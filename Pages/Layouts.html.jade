@@ -1,0 +1,96 @@
+doctype html
+html.no-js(lang='en')
+  head
+    meta(charset='utf-8')
+    title Layout Examples | Scriptura Framework
+    meta(name='description' content='Layout examples for Scriptura Framework')
+    include ../Includes/Metas.jade
+  body(itemscope itemtype='//schema.org/WebPage')
+    nav.main-nav(role='navigation')
+      .wrap
+        input(type='checkbox')#cmd-main-nav
+        label(for='cmd-main-nav')
+          span
+        .brand
+          a(href='/')
+            span.letter S
+            span criptura
+        ul
+          li
+            a(href='/')
+              span.icon-home
+              span.sizeNav-hidden Home
+          li
+            a(href='./StyleGuide.html')
+              span.icon-list2
+              | Style Guide
+          li
+            span.active
+              span.icon-frame
+              | Layout Examples
+          li
+            a(href='./Themes.html')
+              span.icon-rocket
+              | Themes
+          li.item-push
+            a(href='//github.com/Scriptura/Scriptura')
+              span.icon-github
+              | Repository
+    main.section(itemprop='mainContentOfPage')
+      .wrap
+        h1(itemprop='headline name').emphasized Layout Examples
+        h2 Theoretical Examples
+        ul.list-striped-link.summary
+          li
+            a(href='./GridLayout.html')
+              span.icon-paperclip
+              | &nbsp;&nbsp;Fluid Grid Layout
+          li
+            a(href='./Layout01.html')
+              span.icon-paperclip
+              | &nbsp;&nbsp;Layout for a blog
+          li
+            a(href='./Layout02.html')
+              span.icon-paperclip
+              | &nbsp;&nbsp;Layout for Photoblog
+          li
+            a(href='./Layout03.html')
+              span.icon-paperclip
+              | &nbsp;&nbsp;Layout for Photoblog 2
+          li
+            a(href='./Layout04.html')
+              span.icon-paperclip
+              | &nbsp;&nbsp;Complex Layout
+          li
+            a(href='./Layout05.html')
+              span.icon-paperclip
+              | &nbsp;&nbsp;Example Nested Grid
+          li
+            a(href='./Layout06.html')
+              span.icon-paperclip
+              | &nbsp;&nbsp;Grid with offsets
+          li
+            a(href='./Layout07.html')
+              span.icon-paperclip
+              | &nbsp;&nbsp;Grid with offsets 2
+          li
+            a(href='./Layout08.html')
+              span.icon-paperclip
+              | &nbsp;&nbsp;Layout for Mobile
+          li
+            a(href='./Layout09.html')
+              span.icon-paperclip
+              | &nbsp;&nbsp;Layout for Mobile 2
+        h2 Practical Examples
+        ul.list-striped-link.summary
+          li
+            a(href='./Article.html')
+              span.icon-paperclip
+              | &nbsp;&nbsp;Web Page Article
+          li
+            a(href='./Profil.html')
+              span.icon-paperclip
+              | &nbsp;&nbsp;Profil Page
+    footer.section.footer
+      include ../Includes/Footer.jade
+    include ../Includes/Scripts.jade

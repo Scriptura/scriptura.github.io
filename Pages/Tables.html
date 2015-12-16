@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <title>Tables, Style Guide | Scriptura Framework</title>
+    <meta name="description" content="Tables for Scriptura Framework">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="geo.placename" content="Saint-Médard-en-Forez, Loire, France">
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../Public/Styles/MainRatatouille.css" media="screen" id="stylesheet">
+    <link rel="stylesheet" href="../Public/Styles/Print.css" media="print">
+  </head>
+  <body itemscope itemtype="https://schema.org/WebPage">
+    <nav role="navigation" class="main-nav">
+      <div class="wrap">
+        <input type="checkbox" id="cmd-main-nav">
+        <label for="cmd-main-nav"><span></span></label>
+        <div class="brand"><a href="/"><span class="letter">S</span><span>criptura</span></a></div>
+        <ul>
+          <li><a href="/"><span class="icon-home"></span><span class="sizeNav-hidden">Home</span></a></li>
+          <li><a href="./StyleGuide.html"><span class="icon-list2"></span>Style Guide</a></li>
+          <li><a href="./Layouts.html"><span class="icon-frame"></span>Layout Examples</a></li>
+          <li><a href="./Themes.html"><span class="icon-rocket"></span>Themes</a></li>
+          <li class="item-push"><a href="//github.com/Scriptura/Scriptura"><span class="icon-github"></span>Repository</a></li>
+        </ul>
+      </div>
+    </nav>
+    <main itemprop="mainContentOfPage" class="section">
+      <div class="wrap">
+        <h1 itemprop="headline name" class="emphasized">Tables</h1>
+        <div class="grid">
+          <div class="m6 sizeS-m12 sizeL-m12"><code>table.table</code>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>n°</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Email</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <td></td>
+                  <td>Foot 2</td>
+                  <td>Foot 3</td>
+                  <td>Foot 4</td>
+                </tr>
+              </tfoot>
+              <tbody>
+                <tr>
+                  <td data-thead="n°">1</td>
+                  <td data-thead="First Name">Leonard</td>
+                  <td data-thead="Last Name"></td>
+                  <td data-thead="Email">leonardo@gmail.com</td>
+                </tr>
+                <tr>
+                  <td data-thead="n°">2</td>
+                  <td data-thead="First Name">Jules</td>
+                  <td data-thead="Last Name">Verne</td>
+                  <td data-thead="Email"> jules.verne@gmail.com</td>
+                </tr>
+                <tr>
+                  <td data-thead="n°">3</td>
+                  <td data-thead="First Name">Ludwig</td>
+                  <td data-thead="Last Name">van Beethoven</td>
+                  <td data-thead="Email">beethoven@gmail.com</td>
+                </tr>
+                <tr>
+                  <td data-thead="n°">4</td>
+                  <td data-thead="First Name" colspan="2">Captain Red</td>
+                  <td data-thead="Email">captain.red@gmail.com</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="m6 sizeS-m12 sizeL-m12"><code>table.table-firstcolumn</code>
+            <table class="table-firstcolumn">
+              <thead>
+                <tr>
+                  <th>n°</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Email</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <td></td>
+                  <td>Foot 2</td>
+                  <td>Foot 3</td>
+                  <td>Foot 4</td>
+                </tr>
+              </tfoot>
+              <tbody>
+                <tr>
+                  <td data-thead="n°">1</td>
+                  <td data-thead="First Name">Leonard</td>
+                  <td data-thead="Last Name"></td>
+                  <td data-thead="Email">leonardo@gmail.com</td>
+                </tr>
+                <tr>
+                  <td data-thead="n°">2</td>
+                  <td data-thead="First Name">Jules</td>
+                  <td data-thead="Last Name">Verne</td>
+                  <td data-thead="Email"> jules.verne@gmail.com</td>
+                </tr>
+                <tr>
+                  <td data-thead="n°">3</td>
+                  <td data-thead="First Name">Ludwig</td>
+                  <td data-thead="Last Name">van Beethoven</td>
+                  <td data-thead="Email">beethoven@gmail.com</td>
+                </tr>
+                <tr>
+                  <td data-thead="n°">4</td>
+                  <td data-thead="First Name" colspan="2">Captain Red</td>
+                  <td data-thead="Email">captain.red@gmail.com</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="m6 sizeS-m12 sizeL-m12"><code>table.table-fixed</code>
+            <table class="table-fixed">
+              <thead>
+                <tr>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Email</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <td>Foot 1</td>
+                  <td>Foot 2</td>
+                  <td>Foot 3</td>
+                </tr>
+              </tfoot>
+              <tbody>
+                <tr>
+                  <td data-thead="First Name">Leonard</td>
+                  <td data-thead="Last Name"></td>
+                  <td data-thead="Email">leonardo@gmail.com</td>
+                </tr>
+                <tr>
+                  <td data-thead="First Name">Jules</td>
+                  <td data-thead="Last Name">Verne</td>
+                  <td data-thead="Email"> jules.verne@gmail.com</td>
+                </tr>
+                <tr>
+                  <td data-thead="First Name">Ludwig</td>
+                  <td data-thead="Last Name">van Beethoven</td>
+                  <td data-thead="Email">beethoven@gmail.com</td>
+                </tr>
+                <tr>
+                  <td data-thead="First Name" colspan="2">Captain Red</td>
+                  <td data-thead="Email">captain.red@gmail.com</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <p class="addletter">These tables use <a href="https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Using_data_attributes">data attributes</a> for the responsive design.</p>
+      </div>
+    </main>
+    <footer class="section footer">
+      <div class="wrap text-center">
+        <p><em>A framework created by</em></p>
+        <p><span class="icon-quill"></span></p>
+        <p><a href="//github.com/Scriptura" itemprop="author" itemscope itemtype="https://schema.org/Person" class="author"><span itemprop="name"><span itemprop="givenName">Olivier</span> <span itemprop="familyName">Chavarin</span></span></a></p>
+      </div>
+      <div class="terms-use">
+        <div class="message-info">
+          <p>En parcourant ce site vous acceptez nos conditions générales d'utilisation...</p>
+          <button id="terms-use" class="button">oui</button>
+        </div>
+      </div>
+      <div class="old-browers">
+        <div class="icon-spaceinvader zoom700"></div><br>
+        <p>Old browser!</p><br>
+        <p>This site has been developed for modern browsers. In order to benefit from its full functionality, upgrade your browser to date.</p>
+      </div>
+      <noscript class="noscript">
+        <p class="message-warning">Javascript is disabled on your browser, enable it to benefit from all the site's features.</p>
+      </noscript>
+      <div class="ajax-window-popin"></div>
+    </footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../Scripts/Vendors/JQuery.js"><\/script>')</script>
+    <script src="../Public/Scripts/Main.js"></script>
+    <script src="../Public/Scripts/Themes.js"></script>
+  </body>
+</html>

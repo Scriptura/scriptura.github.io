@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <title>Inputs, Style Guide | Scriptura Framework</title>
+    <meta name="description" content="Inputs for Scriptura Framework">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="geo.placename" content="Saint-Médard-en-Forez, Loire, France">
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../Public/Styles/MainRatatouille.css" media="screen" id="stylesheet">
+    <link rel="stylesheet" href="../Public/Styles/Print.css" media="print">
+  </head>
+  <body itemscope itemtype="https://schema.org/WebPage">
+    <nav role="navigation" class="main-nav">
+      <div class="wrap">
+        <input type="checkbox" id="cmd-main-nav">
+        <label for="cmd-main-nav"><span></span></label>
+        <div class="brand"><a href="/"><span class="letter">S</span><span>criptura</span></a></div>
+        <ul>
+          <li><a href="/"><span class="icon-home"></span><span class="sizeNav-hidden">Home</span></a></li>
+          <li><a href="./StyleGuide.html"><span class="icon-list2"></span>Style Guide</a></li>
+          <li><a href="./Layouts.html"><span class="icon-frame"></span>Layout Examples</a></li>
+          <li><a href="./Themes.html"><span class="icon-rocket"></span>Themes</a></li>
+          <li class="item-push"><a href="//github.com/Scriptura/Scriptura"><span class="icon-github"></span>Repository</a></li>
+        </ul>
+      </div>
+    </nav>
+    <main itemprop="mainContentOfPage" class="section">
+      <div class="wrap">
+        <h1 itemprop="headline name" class="emphasized">Inputs</h1>
+        <div class="grid">
+          <form method="get" action="./" class="m6 sizeS-m12">
+            <fieldset>
+              <legend>Label & Inputs</legend>
+              <p><code>.input label + input</code></p>
+              <div class="columns">
+                <div class="input">
+                  <label for="name">Type text</label>
+                  <input id="name" type="text" name="name" value="" size="23" placeholder="John" required="">
+                </div>
+                <div class="input c2 invalid">
+                  <label for="name2">Text + error</label>
+                  <input id="name2" type="text" name="name2" value="" size="23" placeholder="Smith" required="">
+                  <p>Champ invalide&nbsp;: des caractères numériques sont placés dans votre nom.</p>
+                </div>
+              </div>
+              <div class="input disabled">
+                <label for="name3">Disabled Attribute</label>
+                <input id="name3" type="text" name="name3" value="" size="23" placeholder=":disabled" required="" disabled="">
+              </div>
+              <div class="columns">
+                <div class="input c2">
+                  <label for="email">Type email</label>
+                  <input id="email" type="email" name="email" value="" size="23" placeholder="pseudo@email.com" required="">
+                </div>
+                <div class="input">
+                  <label for="tel">Type tel</label>
+                  <input id="tel" type="tel" name="tel" value="" size="23" placeholder="0477446677">
+                </div>
+              </div>
+              <div class="columns">
+                <div class="input">
+                  <label for="date">Type date</label>
+                  <input type="date" name="date" value="2015-02-12">
+                </div>
+                <div class="input">
+                  <label for="time">Type time</label>
+                  <input type="time" name="time">
+                </div>
+                <div class="input">
+                  <label for="datetime">Type datetime</label>
+                  <input type="datetime" name="datetime">
+                </div>
+              </div>
+              <div class="columns">
+                <div class="input">
+                  <label for="number">Type number</label>
+                  <input type="number" name="number" step="1" min="-5" max="100" value="50">
+                </div>
+                <div class="input">
+                  <label for="color">Type color</label>
+                  <input type="color" name="color" value="#5ae310">
+                </div>
+              </div>
+              <div class="input hidden">
+                <label for="test">Type hidden</label>
+                <input id="test" type="text" name="test" value="" size="23" placeholder="requis">
+              </div>
+            </fieldset>
+          </form>
+          <form method="get" action="./" class="m6 sizeS-m12">
+            <fieldset>
+              <legend>Select & Textarea</legend>
+              <p><code>.input label + select</code></p>
+              <div class="columns">
+                <div class="input">
+                  <label for="pays">Type select</label>
+                  <select id="pays" name="pays">
+                    <option value="00" selected="">Pays</option>
+                    <option value="FR">France</option>
+                    <option value="ZA">Afrique du Sud</option>
+                    <option value="AL">Albanie</option>
+                    <option value="DZ">Algérie</option>
+                    <option value="DE">Allemagne</option>
+                    <option value="AD">Andorre</option>
+                    <option value="AO">Angola</option>
+                    <option value="AI">Anguilla</option>
+                    <option value="AQ">Antarctique</option>
+                    <option value="AG">Antigua-et-Barbuda</option>
+                    <option value="AN">Antilles néerlandaises</option>
+                  </select>
+                </div>
+                <div class="input">
+                  <label for="pays2">Type select multiple</label>
+                  <select id="pays" multiple name="pays2">
+                    <option value="00" selected="">Pays</option>
+                    <option value="FR">France</option>
+                    <option value="ZA">Afrique du Sud</option>
+                    <option value="AL">Albanie</option>
+                    <option value="DZ">Algérie</option>
+                    <option value="DE">Allemagne</option>
+                    <option value="AD">Andorre</option>
+                    <option value="AO">Angola</option>
+                    <option value="AI">Anguilla</option>
+                    <option value="AQ">Antarctique</option>
+                    <option value="AG">Antigua-et-Barbuda</option>
+                    <option value="AN">Antilles néerlandaises</option>
+                  </select>
+                </div>
+              </div>
+              <p><code>.input label + textarea</code></p>
+              <div class="input">
+                <label for="message">Textarea</label>
+                <textarea id="message" name="message" placeholder="Bonjour..." required=""></textarea>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+        <div class="grid">
+          <h3>Search Form</h3>
+          <p><code>.search</code></p>
+          <form role="search" method="get" action="./" class="m6">
+            <fieldset class="search">
+              <input type="search" name="s" placeholder="Rechercher" required="">
+              <label accesskey="s">Rechercher</label>
+              <button><span>Valider</span></button>
+            </fieldset>
+          </form>
+        </div>
+        <div class="grid">
+          <h3>Input Groups</h3>
+          <form method="get" action="./" class="grid">
+            <fieldset class="m6">
+              <p><code>.input-group</code></p>
+              <div class="input-group">
+                <label>Text label</label>
+                <div>
+                  <div>Prepend</div>
+                  <input type="text" placeholder="Test">
+                  <div>Append</div>
+                </div>
+              </div>
+              <div class="input-group">
+                <label>Result</label>
+                <div>
+                  <div>Total Value</div>
+                  <input type="text" placeholder="Test">
+                  <div>Deutsche Mark</div>
+                </div>
+              </div>
+            </fieldset>
+            <fieldset class="m6">
+              <p><code>.input-group</code>
+                <div class="input-group-right">
+                  <label>Total</label>
+                  <div>
+                    <div>$</div>
+                    <input type="number" placeholder="100">
+                    <div>.00</div>
+                  </div>
+                </div>
+                <div class="input-group-right">
+                  <label>Total</label>
+                  <div>
+                    <div>€</div>
+                    <input type="number" placeholder="100">
+                    <div>.00</div>
+                  </div>
+                </div>
+              </p>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </main>
+    <footer class="section footer">
+      <div class="wrap text-center">
+        <p><em>A framework created by</em></p>
+        <p><span class="icon-quill"></span></p>
+        <p><a href="//github.com/Scriptura" itemprop="author" itemscope itemtype="https://schema.org/Person" class="author"><span itemprop="name"><span itemprop="givenName">Olivier</span> <span itemprop="familyName">Chavarin</span></span></a></p>
+      </div>
+      <div class="terms-use">
+        <div class="message-info">
+          <p>En parcourant ce site vous acceptez nos conditions générales d'utilisation...</p>
+          <button id="terms-use" class="button">oui</button>
+        </div>
+      </div>
+      <div class="old-browers">
+        <div class="icon-spaceinvader zoom700"></div><br>
+        <p>Old browser!</p><br>
+        <p>This site has been developed for modern browsers. In order to benefit from its full functionality, upgrade your browser to date.</p>
+      </div>
+      <noscript class="noscript">
+        <p class="message-warning">Javascript is disabled on your browser, enable it to benefit from all the site's features.</p>
+      </noscript>
+      <div class="ajax-window-popin"></div>
+    </footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../Scripts/Vendors/JQuery.js"><\/script>')</script>
+    <script src="../Public/Scripts/Main.js"></script>
+    <script src="../Public/Scripts/Themes.js"></script>
+  </body>
+</html>

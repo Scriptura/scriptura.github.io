@@ -1,0 +1,159 @@
+doctype html
+html.no-js(lang='en' itemscope itemtype='https://schema.org/WebPage')
+  head
+    meta(charset='utf-8')
+    title Profil | Scriptura Framework
+    meta(name='description' content='Profil page for Scriptura Framework')
+    include ../Includes/Metas.jade
+  body#index
+    nav.main-nav
+      .wrap
+        input(type='checkbox')#cmd-main-nav
+        label(for='cmd-main-nav')
+          span
+        .brand
+          a(href='/') Scriptura
+        ul
+          li
+            a(href='/')
+              span.icon-home
+              span.sizeNav-hidden Home
+          li
+            a(href='/Pages/Layouts.html')
+              span.icon-list2
+              | Summary
+          li
+            a(href='/Pages/Layouts.html')
+              span.icon-frame
+              | About
+          li
+            a(href='/Pages/Layouts.html')
+              span.icon-quill
+              | Contact
+          li.item-push
+            a(href='#')#user
+              span.icon-user
+              | Connection
+    nav.breadcrumb
+      .wrap
+        ul(itemprop='breadcrumb' itemscope itemtype='http://schema.org/BreadcrumbList')
+          li(itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem')
+            a(href='#' itemprop='item')
+              span(itemprop='name') Home
+          li(itemprop='itemListElement', itemscope itemtype='http://schema.org/ListItem')
+            a(href='#' itemprop='item')
+              span(itemprop='name') Profil
+          li(itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem')
+            a(href='/Pages/Article.html' itemprop='item')
+              span(itemprop='name') Pseudo
+    main(itemprop='mainContentOfPage').section.profil
+      .wrap
+        div(itemscope itemtype='http://schema.org/Person')
+          header.grid
+            .m2.sizeS-m4.sizeXS-m6
+              .ratio.avatar(style='background-image:url(//scriptura.github.io/Images/Demo/ponton.jpg)')
+            .m10.sizeS-m8
+              h1(itemprop='name') Pseudo
+            blockquote(itemprop='description')
+              p Description. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed fermentum sagittis urna, a scelerisque metus cursus in. Praesent non urna diam. Nullam vitae neque feugiat, ultricies mauris et, bibendum urna. Nulla a urna ac lectus feugiat pellentesque. Praesent a tortor cursus, facilisis dui sodales, aliquam magna.
+            .m6
+              ul.list-stripe
+                li(itemscope itemtype='http://schema.org/Organization')
+                  span.icon-office
+                  |  
+                  span(itemprop='name') Organization
+                li
+                  span.icon-suitcase
+                  |  
+                  span(itemprop='jobtitle') Job
+              ul.list-stripe-link
+                li
+                  a(itemprop='url' href='http://localhost:9999/')
+                    span.icon-flag
+                    |  
+                    span Blog name
+            .m6
+              ul.list-stripe
+                li
+                  span.icon-at
+                  |  
+                  span(itemprop='email') mail@mail.com
+                li
+                  span.icon-phone
+                  |  
+                  span(itemprop='telephone') 0600223344
+                li
+                  span.icon-birthday-cake
+                  |  
+                  span(itemprop='birthDate' content='2015-01-01') 01/01/2015
+            .m6
+              .message-location(itemprop='address' itemscope='' itemtype='http://schema.org/PostalAddress')
+                p
+                  span(itemprop='streetAddress') 21 street...
+                  | ,
+                  br
+                  span(itemprop='postalCode') 42100
+                  | , 
+                  span(itemprop='addressLocality') Saint Etienne
+                  | ,
+                  br
+                  span(itemprop='addressRegion') Rhône-Alpes
+                  | , 
+                  span(itemprop='addressCountry') France
+    footer#index-footer.section.footer
+      .wrap.text-center(itemprop='author', itemscope, itemtype='https://schema.org/Person')
+        p
+          em "Scriptura" is a site run by&nbsp;:
+        p
+          a
+            abbr(title='Madame' itemprop='honorificPrefix') M
+              sup me
+            |  
+            span(itemprop='name').author
+              span(itemprop='givenName') Givenname
+              |  
+              span(itemprop='familyName') Familyname
+        p
+          em(itemprop='jobTitle') JobTitle
+        .icon-quill
+      //- Nécessité d'insérer les div suivantes dans un contener afin ne pas faire "sauter" le script de navigation OnePage
+      .terms-use
+        .message-info
+          p En parcourant ce site vous acceptez nos conditions générales d'utilisation...
+          button.button#terms-use oui
+      .old-browers
+        .icon-spaceinvader.zoom700
+        br
+        p Old browser!
+        br
+        p This site has been developed for modern browsers. In order to benefit from its full functionality, upgrade your browser to date.
+      noscript.noscript
+        //-
+          Javascript est désactivé sur votre navigateur, activez-le afin de bénéficier de toutes les fonctionnalités du site.
+        p.message-warning Javascript is disabled on your browser, enable it to benefit from all the site's features.
+      .ajax-window-popin
+      section#popin-user.hidden
+        h2.emphasized Connection
+        form(method='get', action='./')
+          .input-group
+            label Identifiant
+            div
+              div
+                .icon-user
+              input(type='text', placeholder='ex : Bonemine', required)
+          .input-group
+            label Mot de passe
+            div
+              div
+                .icon-key-hollow
+              input(type='password', placeholder='ex : Marron glacé', required)
+          div.columns
+            input#testLogin.switch(type='checkbox', checked='')
+            label(for='testLogin') Sauvegarder les informations
+              span(data-on='yes', data-off='no')
+          div.columns
+            button.button
+              span.icon-login
+              | &nbsp;&nbsp;Se connecter
+        a(href='#')#cmd-popin
+    include ../Includes/Scripts.jade

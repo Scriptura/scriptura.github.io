@@ -1,0 +1,222 @@
+doctype html
+html.no-js(lang='en' itemscope itemtype='https://schema.org/WebPage')
+  head
+    meta(charset='utf-8')
+    title Article | Scriptura Framework
+    meta(name='description' content='Article page for Scriptura Framework')
+    include ../Includes/Metas.jade
+  body#index
+    nav.main-nav
+      .wrap
+        input(type='checkbox')#cmd-main-nav
+        label(for='cmd-main-nav')
+          span
+        .brand
+          a(href='/') Scriptura
+        ul
+          li
+            a(href='/')
+              span.icon-home
+              span.sizeNav-hidden Home
+          li
+            a(href='/Pages/Layouts.html')
+              span.icon-list2
+              | Summary
+          li
+            a(href='/Pages/Layouts.html')
+              span.icon-frame
+              | About
+          li
+            a(href='/Pages/Layouts.html')
+              span.icon-quill
+              | Contact
+          li.item-push
+            a(href='#')#user
+              span.icon-user
+              | Connection
+    nav.breadcrumb
+      .wrap
+        ul(itemprop='breadcrumb' itemscope itemtype='http://schema.org/BreadcrumbList')
+          li(itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem')
+            a(href='#' itemprop='item')
+              span(itemprop='name') Home
+          li(itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem')
+            a(href='#' itemprop='item')
+              span(itemprop='name') Category
+          li(itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem')
+            a(href='/Pages/Article.html' itemprop='item')
+              span(itemprop='name') Sample Title for a demonstration web page article
+    main(itemprop='mainContentOfPage')
+      article.article(itemscope itemtype='https://schema.org/Article')
+        header
+          div(style='background-image:url(/Images/Demo/tunel.jpg)')
+            img(itemprop='image' src='/Images/Demo/tunel.jpg' alt='Tunel')
+        #index-article
+          .wrap
+            .grid.print-area
+              .m12
+                h1(itemprop='headline name') Sample Title for a demonstration web page Article
+                  a.anchor(href='#index-article')
+              .grid6.sizeS-grid12
+                .adddropcap.links(itemprop='articleBody')
+                  p Adolescebat autem obstinatum propositum erga haec et similia multa scrutanda, stimulos admovente regina, quae abrupte mariti fortunas trudebat in exitium praeceps, cum eum potius lenitate feminea ad veritatis humanitatisque viam reducere utilia suadendo deberet, ut in Gordianorum actibus factitasse Maximini truculenti illius imperatoris rettulimus coniugem.
+                  p
+                    | Nec minus feminae quoque calamitatum participes fuere similium. 
+                    a(href='https://github.com/Scriptura/Scriptura') Nam ex hoc quoque sexu peremptae
+                    |  sunt originis altae conplures, adulteriorum flagitiis obnoxiae vel stuprorum. inter quas notiores fuere Claritas et Flaviana, quarum altera cum duceretur ad mortem, indumento, quo vestita erat, abrepto, ne velemen quidem secreto membrorum sufficiens retinere permissa est. ideoque carnifex nefas admisisse convictus inmane, vivus exustus est.
+                  blockquote(cite='https://github.com/Scriptura/Scriptura')
+                    p This is a quote placed in a block, rather elongated just for testing.
+                    footer
+                      | Information produced by 
+                      cite Name
+                  p Ob haec et huius modi multa, quae cernebantur in paucis, omnibus timeri sunt coepta. et ne tot malis dissimulatis paulatimque serpentibus acervi crescerent aerumnarum, nobilitatis decreto legati mittuntur: Praetextatus ex urbi praefecto et ex vicario Venustus et ex consulari Minervius oraturi, ne delictis supplicia sint grandiora, neve senator quisquam inusitato et inlicito more tormentis exponeretur.
+                  p Advenit post multos Scudilo Scutariorum tribunus velamento subagrestis ingenii persuasionis opifex callidus. qui eum adulabili sermone seriis admixto solus omnium proficisci pellexit vultu adsimulato saepius replicando quod flagrantibus votis eum videre frater cuperet patruelis, siquid per inprudentiam gestum est remissurus ut mitis et clemens, participemque eum suae maiestatis adscisceret, futurum laborum quoque socium, quos Arctoae provinciae diu fessae poscebant.
+                  p His cognitis Gallus ut serpens adpetitus telo vel saxo iamque spes extremas opperiens et succurrens saluti suae quavis ratione colligi omnes iussit armatos et cum starent attoniti, districta dentium acie stridens adeste inquit viri fortes mihi periclitanti vobiscum.
+                aside.button-group.no-print
+                  button(title='Print article').button.cmd-print
+                    span.icon-printer
+                  button(title='Share article').button
+                    span.icon-share
+                  button(title='Comment article').button.ajax-global#ajax-comments
+                    span.icon-bubbles
+                  button(title='Edit article').button
+                    span.icon-pen
+              aside.m5.sizeS-m12.sizeL-o1.sizeXL-o1
+                p.message-source
+                  span(itemprop='author').author Author
+                  | , 
+                  em(itemprop='alternativeHeadline') Title
+                  | , tr. 
+                  span(itemprop='translator') Translator
+                  | , 
+                  span(itemprop='publisher') Publishing house
+                  | , 
+                  span(itemprop='locationCreated' itemscope itemtype='https://schema.org/Place')
+                    span(itemprop='address' itemscope itemtype='https://schema.org/PostalAddress')
+                      span(itemprop='addressLocality') Place
+                  | , 
+                  span(itemprop='datePublished') 2015
+                  | , pp. 
+                  span(itemprop='pagination')
+                    span(itemprop='pageStart') 56
+                    | -
+                    span(itemprop='pageEnd') 57
+                  | .
+                p.message-date Published on  
+                  time(itemprop='dateCreated' datetime='2015-11-21T20:06:17+00:00') 20/11/2015
+                  |  • Modified on 
+                  time(itemprop='dateModified' datetime='2015-11-21T20:06:17+00:00') 21/11/2015
+                p.message.no-print Article summary&nbsp;:
+                ul.list-stripe-link.no-print
+                  li
+                    a(href='#index')
+                      span.icon-arrow-down
+                      | &nbsp;&nbsp; Title 1
+                  li
+                    a(href='#index')
+                      span.icon-arrow-down
+                      | &nbsp;&nbsp; Title 2
+                  li
+                    a(href='#index')
+                      span.icon-arrow-down
+                      | &nbsp;&nbsp; Title 3
+                  li
+                    a(href='#index')
+                      span.icon-arrow-down
+                      | &nbsp;&nbsp; Title 4
+                  li
+                    a(href='#index')
+                      span.icon-arrow-down
+                      | &nbsp;&nbsp; Title 5
+                p.message-keyword Keywords&nbsp;: 
+                  span(itemprop='keywords')
+                    a(href='#') Test 1
+                    | , 
+                    a(href='#') Test 2
+                    | , 
+                    a(href='#') Test 3
+                    | , 
+                    a(href='#') Test 4
+                    | , 
+                    a(href='#') Test 5
+    .ajax-window
+    aside.aside
+      .wrap
+        .relationship
+          a(href='/Pages/Layouts.html' itemprop='relatedLink').ribbon-container
+            .ratio-16-9(style='background-image:url(//scriptura.github.io/Images/Demo/boat.jpg)')
+            h2 Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+            .ribbon
+              span Read more...
+          a(href='/Pages/Layouts.html' itemprop='relatedLink').ribbon-container
+            .ratio-16-9(style='background-image:url(//scriptura.github.io/Images/Demo/oldhouse_1440_b&w.jpg)')
+            h2 Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+            .ribbon
+              span Read more...
+          a(href='/Pages/Layouts.html' itemprop='relatedLink').ribbon-container
+            .ratio-16-9(style='background-image:url(//scriptura.github.io/Images/Demo/phare.jpg)')
+            h2 Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+            .ribbon
+              span Read more...
+          a(href='/Pages/Layouts.html' itemprop='relatedLink').ribbon-container
+            .ratio-16-9(style='background-image:url(//scriptura.github.io/Images/Demo/ponton.jpg)')
+            h2 Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+            .ribbon
+              span Read more...
+    footer#index-footer.section.footer
+      .wrap.text-center(itemprop='author' itemscope itemtype='https://schema.org/Person')
+        p
+          em "Scriptura" is a site run by&nbsp;:
+        p
+          a
+            abbr(title='Madame' itemprop='honorificPrefix') M
+              sup me
+            |  
+            span(itemprop='name').author
+              span(itemprop='givenName') Givenname
+              |  
+              span(itemprop='familyName') Familyname
+        p
+          em(itemprop='jobTitle') JobTitle
+        .icon-quill
+      //- Nécessité d'insérer les div suivantes dans un contener afin ne pas faire "sauter" le script de navigation OnePage
+      .terms-use
+        .message-info
+          p En parcourant ce site vous acceptez nos conditions générales d'utilisation...
+          button.button#terms-use oui
+      .old-browers
+        .icon-spaceinvader.zoom700
+        br
+        p Old browser!
+        br
+        p This site has been developed for modern browsers. In order to benefit from its full functionality, upgrade your browser to date.
+      noscript.noscript
+        //-
+          Javascript est désactivé sur votre navigateur, activez-le afin de bénéficier de toutes les fonctionnalités du site.
+        p.message-warning Javascript is disabled on your browser, enable it to benefit from all the site's features.
+      .ajax-window-popin
+      section#popin-user.hidden
+        h2.emphasized Connection
+        form(method='get' action='./')
+          .input-group
+            label Identifiant
+            div
+              div
+                .icon-user
+              input(type='text' placeholder='ex : Bonemine' required)
+          .input-group
+            label Mot de passe
+            div
+              div
+                .icon-key-hollow
+              input(type='password' placeholder='ex : Marron glacé' required)
+          div.columns
+            input#testLogin.switch(type='checkbox' checked='')
+            label(for='testLogin') Sauvegarder les informations
+              span(data-on='yes' data-off='no')
+          div.columns
+            button.button
+              span.icon-login
+              | &nbsp;&nbsp;Se connecter
+        a(href='#')#cmd-popin
+    include ../Includes/Scripts.jade

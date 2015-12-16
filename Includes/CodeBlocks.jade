@@ -1,0 +1,73 @@
+.grid
+  .m3.sizeS-m12.sizeL-m4
+    p
+      code pre > code
+    pre
+      code(translate='no', data-select='true', data-value='Sélection').
+        &lt;html&gt;
+         &lt;head&gt;&lt;/head&gt;
+         &lt;body&gt;
+           &lt;header&gt;&lt;/header&gt;
+           &lt;main&gt;
+             &lt;article&gt;&lt;/article&gt;
+           &lt;/main&gt;
+           &lt;aside&gt;&lt;/aside&gt;
+           &lt;footer&gt;&lt;/footer&gt;
+         &lt;/body&gt;
+        &lt;/html&gt;
+  .m3.sizeS-m12.sizeL-m4
+    p
+      code pre > code(data-code=' HTML')
+    pre
+      code(translate='no', data-code=' HTML', data-select='true', data-value='Sélection').
+        &lt;html&gt;
+         &lt;head&gt;&lt;/head&gt;
+         &lt;body&gt;
+           &lt;header&gt;&lt;/header&gt;
+           &lt;main&gt;
+             &lt;article&gt;&lt;/article&gt;
+           &lt;/main&gt;
+           &lt;aside&gt;&lt;/aside&gt;
+           &lt;footer&gt;&lt;/footer&gt;
+         &lt;/body&gt;
+        &lt;/html&gt;
+  .m3.sizeS-m12.sizeL-m4
+    p
+      code pre > code(data-code=' CSS')
+    pre
+      code(translate='no', data-code=' CSS', data-select='true', data-value='Sélection').
+        sub,
+        sup {
+          line-height: 0;
+          font-size: 75%;
+          position: relative;
+          vertical-align: baseline;
+        }
+  .m3.sizeS-m12.sizeL-m4
+    p
+      code pre > code(data-code=' JavaScript')
+    pre
+      code(translate='no', data-code=' JavaScript', data-select='true', data-value='Sélection').
+        $(function() {
+          $('.section').attr({
+            id: function(index) {
+              return 'section-' + index;
+            }
+          });
+        });
+  .m3.sizeS-m12.sizeL-m4
+    p
+      code pre > code(data-code=' Jade')
+    pre
+      code(translate='no', data-code=' Jade', data-select='true', data-value='Sélection').
+        ul
+          li Artichauts
+          li Carottes
+          li Concombres
+            ul
+              li Composition
+              li Saveur
+                ul
+                  li Vert
+                  li Gris
+                  li Rouge

@@ -1,0 +1,36 @@
+.grid
+  .m6.sizeS-m12
+    p
+      code button.button
+    .button-group
+      button.button
+        span.icon-checkmark
+        |  First Button
+      button.button(disabled='')
+        span.icon-mark
+        |  Button disabled
+      button.button.second
+        span.icon-checkmark
+        |  Second Button
+  .m6.sizeS-m12
+    p
+      code input.button
+    .button-group
+      input.button(type='submit', value='First Button')
+      input.button(type='submit', value='Button disabled', disabled='')
+      input.button.second(type='submit', value='Second Button')
+  .m12
+    h3 Another Example
+    .button-group
+      button.button
+        span.icon-control-fast-prev
+      button.button
+        span.icon-control-prev
+      button.button
+        span.icon-control-play
+      button.button
+        span.icon-control-pause
+      button.button
+        span.icon-control-fast-next
+      button.button
+        span.icon-control-next

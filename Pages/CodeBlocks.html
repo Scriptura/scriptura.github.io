@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <title>Code Blocks, Style Guide | Scriptura Framework</title>
+    <meta name="description" content="Code Blocks for Scriptura Framework">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="geo.placename" content="Saint-Médard-en-Forez, Loire, France">
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../Public/Styles/MainRatatouille.css" media="screen" id="stylesheet">
+    <link rel="stylesheet" href="../Public/Styles/Print.css" media="print">
+  </head>
+  <body itemscope itemtype="https://schema.org/WebPage">
+    <nav role="navigation" class="main-nav">
+      <div class="wrap">
+        <input type="checkbox" id="cmd-main-nav">
+        <label for="cmd-main-nav"><span></span></label>
+        <div class="brand"><a href="/"><span class="letter">S</span><span>criptura</span></a></div>
+        <ul>
+          <li><a href="/"><span class="icon-home"></span><span class="sizeNav-hidden">Home</span></a></li>
+          <li><a href="./StyleGuide.html"><span class="icon-list2"></span>Style Guide</a></li>
+          <li><a href="./Layouts.html"><span class="icon-frame"></span>Layout Examples</a></li>
+          <li><a href="./Themes.html"><span class="icon-rocket"></span>Themes</a></li>
+          <li class="item-push"><a href="//github.com/Scriptura/Scriptura"><span class="icon-github"></span>Repository</a></li>
+        </ul>
+      </div>
+    </nav>
+    <main itemprop="mainContentOfPage" class="section">
+      <div class="wrap">
+        <h1 itemprop="headline name" class="emphasized">Code Blocks</h1>
+        <div class="grid">
+          <div class="m3 sizeS-m12 sizeL-m4">
+            <p><code>pre > code</code></p>
+            <pre><code translate="no" data-select="true" data-value="Sélection">&lt;html&gt;
+ &lt;head&gt;&lt;/head&gt;
+ &lt;body&gt;
+   &lt;header&gt;&lt;/header&gt;
+   &lt;main&gt;
+     &lt;article&gt;&lt;/article&gt;
+   &lt;/main&gt;
+   &lt;aside&gt;&lt;/aside&gt;
+   &lt;footer&gt;&lt;/footer&gt;
+ &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+          </div>
+          <div class="m3 sizeS-m12 sizeL-m4">
+            <p><code>pre > code(data-code=' HTML')</code></p>
+            <pre><code translate="no" data-code=" HTML" data-select="true" data-value="Sélection">&lt;html&gt;
+ &lt;head&gt;&lt;/head&gt;
+ &lt;body&gt;
+   &lt;header&gt;&lt;/header&gt;
+   &lt;main&gt;
+     &lt;article&gt;&lt;/article&gt;
+   &lt;/main&gt;
+   &lt;aside&gt;&lt;/aside&gt;
+   &lt;footer&gt;&lt;/footer&gt;
+ &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+          </div>
+          <div class="m3 sizeS-m12 sizeL-m4">
+            <p><code>pre > code(data-code=' CSS')</code></p>
+            <pre><code translate="no" data-code=" CSS" data-select="true" data-value="Sélection">sub,
+sup {
+  line-height: 0;
+  font-size: 75%;
+  position: relative;
+  vertical-align: baseline;
+}</code></pre>
+          </div>
+          <div class="m3 sizeS-m12 sizeL-m4">
+            <p><code>pre > code(data-code=' JavaScript')</code></p>
+            <pre><code translate="no" data-code=" JavaScript" data-select="true" data-value="Sélection">$(function() {
+  $('.section').attr({
+    id: function(index) {
+      return 'section-' + index;
+    }
+  });
+});</code></pre>
+          </div>
+          <div class="m3 sizeS-m12 sizeL-m4">
+            <p><code>pre > code(data-code=' Jade')</code></p>
+            <pre><code translate="no" data-code=" Jade" data-select="true" data-value="Sélection">ul
+  li Artichauts
+  li Carottes
+  li Concombres
+    ul
+      li Composition
+      li Saveur
+        ul
+          li Vert
+          li Gris
+          li Rouge</code></pre>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="section footer">
+      <div class="wrap text-center">
+        <p><em>A framework created by</em></p>
+        <p><span class="icon-quill"></span></p>
+        <p><a href="//github.com/Scriptura" itemprop="author" itemscope itemtype="https://schema.org/Person" class="author"><span itemprop="name"><span itemprop="givenName">Olivier</span> <span itemprop="familyName">Chavarin</span></span></a></p>
+      </div>
+      <div class="terms-use">
+        <div class="message-info">
+          <p>En parcourant ce site vous acceptez nos conditions générales d'utilisation...</p>
+          <button id="terms-use" class="button">oui</button>
+        </div>
+      </div>
+      <div class="old-browers">
+        <div class="icon-spaceinvader zoom700"></div><br>
+        <p>Old browser!</p><br>
+        <p>This site has been developed for modern browsers. In order to benefit from its full functionality, upgrade your browser to date.</p>
+      </div>
+      <noscript class="noscript">
+        <p class="message-warning">Javascript is disabled on your browser, enable it to benefit from all the site's features.</p>
+      </noscript>
+      <div class="ajax-window-popin"></div>
+    </footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../Scripts/Vendors/JQuery.js"><\/script>')</script>
+    <script src="../Public/Scripts/Main.js"></script>
+    <script src="../Public/Scripts/Themes.js"></script>
+  </body>
+</html>

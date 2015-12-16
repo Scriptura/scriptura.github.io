@@ -1,0 +1,58 @@
+<h1 id="scriptura">Scriptura</h1>
+<blockquote>
+<p>Interface for web apps</p>
+</blockquote>
+<p><strong>Project under development...</strong></p>
+<ul>
+<li><a href="http://scriptura.github.io/">Demo Page</a></li>
+</ul>
+<h2 id="about">About</h2>
+<h3 id="eng">Eng</h3>
+<p><em>Scriptura</em> is a framework html/js/css light that aims to simplify the layout. Here, no supperflu adding html tags or index in the flow of web pages in order to support a script or a visual effect, priority is given to content, the HTML code is clean and respects the logic of the flow Datas.</p>
+<p>The idea is to start from a properly structured text and to surround it with a parent element with a class. The part of the target document will be transformed as tabs or accordion menu, or anything else as appropriate. For examples see our (<a href="./Pages/StyleGuide.html">StyleGuide</a>).</p>
+<p>The framework allows for (<a href="./Pages/Layouts.html">complex layouts</a>) through a grid system based on the modules css FlexBox and calc() function.</p>
+<p>Their scripts sides are based on the Web Storage rather than cookies.</p>
+<p>These technologies imply a limitation of backward compatibility with older browsers, bias on our part that allows us the use of the latest technologies without compromise web.</p>
+<h3 id="fr">Fr</h3>
+<p><em>Scriptura</em> est un framework html/js/css léger dont le but est de simplifier la mise en page. Ici, pas d&#39;ajout supperflu de balises html ou d&#39;index dans le flux des pages web dans le but de soutenir un script ou un effet visuel, la priorité est donnée au contenu, le code html reste propre et respecte la logique du flux des données.</p>
+<p>L&#39;idée est de partir d&#39;un texte correctement structuré et de l&#39;entourer d&#39;un élément parent comportant une classe. La partie du document ainsi ciblée sera transformée en menu onglets ou accordéon, ou encore autre chose selon les besoins. Pour voir des exemples consultez notre (<a href="./Pages/StyleGuide.html">StyleGuide</a>).</p>
+<p>Le framework permet des (<a href="./Pages/Layouts.html">mises en page complexes</a>) grâce à un système de grille basé sur les modules css flexbox et la fonction calc().</p>
+<p>De leurs côtés les scripts s&#39;appuient sur le Web Storage plutôt que sur les cookies.</p>
+<p>Ces technologies impliquent une limitation de la rétrocompatibilité aux navigateurs récents, un parti pris de notre part qui nous permet l&#39;utilisation des dernières technologies du web sans compromis.</p>
+<h2 id="folder-tree-and-key-files">Folder tree and key files</h2>
+<pre><code>├── index.html.jade
+├── Scripts
+│   ├── Vendors
+│   ├── Sources
+│   │   └── Main.js
+├── Styles
+│   │   └── Main.styl
+│       └── Partial
+├── Public
+│   ├── Scripts
+│   │   └── Main.js
+│   └── Styles
+│       ├── Main*.css
+│       ├── Print.css
+│       └── Expanded
+├── Images
+├── Fonts
+├── package.json
+├── Gruntfile.js
+├── node_modules
+└── Readme.md
+</code></pre><h2 id="template-engine-with-jade-lang-and-sass">Template engine with Jade lang and Sass</h2>
+<p>The framework uses the syntax <a href="http://jade-lang.com/">Jade</a> and <a href="https://learnboost.github.io/stylus/">Stylus</a>.</p>
+<h2 id="get-started">Get Started</h2>
+<h3 id="first-stage">First stage</h3>
+<p>Work with the workflow by running this command with your terminal to the file in the root: <code>$ gulp</code></p>
+<p>Connect this adress: <code>http://localhost:9999</code></p>
+<h3 id="second-stage">Second stage</h3>
+<p>Create an .html.jade or an .php.jade file in the folder.</p>
+<p>With in the file&#39;s header:</p>
+<pre><code>link(rel=&#39;stylesheet&#39;, href=&#39;./Public/Styles/Main.css&#39;, media=&#39;screen&#39;)
+</code></pre><p>And in the file&#39;s footer:</p>
+<pre><code>script(src=&#39;./Scripts/Vendors/JQuery.js&#39;)
+script(src=&#39;./Public/Scripts/Main.js&#39;)
+</code></pre><h3 id="third-stage">Third stage</h3>
+<p>That&#39;s all! You can start creating with jade syntaxe.</p>

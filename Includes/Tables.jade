@@ -1,0 +1,104 @@
+.grid
+  .m6.sizeS-m12.sizeL-m12
+    code table.table
+    table.table
+      thead
+        tr
+          th n°
+          th First Name
+          th Last Name
+          th Email
+      tfoot
+        tr
+          td
+          td Foot 2
+          td Foot 3
+          td Foot 4
+      tbody
+        tr
+          td(data-thead='n°') 1
+          td(data-thead='First Name') Leonard
+          td(data-thead='Last Name')
+          td(data-thead='Email') leonardo@gmail.com
+        tr
+          td(data-thead='n°') 2
+          td(data-thead='First Name') Jules
+          td(data-thead='Last Name') Verne
+          td(data-thead='Email')  jules.verne@gmail.com
+        tr
+          td(data-thead='n°') 3
+          td(data-thead='First Name') Ludwig
+          td(data-thead='Last Name') van Beethoven
+          td(data-thead='Email') beethoven@gmail.com
+        tr
+          td(data-thead='n°') 4
+          td(data-thead='First Name', colspan='2') Captain Red
+          td(data-thead='Email') captain.red@gmail.com
+  .m6.sizeS-m12.sizeL-m12
+    code table.table-firstcolumn
+    table.table-firstcolumn
+      thead
+        tr
+          th n°
+          th First Name
+          th Last Name
+          th Email
+      tfoot
+        tr
+          td
+          td Foot 2
+          td Foot 3
+          td Foot 4
+      tbody
+        tr
+          td(data-thead='n°') 1
+          td(data-thead='First Name') Leonard
+          td(data-thead='Last Name')
+          td(data-thead='Email') leonardo@gmail.com
+        tr
+          td(data-thead='n°') 2
+          td(data-thead='First Name') Jules
+          td(data-thead='Last Name') Verne
+          td(data-thead='Email')  jules.verne@gmail.com
+        tr
+          td(data-thead='n°') 3
+          td(data-thead='First Name') Ludwig
+          td(data-thead='Last Name') van Beethoven
+          td(data-thead='Email') beethoven@gmail.com
+        tr
+          td(data-thead='n°') 4
+          td(data-thead='First Name', colspan='2') Captain Red
+          td(data-thead='Email') captain.red@gmail.com
+  .m6.sizeS-m12.sizeL-m12
+    code table.table-fixed
+    table.table-fixed
+      thead
+        tr
+          th First Name
+          th Last Name
+          th Email
+      tfoot
+        tr
+          td Foot 1
+          td Foot 2
+          td Foot 3
+      tbody
+        tr
+          td(data-thead='First Name') Leonard
+          td(data-thead='Last Name')
+          td(data-thead='Email') leonardo@gmail.com
+        tr
+          td(data-thead='First Name') Jules
+          td(data-thead='Last Name') Verne
+          td(data-thead='Email')  jules.verne@gmail.com
+        tr
+          td(data-thead='First Name') Ludwig
+          td(data-thead='Last Name') van Beethoven
+          td(data-thead='Email') beethoven@gmail.com
+        tr
+          td(data-thead='First Name', colspan='2') Captain Red
+          td(data-thead='Email') captain.red@gmail.com
+p.addletter
+ | These tables use 
+ a(href='https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Using_data_attributes') data attributes
+ |  for the responsive design.

@@ -1,0 +1,73 @@
+doctype html
+html.no-js(lang='en')
+  head
+    meta(charset='utf-8')
+    title Error 404: Page not found | Scriptura Framework
+    meta(name='description' content='Interface for web apps')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    meta(name='geo.placename' content='Saint-Médard-en-Forez, Loire, France')
+    link(rel='shortcut icon' href='./favicon.ico')
+    link(rel='stylesheet' href='./Public/Styles/MainRatatouille.css' media='screen')#stylesheet
+    // Page 404 only for Github
+  body(itemscope, itemtype='//schema.org/WebPage')
+    nav.main-nav(role='navigation')
+      .wrap
+        input(type='checkbox' id='cmd-main-nav')
+        label(for='cmd-main-nav')
+          span
+        .brand
+          a(href='./')
+            span.letter S
+            span criptura
+        ul
+          li
+            a(href='./')
+              span.icon-home
+              span.sizeNav-hidden Home
+          li
+            a(href='./Pages/StyleGuide.html')
+              span.icon-list2
+              | Style Guide
+          li
+            a(href='./Pages/Layouts.html')
+              span.icon-frame
+              | Layout Examples
+          li
+            a(href='./Pages/Themes.html')
+              span.icon-rocket
+              | Themes
+          li.item-push
+            a(href='//github.com/Scriptura/Scriptura')
+              span.icon-github
+              | Repository
+    header.section.vh100(role='banner')
+      .wrap.ribbon-container
+        .ribbon
+          a(href='./') Home Page
+        .vertical.vh85
+          .text-center
+            h1(itemprop='name') Error 404!
+            h2 Page not found...
+    footer#index-footer.section.footer.vertical.vh100(role='contentinfo')
+      .wrap.text-center
+        include ./Includes/Author.jade
+      //- Nécessité d'insérer les div suivantes dans un conteneur afin ne pas faire "sauter" le script de navigation OnePage
+      .terms-use
+        .message-info
+          p En parcourant ce site vous acceptez nos conditions générales d'utilisation...
+          button.button#terms-use oui
+      .old-browers
+        .icon-spaceinvader.zoom700
+        br
+        p Old browser!
+        br
+        p This site has been developed for modern browsers. In order to benefit from its full functionality, upgrade your browser to date.
+      noscript.noscript
+        //-
+          Javascript est désactivé sur votre navigateur, activez-le afin de bénéficier de toutes les fonctionnalités du site.
+        p.message-warning Javascript is disabled on your browser, enable it to benefit from all the site's features.
+      .ajax-window-popin
+    script(src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js")
+    script window.jQuery || document.write('<script src="./Scripts/Vendors/JQuery.js"><\/script>')
+    script(src='./Public/Scripts/Main.js')
+    script(src='./Public/Scripts/Themes.js')
