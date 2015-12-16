@@ -65,8 +65,6 @@ The framework uses the syntax [Jade](http://jade-lang.com/) and [Stylus](https:/
 
 Work with the workflow by running this command with your terminal to the file in the root: `$ gulp`
 
-Connect this adress: `http://localhost:9999`
-
 ### Second stage
 
 Create an .html.jade or an .php.jade file in the folder.
