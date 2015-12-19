@@ -1,10 +1,16 @@
+mixin list(name, anchor)
+  li
+    a(href='./#{anchor}.html')
+      span.icon-arrow-down
+      | &nbsp;&nbsp;#{name}
+
 doctype html
 html.no-js(lang='en')
   head
     meta(charset='utf-8')
     title Layout Examples | Scriptura Framework
     meta(name='description' content='Layout examples for Scriptura Framework')
-    include ../Includes/Metas.jade
+    include ../Includes/Metas
   body(itemscope itemtype='//schema.org/WebPage')
     nav.main-nav(role='navigation')
       .wrap
@@ -40,57 +46,20 @@ html.no-js(lang='en')
       .wrap
         h1(itemprop='headline name').emphasized Layout Examples
         h2 Theoretical Examples
-        ul.list-striped-link.summary
-          li
-            a(href='./GridLayout.html')
-              span.icon-paperclip
-              | &nbsp;&nbsp;Fluid Grid Layout
-          li
-            a(href='./Layout01.html')
-              span.icon-paperclip
-              | &nbsp;&nbsp;Layout for a blog
-          li
-            a(href='./Layout02.html')
-              span.icon-paperclip
-              | &nbsp;&nbsp;Layout for Photoblog
-          li
-            a(href='./Layout03.html')
-              span.icon-paperclip
-              | &nbsp;&nbsp;Layout for Photoblog 2
-          li
-            a(href='./Layout04.html')
-              span.icon-paperclip
-              | &nbsp;&nbsp;Complex Layout
-          li
-            a(href='./Layout05.html')
-              span.icon-paperclip
-              | &nbsp;&nbsp;Example Nested Grid
-          li
-            a(href='./Layout06.html')
-              span.icon-paperclip
-              | &nbsp;&nbsp;Grid with offsets
-          li
-            a(href='./Layout07.html')
-              span.icon-paperclip
-              | &nbsp;&nbsp;Grid with offsets 2
-          li
-            a(href='./Layout08.html')
-              span.icon-paperclip
-              | &nbsp;&nbsp;Layout for Mobile
-          li
-            a(href='./Layout09.html')
-              span.icon-paperclip
-              | &nbsp;&nbsp;Layout for Mobile 2
+        ul.list-stripe-link.summary
+          +list('Fluid Grid Layout', 'GridLayout')
+          +list('Layout for a blog', 'Layout01')
+          +list('Layout for Photoblog', 'Layout02')
+          +list('Layout for Photoblog 2', 'Layout03')
+          +list('Example Nested Grid', 'Layout05')
+          +list('Grid with offsets', 'Layout06')
+          +list('Grid with offsets 2', 'Layout07')
+          +list('Layout for Mobile', 'Layout08')
+          +list('Layout for Mobile 2', 'Layout09')
         h2 Practical Examples
-        ul.list-striped-link.summary
-          li
-            a(href='./Article.html')
-              span.icon-paperclip
-              | &nbsp;&nbsp;Web Page Article
-          li
-            a(href='./Profil.html')
-              span.icon-paperclip
-              | &nbsp;&nbsp;Profil Page
+        ul.list-stripe-link.summary
+          +list('Web Page Article', 'Article')
+          +list('Profil Page', 'Profil')
     footer.section.footer
-      include ../Includes/Footer.jade
-    include ../Includes/Scripts.jade
+      include ../Includes/Footer
+    include ../Includes/Scripts

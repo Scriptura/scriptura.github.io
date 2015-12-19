@@ -1,16 +1,7 @@
-doctype html
-html.no-js(lang='en')
-  head
-    meta(charset='utf-8')
-    title Ajax, Style Guide | Scriptura Framework
-    meta(name='description' content='Ajax for Scriptura Framework')
-    include ../Includes/Metas.jade
-  body(itemscope itemtype='https://schema.org/WebPage')
-    include ../Includes/MainNav.jade
-    main(itemprop='mainContentOfPage').section
-      .wrap
-        h1(itemprop='headline name').emphasized Ajax
-        include ../Includes/Ajax.jade
-    footer.section.footer
-      include ../Includes/Footer.jade
-    include ../Includes/Scripts.jade
+extends ./_LayoutDemo
+
+block var
+  - name = 'Ajax'
+
+block content
+  include ../Includes/Ajax
