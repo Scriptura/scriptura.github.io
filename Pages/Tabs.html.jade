@@ -1,7 +1,8 @@
-extends ./_LayoutDemo
+extends ../PatternLayouts
 
-block var
+append var
   - name = 'Tabs'
+  - title = name + titlesuffix
 
 block content
   include ../Includes/Tabs

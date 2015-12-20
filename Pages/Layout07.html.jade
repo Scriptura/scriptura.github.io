@@ -1,119 +1,115 @@
-doctype html
-html.no-js(lang='en')
-  head
-    meta(charset='utf-8')
-    title Grid with offsets 2 | Scriptura Framework
-    meta(name='description' content='Grid with offsets 2 for Scriptura Framework')
-    include ../Includes/Metas
-  body(itemscope itemtype='https://schema.org/WebPage')
-    include ../Includes/MainNav
-    .section
-      .wrap
-        style.
-          .layout-demo [class^="m"] {
-          min-height: 4rem;
-          padding: .5rem;
-          background-color: rgba(255, 255, 255, .1);
-          }
-        h1(itemprop='headline name').emphasized Grid with offsets 2
-        p
-          em Resize your browser window to test.
-        .grid.demo-layout
+extends ../PatternLayouts
+
+append var
+  - name = 'Grid with offsets 2'
+  - title = name + titlesuffix
+  - contentlarge = true
+
+block content
+  .section
+    .wrap
+      style.
+        .layout-demo [class^="m"] {
+        min-height: 4rem;
+        padding: .5rem;
+        background-color: rgba(255, 255, 255, .1);
+        }
+      h1(itemprop='headline name').emphasized Grid with offsets 2
+      p
+        em Resize your browser window to test.
+      .grid.demo-layout
+        .grid
+          .m1
+          .m1.o10
+        .grid
+          .m1.o1
+          .m1.o3
+          .m1
+          .m1.o3
+        .grid
+          .m1.o2
+          .m1.o6
+        .grid
+          .m1.o3
+          .m1.o4
+        .grid
+          .m1.o4
+          .m1.o2
+        .grid
+          .m1.o1
+          .m1.o3
+          .m1
+          .m1.o3
+        .grid
+          .m1.o1
+          .m1.o3
+          .m1
+          .m1.o3
+        .grid
+          .m1.o4
+          .m1.o2
+        .grid
+          .m1.o3
+          .m1.o4
+        .grid
+          .m1.o2
+          .m1.o6
+        .grid
+          .m1.o1
+          .m1.o3
+          .m1
+          .m1.o3
+        .grid
+          .m1
+          .m1.o10
+  .section#index-detail-of-html-code
+    .wrap
+      h2.highlight Detail of html code
+        a.anchor(href='#index-detail-of-html-code')
+      pre
+        code(translate='no', data-code=' Jade', data-select='true', data-value='Sélection').
           .grid
-            .m1
-            .m1.o10
-          .grid
-            .m1.o1
-            .m1.o3
-            .m1
-            .m1.o3
-          .grid
-            .m1.o2
-            .m1.o6
-          .grid
-            .m1.o3
-            .m1.o4
-          .grid
-            .m1.o4
-            .m1.o2
-          .grid
-            .m1.o1
-            .m1.o3
-            .m1
-            .m1.o3
-          .grid
-            .m1.o1
-            .m1.o3
-            .m1
-            .m1.o3
-          .grid
-            .m1.o4
-            .m1.o2
-          .grid
-            .m1.o3
-            .m1.o4
-          .grid
-            .m1.o2
-            .m1.o6
-          .grid
-            .m1.o1
-            .m1.o3
-            .m1
-            .m1.o3
-          .grid
-            .m1
-            .m1.o10
-    .section#index-detail-of-html-code
-      .wrap
-        h2.highlight Detail of html code
-          a.anchor(href='#index-detail-of-html-code')
-        pre
-          code(translate='no', data-code=' Jade', data-select='true', data-value='Sélection').
             .grid
-              .grid
-                .m1
-                .m1.o10
-              .grid
-                .m1.o1
-                .m1.o3
-                .m1
-                .m1.o3
-              .grid
-                .m1.o2
-                .m1.o6
-              .grid
-                .m1.o3
-                .m1.o4
-              .grid
-                .m1.o4
-                .m1.o2
-              .grid
-                .m1.o1
-                .m1.o3
-                .m1
-                .m1.o3
-              .grid
-                .m1.o1
-                .m1.o3
-                .m1
-                .m1.o3
-              .grid
-                .m1.o4
-                .m1.o2
-              .grid
-                .m1.o3
-                .m1.o4
-              .grid
-                .m1.o2
-                .m1.o6
-              .grid
-                .m1.o1
-                .m1.o3
-                .m1
-                .m1.o3
-              .grid
-                .m1
-                .m1.o10
-    footer.section.footer
-      include ../Includes/Footer
-    include ../Includes/Scripts
+              .m1
+              .m1.o10
+            .grid
+              .m1.o1
+              .m1.o3
+              .m1
+              .m1.o3
+            .grid
+              .m1.o2
+              .m1.o6
+            .grid
+              .m1.o3
+              .m1.o4
+            .grid
+              .m1.o4
+              .m1.o2
+            .grid
+              .m1.o1
+              .m1.o3
+              .m1
+              .m1.o3
+            .grid
+              .m1.o1
+              .m1.o3
+              .m1
+              .m1.o3
+            .grid
+              .m1.o4
+              .m1.o2
+            .grid
+              .m1.o3
+              .m1.o4
+            .grid
+              .m1.o2
+              .m1.o6
+            .grid
+              .m1.o1
+              .m1.o3
+              .m1
+              .m1.o3
+            .grid
+              .m1
+              .m1.o10

@@ -163,60 +163,60 @@ html.no-js(lang='en' itemscope itemtype='https://schema.org/WebPage')
             h2 Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
             .ribbon
               span Read more...
-    footer#index-footer.section.footer
-      .wrap.text-center(itemprop='author' itemscope itemtype='https://schema.org/Person')
-        p
-          em "Scriptura" is a site run by&nbsp;:
-        p
-          a
-            abbr(title='Madame' itemprop='honorificPrefix') M
-              sup me
-            |  
-            span(itemprop='name').author
-              span(itemprop='givenName') Givenname
+    block footer
+      footer#index-footer.section.footer
+        .wrap.text-center(itemprop='author' itemscope itemtype='https://schema.org/Person')
+          p
+            em "Scriptura" is a site run by&nbsp;:
+          p
+            a
+              abbr(title='Madame' itemprop='honorificPrefix') M
+                sup me
               |  
-              span(itemprop='familyName') Familyname
-        p
-          em(itemprop='jobTitle') JobTitle
-        .icon-quill
-      //- Nécessité d'insérer les div suivantes dans un contener afin ne pas faire "sauter" le script de navigation OnePage
-      .terms-use
-        .message-info
-          p En parcourant ce site vous acceptez nos conditions générales d'utilisation...
-          button.button#terms-use oui
-      .old-browers
-        .icon-spaceinvader.zoom700
-        br
-        p Old browser!
-        br
-        p This site has been developed for modern browsers. In order to benefit from its full functionality, upgrade your browser to date.
-      noscript.noscript
-        //-
-          Javascript est désactivé sur votre navigateur, activez-le afin de bénéficier de toutes les fonctionnalités du site.
-        p.message-warning Javascript is disabled on your browser, enable it to benefit from all the site's features.
-      .ajax-window-popin
-      section#popin-user.hidden
-        h2.emphasized Connection
-        form(method='get' action='./')
-          .input-group
-            label Identifiant
-            div
+              span(itemprop='name').author
+                span(itemprop='givenName') Givenname
+                |  
+                span(itemprop='familyName') Familyname
+          p
+            em(itemprop='jobTitle') JobTitle
+          .icon-quill
+        //- Nécessité d'insérer les div suivantes dans un contener afin ne pas faire "sauter" le script de navigation OnePage
+        .terms-use
+          .message-info
+            p En parcourant ce site vous acceptez nos conditions générales d'utilisation...
+            button.button#terms-use oui
+        .old-browers
+          .icon-spaceinvader.zoom700
+          br
+          p Old browser!
+          br
+          p This site has been developed for modern browsers. In order to benefit from its full functionality, upgrade your browser to date.
+        noscript.noscript
+          //-
+            Javascript est désactivé sur votre navigateur, activez-le afin de bénéficier de toutes les fonctionnalités du site.
+          p.message-warning Javascript is disabled on your browser, enable it to benefit from all the site's features.
+        .ajax-window-popin
+        section#popin-user.hidden
+          h2.emphasized Connection
+          form(method='get' action='./')
+            .input-group
+              label Identifiant
               div
-                .icon-user
-              input(type='text' placeholder='ex : Bonemine' required)
-          .input-group
-            label Mot de passe
-            div
+                div
+                  .icon-user
+                input(type='text' placeholder='ex : Bonemine' required)
+            .input-group
+              label Mot de passe
               div
-                .icon-key-hollow
-              input(type='password' placeholder='ex : Marron glacé' required)
-          div.columns
-            input#testLogin.switch(type='checkbox' checked='')
-            label(for='testLogin') Sauvegarder les informations
-              span(data-on='yes' data-off='no')
-          div.columns
-            button.button
-              span.icon-login
-              | &nbsp;&nbsp;Se connecter
-        a(href='#')#cmd-popin
-    include ../Includes/Scripts.jade
+                div
+                  .icon-key-hollow
+                input(type='password' placeholder='ex : Marron glacé' required)
+            div.columns
+              input#testLogin.switch(type='checkbox' checked='')
+              label(for='testLogin') Sauvegarder les informations
+                span(data-on='yes' data-off='no')
+            div.columns
+              button.button
+                span.icon-login
+                | &nbsp;&nbsp;Se connecter
+          a(href='#')#cmd-popin

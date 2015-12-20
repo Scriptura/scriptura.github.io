@@ -9,21 +9,41 @@ nav.main-nav(role='navigation')
         span criptura
     ul
       li
-        a(href='/')
-          span.icon-home
-          span.sizeNav-hidden Home
+        if homepage
+          span.active
+            span.icon-home
+            span.sizeNav-hidden Home
+        else
+          a(href='/')
+            span.icon-home
+            span.sizeNav-hidden Home
       li
-        a(href='./StyleGuide.html')
-          span.icon-list2
-          | Style Guide
+        if styleguidepage
+          span.active
+            span.icon-list2
+            | Style Guide
+        else
+          a(href='/Pages/StyleGuide.html')
+            span.icon-list2
+            | Style Guide
       li
-        a(href='./Layouts.html')
-          span.icon-frame
-          | Layout Examples
+        if layoutspage
+          span.active
+            span.icon-frame
+            | Layout Examples
+        else
+          a(href='/Pages/Layouts.html')
+            span.icon-frame
+            | Layout Examples
       li
-        a(href='./Themes.html')
-          span.icon-rocket
-          | Themes
+        if themespage
+          span.active
+            span.icon-rocket
+            | Themes
+        else
+          a(href='/Pages/Themes.html')
+            span.icon-rocket
+            | Themes
       li.item-push
         a(href='//github.com/Scriptura/ScripturaFramework')
           span.icon-github

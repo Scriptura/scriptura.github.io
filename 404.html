@@ -3,40 +3,46 @@
   <head>
     <meta charset="utf-8">
     <title>Error 404: Page not found | Scriptura Framework</title>
-    <meta name="description" content="Interface for web apps">
+    <meta name="description" content="Error 404! for Scriptura Framework">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="geo.placename" content="Saint-Médard-en-Forez, Loire, France">
-    <link rel="shortcut icon" href="./favicon.ico">
-    <link rel="stylesheet" href="./Public/Styles/MainRatatouille.css" media="screen" id="stylesheet">
-    <!-- Page 404 only for Github-->
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../Public/Styles/MainRatatouille.css" media="screen" id="stylesheet">
+    <link rel="stylesheet" href="../Public/Styles/Print.css" media="print">
   </head>
-  <body itemscope itemtype="//schema.org/WebPage">
+  <body itemscope itemtype="https://schema.org/WebPage">
     <nav role="navigation" class="main-nav">
       <div class="wrap">
         <input type="checkbox" id="cmd-main-nav">
         <label for="cmd-main-nav"><span></span></label>
-        <div class="brand"><a href="./"><span class="letter">S</span><span>criptura</span></a></div>
+        <div class="brand"><a href="/"><span class="letter">S</span><span>criptura</span></a></div>
         <ul>
-          <li><a href="./"><span class="icon-home"></span><span class="sizeNav-hidden">Home</span></a></li>
-          <li><a href="./Pages/StyleGuide.html"><span class="icon-list2"></span>Style Guide</a></li>
-          <li><a href="./Pages/Layouts.html"><span class="icon-frame"></span>Layout Examples</a></li>
-          <li><a href="./Pages/Themes.html"><span class="icon-rocket"></span>Themes</a></li>
+          <li><a href="/"><span class="icon-home"></span><span class="sizeNav-hidden">Home</span></a>
+          </li>
+          <li><a href="/Pages/StyleGuide.html"><span class="icon-list2"></span>Style Guide</a>
+          </li>
+          <li><a href="/Pages/Layouts.html"><span class="icon-frame"></span>Layout Examples</a>
+          </li>
+          <li><a href="/Pages/Themes.html"><span class="icon-rocket"></span>Themes</a>
+          </li>
           <li class="item-push"><a href="//github.com/Scriptura/ScripturaFramework"><span class="icon-github"></span>Repository</a></li>
         </ul>
       </div>
     </nav>
-    <header role="banner" class="section vh100">
-      <div class="wrap ribbon-container">
-        <div class="ribbon"><a href="./">Home Page</a></div>
-        <div class="vertical vh85">
-          <div class="text-center">
-            <h1 itemprop="name">Error 404!</h1>
-            <h2>Page not found...</h2>
+    <main itemprop="mainContentOfPage" class="section">
+      <header role="banner" class="section vh100">
+        <div class="wrap ribbon-container">
+          <div class="ribbon"><a href="./">Home Page</a></div>
+          <div class="vertical vh85">
+            <div class="text-center">
+              <h1 itemprop="name">Error 404!</h1>
+              <h2>Page not found...</h2>
+            </div>
           </div>
         </div>
-      </div>
-    </header>
-    <footer id="index-footer" role="contentinfo" class="section footer vertical vh100">
+      </header>
+    </main>
+    <footer class="section footer">
       <div class="wrap text-center">
         <p><em>A framework created by</em></p>
         <p><span class="icon-quill"></span></p>
@@ -58,9 +64,9 @@
       </noscript>
       <div class="ajax-window-popin"></div>
     </footer>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="./Scripts/Vendors/JQuery.js"><\/script>')</script>
-    <script src="./Public/Scripts/Main.js"></script>
-    <script src="./Public/Scripts/Themes.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../Scripts/Vendors/JQuery.js"><\/script>')</script>
+    <script src="../Public/Scripts/Main.js"></script>
+    <script src="../Public/Scripts/Themes.js"></script>
   </body>
 </html>

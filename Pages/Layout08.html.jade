@@ -1,71 +1,67 @@
-doctype html
-html.no-js(lang='en')
-  head
-    meta(charset='utf-8')
-    title Layout for mobile | Scriptura Framework
-    meta(name='description' content='Mobil\'s layout for Scriptura Framework')
-    include ../Includes/Metas
-  body(itemscope itemtype='https://schema.org/WebPage')
-    include ../Includes/MainNav
-    .section
-      .wrap
-        h1(itemprop='headline name').emphasized Layout for Mobile
-        p
-          em Resize your browser window to test.
-        .grid.demo-layout
-          .m.sizeXS-m1
-          .m.sizeXS-m11
-          .m.sizeXS-m2
-          .m.sizeXS-m10
-          .m.sizeXS-m3
-          .m.sizeXS-m9
-          .m.sizeXS-m4
-          .m.sizeXS-m8
-          .m.sizeXS-m5
-          .m.sizeXS-m7
-          .m.sizeXS-m6
-          .m.sizeXS-m6
-          .m.sizeXS-m7
-          .m.sizeXS-m5
-          .m.sizeXS-m8
-          .m.sizeXS-m4
-          .m.sizeXS-m9
-          .m.sizeXS-m3
-          .m.sizeXS-m10
-          .m.sizeXS-m2
-          .m.sizeXS-m11
-          .m.sizeXS-m1
-          .m
-    .section#index-detail-of-html-code
-      .wrap
-        h2.highlight Detail of html code
-          a.anchor(href='#index-detail-of-html-code')
-        pre
-          code(translate='no', data-code=' Jade', data-select='true', data-value='Sélection').
-            .grid
-              .m.sizeXS-m1
-              .m.sizeXS-m11
-              .m.sizeXS-m2
-              .m.sizeXS-m10
-              .m.sizeXS-m3
-              .m.sizeXS-m9
-              .m.sizeXS-m4
-              .m.sizeXS-m8
-              .m.sizeXS-m5
-              .m.sizeXS-m7
-              .m.sizeXS-m6
-              .m.sizeXS-m6
-              .m.sizeXS-m7
-              .m.sizeXS-m5
-              .m.sizeXS-m8
-              .m.sizeXS-m4
-              .m.sizeXS-m9
-              .m.sizeXS-m3
-              .m.sizeXS-m10
-              .m.sizeXS-m2
-              .m.sizeXS-m11
-              .m.sizeXS-m1
-              .m
-    footer.section.footer
-      include ../Includes/Footer
-    include ../Includes/Scripts
+extends ../PatternLayouts
+
+append var
+  - name = 'Layout for mobile'
+  - title = name + titlesuffix
+  - contentlarge = true
+
+block content
+  .section
+    .wrap
+      h1(itemprop='headline name').emphasized Layout for Mobile
+      p
+        em Resize your browser window to test.
+      .grid.demo-layout
+        .m.sizeXS-m1
+        .m.sizeXS-m11
+        .m.sizeXS-m2
+        .m.sizeXS-m10
+        .m.sizeXS-m3
+        .m.sizeXS-m9
+        .m.sizeXS-m4
+        .m.sizeXS-m8
+        .m.sizeXS-m5
+        .m.sizeXS-m7
+        .m.sizeXS-m6
+        .m.sizeXS-m6
+        .m.sizeXS-m7
+        .m.sizeXS-m5
+        .m.sizeXS-m8
+        .m.sizeXS-m4
+        .m.sizeXS-m9
+        .m.sizeXS-m3
+        .m.sizeXS-m10
+        .m.sizeXS-m2
+        .m.sizeXS-m11
+        .m.sizeXS-m1
+        .m
+  .section#index-detail-of-html-code
+    .wrap
+      h2.highlight Detail of html code
+        a.anchor(href='#index-detail-of-html-code')
+      pre
+        code(translate='no', data-code=' Jade', data-select='true', data-value='Sélection').
+          .grid
+            .m.sizeXS-m1
+            .m.sizeXS-m11
+            .m.sizeXS-m2
+            .m.sizeXS-m10
+            .m.sizeXS-m3
+            .m.sizeXS-m9
+            .m.sizeXS-m4
+            .m.sizeXS-m8
+            .m.sizeXS-m5
+            .m.sizeXS-m7
+            .m.sizeXS-m6
+            .m.sizeXS-m6
+            .m.sizeXS-m7
+            .m.sizeXS-m5
+            .m.sizeXS-m8
+            .m.sizeXS-m4
+            .m.sizeXS-m9
+            .m.sizeXS-m3
+            .m.sizeXS-m10
+            .m.sizeXS-m2
+            .m.sizeXS-m11
+            .m.sizeXS-m1
+            .m

@@ -1,18 +1,20 @@
-doctype html
-html.no-js(lang='en')
-  head
-    meta(charset='utf-8')
-    title Example Nested Grid | Scriptura Framework
-    meta(name='description' content='Example nested grid for Scriptura Framework')
-    include ../Includes/Metas
-  body(itemscope itemtype='https://schema.org/WebPage')
-    include ../Includes/MainNav
-    .section
-      .wrap
-        h1(itemprop='headline name').emphasized Example Nested Grid
-        p
-          em Resize your browser window to test.
-        .grid.demo-layout
+extends ../PatternLayouts
+
+append var
+  - name = 'Example Nested Grid'
+  - title = name + titlesuffix
+  - contentlarge = true
+
+block content
+  .section
+    .wrap
+      h1(itemprop='headline name').emphasized Example Nested Grid
+      p
+        em Resize your browser window to test.
+      .grid.demo-layout
+        .m6
+        .grid6
+          .m12
           .m6
           .grid6
             .m12
@@ -20,17 +22,17 @@ html.no-js(lang='en')
             .grid6
               .m12
               .m6
-              .grid6
-                .m12
-                .m6
-                .m6
-    .section#index-detail-of-html-code
-      .wrap
-        h2.highlight Detail of html code
-          a.anchor(href='#index-detail-of-html-code')
-        pre
-          code(translate='no', data-code=' Jade', data-select='true', data-value='Sélection').
-            .grid
+              .m6
+  .section#index-detail-of-html-code
+    .wrap
+      h2.highlight Detail of html code
+        a.anchor(href='#index-detail-of-html-code')
+      pre
+        code(translate='no', data-code=' Jade', data-select='true', data-value='Sélection').
+          .grid
+            .m6
+            .grid6
+              .m12
               .m6
               .grid6
                 .m12
@@ -38,10 +40,4 @@ html.no-js(lang='en')
                 .grid6
                   .m12
                   .m6
-                  .grid6
-                    .m12
-                    .m6
-                    .m6
-    footer.section.footer
-      include ../Includes/Footer
-    include ../Includes/Scripts
+                  .m6

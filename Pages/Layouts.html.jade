@@ -1,65 +1,29 @@
+extends ../PatternLayouts
+
+append var
+  - name = 'Layout Examples'
+  - layoutspage = true
+  - title = name + titlesuffix
+
 mixin list(name, anchor)
   li
     a(href='./#{anchor}.html')
       span.icon-arrow-down
       | &nbsp;&nbsp;#{name}
 
-doctype html
-html.no-js(lang='en')
-  head
-    meta(charset='utf-8')
-    title Layout Examples | Scriptura Framework
-    meta(name='description' content='Layout examples for Scriptura Framework')
-    include ../Includes/Metas
-  body(itemscope itemtype='//schema.org/WebPage')
-    nav.main-nav(role='navigation')
-      .wrap
-        input(type='checkbox')#cmd-main-nav
-        label(for='cmd-main-nav')
-          span
-        .brand
-          a(href='/')
-            span.letter S
-            span criptura
-        ul
-          li
-            a(href='/')
-              span.icon-home
-              span.sizeNav-hidden Home
-          li
-            a(href='./StyleGuide.html')
-              span.icon-list2
-              | Style Guide
-          li
-            span.active
-              span.icon-frame
-              | Layout Examples
-          li
-            a(href='./Themes.html')
-              span.icon-rocket
-              | Themes
-          li.item-push
-            a(href='//github.com/Scriptura/ScripturaFramework')
-              span.icon-github
-              | Repository
-    main.section(itemprop='mainContentOfPage')
-      .wrap
-        h1(itemprop='headline name').emphasized Layout Examples
-        h2 Theoretical Examples
-        ul.list-stripe-link.summary
-          +list('Fluid Grid Layout', 'GridLayout')
-          +list('Layout for a blog', 'Layout01')
-          +list('Layout for Photoblog', 'Layout02')
-          +list('Layout for Photoblog 2', 'Layout03')
-          +list('Example Nested Grid', 'Layout05')
-          +list('Grid with offsets', 'Layout06')
-          +list('Grid with offsets 2', 'Layout07')
-          +list('Layout for Mobile', 'Layout08')
-          +list('Layout for Mobile 2', 'Layout09')
-        h2 Practical Examples
-        ul.list-stripe-link.summary
-          +list('Web Page Article', 'Article')
-          +list('Profil Page', 'Profil')
-    footer.section.footer
-      include ../Includes/Footer
-    include ../Includes/Scripts
+block content
+  h2 Theoretical Examples
+  ul.list-stripe-link.summary
+    +list('Fluid Grid Layout', 'GridLayout')
+    +list('Layout for a blog', 'Layout01')
+    +list('Layout for Photoblog', 'Layout02')
+    +list('Layout for Photoblog 2', 'Layout03')
+    +list('Example Nested Grid', 'Layout05')
+    +list('Grid with offsets', 'Layout06')
+    +list('Grid with offsets 2', 'Layout07')
+    +list('Layout for Mobile', 'Layout08')
+    +list('Layout for Mobile 2', 'Layout09')
+  h2 Practical Examples
+  ul.list-stripe-link.summary
+    +list('Web Page Article', 'Article')
+    +list('Profil Page', 'Profil')

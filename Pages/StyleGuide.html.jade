@@ -1,3 +1,11 @@
+extends ../PatternLayouts
+
+append var
+  - name = 'Style Guide'
+  - title = name
+  - styleguidepage = true
+  - contentlarge = true
+
 mixin list(name, anchor)
   li
     a(href='#index-#{anchor}')
@@ -13,133 +21,93 @@ mixin section(name, anchor)
         a.anchor(href='#index-#{anchor}')
       block
 
-doctype html
-html.no-js(lang='en')
-  head
-    meta(charset='utf-8')
-    title Style Guide | Scriptura Framework
-    meta(name='description' content='Style Guide for Scriptura Framework')
-    include ../Includes/Metas
-  body(itemscope itemtype='//schema.org/WebPage')
-    nav.main-nav(role='navigation')
-      .wrap
-        input(type='checkbox')#cmd-main-nav
-        label(for='cmd-main-nav')
-          span
-        .brand
-          a(href='/')
-            span.letter S
-            span criptura
-        ul
-          li
-            a(href='/')
-              span.icon-home
-              span.sizeNav-hidden Home
-          li
-            span.active
-              span.icon-list2
-              | Style Guide
-          li
-            a(href='./Layouts.html')
-              span.icon-frame
-              | Layout Examples
-          li
-            a(href='./Themes.html')
-              span.icon-rocket
-              | Themes
-          li.item-push
-            a(href='//github.com/Scriptura/Scriptura')
-              span.icon-github
-              | Repository
-    header.section(role='banner')
-      .wrap              
-        h1(itemprop='headline name').emphasized Style Guide
-        p.touch-hidden
-          em Keyboard navigation: press 
-            code s
-            | or 
-            code z
-            |  to switch sections.
-        ul.list-stripe-link.summary
-          +list('Typography', 'typography')
-          +list('Messages Box', 'messages-box')
-          +list('Code Blocks', 'code-blocks')
-          +list('Lists', 'lists')
-          +list('Tables', 'tables')
-          +list('Images', 'images')
-          +list('Players', 'players')
-          +list('Inputs', 'inputs')
-          +list('Checkbox & Radio', 'checkbox-radio')
-          +list('Ranges', 'ranges')
-          +list('Buttons', 'buttons')
-          +list('Ajax', 'ajax')
-          +list('Tabs', 'tabs')
-          +list('Accordions', 'accordions')
-          +list('Progress', 'progress')
-          +list('Loaders', 'loaders')
-          +list('Ribbons', 'ribbons')
-          +list('Grid Layout', 'grid-layout')
-          +list('Columns', 'columns')
-          +list('Dimensions', 'dimensions')
-          +list('Zoom', 'zoom')
-          +list('Ratios', 'ratios')
-          +list('Langages', 'langages')
-          +list('Glyph Icons', 'glyph-icons')
-          +list('Maps', 'maps')
-    +section('Typography', 'typography')(link='./Typography.html')
-      include ../Includes/Typography
-    +section('Messages Box', 'messages-box')(link='./MessagesBox.html')
-      include ../Includes/MessagesBox
-    +section('Code Blocks', 'code-blocks')(link='./CodeBlocks.html')
-      include ../Includes/CodeBlocks
-    +section('Lists', 'lists')(link='./Lists.html')
-      include ../Includes/Lists
-    +section('Tables', 'tables')(link='./Tables.html')
-      include ../Includes/Tables
-    +section('Images', 'images')(link='./Images.html')
-      include ../Includes/Images
-    +section('Players', 'players')(link='./Players.html')
-      include ../Includes/Players
-    +section('Inputs', 'inputs')(link='./Inputs.html')
-      include ../Includes/Inputs
-    +section('Checkbox & Radio', 'checkbox-radio')(link='./CheckboxRadio.html')
-      include ../Includes/CheckboxRadio
-    +section('Ranges', 'ranges')(link='./Ranges.html')
-      include ../Includes/Ranges
-    +section('Buttons', 'buttons')(link='./Buttons.html')
-      include ../Includes/Buttons
-    +section('Ajax', 'ajax')(link='./Ajax.html')
-      include ../Includes/Ajax
-    +section('Tabs', 'tabs')(link='./Tabs.html')
-      include ../Includes/Tabs
-    +section('Accordions', 'accordions')(link='./Accordions.html')
-      include ../Includes/Accordions
-    +section('Progress', 'progress')(link='./Progress.html')
-      include ../Includes/Progress
-    +section('Loaders', 'loaders')(link='./Loaders.html')
-      include ../Includes/Loaders
-    +section('Ribbons', 'ribbons')(link='./Ribbons.html')
-      include ../Includes/Ribbons
-    +section('Grid Layout', 'grid-layout')(link='./GridLayout.html')
-      include ../Includes/GridLayout
-      p
-        a(href='./Layouts.html')
-          span.icon-paperclip
-          |  Layout Examples
-    +section('Columns', 'columns')(link='./Columns.html')
-      include ../Includes/Columns
-    +section('Dimensions', 'dimensions')(link='./Dimensions.html')
-      include ../Includes/Dimensions
-    +section('Zoom', 'zoom')(link='./Zoom.html')
-      include ../Includes/Zoom
-    +section('Ratios', 'ratios')(link='./Ratios.html')
-      include ../Includes/Ratios
-    +section('Langages', 'langages')(link='./Langages.html')
-      include ../Includes/Langages
-    +section('Glyph Icons', 'glyph-icons')(link='./GlyphIcons.html')
-      include ../Includes/GlyphIcons
-    +section('Maps', 'maps')(link='./Maps.html')
-      include ../Includes/Maps
-    footer.section.footer
-      include ../Includes/Footer
-    include ../Includes/Scripts
+block content
+  header.section
+    .wrap              
+      h1(itemprop='headline name').emphasized Style Guide
+      p.touch-hidden
+        em Keyboard navigation: press 
+          code s
+          | or 
+          code z
+          |  to switch sections.
+      ul.list-stripe-link.summary
+        +list('Typography', 'typography')
+        +list('Messages Box', 'messages-box')
+        +list('Code Blocks', 'code-blocks')
+        +list('Lists', 'lists')
+        +list('Tables', 'tables')
+        +list('Images', 'images')
+        +list('Players', 'players')
+        +list('Inputs', 'inputs')
+        +list('Checkbox & Radio', 'checkbox-radio')
+        +list('Ranges', 'ranges')
+        +list('Buttons', 'buttons')
+        +list('Ajax', 'ajax')
+        +list('Tabs', 'tabs')
+        +list('Accordions', 'accordions')
+        +list('Progress', 'progress')
+        +list('Loaders', 'loaders')
+        +list('Ribbons', 'ribbons')
+        +list('Grid Layout', 'grid-layout')
+        +list('Columns', 'columns')
+        +list('Dimensions', 'dimensions')
+        +list('Zoom', 'zoom')
+        +list('Ratios', 'ratios')
+        +list('Langages', 'langages')
+        +list('Glyph Icons', 'glyph-icons')
+        +list('Maps', 'maps')
+  +section('Typography', 'typography')(link='./Typography.html')
+    include ../Includes/Typography
+  +section('Messages Box', 'messages-box')(link='./MessagesBox.html')
+    include ../Includes/MessagesBox
+  +section('Code Blocks', 'code-blocks')(link='./CodeBlocks.html')
+    include ../Includes/CodeBlocks
+  +section('Lists', 'lists')(link='./Lists.html')
+    include ../Includes/Lists
+  +section('Tables', 'tables')(link='./Tables.html')
+    include ../Includes/Tables
+  +section('Images', 'images')(link='./Images.html')
+    include ../Includes/Images
+  +section('Players', 'players')(link='./Players.html')
+    include ../Includes/Players
+  +section('Inputs', 'inputs')(link='./Inputs.html')
+    include ../Includes/Inputs
+  +section('Checkbox & Radio', 'checkbox-radio')(link='./CheckboxRadio.html')
+    include ../Includes/CheckboxRadio
+  +section('Ranges', 'ranges')(link='./Ranges.html')
+    include ../Includes/Ranges
+  +section('Buttons', 'buttons')(link='./Buttons.html')
+    include ../Includes/Buttons
+  +section('Ajax', 'ajax')(link='./Ajax.html')
+    include ../Includes/Ajax
+  +section('Tabs', 'tabs')(link='./Tabs.html')
+    include ../Includes/Tabs
+  +section('Accordions', 'accordions')(link='./Accordions.html')
+    include ../Includes/Accordions
+  +section('Progress', 'progress')(link='./Progress.html')
+    include ../Includes/Progress
+  +section('Loaders', 'loaders')(link='./Loaders.html')
+    include ../Includes/Loaders
+  +section('Ribbons', 'ribbons')(link='./Ribbons.html')
+    include ../Includes/Ribbons
+  +section('Grid Layout', 'grid-layout')(link='./GridLayout.html')
+    include ../Includes/GridLayout
+    p
+      a(href='./Layouts.html')
+        span.icon-paperclip
+        |  Layout Examples
+  +section('Columns', 'columns')(link='./Columns.html')
+    include ../Includes/Columns
+  +section('Dimensions', 'dimensions')(link='./Dimensions.html')
+    include ../Includes/Dimensions
+  +section('Zoom', 'zoom')(link='./Zoom.html')
+    include ../Includes/Zoom
+  +section('Ratios', 'ratios')(link='./Ratios.html')
+    include ../Includes/Ratios
+  +section('Langages', 'langages')(link='./Langages.html')
+    include ../Includes/Langages
+  +section('Glyph Icons', 'glyph-icons')(link='./GlyphIcons.html')
+    include ../Includes/GlyphIcons
+  +section('Maps', 'maps')(link='./Maps.html')
+    include ../Includes/Maps

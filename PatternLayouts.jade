@@ -1,0 +1,33 @@
+block var
+  //- Default values
+  - name = '[Name]'
+  - title = '[Title]'
+  - titlesuffix = ', Style Guide'
+
+doctype html
+html.no-js(lang='en')
+  head
+    meta(charset='utf-8')
+    if homepage
+      title Scriptura, Interface for web apps
+    else
+      title #{title} | Scriptura Framework
+    meta(name='description' content='#{name} for Scriptura Framework')
+    include Includes/Metas
+  body(itemscope itemtype='https://schema.org/WebPage')
+    block mainnav
+      include Includes/MainNav
+    if contentlarge
+      main(itemprop='mainContentOfPage').section
+        block content
+          //- Default
+          p [Content]
+    else
+      main(itemprop='mainContentOfPage').section
+        .wrap
+          h1(itemprop='headline name').emphasized #{name}
+          block content
+            //- Default
+            p [Content]
+    block footer
+      include Includes/Footer
