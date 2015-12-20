@@ -1,27 +1,31 @@
 <!DOCTYPE html>
-<html lang="en" itemscope itemtype="https://schema.org/WebPage" class="no-js">
+<html lang="en" class="no-js">
   <head>
     <meta charset="utf-8">
     <title>Profil | Scriptura Framework</title>
-    <meta name="description" content="Profil page for Scriptura Framework">
+    <meta name="description" content="Profil for Scriptura Framework">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="geo.placename" content="Saint-Médard-en-Forez, Loire, France">
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../Public/Styles/MainRatatouille.css" media="screen" id="stylesheet">
     <link rel="stylesheet" href="../Public/Styles/Print.css" media="print">
   </head>
-  <body id="index">
-    <nav class="main-nav">
+  <body itemscope itemtype="https://schema.org/WebPage">
+    <nav role="navigation" class="main-nav">
       <div class="wrap">
         <input type="checkbox" id="cmd-main-nav">
         <label for="cmd-main-nav"><span></span></label>
-        <div class="brand"><a href="/">Scriptura</a></div>
+        <div class="brand"><a href="/"><span class="letter">S</span><span>criptura</span></a></div>
         <ul>
-          <li><a href="/"><span class="icon-home"></span><span class="sizeNav-hidden">Home</span></a></li>
-          <li><a href="/Pages/Layouts.html"><span class="icon-list2"></span>Summary</a></li>
-          <li><a href="/Pages/Layouts.html"><span class="icon-frame"></span>About</a></li>
-          <li><a href="/Pages/Layouts.html"><span class="icon-quill"></span>Contact</a></li>
-          <li class="item-push"><a href="#" id="user"><span class="icon-user"></span>Connection</a></li>
+          <li><a href="/"><span class="icon-home"></span><span class="sizeNav-hidden">Home</span></a>
+          </li>
+          <li><a href="/Pages/StyleGuide.html"><span class="icon-list2"></span>Style Guide</a>
+          </li>
+          <li><a href="/Pages/Layouts.html"><span class="icon-frame"></span>Layout Examples</a>
+          </li>
+          <li><a href="/Pages/Themes.html"><span class="icon-rocket"></span>Themes</a>
+          </li>
+          <li class="item-push"><a href="//github.com/Scriptura/ScripturaFramework"><span class="icon-github"></span>Repository</a></li>
         </ul>
       </div>
     </nav>
@@ -34,7 +38,7 @@
         </ul>
       </div>
     </nav>
-    <main itemprop="mainContentOfPage" class="section profil">
+    <main itemprop="mainContentOfPage">
       <div class="wrap">
         <div itemscope itemtype="http://schema.org/Person">
           <header class="grid">
@@ -65,19 +69,18 @@
             </div>
             <div class="m6">
               <div itemprop="address" itemscope="" itemtype="http://schema.org/PostalAddress" class="message-location">
-                <p><span itemprop="streetAddress">21 street...</span>,<br><span itemprop="postalCode">42100</span>, <span itemprop="addressLocality">Saint Etienne</span>,<br><span itemprop="addressRegion">Rhône-Alpes</span>, <span itemprop="addressCountry">France</span></p>
+                <p><span itemprop="streetAddress">21 street...</span>,<br><span itemprop="postalCode">42100</span>, <span itemprop="addressLocality">Saint Etienne</span>,<br><span itemprop="addressRegion">Rhône-Alpes</span>, <span itemprop="addressCountry">Franceock footer</span></p>
               </div>
             </div>
           </header>
         </div>
       </div>
     </main>
-    <footer id="index-footer" class="section footer">
-      <div itemprop="author" itemscope itemtype="https://schema.org/Person" class="wrap text-center">
-        <p><em>"Scriptura" is a site run by&nbsp;:</em></p>
-        <p><a><abbr title="Madame" itemprop="honorificPrefix">M<sup>me</sup></abbr> <span itemprop="name" class="author"><span itemprop="givenName">Givenname</span> <span itemprop="familyName">Familyname</span></span></a></p>
-        <p><em itemprop="jobTitle">JobTitle</em></p>
-        <div class="icon-quill"></div>
+    <footer class="section footer">
+      <div class="wrap text-center">
+        <p><em>A framework created by</em></p>
+        <p><span class="icon-quill"></span></p>
+        <p><a href="//github.com/Scriptura" itemprop="author" itemscope itemtype="https://schema.org/Person" class="author"><span itemprop="name"><span itemprop="givenName">Olivier</span> <span itemprop="familyName">Chavarin</span></span></a></p>
       </div>
       <div class="terms-use">
         <div class="message-info">
@@ -94,36 +97,6 @@
         <p class="message-warning">Javascript is disabled on your browser, enable it to benefit from all the site's features.</p>
       </noscript>
       <div class="ajax-window-popin"></div>
-      <section id="popin-user" class="hidden">
-        <h2 class="emphasized">Connection</h2>
-        <form method="get" action="./">
-          <div class="input-group">
-            <label>Identifiant</label>
-            <div>
-              <div>
-                <div class="icon-user"></div>
-              </div>
-              <input type="text" placeholder="ex : Bonemine" required>
-            </div>
-          </div>
-          <div class="input-group">
-            <label>Mot de passe</label>
-            <div>
-              <div>
-                <div class="icon-key-hollow"></div>
-              </div>
-              <input type="password" placeholder="ex : Marron glacé" required>
-            </div>
-          </div>
-          <div class="columns">
-            <input id="testLogin" type="checkbox" checked="" class="switch">
-            <label for="testLogin">Sauvegarder les informations<span data-on="yes" data-off="no"></span></label>
-          </div>
-          <div class="columns">
-            <button class="button"><span class="icon-login"></span>&nbsp;&nbsp;Se connecter</button>
-          </div>
-        </form><a href="#" id="cmd-popin"></a>
-      </section>
     </footer>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="../Scripts/Vendors/JQuery.js"><\/script>')</script>

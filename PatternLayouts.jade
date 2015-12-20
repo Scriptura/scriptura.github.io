@@ -3,6 +3,7 @@ block var
   - name = '[Name]'
   - title = '[Title]'
   - titlesuffix = ', Style Guide'
+  - contentlarge = false
 
 doctype html
 html.no-js(lang='en')
@@ -19,8 +20,9 @@ html.no-js(lang='en')
   body(itemscope itemtype='https://schema.org/WebPage')
     block mainnav
       include Includes/MainNav
+    block breadcrumb
     if contentlarge
-      main(itemprop='mainContentOfPage').section
+      main(itemprop='mainContentOfPage')
         block content
           //- Default
           p [Content]
@@ -31,5 +33,6 @@ html.no-js(lang='en')
           block content
             //- Default
             p [Content]
+    block aside
     block footer
       include Includes/Footer
