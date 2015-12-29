@@ -1,4 +1,3 @@
-
 <h2 class="h3">@todo Problem Ajax</h2>
 <div class="columns">
   <div>

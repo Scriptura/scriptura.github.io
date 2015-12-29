@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="en" class="no-js">
+<!DOCTYPE html><html lang="en" class="no-js">
   <head>
     <meta charset="utf-8">
     <title>Style Guide | Scriptura Framework</title>
@@ -1052,11 +1051,15 @@ sup {
           <h2 class="highlight">Ajax<a href="#index-ajax" class="anchor"></a></h2>
           <p><code>ajax.button</code></p>
           <div class="button-group">
-            <button id="ajax-test" class="button ajax-global"><span class="icon-list"></span> Ajax Test</button>
-            <button id="ajax-test2" class="button ajax-popin"><span class="icon-enlarge"></span> Ajax Test + Popin</button>
-            <button id="ajax-todo-ajax" class="button ajax-global"><span class="icon-warning"></span> @todo Problem Ajax</button>
+            <button data-ajax="global" data-url="Test" class="button"><span class="icon-puzzle"></span> Ajax Global</button>
+            <button data-ajax="affected" data-url="Test" class="button"><span class="icon-ampersand"></span> Ajax Affected</button>
+            <button data-ajax="popin" data-url="Test" class="button"><span class="icon-enlarge"></span> Ajax Popin</button>
           </div>
+          <!-- Fenêtre Ajax globale-->
           <div class="ajax-window"></div>
+          <!-- Fenêtre Ajax dédiée pour 'Test'-->
+          <div class="ajax-window-Test"></div>
+          <div class="ajax-window-popin"></div>
         </div>
       </section>
       <section id="index-tabs" class="section">
@@ -2791,7 +2794,6 @@ sup {
       <noscript class="noscript">
         <p class="message-warning">Javascript is disabled on your browser, enable it to benefit from all the site's features.</p>
       </noscript>
-      <div class="ajax-window-popin"></div>
     </footer>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="../Scripts/Vendors/JQuery.js"><\/script>')</script>

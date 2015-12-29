@@ -1,4 +1,3 @@
-
 <aside id="index-comments" class="aside">
   <div class="wrap">
     <h2 class="emphasized">Comments<a href="#index-comments" class="anchor"></a></h2>

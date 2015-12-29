@@ -2,7 +2,7 @@
 // @-name         Main Js
 // @-description  Scripts du framework
 // @-version      0.0.0
-// @-lastmodified 2015-03-09 16:52:32
+// @-lastmodified 2015-12-24 09:07:00
 // @-author       Olivier Chavarin
 // @-link         https://github.com/Scriptura/Scriptura
 // @-license      ISC
@@ -608,66 +608,41 @@ jQuery('pre code').each(function() { // Création du bouton de commande
 // @section Ajax
 // -----------------------------------------------------------------------------
 
-// L'id de l'élément ajax doit correspondre au nom du fichier placé dans le dossier 'ajax'. Le script récupère le fichier et l'affiche dans une fenêtre '.ajax-window-*'.
+// @documentation :
+// - L'attribut 'data-ajax' détermine la prise en charge du fichier par le script lors d'un click.
+// - L'attribut 'data-url' de l'élément ajax doit correspondre au nom du fichier placé dans le dossier 'ajax'. Le script récupère le fichier et l'affiche dans une fenêtre '.ajax-window-*'.
 
-// Affichage dans une div spécifique
-jQuery(document).on('click', '.ajax', function() {
-	var param = $(this).attr('id');
-	// Ouverture dans une fenêtre ajax dédiée :
-	$('.ajax-window-' + param).load('../Ajax/' + param + '.php');
+jQuery(document).on('click', '[data-ajax]', function() {
+	type = $(this).data('ajax');
+	url = $(this).data('url');
+	console.log(type);
+	console.log(url);
+	if (type === 'global') {
+		$('.ajax-window').load('../Ajax/' + url + '.php');
+	} else if (type === 'popin') {
+		$('body').css('overflow', 'hidden'); // Pas de scroll sur la page si popin ouverte
+		$('.ajax-window-popin').load('../Ajax/' + url + '.php', function() {
+			$(this)
+				.append('<a href="" id="cmd-popin"/>')
+				.wrapInner('<section id="popin" class="popin"/>');
+		});
+	} else {
+		$('.ajax-window-' + url).load('../Ajax/' + url + '.php');
+	}
 });
 
-// Affichage dans une div généraliste
-jQuery(document).on('click', '.ajax-global', function() {
-	var param = $(this).attr('id');
-	// Ouverture dans une fenêtre ajax généraliste :
-	$('.ajax-window').load('../Ajax/' + param + '.php');
-});
 
-jQuery(document).on('click', '.ajax-popin', function() {
-	$('body').css('overflow', 'hidden'); // @note Pas de scroll sur la page si photo en focus
-	// Ouverture dans une fenêtre ajax globale pour toutes les popins
-	$('.ajax-window-popin').load('../Ajax/' + $(this).attr('id') + '.php', function() {
-		$(this)
-			.append('<a href="" id="cmd-popin"/>')
-			.wrapInner('<section id="popin" class="popin"/>');
-	});
-});
+// -----------------------------------------------------------------------------
+// @section Auto Scroll
+// -----------------------------------------------------------------------------
 
-// Scrool vers la fenêtre ajax qui vient d'être appelée
-jQuery(document).on('click', '#ajax-comments', function() {
+// Scrool vers un élément ajax qui vient d'être appelé
+jQuery(document).on('click', '#comments', function() {
 		setTimeout(function() {
 			$('html, body').animate({
 				scrollTop: $("#index-comments").offset().top
 			}, 600);
 	}, 300);
-});
-
-
-// -----------------------------------------------------------------------------
-// @section Maintenance
-// -----------------------------------------------------------------------------
-
-// @subsection Styles de maintenance
-// -----------------------------------------------------------------------------
-
-jQuery('.maintenance1').click(function(e){
-	$('head').append(
-		$(document.createElement("link")).attr({rel:"stylesheet", type:"text/css", id:"maintenance1", href: './Styles/Public/maintenance1.css'})
-	);
-	e.preventDefault();
-});
-
-jQuery('.maintenance2').click(function(e){
-	$('head').append(
-		$(document.createElement("link")).attr({rel:"stylesheet", type:"text/css", id:"maintenance2", href: './Styles/Public//maintenance2.css'})
-	);
-	e.preventDefault();
-});
-
-jQuery('.maintenance-reset').click(function(e){
-	$('#maintenance1, #maintenance2').remove();
-	e.preventDefault();
 });
 
 
@@ -685,7 +660,7 @@ jQuery(document).on('click', '#terms-use', function() {
 	$('.terms-use').remove();
 });
 
-if (localStorage.getItem('termsuse') == 'true') {
+if (localStorage.getItem('termsuse') === 'true') {
 	$('.terms-use').remove();
 }
 
