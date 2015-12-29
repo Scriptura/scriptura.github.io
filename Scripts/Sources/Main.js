@@ -405,7 +405,8 @@ jQuery(document).on('click', '#cmd-popin', function(e) { // Supprimer ou cacher 
 	popin
 		.fadeOut(300);
 		setTimeout(function() {
-			popin.remove();
+			$('.ajax-window-popin').remove(); // Suppression de la fenêtre Ajax et donc de la popin qu'elle contient
+			// popin.remove();
 		},300);
 	popinUser
 		.fadeOut(300);
@@ -608,25 +609,32 @@ jQuery('pre code').each(function() { // Création du bouton de commande
 // @section Ajax
 // -----------------------------------------------------------------------------
 
+// @note Renseignement du script via des attributs data-* plutôt que des IDs : solution bien plus souple, permettant d'utliser les même fichiers cibles sur une même page web, à divers endroits de cette page.
+
 // @documentation :
-// - L'attribut 'data-ajax' détermine la prise en charge du fichier par le script lors d'un click.
+// - L'attribut 'data-display' détermine la prise en charge du contenu Ajax par le script
+//      [1] 'global' : ouverture du contenu Ajax dans une fenêtre globale
+//      [2] 'popin' : ouverture dans une popin
+//      [3] 'affected' : ouverture dans une fenêtre dédiée
 // - L'attribut 'data-url' de l'élément ajax doit correspondre au nom du fichier placé dans le dossier 'ajax'. Le script récupère le fichier et l'affiche dans une fenêtre '.ajax-window-*'.
 
-jQuery(document).on('click', '[data-ajax]', function() {
-	type = $(this).data('ajax');
-	url = $(this).data('url');
-	console.log(type);
-	console.log(url);
-	if (type === 'global') {
+jQuery(document).on('click', '[data-display][data-url]', function() {
+	obj = $(this);
+	type = obj.data('display');
+	url = obj.data('url');
+	if (type === 'global') { // [1]
+		$('.ajax-window').remove(); // Si déjà une fenêtre créée précédement
+		$('<div class="ajax-window"/>').appendTo('main'); // Création d'une fenêtre Ajax
 		$('.ajax-window').load('../Ajax/' + url + '.php');
-	} else if (type === 'popin') {
+	} else if (type === 'popin') { // [2]
 		$('body').css('overflow', 'hidden'); // Pas de scroll sur la page si popin ouverte
+		$('<div class="ajax-window-popin"/>').appendTo('body'); // Création d'une fenêtre Ajax
 		$('.ajax-window-popin').load('../Ajax/' + url + '.php', function() {
 			$(this)
 				.append('<a href="" id="cmd-popin"/>')
 				.wrapInner('<section id="popin" class="popin"/>');
 		});
-	} else {
+	} else { // [3]
 		$('.ajax-window-' + url).load('../Ajax/' + url + '.php');
 	}
 });
