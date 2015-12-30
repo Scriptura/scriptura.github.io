@@ -1,14 +1,14 @@
 p
   code ajax.button
 .button-group
-  button(data-display='global' data-url='Test').button
+  button(data-display='global' data-url='/Ajax/Test').button
     span.icon-puzzle
     |  Ajax Global
-  button(data-display='affected' data-url='Test').button
+  button(data-display='affected' data-url='/Ajax/Test').button
     span.icon-ampersand
     |  Ajax Affected
-  button(data-display='popin' data-url='Test').button
+  button(data-display='popin' data-url='/Ajax/Test').button
     span.icon-enlarge
     |  Ajax Popin
-//- Fenêtre Ajax dédiée pour 'Test'
-.ajax-window-Test
+//- Fenêtre Ajax dédiée pour le paramètre 'affected' de data-display :
+.ajax-window-affected
