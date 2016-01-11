@@ -16,7 +16,7 @@
         <label for="cmd-main-nav"><span></span></label>
         <div class="brand"><a href="/">Scriptura</a></div>
         <ul>
-          <li><a href="/"><span class="icon-home"></span><span class="sizeNav-hidden">Home</span></a>
+          <li><a href="/"><span class="icon-home only-icon"></span><span class="sizeNav-hidden">Home</span></a>
           </li>
           <li><span class="active"><span class="icon-list2"></span>Style Guide</span>
           </li>
@@ -2723,50 +2723,9 @@ sup {
         <div class="wrap box ribbon-container sizeXS-ribbon-container-bottom">
           <div class="ribbon"><a href="./Maps.html">See page</a></div>
           <h2 class="highlight">Maps<a href="#index-maps" class="anchor"></a></h2>
-          <script src="https://maps.googleapis.com/maps/api/js"></script>
-          <script>
-            var carte = new google.maps.LatLng(45.592305, 4.369958);
-            var tMarker = [
-            { lat : 45.592305,
-            lon : 4.369958,
-            title : 'Marker 1'
-            },
-            ];
-            var map;
-            function initialize() {
-            var mapOptions = {
-            scrollwheel: false,
-            zoom: 12,
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            center: carte
-            };
-            map = new google.maps.Map(document.getElementById('google-maps'),
-            mapOptions);
-            function createMarqueur( tab, map){
-            var oLatLng, oMarker, data;
-            var i, nb = tab.length;
-            for( i = 0; i < nb; i++){
-            data = tab[i];
-            oLatLng = new google.maps.LatLng( data.lat, data.lon);
-            oMarker = new google.maps.Marker({
-            position : oLatLng,
-            // animation: google.maps.Animation.BOUNCE,
-            map : map,
-            title : data.title
-            });
-            }
-            }
-            // creating markers
-            createMarqueur( tMarker, map);
-            marker = new google.maps.Marker({
-            map: map,
-            draggable: true,
-            animation: google.maps.Animation.BOUNCE
-            });
-            }
-            google.maps.event.addDomListener(window, 'load', initialize);
-          </script>
-          <div id="google-maps" class="map ratio-1-2 sizeXS-ratio"></div><br>
+          <script src="../Public/Scripts/Maps.js"></script>
+          <script src="https://maps.googleapis.com/maps/api/js?callback=initMap&amp;sensor=false" async defer></script>
+          <div id="map" class="map ratio-1-2 sizeXS-ratio"></div>
         </div>
       </section>
     </main>
