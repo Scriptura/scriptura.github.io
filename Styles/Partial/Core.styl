@@ -2887,30 +2887,38 @@ if $bundleMainNav
   .main-nav + *
     padding-top 3.5em !important // @note Décalage sur le conteneur suivant afin de laisser une place pour le menu de navigation en position absolute.
 
-  // @subsection Main Nav Avatar
+  // @subsection Login Avatar
   // -----------------------------------------------------------------------------
 
   // @note L'ajout de l'avatar ne doit pas conduire à dénaturer la '.main-nav' en mode déconnecté, d'où le choix suivant :
 
-  .main-nav .login .avatar
+  .login
+    display flex
+
+  .login .avatar
     width 2.5rem
     height 2.5rem
-    margin 0 0 -2.5rem 0
+    margin-top -2.5rem
 
-  .main-nav .login .avatar + *
-    margin-left 3rem
+  @media (max-width: $sizeNav)
+      
+    .login .avatar
+      margin-left auto
 
   @media (min-width: $sizeNav)
   
-    .main-nav .login
-      border-radius 2.5rem 0 0 2.5rem
+    .login
       overflow hidden
-      
-    .main-nav .login .avatar
-      margin-left -1rem
+      border-radius 2.5rem 0 0 2.5rem
+
+    .login .avatar
+      margin -2.5rem 0 0 -1rem
       border-radius 50%
-  
-    .main-nav .login .avatar + *
+      
+    .login :first-child
+      display none
+      
+    .login :nth-child(2)
       margin-left 2rem
 
 
