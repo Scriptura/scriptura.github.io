@@ -1,0 +1,41 @@
+extends ../PatternLayouts
+
+append var
+  - name = 'Layout for mobile 2'
+  - title = name + titlesuffix
+  - contentlarge = true
+
+block content
+  .section
+    .wrap
+      h1(itemprop='headline name').emphasized Wraps
+      p
+        em Resize your browser window to test.
+    .grid.demo-layout
+      p
+        code [no wrap]
+      .m
+    .wrap
+      .grid.demo-layout
+        p
+          code .wrap
+        .m
+    .wrap-limited
+      .grid.demo-layout
+        p
+          code .wrap-limited
+        .m
+  .section#index-detail-of-html-code
+    .wrap
+      h2.highlight Detail of html code
+        a.anchor(href='#index-detail-of-html-code')
+      pre
+        code(translate='no', data-code=' Jade', data-select='true', data-value='Sélection').
+          .grid
+            .m
+          .wrap
+            .grid
+              .m
+          .wrap-limited
+            .grid
+              .m
