@@ -10,22 +10,21 @@ block content
   header.section.vh100(role='banner')
     .wrap.ribbon-container
       .ribbon
-        a(href='#index-about') About
+        div v. @@pkg.version
       .vertical.vh85
         .text-center
-          h1(itemprop='name') Scriptura
+          h1.vmin(itemprop='name') Scriptura
           svg.svg-color.width10(xmlns='//www.w3.org/2000/svg' viewbox='0 0 200 200' fill='#ff6f7d')
             path(d='M200 24.758c-355.807-105.878 130.682 161.232-200 175.242 286.814-75.173-174.292-221.127 200-175.242z')
-          h2(itemprop='alternativeHeadline') Interface for web apps
-          br.sizeXS-unhidden
+          h2.vmin(itemprop='alternativeHeadline') Interface for web apps
           br.sizeXS-unhidden
           a(href='https://github.com/Scriptura/ScripturaFramework/archive/master.zip').download-link.sizeXS-unhidden.center.width16
             span.icon-github 
             | Download Scriptura
-          p.zoom70 Currently @@pkg.version
-    //-
-      .ribbon
-        a(href='#index-get-started') Get Started
+          br
+          br.sizeXS-unhidden
+          a(href='#index-about' style='text-decoration:none')
+            .icon-chevron-right.zoom200(style='transform:rotate(90deg)')
   .section#index-about
     .wrap.box.ribbon-container
       .ribbon
@@ -69,6 +68,8 @@ block content
           h3.h5 First stage
           .active
             p Work with the workflow by running this command with your terminal to the file in the root: 
+              code $ npm install
+            p And monitoring of the folder:
               code $ gulp
           h3.h5 Second stage
           div
