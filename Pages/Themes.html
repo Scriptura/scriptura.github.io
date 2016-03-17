@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="geo.placename" content="Saint-Médard-en-Forez, Loire, France">
     <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../Public/Styles/MainRatatouille.css" media="screen" id="stylesheet">
+    <link rel="stylesheet" href="../Public/Styles/MainBlooming.css" media="screen" id="stylesheet">
     <link rel="stylesheet" href="../Public/Styles/Print.css" media="print">
   </head>
   <body itemscope itemtype="https://schema.org/WebPage">
@@ -28,39 +28,47 @@
         </ul>
       </div>
     </nav>
-    <main itemprop="mainContentOfPage" class="section">
-      <div class="wrap">
-        <h1 itemprop="headline name" class="emphasized">The Themes</h1>
-        <div class="grid">
-          <form method="get" action="./">
-            <legend class="h4">Style Switcher</legend>
-            <div>
-              <input id="themeInitial" type="radio" name="theme-demo" value="Initial" class="switch">
-              <label for="themeInitial">Initial<span data-on="yes" data-off="no"></span></label>
-            </div>
-            <div>
-              <input id="themeDualColor" type="radio" name="theme-demo" value="DualColor" class="switch">
-              <label for="themeDualColor">Dual Color<span data-on="yes" data-off="no"></span></label>
-            </div>
-            <div>
-              <input id="clearTheme" type="radio" name="theme-demo" checked="" class="switch">
-              <label for="clearTheme">Ratatouille<span data-on="yes" data-off="no"></span></label>
-            </div>
-          </form>
-          <div class="accordion">
-            <h3>Eng</h3>
-            <div class="active">
-              <p class="message-info">Choose a theme and then revisit the <a href="/Pages/StyleGuide.html">Style Guide</a> with new eyes...</p>
-            </div>
-            <h3>Fr</h3>
-            <div lang="fr">
-              <p class="message-info">Choisissez un thème puis revisitez le <a href="/Pages/StyleGuide.html">Style Guide</a> avec un nouveau regard...</p>
+    <main itemprop="mainContentOfPage">
+      <div class="section">
+        <div class="wrap">
+          <h1 itemprop="headline name" class="emphasized">The Themes</h1>
+          <div class="grid">
+            <form method="get" action="./">
+              <legend class="h4">Style Switcher</legend>
+              <div>
+                <input id="themeInitial" type="radio" name="theme-demo" value="Initial" class="switch">
+                <label for="themeInitial">Initial<span data-on="yes" data-off="no"></span></label>
+              </div>
+              <div>
+                <input id="themeDualColor" type="radio" name="theme-demo" value="DualColor" class="switch">
+                <label for="themeDualColor">Dual Color<span data-on="yes" data-off="no"></span></label>
+              </div>
+              <div>
+                <input id="themeRatatouille" type="radio" name="theme-demo" value="Ratatouille" class="switch">
+                <label for="themeRatatouille">Ratatouille<span data-on="yes" data-off="no"></span></label>
+              </div>
+              <!--Clear your preference : default theme...
+              -->
+              <div>
+                <input id="clearTheme" type="radio" name="theme-demo" checked="" class="switch">
+                <label for="clearTheme">Blooming<span data-on="yes" data-off="no"></span></label>
+              </div>
+            </form>
+            <div class="accordion">
+              <h3>Eng</h3>
+              <div class="active">
+                <p class="message-info">Choose a theme and then revisit the <a href="/Pages/StyleGuide.html">Style Guide</a> with new eyes...</p>
+              </div>
+              <h3>Fr</h3>
+              <div lang="fr">
+                <p class="message-info">Choisissez un thème puis revisitez le <a href="/Pages/StyleGuide.html">Style Guide</a> avec un nouveau regard...</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </main>
-    <footer class="section footer">
+    <footer class="footer">
       <div class="wrap text-center">
         <p><em>A framework created by</em></p>
         <p><span class="icon-quill"></span></p>

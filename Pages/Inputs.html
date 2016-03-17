@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="geo.placename" content="Saint-Médard-en-Forez, Loire, France">
     <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../Public/Styles/MainRatatouille.css" media="screen" id="stylesheet">
+    <link rel="stylesheet" href="../Public/Styles/MainBlooming.css" media="screen" id="stylesheet">
     <link rel="stylesheet" href="../Public/Styles/Print.css" media="print">
   </head>
   <body itemscope itemtype="https://schema.org/WebPage">
@@ -28,175 +28,177 @@
         </ul>
       </div>
     </nav>
-    <main itemprop="mainContentOfPage" class="section">
-      <div class="wrap">
-        <h1 itemprop="headline name" class="emphasized">Inputs</h1>
-        <div class="grid">
-          <form method="get" action="./" class="m6 sizeS-m12">
-            <fieldset>
-              <legend>Label & Inputs</legend>
-              <p><code>.input label + input</code></p>
-              <div class="columns">
-                <div class="input">
-                  <label for="name">Type text</label>
-                  <input id="name" type="text" name="name" value="" size="23" placeholder="John" required="">
-                </div>
-                <div class="input c2 invalid">
-                  <label for="name2">Text + error</label>
-                  <input id="name2" type="text" name="name2" value="" size="23" placeholder="Smith" required="">
-                  <p>Champ invalide&nbsp;: des caractères numériques sont placés dans votre nom.</p>
-                </div>
-              </div>
-              <div class="input disabled">
-                <label for="name3">Disabled Attribute</label>
-                <input id="name3" type="text" name="name3" value="" size="23" placeholder=":disabled" required="" disabled="">
-              </div>
-              <div class="columns">
-                <div class="input c2">
-                  <label for="email">Type email</label>
-                  <input id="email" type="email" name="email" value="" size="23" placeholder="pseudo@email.com" required="">
-                </div>
-                <div class="input">
-                  <label for="tel">Type tel</label>
-                  <input id="tel" type="tel" name="tel" value="" size="23" placeholder="0477446677">
-                </div>
-              </div>
-              <div class="columns">
-                <div class="input">
-                  <label for="date">Type date</label>
-                  <input type="date" name="date" value="2015-02-12">
-                </div>
-                <div class="input">
-                  <label for="time">Type time</label>
-                  <input type="time" name="time">
-                </div>
-                <div class="input">
-                  <label for="datetime">Type datetime</label>
-                  <input type="datetime" name="datetime">
-                </div>
-              </div>
-              <div class="columns">
-                <div class="input">
-                  <label for="number">Type number</label>
-                  <input type="number" name="number" step="1" min="-5" max="100" value="50">
-                </div>
-                <div class="input">
-                  <label for="color">Type color</label>
-                  <input type="color" name="color" value="#5ae310">
-                </div>
-              </div>
-              <div class="input hidden">
-                <label for="test">Type hidden</label>
-                <input id="test" type="text" name="test" value="" size="23" placeholder="requis">
-              </div>
-            </fieldset>
-          </form>
-          <form method="get" action="./" class="m6 sizeS-m12">
-            <fieldset>
-              <legend>Select & Textarea</legend>
-              <p><code>.input label + select</code></p>
-              <div class="columns">
-                <div class="input">
-                  <label for="pays">Type select</label>
-                  <select id="pays" name="pays">
-                    <option value="00" selected="">Pays</option>
-                    <option value="FR">France</option>
-                    <option value="ZA">Afrique du Sud</option>
-                    <option value="AL">Albanie</option>
-                    <option value="DZ">Algérie</option>
-                    <option value="DE">Allemagne</option>
-                    <option value="AD">Andorre</option>
-                    <option value="AO">Angola</option>
-                    <option value="AI">Anguilla</option>
-                    <option value="AQ">Antarctique</option>
-                    <option value="AG">Antigua-et-Barbuda</option>
-                    <option value="AN">Antilles néerlandaises</option>
-                  </select>
-                </div>
-                <div class="input">
-                  <label for="pays2">Type select multiple</label>
-                  <select id="pays" multiple name="pays2">
-                    <option value="00" selected="">Pays</option>
-                    <option value="FR">France</option>
-                    <option value="ZA">Afrique du Sud</option>
-                    <option value="AL">Albanie</option>
-                    <option value="DZ">Algérie</option>
-                    <option value="DE">Allemagne</option>
-                    <option value="AD">Andorre</option>
-                    <option value="AO">Angola</option>
-                    <option value="AI">Anguilla</option>
-                    <option value="AQ">Antarctique</option>
-                    <option value="AG">Antigua-et-Barbuda</option>
-                    <option value="AN">Antilles néerlandaises</option>
-                  </select>
-                </div>
-              </div>
-              <p><code>.input label + textarea</code></p>
-              <div class="input">
-                <label for="message">Textarea</label>
-                <textarea id="message" name="message" placeholder="Bonjour..." required=""></textarea>
-              </div>
-            </fieldset>
-          </form>
-        </div>
-        <div class="grid">
-          <h3>Search Form</h3>
-          <p><code>.search</code></p>
-          <form role="search" method="get" action="./" class="m6">
-            <fieldset class="search">
-              <input type="search" name="s" placeholder="Rechercher" required="">
-              <label accesskey="s">Rechercher</label>
-              <button><span>Valider</span></button>
-            </fieldset>
-          </form>
-        </div>
-        <div class="grid">
-          <h3>Input Groups</h3>
-          <form method="get" action="./" class="grid">
-            <fieldset class="m6">
-              <p><code>.input-group</code></p>
-              <div class="input-group">
-                <label for="test1111">Text label</label>
-                <div>
-                  <div>Prepend</div>
-                  <input type="text" id="test1111" name="test1111" placeholder="Test">
-                  <div>Append</div>
-                </div>
-              </div>
-              <div class="input-group">
-                <label for="test1112">Result</label>
-                <div>
-                  <div>Total Value</div>
-                  <input type="text" id="test1112" name="test1112" placeholder="Test">
-                  <div>Deutsche Mark</div>
-                </div>
-              </div>
-            </fieldset>
-            <fieldset class="m6">
-              <p><code>.input-group</code>
-                <div class="input-group-right">
-                  <label for="test1113">Total</label>
-                  <div>
-                    <div>$</div>
-                    <input type="number" id="test1113" name="test1113" placeholder="100">
-                    <div>.00</div>
+    <main itemprop="mainContentOfPage">
+      <div class="section">
+        <div class="wrap">
+          <h1 itemprop="headline name" class="emphasized">Inputs</h1>
+          <div class="grid">
+            <form method="get" action="./" class="m6 sizeS-m12">
+              <fieldset>
+                <legend>Label & Inputs</legend>
+                <p><code>.input label + input</code></p>
+                <div class="columns">
+                  <div class="input">
+                    <label for="name">Type text</label>
+                    <input id="name" type="text" name="name" value="" size="23" placeholder="John" required="">
+                  </div>
+                  <div class="input c2 invalid">
+                    <label for="name2">Text + error</label>
+                    <input id="name2" type="text" name="name2" value="" size="23" placeholder="Smith" required="">
+                    <p>Champ invalide&nbsp;: des caractères numériques sont placés dans votre nom.</p>
                   </div>
                 </div>
-                <div class="input-group-right">
-                  <label for="test1114">Total</label>
-                  <div>
-                    <div>€</div>
-                    <input type="number" id="test1114" name="test1114" placeholder="100">
-                    <div>.00</div>
+                <div class="input disabled">
+                  <label for="name3">Disabled Attribute</label>
+                  <input id="name3" type="text" name="name3" value="" size="23" placeholder=":disabled" required="" disabled="">
+                </div>
+                <div class="columns">
+                  <div class="input c2">
+                    <label for="email">Type email</label>
+                    <input id="email" type="email" name="email" value="" size="23" placeholder="pseudo@email.com" required="">
+                  </div>
+                  <div class="input">
+                    <label for="tel">Type tel</label>
+                    <input id="tel" type="tel" name="tel" value="" size="23" placeholder="0477446677">
                   </div>
                 </div>
-              </p>
-            </fieldset>
-          </form>
+                <div class="columns">
+                  <div class="input">
+                    <label for="date">Type date</label>
+                    <input type="date" name="date" value="2015-02-12">
+                  </div>
+                  <div class="input">
+                    <label for="time">Type time</label>
+                    <input type="time" name="time">
+                  </div>
+                  <div class="input">
+                    <label for="datetime">Type datetime</label>
+                    <input type="datetime" name="datetime">
+                  </div>
+                </div>
+                <div class="columns">
+                  <div class="input">
+                    <label for="number">Type number</label>
+                    <input type="number" name="number" step="1" min="-5" max="100" value="50">
+                  </div>
+                  <div class="input">
+                    <label for="color">Type color</label>
+                    <input type="color" name="color" value="#5ae310">
+                  </div>
+                </div>
+                <div class="input hidden">
+                  <label for="test">Type hidden</label>
+                  <input id="test" type="text" name="test" value="" size="23" placeholder="requis">
+                </div>
+              </fieldset>
+            </form>
+            <form method="get" action="./" class="m6 sizeS-m12">
+              <fieldset>
+                <legend>Select & Textarea</legend>
+                <p><code>.input label + select</code></p>
+                <div class="columns">
+                  <div class="input">
+                    <label for="pays">Type select</label>
+                    <select id="pays" name="pays">
+                      <option value="00" selected="">Pays</option>
+                      <option value="FR">France</option>
+                      <option value="ZA">Afrique du Sud</option>
+                      <option value="AL">Albanie</option>
+                      <option value="DZ">Algérie</option>
+                      <option value="DE">Allemagne</option>
+                      <option value="AD">Andorre</option>
+                      <option value="AO">Angola</option>
+                      <option value="AI">Anguilla</option>
+                      <option value="AQ">Antarctique</option>
+                      <option value="AG">Antigua-et-Barbuda</option>
+                      <option value="AN">Antilles néerlandaises</option>
+                    </select>
+                  </div>
+                  <div class="input">
+                    <label for="pays2">Type select multiple</label>
+                    <select id="pays" multiple name="pays2">
+                      <option value="00" selected="">Pays</option>
+                      <option value="FR">France</option>
+                      <option value="ZA">Afrique du Sud</option>
+                      <option value="AL">Albanie</option>
+                      <option value="DZ">Algérie</option>
+                      <option value="DE">Allemagne</option>
+                      <option value="AD">Andorre</option>
+                      <option value="AO">Angola</option>
+                      <option value="AI">Anguilla</option>
+                      <option value="AQ">Antarctique</option>
+                      <option value="AG">Antigua-et-Barbuda</option>
+                      <option value="AN">Antilles néerlandaises</option>
+                    </select>
+                  </div>
+                </div>
+                <p><code>.input label + textarea</code></p>
+                <div class="input">
+                  <label for="message">Textarea</label>
+                  <textarea id="message" name="message" placeholder="Bonjour..." required=""></textarea>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+          <div class="grid">
+            <h3>Search Form</h3>
+            <p><code>.search</code></p>
+            <form role="search" method="get" action="./" class="m6">
+              <fieldset class="search">
+                <input type="search" name="s" placeholder="Rechercher" required="">
+                <label accesskey="s">Rechercher</label>
+                <button><span>Valider</span></button>
+              </fieldset>
+            </form>
+          </div>
+          <div class="grid">
+            <h3>Input Groups</h3>
+            <form method="get" action="./" class="grid">
+              <fieldset class="m6">
+                <p><code>.input-group</code></p>
+                <div class="input-group">
+                  <label for="test1111">Text label</label>
+                  <div>
+                    <div>Prepend</div>
+                    <input type="text" id="test1111" name="test1111" placeholder="Test">
+                    <div>Append</div>
+                  </div>
+                </div>
+                <div class="input-group">
+                  <label for="test1112">Result</label>
+                  <div>
+                    <div>Total Value</div>
+                    <input type="text" id="test1112" name="test1112" placeholder="Test">
+                    <div>Deutsche Mark</div>
+                  </div>
+                </div>
+              </fieldset>
+              <fieldset class="m6">
+                <p><code>.input-group</code>
+                  <div class="input-group-right">
+                    <label for="test1113">Total</label>
+                    <div>
+                      <div>$</div>
+                      <input type="number" id="test1113" name="test1113" placeholder="100">
+                      <div>.00</div>
+                    </div>
+                  </div>
+                  <div class="input-group-right">
+                    <label for="test1114">Total</label>
+                    <div>
+                      <div>€</div>
+                      <input type="number" id="test1114" name="test1114" placeholder="100">
+                      <div>.00</div>
+                    </div>
+                  </div>
+                </p>
+              </fieldset>
+            </form>
+          </div>
         </div>
       </div>
     </main>
-    <footer class="section footer">
+    <footer class="footer">
       <div class="wrap text-center">
         <p><em>A framework created by</em></p>
         <p><span class="icon-quill"></span></p>

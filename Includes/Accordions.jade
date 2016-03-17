@@ -6,9 +6,7 @@
       .accordion-js
         h3 Item 1
         div
-          p 
-            code .active
-            |  Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+          p Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
         h3 Item 2
         ul
           li
@@ -78,7 +76,9 @@
       .accordion-js
         h3 Item 1
         .active
-          p Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+          p
+            code .active
+            |  Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
         h3 Item 2
         ul
           li
@@ -123,9 +123,7 @@
         h3 Item 2
         ul
           li
-            a(href='#index-accordions')
-              code .active
-              |  Sub-item
+            a(href='#index-accordions') Sub-item
           li
             a(href='#index-accordions') Sub-item
         h3 Item 3
@@ -225,7 +223,9 @@
         h3 Item 2
         ul.active
           li
-            a(href='#index-accordions') Sub-item
+            a(href='#index-accordions')
+              code .active
+              |  Sub-item
           li
             a(href='#index-accordions') Sub-item
           li

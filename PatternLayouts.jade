@@ -16,7 +16,11 @@ html.no-js(lang='en')
     else
       title #{title} | Scriptura Framework
     meta(name='description' content='#{name} for Scriptura Framework')
-    include Includes/Metas
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    meta(name='geo.placename', content='Saint-Médard-en-Forez, Loire, France')
+    link(rel='shortcut icon', href='../favicon.ico')
+    link(rel='stylesheet', href='../Public/Styles/MainBlooming.css', media='screen')#stylesheet
+    link(rel='stylesheet', href='../Public/Styles/Print.css', media='print')
   body(itemscope itemtype='https://schema.org/WebPage')
     block mainnav
       include Includes/MainNav
@@ -27,12 +31,13 @@ html.no-js(lang='en')
           //- Default
           p [Content]
     else
-      main(itemprop='mainContentOfPage').section
-        .wrap
-          h1(itemprop='headline name').emphasized #{name}
-          block content
-            //- Default
-            p [Content]
+      main(itemprop='mainContentOfPage')
+        .section
+          .wrap
+            h1(itemprop='headline name').emphasized #{name}
+            block content
+              //- Default
+              p [Content]
     block aside
     block footer
       include Includes/Footer

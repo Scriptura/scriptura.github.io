@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="geo.placename" content="Saint-Médard-en-Forez, Loire, France">
     <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../Public/Styles/MainRatatouille.css" media="screen" id="stylesheet">
+    <link rel="stylesheet" href="../Public/Styles/MainBlooming.css" media="screen" id="stylesheet">
     <link rel="stylesheet" href="../Public/Styles/Print.css" media="print">
   </head>
   <body itemscope itemtype="https://schema.org/WebPage">
@@ -28,62 +28,64 @@
         </ul>
       </div>
     </nav>
-    <main itemprop="mainContentOfPage" class="section">
-      <div class="wrap">
-        <h1 itemprop="headline name" class="emphasized">Typography</h1>
-        <div class="columns-largespace links">
-          <div class="sizeXS-hr">
-            <p><code>.adddropcap p</code></p>
-            <div class="adddropcap">
-              <p>Lorem ipsum dolor sit amet, consetetur <ins>sadipscing elitr</ins> <code>ins</code> , sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet <small>clita</small> <code>small</code> kasd gubergren, 
-                <s>no sea takimata sanctus</s> <code>s</code> est Lorem ipsum 
-                <del>dolor sit amet</del> <code>del</code>.
+    <main itemprop="mainContentOfPage">
+      <div class="section">
+        <div class="wrap">
+          <h1 itemprop="headline name" class="emphasized">Typography</h1>
+          <div class="columns-largespace links">
+            <div class="sizeXS-hr">
+              <p><code>.adddropcap p</code></p>
+              <div class="adddropcap">
+                <p>Lorem ipsum dolor sit amet, consetetur <ins>sadipscing elitr</ins> <code>ins</code> , sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Stet <small>clita</small> <code>small</code> kasd gubergren, 
+                  <s>no sea takimata sanctus</s> <code>s</code> est Lorem ipsum 
+                  <del>dolor sit amet</del> <code>del</code>.
+                </p>
+                <p>At vero eos et accusam et justo duo dolores et ea rebum. <strong>Stet clita kasd gubergren</strong> <code>strong</code>, no sea takimata sanctus est. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+              </div>
+              <p><code>.addtooltips a</code></p>
+              <p class="addtooltips">Nam liber tempor cum <a href="https://github.com/Scriptura/Scriptura" title="Viewing the title in a tooltip.">soluta nobis</a> eleifend option congue nihil imperdiet doming id <a href="#" title="Demo link with a title.">quod mazim placerat</a> facer possim assum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>
+              <p>Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. <em>Stet clita kasd gubergren</em> <code>em</code>, no sea takimata sanctus est. 
+                <mark>Lorem ipsum dolor sit amet</mark> <code>mark</code>, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
               </p>
-              <p>At vero eos et accusam et justo duo dolores et ea rebum. <strong>Stet clita kasd gubergren</strong> <code>strong</code>, no sea takimata sanctus est. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+              <p><code>blockquote</code></p>
+              <blockquote cite="http://developer.mozilla.org">
+                <p>This is a quote placed in a block, rather elongated just for testing.</p>
+                <footer>Information produced by 
+                  <cite>Name</cite>
+                </footer>
+              </blockquote>
+              <p><code>sup</code> <code>sub</code></p>
+              <p>
+                <var>E</var>=
+                <var>mc<sup>2</sup></var> ; 
+                <var>a</var> + 
+                <var>b<sub>2</sub></var>.
+              </p>
             </div>
-            <p><code>.addtooltips a</code></p>
-            <p class="addtooltips">Nam liber tempor cum <a href="https://github.com/Scriptura/Scriptura" title="Viewing the title in a tooltip.">soluta nobis</a> eleifend option congue nihil imperdiet doming id <a href="#" title="Demo link with a title.">quod mazim placerat</a> facer possim assum. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>
-            <p>Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. <em>Stet clita kasd gubergren</em> <code>em</code>, no sea takimata sanctus est. 
-              <mark>Lorem ipsum dolor sit amet</mark> <code>mark</code>, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
-            </p>
-            <p><code>blockquote</code></p>
-            <blockquote cite="http://developer.mozilla.org">
-              <p>This is a quote placed in a block, rather elongated just for testing.</p>
-              <footer>Information produced by 
-                <cite>Name</cite>
-              </footer>
-            </blockquote>
-            <p><code>sup</code> <code>sub</code></p>
-            <p>
-              <var>E</var>=
-              <var>mc<sup>2</sup></var> ; 
-              <var>a</var> + 
-              <var>b<sub>2</sub></var>.
-            </p>
-          </div>
-          <div>
-            <p><code>h1</code> <code>.h1</code></p>
-            <h3 class="h1">Scriptura heading</h3>
-            <p><code>h2</code> <code>.h2</code></p>
-            <h3 class="h2">Scriptura heading</h3>
-            <p><code>h3</code> <code>.h3</code></p>
-            <h3 class="h3">Scriptura heading</h3>
-            <p><code>h4</code> <code>.h4</code></p>
-            <h3 class="h4">Scriptura heading</h3>
-            <p><code>h5</code> <code>.h5</code></p>
-            <h3 class="h5">Scriptura heading</h3>
-            <p><code>h6</code> <code>.h6</code></p>
-            <h3 class="h6">Scriptura heading</h3>
-            <p><code>hr</code></p>
-            <hr>
-            <p><code>hr.separator</code></p>
-            <hr class="separator">
-            <button class="button cmd-print"><span class="icon-printer"></span>&nbsp;&nbsp;Print Stylesheet</button>
+            <div>
+              <p><code>h1</code> <code>.h1</code></p>
+              <h3 class="h1">Scriptura heading</h3>
+              <p><code>h2</code> <code>.h2</code></p>
+              <h3 class="h2">Scriptura heading</h3>
+              <p><code>h3</code> <code>.h3</code></p>
+              <h3 class="h3">Scriptura heading</h3>
+              <p><code>h4</code> <code>.h4</code></p>
+              <h3 class="h4">Scriptura heading</h3>
+              <p><code>h5</code> <code>.h5</code></p>
+              <h3 class="h5">Scriptura heading</h3>
+              <p><code>h6</code> <code>.h6</code></p>
+              <h3 class="h6">Scriptura heading</h3>
+              <p><code>hr</code></p>
+              <hr>
+              <p><code>hr.separator</code></p>
+              <hr class="separator">
+              <button class="button cmd-print"><span class="icon-printer"></span>&nbsp;&nbsp;Print Stylesheet</button>
+            </div>
           </div>
         </div>
       </div>
     </main>
-    <footer class="section footer">
+    <footer class="footer">
       <div class="wrap text-center">
         <p><em>A framework created by</em></p>
         <p><span class="icon-quill"></span></p>

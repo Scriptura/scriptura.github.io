@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="geo.placename" content="Saint-Médard-en-Forez, Loire, France">
     <link rel="shortcut icon" href="../favicon.ico">
-    <link rel="stylesheet" href="../Public/Styles/MainRatatouille.css" media="screen" id="stylesheet">
+    <link rel="stylesheet" href="../Public/Styles/MainBlooming.css" media="screen" id="stylesheet">
     <link rel="stylesheet" href="../Public/Styles/Print.css" media="print">
   </head>
   <body itemscope itemtype="https://schema.org/WebPage">
@@ -28,13 +28,14 @@
         </ul>
       </div>
     </nav>
-    <main itemprop="mainContentOfPage" class="section">
-      <div class="wrap">
-        <h1 itemprop="headline name" class="emphasized">Code Blocks</h1>
-        <div class="grid">
-          <div class="m3 sizeS-m12 sizeL-m4">
-            <p><code>pre > code</code></p>
-            <pre><code translate="no" data-select="true" data-value="Sélection">&lt;html&gt;
+    <main itemprop="mainContentOfPage">
+      <div class="section">
+        <div class="wrap">
+          <h1 itemprop="headline name" class="emphasized">Code Blocks</h1>
+          <div class="grid">
+            <div class="m3 sizeS-m12 sizeL-m4">
+              <p><code>pre > code</code></p>
+              <pre><code translate="no" data-select="true" data-value="Sélection">&lt;html&gt;
  &lt;head&gt;&lt;/head&gt;
  &lt;body&gt;
    &lt;header&gt;&lt;/header&gt;
@@ -45,10 +46,10 @@
    &lt;footer&gt;&lt;/footer&gt;
  &lt;/body&gt;
 &lt;/html&gt;</code></pre>
-          </div>
-          <div class="m3 sizeS-m12 sizeL-m4">
-            <p><code>pre > code(data-code=' HTML')</code></p>
-            <pre><code translate="no" data-code=" HTML" data-select="true" data-value="Sélection">&lt;html&gt;
+            </div>
+            <div class="m3 sizeS-m12 sizeL-m4">
+              <p><code>pre > code(data-code=' HTML')</code></p>
+              <pre><code translate="no" data-code=" HTML" data-select="true" data-value="Sélection">&lt;html&gt;
  &lt;head&gt;&lt;/head&gt;
  &lt;body&gt;
    &lt;header&gt;&lt;/header&gt;
@@ -59,30 +60,30 @@
    &lt;footer&gt;&lt;/footer&gt;
  &lt;/body&gt;
 &lt;/html&gt;</code></pre>
-          </div>
-          <div class="m3 sizeS-m12 sizeL-m4">
-            <p><code>pre > code(data-code=' CSS')</code></p>
-            <pre><code translate="no" data-code=" CSS" data-select="true" data-value="Sélection">sub,
+            </div>
+            <div class="m3 sizeS-m12 sizeL-m4">
+              <p><code>pre > code(data-code=' CSS')</code></p>
+              <pre><code translate="no" data-code=" CSS" data-select="true" data-value="Sélection">sub,
 sup {
   line-height: 0;
   font-size: 75%;
   position: relative;
   vertical-align: baseline;
 }</code></pre>
-          </div>
-          <div class="m3 sizeS-m12 sizeL-m4">
-            <p><code>pre > code(data-code=' JavaScript')</code></p>
-            <pre><code translate="no" data-code=" JavaScript" data-select="true" data-value="Sélection">$(function() {
+            </div>
+            <div class="m3 sizeS-m12 sizeL-m4">
+              <p><code>pre > code(data-code=' JavaScript')</code></p>
+              <pre><code translate="no" data-code=" JavaScript" data-select="true" data-value="Sélection">$(function() {
   $('.section').attr({
     id: function(index) {
       return 'section-' + index;
     }
   });
 });</code></pre>
-          </div>
-          <div class="m3 sizeS-m12 sizeL-m4">
-            <p><code>pre > code(data-code=' Jade')</code></p>
-            <pre><code translate="no" data-code=" Jade" data-select="true" data-value="Sélection">ul
+            </div>
+            <div class="m3 sizeS-m12 sizeL-m4">
+              <p><code>pre > code(data-code=' Jade')</code></p>
+              <pre><code translate="no" data-code=" Jade" data-select="true" data-value="Sélection">ul
   li Artichauts
   li Carottes
   li Concombres
@@ -93,11 +94,12 @@ sup {
           li Vert
           li Gris
           li Rouge</code></pre>
+            </div>
           </div>
         </div>
       </div>
     </main>
-    <footer class="section footer">
+    <footer class="footer">
       <div class="wrap text-center">
         <p><em>A framework created by</em></p>
         <p><span class="icon-quill"></span></p>
