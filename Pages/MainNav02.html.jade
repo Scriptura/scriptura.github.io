@@ -1,0 +1,86 @@
+extends ../PatternLayouts
+
+append var
+  - name = 'Main Nav Bottom'
+  - title = name + titlesuffix
+  - contentlarge = true
+
+block mainnav
+  nav.main-nav.sizeNav-nav-bottom(role='navigation')
+    .wrap
+      .brand-image
+        a(href='/')
+          span.hidden Scriptura
+      ul
+        li.cmd-slide
+        li
+          if homepage
+            span.active
+              span.icon-home.only-icon
+              span.sizeNav-hidden Home
+          else
+            a(href='/')
+              span.icon-home.only-icon
+              span.sizeNav-hidden Home
+        li
+          if styleguidepage
+            span.active
+              span.icon-list2
+              | Style Guide
+          else
+            a(href='/Pages/StyleGuide.html')
+              span.icon-list2
+              | Style Guide
+        li
+          if layoutspage
+            span.active
+              span.icon-frame
+              | Layout Examples
+          else
+            a(href='/Pages/Layouts.html')
+              span.icon-frame
+              | Layout Examples
+        li
+          if themespage
+            span.active
+              span.icon-rocket
+              | Themes
+          else
+            a(href='/Pages/Themes.html')
+              span.icon-rocket
+              | Themes
+        li.item-push
+          a(href='//github.com/Scriptura/ScripturaFramework')
+            span.icon-github
+            | Repository
+
+block content
+  .section
+    .wrap
+      h1(itemprop='headline name').emphasized Main Nav Bottom
+      p Code for creating the main menu present on this page. This menu is also managed in the mobile version.
+      p
+        em Resize your browser window to test.
+  .section#index-detail-of-html-code
+    .wrap
+      h2.highlight Detail of html code
+        a.anchor(href='#index-detail-of-html-code')
+      p Extract:
+      pre
+        code(translate='no', data-code=' Jade', data-select='true', data-value='Sélection').
+          nav.main-nav.sizeNav-nav-bottom(role='navigation')
+            .wrap
+              .brand-image
+                a(href='/')
+                  span Scriptura
+              ul
+                li.cmd-slide
+                li
+                  if homepage
+                    span.active
+                      span.icon-home.only-icon
+                      span.sizeNav-hidden Home
+                  else
+                    a(href='/')
+                      span.icon-home.only-icon
+                      span.sizeNav-hidden Home

@@ -1,8 +1,8 @@
 <!DOCTYPE html><html lang="en" class="no-js">
   <head>
     <meta charset="utf-8">
-    <title>Layout Examples, Style Guide | Scriptura Framework</title>
-    <meta name="description" content="Layout Examples for Scriptura Framework">
+    <title>Main Nav, Style Guide | Scriptura Framework</title>
+    <meta name="description" content="Main Nav for Scriptura Framework">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="geo.placename" content="Saint-Médard-en-Forez, Loire, France">
     <link rel="shortcut icon" href="../favicon.ico">
@@ -20,7 +20,7 @@
           </li>
           <li><a href="/Pages/StyleGuide.html"><span class="icon-list2"></span>Style Guide</a>
           </li>
-          <li><span class="active"><span class="icon-frame"></span>Layout Examples</span>
+          <li><a href="/Pages/Layouts.html"><span class="icon-frame"></span>Layout Examples</a>
           </li>
           <li><a href="/Pages/Themes.html"><span class="icon-rocket"></span>Themes</a>
           </li>
@@ -31,22 +31,33 @@
     <main itemprop="mainContentOfPage">
       <div class="section">
         <div class="wrap">
-          <h1 itemprop="headline name" class="emphasized">Layout Examples</h1>
-          <ul class="list-stripe-link summary">
-            <li><a href="./GridLayout.html"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Fluid Grid Layout</a></li>
-            <li><a href="./Layout01.html"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Layout for a blog</a></li>
-            <li><a href="./Layout02.html"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Layout for Photoblog</a></li>
-            <li><a href="./Layout03.html"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Layout for Photoblog 2</a></li>
-            <li><a href="./Layout04.html"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Example Complex Layout</a></li>
-            <li><a href="./Layout05.html"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Example Nested Grid</a></li>
-            <li><a href="./Layout06.html"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Grid with offsets</a></li>
-            <li><a href="./Layout07.html"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Grid with offsets 2</a></li>
-            <li><a href="./Layout08.html"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Layout for Mobile</a></li>
-            <li><a href="./Layout09.html"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Layout for Mobile 2</a></li>
-            <li><a href="./Layout10.html"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Wraps</a></li>
-            <li><a href="./MainNav01.html"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Main Nav</a></li>
-            <li><a href="./MainNav02.html"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Main Nav Bottom</a></li>
-          </ul>
+          <h1 itemprop="headline name" class="emphasized">Main Nav</h1>
+          <p>Code for creating the main menu present on this page. This menu is also managed in the mobile version.</p>
+          <p><em>Resize your browser window to test.</em></p>
+        </div>
+      </div>
+      <div id="index-detail-of-html-code" class="section">
+        <div class="wrap">
+          <h2 class="highlight">Detail of html code<a href="#index-detail-of-html-code" class="anchor"></a></h2>
+          <p>Extract:</p>
+          <pre><code translate="no" data-code=" Jade" data-select="true" data-value="Sélection">nav.main-nav(role='navigation')
+  .wrap
+    input(type='checkbox', id='cmd-main-nav')
+    label(for='cmd-main-nav')
+      span
+    .brand-image
+      a(href='/')
+        span.hidden Scriptura
+    ul
+      li
+        if homepage
+          span.active
+            span.icon-home.only-icon
+            span.sizeNav-hidden Home
+        else
+          a(href='/')
+            span.icon-home.only-icon
+            span.sizeNav-hidden Home</code></pre>
         </div>
       </div>
     </main>

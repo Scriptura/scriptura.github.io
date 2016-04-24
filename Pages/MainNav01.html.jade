@@ -1,0 +1,39 @@
+extends ../PatternLayouts
+
+append var
+  - name = 'Main Nav'
+  - title = name + titlesuffix
+  - contentlarge = true
+
+block content
+  .section
+    .wrap
+      h1(itemprop='headline name').emphasized Main Nav
+      p Code for creating the main menu present on this page. This menu is also managed in the mobile version.
+      p
+        em Resize your browser window to test.
+  .section#index-detail-of-html-code
+    .wrap
+      h2.highlight Detail of html code
+        a.anchor(href='#index-detail-of-html-code')
+      p Extract:
+      pre
+        code(translate='no', data-code=' Jade', data-select='true', data-value='Sélection').
+          nav.main-nav(role='navigation')
+            .wrap
+              input(type='checkbox', id='cmd-main-nav')
+              label(for='cmd-main-nav')
+                span
+              .brand-image
+                a(href='/')
+                  span.hidden Scriptura
+              ul
+                li
+                  if homepage
+                    span.active
+                      span.icon-home.only-icon
+                      span.sizeNav-hidden Home
+                  else
+                    a(href='/')
+                      span.icon-home.only-icon
+                      span.sizeNav-hidden Home
