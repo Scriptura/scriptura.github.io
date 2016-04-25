@@ -126,6 +126,24 @@ jQuery(document).on('click','a:not(.download-link)',function() { // Ajout d'un a
 
 (function($) {
 	var body = $('body');
+	var menu = $('.sizeNav-nav-bottom');
+	var scrollTop = $('.scroll-top');
+	$('.sizeNav-nav-bottom button').on('click touchmove', function() {
+		menu.toggleClass('active');
+		if (menu.hasClass('active')) {
+			body.css('overflow', 'hidden'); // Évite la confusion avec un scrool sur la page
+			scrollTop.addClass('hidden');
+		} else {
+			body.css('overflow', 'visible');
+			menu.removeClass('active');
+			scrollTop.removeClass('hidden');
+		}
+	});
+})(jQuery);
+
+/*
+(function($) {
+	var body = $('body');
 	var menu = $('.sizeNav-nav-bottom ul');
 	var scrollTop = $('.scroll-top');
 	$('.cmd-slide').on('click touchmove', function() {
@@ -140,6 +158,7 @@ jQuery(document).on('click','a:not(.download-link)',function() { // Ajout d'un a
 		}
 	});
 })(jQuery);
+*/
 
 
 // -----------------------------------------------------------------------------
