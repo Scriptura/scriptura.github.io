@@ -16,8 +16,6 @@
         <div class="sizeNav-nav-bottom">
           <button></button>
           <ul>
-            <!--li.cmd-slide
-            -->
             <li><a href="/"><span class="icon-home only-icon"></span><span class="sizeNav-hidden">Home</span></a>
             </li>
             <li><a href="/Pages/StyleGuide.html"><span class="icon-list2"></span>Style Guide</a>
@@ -48,17 +46,18 @@
     .brand-image
       a(href='/')
         span Scriptura
-    ul
-      li.cmd-slide
-      li
-        if homepage
-          span.active
-            span.icon-home.only-icon
-            span.sizeNav-hidden Home
-        else
-          a(href='/')
-            span.icon-home.only-icon
-            span.sizeNav-hidden Home</code></pre>
+    .sizeNav-nav-bottom
+      button
+      ul
+        li
+          if homepage
+            span.active
+              span.icon-home.only-icon
+              span.sizeNav-hidden Home
+          else
+            a(href='/')
+              span.icon-home.only-icon
+              span.sizeNav-hidden Home</code></pre>
         </div>
       </div>
     </main>

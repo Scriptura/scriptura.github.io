@@ -14,8 +14,6 @@ block mainnav
       .sizeNav-nav-bottom
         button
         ul
-          //
-            li.cmd-slide
           li
             if homepage
               span.active
@@ -76,14 +74,15 @@ block content
               .brand-image
                 a(href='/')
                   span Scriptura
-              ul
-                li.cmd-slide
-                li
-                  if homepage
-                    span.active
-                      span.icon-home.only-icon
-                      span.sizeNav-hidden Home
-                  else
-                    a(href='/')
-                      span.icon-home.only-icon
-                      span.sizeNav-hidden Home
+              .sizeNav-nav-bottom
+                button
+                ul
+                  li
+                    if homepage
+                      span.active
+                        span.icon-home.only-icon
+                        span.sizeNav-hidden Home
+                    else
+                      a(href='/')
+                        span.icon-home.only-icon
+                        span.sizeNav-hidden Home
