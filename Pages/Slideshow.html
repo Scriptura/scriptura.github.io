@@ -1,0 +1,94 @@
+<!DOCTYPE html><html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <title>Slideshow, Style Guide | Scriptura Framework</title>
+    <meta name="description" content="Slideshow for Scriptura Framework">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="geo.placename" content="Saint-Médard-en-Forez, Loire, France">
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../Public/Styles/MainBlooming.css" media="screen" id="stylesheet">
+    <link rel="stylesheet" href="../Public/Styles/Print.css" media="print">
+  </head>
+  <body itemscope itemtype="https://schema.org/WebPage">
+    <nav role="navigation" class="main-nav">
+      <div class="wrap">
+        <div class="brand-image"><a href="/"><span class="hidden">Scriptura</span></a></div>
+        <input type="checkbox" id="cmd-main-nav">
+        <label for="cmd-main-nav"><span></span></label>
+        <ul>
+          <li><a href="/"><span class="icon-home only-icon"></span><span class="sizeNav-hidden">Home</span></a>
+          </li>
+          <li><a href="/Pages/StyleGuide.html"><span class="icon-list2"></span>Style Guide</a>
+          </li>
+          <li><a href="/Pages/Layouts.html"><span class="icon-frame"></span>Layout Examples</a>
+          </li>
+          <li><a href="/Pages/Themes.html"><span class="icon-rocket"></span>Themes</a>
+          </li>
+          <li class="item-push"><a href="//github.com/Scriptura/ScripturaFramework"><span class="icon-github"></span>Repository</a></li>
+        </ul>
+      </div>
+    </nav>
+    <main itemprop="mainContentOfPage">
+      <div data-cycle-slides=".cycle-item" data-cycle-timeout="2000" data-cycle-speed="2000" data-cycle-prev="#prev" data-cycle-next="#next" data-cycle-manual-fx="scrollHorz" data-cycle-manual-speed="300" class="section cycle-slideshow slideshow">
+        <div class="cycle-pager"></div>
+        <div style="background-image:url(../Images/Demo/boat.jpg)" class="cycle-item"><img src="../Images/Demo/boat.jpg" alt="Lorem ipsum dolor sit amet">
+          <div class="cycle-text">
+            <p>Lorem ipsum dolor sit amet</p>
+          </div>
+        </div>
+        <div style="background-image:url(../Images/Demo/ponton.jpg)" class="cycle-item"><img src="../Images/Demo/ponton.jpg" alt="Consectetur adipiscing elit">
+          <div class="cycle-text">
+            <p>Consectetur adipiscing elit</p>
+          </div>
+        </div>
+        <div style="background-image:url(../Images/Demo/phare.jpg)" class="cycle-item"><img src="../Images/Demo/phare.jpg" alt="Aenean consectetur velit scelerisque dapibus faucibus">
+          <div class="cycle-text">
+            <p>Aenean consectetur velit scelerisque dapibus faucibus</p>
+          </div>
+        </div>
+        <div style="background-image:url(../Images/Demo/rose.jpg)" class="cycle-item"><img src="../Images/Demo/rose.jpg" alt="Mauris condimentum auctor dapibus">
+          <div class="cycle-text">
+            <p>Mauris condimentum auctor dapibus</p>
+          </div>
+        </div>
+        <button id="prev" class="icon-chevron-right"></button>
+        <button id="next" class="icon-chevron-right"></button>
+      </div>
+      <div id="index-detail-of-html-code" class="section">
+        <div class="wrap">
+          <h1 itemprop="headline name" class="emphasized">Slideshow</h1>
+          <h2 class="highlight">Detail of html code<a href="#index-detail-of-html-code" class="anchor"></a></h2>
+          <pre><code translate="no" data-code=" Jade" data-select="true" data-value="Sélection">.section.cycle-slideshow.slideshow(data-cycle-slides='.cycle-item', data-cycle-timeout='2000', data-cycle-speed='2000', data-cycle-prev='#prev', data-cycle-next='#next', data-cycle-manual-fx='scrollHorz', data-cycle-manual-speed='300')
+  - var img = ['../Images/Demo/boat.jpg', '../Images/Demo/ponton.jpg', '../Images/Demo/phare.jpg', '../Images/Demo/rose.jpg']
+  - var title = ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Aenean consectetur velit scelerisque dapibus faucibus', 'Mauris condimentum auctor dapibus']
+    .cycle-pager
+    - for (var i = 0; i < 4; i++)
+      .cycle-item(style='background-image:url(' + img[i] + ')')
+        img(src='' + img[i] + '' alt='' + title[i] + '')
+        .cycle-text
+          p= title[i]</code></pre>
+        </div>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap text-center"><br>
+        <p><em>A framework created by</em></p>
+        <p><span class="icon-quill"></span></p>
+        <p><a href="//github.com/Scriptura" itemprop="author" itemscope itemtype="https://schema.org/Person" class="author"><span itemprop="name"><span itemprop="givenName">Olivier</span> <span itemprop="familyName">Chavarin</span></span></a></p><br>
+      </div>
+      <div class="old-browers">
+        <div class="icon-spaceinvader zoom700"></div><br>
+        <p>Old browser!</p><br>
+        <p>This site has been developed for modern browsers. In order to benefit from its full functionality, upgrade your browser to date.</p>
+      </div>
+      <noscript class="noscript">
+        <p class="message-warning">Javascript is disabled on your browser, enable it to benefit from all the site's features.</p>
+      </noscript>
+    </footer>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.3.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../Scripts/Vendors/JQuery.js"><\/script>')</script>
+    <script src="../Scripts/Vendors/Cycle.js"></script>
+    <script src="../Public/Scripts/Main.js"></script>
+    <script src="../Public/Scripts/Themes.js"></script>
+  </body>
+</html>

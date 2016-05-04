@@ -1,0 +1,27 @@
+.section.cycle-slideshow.slideshow(data-cycle-slides='.cycle-item', data-cycle-timeout='2000', data-cycle-speed='2000', data-cycle-prev='#prev', data-cycle-next='#next', data-cycle-manual-fx='scrollHorz', data-cycle-manual-speed='300')
+  - var img = ['../Images/Demo/boat.jpg', '../Images/Demo/ponton.jpg', '../Images/Demo/phare.jpg', '../Images/Demo/rose.jpg']
+  - var title = ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Aenean consectetur velit scelerisque dapibus faucibus', 'Mauris condimentum auctor dapibus']
+    .cycle-pager
+    - for (var i = 0; i < 4; i++)
+      .cycle-item(style='background-image:url(' + img[i] + ')')
+        img(src='' + img[i] + '' alt='' + title[i] + '')
+        .cycle-text
+          p= title[i]
+  button#prev.icon-chevron-right
+  button#next.icon-chevron-right
+.section#index-detail-of-html-code
+  .wrap
+    h1(itemprop='headline name').emphasized Slideshow
+    h2.highlight Detail of html code
+      a.anchor(href='#index-detail-of-html-code')
+    pre
+      code(translate='no' data-code=' Jade' data-select='true' data-value='Sélection').
+        .section.cycle-slideshow.slideshow(data-cycle-slides='.cycle-item', data-cycle-timeout='2000', data-cycle-speed='2000', data-cycle-prev='#prev', data-cycle-next='#next', data-cycle-manual-fx='scrollHorz', data-cycle-manual-speed='300')
+          - var img = ['../Images/Demo/boat.jpg', '../Images/Demo/ponton.jpg', '../Images/Demo/phare.jpg', '../Images/Demo/rose.jpg']
+          - var title = ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Aenean consectetur velit scelerisque dapibus faucibus', 'Mauris condimentum auctor dapibus']
+            .cycle-pager
+            - for (var i = 0; i < 4; i++)
+              .cycle-item(style='background-image:url(' + img[i] + ')')
+                img(src='' + img[i] + '' alt='' + title[i] + '')
+                .cycle-text
+                  p= title[i]
