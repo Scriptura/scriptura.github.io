@@ -1,14 +1,31 @@
-.section.cycle-slideshow.slideshow(data-cycle-slides='.cycle-item', data-cycle-timeout='2000', data-cycle-speed='2000', data-cycle-prev='#prev', data-cycle-next='#next', data-cycle-manual-fx='scrollHorz', data-cycle-manual-speed='300')
-  - var img = ['../Images/Demo/boat.jpg', '../Images/Demo/ponton.jpg', '../Images/Demo/phare.jpg', '../Images/Demo/rose.jpg']
+.section.cycle-slideshow.slideshow#cycle-slideshow-1(
+  data-cycle-slides='.cycle-item'
+  data-cycle-timeout='6000'
+  data-cycle-speed='2000'
+  data-cycle-prev='#prev'
+  data-cycle-next='#next'
+  data-cycle-manual-fx='scrollHorz'
+  data-cycle-manual-speed='300'
+  )
+  - var img = ['../Images/Demo/boat.jpg', '../Images/Demo/ponton.jpg', '../Images/Demo/tunel.jpg', '../Images/Demo/rose.jpg']
   - var title = ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Aenean consectetur velit scelerisque dapibus faucibus', 'Mauris condimentum auctor dapibus']
+  - var textColor = ['#ddd', '#97B5D1', '#ddd', 'Orange']
     .cycle-pager
     - for (var i = 0; i < 4; i++)
       .cycle-item(style='background-image:url(' + img[i] + ')')
         img(src='' + img[i] + '' alt='' + title[i] + '')
         .cycle-text
-          p= title[i]
-  button#prev.icon-chevron-right
-  button#next.icon-chevron-right
+          p
+            a(href='/' style='color:' + textColor[i] + '')= title[i]
+  button#prev
+    .icon-chevron-right
+  button.pause(data-cycle-cmd='pause' data-cycle-context='#cycle-slideshow-1')
+    .icon-control-pause
+  button.resume(data-cycle-cmd='resume' data-cycle-context='#cycle-slideshow-1')
+    .icon-control-play
+  button#next
+    .icon-chevron-right
+  #progress
 .section#index-detail-of-html-code
   .wrap
     h1(itemprop='headline name').emphasized Slideshow
@@ -19,9 +36,10 @@
         .section.cycle-slideshow.slideshow(data-cycle-slides='.cycle-item', data-cycle-timeout='2000', data-cycle-speed='2000', data-cycle-prev='#prev', data-cycle-next='#next', data-cycle-manual-fx='scrollHorz', data-cycle-manual-speed='300')
           - var img = ['../Images/Demo/boat.jpg', '../Images/Demo/ponton.jpg', '../Images/Demo/phare.jpg', '../Images/Demo/rose.jpg']
           - var title = ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Aenean consectetur velit scelerisque dapibus faucibus', 'Mauris condimentum auctor dapibus']
+          - var textColor = ['#ddd', '#97B5D1', '#333', 'Orange']
             .cycle-pager
             - for (var i = 0; i < 4; i++)
               .cycle-item(style='background-image:url(' + img[i] + ')')
                 img(src='' + img[i] + '' alt='' + title[i] + '')
                 .cycle-text
-                  p= title[i]
+                  p(style='color:' + textColor[i] + '')= title[i]

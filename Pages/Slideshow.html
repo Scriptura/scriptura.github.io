@@ -29,30 +29,41 @@
       </div>
     </nav>
     <main itemprop="mainContentOfPage">
-      <div data-cycle-slides=".cycle-item" data-cycle-timeout="2000" data-cycle-speed="2000" data-cycle-prev="#prev" data-cycle-next="#next" data-cycle-manual-fx="scrollHorz" data-cycle-manual-speed="300" class="section cycle-slideshow slideshow">
+      <div id="cycle-slideshow-1" data-cycle-slides=".cycle-item" data-cycle-timeout="6000" data-cycle-speed="2000" data-cycle-prev="#prev" data-cycle-next="#next" data-cycle-manual-fx="scrollHorz" data-cycle-manual-speed="300" class="section cycle-slideshow slideshow">
         <div class="cycle-pager"></div>
         <div style="background-image:url(../Images/Demo/boat.jpg)" class="cycle-item"><img src="../Images/Demo/boat.jpg" alt="Lorem ipsum dolor sit amet">
           <div class="cycle-text">
-            <p>Lorem ipsum dolor sit amet</p>
+            <p><a href="/" style="color:#ddd">Lorem ipsum dolor sit amet</a></p>
           </div>
         </div>
         <div style="background-image:url(../Images/Demo/ponton.jpg)" class="cycle-item"><img src="../Images/Demo/ponton.jpg" alt="Consectetur adipiscing elit">
           <div class="cycle-text">
-            <p>Consectetur adipiscing elit</p>
+            <p><a href="/" style="color:#97B5D1">Consectetur adipiscing elit</a></p>
           </div>
         </div>
-        <div style="background-image:url(../Images/Demo/phare.jpg)" class="cycle-item"><img src="../Images/Demo/phare.jpg" alt="Aenean consectetur velit scelerisque dapibus faucibus">
+        <div style="background-image:url(../Images/Demo/tunel.jpg)" class="cycle-item"><img src="../Images/Demo/tunel.jpg" alt="Aenean consectetur velit scelerisque dapibus faucibus">
           <div class="cycle-text">
-            <p>Aenean consectetur velit scelerisque dapibus faucibus</p>
+            <p><a href="/" style="color:#ddd">Aenean consectetur velit scelerisque dapibus faucibus</a></p>
           </div>
         </div>
         <div style="background-image:url(../Images/Demo/rose.jpg)" class="cycle-item"><img src="../Images/Demo/rose.jpg" alt="Mauris condimentum auctor dapibus">
           <div class="cycle-text">
-            <p>Mauris condimentum auctor dapibus</p>
+            <p><a href="/" style="color:Orange">Mauris condimentum auctor dapibus</a></p>
           </div>
         </div>
-        <button id="prev" class="icon-chevron-right"></button>
-        <button id="next" class="icon-chevron-right"></button>
+        <button id="prev">
+          <div class="icon-chevron-right"></div>
+        </button>
+        <button data-cycle-cmd="pause" data-cycle-context="#cycle-slideshow-1" class="pause">
+          <div class="icon-control-pause"></div>
+        </button>
+        <button data-cycle-cmd="resume" data-cycle-context="#cycle-slideshow-1" class="resume">
+          <div class="icon-control-play"></div>
+        </button>
+        <button id="next">
+          <div class="icon-chevron-right"></div>
+        </button>
+        <div id="progress"></div>
       </div>
       <div id="index-detail-of-html-code" class="section">
         <div class="wrap">
@@ -61,12 +72,13 @@
           <pre><code translate="no" data-code=" Jade" data-select="true" data-value="Sélection">.section.cycle-slideshow.slideshow(data-cycle-slides='.cycle-item', data-cycle-timeout='2000', data-cycle-speed='2000', data-cycle-prev='#prev', data-cycle-next='#next', data-cycle-manual-fx='scrollHorz', data-cycle-manual-speed='300')
   - var img = ['../Images/Demo/boat.jpg', '../Images/Demo/ponton.jpg', '../Images/Demo/phare.jpg', '../Images/Demo/rose.jpg']
   - var title = ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Aenean consectetur velit scelerisque dapibus faucibus', 'Mauris condimentum auctor dapibus']
+  - var textColor = ['#ddd', '#97B5D1', '#333', 'Orange']
     .cycle-pager
     - for (var i = 0; i < 4; i++)
       .cycle-item(style='background-image:url(' + img[i] + ')')
         img(src='' + img[i] + '' alt='' + title[i] + '')
         .cycle-text
-          p= title[i]</code></pre>
+          p(style='color:' + textColor[i] + '')= title[i]</code></pre>
         </div>
       </div>
     </main>
