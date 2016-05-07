@@ -29,56 +29,84 @@
       </div>
     </nav>
     <main itemprop="mainContentOfPage">
-      <div id="cycle-slideshow-1" data-cycle-slides=".cycle-item" data-cycle-timeout="6000" data-cycle-speed="2000" data-cycle-prev="#prev" data-cycle-next="#next" data-cycle-manual-fx="scrollHorz" data-cycle-manual-speed="300" class="section cycle-slideshow slideshow">
+      <div id="slideshow1" data-cycle-slides=".cycle-item" data-cycle-timeout="6000" data-cycle-speed="2000" data-cycle-prev="#prev" data-cycle-next="#next" data-cycle-manual-fx="scrollHorz" data-cycle-manual-speed="300" class="section slideshow">
         <div class="cycle-pager"></div>
         <div style="background-image:url(../Images/Demo/boat.jpg)" class="cycle-item"><img src="../Images/Demo/boat.jpg" alt="Lorem ipsum dolor sit amet">
           <div class="cycle-text">
-            <p><a href="/" style="color:#ddd">Lorem ipsum dolor sit amet</a></p>
+            <div>
+              <h2><a href="/" style="color:#ddd">Lorem ipsum dolor sit amet</a></h2>
+            </div>
           </div>
         </div>
         <div style="background-image:url(../Images/Demo/ponton.jpg)" class="cycle-item"><img src="../Images/Demo/ponton.jpg" alt="Consectetur adipiscing elit">
           <div class="cycle-text">
-            <p><a href="/" style="color:#97B5D1">Consectetur adipiscing elit</a></p>
+            <div>
+              <h2><a href="/" style="color:#97B5D1">Consectetur adipiscing elit</a></h2>
+            </div>
           </div>
         </div>
-        <div style="background-image:url(../Images/Demo/tunel.jpg)" class="cycle-item"><img src="../Images/Demo/tunel.jpg" alt="Aenean consectetur velit scelerisque dapibus faucibus">
+        <div style="background-image:url(../Images/Demo/tunel.jpg)" class="cycle-item"><img src="../Images/Demo/tunel.jpg" alt="Aenean commodo ligula eget dolor. Aenean massa.">
           <div class="cycle-text">
-            <p><a href="/" style="color:#ddd">Aenean consectetur velit scelerisque dapibus faucibus</a></p>
+            <div>
+              <h2><a href="/" style="color:#ddd">Aenean commodo ligula eget dolor. Aenean massa.</a></h2>
+            </div>
           </div>
         </div>
-        <div style="background-image:url(../Images/Demo/rose.jpg)" class="cycle-item"><img src="../Images/Demo/rose.jpg" alt="Mauris condimentum auctor dapibus">
+        <div style="background-image:url(../Images/Demo/rose.jpg)" class="cycle-item"><img src="../Images/Demo/rose.jpg" alt="Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.">
           <div class="cycle-text">
-            <p><a href="/" style="color:Orange">Mauris condimentum auctor dapibus</a></p>
+            <div>
+              <h2><a href="/" style="color:Orange">Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</a></h2>
+            </div>
           </div>
         </div>
         <button id="prev">
           <div class="icon-chevron-right"></div>
         </button>
-        <button data-cycle-cmd="pause" data-cycle-context="#cycle-slideshow-1" class="pause">
+        <button data-cycle-cmd="pause" data-cycle-context="#slideshow1" class="pause">
           <div class="icon-control-pause"></div>
         </button>
-        <button data-cycle-cmd="resume" data-cycle-context="#cycle-slideshow-1" class="resume">
+        <button data-cycle-cmd="resume" data-cycle-context="#slideshow1" class="resume">
           <div class="icon-control-play"></div>
         </button>
         <button id="next">
           <div class="icon-chevron-right"></div>
         </button>
-        <div id="progress"></div>
       </div>
       <div id="index-detail-of-html-code" class="section">
         <div class="wrap">
           <h1 itemprop="headline name" class="emphasized">Slideshow</h1>
           <h2 class="highlight">Detail of html code<a href="#index-detail-of-html-code" class="anchor"></a></h2>
-          <pre><code translate="no" data-code=" Jade" data-select="true" data-value="Sélection">.section.cycle-slideshow.slideshow(data-cycle-slides='.cycle-item', data-cycle-timeout='2000', data-cycle-speed='2000', data-cycle-prev='#prev', data-cycle-next='#next', data-cycle-manual-fx='scrollHorz', data-cycle-manual-speed='300')
-  - var img = ['../Images/Demo/boat.jpg', '../Images/Demo/ponton.jpg', '../Images/Demo/phare.jpg', '../Images/Demo/rose.jpg']
-  - var title = ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Aenean consectetur velit scelerisque dapibus faucibus', 'Mauris condimentum auctor dapibus']
-  - var textColor = ['#ddd', '#97B5D1', '#333', 'Orange']
+          <pre><code translate="no" data-code=" Jade" data-select="true" data-value="Sélection">.section.slideshow#slideshow1(
+  data-cycle-slides='.cycle-item'
+  data-cycle-timeout='6000'
+  data-cycle-speed='2000'
+  data-cycle-prev='#prev'
+  data-cycle-next='#next'
+  data-cycle-manual-fx='scrollHorz'
+  data-cycle-manual-speed='300'
+  )
+  - var img = ['../Images/Demo/boat.jpg', '../Images/Demo/ponton.jpg', '../Images/Demo/tunel.jpg', '../Images/Demo/rose.jpg']
+  - var title = ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Aenean commodo ligula eget dolor. Aenean massa.', 'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.']
+  - var textColor = ['#ddd', '#97B5D1', '#ddd', 'Orange']
     .cycle-pager
     - for (var i = 0; i < 4; i++)
-      .cycle-item(style='background-image:url(' + img[i] + ')')
+      .cycle-item(
+        style='background-image:url(' + img[i] + ')'
+        )
+        //- data-cycle-hash='' + title[i] + '' // Attribute for .cycle-item
         img(src='' + img[i] + '' alt='' + title[i] + '')
         .cycle-text
-          p(style='color:' + textColor[i] + '')= title[i]</code></pre>
+          div
+            p
+              a(href='/' style='color:' + textColor[i] + '')= title[i]
+  button#prev
+    .icon-chevron-right
+  button.pause(data-cycle-cmd='pause' data-cycle-context='#slideshow1')
+    .icon-control-pause
+  button.resume(data-cycle-cmd='resume' data-cycle-context='#slideshow1')
+    .icon-control-play
+  button#next
+    .icon-chevron-right</code></pre>
         </div>
       </div>
     </main>
@@ -99,7 +127,6 @@
     </footer>
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.3.min.js"></script>
     <script>window.jQuery || document.write('<script src="../Scripts/Vendors/JQuery.js"><\/script>')</script>
-    <script src="../Scripts/Vendors/Cycle.js"></script>
     <script src="../Public/Scripts/Main.js"></script>
     <script src="../Public/Scripts/Themes.js"></script>
   </body>

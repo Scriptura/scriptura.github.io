@@ -1,4 +1,4 @@
-.section.cycle-slideshow.slideshow#cycle-slideshow-1(
+.section.slideshow#slideshow1(
   data-cycle-slides='.cycle-item'
   data-cycle-timeout='6000'
   data-cycle-speed='2000'
@@ -8,24 +8,27 @@
   data-cycle-manual-speed='300'
   )
   - var img = ['../Images/Demo/boat.jpg', '../Images/Demo/ponton.jpg', '../Images/Demo/tunel.jpg', '../Images/Demo/rose.jpg']
-  - var title = ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Aenean consectetur velit scelerisque dapibus faucibus', 'Mauris condimentum auctor dapibus']
+  - var title = ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Aenean commodo ligula eget dolor. Aenean massa.', 'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.']
   - var textColor = ['#ddd', '#97B5D1', '#ddd', 'Orange']
     .cycle-pager
     - for (var i = 0; i < 4; i++)
-      .cycle-item(style='background-image:url(' + img[i] + ')')
+      .cycle-item(
+        style='background-image:url(' + img[i] + ')'
+        )
+        //- data-cycle-hash='' + title[i] + '' // Attribute for .cycle-item
         img(src='' + img[i] + '' alt='' + title[i] + '')
         .cycle-text
-          p
-            a(href='/' style='color:' + textColor[i] + '')= title[i]
+          div
+            h2
+              a(href='/' style='color:' + textColor[i] + '')= title[i]
   button#prev
     .icon-chevron-right
-  button.pause(data-cycle-cmd='pause' data-cycle-context='#cycle-slideshow-1')
+  button.pause(data-cycle-cmd='pause' data-cycle-context='#slideshow1')
     .icon-control-pause
-  button.resume(data-cycle-cmd='resume' data-cycle-context='#cycle-slideshow-1')
+  button.resume(data-cycle-cmd='resume' data-cycle-context='#slideshow1')
     .icon-control-play
   button#next
     .icon-chevron-right
-  #progress
 .section#index-detail-of-html-code
   .wrap
     h1(itemprop='headline name').emphasized Slideshow
@@ -33,13 +36,34 @@
       a.anchor(href='#index-detail-of-html-code')
     pre
       code(translate='no' data-code=' Jade' data-select='true' data-value='Sélection').
-        .section.cycle-slideshow.slideshow(data-cycle-slides='.cycle-item', data-cycle-timeout='2000', data-cycle-speed='2000', data-cycle-prev='#prev', data-cycle-next='#next', data-cycle-manual-fx='scrollHorz', data-cycle-manual-speed='300')
-          - var img = ['../Images/Demo/boat.jpg', '../Images/Demo/ponton.jpg', '../Images/Demo/phare.jpg', '../Images/Demo/rose.jpg']
-          - var title = ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Aenean consectetur velit scelerisque dapibus faucibus', 'Mauris condimentum auctor dapibus']
-          - var textColor = ['#ddd', '#97B5D1', '#333', 'Orange']
+        .section.slideshow#slideshow1(
+          data-cycle-slides='.cycle-item'
+          data-cycle-timeout='6000'
+          data-cycle-speed='2000'
+          data-cycle-prev='#prev'
+          data-cycle-next='#next'
+          data-cycle-manual-fx='scrollHorz'
+          data-cycle-manual-speed='300'
+          )
+          - var img = ['../Images/Demo/boat.jpg', '../Images/Demo/ponton.jpg', '../Images/Demo/tunel.jpg', '../Images/Demo/rose.jpg']
+          - var title = ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Aenean commodo ligula eget dolor. Aenean massa.', 'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.']
+          - var textColor = ['#ddd', '#97B5D1', '#ddd', 'Orange']
             .cycle-pager
             - for (var i = 0; i < 4; i++)
-              .cycle-item(style='background-image:url(' + img[i] + ')')
+              .cycle-item(
+                style='background-image:url(' + img[i] + ')'
+                )
+                //- data-cycle-hash='' + title[i] + '' // Attribute for .cycle-item
                 img(src='' + img[i] + '' alt='' + title[i] + '')
                 .cycle-text
-                  p(style='color:' + textColor[i] + '')= title[i]
+                  div
+                    p
+                      a(href='/' style='color:' + textColor[i] + '')= title[i]
+          button#prev
+            .icon-chevron-right
+          button.pause(data-cycle-cmd='pause' data-cycle-context='#slideshow1')
+            .icon-control-pause
+          button.resume(data-cycle-cmd='resume' data-cycle-context='#slideshow1')
+            .icon-control-play
+          button#next
+            .icon-chevron-right
