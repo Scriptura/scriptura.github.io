@@ -12,15 +12,45 @@
   - var textColor = ['#ddd', '#97B5D1', '#ddd', 'Orange']
     .cycle-pager
     - for (var i = 0; i < 4; i++)
-      .cycle-item(
-        style='background-image:url(' + img[i] + ')'
-        )
-        //- data-cycle-hash='' + title[i] + '' // Attribute for .cycle-item
-        img(src='' + img[i] + '' alt='' + title[i] + '')
+      style.
+        @media screen and (max-width: 36.01rem) {
+          #cycle-item#{i} {
+            background-image: url(#{img[i]});
+          }
+        }
+        @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
+          #cycle-item#{i} {
+            background-image: url(#{img[i]});
+          }
+        }
+        @media screen and (min-width: 65.01rem) and (max-width: 90.01rem) {
+          #cycle-item#{i} {
+            background-image: url(#{img[i]});
+          }
+        }
+        @media screen and (min-width: 90.01rem) and (max-width: 120.01rem) {
+          #cycle-item#{i} {
+            background-image: url(#{img[i]});
+          }
+        }
+        @media screen and (min-width: 120.01rem) and (max-width: 140.01rem) {
+          #cycle-item#{i} {
+            background-image: url(#{img[i]});
+          }
+        }
+        @media screen and (min-width: 140.01rem) {
+          #cycle-item#{i} {
+            background-image: url(#{img[i]});
+          }
+        }
+      .cycle-item(id='cycle-item#{i}')
+        //- data-cycle-hash='#{title[i]}' // Attribute for .cycle-item
+        img(src='#{img[i]}' alt='#{title[i]}')
         .cycle-text
           div
             h2
-              a(href='/' style='color:' + textColor[i] + '')= title[i]
+              a(href='/' style='color:#{textColor[i]}')
+                = title[i]
   button#prev
     .icon-chevron-right
   button.pause(data-cycle-cmd='pause' data-cycle-context='#slideshow1')
@@ -50,15 +80,45 @@
           - var textColor = ['#ddd', '#97B5D1', '#ddd', 'Orange']
             .cycle-pager
             - for (var i = 0; i < 4; i++)
-              .cycle-item(
-                style='background-image:url(' + img[i] + ')'
-                )
-                //- data-cycle-hash='' + title[i] + '' // Attribute for .cycle-item
-                img(src='' + img[i] + '' alt='' + title[i] + '')
+              style.
+                @media screen and (max-width: 36.01rem) {
+                  #cycle-item#{i} {
+                    background-image: url(#{img[i]});
+                  }
+                }
+                @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
+                  #cycle-item#{i} {
+                    background-image: url(#{img[i]});
+                  }
+                }
+                @media screen and (min-width: 65.01rem) and (max-width: 90.01rem) {
+                  #cycle-item#{i} {
+                    background-image: url(#{img[i]});
+                  }
+                }
+                @media screen and (min-width: 90.01rem) and (max-width: 120.01rem) {
+                  #cycle-item#{i} {
+                    background-image: url(#{img[i]});
+                  }
+                }
+                @media screen and (min-width: 120.01rem) and (max-width: 140.01rem) {
+                  #cycle-item#{i} {
+                    background-image: url(#{img[i]});
+                  }
+                }
+                @media screen and (min-width: 140.01rem) {
+                  #cycle-item#{i} {
+                    background-image: url(#{img[i]});
+                  }
+                }
+              .cycle-item(id='cycle-item#{i}')
+                //- data-cycle-hash='#{title[i]}' // Attribute for .cycle-item
+                img(src='#{img[i]}' alt='#{title[i]}')
                 .cycle-text
                   div
-                    p
-                      a(href='/' style='color:' + textColor[i] + '')= title[i]
+                    h2
+                      a(href='/' style='color:#{textColor[i]}')
+                        = title[i]
           button#prev
             .icon-chevron-right
           button.pause(data-cycle-cmd='pause' data-cycle-context='#slideshow1')
