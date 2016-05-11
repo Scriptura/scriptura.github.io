@@ -1,66 +1,76 @@
+mixin picture(img, alt)
+  - var img = '../Images/Demo/' + img
+  picture
+    source(media='(min-width: 2048px)' srcset='#{img}2048.jpg 2500w' sizes='100vw')
+    source(media='(min-width: 1024px)' srcset='#{img}2048.jpg 2048w' sizes='100vw')
+    source(media='(min-width: 640px)' srcset='#{img}1024.jpg 1024w' sizes='100vw')
+    source(media='(min-width: 320px)' srcset='#{img}640.jpg 640w' sizes='100vw')
+    source(srcset='#{img}320.jpg 320w' sizes='100vw')
+    img(src='#{img}.jpg' alt='#{alt}')
+
 .grid
   .m4.sizeS-m6
     p
       code img
-    img(src='../Images/Demo/ponton.jpg', alt='Ponton')
+    +picture('lotus', 'Lotus')
   .m4.sizeS-m6
     p
       code .figure
     figure.figure
-      img(src='../Images/Demo/ponton.jpg', alt='Ponton')
+      +picture('lotus', 'Lotus')
   .m4.sizeS-m6
     p
       code .figure-captionslide
     figure.figure-captionslide
-      img(src='../Images/Demo/ponton.jpg', alt='Ponton')
+      +picture('lotus', 'Lotus')
       figcaption Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
   .m3.sizeL-m4.sizeS-m6
     p
       code .figure figcaption
     figure.figure
-      img(src='../Images/Demo/ponton.jpg', alt='Ponton')
+      +picture('lotus', 'Lotus')
       figcaption Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
   .m3.sizeL-m4.sizeS-m6
     p
       code .figure-focus
     figure.figure-focus
-      img(src='../Images/Demo/ponton.jpg', alt='Ponton')
+      +picture('lotus', 'Lotus')
       figcaption Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
   .m3.sizeL-m4.sizeS-m6
     p
       code .figure-focus
     figure.figure-focus
-      img(src='../Images/Demo/tunel.jpg', alt='Tunel')
+      +picture('lotus', 'Lotus')
       figcaption Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
   .m3.sizeL-m4.sizeS-m6
     p
       code .figure-focus
     figure.figure-focus
-      img(src='../Images/Demo/LittleGirl.jpg', alt='Little Girl')
+      +picture('LittleGirl', 'Little Girl')
       figcaption Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
   .grid
     .m6
       p
         code .figure
       figure.figure
-        img(src='../Images/Demo/ponton.jpg', alt='Ponton')
+        +picture('boat', 'Boat')
     .m6
       p
         code .figure-thumbnail
       figure.figure-thumbnail
-        img(src='../Images/Demo/ponton.jpg', alt='Ponton')
+        +picture('boat', 'Boat')
   .grid
     .m6
       p
         code .figure-alignleft
       figure.figure-alignleft-captionslide-thumbnail
-        img(src='../Images/Demo/ponton.jpg', alt='Ponton')
+        +picture('tunel', 'Tunel')
         figcaption Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
       p Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
     .m6
       p
         code .figure-alignright
       figure.figure-alignright-captionslide-thumbnail
-        img(src='../Images/Demo/ponton.jpg', alt='Ponton')
+        +picture('tunel', 'Tunel')
         figcaption Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
       p Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.

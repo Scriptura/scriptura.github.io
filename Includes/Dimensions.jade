@@ -1,15 +1,6 @@
-p
-  code .width2
-img(src='../Images/Demo/ponton.jpg', alt='Ponton').width2
-p
-  code .width4
-img(src='../Images/Demo/ponton.jpg', alt='Ponton').width4
-p
-  code .width8
-img(src='../Images/Demo/ponton.jpg', alt='Ponton').width8
-p
-  code .width16
-img(src='../Images/Demo/ponton.jpg', alt='Ponton').width16
-p
-  code .width32
-img(src='../Images/Demo/ponton.jpg', alt='Ponton').width32
+- inlineStyle = 'background-image:url(../Images/Demo/ponton1024.jpg);background-size:cover'
+- each i in [2, 4, 8, 16, 32]
+  p
+    code .width#{i}
+  div(class='width#{i}')
+    .ratio-16-9(style='#{inlineStyle}')

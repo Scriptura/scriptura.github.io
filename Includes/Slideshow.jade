@@ -7,45 +7,37 @@
   data-cycle-manual-fx='scrollHorz'
   data-cycle-manual-speed='300'
   )
-  - var img = ['../Images/Demo/boat.jpg', '../Images/Demo/ponton.jpg', '../Images/Demo/tunel.jpg', '../Images/Demo/rose.jpg']
+  - var img = ['../Images/Demo/boat', '../Images/Demo/ponton', '../Images/Demo/tunel', '../Images/Demo/rose']
   - var title = ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Aenean commodo ligula eget dolor. Aenean massa.', 'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.']
   - var textColor = ['#ddd', '#97B5D1', '#ddd', 'Orange']
+  - var sizes = '100vw'
     .cycle-pager
     - for (var i = 0; i < 4; i++)
       style.
         @media screen and (max-width: 36.01rem) {
           #cycle-item#{i} {
-            background-image: url(#{img[i]});
+            background-image: url(#{img[i]}1024.jpg); /* 1024px */
           }
         }
         @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
           #cycle-item#{i} {
-            background-image: url(#{img[i]});
+            background-image: url(#{img[i]}2048.jpg); /* 2048px */
           }
         }
-        @media screen and (min-width: 65.01rem) and (max-width: 90.01rem) {
+        @media screen and (min-width: 65.01rem) {
           #cycle-item#{i} {
-            background-image: url(#{img[i]});
-          }
-        }
-        @media screen and (min-width: 90.01rem) and (max-width: 120.01rem) {
-          #cycle-item#{i} {
-            background-image: url(#{img[i]});
-          }
-        }
-        @media screen and (min-width: 120.01rem) and (max-width: 140.01rem) {
-          #cycle-item#{i} {
-            background-image: url(#{img[i]});
-          }
-        }
-        @media screen and (min-width: 140.01rem) {
-          #cycle-item#{i} {
-            background-image: url(#{img[i]});
+            background-image: url(#{img[i]}2048.jpg); /* Original */
           }
         }
       .cycle-item(id='cycle-item#{i}')
         //- data-cycle-hash='#{title[i]}' // Attribute for .cycle-item
-        img(src='#{img[i]}' alt='#{title[i]}')
+        picture
+          //- @todo L'image la plus petite est suffisante pour l'attribut srcset étant donné que l'image est inutilisée au profit de 'background-image'
+          source(
+            srcset='#{img[i]}320.jpg'
+            sizes='#{sizes}'
+            )
+          img(src='#{img[i]}' alt='#{title[i]}')
         .cycle-text
           div
             h2
