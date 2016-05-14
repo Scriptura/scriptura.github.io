@@ -52,7 +52,7 @@ block content
                 .vertical.vh85.zoom150
                   h1.vmin(itemprop='name' style='color:#{textColor[i]}') Scriptura
                   .text-center
-                    svg.svg-color.width10(xmlns='http://www.w3.org/2000/svg' viewbox='0 0 200 200')
+                    svg.svg-color.width10(xmlns='http://www.w3.org/2000/svg' viewbox='0 0 200 200' style='fill:#{textColor[i]}')
                       path(d='M200 24.758c-355.807-105.878 130.682 161.232-200 175.242 286.814-75.173-174.292-221.127 200-175.242z')
                   h2.vmin(itemprop='alternativeHeadline' style='color:#{textColor[i]}') Interface for web apps
                   p(style='color:#fff') v. @@pkg.version
@@ -64,7 +64,10 @@ block content
                 br
                 br
                 a.vmin(href='#index-about' style='text-decoration:none')
-                  .icon-chevron-right.zoom200(style='color:#{textColor[i]};transform:rotate(90deg)')
+                  .icon-chevron-right.zoom500(style='color:#ddd;transform:rotate(90deg)')
+                br
+                br
+                br
   //-
     header.section.vh100(role='banner')
       .wrap.ribbon-container
