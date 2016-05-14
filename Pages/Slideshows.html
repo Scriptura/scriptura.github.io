@@ -52,7 +52,7 @@
           <picture>
             <source srcset="../Images/Demo/LotusMacro300.jpg" sizes="100vw"><img src="../Images/Demo/LotusMacro.jpg" alt="Lorem ipsum dolor sit amet">
           </picture>
-          <div class="cycle-text">
+          <div class="wrap cycle-text">
             <div>
               <h2><a href="/" style="color:#fff">Lorem ipsum dolor sit amet</a></h2>
             </div>
@@ -61,96 +61,57 @@
         <style>
           @media screen and (max-width: 36.01rem) {
             #cycle-item1 {
-              background-image: url(../Images/Demo/ForlornKeel1000.jpg);
+              background-image: url(../Images/Demo/PacificCity1000.jpg);
             }
           }
           @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
             #cycle-item1 {
-              background-image: url(../Images/Demo/ForlornKeel1500.jpg);
+              background-image: url(../Images/Demo/PacificCity1500.jpg);
             }
           }
           @media screen and (min-width: 65.01rem) {
             #cycle-item1 {
-              background-image: url(../Images/Demo/ForlornKeel2000.jpg);
+              background-image: url(../Images/Demo/PacificCity2000.jpg);
             }
           }
         </style>
         <div id="cycle-item1" class="cycle-item">
           <picture>
-            <source srcset="../Images/Demo/ForlornKeel300.jpg" sizes="100vw"><img src="../Images/Demo/ForlornKeel.jpg" alt="Consectetur adipiscing elit">
+            <source srcset="../Images/Demo/PacificCity300.jpg" sizes="100vw"><img src="../Images/Demo/PacificCity.jpg" alt="Consectetur adipiscing elit">
           </picture>
-          <div class="cycle-text">
+          <div class="wrap cycle-text">
             <div>
-              <h2><a href="/" style="color:#cee2f9">Consectetur adipiscing elit</a></h2>
+              <h2><a href="/" style="color:#b7c3b9">Consectetur adipiscing elit</a></h2>
             </div>
           </div>
         </div>
         <style>
           @media screen and (max-width: 36.01rem) {
             #cycle-item2 {
-              background-image: url(../Images/Demo/PacificCity1000.jpg);
+              background-image: url(../Images/Demo/OldMechanism1000.jpg);
             }
           }
           @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
             #cycle-item2 {
-              background-image: url(../Images/Demo/PacificCity1500.jpg);
+              background-image: url(../Images/Demo/OldMechanism1500.jpg);
             }
           }
           @media screen and (min-width: 65.01rem) {
             #cycle-item2 {
-              background-image: url(../Images/Demo/PacificCity2000.jpg);
+              background-image: url(../Images/Demo/OldMechanism2000.jpg);
             }
           }
         </style>
         <div id="cycle-item2" class="cycle-item">
           <picture>
-            <source srcset="../Images/Demo/PacificCity300.jpg" sizes="100vw"><img src="../Images/Demo/PacificCity.jpg" alt="Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.">
-          </picture>
-          <div class="cycle-text">
-            <div>
-              <h2><a href="/" style="color:#b7c3b9">Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</a></h2>
-            </div>
-          </div>
-        </div>
-        <style>
-          @media screen and (max-width: 36.01rem) {
-            #cycle-item3 {
-              background-image: url(../Images/Demo/OldMechanism1000.jpg);
-            }
-          }
-          @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
-            #cycle-item3 {
-              background-image: url(../Images/Demo/OldMechanism1500.jpg);
-            }
-          }
-          @media screen and (min-width: 65.01rem) {
-            #cycle-item3 {
-              background-image: url(../Images/Demo/OldMechanism2000.jpg);
-            }
-          }
-        </style>
-        <div id="cycle-item3" class="cycle-item">
-          <picture>
             <source srcset="../Images/Demo/OldMechanism300.jpg" sizes="100vw"><img src="../Images/Demo/OldMechanism.jpg" alt="Fusce tempor, justo at pellentesque molestie, turpis lacus fringilla urna, ut luctus lorem lectus iaculis elit.">
           </picture>
-          <div class="cycle-text">
+          <div class="wrap cycle-text">
             <div>
               <h2><a href="/" style="color:#9fa6b6">Fusce tempor, justo at pellentesque molestie, turpis lacus fringilla urna, ut luctus lorem lectus iaculis elit.</a></h2>
             </div>
           </div>
         </div>
-        <button id="prev">
-          <div class="icon-chevron-right"></div>
-        </button>
-        <button data-cycle-cmd="pause" data-cycle-context="#slideshow1" class="pause">
-          <div class="icon-control-pause"></div>
-        </button>
-        <button data-cycle-cmd="resume" data-cycle-context="#slideshow1" class="resume">
-          <div class="icon-control-play"></div>
-        </button>
-        <button id="next">
-          <div class="icon-chevron-right"></div>
-        </button>
       </div>
       <div id="index-detail-of-html-code" class="section">
         <div class="wrap">
@@ -165,58 +126,41 @@
   data-cycle-manual-fx='scrollHorz'
   data-cycle-manual-speed='300'
   )
-  - var img = ['../Images/Demo/boat.jpg', '../Images/Demo/ponton.jpg', '../Images/Demo/tunel.jpg', '../Images/Demo/rose.jpg']
-  - var title = ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Aenean commodo ligula eget dolor. Aenean massa.', 'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.']
-  - var textColor = ['#ddd', '#97B5D1', '#ddd', 'Orange']
+  - var img = [ '../Images/Demo/LotusMacro', '../Images/Demo/PacificCity', '../Images/Demo/OldMechanism' ]
+  - var title = [ 'Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Fusce tempor, justo at pellentesque molestie, turpis lacus fringilla urna, ut luctus lorem lectus iaculis elit.' ]
+  - var textColor = [ '#fff', '#b7c3b9', '#9fa6b6' ]
     .cycle-pager
-    - for (var i = 0; i < 4; i++)
+    - for (var i = 0; i < img.length; i++)
       style.
         @media screen and (max-width: 36.01rem) {
-          #cycle-item4 {
-            background-image: url();
+          #cycle-item3 {
+            background-image: url(1000.jpg);
           }
         }
         @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
-          #cycle-item4 {
-            background-image: url();
+          #cycle-item3 {
+            background-image: url(1500.jpg);
           }
         }
-        @media screen and (min-width: 65.01rem) and (max-width: 90.01rem) {
-          #cycle-item4 {
-            background-image: url();
+        @media screen and (min-width: 65.01rem) {
+          #cycle-item3 {
+            background-image: url(2000.jpg);
           }
         }
-        @media screen and (min-width: 90.01rem) and (max-width: 120.01rem) {
-          #cycle-item4 {
-            background-image: url();
-          }
-        }
-        @media screen and (min-width: 120.01rem) and (max-width: 140.01rem) {
-          #cycle-item4 {
-            background-image: url();
-          }
-        }
-        @media screen and (min-width: 140.01rem) {
-          #cycle-item4 {
-            background-image: url();
-          }
-        }
-      .cycle-item(id='cycle-item4')
-        //- data-cycle-hash='' // Attribute for .cycle-item
-        img(src='' alt='')
-        .cycle-text
+      .cycle-item(id='cycle-item3')
+        //- data-cycle-hash='' // Attribut permettant une ancre liée à l'élément
+        picture
+          //- @todo L'image la plus petite est suffisante pour l'attribut srcset étant donné que l'image est inutilisée au profit de 'background-image'
+          source(
+            srcset='300.jpg'
+            sizes='100vw'
+            )
+          img(src='.jpg' alt='')
+        .wrap.cycle-text
           div
             h2
               a(href='/' style='color:')
-                = title[i]
-  button#prev
-    .icon-chevron-right
-  button.pause(data-cycle-cmd='pause' data-cycle-context='#slideshow1')
-    .icon-control-pause
-  button.resume(data-cycle-cmd='resume' data-cycle-context='#slideshow1')
-    .icon-control-play
-  button#next
-    .icon-chevron-right</code></pre>
+                = title[i]</code></pre>
         </div>
       </div>
     </main>

@@ -7,22 +7,81 @@ append var
   - contentlarge = true
 
 block content
-  header.section.vh100(role='banner')
-    .wrap.ribbon-container
-      .ribbon
-        div v. @@pkg.version
-      .vertical.vh85
-        .text-center
-          h1.vmin(itemprop='name') Scriptura
-          svg.svg-color.width10(xmlns='http://www.w3.org/2000/svg' viewbox='0 0 200 200')
-            path(d='M200 24.758c-355.807-105.878 130.682 161.232-200 175.242 286.814-75.173-174.292-221.127 200-175.242z')
-          h2.vmin(itemprop='alternativeHeadline') Interface for web apps
-          br
-          br
-          br.sizeXS-unhidden
-          br.sizeXS-unhidden
-          a(href='#index-about' style='text-decoration:none')
-            .icon-chevron-right.zoom200(style='transform:rotate(90deg)')
+  header.section.slideshow#slideshow1(
+    data-cycle-slides='.cycle-item'
+    data-cycle-timeout='10000'
+    data-cycle-speed='2000'
+    data-cycle-prev='#prev'
+    data-cycle-next='#next'
+    data-cycle-manual-fx='scrollHorz'
+    data-cycle-manual-speed='300'
+    )
+    - var img = [ '../Images/Demo/LotusMacro', '../Images/Demo/FlowerMacro' ]
+    - var title = [ '', 'A framework Jade/Stylus/Javascript' ]
+    - var textColor = [ '#fff', '#fff' ]
+      .cycle-pager
+      - for (var i = 0; i < img.length; i++)
+        style.
+          @media screen and (max-width: 36.01rem) {
+            #cycle-item#{i} {
+              background-image: url(#{img[i]}1000.jpg);
+            }
+          }
+          @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
+            #cycle-item#{i} {
+              background-image: url(#{img[i]}1500.jpg);
+            }
+          }
+          @media screen and (min-width: 65.01rem) {
+            #cycle-item#{i} {
+              background-image: url(#{img[i]}2000.jpg);
+            }
+          }
+        .cycle-item(id='cycle-item#{i}')
+          //- data-cycle-hash='#{title[i]}' // Attribut permettant une ancre liée à l'élément
+          picture
+            //- @todo L'image la plus petite est suffisante pour l'attribut srcset étant donné que l'image est inutilisée au profit de 'background-image'
+            source(
+              srcset='#{img[i]}300.jpg'
+              sizes='100vw'
+              )
+            img(src='#{img[i]}.jpg' alt='#{title[i]}')
+          .wrap.cycle-text
+            if title[i] === title[0]
+              div
+                .vertical.vh85.zoom150
+                  h1.vmin(itemprop='name' style='color:#{textColor[i]}') Scriptura
+                  .text-center
+                    svg.svg-color.width10(xmlns='http://www.w3.org/2000/svg' viewbox='0 0 200 200')
+                      path(d='M200 24.758c-355.807-105.878 130.682 161.232-200 175.242 286.814-75.173-174.292-221.127 200-175.242z')
+                  h2.vmin(itemprop='alternativeHeadline' style='color:#{textColor[i]}') Interface for web apps
+                  p(style='color:#fff') v. @@pkg.version
+            else
+              div
+                h2.vmin(style='color:#{textColor[i]}')
+                  = title[i]
+                br
+                br
+                br
+                a.vmin(href='#index-about' style='text-decoration:none')
+                  .icon-chevron-right.zoom200(style='color:#{textColor[i]};transform:rotate(90deg)')
+  //-
+    header.section.vh100(role='banner')
+      .wrap.ribbon-container
+        .ribbon
+          div v. @@pkg.version
+        .vertical.vh85
+          .text-center
+            h1.vmin(itemprop='name') Scriptura
+            svg.svg-color.width10(xmlns='http://www.w3.org/2000/svg' viewbox='0 0 200 200')
+              path(d='M200 24.758c-355.807-105.878 130.682 161.232-200 175.242 286.814-75.173-174.292-221.127 200-175.242z')
+            h2.vmin(itemprop='alternativeHeadline') Interface for web apps
+            br
+            br
+            br.sizeXS-unhidden
+            br.sizeXS-unhidden
+            a(href='#index-about' style='text-decoration:none')
+              .icon-chevron-right.zoom200(style='transform:rotate(90deg)')
   .section#index-about
     .wrap.box.ribbon-container
       .ribbon

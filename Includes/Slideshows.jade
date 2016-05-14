@@ -7,11 +7,11 @@
   data-cycle-manual-fx='scrollHorz'
   data-cycle-manual-speed='300'
   )
-  - var img = [ '../Images/Demo/LotusMacro', '../Images/Demo/ForlornKeel', '../Images/Demo/PacificCity', '../Images/Demo/OldMechanism' ]
-  - var title = [ 'Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.', 'Fusce tempor, justo at pellentesque molestie, turpis lacus fringilla urna, ut luctus lorem lectus iaculis elit.' ]
-  - var textColor = [ '#fff', '#cee2f9', '#b7c3b9', '#9fa6b6' ]
+  - var img = [ '../Images/Demo/LotusMacro', '../Images/Demo/PacificCity', '../Images/Demo/OldMechanism' ]
+  - var title = [ 'Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Fusce tempor, justo at pellentesque molestie, turpis lacus fringilla urna, ut luctus lorem lectus iaculis elit.' ]
+  - var textColor = [ '#fff', '#b7c3b9', '#9fa6b6' ]
     .cycle-pager
-    - for (var i = 0; i < 4; i++)
+    - for (var i = 0; i < img.length; i++)
       style.
         @media screen and (max-width: 36.01rem) {
           #cycle-item#{i} {
@@ -29,7 +29,7 @@
           }
         }
       .cycle-item(id='cycle-item#{i}')
-        //- data-cycle-hash='#{title[i]}' // Attribute for .cycle-item
+        //- data-cycle-hash='#{title[i]}' // Attribut permettant une ancre liée à l'élément
         picture
           //- @todo L'image la plus petite est suffisante pour l'attribut srcset étant donné que l'image est inutilisée au profit de 'background-image'
           source(
@@ -37,19 +37,11 @@
             sizes='100vw'
             )
           img(src='#{img[i]}.jpg' alt='#{title[i]}')
-        .cycle-text
+        .wrap.cycle-text
           div
             h2
               a(href='/' style='color:#{textColor[i]}')
                 = title[i]
-  button#prev
-    .icon-chevron-right
-  button.pause(data-cycle-cmd='pause' data-cycle-context='#slideshow1')
-    .icon-control-pause
-  button.resume(data-cycle-cmd='resume' data-cycle-context='#slideshow1')
-    .icon-control-play
-  button#next
-    .icon-chevron-right
 .section#index-detail-of-html-code
   .wrap
     h1(itemprop='headline name').emphasized Slideshow
@@ -66,55 +58,38 @@
           data-cycle-manual-fx='scrollHorz'
           data-cycle-manual-speed='300'
           )
-          - var img = ['../Images/Demo/boat.jpg', '../Images/Demo/ponton.jpg', '../Images/Demo/tunel.jpg', '../Images/Demo/rose.jpg']
-          - var title = ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Aenean commodo ligula eget dolor. Aenean massa.', 'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.']
-          - var textColor = ['#ddd', '#97B5D1', '#ddd', 'Orange']
+          - var img = [ '../Images/Demo/LotusMacro', '../Images/Demo/PacificCity', '../Images/Demo/OldMechanism' ]
+          - var title = [ 'Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Fusce tempor, justo at pellentesque molestie, turpis lacus fringilla urna, ut luctus lorem lectus iaculis elit.' ]
+          - var textColor = [ '#fff', '#b7c3b9', '#9fa6b6' ]
             .cycle-pager
-            - for (var i = 0; i < 4; i++)
+            - for (var i = 0; i < img.length; i++)
               style.
                 @media screen and (max-width: 36.01rem) {
                   #cycle-item#{i} {
-                    background-image: url(#{img[i]});
+                    background-image: url(#{img[i]}1000.jpg);
                   }
                 }
                 @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
                   #cycle-item#{i} {
-                    background-image: url(#{img[i]});
+                    background-image: url(#{img[i]}1500.jpg);
                   }
                 }
-                @media screen and (min-width: 65.01rem) and (max-width: 90.01rem) {
+                @media screen and (min-width: 65.01rem) {
                   #cycle-item#{i} {
-                    background-image: url(#{img[i]});
-                  }
-                }
-                @media screen and (min-width: 90.01rem) and (max-width: 120.01rem) {
-                  #cycle-item#{i} {
-                    background-image: url(#{img[i]});
-                  }
-                }
-                @media screen and (min-width: 120.01rem) and (max-width: 140.01rem) {
-                  #cycle-item#{i} {
-                    background-image: url(#{img[i]});
-                  }
-                }
-                @media screen and (min-width: 140.01rem) {
-                  #cycle-item#{i} {
-                    background-image: url(#{img[i]});
+                    background-image: url(#{img[i]}2000.jpg);
                   }
                 }
               .cycle-item(id='cycle-item#{i}')
-                //- data-cycle-hash='#{title[i]}' // Attribute for .cycle-item
-                img(src='#{img[i]}' alt='#{title[i]}')
-                .cycle-text
+                //- data-cycle-hash='#{title[i]}' // Attribut permettant une ancre liée à l'élément
+                picture
+                  //- @todo L'image la plus petite est suffisante pour l'attribut srcset étant donné que l'image est inutilisée au profit de 'background-image'
+                  source(
+                    srcset='#{img[i]}300.jpg'
+                    sizes='100vw'
+                    )
+                  img(src='#{img[i]}.jpg' alt='#{title[i]}')
+                .wrap.cycle-text
                   div
                     h2
                       a(href='/' style='color:#{textColor[i]}')
                         = title[i]
-          button#prev
-            .icon-chevron-right
-          button.pause(data-cycle-cmd='pause' data-cycle-context='#slideshow1')
-            .icon-control-pause
-          button.resume(data-cycle-cmd='resume' data-cycle-context='#slideshow1')
-            .icon-control-play
-          button#next
-            .icon-chevron-right

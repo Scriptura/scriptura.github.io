@@ -29,19 +29,70 @@
       </div>
     </nav>
     <main itemprop="mainContentOfPage">
-      <header role="banner" class="section vh100">
-        <div class="wrap ribbon-container">
-          <div class="ribbon">
-            <div>v. 0.0.18</div>
+      <header id="slideshow1" data-cycle-slides=".cycle-item" data-cycle-timeout="10000" data-cycle-speed="2000" data-cycle-prev="#prev" data-cycle-next="#next" data-cycle-manual-fx="scrollHorz" data-cycle-manual-speed="300" class="section slideshow">
+        <div class="cycle-pager"></div>
+        <style>
+          @media screen and (max-width: 36.01rem) {
+            #cycle-item0 {
+              background-image: url(../Images/Demo/LotusMacro1000.jpg);
+            }
+          }
+          @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
+            #cycle-item0 {
+              background-image: url(../Images/Demo/LotusMacro1500.jpg);
+            }
+          }
+          @media screen and (min-width: 65.01rem) {
+            #cycle-item0 {
+              background-image: url(../Images/Demo/LotusMacro2000.jpg);
+            }
+          }
+        </style>
+        <div id="cycle-item0" class="cycle-item">
+          <picture>
+            <source srcset="../Images/Demo/LotusMacro300.jpg" sizes="100vw"><img src="../Images/Demo/LotusMacro.jpg" alt="">
+          </picture>
+          <div class="wrap cycle-text">
+            <div>
+              <div class="vertical vh85 zoom150">
+                <h1 itemprop="name" style="color:#fff" class="vmin">Scriptura</h1>
+                <div class="text-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 200 200" class="svg-color width10">
+                    <path d="M200 24.758c-355.807-105.878 130.682 161.232-200 175.242 286.814-75.173-174.292-221.127 200-175.242z"></path>
+                  </svg>
+                </div>
+                <h2 itemprop="alternativeHeadline" style="color:#fff" class="vmin">Interface for web apps</h2>
+                <p style="color:#fff">v. 0.0.19</p>
+              </div>
+            </div>
           </div>
-          <div class="vertical vh85">
-            <div class="text-center">
-              <h1 itemprop="name" class="vmin">Scriptura</h1>
-              <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 200 200" class="svg-color width10">
-                <path d="M200 24.758c-355.807-105.878 130.682 161.232-200 175.242 286.814-75.173-174.292-221.127 200-175.242z"></path>
-              </svg>
-              <h2 itemprop="alternativeHeadline" class="vmin">Interface for web apps</h2><br><br><br class="sizeXS-unhidden"><br class="sizeXS-unhidden"><a href="#index-about" style="text-decoration:none">
-                <div style="transform:rotate(90deg)" class="icon-chevron-right zoom200"></div></a>
+        </div>
+        <style>
+          @media screen and (max-width: 36.01rem) {
+            #cycle-item1 {
+              background-image: url(../Images/Demo/FlowerMacro1000.jpg);
+            }
+          }
+          @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
+            #cycle-item1 {
+              background-image: url(../Images/Demo/FlowerMacro1500.jpg);
+            }
+          }
+          @media screen and (min-width: 65.01rem) {
+            #cycle-item1 {
+              background-image: url(../Images/Demo/FlowerMacro2000.jpg);
+            }
+          }
+        </style>
+        <div id="cycle-item1" class="cycle-item">
+          <picture>
+            <source srcset="../Images/Demo/FlowerMacro300.jpg" sizes="100vw"><img src="../Images/Demo/FlowerMacro.jpg" alt="A framework Jade/Stylus/Javascript">
+          </picture>
+          <div class="wrap cycle-text">
+            <div>
+              <h2 style="color:#fff" class="vmin">A framework Jade/Stylus/Javascript
+              </h2><br><br><br><a href="#index-about" style="text-decoration:none" class="vmin">
+                <div style="color:#fff;transform:rotate(90deg)" class="icon-chevron-right zoom200"></div></a>
             </div>
           </div>
         </div>
