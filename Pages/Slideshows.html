@@ -1,0 +1,216 @@
+<!DOCTYPE html><html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <title>Slideshows, Style Guide | Scriptura Framework</title>
+    <meta name="description" content="Slideshows for Scriptura Framework">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="geo.placename" content="Saint-Médard-en-Forez, Loire, France">
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../Public/Styles/MainBlooming.css" media="screen" id="stylesheet">
+    <link rel="stylesheet" href="../Public/Styles/Print.css" media="print">
+  </head>
+  <body itemscope itemtype="https://schema.org/WebPage">
+    <nav role="navigation" class="main-nav">
+      <div class="wrap">
+        <div class="brand-image"><a href="/"><span class="hidden">Scriptura</span></a></div>
+        <input type="checkbox" id="cmd-main-nav">
+        <label for="cmd-main-nav"><span></span></label>
+        <ul>
+          <li><a href="/"><span class="icon-home only-icon"></span><span class="sizeNav-hidden">Home</span></a>
+          </li>
+          <li><a href="/Pages/StyleGuide.html"><span class="icon-list2"></span>Style Guide</a>
+          </li>
+          <li><a href="/Pages/Layouts.html"><span class="icon-frame"></span>Layout Examples</a>
+          </li>
+          <li><a href="/Pages/Themes.html"><span class="icon-rocket"></span>Themes</a>
+          </li>
+          <li class="item-push"><a href="//github.com/Scriptura/ScripturaFramework"><span class="icon-github"></span>Repository</a></li>
+        </ul>
+      </div>
+    </nav>
+    <main itemprop="mainContentOfPage">
+      <div id="slideshow1" data-cycle-slides=".cycle-item" data-cycle-timeout="6000" data-cycle-speed="2000" data-cycle-prev="#prev" data-cycle-next="#next" data-cycle-manual-fx="scrollHorz" data-cycle-manual-speed="300" class="section slideshow">
+        <div class="cycle-pager"></div>
+        <style>
+          @media screen and (max-width: 36.01rem) {
+            #cycle-item0 {
+              background-image: url(../Images/Demo/ForlornKeel1000.jpg);
+            }
+          }
+          @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
+            #cycle-item0 {
+              background-image: url(../Images/Demo/ForlornKeel1500.jpg);
+            }
+          }
+          @media screen and (min-width: 65.01rem) {
+            #cycle-item0 {
+              background-image: url(../Images/Demo/ForlornKeel2000.jpg);
+            }
+          }
+        </style>
+        <div id="cycle-item0" class="cycle-item">
+          <picture>
+            <source srcset="../Images/Demo/ForlornKeel300.jpg" sizes="100vw"><img src="../Images/Demo/ForlornKeel.jpg" alt="Lorem ipsum dolor sit amet">
+          </picture>
+          <div class="cycle-text">
+            <div>
+              <h2><a href="/" style="color:#cee2f9">Lorem ipsum dolor sit amet</a></h2>
+            </div>
+          </div>
+        </div>
+        <style>
+          @media screen and (max-width: 36.01rem) {
+            #cycle-item1 {
+              background-image: url(../Images/Demo/PacificCity1000.jpg);
+            }
+          }
+          @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
+            #cycle-item1 {
+              background-image: url(../Images/Demo/PacificCity1500.jpg);
+            }
+          }
+          @media screen and (min-width: 65.01rem) {
+            #cycle-item1 {
+              background-image: url(../Images/Demo/PacificCity2000.jpg);
+            }
+          }
+        </style>
+        <div id="cycle-item1" class="cycle-item">
+          <picture>
+            <source srcset="../Images/Demo/PacificCity300.jpg" sizes="100vw"><img src="../Images/Demo/PacificCity.jpg" alt="Consectetur adipiscing elit">
+          </picture>
+          <div class="cycle-text">
+            <div>
+              <h2><a href="/" style="color:#b7c3b9">Consectetur adipiscing elit</a></h2>
+            </div>
+          </div>
+        </div>
+        <style>
+          @media screen and (max-width: 36.01rem) {
+            #cycle-item2 {
+              background-image: url(../Images/Demo/OldMechanism1000.jpg);
+            }
+          }
+          @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
+            #cycle-item2 {
+              background-image: url(../Images/Demo/OldMechanism1500.jpg);
+            }
+          }
+          @media screen and (min-width: 65.01rem) {
+            #cycle-item2 {
+              background-image: url(../Images/Demo/OldMechanism2000.jpg);
+            }
+          }
+        </style>
+        <div id="cycle-item2" class="cycle-item">
+          <picture>
+            <source srcset="../Images/Demo/OldMechanism300.jpg" sizes="100vw"><img src="../Images/Demo/OldMechanism.jpg" alt="Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.">
+          </picture>
+          <div class="cycle-text">
+            <div>
+              <h2><a href="/" style="color:#9fa6b6">Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</a></h2>
+            </div>
+          </div>
+        </div>
+        <button id="prev">
+          <div class="icon-chevron-right"></div>
+        </button>
+        <button data-cycle-cmd="pause" data-cycle-context="#slideshow1" class="pause">
+          <div class="icon-control-pause"></div>
+        </button>
+        <button data-cycle-cmd="resume" data-cycle-context="#slideshow1" class="resume">
+          <div class="icon-control-play"></div>
+        </button>
+        <button id="next">
+          <div class="icon-chevron-right"></div>
+        </button>
+      </div>
+      <div id="index-detail-of-html-code" class="section">
+        <div class="wrap">
+          <h1 itemprop="headline name" class="emphasized">Slideshow</h1>
+          <h2 class="highlight">Detail of html code<a href="#index-detail-of-html-code" class="anchor"></a></h2>
+          <pre><code translate="no" data-code=" Jade" data-select="true" data-value="Sélection">.section.slideshow#slideshow1(
+  data-cycle-slides='.cycle-item'
+  data-cycle-timeout='6000'
+  data-cycle-speed='2000'
+  data-cycle-prev='#prev'
+  data-cycle-next='#next'
+  data-cycle-manual-fx='scrollHorz'
+  data-cycle-manual-speed='300'
+  )
+  - var img = ['../Images/Demo/boat.jpg', '../Images/Demo/ponton.jpg', '../Images/Demo/tunel.jpg', '../Images/Demo/rose.jpg']
+  - var title = ['Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Aenean commodo ligula eget dolor. Aenean massa.', 'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.']
+  - var textColor = ['#ddd', '#97B5D1', '#ddd', 'Orange']
+    .cycle-pager
+    - for (var i = 0; i < 4; i++)
+      style.
+        @media screen and (max-width: 36.01rem) {
+          #cycle-item3 {
+            background-image: url();
+          }
+        }
+        @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
+          #cycle-item3 {
+            background-image: url();
+          }
+        }
+        @media screen and (min-width: 65.01rem) and (max-width: 90.01rem) {
+          #cycle-item3 {
+            background-image: url();
+          }
+        }
+        @media screen and (min-width: 90.01rem) and (max-width: 120.01rem) {
+          #cycle-item3 {
+            background-image: url();
+          }
+        }
+        @media screen and (min-width: 120.01rem) and (max-width: 140.01rem) {
+          #cycle-item3 {
+            background-image: url();
+          }
+        }
+        @media screen and (min-width: 140.01rem) {
+          #cycle-item3 {
+            background-image: url();
+          }
+        }
+      .cycle-item(id='cycle-item3')
+        //- data-cycle-hash='' // Attribute for .cycle-item
+        img(src='' alt='')
+        .cycle-text
+          div
+            h2
+              a(href='/' style='color:')
+                = title[i]
+  button#prev
+    .icon-chevron-right
+  button.pause(data-cycle-cmd='pause' data-cycle-context='#slideshow1')
+    .icon-control-pause
+  button.resume(data-cycle-cmd='resume' data-cycle-context='#slideshow1')
+    .icon-control-play
+  button#next
+    .icon-chevron-right</code></pre>
+        </div>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="wrap text-center"><br>
+        <p><em>A framework created by</em></p>
+        <p><span class="icon-quill"></span></p>
+        <p><a href="//github.com/Scriptura" itemprop="author" itemscope itemtype="https://schema.org/Person" class="author"><span itemprop="name"><span itemprop="givenName">Olivier</span> <span itemprop="familyName">Chavarin</span></span></a></p><br>
+      </div>
+      <div class="old-browers">
+        <div class="icon-spaceinvader zoom700"></div><br>
+        <p>Old browser!</p><br>
+        <p>This site has been developed for modern browsers. In order to benefit from its full functionality, upgrade your browser to date.</p>
+      </div>
+      <noscript class="noscript">
+        <p class="message-warning">Javascript is disabled on your browser, enable it to benefit from all the site's features.</p>
+      </noscript>
+    </footer>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.3.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../Scripts/Vendors/JQuery.js"><\/script>')</script>
+    <script src="../Public/Scripts/Main.js"></script>
+    <script src="../Public/Scripts/Themes.js"></script>
+  </body>
+</html>
