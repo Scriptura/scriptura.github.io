@@ -4,7 +4,6 @@ block var
   - title = '[Title]'
   - titlesuffix = ', Style Guide'
   - contentlarge = false
-  - demostyles = false
 
 doctype html
 html.no-js(lang='en')
@@ -21,8 +20,8 @@ html.no-js(lang='en')
     meta(name='geo.placename', content='Saint-Médard-en-Forez, Loire, France')
     link(rel='shortcut icon', href='../favicon.ico')
     link#stylesheet(rel='stylesheet', href='../Public/Styles/MainBlooming.css', media='screen')
-    if demostyles
-      link(rel='stylesheet', href='../Public/Styles/Demos.css', media='screen')
+    // For framework:
+    link(rel='stylesheet', href='../Public/Styles/Demos.css', media='screen')
     link(rel='stylesheet', href='../Public/Styles/Print.css', media='print')
   body(itemscope itemtype='https://schema.org/WebPage')
     block mainnav
