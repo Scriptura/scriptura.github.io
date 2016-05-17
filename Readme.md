@@ -1,7 +1,7 @@
 # Scriptura
 > Interface for web apps
 
-A framework [Jade](http://jade-lang.com/)/[Stylus](https://learnboost.github.io/stylus/)/[jQuery](https://jquery.com/)).
+A framework [Jade](http://jade-lang.com/)/[Stylus](https://learnboost.github.io/stylus/)/[jQuery](https://jquery.com/).
 
 * [Demo website and style guide](https://scriptura.github.io/)
 
