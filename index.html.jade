@@ -18,7 +18,6 @@ block content
     )
     - var img = [ '../Images/Demo/LotusMacro', '../Images/Demo/FlowerMacro' ]
     - var title = [ '', 'A framework Jade/Stylus/Javascript' ]
-      .cycle-pager
       - for (var i = 0; i < img.length; i++)
         style.
           @media screen and (max-width: 36.01rem) {
@@ -59,25 +58,9 @@ block content
               div
                 h2.vmin
                   = title[i]
-                a.vmin(href='#index-about')
-                  .icon-chevron-right
-  //-
-    header.section.vh100(role='banner')
-      .wrap.ribbon-container
-        .ribbon
-          div v. @@pkg.version
-        .vertical.vh85
-          .text-center
-            h1.vmin(itemprop='name') Scriptura
-            svg.svg-color.width10(xmlns='http://www.w3.org/2000/svg' viewbox='0 0 200 200')
-              path(d='M200 24.758c-355.807-105.878 130.682 161.232-200 175.242 286.814-75.173-174.292-221.127 200-175.242z')
-            h2.vmin(itemprop='alternativeHeadline') Interface for web apps
-            br
-            br
-            br.sizeXS-unhidden
-            br.sizeXS-unhidden
-            a(href='#index-about' style='text-decoration:none')
-              .icon-chevron-right.zoom200(style='transform:rotate(90deg)')
+                br
+                a(href='#index-about')
+                  button(type='button')
   .section#index-about
     .wrap.box.ribbon-container
       .ribbon
@@ -135,7 +118,7 @@ block content
               |  file in the folder.
             p With in the file's header:
             p
-              code link(rel='stylesheet', href='./Public/Styles/Main.css', media='screen')
+              code link(rel='stylesheet' href='./Public/Styles/Main.css' media='screen')
             p And in the file's footer:
             p
               code script(src='./Scripts/Vendors/JQuery.js')

@@ -448,6 +448,7 @@
 // -----------------------------------------------------------------------------
 
 		slideshow
+			.append( '<div class="cycle-pager"/>' )
 			.append( '<button id="prev"/>' )
 			.append( '<button data-cycle-cmd="pause" data-cycle-context="#slideshow1" class="pause"/>' )
 			.append( '<button data-cycle-cmd="resume" data-cycle-context="#slideshow1" class="resume"/>' )
