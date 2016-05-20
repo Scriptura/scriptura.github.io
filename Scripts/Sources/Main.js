@@ -1,8 +1,8 @@
 // -----------------------------------------------------------------------------
 // @name         Scriptura
 // @description  Interface for web apps
-// @version      0.0.23
-// @lastmodified 2016-05-17 22:33:18
+// @version      0.0.25
+// @lastmodified 2016-05-20 22:50:22
 // @author       Olivier Chavarin
 // @homepage     http://scriptura.github.io/
 // @license      ISC
@@ -494,7 +494,7 @@
 // @subsection Auto-Initialization
 // -----------------------------------------------------------------------------
 
-		var url = '../Scripts/Vendors/Cycle.js';
+		var url = templateUri + '/Scripts/Vendors/Cycle.js';
 
 		$.getScript( url, function() { // Chargement de la librairie 'Cycle 2'
 			$( '.slideshow' ).cycle(); // Initialisation du script
