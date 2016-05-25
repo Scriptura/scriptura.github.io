@@ -6,9 +6,9 @@ footer.footer
   //- Nécessité d'insérer les div suivantes dans un conteneur afin ne pas faire "sauter" le script de navigation OnePage
   //-
     .terms-use
-      .message-info
+      .message-warning
         p En parcourant ce site vous acceptez nos conditions générales d'utilisation...
-        button.button#terms-use oui
+        button.button.width#terms-use oui
   .old-browers
     .icon-spaceinvader.zoom700
     br
@@ -17,7 +17,7 @@ footer.footer
     p This site has been developed for modern browsers. In order to benefit from its full functionality, upgrade your browser to date.
   noscript.noscript
     p.message-warning Javascript is disabled on your browser, enable it to benefit from all the site's features.
-script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js')
+script(src='https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js')
 //- En cas d'échec du chargement via CDN :
 script window.jQuery || document.write('<script src="../Scripts/Vendors/JQuery.js"><\/script>')
 script var templateUri = '../'

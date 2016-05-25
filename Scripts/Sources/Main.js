@@ -1,8 +1,8 @@
 // -----------------------------------------------------------------------------
 // @name         Scriptura
 // @description  Interface for web apps
-// @version      0.0.25
-// @lastmodified 2016-05-20 22:50:22
+// @version      0.0.27
+// @lastmodified 2016-05-25 23:02:17
 // @author       Olivier Chavarin
 // @homepage     http://scriptura.github.io/
 // @license      ISC
@@ -103,7 +103,7 @@
 
 ( function( $ ) {
 	var body = $( 'body' );
-	var menu = $( '.sizeNav-nav-bottom' );
+	var menu = $( '.sizeNav-nav-bottom .wrap > :last-child' );
 	var scrollTop = $( '.scroll-top' );
 	$( '.sizeNav-nav-bottom button' ).on( 'click touchmove', function() {
 		menu.toggleClass( 'active' );
