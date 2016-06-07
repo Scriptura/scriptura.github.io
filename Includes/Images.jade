@@ -1,5 +1,6 @@
 mixin picture(img, alt)
   - var img = '../Images/' + img
+  - var alt
   picture
     source(media='(min-width: 2000px)' srcset='#{img}.jpg 2500w' sizes='100vw')
     source(media='(min-width: 1500px)' srcset='#{img}2000.jpg 2000w' sizes='100vw')
