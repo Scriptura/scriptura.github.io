@@ -8,33 +8,34 @@ append var
 block content
   .grid
     form(method='get', action='./')
-      legend.h4 Style Switcher
-      div
-        input#themeInitial.switch(type='radio', name='theme-demo', value='Initial')
-        label(for='themeInitial') Initial
-          span(data-on='yes', data-off='no')
-      div
-        input#themeDualColor.switch(type='radio', name='theme-demo', value='DualColor')
-        label(for='themeDualColor') Dual Color
-          span(data-on='yes', data-off='no')
-      div
-        input#themeRatatouille.switch(type='radio', name='theme-demo', value='Ratatouille')
-        label(for='themeRatatouille') Ratatouille
-          span(data-on='yes', data-off='no')
-      //
-        Clear your preference : default theme...
-      div
-        input#clearTheme.switch(type='radio', name='theme-demo', checked='')
-        label(for='clearTheme') Blooming
-          span(data-on='yes', data-off='no')
-    .accordion
-      h3 Eng
-      .active
-        p.message-info Choose a theme and then revisit the 
-          a(href='/Pages/StyleGuide.html') Style Guide
-          |  with new eyes...
-      h3 Fr
-      div(lang='fr')
-        p.message-info Choisissez un thème puis revisitez le 
-          a(href='/Pages/StyleGuide.html') Style Guide
-          |  avec un nouveau regard...
+      fieldset
+        legend.h4 Style Switcher
+        div
+          input#themeInitial.switch(type='radio', name='theme-demo', value='Initial')
+          label(for='themeInitial') Initial
+            span(data-on='yes', data-off='no')
+        div
+          input#themeDualColor.switch(type='radio', name='theme-demo', value='DualColor')
+          label(for='themeDualColor') Dual Color
+            span(data-on='yes', data-off='no')
+        div
+          input#themeRatatouille.switch(type='radio', name='theme-demo', value='Ratatouille')
+          label(for='themeRatatouille') Ratatouille
+            span(data-on='yes', data-off='no')
+        //
+          Clear your preference : default theme...
+        div
+          input#clearTheme.switch(type='radio', name='theme-demo', checked='')
+          label(for='clearTheme') Blooming
+            span(data-on='yes', data-off='no')
+      .accordion
+        h3 Eng
+        .active
+          p.message-info Choose a theme and then revisit the 
+            a(href='/Pages/StyleGuide.html') Style Guide
+            |  with new eyes...
+        h3 Fr
+        div(lang='fr')
+          p.message-info Choisissez un thème puis revisitez le 
+            a(href='/Pages/StyleGuide.html') Style Guide
+            |  avec un nouveau regard...

@@ -69,7 +69,7 @@
             option(value='AN') Antilles néerlandaises
         .input
           label(for='pays2') Type select multiple
-          select#pays(multiple name='pays2')
+          select#pays2(multiple name='pays2')
             option(value='00' selected='') Pays
             option(value='FR') France
             option(value='ZA') Afrique du Sud
@@ -118,15 +118,15 @@
     fieldset.m6
       p
         code .input-group
-        .input-group-right
-          label(for='test1113') Total
-          div
-            div $
-            input(type='number' id='test1113' name='test1113' placeholder='100')
-            div .00
-        .input-group-right
-          label(for='test1114') Total
-          div
-            div €
-            input(type='number' id='test1114' name='test1114' placeholder='100')
-            div .00
+      .input-group-right
+        label(for='test1113') Total
+        div
+          div $
+          input(type='number' id='test1113' name='test1113' placeholder='100')
+          div .00
+      .input-group-right
+        label(for='test1114') Total
+        div
+          div €
+          input(type='number' id='test1114' name='test1114' placeholder='100')
+          div .00

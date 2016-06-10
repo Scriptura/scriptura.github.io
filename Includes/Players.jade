@@ -6,17 +6,20 @@
   .m6
     p
       code audio
-    audio(controls='controls')
-      source(src='../Audios/BagdadCafe.mp3')
-      p.message-error This media is not supported by your browser.
+    div(itemprop='audio')
+      audio(controls='controls')
+        source(src='../Audios/BagdadCafe.mp3')
+        p.message-error This media is not supported by your browser.
   .m6
     p
       code video
-    video(controls='controls', poster='../Images/LeRetourDuRoi.jpg')
-      source(src='../Videos/LeRetourDuRoi.mp4', type='video/mp4')
-      p.message-warning HTML5 video codec proposed is not supported by your browser.
+    div(itemprop='video')
+      video(controls='controls', poster='../Images/LeRetourDuRoi.jpg')
+        source(src='../Videos/LeRetourDuRoi.mp4', type='video/mp4')
+        p.message-warning HTML5 video codec proposed is not supported by your browser.
   .m6
     p
       code .video
-    .video
-      iframe(src='//www.youtube.com/embed/vw61gCe2oqI', allowfullscreen='')
+    div(itemprop='video')
+      .video
+        iframe(src='//www.youtube.com/embed/vw61gCe2oqI', allowfullscreen='')
