@@ -3567,9 +3567,6 @@ if $bundleBox
     ifBorderRadius($r1)
     box-shadow 0 0 2em rgba(0, 0, 0, .1)
 
-  .box
-    padding 1em
-
   [class*="box"]::before
   [class*="box"]::after
     content ''
@@ -3594,6 +3591,12 @@ if $bundleBox
 
   [class*="ribbon-container"][class*="box"]
     background-image none
+
+  .box
+    padding 1em
+
+  .box0
+    padding-bottom .75rem
 
   .box0 > :not(:first-child):not(:last-child)
     //margin 1em 1rem // @note em units pour le height en fonction de la taille de la font, rem units pour la largeur

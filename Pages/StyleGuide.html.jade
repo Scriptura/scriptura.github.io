@@ -7,10 +7,9 @@ append var
   - contentlarge = true
 
 mixin list(name, anchor)
-  li
-    a(href='#index-#{anchor}')
-      span.icon-arrow-down
-      | &nbsp;&nbsp;#{name}
+  a(href='#index-#{anchor}')
+    span.icon-arrow-down
+    | &nbsp;&nbsp;#{name}
 
 mixin section(name, anchor)
   section.section(id='index-#{anchor}')
@@ -31,7 +30,7 @@ block content
           | or 
           code z
           |  to switch sections.
-      ul.list-stripe-link.summary
+      .list-stripe.summary
         +list('Typography', 'typography')
         +list('Messages Box', 'messages-box')
         +list('Code Blocks', 'code-blocks')

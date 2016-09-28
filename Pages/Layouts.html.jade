@@ -6,13 +6,12 @@ append var
   - title = name
 
 mixin list(name, anchor)
-  li
-    a(href='./#{anchor}.html')
-      span.icon-arrow-down
-      | &nbsp;&nbsp;#{name}
+  a(href='./#{anchor}.html')
+    span.icon-arrow-down
+    | &nbsp;&nbsp;#{name}
 
 block content
-  ul.list-stripe-link.summary
+  .list-stripe.summary
     +list('Fluid Grid Layout', 'GridLayout')
     +list('Layout for a blog', 'Layout01')
     +list('Layout for Photoblog', 'Layout02')
