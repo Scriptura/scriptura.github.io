@@ -1,21 +1,21 @@
 .grid
-  .m3.sizeS-m12.sizeL-m4
+  .m4.sizeS-m12.sizeL-m6
     p
       code pre > code
     pre
       code(translate='no', data-select='true', data-value='Sélection').
-        &lt;html&gt;
-         &lt;head&gt;&lt;/head&gt;
-         &lt;body&gt;
-           &lt;header&gt;&lt;/header&gt;
-           &lt;main&gt;
-             &lt;article&gt;&lt;/article&gt;
-           &lt;/main&gt;
-           &lt;aside&gt;&lt;/aside&gt;
-           &lt;footer&gt;&lt;/footer&gt;
-         &lt;/body&gt;
-        &lt;/html&gt;
-  .m3.sizeS-m12.sizeL-m4
+        //#include &lt;windows.h&gt;
+        #include &lt;iostream&gt;
+        #include &lt;GL/glut.h&gt;
+        /* process menu option 'op' */
+        void menu(int op) {
+          switch(op) {
+          case 'Q':
+          case 'q':
+            exit(0);
+          }
+        }
+  .m4.sizeS-m12.sizeL-m6
     p
       code pre > code(data-code=' HTML')
     pre
@@ -31,43 +31,63 @@
            &lt;footer&gt;&lt;/footer&gt;
          &lt;/body&gt;
         &lt;/html&gt;
-  .m3.sizeS-m12.sizeL-m4
-    p
-      code pre > code(data-code=' CSS')
-    pre
-      code(translate='no', data-code=' CSS', data-select='true', data-value='Sélection').
-        sub,
-        sup {
-          line-height: 0;
-          font-size: 75%;
-          position: relative;
-          vertical-align: baseline;
-        }
-  .m3.sizeS-m12.sizeL-m4
-    p
-      code pre > code(data-code=' JavaScript')
-    pre
-      code(translate='no', data-code=' JavaScript', data-select='true', data-value='Sélection').
-        $(function() {
-          $('.section').attr({
-            id: function(index) {
-              return 'section-' + index;
-            }
-          });
-        });
-  .m3.sizeS-m12.sizeL-m4
+  .m4.sizeS-m12.sizeL-m6
     p
       code pre > code(data-code=' Jade')
     pre
       code(translate='no', data-code=' Jade', data-select='true', data-value='Sélection').
-        ul
-          li Artichauts
-          li Carottes
-          li Concombres
-            ul
-              li Composition
-              li Saveur
-                ul
-                  li Vert
-                  li Gris
-                  li Rouge
+        .progress
+          #progress-test(data-value='0')
+        .progress
+          div(data-value='40')
+        .progress
+          div(data-value='70')
+        .progress
+          div(data-value='100')
+        .progress
+          div(data-value='30')
+        button.button#progress-start Start demo
+  .m4.sizeS-m12.sizeL-m6
+    p
+      code pre > code(data-code=' CSS')
+    pre
+      code(translate='no', data-code=' CSS', data-select='true', data-value='Sélection').
+        .headband {
+          position: absolute;
+          z-index: 10;
+          top: 0;
+          right: 0;
+          margin: 0;
+          width: 15rem;
+          height: 15rem;
+          overflow: hidden;
+        }
+  .m4.sizeS-m12.sizeL-m6
+    p
+      code pre > code(data-code=' Stylus')
+    pre
+      code(translate='no', data-code=' Stylus', data-select='true', data-value='Sélection').
+        cube
+          position relative
+          display block
+          top ((100vmin - $m) / 2)
+          margin 0 auto
+          width $m
+          height $m
+          transform-style preserve-3d
+          transform rotate3d(1, 1, 1, 45deg)
+          animation anim-rotate3d $frame linear infinite
+  .m4.sizeS-m12.sizeL-m6
+    p
+      code pre > code(data-code=' JavaScript')
+    pre
+      code(translate='no', data-code=' JavaScript', data-select='true', data-value='Sélection').
+        function addPrintStyles() {
+            var ss = document.createElement('link');
+            ss.type = 'text/css';
+            ss.rel = 'stylesheet';
+            ss.href = 'print.css';
+            ss.media = 'print';
+            ss.id = 'print';
+            document.getElementsByTagName('head')[0].appendChild(ss);
+        }

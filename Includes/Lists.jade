@@ -14,9 +14,10 @@
           li Taille
           li Couleurs
             ul
-              li Vert
-              li Gris
-              li Rouge
+              li Cyan
+              li Magenta
+              li Jaune
+              li Noir
   .m3.sizeS-m6
     p
       code ol
@@ -42,11 +43,13 @@
             a(href='#index') Couleurs
             ol
               li
-                a(href='#index') Vert
+                a(href='#index') Cyan
               li
-                a(href='#index') Gris
+                a(href='#index') Magenta
               li
-                a(href='#index') Rouge
+                a(href='#index') Jaune
+              li
+                a(href='#index') Noir
   .m3.sizeS-m6
     p
       code ul.list
@@ -62,9 +65,10 @@
           li Taille
           li Couleurs
             ul
-              li Vert
-              li Gris
-              li Rouge
+              li Cyan
+              li Magenta
+              li Jaune
+              li Noir
   .m3.sizeS-m6
     p
       code div.list
@@ -73,130 +77,153 @@
       div Carottes
       div Concombres
       div Poireaux
-      div
-        | Choux
+      div Choux
         div Composition
         div Saveur
         div Taille
-        div
-          | Couleurs
-          div Vert
-          div Gris
-          div Rouge
+        div Couleurs
+          div Cyan
+          div Magenta
+          div Jaune
+          div Noir
 .grid
   .m3.sizeS-m6
     p
       code ul.list-stripe
     ul.list-stripe
       li
-        span.icon-sharp
+        span.icon-ampersand
         | &nbsp;&nbsp;Artichauts
       li
         span.icon-sharp
         | &nbsp;&nbsp;Carottes
       li
-        span.icon-sharp
+        span.icon-asterisk
         | &nbsp;&nbsp;Concombres
       li
-        span.icon-sharp
+        span.icon-flame
         | &nbsp;&nbsp;Poireaux
       li
-        span.icon-sharp
+        span.icon-heart
         | &nbsp;&nbsp;Choux
   .m3.sizeS-m6
     p
-      code ul.list-stripe
-    .list-stripe
-      a(href='#index')
-        span.icon-arrow-right
-        | &nbsp;&nbsp;Artichauts
-      a(href='#index')
-        span.icon-arrow-right
-        | &nbsp;&nbsp;Carottes
-      a(href='#index')
-        span.icon-arrow-right
-        | &nbsp;&nbsp;Concombres
-      a(href='#index')
-        span.icon-arrow-right
-        | &nbsp;&nbsp;Poireaux
-      a(href='#index')
-        span.icon-arrow-right
-        | &nbsp;&nbsp;Choux
-  .m3.sizeS-m6
-    p
-      code div.list-stripe
-    .list-stripe
-      div
-        span.icon-sharp
-        | &nbsp;&nbsp;Artichauts
-      div
-        span.icon-sharp
-        | &nbsp;&nbsp;Carottes
-      div
-        span.icon-sharp
-        | &nbsp;&nbsp;Concombres
-      div
-        span.icon-sharp
-        | &nbsp;&nbsp;Poireaux
-      div
-        span.icon-sharp
-        | &nbsp;&nbsp;Choux
+      code ul.list-stripe * a
+    ul.list-stripe
+      li
+        span.icon-arrow-up
+        | &nbsp;&nbsp;
+        a(href='#index') Artichauts
+      li
+        span.icon-arrow-up
+        | &nbsp;&nbsp;
+        a(href='#index') Carottes
+      li
+        span.icon-arrow-up
+        | &nbsp;&nbsp;
+        a(href='#index') Concombres
+      li
+        span.icon-arrow-up
+        | &nbsp;&nbsp;
+        a(href='#index') Poireaux
+      li
+        span.icon-arrow-up
+        | &nbsp;&nbsp;
+        a(href='#index') Choux
   .m3.sizeS-m6
     p
       code div.list-stripe
     .list-stripe
+      div
+        span.icon-ampersand
+        | &nbsp;&nbsp;Artichauts
+      div
+        span.icon-sharp
+        | &nbsp;&nbsp;Carottes
+      div
+        span.icon-asterisk
+        | &nbsp;&nbsp;Concombres
+      div
+        span.icon-flame
+        | &nbsp;&nbsp;Poireaux
+      div
+        span.icon-heart
+        | &nbsp;&nbsp;Choux
+  .m3.sizeS-m6
+    p
+      code div.list-stripe > a
+    .list-stripe
       a(href='#index')
-        span.icon-arrow-right
+        span.icon-arrow-up
         | &nbsp;&nbsp;Artichauts
       a(href='#index')
-        span.icon-arrow-right
+        span.icon-arrow-up
         | &nbsp;&nbsp;Carottes
       a(href='#index')
-        span.icon-arrow-right
+        span.icon-arrow-up
         | &nbsp;&nbsp;Concombres
       a(href='#index')
-        span.icon-arrow-right
+        span.icon-arrow-up
         | &nbsp;&nbsp;Poireaux
       a(href='#index')
-        span.icon-arrow-right
+        span.icon-arrow-up
         | &nbsp;&nbsp;Choux
-  .m6
+  .m4.sizeS-m6
     p
-      code .list-stripe-large
+      code ul.list-stripe-large
     ul.list-stripe-large
       li
-        span.icon-sharp
+        span.icon-ampersand
         | &nbsp;&nbsp;Artichauts
       li
         span.icon-sharp
         | &nbsp;&nbsp;Carottes
       li
-        span.icon-sharp
+        span.icon-asterisk
         | &nbsp;&nbsp;Concombres
       li
-        span.icon-sharp
+        span.icon-flame
         | &nbsp;&nbsp;Poireaux
       li
-        span.icon-sharp
+        span.icon-heart
         | &nbsp;&nbsp;Choux
-  .m6
+  .m4.sizeS-m6
     p
-      code .list-stripe-large
+      code div.list-stripe-large
+    .list-stripe-large
+      div
+        span.icon-ampersand
+        | &nbsp;&nbsp;Artichauts
+      div
+        span.icon-sharp
+        | &nbsp;&nbsp;Carottes
+      div
+        span.icon-asterisk
+        | &nbsp;&nbsp;Concombres
+      div
+        span.icon-flame
+        | &nbsp;&nbsp;Poireaux
+      div
+        span.icon-heart
+        | &nbsp;&nbsp;Choux
+  .m4.sizeS-m6
+    p
+      code .list-stripe-large a
     .list-stripe-large
       a(href='#index')
-        span.icon-arrow-right
+        span.icon-arrow-up
         | &nbsp;&nbsp;Artichauts
       a(href='#index')
-        span.icon-arrow-right
+        span.icon-arrow-up
         | &nbsp;&nbsp;Carottes
       a(href='#index')
-        span.icon-arrow-right
+        span.icon-arrow-up
         | &nbsp;&nbsp;Concombres
       a(href='#index')
-        span.icon-arrow-right
+        span.icon-arrow-up
         | &nbsp;&nbsp;Poireaux
       a(href='#index')
-        span.icon-arrow-right
+        span.icon-arrow-up
         | &nbsp;&nbsp;Choux
 .columns-largespace
   div
@@ -258,75 +285,7 @@
 p
   code .list-stripe.summary
 .list-stripe.summary
-  a(href='#index')
-    span.icon-arrow-down
-    | &nbsp;&nbsp;Item list
-  a(href='#index')
-    span.icon-arrow-down
-    | &nbsp;&nbsp;Item list
-  a(href='#index')
-    span.icon-arrow-down
-    | &nbsp;&nbsp;Item list
-  a(href='#index')
-    span.icon-arrow-down
-    | &nbsp;&nbsp;Item list
-  a(href='#index')
-    span.icon-arrow-down
-    | &nbsp;&nbsp;Item list
-  a(href='#index')
-    span.icon-arrow-down
-    | &nbsp;&nbsp;Item list
-  a(href='#index')
-    span.icon-arrow-down
-    | &nbsp;&nbsp;Item list
-  a(href='#index')
-    span.icon-arrow-down
-    | &nbsp;&nbsp;Item list
-  a(href='#index')
-    span.icon-arrow-down
-    | &nbsp;&nbsp;Item list
-  a(href='#index')
-    span.icon-arrow-down
-    | &nbsp;&nbsp;Item list
-  a(href='#index')
-    span.icon-arrow-down
-    | &nbsp;&nbsp;Item list
-  a(href='#index')
-    span.icon-arrow-down
-    | &nbsp;&nbsp;Item list
-  a(href='#index')
-    span.icon-arrow-down
-    | &nbsp;&nbsp;Item list
-  a(href='#index')
-    span.icon-arrow-down
-    | &nbsp;&nbsp;Item list
-  a(href='#index')
-    span.icon-arrow-down
-    | &nbsp;&nbsp;Item list
-  a(href='#index')
-    span.icon-arrow-down
-    | &nbsp;&nbsp;Item list
-  a(href='#index')
-    span.icon-arrow-down
-    | &nbsp;&nbsp;Item list
-  a(href='#index')
-    span.icon-arrow-down
-    | &nbsp;&nbsp;Item list
-  a(href='#index')
-    span.icon-arrow-down
-    | &nbsp;&nbsp;Item list
-  a(href='#index')
-    span.icon-arrow-down
-    | &nbsp;&nbsp;Item list
-  a(href='#index')
-    span.icon-arrow-down
-    | &nbsp;&nbsp;Item list
-  a(href='#index')
-    span.icon-arrow-down
-    | &nbsp;&nbsp;Item list
-  a(href='#index')
-    span.icon-arrow-down
-    | &nbsp;&nbsp;Item list
-  a(href='#index')
-    span.icon-arrow-down
-    | &nbsp;&nbsp;Item list
+  - for (var i = 1; i < 25; i++)
+    a(href='#index')
+      span.icon-arrow-up
+      | &nbsp;&nbsp;Item list #{i}

@@ -143,21 +143,21 @@
           <div class="ribbon"><a href="./CodeBlocks.html">See page</a></div>
           <h2 class="highlight">Code Blocks<a href="#index-code-blocks" class="anchor"></a></h2>
           <div class="grid">
-            <div class="m3 sizeS-m12 sizeL-m4">
+            <div class="m4 sizeS-m12 sizeL-m6">
               <p><code>pre > code</code></p>
-              <pre><code translate="no" data-select="true" data-value="Sélection">&lt;html&gt;
- &lt;head&gt;&lt;/head&gt;
- &lt;body&gt;
-   &lt;header&gt;&lt;/header&gt;
-   &lt;main&gt;
-     &lt;article&gt;&lt;/article&gt;
-   &lt;/main&gt;
-   &lt;aside&gt;&lt;/aside&gt;
-   &lt;footer&gt;&lt;/footer&gt;
- &lt;/body&gt;
-&lt;/html&gt;</code></pre>
+              <pre><code translate="no" data-select="true" data-value="Sélection">//#include &lt;windows.h&gt;
+#include &lt;iostream&gt;
+#include &lt;GL/glut.h&gt;
+/* process menu option 'op' */
+void menu(int op) {
+  switch(op) {
+  case 'Q':
+  case 'q':
+    exit(0);
+  }
+}</code></pre>
             </div>
-            <div class="m3 sizeS-m12 sizeL-m4">
+            <div class="m4 sizeS-m12 sizeL-m6">
               <p><code>pre > code(data-code=' HTML')</code></p>
               <pre><code translate="no" data-code=" HTML" data-select="true" data-value="Sélection">&lt;html&gt;
  &lt;head&gt;&lt;/head&gt;
@@ -171,39 +171,57 @@
  &lt;/body&gt;
 &lt;/html&gt;</code></pre>
             </div>
-            <div class="m3 sizeS-m12 sizeL-m4">
+            <div class="m4 sizeS-m12 sizeL-m6">
+              <p><code>pre > code(data-code=' Jade')</code></p>
+              <pre><code translate="no" data-code=" Jade" data-select="true" data-value="Sélection">.progress
+  #progress-test(data-value='0')
+.progress
+  div(data-value='40')
+.progress
+  div(data-value='70')
+.progress
+  div(data-value='100')
+.progress
+  div(data-value='30')
+button.button#progress-start Start demo</code></pre>
+            </div>
+            <div class="m4 sizeS-m12 sizeL-m6">
               <p><code>pre > code(data-code=' CSS')</code></p>
-              <pre><code translate="no" data-code=" CSS" data-select="true" data-value="Sélection">sub,
-sup {
-  line-height: 0;
-  font-size: 75%;
-  position: relative;
-  vertical-align: baseline;
+              <pre><code translate="no" data-code=" CSS" data-select="true" data-value="Sélection">.headband {
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  right: 0;
+  margin: 0;
+  width: 15rem;
+  height: 15rem;
+  overflow: hidden;
 }</code></pre>
             </div>
-            <div class="m3 sizeS-m12 sizeL-m4">
-              <p><code>pre > code(data-code=' JavaScript')</code></p>
-              <pre><code translate="no" data-code=" JavaScript" data-select="true" data-value="Sélection">$(function() {
-  $('.section').attr({
-    id: function(index) {
-      return 'section-' + index;
-    }
-  });
-});</code></pre>
+            <div class="m4 sizeS-m12 sizeL-m6">
+              <p><code>pre > code(data-code=' Stylus')</code></p>
+              <pre><code translate="no" data-code=" Stylus" data-select="true" data-value="Sélection">cube
+  position relative
+  display block
+  top ((100vmin - $m) / 2)
+  margin 0 auto
+  width $m
+  height $m
+  transform-style preserve-3d
+  transform rotate3d(1, 1, 1, 45deg)
+  animation anim-rotate3d $frame linear infinite</code></pre>
             </div>
-            <div class="m3 sizeS-m12 sizeL-m4">
-              <p><code>pre > code(data-code=' Jade')</code></p>
-              <pre><code translate="no" data-code=" Jade" data-select="true" data-value="Sélection">ul
-  li Artichauts
-  li Carottes
-  li Concombres
-    ul
-      li Composition
-      li Saveur
-        ul
-          li Vert
-          li Gris
-          li Rouge</code></pre>
+            <div class="m4 sizeS-m12 sizeL-m6">
+              <p><code>pre > code(data-code=' JavaScript')</code></p>
+              <pre><code translate="no" data-code=" JavaScript" data-select="true" data-value="Sélection">function addPrintStyles() {
+    var ss = document.createElement('link');
+    ss.type = 'text/css';
+    ss.rel = 'stylesheet';
+    ss.href = 'print.css';
+    ss.media = 'print';
+    ss.id = 'print';
+    document.getElementsByTagName('head')[0].appendChild(ss);
+}</code></pre>
             </div>
           </div>
         </div>
@@ -227,9 +245,10 @@ sup {
                     <li>Taille</li>
                     <li>Couleurs
                       <ul>
-                        <li>Vert</li>
-                        <li>Gris</li>
-                        <li>Rouge</li>
+                        <li>Cyan</li>
+                        <li>Magenta</li>
+                        <li>Jaune</li>
+                        <li>Noir</li>
                       </ul>
                     </li>
                   </ul>
@@ -250,9 +269,10 @@ sup {
                     <li><a href="#index">Taille</a></li>
                     <li><a href="#index">Couleurs</a>
                       <ol>
-                        <li><a href="#index">Vert</a></li>
-                        <li><a href="#index">Gris</a></li>
-                        <li><a href="#index">Rouge</a></li>
+                        <li><a href="#index">Cyan</a></li>
+                        <li><a href="#index">Magenta</a></li>
+                        <li><a href="#index">Jaune</a></li>
+                        <li><a href="#index">Noir</a></li>
                       </ol>
                     </li>
                   </ol>
@@ -273,9 +293,10 @@ sup {
                     <li>Taille</li>
                     <li>Couleurs
                       <ul>
-                        <li>Vert</li>
-                        <li>Gris</li>
-                        <li>Rouge</li>
+                        <li>Cyan</li>
+                        <li>Magenta</li>
+                        <li>Jaune</li>
+                        <li>Noir</li>
                       </ul>
                     </li>
                   </ul>
@@ -294,9 +315,10 @@ sup {
                   <div>Saveur</div>
                   <div>Taille</div>
                   <div>Couleurs
-                    <div>Vert</div>
-                    <div>Gris</div>
-                    <div>Rouge</div>
+                    <div>Cyan</div>
+                    <div>Magenta</div>
+                    <div>Jaune</div>
+                    <div>Noir</div>
                   </div>
                 </div>
               </div>
@@ -306,44 +328,60 @@ sup {
             <div class="m3 sizeS-m6">
               <p><code>ul.list-stripe</code></p>
               <ul class="list-stripe">
-                <li><span class="icon-sharp"></span>&nbsp;&nbsp;Artichauts</li>
+                <li><span class="icon-ampersand"></span>&nbsp;&nbsp;Artichauts</li>
                 <li><span class="icon-sharp"></span>&nbsp;&nbsp;Carottes</li>
-                <li><span class="icon-sharp"></span>&nbsp;&nbsp;Concombres</li>
-                <li><span class="icon-sharp"></span>&nbsp;&nbsp;Poireaux</li>
-                <li><span class="icon-sharp"></span>&nbsp;&nbsp;Choux</li>
+                <li><span class="icon-asterisk"></span>&nbsp;&nbsp;Concombres</li>
+                <li><span class="icon-flame"></span>&nbsp;&nbsp;Poireaux</li>
+                <li><span class="icon-heart"></span>&nbsp;&nbsp;Choux</li>
               </ul>
             </div>
             <div class="m3 sizeS-m6">
-              <p><code>ul.list-stripe</code></p>
-              <div class="list-stripe"><a href="#index"><span class="icon-arrow-right"></span>&nbsp;&nbsp;Artichauts</a><a href="#index"><span class="icon-arrow-right"></span>&nbsp;&nbsp;Carottes</a><a href="#index"><span class="icon-arrow-right"></span>&nbsp;&nbsp;Concombres</a><a href="#index"><span class="icon-arrow-right"></span>&nbsp;&nbsp;Poireaux</a><a href="#index"><span class="icon-arrow-right"></span>&nbsp;&nbsp;Choux</a></div>
+              <p><code>ul.list-stripe * a</code></p>
+              <ul class="list-stripe">
+                <li><span class="icon-arrow-up"></span>&nbsp;&nbsp;<a href="#index">Artichauts</a></li>
+                <li><span class="icon-arrow-up"></span>&nbsp;&nbsp;<a href="#index">Carottes</a></li>
+                <li><span class="icon-arrow-up"></span>&nbsp;&nbsp;<a href="#index">Concombres</a></li>
+                <li><span class="icon-arrow-up"></span>&nbsp;&nbsp;<a href="#index">Poireaux</a></li>
+                <li><span class="icon-arrow-up"></span>&nbsp;&nbsp;<a href="#index">Choux</a></li>
+              </ul>
             </div>
             <div class="m3 sizeS-m6">
               <p><code>div.list-stripe</code></p>
               <div class="list-stripe">
-                <div><span class="icon-sharp"></span>&nbsp;&nbsp;Artichauts</div>
+                <div><span class="icon-ampersand"></span>&nbsp;&nbsp;Artichauts</div>
                 <div><span class="icon-sharp"></span>&nbsp;&nbsp;Carottes</div>
-                <div><span class="icon-sharp"></span>&nbsp;&nbsp;Concombres</div>
-                <div><span class="icon-sharp"></span>&nbsp;&nbsp;Poireaux</div>
-                <div><span class="icon-sharp"></span>&nbsp;&nbsp;Choux</div>
+                <div><span class="icon-asterisk"></span>&nbsp;&nbsp;Concombres</div>
+                <div><span class="icon-flame"></span>&nbsp;&nbsp;Poireaux</div>
+                <div><span class="icon-heart"></span>&nbsp;&nbsp;Choux</div>
               </div>
             </div>
             <div class="m3 sizeS-m6">
-              <p><code>div.list-stripe</code></p>
-              <div class="list-stripe"><a href="#index"><span class="icon-arrow-right"></span>&nbsp;&nbsp;Artichauts</a><a href="#index"><span class="icon-arrow-right"></span>&nbsp;&nbsp;Carottes</a><a href="#index"><span class="icon-arrow-right"></span>&nbsp;&nbsp;Concombres</a><a href="#index"><span class="icon-arrow-right"></span>&nbsp;&nbsp;Poireaux</a><a href="#index"><span class="icon-arrow-right"></span>&nbsp;&nbsp;Choux</a></div>
+              <p><code>div.list-stripe > a</code></p>
+              <div class="list-stripe"><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Artichauts</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Carottes</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Concombres</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Poireaux</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Choux</a></div>
             </div>
-            <div class="m6">
-              <p><code>.list-stripe-large</code></p>
+            <div class="m4 sizeS-m6">
+              <p><code>ul.list-stripe-large</code></p>
               <ul class="list-stripe-large">
-                <li><span class="icon-sharp"></span>&nbsp;&nbsp;Artichauts</li>
+                <li><span class="icon-ampersand"></span>&nbsp;&nbsp;Artichauts</li>
                 <li><span class="icon-sharp"></span>&nbsp;&nbsp;Carottes</li>
-                <li><span class="icon-sharp"></span>&nbsp;&nbsp;Concombres</li>
-                <li><span class="icon-sharp"></span>&nbsp;&nbsp;Poireaux</li>
-                <li><span class="icon-sharp"></span>&nbsp;&nbsp;Choux</li>
+                <li><span class="icon-asterisk"></span>&nbsp;&nbsp;Concombres</li>
+                <li><span class="icon-flame"></span>&nbsp;&nbsp;Poireaux</li>
+                <li><span class="icon-heart"></span>&nbsp;&nbsp;Choux</li>
               </ul>
             </div>
-            <div class="m6">
-              <p><code>.list-stripe-large</code></p>
-              <div class="list-stripe-large"><a href="#index"><span class="icon-arrow-right"></span>&nbsp;&nbsp;Artichauts</a><a href="#index"><span class="icon-arrow-right"></span>&nbsp;&nbsp;Carottes</a><a href="#index"><span class="icon-arrow-right"></span>&nbsp;&nbsp;Concombres</a><a href="#index"><span class="icon-arrow-right"></span>&nbsp;&nbsp;Poireaux</a><a href="#index"><span class="icon-arrow-right"></span>&nbsp;&nbsp;Choux</a></div>
+            <div class="m4 sizeS-m6">
+              <p><code>div.list-stripe-large</code></p>
+              <div class="list-stripe-large">
+                <div><span class="icon-ampersand"></span>&nbsp;&nbsp;Artichauts</div>
+                <div><span class="icon-sharp"></span>&nbsp;&nbsp;Carottes</div>
+                <div><span class="icon-asterisk"></span>&nbsp;&nbsp;Concombres</div>
+                <div><span class="icon-flame"></span>&nbsp;&nbsp;Poireaux</div>
+                <div><span class="icon-heart"></span>&nbsp;&nbsp;Choux</div>
+              </div>
+            </div>
+            <div class="m4 sizeS-m6">
+              <p><code>.list-stripe-large a</code></p>
+              <div class="list-stripe-large"><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Artichauts</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Carottes</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Concombres</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Poireaux</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Choux</a></div>
             </div>
           </div>
           <div class="columns-largespace">
@@ -383,7 +421,8 @@ sup {
             </div>
           </div>
           <p><code>.list-stripe.summary</code></p>
-          <div class="list-stripe summary"><a href="#index"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Item list</a><a href="#index"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Item list</a><a href="#index"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Item list</a><a href="#index"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Item list</a><a href="#index"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Item list</a><a href="#index"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Item list</a><a href="#index"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Item list</a><a href="#index"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Item list</a><a href="#index"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Item list</a><a href="#index"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Item list</a><a href="#index"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Item list</a><a href="#index"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Item list</a><a href="#index"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Item list</a><a href="#index"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Item list</a><a href="#index"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Item list</a><a href="#index"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Item list</a><a href="#index"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Item list</a><a href="#index"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Item list</a><a href="#index"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Item list</a><a href="#index"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Item list</a><a href="#index"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Item list</a><a href="#index"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Item list</a><a href="#index"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Item list</a><a href="#index"><span class="icon-arrow-down"></span>&nbsp;&nbsp;Item list</a></div>
+          <div class="list-stripe summary"><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Item list 1</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Item list 2</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Item list 3</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Item list 4</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Item list 5</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Item list 6</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Item list 7</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Item list 8</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Item list 9</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Item list 10</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Item list 11</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Item list 12</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Item list 13</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Item list 14</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Item list 15</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Item list 16</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Item list 17</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Item list 18</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Item list 19</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Item list 20</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Item list 21</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Item list 22</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Item list 23</a><a href="#index"><span class="icon-arrow-up"></span>&nbsp;&nbsp;Item list 24</a>
+          </div>
         </div>
       </section>
       <section id="index-tables" class="section">
@@ -1416,7 +1455,7 @@ sup {
           <div class="ribbon"><a href="./Ribbons.html">See page</a></div>
           <h2 class="highlight">Ribbons<a href="#index-ribbons" class="anchor"></a></h2>
           <div class="grid">
-            <div class="grid4">
+            <div class="m4">
               <div class="ribbon-container">
                 <p><code>.ribbon-container .ribbon</code></p>
                 <div class="ribbon"><a href="#index-ribbons">Top</a></div>
@@ -1426,20 +1465,14 @@ sup {
                 <div class="ribbon"><a href="#index-ribbons">Bottom</a></div>
               </div>
             </div>
-            <div class="grid sizeXS-hidden">
-              <div class="ratio-1-8"></div>
-            </div>
-            <div class="grid4">
+            <div class="m4">
               <div class="ribbon-container-dual">
                 <p><code>.ribbon-container-dual</code></p>
                 <div class="ribbon"><a href="#index-ribbons">Top</a></div>
                 <div class="ribbon"><a href="#index-ribbons">Bottom</a></div>
               </div>
             </div>
-            <div class="grid sizeXS-hidden">
-              <div class="ratio-1-8"></div>
-            </div>
-            <div class="grid4">
+            <div class="m4">
               <div class="ribbon-container sizeXS-ribbon-container-bottom">
                 <p><code>.sizeXS-ribbon-container-bottom</code></p>
                 <div class="ribbon"><a href="#index-ribbons">Responsive</a></div>

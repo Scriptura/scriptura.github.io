@@ -20,19 +20,28 @@ block content
         code(translate='no' data-code=' Jade' data-select='true' data-value='Sélection').
           nav.main-nav(role='navigation')
             .wrap
+              .brand-image.onaline
+                a(href='/')
+                  span Scriptura
               input(type='checkbox', id='cmd-main-nav')
               label(for='cmd-main-nav')
                 span
-              .brand-image
-                a(href='/')
-                  span.hidden Scriptura
               ul
                 li
                   if homepage
                     span.active
                       span.icon-home.only-icon
-                      span.sizeNav-hidden Home
+                      span Home
                   else
                     a(href='/')
                       span.icon-home.only-icon
-                      span.sizeNav-hidden Home
+                      span Home
+                li
+                  if styleguidepage
+                    span.active
+                      span.icon-list2
+                      | Style Guide
+                  else
+                    a(href='/Pages/StyleGuide.html')
+                      span.icon-list2
+                      | Style Guide
