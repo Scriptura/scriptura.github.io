@@ -20,7 +20,13 @@ block content
     - var title = [ '', 'A framework Jade/Stylus/Javascript' ]
       - for (var i = 0; i < img.length; i++)
         style.
+          #welcome h2 {
+            font-size: 2.5rem;
+          }
           @media screen and (max-width: 36.01rem) {
+            #welcome h2 {
+              font-size: 1.5rem;
+            }
             #cycle-item#{i} {
               background-image: url(#{img[i]}1000.jpg);
             }
@@ -47,12 +53,13 @@ block content
           .wrap.cycle-text
             if title[i] === title[0]
               div
-                .vertical.vh85.zoom150
+                .vertical.vh85
                   h1(itemprop='name') Scriptura
                   .text-center
                     svg.svg-color.width10(xmlns='http://www.w3.org/2000/svg' viewbox='0 0 200 200')
                       path(d='M200 24.758c-355.807-105.878 130.682 161.232-200 175.242 286.814-75.173-174.292-221.127 200-175.242z')
-                  h2(itemprop='alternativeHeadline') Interface for web apps
+                  h2
+                    em.unveiling(itemprop='alternativeHeadline') Interface for web apps
                   p(style='font-size:50%') v. @@pkg.version
             else
               div
