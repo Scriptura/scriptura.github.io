@@ -33,16 +33,20 @@
           label(for='datetime') Type datetime
           input(type='datetime' name='datetime')
       .columns
-        .input
+        .input.c2
           label(for='number') Type number
           input(type='number' name='number' step='1' min='-5' max='100' value='50')
         .input
           label(for='color') Type color
           input(type='color' name='color' value='#5ae310')
+      .columns
         .input-password
           label(for='password') Type password
           input(type='password' id='user_password' name='password' placeholder='• • • • • • • •')
           input(type='checkbox' title='See the password')
+        .input.c2
+          label(for='file') Type file
+          input#tel(type='file' name='file' size='23')
       .input.hidden
         label(for='test') Type hidden
         input#test(type='text' name='test' value='' size='23' placeholder='requis')
