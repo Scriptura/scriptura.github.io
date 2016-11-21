@@ -1,8 +1,8 @@
 // -----------------------------------------------------------------------------
 // @name         Scriptura
 // @description  Interface for web apps
-// @version      0.0.42
-// @lastmodified 2016-11-18 05:44:57
+// @version      0.0.43
+// @lastmodified 2016-11-18 10:17:07
 // @author       Olivier Chavarin
 // @homepage     http://scriptura.github.io/
 // @license      ISC
