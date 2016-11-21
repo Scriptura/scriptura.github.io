@@ -3588,7 +3588,7 @@ if $bundleComments
 // -----------------------------------------------------------------------------
 if $bundleBox
 
-  [class^="box"]
+  .box
     position relative
     display flex
     flex-direction column
@@ -3599,8 +3599,8 @@ if $bundleBox
     ifBorderRadius($r1)
     box-shadow 0 0 2em rgba(0, 0, 0, .1)
 
-  [class^="box"]::before
-  [class^="box"]::after
+  .box::before
+  .box::after
     content ''
     z-index -1
     position absolute
@@ -3612,21 +3612,21 @@ if $bundleBox
     box-shadow 0 1.5em 2em rgba(0, 0, 0, .4)
     transform rotate(-3deg) translateZ(0)
 
-  [class^="box"]::after
+  .box::after
     right 1em
     left auto
     transform rotate(3deg)
 
-  [class^="box"] h2
+  .box h2
     text-align center
 
-  [class^="box"] h2 a
+  .box h2 a
     color $color6
 
-  [class^="box"] .vertical
+  .box .vertical
     flex-grow 2
   
-  [class^="box"] [class*="icon"]
+  .box [class*="icon"]
     margin-bottom 2rem // Permet un meilleur centrage de l'icône
     //color #ccc
 
@@ -3634,7 +3634,7 @@ if $bundleBox
   //.emphasized::after
   //  border-image url('../../Images/border4.svg') 0 100 100 repeat
 
-  //[class*="ribbon-container"][class^="box"]
+  //[class*="ribbon-container"].box
   //  background-image none
 
   .box

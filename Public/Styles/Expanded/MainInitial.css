@@ -3,9 +3,11 @@
 
 /* line 1 : /Users/olivierchavarin/Documents/Archives/Web/Scriptura/ScripturaSite/node_modules/stylus/lib/functions/index.styl */
 
-/* line 1 : /Users/olivierchavarin/Documents/Archives/Web/Scriptura/ScripturaSite/node_modules/stylus/lib/functions/index.styl */
+/* line 17 : /Users/olivierchavarin/Documents/Archives/Web/Scriptura/ScripturaSite/node_modules/stylus/lib/functions/index.styl */
 
-/* line 423 : /Users/olivierchavarin/Documents/Archives/Web/Scriptura/ScripturaSite/node_modules/stylus/lib/functions/index.styl */
+/* line 1 : /Users/olivierchavarin/Documents/Archives/Web/Scriptura/ScripturaSite/Root/Styles/Partial/Header.styl */
+
+/* line 423 : /Users/olivierchavarin/Documents/Archives/Web/Scriptura/ScripturaSite/Root/Styles/Partial/Header.styl */
 
 /* line 12 : /Users/olivierchavarin/Documents/Archives/Web/Scriptura/ScripturaSite/Root/Styles/Partial/Variables.styl */
 
@@ -6348,7 +6350,7 @@ form [class^="columns"] > div {
 /* line 3589 : /Users/olivierchavarin/Documents/Archives/Web/Scriptura/ScripturaSite/Root/Styles/Partial/Core.styl */
 
 /* line 3591 : /Users/olivierchavarin/Documents/Archives/Web/Scriptura/ScripturaSite/Root/Styles/Partial/Core.styl */
-[class^="box"] {
+.box {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -6366,8 +6368,8 @@ form [class^="columns"] > div {
 }
 
 /* line 3602 : /Users/olivierchavarin/Documents/Archives/Web/Scriptura/ScripturaSite/Root/Styles/Partial/Core.styl */
-[class^="box"]::before,
-[class^="box"]::after {
+.box::before,
+.box::after {
   content: '';
   z-index: -1;
   position: absolute;
@@ -6382,7 +6384,7 @@ form [class^="columns"] > div {
 }
 
 /* line 3615 : /Users/olivierchavarin/Documents/Archives/Web/Scriptura/ScripturaSite/Root/Styles/Partial/Core.styl */
-[class^="box"]::after {
+.box::after {
   right: 1em;
   left: auto;
   -webkit-transform: rotate(3deg);
@@ -6390,17 +6392,17 @@ form [class^="columns"] > div {
 }
 
 /* line 3620 : /Users/olivierchavarin/Documents/Archives/Web/Scriptura/ScripturaSite/Root/Styles/Partial/Core.styl */
-[class^="box"] h2 {
+.box h2 {
   text-align: center;
 }
 
 /* line 3623 : /Users/olivierchavarin/Documents/Archives/Web/Scriptura/ScripturaSite/Root/Styles/Partial/Core.styl */
-[class^="box"] h2 a {
+.box h2 a {
   color: #d9edf7;
 }
 
 /* line 3626 : /Users/olivierchavarin/Documents/Archives/Web/Scriptura/ScripturaSite/Root/Styles/Partial/Core.styl */
-[class^="box"] .vertical {
+.box .vertical {
   -webkit-box-flex: 2;
   -webkit-flex-grow: 2;
       -ms-flex-positive: 2;
@@ -6408,7 +6410,7 @@ form [class^="columns"] > div {
 }
 
 /* line 3629 : /Users/olivierchavarin/Documents/Archives/Web/Scriptura/ScripturaSite/Root/Styles/Partial/Core.styl */
-[class^="box"] [class*="icon"] {
+.box [class*="icon"] {
   margin-bottom: 2rem;
 }
 
