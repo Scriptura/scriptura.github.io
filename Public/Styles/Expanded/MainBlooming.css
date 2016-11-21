@@ -6495,7 +6495,7 @@ form [class^="columns"] > div {
 }
 
 /* line 3640 : /Users/olivierchavarin/Documents/Archives/Web/Scriptura/ScripturaSite/Root/Styles/Partial/Core.styl */
-.box {
+.box:not(.box0) {
   padding: 1em;
 }
 
