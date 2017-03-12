@@ -10,15 +10,15 @@ html.no-js(lang='en')
   head
     meta(charset='utf-8')
     if homepage
-      title Scriptura, a framework Jade/Stylus/Javascript
+      title Scriptura, a framework Pug/Stylus/Javascript
     else if errorpage
       title Error 404: Page not found
     else
-      title #{title} | Scriptura Framework
+      title= title + ' | Scriptura Framework'
     if homepage
       meta(name='description' content='Scriptura is a framework html/js/css light that aims to simplify the layout. Here, no supperflu adding html tags or index in the flow of web pages in order to support a script or a visual effect, priority is given to content, the HTML code is clean and respects the logic of the flow Datas.')
     else
-      meta(name='description' content='#{name} for Scriptura Framework')
+      meta(name='description' content=name + ' for Scriptura Framework')
     meta(name='viewport' content='width=device-width, initial-scale=1.0')
     meta(name='geo.placename' content='Saint-Médard-en-Forez, Loire, France')
     meta(name='theme-color' content='#ff6f7d')
@@ -32,18 +32,17 @@ html.no-js(lang='en')
     block mainnav
       include Includes/MainNav
     block breadcrumb
-    if contentlarge
-      main(itemprop='mainContentOfPage')
+    main(itemprop='mainContentOfPage')
+      if contentlarge
         block content
-          //- Default
+          // Default
           p [Content]
-    else
-      main(itemprop='mainContentOfPage')
+      else
         .section
           .wrap
-            h1(itemprop='headline name').emphasized #{name}
+            h1(itemprop='headline name').emphasized= name
             block content
-              //- Default
+              // Default
               p [Content]
     block aside
     block footer

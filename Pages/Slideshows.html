@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en" class="no-js">
+<!DOCTYPE html>
+<html class="no-js" lang="en">
   <head>
     <meta charset="utf-8">
     <title>Slideshows, Style Guide | Scriptura Framework</title>
@@ -13,7 +14,7 @@
     <link rel="stylesheet" href="../Public/Styles/Print.css" media="print">
   </head>
   <body itemscope itemtype="https://schema.org/WebPage">
-    <nav role="navigation" class="main-nav">
+    <nav class="main-nav" role="navigation">
       <div class="wrap">
         <div class="brand-image onaline"><a href="/"><span>Scriptura</span></a></div>
         <input type="checkbox" id="cmd-main-nav">
@@ -32,27 +33,27 @@
       </div>
     </nav>
     <main itemprop="mainContentOfPage">
-      <div id="slideshow1" data-cycle-slides=".cycle-item" data-cycle-timeout="6000" data-cycle-speed="2000" data-cycle-prev="#prev" data-cycle-next="#next" data-cycle-manual-fx="scrollHorz" data-cycle-manual-speed="300" class="section slideshow">
-        <style>
-          @media screen and (max-width: 36.01rem) {
-            #cycle-item0 {
-              background-image: url(../Images/Demo/LotusMacro1000.jpg);
+      <div class="section slideshow" id="slideshow1" data-cycle-slides=".cycle-item" data-cycle-timeout="6000" data-cycle-speed="2000" data-cycle-prev="#prev" data-cycle-next="#next" data-cycle-manual-fx="scrollHorz" data-cycle-manual-speed="300">
+        <div class="cycle-item" id="cycle-item0">
+          <style scoped>
+            @media screen and (max-width: 36.01rem) {
+              #cycle-item0 {
+                background-image: url(../Images/Demo/LotusMacro1000.jpg);
+              }
             }
-          }
-          @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
-            #cycle-item0 {
-              background-image: url(../Images/Demo/LotusMacro1500.jpg);
+            @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
+              #cycle-item0 {
+                background-image: url(../Images/Demo/LotusMacro1500.jpg);
+              }
             }
-          }
-          @media screen and (min-width: 65.01rem) {
-            #cycle-item0 {
-              background-image: url(../Images/Demo/LotusMacro2000.jpg);
+            @media screen and (min-width: 65.01rem) {
+              #cycle-item0 {
+                background-image: url(../Images/Demo/LotusMacro2000.jpg);
+              }
             }
-          }
-        </style>
-        <div id="cycle-item0" class="cycle-item">
+          </style>
           <picture>
-            <source srcset="../Images/Demo/LotusMacro300.jpg" sizes="100vw"><img src="../Images/Demo/LotusMacro.jpg" alt="Lorem ipsum dolor sit amet">
+            <source srcset="#{img[i]}300.jpg" sizes="100vw"><img src="#{img[i]}.jpg" alt="#{title[i]}">
           </picture>
           <div class="wrap cycle-text">
             <div>
@@ -60,26 +61,26 @@
             </div>
           </div>
         </div>
-        <style>
-          @media screen and (max-width: 36.01rem) {
-            #cycle-item1 {
-              background-image: url(../Images/Demo/PacificCity1000.jpg);
+        <div class="cycle-item" id="cycle-item1">
+          <style scoped>
+            @media screen and (max-width: 36.01rem) {
+              #cycle-item1 {
+                background-image: url(../Images/Demo/PacificCity1000.jpg);
+              }
             }
-          }
-          @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
-            #cycle-item1 {
-              background-image: url(../Images/Demo/PacificCity1500.jpg);
+            @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
+              #cycle-item1 {
+                background-image: url(../Images/Demo/PacificCity1500.jpg);
+              }
             }
-          }
-          @media screen and (min-width: 65.01rem) {
-            #cycle-item1 {
-              background-image: url(../Images/Demo/PacificCity2000.jpg);
+            @media screen and (min-width: 65.01rem) {
+              #cycle-item1 {
+                background-image: url(../Images/Demo/PacificCity2000.jpg);
+              }
             }
-          }
-        </style>
-        <div id="cycle-item1" class="cycle-item">
+          </style>
           <picture>
-            <source srcset="../Images/Demo/PacificCity300.jpg" sizes="100vw"><img src="../Images/Demo/PacificCity.jpg" alt="Consectetur adipiscing elit">
+            <source srcset="#{img[i]}300.jpg" sizes="100vw"><img src="#{img[i]}.jpg" alt="#{title[i]}">
           </picture>
           <div class="wrap cycle-text">
             <div>
@@ -87,26 +88,26 @@
             </div>
           </div>
         </div>
-        <style>
-          @media screen and (max-width: 36.01rem) {
-            #cycle-item2 {
-              background-image: url(../Images/Demo/OldMechanism1000.jpg);
+        <div class="cycle-item" id="cycle-item2">
+          <style scoped>
+            @media screen and (max-width: 36.01rem) {
+              #cycle-item2 {
+                background-image: url(../Images/Demo/OldMechanism1000.jpg);
+              }
             }
-          }
-          @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
-            #cycle-item2 {
-              background-image: url(../Images/Demo/OldMechanism1500.jpg);
+            @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
+              #cycle-item2 {
+                background-image: url(../Images/Demo/OldMechanism1500.jpg);
+              }
             }
-          }
-          @media screen and (min-width: 65.01rem) {
-            #cycle-item2 {
-              background-image: url(../Images/Demo/OldMechanism2000.jpg);
+            @media screen and (min-width: 65.01rem) {
+              #cycle-item2 {
+                background-image: url(../Images/Demo/OldMechanism2000.jpg);
+              }
             }
-          }
-        </style>
-        <div id="cycle-item2" class="cycle-item">
+          </style>
           <picture>
-            <source srcset="../Images/Demo/OldMechanism300.jpg" sizes="100vw"><img src="../Images/Demo/OldMechanism.jpg" alt="Fusce tempor, justo at pellentesque molestie, turpis lacus fringilla urna, ut luctus lorem lectus iaculis elit.">
+            <source srcset="#{img[i]}300.jpg" sizes="100vw"><img src="#{img[i]}.jpg" alt="#{title[i]}">
           </picture>
           <div class="wrap cycle-text">
             <div>
@@ -115,11 +116,11 @@
           </div>
         </div>
       </div>
-      <div id="index-detail-of-html-code" class="section">
+      <div class="section" id="index-detail-of-html-code">
         <div class="wrap">
-          <h1 itemprop="headline name" class="emphasized">Slideshow</h1>
-          <h2 class="highlight">Detail of html code<a href="#index-detail-of-html-code" class="anchor"></a></h2>
-          <pre><code translate="no" data-code=" Jade" data-select="true" data-value="Sélection">.section.slideshow#slideshow1(
+          <h1 class="emphasized" itemprop="headline name">Slideshow</h1>
+          <h2 class="highlight">Detail of html code<a class="anchor" href="#index-detail-of-html-code"></a></h2>
+          <pre><code translate="no" data-code=" Pug" data-select="true" data-value="Select and copy">.section.slideshow#slideshow1(
   data-cycle-slides='.cycle-item'
   data-cycle-timeout='6000'
   data-cycle-speed='2000'
@@ -131,23 +132,23 @@
   - var img = [ '../Images/Demo/LotusMacro', '../Images/Demo/PacificCity', '../Images/Demo/OldMechanism' ]
   - var title = [ 'Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Fusce tempor, justo at pellentesque molestie, turpis lacus fringilla urna, ut luctus lorem lectus iaculis elit.' ]
     - for (var i = 0; i < img.length; i++)
-      style.
-        @media screen and (max-width: 36.01rem) {
-          #cycle-item3 {
-            background-image: url(1000.jpg);
+      .cycle-item(id='cycle-item' + i)
+        style(scoped).
+          @media screen and (max-width: 36.01rem) {
+            #cycle-item3 {
+              background-image: url(1000.jpg);
+            }
           }
-        }
-        @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
-          #cycle-item3 {
-            background-image: url(1500.jpg);
+          @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
+            #cycle-item3 {
+              background-image: url(1500.jpg);
+            }
           }
-        }
-        @media screen and (min-width: 65.01rem) {
-          #cycle-item3 {
-            background-image: url(2000.jpg);
+          @media screen and (min-width: 65.01rem) {
+            #cycle-item3 {
+              background-image: url(2000.jpg);
+            }
           }
-        }
-      .cycle-item(id='cycle-item3')
         //- data-cycle-hash='' // Attribut permettant une ancre liée à l'élément
         picture
           //- @todo L'image la plus petite est suffisante pour l'attribut srcset étant donné que l'image est inutilisée au profit de 'background-image'
@@ -168,7 +169,7 @@
       <div class="wrap text-center"><br>
         <p><em>A framework created by</em></p>
         <p><span class="icon-quill"></span></p>
-        <p><a href="//github.com/Scriptura" itemprop="author" itemscope itemtype="https://schema.org/Person" class="author"><span itemprop="name"><span itemprop="givenName">Olivier</span> <span itemprop="familyName">Chavarin</span></span></a></p><br>
+        <p><a class="author" href="//github.com/Scriptura" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name"><span itemprop="givenName">Olivier</span> <span itemprop="familyName">Chavarin</span></span></a></p><br>
       </div>
       <div class="old-browers">
         <div class="icon-spaceinvader zoom700"></div><br>

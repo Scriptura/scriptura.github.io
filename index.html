@@ -1,7 +1,8 @@
-<!DOCTYPE html><html lang="en" class="no-js">
+<!DOCTYPE html>
+<html class="no-js" lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Scriptura, a framework Jade/Stylus/Javascript</title>
+    <title>Scriptura, a framework Pug/Stylus/Javascript</title>
     <meta name="description" content="Scriptura is a framework html/js/css light that aims to simplify the layout. Here, no supperflu adding html tags or index in the flow of web pages in order to support a script or a visual effect, priority is given to content, the HTML code is clean and respects the logic of the flow Datas.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="geo.placename" content="Saint-Médard-en-Forez, Loire, France">
@@ -13,7 +14,7 @@
     <link rel="stylesheet" href="../Public/Styles/Print.css" media="print">
   </head>
   <body itemscope itemtype="https://schema.org/WebPage">
-    <nav role="navigation" class="main-nav">
+    <nav class="main-nav" role="navigation">
       <div class="wrap">
         <div class="brand-image onaline"><a href="/"><span>Scriptura</span></a></div>
         <input type="checkbox" id="cmd-main-nav">
@@ -32,31 +33,31 @@
       </div>
     </nav>
     <main itemprop="mainContentOfPage">
-      <header id="slideshow1" data-cycle-slides=".cycle-item" data-cycle-timeout="10000" data-cycle-speed="2000" data-cycle-prev="#prev" data-cycle-next="#next" data-cycle-manual-fx="scrollHorz" data-cycle-manual-speed="300" class="section slideshow">
-        <style>
-          #welcome h2 {
-            font-size: 2.5rem;
-          }
-          @media screen and (max-width: 36.01rem) {
+      <header class="section slideshow" id="slideshow1" data-cycle-slides=".cycle-item" data-cycle-timeout="10000" data-cycle-speed="2000" data-cycle-prev="#prev" data-cycle-next="#next" data-cycle-manual-fx="scrollHorz" data-cycle-manual-speed="300">
+        <div class="cycle-item" id="cycle-item0">
+          <style scoped>
             #welcome h2 {
-              font-size: 1.5rem;
+              font-size: 2.5rem;
             }
-            #cycle-item0 {
-              background-image: url(../Images/Demo/LotusMacro1000.jpg);
+            @media screen and (max-width: 36.01rem) {
+              #welcome h2 {
+                font-size: 1.5rem;
+              }
+              #cycle-item0 {
+                background-image: url(../Images/Demo/LotusMacro1000.jpg);
+              }
             }
-          }
-          @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
-            #cycle-item0 {
-              background-image: url(../Images/Demo/LotusMacro1500.jpg);
+            @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
+              #cycle-item0 {
+                background-image: url(../Images/Demo/LotusMacro1500.jpg);
+              }
             }
-          }
-          @media screen and (min-width: 65.01rem) {
-            #cycle-item0 {
-              background-image: url(../Images/Demo/LotusMacro2000.jpg);
+            @media screen and (min-width: 65.01rem) {
+              #cycle-item0 {
+                background-image: url(../Images/Demo/LotusMacro2000.jpg);
+              }
             }
-          }
-        </style>
-        <div id="cycle-item0" class="cycle-item">
+          </style>
           <picture>
             <source srcset="../Images/Demo/LotusMacro300.jpg" sizes="100vw"><img src="../Images/Demo/LotusMacro.jpg" alt="">
           </picture>
@@ -65,56 +66,55 @@
               <div class="vertical vh85 unveiling">
                 <h1 itemprop="name">Scriptura</h1>
                 <div class="text-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 200 200" class="svg-color width10">
+                  <svg class="svg-color width10" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 200 200">
                     <path d="M200 24.758c-355.807-105.878 130.682 161.232-200 175.242 286.814-75.173-174.292-221.127 200-175.242z"></path>
                   </svg>
                 </div>
                 <h2><em itemprop="alternativeHeadline">Interface for web apps</em></h2>
-                <p class="zoom120">v. 0.0.43</p>
+                <p class="zoom120">SemVer 0.1.0</p>
               </div>
             </div>
           </div>
         </div>
-        <style>
-          #welcome h2 {
-            font-size: 2.5rem;
-          }
-          @media screen and (max-width: 36.01rem) {
+        <div class="cycle-item" id="cycle-item1">
+          <style scoped>
             #welcome h2 {
-              font-size: 1.5rem;
+              font-size: 2.5rem;
             }
-            #cycle-item1 {
-              background-image: url(../Images/Demo/FlowerMacro1000.jpg);
+            @media screen and (max-width: 36.01rem) {
+              #welcome h2 {
+                font-size: 1.5rem;
+              }
+              #cycle-item1 {
+                background-image: url(../Images/Demo/FlowerMacro1000.jpg);
+              }
             }
-          }
-          @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
-            #cycle-item1 {
-              background-image: url(../Images/Demo/FlowerMacro1500.jpg);
+            @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
+              #cycle-item1 {
+                background-image: url(../Images/Demo/FlowerMacro1500.jpg);
+              }
             }
-          }
-          @media screen and (min-width: 65.01rem) {
-            #cycle-item1 {
-              background-image: url(../Images/Demo/FlowerMacro2000.jpg);
+            @media screen and (min-width: 65.01rem) {
+              #cycle-item1 {
+                background-image: url(../Images/Demo/FlowerMacro2000.jpg);
+              }
             }
-          }
-        </style>
-        <div id="cycle-item1" class="cycle-item">
+          </style>
           <picture>
-            <source srcset="../Images/Demo/FlowerMacro300.jpg" sizes="100vw"><img src="../Images/Demo/FlowerMacro.jpg" alt="A framework Jade/Stylus/Javascript">
+            <source srcset="../Images/Demo/FlowerMacro300.jpg" sizes="100vw"><img src="../Images/Demo/FlowerMacro.jpg" alt="A framework Pug/Stylus/Javascript">
           </picture>
           <div class="wrap cycle-text">
             <div>
-              <h2>A framework Jade/Stylus/Javascript
-              </h2><br><a href="#index-about">
+              <h2>A framework Pug/Stylus/Javascript</h2><br><a href="#index-about">
                 <button type="button"></button></a>
             </div>
           </div>
         </div>
       </header>
-      <div id="index-about" class="section">
+      <div class="section" id="index-about">
         <div class="wrap box ribbon-container">
           <div class="ribbon"><a href="https://github.com/Scriptura/ScripturaFramework/blob/master/Readme.md#about">More details</a></div>
-          <h2 class="highlight">About<a href="#index-about" class="anchor"></a></h2>
+          <h2 class="highlight">About<a class="anchor" href="#index-about"></a></h2>
           <div class="grid">
             <div class="m6 sizeS-m8 accordion">
               <h3>Eng</h3>
@@ -126,7 +126,7 @@
                 <p>These technologies imply a limitation of backward compatibility with older browsers, bias on our part that allows us the use of the latest technologies without compromise web.</p>
               </div>
               <h3>Fr</h3>
-              <div lang="fr" class="links">
+              <div class="links" lang="fr">
                 <p>Scriptura est un framework html/js/css léger dont le but est de simplifier la mise en page. Ici, pas d'ajout supperflu de balises html ou d'index dans le flux des pages web dans le but de soutenir un script ou un effet visuel, la priorité est donnée au contenu, le code html reste propre et respecte la logique du flux des données.</p>
                 <p>L'idée est de partir d'un texte correctement structuré et de l'entourer d'un élément parent comportant une classe. La partie du document ainsi ciblée sera transformée en menu onglets ou accordéon, ou encore autre chose selon les besoins. Pour voir des exemples consultez notre <a href="./Pages/StyleGuide.html">StyleGuide</a>.</p>
                 <p>Le framework permet des <a href="./Pages/Layouts.html">mises en page complexes</a> grâce à un système de grille basé sur les modules css flexbox et la fonction calc().</p>
@@ -140,10 +140,11 @@
           </div>
         </div>
       </div>
-      <div id="index-get-started" class="section">
+      <div class="section" id="index-get-started">
         <div class="wrap box ribbon-container">
           <div class="ribbon"><a href="https://github.com/Scriptura/ScripturaFramework/blob/master/Readme.md#folder-tree-and-key-files">More details</a></div>
-          <h2 class="highlight">Get Started<a href="#index-get-started" class="anchor"></a></h2>
+          <h2 class="highlight">Get Started<a class="anchor" href="#index-get-started"></a></h2>
+          <p>Scriptura uses <a href="http://gulpjs.com/">Gulp</a> to compile its code, so it is necessary to work under a <a href="https://nodejs.org/">Node.js</a>.</p>
           <div class="grid">
             <div class="m6 sizeS-m8">
               <h3 class="h5">First stage</h3>
@@ -155,7 +156,7 @@
               </div>
               <h3 class="h5">Second stage</h3>
               <div>
-                <p>Create an <code>.html.jade</code> or an <code>.php.jade</code> file in the folder.</p>
+                <p>Create an <code>.html.pug</code> or an <code>.php.pug</code> file in the folder.</p>
                 <p>With in the file's header:</p>
                 <p><code>link(rel='stylesheet' href='./Public/Styles/Main.css' media='screen')</code></p>
                 <p>And in the file's footer:</p>
@@ -164,7 +165,7 @@
               </div>
               <h3 class="h5">Third stage</h3>
               <div>
-                <p>That's all! You can start creating with jade syntaxe.</p>
+                <p>That's all! You can start creating with pug syntaxe.</p>
               </div>
             </div>
             <div class="m6 sizeS-m4 vertical">
@@ -178,7 +179,7 @@
       <div class="wrap text-center"><br>
         <p><em>A framework created by</em></p>
         <p><span class="icon-quill"></span></p>
-        <p><a href="//github.com/Scriptura" itemprop="author" itemscope itemtype="https://schema.org/Person" class="author"><span itemprop="name"><span itemprop="givenName">Olivier</span> <span itemprop="familyName">Chavarin</span></span></a></p><br>
+        <p><a class="author" href="//github.com/Scriptura" itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name"><span itemprop="givenName">Olivier</span> <span itemprop="familyName">Chavarin</span></span></a></p><br>
       </div>
       <div class="old-browers">
         <div class="icon-spaceinvader zoom700"></div><br>

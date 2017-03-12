@@ -10,23 +10,23 @@
   - var img = [ '../Images/Demo/LotusMacro', '../Images/Demo/PacificCity', '../Images/Demo/OldMechanism' ]
   - var title = [ 'Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Fusce tempor, justo at pellentesque molestie, turpis lacus fringilla urna, ut luctus lorem lectus iaculis elit.' ]
     - for (var i = 0; i < img.length; i++)
-      style.
-        @media screen and (max-width: 36.01rem) {
-          #cycle-item#{i} {
-            background-image: url(#{img[i]}1000.jpg);
+      .cycle-item(id='cycle-item' + i)
+        style(scoped).
+          @media screen and (max-width: 36.01rem) {
+            #cycle-item#{i} {
+              background-image: url(#{img[i]}1000.jpg);
+            }
           }
-        }
-        @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
-          #cycle-item#{i} {
-            background-image: url(#{img[i]}1500.jpg);
+          @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
+            #cycle-item#{i} {
+              background-image: url(#{img[i]}1500.jpg);
+            }
           }
-        }
-        @media screen and (min-width: 65.01rem) {
-          #cycle-item#{i} {
-            background-image: url(#{img[i]}2000.jpg);
+          @media screen and (min-width: 65.01rem) {
+            #cycle-item#{i} {
+              background-image: url(#{img[i]}2000.jpg);
+            }
           }
-        }
-      .cycle-item(id='cycle-item#{i}')
         //- data-cycle-hash='#{title[i]}' // Attribut permettant une ancre liée à l'élément
         picture
           //- @todo L'image la plus petite est suffisante pour l'attribut srcset étant donné que l'image est inutilisée au profit de 'background-image'
@@ -46,7 +46,7 @@
     h2.highlight Detail of html code
       a.anchor(href='#index-detail-of-html-code')
     pre
-      code(translate='no' data-code=' Jade' data-select='true' data-value='Sélection').
+      code(translate='no' data-code=' Pug' data-select='true' data-value='Select and copy').
         .section.slideshow#slideshow1(
           data-cycle-slides='.cycle-item'
           data-cycle-timeout='6000'
@@ -59,23 +59,23 @@
           - var img = [ '../Images/Demo/LotusMacro', '../Images/Demo/PacificCity', '../Images/Demo/OldMechanism' ]
           - var title = [ 'Lorem ipsum dolor sit amet', 'Consectetur adipiscing elit', 'Fusce tempor, justo at pellentesque molestie, turpis lacus fringilla urna, ut luctus lorem lectus iaculis elit.' ]
             - for (var i = 0; i < img.length; i++)
-              style.
-                @media screen and (max-width: 36.01rem) {
-                  #cycle-item#{i} {
-                    background-image: url(#{img[i]}1000.jpg);
+              .cycle-item(id='cycle-item' + i)
+                style(scoped).
+                  @media screen and (max-width: 36.01rem) {
+                    #cycle-item#{i} {
+                      background-image: url(#{img[i]}1000.jpg);
+                    }
                   }
-                }
-                @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
-                  #cycle-item#{i} {
-                    background-image: url(#{img[i]}1500.jpg);
+                  @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
+                    #cycle-item#{i} {
+                      background-image: url(#{img[i]}1500.jpg);
+                    }
                   }
-                }
-                @media screen and (min-width: 65.01rem) {
-                  #cycle-item#{i} {
-                    background-image: url(#{img[i]}2000.jpg);
+                  @media screen and (min-width: 65.01rem) {
+                    #cycle-item#{i} {
+                      background-image: url(#{img[i]}2000.jpg);
+                    }
                   }
-                }
-              .cycle-item(id='cycle-item#{i}')
                 //- data-cycle-hash='#{title[i]}' // Attribut permettant une ancre liée à l'élément
                 picture
                   //- @todo L'image la plus petite est suffisante pour l'attribut srcset étant donné que l'image est inutilisée au profit de 'background-image'

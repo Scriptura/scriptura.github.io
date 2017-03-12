@@ -7,23 +7,23 @@ append var
   - contentlarge = true
 
 mixin list(name, anchor)
-  a(href='#index-#{anchor}')
+  a(href='#index-' + anchor)
     span.icon-arrow-down
     | &nbsp;&nbsp;#{name}
 
 mixin section(name, anchor)
-  section.section(id='index-#{anchor}')
+  section.section(id='index-' + anchor)
     .wrap.box.ribbon-container.sizeXS-ribbon-container-bottom
       .ribbon
         a(href=attributes.link) See page
-      h2.highlight #{name}
-        a.anchor(href='#index-#{anchor}')
+      h2.highlight= name
+        a.anchor(href='#index-' + anchor)
       block
 
 block content
   header.section
     .wrap              
-      h1(itemprop='headline name').emphasized Style Guide
+      h1(itemprop='headline name').emphasized= name
       p.touch-hidden
         em Keyboard navigation: press 
           code s

@@ -6,7 +6,7 @@ append var
   - title = name
 
 mixin list(name, anchor)
-  a(href='./#{anchor}.html')
+  a(href='./' + anchor + '.html')
     span.icon-arrow-down
     | &nbsp;&nbsp;#{name}
 
@@ -24,6 +24,4 @@ block content
     +list('Layout for Mobile 2', 'Layout09')
     +list('Wraps', 'Layout10')
     +list('Main Nav', 'MainNav01')
-    //-
-      +list('Main Nav Bottom', 'MainNav02')
     +list('Slideshows', 'Slideshows')

@@ -2,15 +2,15 @@ mixin picture(img, alt)
   - var img = '../Images/' + img
   - var alt
   picture
-    source(media='(min-width: 2000px)' srcset='#{img}.jpg 2500w' sizes='100vw')
-    source(media='(min-width: 1500px)' srcset='#{img}2000.jpg 2000w' sizes='100vw')
-    source(media='(min-width: 1000px)' srcset='#{img}1500.jpg 1500w' sizes='100vw')
-    source(media='(min-width: 800px)' srcset='#{img}1000.jpg 1000w' sizes='100vw')
-    source(media='(min-width: 600px)' srcset='#{img}800.jpg 800w' sizes='100vw')
-    source(media='(min-width: 400px)' srcset='#{img}600.jpg 600w' sizes='100vw')
-    source(media='(min-width: 300px)' srcset='#{img}400.jpg 400w' sizes='100vw')
-    source(srcset='#{img}300.jpg 300w' sizes='100vw')
-    img(src='#{img}.jpg' alt='#{alt}')
+    source(media='(min-width: 2000px)' srcset=img + '.jpg 2500w' sizes='100vw')
+    source(media='(min-width: 1500px)' srcset=img + '2000.jpg 2000w' sizes='100vw')
+    source(media='(min-width: 1000px)' srcset=img + '1500.jpg 1500w' sizes='100vw')
+    source(media='(min-width: 800px)' srcset=img + '1000.jpg 1000w' sizes='100vw')
+    source(media='(min-width: 600px)' srcset=img + '800.jpg 800w' sizes='100vw')
+    source(media='(min-width: 400px)' srcset=img + '600.jpg 600w' sizes='100vw')
+    source(media='(min-width: 300px)' srcset=img + '400.jpg 400w' sizes='100vw')
+    source(srcset=img + '300.jpg 300w' sizes='100vw')
+    img(src=img + '.jpg' alt=alt)
 
 .grid
   .m4.sizeS-m6

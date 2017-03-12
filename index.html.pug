@@ -17,39 +17,39 @@ block content
     data-cycle-manual-speed='300'
     )
     - var img = [ '../Images/Demo/LotusMacro', '../Images/Demo/FlowerMacro' ]
-    - var title = [ '', 'A framework Jade/Stylus/Javascript' ]
+    - var title = [ '', 'A framework Pug/Stylus/Javascript' ]
       - for (var i = 0; i < img.length; i++)
-        style.
-          #welcome h2 {
-            font-size: 2.5rem;
-          }
-          @media screen and (max-width: 36.01rem) {
+        .cycle-item(id='cycle-item' + i)
+          style(scoped).
             #welcome h2 {
-              font-size: 1.5rem;
+              font-size: 2.5rem;
             }
-            #cycle-item#{i} {
-              background-image: url(#{img[i]}1000.jpg);
+            @media screen and (max-width: 36.01rem) {
+              #welcome h2 {
+                font-size: 1.5rem;
+              }
+              #cycle-item#{i} {
+                background-image: url(#{img[i]}1000.jpg);
+              }
             }
-          }
-          @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
-            #cycle-item#{i} {
-              background-image: url(#{img[i]}1500.jpg);
+            @media screen and (min-width: 36.01rem) and (max-width: 65.01rem) {
+              #cycle-item#{i} {
+                background-image: url(#{img[i]}1500.jpg);
+              }
             }
-          }
-          @media screen and (min-width: 65.01rem) {
-            #cycle-item#{i} {
-              background-image: url(#{img[i]}2000.jpg);
+            @media screen and (min-width: 65.01rem) {
+              #cycle-item#{i} {
+                background-image: url(#{img[i]}2000.jpg);
+              }
             }
-          }
-        .cycle-item(id='cycle-item#{i}')
           //- data-cycle-hash='#{title[i]}' // Attribut permettant une ancre liée à l'élément
           picture
             //- @todo L'image la plus petite est suffisante pour l'attribut srcset étant donné que l'image est inutilisée au profit de 'background-image'
             source(
-              srcset='#{img[i]}300.jpg'
+              srcset=img[i] + '300.jpg'
               sizes='100vw'
               )
-            img(src='#{img[i]}.jpg' alt='#{title[i]}')
+            img(src=img[i] + '.jpg' alt=title[i])
           .wrap.cycle-text
             if title[i] === title[0]
               div
@@ -60,11 +60,10 @@ block content
                       path(d='M200 24.758c-355.807-105.878 130.682 161.232-200 175.242 286.814-75.173-174.292-221.127 200-175.242z')
                   h2
                     em(itemprop='alternativeHeadline') Interface for web apps
-                  p.zoom120 v. @@pkg.version
+                  p.zoom120 SemVer @@pkg.version
             else
               div
-                h2
-                  = title[i]
+                h2= title[i]
                 br
                 a(href='#index-about')
                   button(type='button')
@@ -106,6 +105,12 @@ block content
         a(href='https://github.com/Scriptura/ScripturaFramework/blob/master/Readme.md#folder-tree-and-key-files') More details
       h2.highlight Get Started
         a.anchor(href='#index-get-started')
+      p
+        | Scriptura uses 
+        a(href="http://gulpjs.com/") Gulp
+        |  to compile its code, so it is necessary to work under a 
+        a(href="https://nodejs.org/") Node.js
+        | .
       .grid
         .m6.sizeS-m8
           h3.h5 First stage
@@ -121,9 +126,9 @@ block content
           h3.h5 Second stage
           div
             p Create an 
-              code .html.jade
+              code .html.pug
               |  or an 
-              code .php.jade
+              code .php.pug
               |  file in the folder.
             p With in the file's header:
             p
@@ -135,6 +140,6 @@ block content
               code script(src='./Public/Scripts/Main.js')
           h3.h5 Third stage
           div
-            p That's all! You can start creating with jade syntaxe.
+            p That's all! You can start creating with pug syntaxe.
         .m6.sizeS-m4.vertical
           .icon-rocket.surround.zoom500

@@ -1,14 +1,14 @@
 extends ../PatternLayouts
 
 append var
-  - name = 'Example number two layout for photoblog'
+  - name = 'Example Layout for Photoblog 2'
   - title = name + titlesuffix
   - contentlarge = true
 
 block content
     .section
       .wrap
-        h1(itemprop='headline name').emphasized Example Layout for Photoblog 2
+        h1(itemprop='headline name').emphasized= name
         p
           em Resize your browser window to test.
         .grid.demo-layout2
@@ -29,7 +29,7 @@ block content
         h2.highlight Detail of html code
           a.anchor(href='#index-detail-of-html-code')
         pre
-          code(translate='no' data-code=' Jade' data-select='true' data-value='Sélection').
+          code(translate='no' data-code=' Pug' data-select='true' data-value='Select and copy').
             .grid
               .m7.sizeXS-m6
                 .ratio-1-2
