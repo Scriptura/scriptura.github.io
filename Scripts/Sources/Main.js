@@ -2,7 +2,7 @@
 // @name         scriptura
 // @description  Interface for web apps
 // @version      0.1.2
-// @lastmodified 2017-07-07 06:03:06
+// @lastmodified 2017-07-08 10:39:43
 // @author       Olivier Chavarin
 // @homepage     http://scriptura.github.io/
 // @license      ISC
@@ -554,17 +554,20 @@ bodyIndex();
 ( function( $ ) {
 	$( '[class*="-focus"]' ).prepend( '<span class="icon-enlarge"/>' ); // Ajout d'une icône si classe détectée
 	$( document ).on( 'click', '[class*="-focus"]', function( e ) { // @note Event si utilisation sur <a>
-		$( this )
-			.find( 'picture' )
-			.clone()
+		imageFocus = $( this ).find( 'img' ).clone();
+		alternativeSource = $( this ).find( 'picture' ).data( 'src' );
+		//console.log( alternativeSource );
+		imageFocus
+			.removeAttr( 'width' ) // @note La suppression de ces attributs permet le responsive en zoom
+			.removeAttr( 'height' ) // @note Idem
 			.css( 'display', 'inherit' ) // @bugfix @affected Firefox @note Neutralise une déclaration inligne style 'display:inline' induite (via jQuery ?) sous ce navigateur
 			.fadeIn( 300 )
 			.appendTo( 'body > footer' )
 			.wrap( '<div class="focus-off"><div></div></div>' ) // @bugfix @affected All browsers @note Image en flex item n'a pas son ratio préservé si resize ; une div intermédiaire entre le conteneur .focus-off et l'image corrige ce problème
-			.before( '<span class="icon-shrink zoom200"/>' )
-			.find( 'img' )
-			.removeAttr( 'width' ) // @note La suppression de ces attributs permet le responsive en zoom
-			.removeAttr( 'height' ); // @note Idem
+			.before( '<span class="icon-shrink zoom200"/>' );
+		if( ( typeof alternativeSource != 'undefined' ) && ( screen.width < 1500 ) ) { // @note Si petite définition d'écran alors résolution limitée pour l'image
+			imageFocus.attr( 'src', alternativeSource );
+		}
 		$( 'body' ).css( 'overflow', 'hidden' ); // @note Pas de scroll sur la page si photo en focus
 		$( document ).find( '.focus-off' ).on( 'click', function( e ) {
 			$( '.focus-off' ).fadeOut( 300 );
@@ -576,6 +579,40 @@ bodyIndex();
 		e.preventDefault();
 	} );
 } )( jQuery );
+
+/*
+( function( $ ) {
+	$( '[class*="-focus"]' ).prepend( '<span class="icon-enlarge"/>' ); // Ajout d'une icône si classe détectée
+	$( document ).on( 'click', '[class*="-focus"]', function( e ) { // @note Event si utilisation sur <a>
+		picture = $( this ).find( 'picture' ).clone();
+		image = picture.find( 'img' );
+		src = image.attr( 'src' );
+		picture
+			.css( 'display', 'inherit' ) // @bugfix @affected Firefox @note Neutralise une déclaration inligne style 'display:inline' induite (via jQuery ?) sous ce navigateur
+			.fadeIn( 300 )
+			.appendTo( 'body > footer' )
+			.wrap( '<div class="focus-off"><div></div></div>' ) // @bugfix @affected All browsers @note Image en flex item n'a pas son ratio préservé si resize ; une div intermédiaire entre le conteneur .focus-off et l'image corrige ce problème
+			.before( '<span class="icon-shrink zoom200"/>' );
+		image
+			.removeAttr( 'width' ) // @note La suppression de ces attributs permet le responsive en zoom
+			.removeAttr( 'height' ); // @note Idem
+		//if( screen.width > 1500 ) { // @note Si la résolution est correcte on propose la source originale
+		//	picture.prepend( '<source media="(min-width: 800px)" srcset="' + src + ' 2500w" sizes="100vw">' );
+		//} else {
+		//	picture.prepend( '<source media="(min-width: 800px)" srcset="' + src + ' 2500w" sizes="100vw">' );
+		//}
+		$( 'body' ).css( 'overflow', 'hidden' ); // @note Pas de scroll sur la page si photo en focus
+		$( document ).find( '.focus-off' ).on( 'click', function( e ) {
+			$( '.focus-off' ).fadeOut( 300 );
+			setTimeout( function() {
+				$( '.focus-off' ).remove();
+			}, 300 );
+			$( 'body' ).css( 'overflow', 'visible' ); // @note Scroll réactivé
+		} );
+		e.preventDefault();
+	} );
+} )( jQuery );
+*/
 
 
 // -----------------------------------------------------------------------------

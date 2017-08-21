@@ -53,7 +53,7 @@
             }
           </style>
           <picture>
-            <source srcset="#{img[i]}300.jpg" sizes="100vw"><img src="#{img[i]}.jpg" alt="#{title[i]}">
+            <source srcset="../Images/Demo/LotusMacro300.jpg" sizes="100vw"><img src="../Images/Demo/LotusMacro.jpg" alt="Lorem ipsum dolor sit amet">
           </picture>
           <div class="wrap cycle-text">
             <div>
@@ -80,7 +80,7 @@
             }
           </style>
           <picture>
-            <source srcset="#{img[i]}300.jpg" sizes="100vw"><img src="#{img[i]}.jpg" alt="#{title[i]}">
+            <source srcset="../Images/Demo/PacificCity300.jpg" sizes="100vw"><img src="../Images/Demo/PacificCity.jpg" alt="Consectetur adipiscing elit">
           </picture>
           <div class="wrap cycle-text">
             <div>
@@ -107,7 +107,7 @@
             }
           </style>
           <picture>
-            <source srcset="#{img[i]}300.jpg" sizes="100vw"><img src="#{img[i]}.jpg" alt="#{title[i]}">
+            <source srcset="../Images/Demo/OldMechanism300.jpg" sizes="100vw"><img src="../Images/Demo/OldMechanism.jpg" alt="Fusce tempor, justo at pellentesque molestie, turpis lacus fringilla urna, ut luctus lorem lectus iaculis elit.">
           </picture>
           <div class="wrap cycle-text">
             <div>
@@ -149,14 +149,14 @@
               background-image: url(2000.jpg);
             }
           }
-        //- data-cycle-hash='' // Attribut permettant une ancre liée à l'élément
+        //- data-cycle-hash=title[i] // Attribut permettant une ancre liée à l'élément
         picture
           //- @todo L'image la plus petite est suffisante pour l'attribut srcset étant donné que l'image est inutilisée au profit de 'background-image'
           source(
-            srcset='300.jpg'
+            srcset=img[i] + '300.jpg'
             sizes='100vw'
             )
-          img(src='.jpg' alt='')
+          img(src=img[i] + '.jpg' alt=title[i])
         .wrap.cycle-text
           div
             h2
