@@ -1,8 +1,8 @@
 // -----------------------------------------------------------------------------
 // @name         scriptura
 // @description  Interface for web apps
-// @version      0.1.2
-// @lastmodified 2017-07-08 10:39:43
+// @version      0.1.3
+// @lastmodified 2017-09-11 15:48:48
 // @author       Olivier Chavarin
 // @homepage     http://scriptura.github.io/
 // @license      ISC
@@ -556,7 +556,6 @@ bodyIndex();
 	$( document ).on( 'click', '[class*="-focus"]', function( e ) { // @note Event si utilisation sur <a>
 		imageFocus = $( this ).find( 'img' ).clone();
 		alternativeSource = $( this ).find( 'picture' ).data( 'src' );
-		//console.log( alternativeSource );
 		imageFocus
 			.removeAttr( 'width' ) // @note La suppression de ces attributs permet le responsive en zoom
 			.removeAttr( 'height' ) // @note Idem
@@ -580,40 +579,74 @@ bodyIndex();
 	} );
 } )( jQuery );
 
+
+// -----------------------------------------------------------------------------
+// @section     Gallery
+// @description Diaporama sur les images sélectionnées
+// -----------------------------------------------------------------------------
+
+//.gallery [class*="figure"]
 /*
-( function( $ ) {
-	$( '[class*="-focus"]' ).prepend( '<span class="icon-enlarge"/>' ); // Ajout d'une icône si classe détectée
-	$( document ).on( 'click', '[class*="-focus"]', function( e ) { // @note Event si utilisation sur <a>
-		picture = $( this ).find( 'picture' ).clone();
-		image = picture.find( 'img' );
-		src = image.attr( 'src' );
-		picture
-			.css( 'display', 'inherit' ) // @bugfix @affected Firefox @note Neutralise une déclaration inligne style 'display:inline' induite (via jQuery ?) sous ce navigateur
-			.fadeIn( 300 )
-			.appendTo( 'body > footer' )
-			.wrap( '<div class="focus-off"><div></div></div>' ) // @bugfix @affected All browsers @note Image en flex item n'a pas son ratio préservé si resize ; une div intermédiaire entre le conteneur .focus-off et l'image corrige ce problème
-			.before( '<span class="icon-shrink zoom200"/>' );
-		image
-			.removeAttr( 'width' ) // @note La suppression de ces attributs permet le responsive en zoom
-			.removeAttr( 'height' ); // @note Idem
-		//if( screen.width > 1500 ) { // @note Si la résolution est correcte on propose la source originale
-		//	picture.prepend( '<source media="(min-width: 800px)" srcset="' + src + ' 2500w" sizes="100vw">' );
-		//} else {
-		//	picture.prepend( '<source media="(min-width: 800px)" srcset="' + src + ' 2500w" sizes="100vw">' );
-		//}
-		$( 'body' ).css( 'overflow', 'hidden' ); // @note Pas de scroll sur la page si photo en focus
-		$( document ).find( '.focus-off' ).on( 'click', function( e ) {
-			$( '.focus-off' ).fadeOut( 300 );
-			setTimeout( function() {
-				$( '.focus-off' ).remove();
-			}, 300 );
-			$( 'body' ).css( 'overflow', 'visible' ); // @note Scroll réactivé
-		} );
-		e.preventDefault();
+BEGIN En test...
+jQuery.fn.gallery = function() {
+	var gallery = $( this );
+	gallery.on( 'focus click', function( e ) {
+			//var item = $( this ).clone().find( 'figure' );
+			var item = $( this ).find( '> *' ).clone();
+			var visio = $( '<gallery/>' );
+			item.removeClass();
+			var n = 0;
+			item.each( function() {
+				n = n + 1;
+				$( this ).wrap( '<a href="#gallery-' + n + '"/>' );
+			} );
+			item.find( 'img' )
+				.removeAttr( 'width' ) // @note Suppression des attributs @todo En test...
+				.removeAttr( 'height' ); // @note Idem
+			visio.appendTo( 'body > footer' );
+			visio.append( item );
+		e.stopPropagation();
+		//e.preventDefault();
 	} );
-} )( jQuery );
+};
+jQuery( '.gallery' ).gallery();
+END En test...
 */
 
+/*
+jQuery.fn.gallery = function() {
+	var gallery = $( this );
+	gallery.find( '> *' ).wrapAll( '<div><div></div></div>' );
+	gallery.prepend( '<div><visio></visio></div>' );
+	gallery.find( 'img' )
+		.removeAttr( 'width' ) // @note Suppression des attributs @todo En test...
+		.removeAttr( 'height' ); // @note Idem
+	var items = gallery.find( 'figure' );
+	items.removeClass(); // @note Évite un 
+	items.find( 'span' ).remove();
+	var imgInit = gallery.find( ':last-child figure:first-child' );
+	var n = 0;
+	$( gallery ).find( ':last-child figure' ).each( function() {
+		n = n + 1;
+		$( this ).wrap( '<a href="#gallery-' + n + '"/>' );
+	} );
+	var imgClone = imgInit.clone();
+	imgClone = imgClone.addClass( 'figure-focus' );
+		imgClone.prepend( '<span class="icon-enlarge"/>' ); // Ajout d'une icône
+	$( 'visio' ).replaceWith( imgClone );
+	gallery.on( 'focus click', '> :last-child a', function( e ) {
+		var imgVisio = $( this ).find( 'figure' ).clone();
+		imgVisio = imgVisio.addClass( 'figure-focus' );
+		imgVisio.prepend( '<span class="icon-enlarge"/>' ); // Ajout d'une icône
+		gallery.find( ' > :first-child figure' )
+			.replaceWith( imgVisio );
+		e.stopPropagation();
+		//e.preventDefault();
+	} );
+};
+
+jQuery( '.gallery' ).gallery();
+*/
 
 // -----------------------------------------------------------------------------
 // @section     Slideshow
