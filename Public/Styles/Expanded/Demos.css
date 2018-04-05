@@ -10,11 +10,14 @@
   min-height: 4rem;
   padding: 0.5rem 0;
   text-align: center;
-  background-color: #fff;
+  background-color: Tan;
+}
+.demo-layout code {
+  background-color: Transparent;
 }
 .demo-layout2 [class^="m"] {
   padding: 0.5rem;
-  background-color: #fff;
+  background-color: #000;
   background-size: cover;
   background-position: 50% 50%;
 }
@@ -70,7 +73,7 @@
   }
 }
 .demo-ratio [class^="ratio"] {
-  background-color: #fff;
+  background-color: Tan;
 }
 .slideshow .cycle-text *:not(button) {
   color: #fff;

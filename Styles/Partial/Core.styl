@@ -481,10 +481,10 @@ html
   text-size-adjust 100% // @bugfix @affected IE pour Windows Phone @note Améliore le zoom sur le texte
   font $fontWeight 1em $fontFamily // @bugfix @affected IE 9-10 @note Pas d'unités rem en raccourcis
   line-height 1.5 // @bugfix @affected All browsers
-  color $colorCL001
+  ifColor($colorCL001)
 
 body
-  ifBackgroundColor(#f0f0f0)
+  ifBackgroundColor($colorBG002)
 
 ::selection
   ifBackgroundColor(rgba(255, 111, 125, .5))
@@ -538,65 +538,59 @@ h1
 .h1
   margin-top 1.3rem // @bugfix @affected Chrome, Firefox et Safari @note Si éléments inclus dans `section` et `article`
   margin-bottom .8rem // @note Idem
-  font-size 3.2em // @note Idem
+  font-size 2.5em // @note Idem
 
 h2
 .h2
   margin-top 1.4rem
   margin-bottom .7rem
-  font-size 2.8em
+  font-size 2em
 
 h3
 .h3
   margin-top 1.2rem
   margin-bottom .6rem
-  font-size 2.4em
+  font-size 1.75em
 
 h4
 .h4
   margin-top 1rem
   margin-bottom .5rem
-  font-size 2em
+  font-size 1.5em
 
 h5
 .h5
   margin-top .8rem
   margin-bottom .4rem
-  font-size 1.6em
+  font-size 1.25em
 
 h6
 .h6
   margin-top .6rem
   margin-bottom .3rem
-  font-size 1.2em
+  font-size 1em
 
-@media (max-width $sizeXS)
-
-  h1
-  .h1
-    font-size 9.6vmin // @note Not work on IE 9, Safari 5.1, Android 4.3, Opera 12.1
-
-  h2
-  .h2
-    font-size 7.6vmin
-
-  h3
-  .h3
-    font-size 7.2vmin
-
-  h4
-  .h4
-    font-size 6vmin
-
-  h5
-  .h5
-    //font-size 4.2vmin
-    font-size 1.2rem
-
-  h6
-  .h6
-    //font-size 3.6vmin
-    font-size 1rem
+//@media (max-width $sizeXS)
+//  h1
+//  .h1
+//    font-size 9.6vmin // @note Not work on IE 9, Safari 5.1, Android 4.3, Opera 12.1
+//  h2
+//  .h2
+//    font-size 7.6vmin
+//  h3
+//  .h3
+//    font-size 7.2vmin
+//  h4
+//  .h4
+//    font-size 6vmin
+//  h5
+//  .h5
+//    //font-size 4.2vmin
+//    font-size 1.2rem
+//  h6
+//  .h6
+//    //font-size 3.6vmin
+//    font-size 1rem
 
 b
 strong
@@ -810,7 +804,7 @@ if $bundleDropCaps
     ifFontFamily($fontFamily3)
     font-weight 600
     font-size 3em
-    ifColor(#777)
+    ifColor($colorCL001)
     ifBackgroundColor(#ebebeb)
 
 
@@ -891,7 +885,7 @@ if $bundleRibbons
     height 2em
     line-height 2
     text-align center
-    ifColor(#eee !important)
+    ifColor(#fff !important)
     background $color1 linear-gradient(to top, rgba(0, 0, 0, .1), rgba(255, 255, 255, .05))
     ifBoxShadow(0 .3em 1em -.5em rgba(0, 0, 0, 1))
     transform rotate(45deg)
@@ -899,7 +893,7 @@ if $bundleRibbons
   .ribbon :hover
   .ribbon :focus
   .ribbon :active
-    ifColor(#fff !important)
+    ifColor(Orange !important)
     text-decoration none
 
   .ribbon ::before
@@ -1173,7 +1167,7 @@ if $bundleSeparators
 
   .separator::after
   .sizeXS-separator::after
-    border-bottom .4rem solid $colorBD028
+    border-bottom .25rem solid $colorBD028
 
   @media (max-width $sizeXS)
 
@@ -1212,7 +1206,7 @@ if $bundleEmphasized
 
     .emphasized
       padding-bottom .5em
-      border-bottom .15em solid $colorBD029
+      border-bottom .1em solid $colorBD029
 
   @media (min-width $sizeS)
 
@@ -1227,7 +1221,7 @@ if $bundleEmphasized
       width 100%
       vertical-align middle
       margin-top .3em
-      border-bottom .15em solid $colorBD029
+      border-bottom .1em solid $colorBD029
 
     .emphasized::before
       margin-left -100%
@@ -1279,7 +1273,7 @@ if $bundleMessagesBox
     padding 1.4em 2em 1em
     ifColor($colorCL030)
     background-color $colorBG030
-    border .1em solid $colorBD030
+    //border .1em solid $colorBD030
     ifBorderRadius($r3)
     ifBoxShadow($colorBS030)
 
@@ -1288,22 +1282,23 @@ if $bundleMessagesBox
     padding-bottom .5em
 
   [class^="message"]::before
+    box-sizing border-box
     content ''
     position absolute
     top -.8em
     left -.8em
-    height 2.8em
-    width 2.8em
+    height 3em
+    width 3em
     background-color $colorBG031
-    border .1em solid $colorBD031
+    //border .1em solid $colorBD031
     border-radius 50%
     ifBoxShadow($colorBS031)
 
   [class^="message"]::after
     content '\ea61'
     position absolute
-    top -.3em
-    left -.1em
+    top -.25em
+    left -.05em
     font-family GlyphIcons
     font-size 1.5em
     text-align center
@@ -1988,7 +1983,7 @@ if $bundleForms
     text-transform none
 
   button
-  html input[type="button"], // @affected Android 4.0
+  :root input[type="button"], // @affected Android 4.0
   input[type="reset"]
   input[type="submit"]
     -webkit-appearance button // @affected iOS
@@ -3666,7 +3661,7 @@ if $bundleBox
     flex-direction column
     min-height 33rem
     padding-bottom .5rem
-    background-color #f5f5f5
+    background-color $color0
     //background-image linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.5))
     ifBorderRadius($r1)
     box-shadow 0 0 2em rgba(0, 0, 0, .1)

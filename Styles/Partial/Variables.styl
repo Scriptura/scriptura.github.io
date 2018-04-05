@@ -166,7 +166,7 @@
   $color1 = #b03c57                         // couleur dominante 1
   $color2 = #b9515d                         // couleur dominante 2
   $color4 = #7ca166                         // couleur secondaire (vert)
-  $color5 = #bb7c3c                         // couleur secondaire (orange)
+  $color5 = #c4823f //#bb7c3c               // couleur secondaire (orange)
   $color6 = #5a728a                         // couleur secondaire (bleu)
   $color7 = #f8fed8                         // couleur secondaire (jaune)
   $colorG = desaturate($color1, 100%)       // gris de référence
@@ -187,8 +187,8 @@
   $colorCL0002 = #efefef
   $colorCL0003 = #777
   
-  $colorCL001 = #777                        // html
-  $colorBG002 = #f0f0f0                     // body
+  $colorCL001 = #444                        // html
+  $colorBG002 = $color0                     // body
   $colorBG003 = rgba(255, 111, 125, .5)     // ::selection
   $colorCL004 = $color1                     // Links
   $colorCL005 = $color1                     // Titles
@@ -238,23 +238,23 @@
   $colorBS0271 = .5rem .5rem 2rem rgba(0, 0, 0, .1)
   $colorBD028 = #ebebeb                     // Separators
   $colorBD029 = $color6                     // Emphasized Titles
-  $colorCL0291 = #ddd                       // Surround
+  $colorCL0291 = #fff                       // Surround
   $colorBG0291 = $color1
   $colorBS0291 = .5rem .5rem 2rem rgba(0, 0, 0, .25)
   $colorCL030 = false
-  $colorBG030 = darken($colorBG002, 5%)     // Messages Box
+  $colorBG030 = $colorBG002                 // Messages Box
   $colorBD030 = $colorBG002
   $colorBS030 = .5rem .5rem 2rem rgba(0, 0, 0, .1)
   $colorBG031 = $colorBG030
   $colorBD031 = $colorBD030
   $colorBS031 = $colorBS030
-  $colorBG032 = lighten($color6, 70%)
-  $colorBG033 = lighten($color4, 70%)       // lighten() for Stylus : 70% = Sass : 35%
-  $colorBG034 = lighten($color5, 70%)
-  $colorBG035a = lighten($color7, 70%)
-  $colorBG035b = rgba(0, 0, 0, .05)
+  $colorBG032 = #cce5ff //lighten($color6, 70%)
+  $colorBG033 = #d4edda //lighten($color4, 50%)
+  $colorBG034 = #f8d7da //lighten($color5, 70%)
+  $colorBG035a = #ffe88f //#fff3cd //lighten($color7, 70%)
+  $colorBG035b = rgba(0, 0, 0, .1)
   $colorFI0351 = $color1                    // Svg
-  $colorCL036 = #ddd                        // Figures
+  $colorCL036 = #fff //#ddd                 // Figures
   $colorBG036 = #555
   $colorBS036 = .5rem .5rem 2rem rgba(0, 0, 0, .2)
   $colorCL037 = $colorCL036                 // Caption Slides
