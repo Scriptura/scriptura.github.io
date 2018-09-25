@@ -3,7 +3,7 @@
   min-height: 4rem;
   width: 100%;
   text-align: center;
-  background-color: #fff;
+  background-color: Tan;
 }
 .demo-layout [class^="m"],
 .demo-layout aside {
@@ -11,6 +11,7 @@
   padding: 0.5rem 0;
   text-align: center;
   background-color: Tan;
+<<<<<<< Updated upstream
 }
 .demo-layout code {
   background-color: Transparent;
@@ -18,6 +19,12 @@
 .demo-layout2 [class^="m"] {
   padding: 0.5rem;
   background-color: #000;
+=======
+}
+.demo-layout2 [class^="m"] {
+  padding: 0.5rem;
+  background-color: Tan;
+>>>>>>> Stashed changes
   background-size: cover;
   background-position: 50% 50%;
 }
