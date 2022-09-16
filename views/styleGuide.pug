@@ -1,0 +1,122 @@
+extends patternLayout
+
+block variables
+  - const documentType = 'styleGuide'
+  - const data = {_name: 'Style Guide <span>.&nbsp;documentation</span>', _title: 'Style Guide . Scritpura framework', _description: 'Style Guide . Scritpura framework' }
+
+mixin list(name, slug)
+  li
+    a(href='#section-' + slug)
+      svg.icon(role='img' focusable='false')
+        use(xlink:href='/sprites/utils.svg#arrow-down')
+      | #{name}
+
+mixin section(name, slug)
+  section(id='section-' + slug).ribbon-hook
+    h2= name
+      a.anchor(href='#section-' + slug)
+    .ribbon
+      a(href='./' + slug + '.html') See page
+    block
+
+block main
+  h1.main-heading!= data._name
+  br
+  ul.list-stripe-links.grid4
+    +list('Typography', 'typography')
+    +list('Languages', 'languages')
+    +list('Lists', 'lists')
+    +list('Details/Summary', 'detailsSummary')
+    +list('Tabs', 'tabs')
+    +list('Accordions', 'accordions')
+    +list('Message Boxes', 'messageBoxes')
+    +list('Code Blocks', 'codeBlocks')
+    +list('Tables', 'tables')
+    +list('Images', 'images')
+    +list('Audio & video players', 'players')
+    +list('Forms', 'forms')
+    +list('Checkboxes & Radio buttons', 'checkboxes')
+    +list('Ranges', 'ranges')
+    +list('Buttons', 'buttons')
+    +list('Progress Bars', 'progressBars')
+    +list('Loaders', 'loaders')
+    +list('Cards', 'cards')
+    +list('Ribbons', 'ribbons')
+    +list('Grids', 'grids')
+    +list('Columns', 'columns')
+    +list('Zoom', 'zoom')
+    +list('Maps', 'maps')
+  br
+  hr
+  //-
+    +section('Sprites', 'sprites')
+      include includes/demos/sprite
+    hr
+  +section('Typography', 'typography')
+    include includes/demos/typography
+  hr
+  +section('Languages', 'languages')
+    include includes/demos/language
+  hr
+  +section('Lists', 'lists')
+    include includes/demos/list
+  hr
+  +section('Details/Summary', 'detailsSummary')
+    include includes/demos/detailsSummary
+  hr
+  +section('Tabs', 'tabs')
+    include includes/demos/tab
+  hr
+  +section('Accordions', 'accordions')
+    include includes/demos/accordion
+  hr
+  +section('Message Boxes', 'messageBoxes')
+    include includes/demos/messageBox
+  hr
+  +section('Code Blocks', 'codeBlocks')
+    include includes/demos/codeBlock
+  hr
+  +section('Tables', 'tables')
+    include includes/demos/table
+  hr
+  +section('Images', 'images')
+    include includes/demos/image
+  hr
+  +section('Audio & video players', 'players')
+    include includes/demos/player
+  hr
+  +section('Forms', 'forms')
+    include includes/demos/form
+  hr
+  +section('Checkboxes & Radio buttons', 'checkboxes')
+    include includes/demos/checkbox
+  hr
+  +section('Ranges', 'ranges')
+    include includes/demos/range
+  hr
+  +section('Buttons', 'buttons')
+    include includes/demos/button
+  hr
+  +section('Progress Bars', 'progressBars')
+    include includes/demos/progressBar
+  hr
+  +section('Loaders', 'loaders')
+    include includes/demos/loader
+  hr
+  +section('Cards', 'cards')
+    include includes/demos/card
+  hr
+  +section('Ribbons', 'ribbons')
+    include includes/demos/ribbon
+  hr
+  +section('Grids', 'grids')
+    include includes/demos/grid
+  hr
+  +section('Columns', 'columns')
+    include includes/demos/column
+  hr
+  +section('Zooms', 'zooms')
+    include includes/demos/zoom
+  hr
+  +section('Maps', 'maps')
+    include includes/demos/map

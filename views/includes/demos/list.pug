@@ -1,0 +1,94 @@
+.grid4.gap.gap-bottom
+  div
+    p
+      code ul
+    ul
+      li Artichauts
+      li Carottes
+      li Concombres
+      li Poireaux
+      li Choux
+        ul
+          li Composition
+          li Saveur
+          li Taille
+          li Couleurs
+            ul
+              li Cyan
+              li Magenta
+              li Jaune
+              li Noir
+  div
+    p
+      code ol
+    ol
+      li Artichauts
+      li Carottes
+      li Concombres
+      li Poireaux
+      li Choux
+        ol
+          li Composition
+          li Saveur
+          li Taille
+          li Couleurs
+            ol
+              li Cyan
+              li Magenta
+              li Jaune
+              li Noir
+  div
+    p
+      code ul.list
+    ul.list
+      li Artichauts
+      li Carottes
+      li Concombres
+      li Poireaux
+      li Choux
+        ul
+          li Composition
+          li Saveur
+          li Taille
+          li Couleurs
+            ul
+              li Cyan
+              li Magenta
+              li Jaune
+              li Noir
+  .center.media-xs-hidden.media-l-hidden
+    svg.size25.decorative-svg(role='img' focusable='false')
+      use(xlink:href='/sprites/silos/245v-d1.svg#1')
+.grid4.gap
+  div
+    p
+      code ul.list-stripe
+    ul.list-stripe
+      - for (let i = 1; i < 8; i++)
+        li List item #{i}
+  div
+    p
+      code ul.list-stripe
+    ul.list-stripe
+      - for (let i = 1; i < 8; i++)
+        li
+          svg.icon(role='img' focusable='false')
+            use(xlink:href='/sprites/utils.svg#quill')
+          | List item #{i}
+  div
+    p
+      code ul.list-stripe li a
+    ul.list-stripe-large
+      - for (let i = 1; i < 8; i++)
+        li
+          a(href='#') List item #{i}
+  div
+    p
+      code ul.list-stripe-links
+    ul.list-stripe-large-links
+      - for (let i = 1; i < 8; i++)
+        li
+          a(href='#')
+            svg.icon(role='img' focusable='false')
+              use(xlink:href='/sprites/utils.svg#link')
+            | List item #{i}

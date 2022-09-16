@@ -1,0 +1,45 @@
+_lineMarksUnit1 = 1em
+_lineMarksColor1 = _colorG + 27.5% // #777
+
+@media (max-width _sizeXS)
+
+  .line-mark
+    display none
+
+@media (min-width _sizeXS)
+
+  .add-line-marks > *
+    position relative
+
+  .line-mark
+    position absolute
+    top - _lineMarksUnit1
+    right -6em
+    width 4em
+    height 2em
+    padding-top _lineMarksUnit1
+    vertical-align sub
+    //font-family _fontList2
+    font-size 1rem // rem obligatoire
+    font-weight normal
+    //text-align right
+    text-decoration none
+    color _lineMarksColor1
+    outline none
+    transition color .2s ease-in-out
+    user-select none // @note On évite de sélectionner les marqueurs, ceux-ci sont un élément de navigation et non de contenu.
+    &:focus
+    &:hover
+    &active
+      //color orange
+      text-decoration none
+    &::before
+      content '- '
+    &::after
+      content ' -'
+
+  h2 .line-mark
+    top -.5em
+
+  h3 .line-mark
+    top -.8em

@@ -1,0 +1,107 @@
+// Clases utilitaires
+
+// @note Cacher l'élément  @affected Lecteurs d'écran inclus
+.hidden
+[hidden]
+  display none !important
+
+@media (max-width _sizeXS)
+
+  .media-xs-hidden
+    display none !important
+
+@media (min-width _sizeS) and (max-width _sizeL)
+
+  .media-l-hidden
+    display none !important
+
+.invisible // @note Cacher l'élément en laissant son emplacement @affected Lecteurs d'écran inclus
+  visibility hidden
+
+a[aria-disabled=true] // @tod En expérimentation.
+  cursor not-allowed
+  &:active
+    pointer-events none
+
+// @note Caché visuellement mais disponible pour les lecteurs d'écran.
+// @see https://github.com/h5bp/html5-boilerplate/blob/master/dist/css/style.css
+
+.sr-only
+  position absolute
+  overflow hidden
+  width 1px
+  height 1px
+  margin -1px
+  padding 0
+  white-space nowrap
+  clip rect(0, 0, 0, 0)
+  border 0
+
+//.relative // @note Classe habituellement ajoutée en js sur des éléments parents
+//  position relative
+
+.protected // @note Protège partiellement le texte en empêchant sa sélection
+  user-select none
+
+.onaline // @note Texte sur une ligne sans dépassement
+  overflow hidden
+  white-space nowrap
+  text-overflow ellipsis
+
+.gap-bottom
+  margin-bottom _gap
+
+.center
+  display grid
+  align-items center
+  justify-content center
+  //& > *
+  //  place-self center // @support @see https://caniuse.com/?search=place-self
+
+//.centerX // @todo
+
+//.centerY // @todo
+
+//.push
+//  margin-left auto
+
+//[class*=rotate]
+//  transform-origin 50% 50%
+
+for _i in 90 180 // 45 135
+  .rotate{_i}
+    transform rotate(_i * 1deg)
+
+// @note .zoom permet de jouer sur la taille des éléments enfants codés en unité relative
+// - cette technique est incompatible avec les unités les éléments utilisant vmin
+// - pas de possibilité de zoom avec cette technique au-dessous de 50%
+// - pas de '.zoom100' : aucun intérêt...
+.reverse
+  transform: scaleX(-1)
+
+[class^=size]
+  max-width 100%
+  max-height 100vh
+  //background-color #333
+
+for _i in 1..25
+  .size{_i}
+    width _i * 1em
+    height _i * 1em
+
+for _i in 1000 900 800 700 600 500 450 400 350 300 250 200 175 150 140 130 120 115 110 105 95 90 85 80 75 70 60 50
+  .zoom{_i}
+    font-size _i * 1%
+
+// @note Réinitialisation d'un élément enfant si élément parent zoomé, valeur égale à la taille d'origine
+
+.zoom-reset
+  font-size 1rem
+
+.blink
+  animation animBlink 2s linear infinite
+
+@keyframes animBlink
+
+  50%
+    opacity .1

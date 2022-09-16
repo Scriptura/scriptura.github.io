@@ -1,0 +1,36 @@
+.grid2.media-s-grid1.gap
+  //-div
+    p
+      code audio
+    audio(controls='controls')
+      source(src='/medias/audios/BagdadCafe.mp3')
+      p.message-error This media is not supported by your browser.
+  div
+    p
+      code audio.audio
+    audio.audio
+      source(src='/medias/audios/BagdadCafe.mp3')
+      p.message-error This media is not supported by your browser.
+    p
+      code audio.audio
+    audio.audio
+      source(src='/medias/audios/BagdadCafe.mp3')
+      p.message-error This media is not supported by your browser.
+    p
+      code audio.audio
+    audio.audio
+      source(src='/medias/audios/BagdadCafe.mp3')
+      p.message-error This media is not supported by your browser.
+  div
+    p
+      code video
+    video(controls='controls', poster='/medias/videos/posters/LeRetourDuRoi.jpg')
+      source(src='/medias/videos/LeRetourDuRoi.mp4', type='video/mp4')
+      p.message-warning HTML5 video codec proposed is not supported by your browser.
+  //-div
+    p
+      code .video
+    .video
+      iframe(src="https://www.youtube.com/embed/tr4dkk5ThTk" title="YouTube video player" frameborder="0" allowfullscreen)
+      //- Option de l'iframe :
+      //- allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

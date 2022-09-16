@@ -1,0 +1,9 @@
+extends ../../../patternLayout
+
+block variables
+  - const documentType = 'player'
+  - const data = { _name: 'Audio & video players <span>.&nbsp;documentation</span>', _title: 'Audio & video players . Scritpura framework' }
+
+block main
+  h1.main-heading!= data._name
+  include ../player

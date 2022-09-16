@@ -1,0 +1,140 @@
+// @note Avec `minmax` la grille ne sera pas tributaire de son contenu en responsive @see https://css-tricks.com/equal-width-columns-in-css-grid-are-kinda-weird/
+
+[class^=grid]
+  display grid
+  grid-auto-flow dense
+  grid-template-columns minmax(0, 1fr)
+
+[class^=grid].gap
+  gap _gap
+
+[class^=grid].vertical-gap
+  gap 0 _gap
+
+@media (min-width _sizeXS)
+
+  .grid2
+  .grid3
+  .grid4
+    grid-template-columns repeat(2, minmax(0, 1fr))
+
+@media (min-width _sizeS)
+
+  .grid3
+  .grid4
+    grid-template-columns repeat(3, minmax(0, 1fr))
+
+@media (min-width _sizeL)
+
+  .grid4
+    grid-template-columns repeat(4, minmax(0, 1fr))
+
+@media (max-width _sizeXS)
+
+  .media-xs-grid2
+    grid-template-columns repeat(2, minmax(0, 1fr))
+
+@media (min-width _sizeXS) and (max-width _sizeS)
+
+  :root .media-s-grid1
+    grid-template-columns minmax(0, 1fr)
+
+  :root .media-s-grid2
+    grid-template-columns repeat(2, minmax(0, 1fr))
+
+@media (min-width _sizeS) and (max-width _sizeL)
+
+  :root .media-l-grid1
+    grid-template-columns minmax(0, 1fr)
+
+  :root .media-l-grid2
+    grid-template-columns repeat(2, minmax(0, 1fr))
+
+@media (min-width _sizeL) and (max-width _sizeXL)
+
+  :root .media-xl-grid2
+    grid-template-columns repeat(2, minmax(0, 1fr))
+
+@media (min-width _sizeXS)
+
+  .c2
+  .c3
+  .c4
+    grid-column span 2
+
+@media (min-width _sizeS)
+
+  .c3
+  .c4
+    grid-column span 3
+
+@media (min-width _sizeL)
+
+  .c4
+    grid-column span 4
+
+.r2
+  grid-row span 2
+
+.r3
+  grid-row span 3
+
+.r4
+  grid-row span 4
+
+.flex // @todo En test...
+  display flex
+  flex-wrap wrap
+  justify-content space-between
+
+.flex.gap
+  gap _gap
+
+/*
+// with Grid layout:
+
+.summary
+  display grid
+  gap _gap
+
+@media (min-width _sizeXS)
+
+  .summary
+    grid-template-columns repeat(2, 1fr)
+
+@media (min-width _sizeS)
+
+  .summary
+    grid-template-columns repeat(3, 1fr)
+
+@media (min-width _sizeL)
+
+  .summary
+    grid-template-columns repeat(4, 1fr)
+
+
+// with flexbox:
+
+.summary
+  display flex
+  flex-wrap wrap
+  gap _gap
+
+.summary > *
+  flex 1 0 100% // = [flex-grow flex-shrink flex-basis]
+
+@media (min-width _sizeXS)
+
+  .summary > *
+    flex-basis 'calc(50% - %s)' % _gap
+
+@media (min-width _sizeS)
+
+  .summary > *
+    flex-basis 'calc(33% - %s)' % _gap
+
+@media (min-width _sizeL)
+
+  .summary > *
+    flex-basis 'calc(25% - %s)' % _gap
+*/

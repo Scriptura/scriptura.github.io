@@ -1,0 +1,51 @@
+extends patternLayout
+
+block variables
+  - var documentType = 'calendarDay'
+
+block main
+  h1.main-heading!= data._name
+  .grid2.gap
+    div
+      .message.flex.gap
+        div
+          if data._calendar.date && data._calendar.weekday
+            p #{data._calendar.date} {#{data._calendar.weekday}}
+          p
+            if data._calendar.color[0]
+              .calendar-color(class='calendar-' + data._calendar.color[0])
+            if data._calendar.color[1] && data._calendar.color[1] !== data._calendar.color[0]
+              .calendar-color(class='calendar-' + data._calendar.color[1])
+            if data._calendar.name && data._calendar.link[0]
+              a(href=_calendar.link[0])!= data._calendar.name
+            else if data._calendar.name
+              span!= data._calendar.name
+            else
+              span no calendar
+          if data._calendar.p.name
+            p!= data._calendar.p.name
+          if data._calendar.type || data._calendar.priority
+            if data._calendar.type
+              p= [data._calendar.type.charAt(0).toUpperCase() + data._calendar.type.slice(1), data._calendar.priority].filter(Boolean).join(', degré de préséance : ')
+            else if !data._calendar.type && data._calendar.priority
+              p= 'Degré de préséance : ' + data._calendar.priority
+          if data._calendar.key
+            p= 'Mots clefs : ' + [data._calendar.key, data._calendar.p.key].filter(Boolean).join(', ')
+        if (data._moonPhase || data._moonPhase === 0)
+          .center
+            svg.size4(role='img' focusable='false')
+              use(xlink:href='/sprites/moons.svg#' + data._moonPhase)
+      ul.list-stripe-links.grid2
+        li
+          a(href=data._previousPage)
+            svg.icon(role='img' focusable='false')
+              use(xlink:href='/sprites/utils.svg#arrow-left')
+            = data._previousPageInfo
+        li(style='direction:rtl;text-align:right')
+          a(href=data._nextPage)
+            svg.icon(role='img' focusable='false' style='margin-right:0;margin-left:0.5em')
+              use(xlink:href='/sprites/utils.svg#arrow-right')
+            = data._nextPageInfo
+    .center
+      svg.size25.decorative-svg(role='img' focusable='false')
+        use(xlink:href='/sprites/silos/182r-d1-1.1.svg#1')

@@ -1,0 +1,15 @@
+figure.figure-focus
+  picture
+    source(
+      srcset=img.src + img.name + '-w600' + '.' + img.ext + ', ' + img.src + img.name + '-w1000' + '.' + img.ext + ' 2x'
+      type=img.typesMime
+    )
+    img(
+      src=img.src + img.name + '-original.' + img.ext
+      /*loading='lazy' @bugfix @note En conflit avec masonry.js*/
+      alt=img.alt
+      width=img.width
+      height=img.height
+      type=img.typesMime
+    )
+  figcaption!= img.alt + '.<br>Crédit&nbsp;: ' + img.author

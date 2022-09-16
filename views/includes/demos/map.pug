@@ -1,0 +1,46 @@
+.grid2
+  .map(
+    style="height:30vh",
+    data-name="Map 1",
+    data-places='["Place name", [48.853133,2.349747]]',
+    data-zoom="15",
+    data-color="#ff654f",
+    data-tileserver="https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoib2xpdmllcmMiLCJhIjoiY2s5dnNnZWoyMDIzNDNzb2Y1dmQ4MGNtMCJ9.m4U-wYcS4EPcKe9nVXIbUA",
+    data-attribution="<a href=\"//www.openstreetmap.org/\">OSM</a> | <a href=\"//www.mapbox.com/\">Mapbox</a>"
+  )
+  .map(
+    style="height:30vh",
+    data-name="Map 2",
+    data-places='["Place name", [45.764043,4.835659]]',
+    data-zoom="6",
+    data-color="#ff654f",
+    data-tileserver="https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoib2xpdmllcmMiLCJhIjoiY2s5dnNnZWoyMDIzNDNzb2Y1dmQ4MGNtMCJ9.m4U-wYcS4EPcKe9nVXIbUA",
+    data-attribution="<a href=\"//www.openstreetmap.org/\">OSM</a> | <a href=\"//www.mapbox.com/\">Mapbox</a>"
+  )
+  .map(
+    style="height:30vh",
+    data-name="Map 3",
+    data-places='["Place name", [50.7630348,2.6999022]]',
+    data-zoom="7",
+    data-color="#ff654f",
+    data-tileserver="https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoib2xpdmllcmMiLCJhIjoiY2s5dnNnZWoyMDIzNDNzb2Y1dmQ4MGNtMCJ9.m4U-wYcS4EPcKe9nVXIbUA",
+    data-attribution="<a href=\"//www.openstreetmap.org/\">OSM</a> | <a href=\"//www.mapbox.com/\">Mapbox</a>"
+  )
+  .map(
+    style="height:30vh",
+    data-name="Map 4",
+    data-places='["Place name", [44.853133,3.349747]]',
+    data-zoom="5",
+    data-color="#ff654f",
+    data-tileserver="https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoib2xpdmllcmMiLCJhIjoiY2s5dnNnZWoyMDIzNDNzb2Y1dmQ4MGNtMCJ9.m4U-wYcS4EPcKe9nVXIbUA",
+    data-attribution="<a href=\"//www.openstreetmap.org/\">OSM</a> | <a href=\"//www.mapbox.com/\">Mapbox</a>"
+  )
+//- Serveurs de tuiles disponibles @see https://wiki.openstreetmap.org/wiki/Tile_servers
+//- Alternative : 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png'
+//- Zoom de 0 à 18
+//- @todo yarn add color -> color.lighten(0.2)
+br
+p.message
+  svg.icon(role='img' focusable='false')
+    use(xlink:href='/sprites/utils.svg#info')
+  | Maps with Leaflet.js.

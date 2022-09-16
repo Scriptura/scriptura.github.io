@@ -1,0 +1,108 @@
+_audioPlayerColor1 = _colorG - 34%
+_audioPlayerColor2 = _colorT2
+
+// @description Audio, vidéo et Caneva
+
+// @note Classe `video` prévue pour les sources vidéos extérieures au site
+// @note Classe `map` pour les cartes
+
+audio
+video
+canvas
+  width 100%
+
+audio
+video
+.video
+  box-shadow _shadow15 // @todo Ne fonctione pas avec audio sous Chrome
+
+video
+.video
+  background-color #000 // @bugfix @affected Google Maps @note Pas de background prédéfinit sur élément `canvas` afin d'éviter les conflits
+
+audio
+video
+  outline none
+
+audio
+  height 2em // @bugfix @affected All browsers @note Nécessaire au positionnement
+  //padding 0 0 .5rem // @bugfix @affected Chrome
+
+audio:not([controls])
+  display none // @affected All browsers @note Affichage de l'audio sans contrôle
+  height 0 // @bugfix @affected iOS 5
+
+// @bugfix Redimentionnement de l'élément video à la lecture @note La solution adoptée est de mettre un poster de même dimention que le flux vidéo
+//video
+//  object-fit cover // @affected Firefox @note Influence sur l'image des posters
+
+.video
+  position relative // [1] Évite un léger resize entre le thumbnail et le chargement de la vidéo.
+  aspect-ratio 16/9
+  user-select none
+  & iframe
+  //& embed
+  //& object
+  & .thumbnail-youtube
+    position absolute // [1]
+    width 100%
+    height 100%
+    background-size cover
+
+.thumbnail-youtube
+  &:focus-within
+  &:hover
+    outline 5px solid _color5
+
+// BEGIN test
+
+.audio
+  display none
+
+.audio-player
+  display flex
+  justify-content space-between
+  align-items center
+  min-width 16em
+  height 4em
+  color _audioPlayerColor2
+  background-color _audioPlayerColor1
+  box-shadow _shadow15
+  border-radius 2em
+
+.audio-player *
+  color _audioPlayerColor2
+
+.audio-player button
+  width 3em
+  height 3em
+  padding .5em
+  background-color transparent
+  border none
+  outline none
+  cursor pointer
+
+.audio-player button:focus
+.audio-player button:hover
+.audio-player button:active
+  background-color #333
+
+.audio-player .audio-play-pause
+  margin-left .5em
+  border-radius 50%
+
+.audio-player svg
+  width 1.5em
+  height 1.5em
+  //fill _audioPlayerColor2
+
+.audio-player output
+  margin 0 .5em
+  //font-size 1em
+
+.audio-player .progress
+  flex-grow 1
+  height .3em
+  background-color _audioPlayerColor2
+
+// END test

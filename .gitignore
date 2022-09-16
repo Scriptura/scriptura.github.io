@@ -1,11 +1,37 @@
+# private
+.env
+variables.js
+private/
+
 # npm
+.npm
 node_modules/
+npm-debug.log
 
-# For demo only
-Sandbox/
+# Yarn
+yarn-debug.log
+yarn-error.log
+# yarn.lock # versioning des packages
 
-# If using Sass
-.sass-cache
+# Debian/Ubuntu (Gnome)
+.goutputstream*
 
-# Mac files
+# Mac os
 .DS_Store
+*.cfg
+
+# Windows image file caches
+Thumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Visual Studio Code
+.vscode/
+.history/
+
+# Other
+tmp/
+*.log
+*.tmp
+.cache

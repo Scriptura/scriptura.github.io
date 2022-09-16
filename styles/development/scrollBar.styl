@@ -1,0 +1,20 @@
+_colorScrollbar1 = rgba(255, 255, 255, .03)
+_colorScrollbar2 = _color2
+
+// 1. @affected Chrome, Edge, and Safari
+// 2. @affected Firefox @note Standard futur ?
+
+::-webkit-scrollbar // [1]
+  width 11px
+
+::-webkit-scrollbar-track
+  background _colorScrollbar1
+
+::-webkit-scrollbar-thumb
+  background-color _colorScrollbar2
+  //border-radius 6px
+  //border 3px solid _colorScrollbar2
+
+* // [2]
+  //scrollbar-width thin
+  scrollbar-color _colorScrollbar2 _colorScrollbar1

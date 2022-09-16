@@ -1,0 +1,37 @@
+{
+  "name": "scriptura",
+  "version": "draft",
+  "type": "module",
+  "description": "Un framework HTML/CSS/JS généré par Pug, Stylus et en javascript natif.",
+  "main": "index.js",
+  "repository": "https://github.com/Scriptura/scriptura.github.io",
+  "author": "Olivier Chavarin",
+  "license": "MIT",
+  "devDependencies": {
+    "autoprefixer-stylus": "^1.0.0",
+    "browser-sync": "^2.27.10",
+    "eslint": "^8.22.0",
+    "image-size": "^1.0.2",
+    "mkdirp": "^1.0.4",
+    "ora": "^6.1.2",
+    "postcss": "^8.4.16",
+    "pug": "^3.0.2",
+    "rename": "^1.0.4",
+    "replace": "^1.2.1",
+    "sharp": "^0.30.7",
+    "stylus": "^0.59.0",
+    "uglify-es": "^3.3.9"
+  },
+  "scripts": {
+    "dev": "yarn html | yarn js",
+    "html": "node tasks/htmlRendering",
+    "js": "uglifyjs scripts/development/main.js -o scripts/main.js -c -m",
+    "css": "yarn cssexp | yarn cssprint | yarn cssmain",
+    "cssmain": "stylus -u autoprefixer-stylus -w styles/development/main.styl -o styles/main.css -c -m",
+    "cssexp": "stylus -u autoprefixer-stylus -w styles/development/main.styl -o styles/expanded/main.css",
+    "cssprint": "stylus -u autoprefixer-stylus -w styles/development/print.styl -o styles/print.css -c -m",
+    "img": "node tasks/images",
+    "imglist": "node tasks/imageList",
+    "bs": "browser-sync start --proxy 'scriptura.github.io.localhost' --port 9010 --reload-debounce 2000 --files 'assets' 'views' --no-notify"
+  }
+}

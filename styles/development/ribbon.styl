@@ -1,0 +1,94 @@
+// @bug @affected Chrome @note Effet de bord indésirables si utilisation avec la propriété column-count sur l'élément parent (sauf pour le premier item). 1/ Bandeau tronqué si placé sur un élément avec la propriété. 2/ Liens non cliquables si utilisation de clip-path.
+
+_ribbonsSize = 2
+_ribbonsSize2 = _ribbonsSize * 5em
+_ribbonsCornerSize = _ribbonsSize / 4 * 1em
+_ribbonsSewingStitchesSize = 2px
+_ribbonsSewingStitches = _ribbonsSewingStitchesSize dotted rgba(0, 0, 0, .3)
+
+.ribbon-hook
+  position relative
+  min-height _ribbonsSize2 * .7 + _ribbonsCornerSize // @note Minimum de hauteur nécessaire pour contenir un ribbon (prise en compte de la diagonale + hauteur d'une cornière comme marge)
+
+.ribbon-hook > [class*=ribbon]
+  overflow hidden // @note Règle nécessaire pour éviter les effets de dépassement (barre de scroll horizontale)
+  position absolute
+  z-index 500 // @note Au cas où le ribbon est placé après le contenu de .ribbon-hook. @todo Valeur importante pour passer par dessus les .map, à évaluer.
+  top - _ribbonsCornerSize
+  right - _ribbonsCornerSize
+  width _ribbonsSize2 * .7 + _ribbonsCornerSize
+  height _ribbonsSize2 * .7 + _ribbonsCornerSize
+  & a
+    position relative
+    display block
+    top _ribbonsCornerSize
+    right _ribbonsSize2 * .3
+    width _ribbonsSize2
+    line-height _ribbonsSize
+    text-align center
+    color _colorT
+    background _color2 'linear-gradient(to top, #555 calc(%s + 2px), rgba(0, 0, 0, .1) calc(%s + 2px), rgba(255, 255, 255, .05))' % (_ribbonsCornerSize _ribbonsCornerSize)
+    padding 0 0 _ribbonsCornerSize
+    box-shadow _shadow11 //0 .3em 1em -.5em rgba(0, 0, 0, 1)
+    transform-origin bottom left
+    transform translate(29.29%, -100%) rotate(45deg)
+    clip-path 'polygon(0 0, calc(100% - 1px) 0, calc(100% - 1px) calc(100% - 1px), calc(calc(100% - 1px) - %s) calc(calc(100% - 1px) - %s), %s calc(calc(100% - 1px) - %s) , 0 calc(100% - 1px))' % (_ribbonsCornerSize _ribbonsCornerSize _ribbonsCornerSize _ribbonsCornerSize) // @Bugfixed @affected All Browsers @note La valeur `-1px` supprime un effet de bord.
+    // @affected Firefox @note Le rendu n'est pas optimal sous ce navigateur avec ces styles.
+    -webkit-mask 'linear-gradient(135deg, transparent calc(50% - %s * 0.707),#fff 0) bottom left, linear-gradient(-135deg, transparent calc(50% - %s * 0.707), #fff 0) bottom right' % (_ribbonsCornerSize _ribbonsCornerSize)
+    -webkit-mask-size 100vmax 100vmax
+    -webkit-mask-composite destination-in
+    mask-composite intersect
+    &::before
+    &::after
+      content ''
+      position absolute
+      left 0
+      height _ribbonsSewingStitchesSize
+      width 100%
+    &::before
+      top 1px
+      border-bottom _ribbonsSewingStitches
+    &::after
+      top 'calc(100% - %s - %s)' % (_ribbonsCornerSize (_ribbonsSewingStitchesSize + 2))
+      border-top _ribbonsSewingStitches
+    &:focus
+    &:hover
+    &:active
+      color #fff
+      text-decoration none
+
+.ribbon-hook > [class*=ribbon-left]
+  left - _ribbonsCornerSize
+  & a
+    left _ribbonsCornerSize
+    transform-origin bottom right
+    transform translate(-29.29%, -100%) rotate(-45deg)
+
+/*
+.test
+  --d 1em
+  --c _color2
+  //--f 16px
+  position relative
+
+.test::before
+  content 'Consulter' //attr(data-ribbon)
+  position absolute
+  //font-size var(--f)
+  top 0
+  right 0
+  transform translate(29.29%, -100%) rotate(45deg)
+  color #fff
+  text-align center
+  border 1px solid transparent
+  border-bottom 0
+  transform-origin bottom left
+  padding 5px 35px calc(var(--d) + 5px)
+  background linear-gradient(rgba(0, 0, 0, 0.5) 0 0) bottom/100% var(--d) no-repeat var(--c)
+  background-clip padding-box
+  clip-path polygon(0 0,100% 0,100% 100%,calc(100% - var(--d)) calc(100% - var(--d)),var(--d) calc(100% - var(--d)),0 100%)
+  -webkit-mask linear-gradient(135deg,transparent calc(50% - var(--d) * 0.707),#fff 0) bottom left, linear-gradient(-135deg, transparent calc(50% - var(--d) * 0.707), #fff 0)bottom right
+  -webkit-mask-size 300vmax 300vmax
+  -webkit-mask-composite destination-in
+  mask-composite intersect
+*/

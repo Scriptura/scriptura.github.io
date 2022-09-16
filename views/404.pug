@@ -1,0 +1,12 @@
+extends patternLayout
+
+block variables
+  - const documentType = '404'
+  - const data = {_name: 'Erreur 404 <span>.&nbsp;page non trouvée</span>'}
+
+block main
+  h1.main-heading!= data._name
+  svg.size25.decorative-svg(role='img' focusable='false')
+    use(xlink:href='/sprites/silos/131v-d1.svg#1')
+  hr
+  include includes/link

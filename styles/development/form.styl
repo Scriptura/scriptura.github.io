@@ -1,0 +1,234 @@
+// @note En raison de leurs éventails d'utilisations les inputs ne sont pas stylés par défaut. N'ont lieux d'être ici que les règles d'harmonisation.
+
+_formsColor1 = _colorG - 20%
+_formsColor2 = _formsColor1 + 40%
+_formsColor3 = #222
+_formsSize1 = .8em
+
+fieldset
+  margin 0
+  //padding 0.35em 0.75em 0.625em // @bugfix Correct the padding @affected Firefox.
+  padding 0
+  border none
+
+legend
+  box-sizing border-box // @bugfix Correct the text wrapping @affected Edge and IE.
+  color inherit // @bugfix Correct the color inheritance from `fieldset` elements @affected IE.
+  display table // @bugfix Correct the text wrapping @affected Edge and IE.
+  max-width 100% // @bugfix Correct the text wrapping @affected Edge and IE.
+  padding 0 // @bugfix Remove the padding so developers are not caught out when they zero out `fieldset` elements @affected All browsers.
+  white-space normal // @bugfix Correct the text wrapping @affected Edge and IE.
+  font-weight bold
+
+form [class*=grid]
+  margin-top _gap //_gap // @note Alignement sur les champs sans grille.
+  margin-bottom _gap
+
+label:focus
+label:hover
+label:active
+label:checked
+  cursor pointer
+
+button
+input
+optgroup
+select
+textarea
+  font-family inherit // @bugfix Change the font styles @affected All browsers
+  font-size 100% // @bugfix Change the font styles @affected All browsers.
+  line-height 1.15 // @bugfix Change the font styles @affected All browsers.
+  margin 0 // @bugfix Remove the margin @affected Firefox and Safari.
+
+button
+input
+  overflow visible // @bugfix Show the overflow @affected Edge.
+  //line-height normal // @affected Firefox 4+.
+  //border-radius 0 // @affected Chrome 62+/OS X.
+
+//button[disabled]
+//html input[disabled]
+//  cursor not-allowed
+
+button
+select
+  text-transform none // @bugfix Remove the inheritance of text transform @affected Edge, Firefox, and IE.
+
+button
+input[type=button]
+input[type=reset]
+input[type=submit]
+  -webkit-appearance button // @bugfix Correct the inability to style clickable types @affected iOS and Safari.
+  //outline none
+  cursor pointer // @todo Test du 10.10.2020
+
+button::-moz-focus-inner
+input[type=button]::-moz-focus-inner
+input[type=reset]::-moz-focus-inner
+input[type=submit]::-moz-focus-inner
+  border-style none // @bugfix Remove the inner border @affected Firefox.
+  padding 0 // @bugfix Remove the inner padding @affected Firefox.
+
+button:-moz-focusring
+input[type=button]:-moz-focusring
+input[type=reset]:-moz-focusring
+input[type=submit]:-moz-focusring
+  outline 1px dotted ButtonText // @bugfix Restore the focus styles unset by the previous rule.
+
+input:not([type=button], [type=submit], [type=range])
+//select:not([multiple])
+  max-height 2.2em // @note Permet de contrôler la hauteur des champs invalides + les imput type date, color, etc...
+
+select
+  //padding 0 // @affected Firefox
+  white-space nowrap
+  text-overflow ellipsis
+
+select //:not([multiple])
+  -webkit-appearance none // @affected Chrome
+  -moz-appearance none // @affected Firefox
+  //background-image _image004
+  //background-repeat no-repeat
+  //background-position right .5em center // calc(100% - .5em) 50%
+  //background-size 1em 1em
+  border-radius 0 // @affected Chrome.
+  vertical-align baseline // @bugfix Add the correct vertical alignment @affected Chrome, Firefox, and Opera.
+
+select[multiple] option
+  padding-top 0
+  padding-bottom 0
+
+select[multiple] option
+  color _colorT !important
+
+select[multiple] option:checked
+  background _color2 linear-gradient(0deg, _color2 0%, _color2 100%) // @see https://stackoverflow.com/a/50618702/4960244
+
+textarea
+  overflow auto // @bugfix Remove the default vertical scrollbar @affected IE 10+
+
+input[type=radio]
+input[type=checkbox]
+  box-sizing border-box // @bugfix @tofo A évaluer.
+  padding 0 // @bugfix Remove the padding @affected IE 10.
+
+input[type=number]
+  -moz-appearance textfield
+  appearance: textfield
+
+input[type=number]::-webkit-inner-spin-button
+  -webkit-appearance none
+
+input[type=number]::-webkit-inner-spin-button
+input[type=number]::-webkit-outer-spin-button
+  height auto // @bugfix Correct the cursor style of increment and decrement buttons @affected Chrome.
+
+input[type=search]
+  -webkit-appearance textfield // @bugfix Correct the odd appearance @affected Chrome and Safari.
+  outline-offset -2px // @bugfix Correct the outline style @affected Safari.
+  &::-webkit-search-decoration
+    -webkit-appearance none // @bugfix Remove the inner padding @affected Chrome and Safari on macOS.
+  &::-webkit-search-cancel-button
+    -webkit-appearance none
+    height 24px
+    width 24px
+    margin-left .4em
+    background-image url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>")
+    cursor pointer
+    &:hover
+    &:active
+      background-image url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffa500'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>")
+
+input[type=file]
+input[type=date]
+input[type=time]
+input[type=datetime-local]
+input[type=week]
+input[type=month]
+select
+  -webkit-appearance none // @affected Chrome mobile @note Suppression de la flèche de sélection sous ce navigateur.
+  background-size 1.5em 1.5em
+  background-repeat no-repeat
+  background-position calc(100% - .6em) 50%
+
+@supports (-moz-appearance none) // @affected Firefox
+  input[type=date]
+  input[type=time]
+  input[type=datetime-local]
+  input[type=week]
+  input[type=month]
+    padding-right 3em !important // @note Évite la superposition de la fonction clear et du datepicker.
+    cursor pointer
+
+::-webkit-datetime-edit-fields-wrapper // @note Remplace tous les sélecteurs de temps et de dates, avec plus de précision, mais ne convient qu'à Chrome.
+input[type=file]
+input[type=color]
+select
+  cursor pointer
+
+::-webkit-file-upload-button //[type=file]
+::file-selector-button // @affected Firefox
+  //-webkit-appearance button // @bugfix Correct the inability to style clickable types @affected iOS and Safari.
+  //font inherit // @bugfix Change font properties to `inherit` @affected Safari.
+  //visibility hidden
+  display none
+
+::-webkit-calendar-picker-indicator
+  opacity 0
+  cursor pointer
+
+//::-webkit-inner-spin-button
+  //display none
+
+::-webkit-clear-button
+  -webkit-appearance none // @affected Chrome mobile v. =< 79
+  height 24px
+  width 24px
+  background-image url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>")
+  cursor pointer
+  &:focus
+  &:hover
+    background-image url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffa500'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>")
+
+[type=time]::-webkit-clear-button
+  transform translateX(-1.4em)
+
+
+:-webkit-autofill // @note Préremplissage des champs par le navigateur @affected Chrome
+  -webkit-text-fill-color _colorT
+  //-webkit-box-shadow inset 0 0 0 2rem red !important
+  transition-property background-color // @note Hack pour éviter l'affichage par défaut de l'autoremplissage, car les autres solutions se sont montrées inéfficaces @todo Solution temporaire à évaluer.
+  transition-delay 1000000s // ibid
+
+::placeholder
+  color _formsColor2
+
+:focus::placeholder
+  color transparent
+
+.invalid + [class*=message]
+  position relative
+  &::before
+    content ''
+    position absolute
+    top - _formsSize1 + .1em // @note Légère correction de la position car décalage visible du pseudo-élément dans certaines situations.
+    left _formsSize1 //calc(50% - _formsSize1)
+    width _formsSize1 * 2
+    height _formsSize1
+    background-color _color5
+    clip-path polygon(50% 0%, 0% 100%, 100% 100%)
+
+//:invalid
+//  border-color orange !important
+
+/* BEGIN Test
+
+input:required:focus:valid
+input[pattern]:focus:valid
+    border-color #b3f3a2
+
+input:required:focus:invalid
+input[pattern]:focus:invalid
+    border-color #f79c9c
+
+END Test */

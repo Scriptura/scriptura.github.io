@@ -1,0 +1,50 @@
+_footerColor1 = darken(_colorG, 34%)
+
+.footer
+  padding 0 1em
+  color _colorT2
+  background-color _footerColor1
+  //box-shadow _shadow1
+
+.footer a
+  //font-variant small-caps
+  color _colorT
+  text-decoration none
+
+.footer a:focus
+.footer a:hover
+.footer a:active
+  text-decoration underline
+
+.footer .wrap
+  display flex
+  max-width 90em
+  margin 0 auto
+
+.footer .wrap > :first-child
+  display flex
+  align-items center
+
+.footer .logo
+.footer .logo svg
+  height 2em
+  width  2em
+  margin-right 1em
+
+.footer .wrap > :nth-child(2)
+  text-align center
+
+@media (max-width _sizeXS)
+  .footer .wrap
+    flex-direction column
+    align-items center
+    text-align center
+    line-height 1
+    //gap _gap
+    padding _gap
+
+@media (min-width _sizeXS)
+
+  .footer .wrap
+    justify-content space-between
+    align-items center

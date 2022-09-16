@@ -1,0 +1,9 @@
+extends ../../../patternLayout
+
+block variables
+  - const documentType = 'zoom'
+  - const data = { _name: 'Zooms <span>.&nbsp;documentation</span>', _title: 'Zooms . Scritpura framework' }
+
+block main
+  h1.main-heading!= data._name
+  include ../zoom

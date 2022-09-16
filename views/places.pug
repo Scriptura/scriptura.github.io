@@ -1,0 +1,12 @@
+extends patternLayout
+
+block variables
+  - var documentType = 'places'
+
+block main
+  h1.main-heading !{data._name} 
+    span .&nbsp;Liste
+  ul.list-stripe-links.grid3
+    each e in data
+      li
+        a(href='/place/' + e._id) #{e._name}

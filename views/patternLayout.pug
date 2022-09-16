@@ -1,0 +1,46 @@
+block variables
+  - const documentType = 'index'
+  - const data = { _name: 'Scriptura', _title: 'Scritpura framework', _title: 'Scritpura framework' }
+
+doctype html
+html.no-js(lang='fr')
+  head
+    meta(charset='utf-8')
+    title=data._title
+    meta(name='description' content=data._description)
+    meta(name='viewport' content='width=device-width, initial-scale=1')
+    meta(name='theme-color' content='#333333')
+    link(rel='stylesheet' href='/styles/main.css', media='screen')
+    link(rel='stylesheet' href='/styles/print.css', media='print')
+    link(rel='apple-touch-icon', sizes='180x180', href='/favicons/apple-touch-icon.png')
+    link(rel='icon', type='image/png', sizes='32x32', href='/favicons/favicon-32x32.png')
+    link(rel='icon', type='image/png', sizes='16x16', href='/favicons/favicon-16x16.png')
+    //-link(rel='icon' type='image/svg+xml' href='/favicons/favicon.svg')
+    //-link(rel='icon' type='image/png' href='/favicons/favicon.png')
+    link(rel='shortcut icon' href='/favicons/favicon.ico')
+    link(rel='mask-icon', href='/favicons/safari-pinned-tab.svg', color='#5bbad5')
+    link(rel='manifest', href='/site.webmanifest')
+    meta(name='msapplication-TileColor', content='#da532c')
+    meta(name='msapplication-config' content='/browserconfig.xml')
+  body(class='type-' + documentType)
+    a(href='#main').sr-only Aller au contenu
+    main#main(role='main')
+      block main
+    //-block aside
+      //-aside.aside aside
+      //-include aside
+    block nav
+      nav.nav
+        a(href='/').logo-nav
+          span.sr-only Scriptura
+        include includes/mainNav
+        include includes/breadcrumb
+    block footer
+      footer.footer(role='contentinfo')
+        include includes/footer
+    block alert
+      section.alert
+        include includes/alert
+    block script
+      script(src='/scripts/development/main.js' async)
+    block structuredData

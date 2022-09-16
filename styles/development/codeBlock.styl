@@ -1,0 +1,79 @@
+_codeBlocksColor1 = _colorG - 30%
+_codeBlocksColor2 = _colorT2
+_codeBlocksColor3 = _colorG - 45%
+_codeBlocksColor4 = _colorT
+
+code
+kbd
+samp
+  font-family monospace, monospace // @bugfix Correct the inheritance and scaling of font size @affected All browsers.
+  font-size 1em // @bugfix Correct the odd `em` font sizing @affected All browsers.
+  word-break break-all
+  color _codeBlocksColor2
+  border-radius _r2
+
+// @note 1. Pas d'effet de transparence sur le background ni de bordures en raison des chevauchements possibles des balises code au sein d'un même paragraphe de texte, puisque nous avons opté pour un padding légèrement supérieur au ligne-height de base.
+
+:not(pre) > code
+  padding .2em
+  background-color _codeBlocksColor1 // 1
+
+// @note Pas de style par défaut pour la balise `pre`
+
+.pre
+  position relative
+  min-height 3em // @note Si pas de contenu. Remplacé par .pre code:empty::after
+  padding 1em
+  background-color _codeBlocksColor3
+  border-radius _r2
+  box-shadow _shadow1
+  & code
+    color _codeBlocksColor4
+    transition color .5s ease-in-out
+    &:focus-within
+      color _colorW
+    &:empty::after
+      content '# no content...'
+  & div
+    position absolute
+    top 1em
+    right 1em
+    display flex
+    font-size 1em
+    color _codeBlocksColor2
+    gap .5em
+  & svg
+    display block
+    width 1em
+    height 1em
+    fill _codeBlocksColor2
+  & button
+    position absolute
+    bottom 1em
+    right 1em
+    padding 0
+    border none
+    color _codeBlocksColor2
+    background-color transparent
+    &:focus
+    &:hover
+    &:active
+      color Orange
+      outline none
+  //& code:empty + button // @todo À évaluer...
+  //  display none
+
+.copy-offset
+  right 2.5em !important
+
+/*
+.pre button:focus::before
+.pre button:hover::before
+.pre button:active::before
+  content '> '
+  animation blink 1s steps(2, start) infinite
+
+@keyframes blink
+  to
+    visibility hidden
+*/

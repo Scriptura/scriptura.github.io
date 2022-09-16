@@ -1,0 +1,77 @@
+_cardsColor1 = _colorT2
+_cardsColor2 = _colorG + 7%
+_cardsColor3 = _colorG + 7%
+_cardsColor4 = _color2 //_cardsColor2 - 30%
+_cardsColor5 = #fff
+_cardsR1 = .5rem // @note [1] Mettre des unités fixes en raison de la nature différentes des éléments
+_cardsR2 = 2px // Idem [1]
+
+.card
+  & h2
+  & p
+    margin 0
+    padding 2rem // @note Idem [1]
+    background-color _cardsColor2
+    box-shadow _shadow8
+  & h2
+    margin-bottom 0
+    text-align center
+    border-radius _cardsR1 _cardsR1 _cardsR2 _cardsR2
+    & span
+      color _color2
+  & p
+    margin-top 0
+    border-radius _cardsR2 _cardsR2 _cardsR1 _cardsR1
+  & > a
+    & svg
+      display block
+      width 'calc(100% - %s)' % (_cardsR2 * 2)
+      height 8em
+      margin 0 auto
+      padding 1em 0
+      color _cardsColor1
+      background-color _cardsColor3
+      box-shadow _shadow8
+  & svg
+    transition background-color .5s,  fill .5s
+  & svg:hover
+  &:focus-within svg
+    fill _cardsColor5
+    background-color _cardsColor4
+
+/*
+.card
+  position relative
+  padding 2em
+  //color _cardsColor1
+  background-color _cardsColor2
+  border-radius .5em
+  box-shadow _shadow8
+
+.card::before
+.card::after
+  content ''
+  z-index -1
+  position absolute
+  bottom 2em
+  left 1em
+  width 80%
+  height 1.5em
+  max-width 30em
+  box-shadow _shadow9
+  transform rotate(-3deg) translateZ(0)
+
+.card::after
+  right 1em
+  left auto
+  transform rotate(3deg)
+
+.card .h2
+  text-align center
+
+.card svg
+  display block
+  height 6em
+  margin 2em auto
+  color _cardsColor1
+*/

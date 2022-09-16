@@ -1,0 +1,31 @@
+_scrollTopColor1 = #000
+_scrollTopColor2 = #aaa
+_scrollTopColor3 = _color5
+
+.scroll-top
+  //display none // @note apparition de l'élément au scrool de la page via JS
+  position fixed
+  bottom 0
+  right 0
+  z-index 4000
+  height 3em
+  width 3em
+  background-color transparent
+  border none
+  outline none
+
+.scroll-top.hide
+  display none
+
+.scroll-top svg
+  height 2em
+  width 2em
+  fill _scrollTopColor1
+  opacity .5
+
+.scroll-top:focus svg
+  fill _scrollTopColor3
+
+.scroll-top:hover svg
+.scroll-top:active svg
+  fill _scrollTopColor2

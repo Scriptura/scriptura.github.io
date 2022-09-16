@@ -1,0 +1,76 @@
+// @description Définition des variables globales pour les styles.
+// @note @bugfix Téléscopages possible entre les variables stylus et certaines valeurs. Par convention le framework utilise donc '_' pour les variables. Cela permet aussi un meilleur repérage des variables dans le code.
+
+
+// @subsection Grid
+
+_gap = 1em                 // Gouttière, largeur entre deux modules (en unité em/rem)
+_wrap = 90em + _gap * 2   // Largeur maximale du contenu (+ prise en compte du padding interne)
+
+
+// @subsection Breakpoints
+
+// @bugfix Nécessité de préciser deux chiffres après la virgule pour éviter un décalage entre 'max-width' et 'min-width' (avec une unité pour éviter les arrondissements par les navigateurs)
+
+_sizeXS =   36.01em
+_sizeS =    50.01em
+_sizeM =    65.01em
+_sizeL =    90.01em
+_sizeXL =  120.01em
+_sizeXXL = 140.01em
+_sizeNav =  91.01em // À caler sur la taille du contenu de '.nav-main ul'. @note Prévoir de la marge en raison des différences d'interprétation des fonts selon les navigateurs
+
+
+// @subsection  Web fonts
+// @description Choix des polices de caractères.
+// @params false, 'font name'
+// @note Le chargement des polices via @font-face est fortement recommandé pour ne pas dépendre de l'environnement de l'utilisateur. Ce qui permet d'avoir la maitrise du design du site.
+
+_fontName = 'Noto Sans'
+_fontList = _fontName, sans-serif
+
+_fontName2 = 'Noto Serif'
+_fontList2 = _fontName2, serif
+
+
+// @subsection Colors
+
+_colorT = #e9dac5      // couleur primaire du texte
+_colorT2 = #d2b48c     // couleur secondaire du texte
+_colorG = #393939      // gris de référence
+_colorW = #fff         // blanc de référence
+_color1 = _colorG        // couleur de fond
+_color2 = #ff6347      // couleur dominante 2 (tomato) // #c94e38
+_color3 = #cc4e2f      // couleur secondaire
+_color4 = #43682b      // couleur secondaire
+_color5 = #ffa500      // couleur secondaire
+_color6 = #4e667a      // couleur secondaire
+_colorS = rgba(255, 99, 71, .5) // dérivée de _color2
+
+
+// @subsection Shadows
+
+_shadow1 = 0 0 2rem rgba(0, 0, 0, .3)
+_shadow2 = .5rem .5rem .5rem rgba(0, 0, 0, .2)
+_shadow3 = inset .5rem .5rem .5rem rgba(0, 0, 0, .2)
+_shadow4 = .5rem .5rem .5rem rgba(0, 0, 0, .25)
+_shadow5 = .5rem .5rem 2rem rgba(0, 0, 0, .15)
+_shadow6 = inset 0 0 .1em rgba(0, 0, 0, .3), 0 .5rem 2rem rgba(0, 0, 0, .3) // ombres interieures en em, ombres exterieures en rem
+_shadow7 = inset 0 0 .1em rgba(0, 0, 0, .3)
+_shadow8 = 0 0 1.5rem rgba(0, 0, 0, .15) //0 0 2rem rgba(0, 0, 0, .1)
+_shadow9 = 0 1.5rem 2rem rgba(0, 0, 0, .4)
+_shadow10 = inset .5rem .5rem 2rem rgba(0, 0, 0, .1)
+_shadow11 = 0 0 2rem rgba(0, 0, 0, .2)
+_shadow12 = .5em .5em 2em rgba(0, 0, 0, .3)
+_shadow13 = 0 0 0 1000em #222
+_shadow14 = .5rem .5rem 2rem rgba(0, 0, 0, .1)
+_shadow15 = .5rem .5rem 2rem rgba(0, 0, 0, .25)
+_shadow16 = inset 0 0 1px #222
+
+
+// @subsection Rounds
+
+_r1 = .3em             // Boites
+_r2 = .2em             // Éléments internes
+_r3 = false            // Éléments d'informations
+_r4 = false            // Bouttons

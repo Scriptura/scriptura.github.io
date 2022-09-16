@@ -1,0 +1,74 @@
+_tableSize = 5px
+_tableColor1 = _colorG + 7%
+_tableColor2 = _color2
+_tableColor3 = _colorG - 30%
+_tableColor4 = _colorG - 10%
+_tableShadow1 = _shadow11
+
+[class*=table]
+  width 100%
+  border-collapse collapse // separate
+  //border-spacing .2em
+  font-weight normal
+  word-wrap break-word // @note Alias de overflow-wrap @see https://developer.mozilla.org/fr/docs/Web/CSS/overflow-wrap
+  text-align left
+  & th
+    font-weight normal
+
+.table-fixed
+  table-layout fixed
+
+@media (max-width _sizeS)
+
+  [class*=table]
+    border-collapse separate
+    border-spacing 0 1em
+    & thead
+    & tfoot
+      display none
+    & th
+    & td
+      display block
+      background-color _tableColor1
+    & tr > :first-child
+      padding-top 1em
+    & td:last-child
+      padding-bottom 1em
+    & tfoot :empty
+      display none
+    & tbody tr
+      border-radius _r2
+      box-shadow _tableShadow1
+      & > *
+        padding 0 1em
+    & tbody th::before
+    & tbody td::before
+      content attr(data-thead) ' ' // '\00a0: '
+      color _colorT2
+    & tbody td:empty::before
+      content attr(data-thead) ' ● ● ●'
+
+@media (min-width _sizeS)
+
+  [class*=table]
+    box-shadow _shadow5
+    & th
+    & td
+      vertical-align top
+      padding .5em 1em
+      box-shadow _shadow16
+    & thead th
+      position sticky
+      top 0
+      z-index 1
+      background-color _tableColor2
+    & tbody th
+    & tfoot
+      background-color _tableColor3
+    & tbody tr:nth-child(odd)
+      background-color _tableColor1
+    & tbody tr:nth-child(even)
+      background-color _tableColor4
+    & tbody :empty::after
+      content '● ● ●'
+      //background-image repeating-linear-gradient(-45deg, transparent 0 _tableSize, rgba(255, 255, 255, .05) _tableSize _tableSize * 2)

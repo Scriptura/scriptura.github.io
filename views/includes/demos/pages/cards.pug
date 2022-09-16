@@ -1,0 +1,9 @@
+extends ../../../patternLayout
+
+block variables
+  - const documentType = 'card'
+  - const data = { _name: 'Cards <span>.&nbsp;documentation</span>', _title: 'Cards . Scritpura framework' }
+
+block main
+  h1.main-heading!= data._name
+  include ../card

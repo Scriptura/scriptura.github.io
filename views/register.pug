@@ -1,0 +1,26 @@
+extends patternLayout
+
+block variables
+  - var documentType = 'register'
+
+block main
+  h1.main-heading= data._name
+  .grid2.media-s-grid1.gap
+    form(action='/register' method='post')
+      .input
+        label Créez un nom d'utilisateur
+        input(type='text' name='username' placeholder='user' autocorrect='off' autocapitalize='off' spellcheck='false' required='required')
+      .input
+        label Créez votre mot de passe
+        input(type='password' name='password' placeholder='• • • • • • • •' required='required')
+      .input
+        label Réentrez votre mot de passe
+        input(type='password' name='password2' placeholder='• • • • • • • •' required='required')
+      div
+        button.button.zoom120
+          svg.icon(role='img' focusable='false')
+            use(xlink:href='/sprites/utils.svg#bookmark')
+          | Enregistrer
+    .center
+      svg.size25.reverse.decorative-svg(role='img' focusable='false')
+        use(xlink:href='/sprites/silos/195v.svg#1')

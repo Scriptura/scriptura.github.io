@@ -1,0 +1,8 @@
+picture
+  //-source(media='(min-width: 2000px)' srcset=img + '.jpg, ' + img + '.jpg 2x')
+  //-source(media='(min-width: 1500px)' srcset=img + '2000.jpg, ' + img + '.jpg 2x')
+  //-source(media='(min-width: 1000px)' srcset=img + '1500.jpg, ' + img + '2000.jpg 2x')
+  //-source(media='(min-width: 800px)' srcset=img + '1000.jpg, ' + img + '2000.jpg 2x')
+  //-source(media='(min-width: 1px)' srcset=img + '800.jpg, ' + img + '1500.jpg 2x')
+  source(srcset=img + '600.jpg, ' + img + '1000.jpg 2x')
+  img(src=img + '.jpg' loading='lazy' alt=alt width=width height=height)

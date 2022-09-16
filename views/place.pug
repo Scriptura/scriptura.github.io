@@ -1,0 +1,73 @@
+extends patternLayout
+
+block variables
+  - const documentType = 'place'
+  -
+    const data = {
+      _name: 'Place <span>.&nbsp;example</span>',
+      _title: 'Place . Scritpura framework',
+      _description: 'Place . Scritpura framework',
+      _street: '6 Parvis Notre-Dame - Pl. Jean-Paul II',
+      _postal_code: '75004',
+      _locality: 'Paris',
+      _location: {x: '2.349747', y: '48.853133'},
+      _elevation: '210',
+      _markerDescription: 'Cathédrale Notre-Dame de Paris'
+    }
+
+block main
+  h1.main-heading Cathédrale Notre-Dame de Paris
+    span .&nbsp;Localisation
+  ul
+    if data._street && data._postal_code && data._locality
+      li Adresse : #{data._street}, #{data._postal_code}, #{data._locality}
+    else if data._locality
+      li Ville : #{data._locality}
+    if data._location
+      li Latitude : #{data._location.y}
+    if data._location
+      li Longitude : #{data._location.x}
+    if data._elevation
+      li Altitude : #{data._elevation}
+  if data._location
+    .gap-bottom
+      .map(
+        style='height: 50vh; max-height: calc(100vw - 2em)',
+        data-name=data._name,
+        data-places=`["${data._markerDescription}", [${data._location.y}, ${data._location.x}]]`,
+        data-zoom='15',
+        data-color='#ff654f',
+        data-tileserver='https://wxs.ign.fr/choisirgeoportail/geoportail/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE=normal&TILEMATRIXSET=PM&FORMAT=image/png&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}',
+        data-attribution='<a target="_blank" href="https://www.geoportail.gouv.fr/">Geoportail France</a>'
+      )
+  //-
+    hr
+    ul.list-stripe-links.grid3
+      li
+        a(href='/place/1') Place 1
+      li
+        a(href='/place/2') Place 2
+      li
+        a(href='/place/3') Place 3
+      li
+        a(href='/place/4') Place 4
+      li
+        a(href='/place/5') Place 5 (pas d'infos GPS)
+      li
+        a(href='/place/6') Place 6
+      li
+        a(href='/place/7') Place 7
+      li
+        a(href='/place/8') Place 8
+      li
+        a(href='/place/9') Place 9
+      li
+        a(href='/place/10') Place 10
+      li
+        a(href='/place/11') Place 11
+      li
+        a(href='/place/12') Place 12
+      li
+        a(href='/place/13') Place 13 (request failed)
+      li
+        a(href='/place/xyz') Place xyz (incorrect path)

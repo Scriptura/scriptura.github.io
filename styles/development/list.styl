@@ -1,0 +1,45 @@
+_listsColor1 = _colorG + 7%
+_listsColor2 = _color2
+_listsColor3 = _colorT
+
+ul
+  list-style-type square
+
+ol ol
+  list-style-type lower-latin
+
+ol ol ol
+  list-style-type lower-greek
+
+[class*=list]
+[class*=list] > *
+  padding-left 0
+
+[class*=list] li
+  display block
+
+[class*=list-stripe]
+  display grid
+  gap _gap
+  margin 0
+
+[class*=list-stripe] > *
+  padding .5em 1em
+  background-color _listsColor1
+  box-shadow _shadow14
+
+[class*=-links] a
+  display block
+  color _listsColor3 //inherit
+  text-decoration none
+
+[class*=-links] li:focus-within
+[class*=-links] li:hover
+  background-color _listsColor2
+  box-shadow _shadow15
+  outline none
+  animation animList .05s ease-in-out
+
+@keyframes animList
+  to
+    transform scale(1.03) translateZ(0)

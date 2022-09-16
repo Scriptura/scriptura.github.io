@@ -1,0 +1,21 @@
+picture
+  //- img.sources.push({ name: img.name, typesMime: 'image/webp', suffix: '-w800', w:'800', suffix2: '-w1500', w2:'1500', bp: {min: '601px', max: '800px'}, ext: 'webp' })
+  - img.sources.push({ name: img.name, typesMime: 'image/webp', suffix: '-w800', w:'800', suffix2: '-w1500', w2:'1500', bp: {min: '601px'}, ext: 'webp' })
+  - img.sources.push({ name: img.name, typesMime: 'image/webp', suffix: '-w600', w:'600', suffix2: '-w1000', w2:'1000', bp: {min: ''}, ext: 'webp' })
+  each source in img.sources
+    - let media = false
+    - if (source.bp.max) media = '(min-width:' + source.bp.min + ') and (max-width:' + source.bp.max + ')'
+    - else if (source.bp.min) media = '(min-width:' + source.bp.min + ')'
+    source(
+      srcset=img.src + source.name + source.suffix + '.' + source.ext + ', ' + img.src + source.name + source.suffix2 + '.' + source.ext + ' 2x'
+      media=media
+      type='image/' + source.ext
+    )
+  img(
+    src=img.src + img.name + '-original' + '.' + img.ext
+    loading='lazy'
+    alt=img.alt
+    width=img.width
+    height=img.height
+    type=img.typesMime
+  )

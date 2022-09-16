@@ -1,0 +1,9 @@
+extends ../../../patternLayout
+
+block variables
+  - const documentType = 'codeBlock'
+  - const data = { _name: 'Code Blocks <span>.&nbsp;documentation</span>', _title: 'Code Blocks . Scritpura framework' }
+
+block main
+  h1.main-heading!= data._name
+  include ../codeBlock

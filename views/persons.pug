@@ -1,0 +1,12 @@
+extends patternLayout
+
+block variables
+  - var documentType = 'persons'
+
+block main
+  h1.main-heading!= data._name
+  ul.list-stripe-links.grid3
+    each e in data
+      - if (e._given_name === null) e._given_name = 'Anonyme ' + e._id
+      li
+        a(href='/person/' + e._id) #{e._given_name} #{e._family_name}

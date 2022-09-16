@@ -1,0 +1,33 @@
+[class^=message]
+  padding .25em 1em // @note Harmonisation avec p.message
+  background-color _colorG + 7%
+  box-shadow _shadow5
+  //overflow hidden // @note Evite un conflit avec les margins et padding des éléments enfants. Mais pose des problèmes avec les pseudo-éléments.
+
+main [class^=message]
+  margin-bottom 1em
+  border-radius _r2
+
+p[class^=message]
+  padding 1em
+
+.message-primary
+  background-color _colorG + 20%
+
+.message-secondary
+  background-color _colorG + 3%
+
+.message-info
+  background-color _color6
+
+.message-success
+  background-color _color4
+
+.message-error
+  background-color _color3
+
+.message-warning
+  color invert(_colorT)
+  background-color _color5
+  & a
+    color _colorW

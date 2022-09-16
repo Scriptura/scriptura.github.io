@@ -1,0 +1,20 @@
+ol.breadcrumb(role='navigation' aria-label='Breadcrumb')
+  if documentType !== 'index'
+    li
+      a(href='/') Home
+  if documentType === 'article'
+    li
+      a(href='/articles') Articles
+  else if documentType === 'keyword'
+    li
+      a(href='/keywords') Keywords
+  else if documentType === 'person'
+    li
+      a(href='/persons') Persons
+  else if documentType === 'place'
+    li
+      a(href='/places') Places
+  li
+    //- @note L'attribut aria-current='page' n'est pas obligatoire pour l'accessibilité. Donc, sppression du lien pour la page courante car sa desactivation via CSS (pointer-events:none) peut toujours être contournée par le focus.
+    //- a(href=data._url.path aria-current='page' aria-disabled='true')!= data._name
+    div!= data._name

@@ -1,0 +1,107 @@
+_rangeColor1 = rgba(255, 255, 255, .1)
+_rangeColor2 = #333
+_rangeColor3 = rgba(255, 255, 255, .1)
+_rangeColor5 = _color2
+_rangeColor6 = _color2
+_rangeColor7 = _colorT
+_rangeColor8 = _color5
+_rangeSize1 = 2.2em
+_rangeSize2 = 4em
+_rangeSize3 = 3px
+
+.range
+  display flex
+  flex-direction column
+  justify-content center
+  align-items center
+  margin-bottom 2em
+
+.range input
+  -webkit-appearance none
+  width 100%
+  height 3px //.2em
+  max-width 100%
+  cursor pointer
+  background-color _rangeColor1
+
+.range input:disabled
+  //background-color _rangeColor2
+  cursor not-allowed
+
+.range input:disabled + output
+  color #999
+
+.range input:disabled + output::after
+  //background-color #555
+  background #555 repeating-linear-gradient(-90deg, _rangeColor3 0 _rangeSize3, _rangeColor3 0, transparent 0, transparent _rangeSize3 * 2)
+
+.range input:focus
+  outline none
+
+//.range ::-webkit-slider-runnable-track // @note Barre
+  //background-color _rangeColor1
+  //box-shadow inset 0px 0px 4px rgba(0, 0, 0, .2)
+
+// 1. Les deux solutions ne peuvent pas être factorisées.
+
+.range ::-webkit-slider-thumb // @affected Chrome @note Curseur [1]
+  -webkit-appearance none
+  width _rangeSize1
+  height _rangeSize1
+  background-color saturation(_rangeColor5 - 10%, 80%)
+  border .3em solid _rangeColor5
+  border-radius 50%
+  box-shadow _shadow6
+
+.range :focus-visible::-webkit-slider-thumb
+  border-color _rangeColor8
+
+.range input:disabled::-webkit-slider-thumb
+  border-color #777
+  background #555 repeating-linear-gradient(-45deg, _rangeColor3 0 _rangeSize3, _rangeColor3 0, transparent 0, transparent _rangeSize3 * 2)
+
+.range ::-moz-range-thumb // @affected Firefox @note Curseur [1]
+  box-sizing border-box // @affected Firefox @note Définition obligatoire de cette règle malgré sa déclaration en globale.
+  width _rangeSize1
+  height _rangeSize1
+  background-color saturation(_rangeColor5 - 10%, 80%)
+  border none // @affected Firefox @note Définition obligatoire.
+  border .3em solid _rangeColor5
+  border-radius 50%
+  box-shadow _shadow6
+
+.range :focus-visible::-moz-range-thumb
+  border-color _rangeColor8
+
+.range input:disabled::-moz-range-thumb
+  border-color #777
+  background #555 repeating-linear-gradient(-45deg, _rangeColor3 0 _rangeSize3, _rangeColor3 0, transparent 0, transparent _rangeSize3 * 2)
+
+.range output
+  position relative
+  order -1
+  display block
+  box-sizing content-box
+  width _rangeSize2
+  height _rangeSize2
+  margin-bottom 2em
+  line-height _rangeSize2
+  vertical-align middle
+  text-align center
+  color _rangeColor7
+  //background-color #222
+  border-radius 50%
+
+.range output::after
+  content ''
+  position absolute
+  z-index -1
+  display block
+  top 0
+  left 0
+  width 100%
+  height 100%
+  background-color _rangeColor6
+  border-radius 50% 50% 0 50%
+  box-shadow _shadow6
+  transform rotate(45deg)

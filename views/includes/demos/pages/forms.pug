@@ -1,0 +1,9 @@
+extends ../../../patternLayout
+
+block variables
+  - const documentType = 'form'
+  - const data = { _name: 'Forms <span>.&nbsp;documentation</span>', _title: 'Forms . Scritpura framework' }
+
+block main
+  h1.main-heading!= data._name
+  include ../form

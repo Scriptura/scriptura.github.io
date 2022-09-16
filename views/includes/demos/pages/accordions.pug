@@ -1,0 +1,9 @@
+extends ../../../patternLayout
+
+block variables
+  - const documentType = 'accordion'
+  - const data = { _name: 'Accordions <span>.&nbsp;documentation</span>', _title: 'Accordions . Scritpura framework' }
+
+block main
+  h1.main-heading!= data._name
+  include ../accordion

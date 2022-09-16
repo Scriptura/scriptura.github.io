@@ -1,0 +1,23 @@
+extends patternLayout
+
+block variables
+  - var documentType = 'login'
+
+block main
+  h1.main-heading!= data._name
+  .grid2.media-s-grid1.gap
+    form(action='/login' method='post')
+      .input
+        label Utilisateur :
+        input(type='text' name='username' placeholder='user' autocorrect='off' autocapitalize='off' spellcheck='false' required='required')
+      .input
+        label Mot de passe :
+        input(type='password' name='password' placeholder='• • • • • • • •' required='required')
+      div
+        button.button.zoom120
+          svg.icon(role='img' focusable='false')
+            use(xlink:href='/sprites/utils.svg#checkmark')
+          | Connexion
+    .center
+      svg.size25.reverse.decorative-svg(role='img' focusable='false')
+        use(xlink:href='/sprites/silos/195v.svg#1')

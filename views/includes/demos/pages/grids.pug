@@ -1,0 +1,9 @@
+extends ../../../patternLayout
+
+block variables
+  - const documentType = 'grid'
+  - const data = { _name: 'Grids <span>.&nbsp;documentation</span>', _title: 'Grids . Scritpura framework' }
+
+block main
+  h1.main-heading!= data._name
+  include ../grid
