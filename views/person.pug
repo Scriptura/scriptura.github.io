@@ -10,13 +10,14 @@ block variables
       _user_id: '1',
       _sexe: '1',
       _given_name: 'Henri',
-      _additional_name: '_usual_name',
+      _additional_name: 'Sonier',
       _family_name: 'de Lubac',
       _prefix: 'P',
       _suffix: 's.j.',
       _birth_date: '19/02/1896',
+      _birth_place_id: 'Cambrai',
       _death_date: '04/09/1991',
-      _death_place_id: 'France',
+      _death_place_id: 'Paris',
       _devise: 'L\'Église a pour unique mission de rendre Jésus Christ présent aux hommes.'
     }
 
@@ -62,7 +63,7 @@ block main
               | Née
             |  le #{data._birth_date}
             if data._birth_place_id
-              |  à {#{data._birth_place_id}}
+              |  à #{data._birth_place_id}
         if data._death_date
           li
             if data._sexe == ('1' || '9')
@@ -71,7 +72,7 @@ block main
               | Décédée
             |  le #{data._death_date}
             if data._death_place_id
-              |  à {#{data._death_place_id}}
+              |  à #{data._death_place_id}
         if data._nationality
           li Pays : #{data._nationality}
         if data._phone
