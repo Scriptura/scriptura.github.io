@@ -9,7 +9,7 @@ _ribbonsSewingStitches = _ribbonsSewingStitchesSize dotted rgba(0, 0, 0, .3)
 .ribbon-hook
   position relative
   min-height _ribbonsSize2 * .7 + _ribbonsCornerSize // @note Minimum de hauteur nécessaire pour contenir un ribbon (prise en compte de la diagonale + hauteur d'une cornière comme marge)
-  background-image linear-gradient(-135deg, lighten(_colorG, .5%) 0 0, transparent 8em 100%)
+  background-image linear-gradient(-135deg, rgba(255, 255, 255, .05) 0 0, transparent 8em 100%)
 
 .ribbon-hook > [class*=ribbon]
   overflow hidden // @note Règle nécessaire pour éviter les effets de dépassement (barre de scroll horizontale)

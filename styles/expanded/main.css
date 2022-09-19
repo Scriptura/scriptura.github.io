@@ -2841,7 +2841,7 @@ a[aria-disabled=true]:active {
 .ribbon-hook {
   position: relative;
   min-height: 7.5em;
-  background-image: linear-gradient(-135deg, #3a3a3a 0 0, transparent 8em 100%);
+  background-image: linear-gradient(-135deg, rgba(255,255,255,0.05) 0 0, transparent 8em 100%);
 }
 .ribbon-hook > [class*=ribbon] {
   overflow: hidden;
