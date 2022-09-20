@@ -2,7 +2,12 @@ extends ../../../patternLayout
 
 block variables
   - const documentType = 'ribbon'
-  - const data = { _name: 'Ribbons <span>.&nbsp;documentation</span>', _title: 'Ribbons . Scritpura framework' }
+  -
+    const data = {
+      _name: 'Ribbons <span>.&nbsp;documentation</span>',
+      _title: 'Ribbons, documentation',
+      _description: 'Ribbons, documentation'
+    }
 
 block main
   h1.main-heading!= data._name

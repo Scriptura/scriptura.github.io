@@ -2,8 +2,12 @@ extends ../../../patternLayout
 
 block variables
   - const documentType = 'player'
-  - const data = { _name: 'Audio & video players <span>.&nbsp;documentation</span>', _title: 'Audio & video players . Scritpura framework' }
-
+  -
+    const data = {
+      _name: 'Audio & video players <span>.&nbsp;documentation</span>',
+      _title: 'Audio & video players, documentation',
+      _description: 'Audio & video players, documentation'
+    }
 block main
   h1.main-heading!= data._name
   include ../player

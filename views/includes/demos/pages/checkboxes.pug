@@ -2,7 +2,12 @@ extends ../../../patternLayout
 
 block variables
   - const documentType = 'checkbox'
-  - const data = { _name: 'Checkboxes & Radio buttons <span>.&nbsp;documentation</span>', _title: 'Checkboxes & Radio buttons . Scritpura framework' }
+  -
+    const data = {
+      _name: 'Checkboxes & Radio buttons <span>.&nbsp;documentation</span>',
+      _title: 'Checkboxes & Radio buttons, documentation',
+      _description: 'Checkboxes & Radio buttons, documentation'
+    }
 
 block main
   h1.main-heading!= data._name

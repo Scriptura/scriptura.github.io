@@ -2,7 +2,12 @@ extends ../../../patternLayout
 
 block variables
   - const documentType = 'range'
-  - const data = { _name: 'Ranges <span>.&nbsp;documentation</span>', _title: 'Ranges . Scritpura framework' }
+  -
+    const data = {
+      _name: 'Ranges <span>.&nbsp;documentation</span>',
+      _title: 'Ranges, documentation',
+      _description: 'Ranges, documentation'
+    }
 
 block main
   h1.main-heading!= data._name

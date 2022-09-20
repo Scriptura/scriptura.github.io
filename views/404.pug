@@ -2,7 +2,12 @@ extends patternLayout
 
 block variables
   - const documentType = '404'
-  - const data = {_name: 'Erreur 404 <span>.&nbsp;page non trouvée</span>'}
+  -
+    const data = {
+      _name: 'Erreur 404 <span>.&nbsp;page non trouvée</span>',
+      _title: 'Erreur 404,page non trouvée',
+      _description: 'La page demandée n\'a pas été trouvée.'
+    }
 
 block main
   h1.main-heading!= data._name

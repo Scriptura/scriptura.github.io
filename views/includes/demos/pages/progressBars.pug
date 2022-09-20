@@ -2,7 +2,12 @@ extends ../../../patternLayout
 
 block variables
   - const documentType = 'progressBar'
-  - const data = { _name: 'Progress Bars <span>.&nbsp;documentation</span>', _title: 'Progress Bars . Scritpura framework' }
+  -
+    const data = {
+      _name: 'Progress Bars <span>.&nbsp;documentation</span>',
+      _title: 'Progress Bars, documentation',
+      _description: 'Progress Bars, documentation'
+    }
 
 block main
   h1.main-heading!= data._name
