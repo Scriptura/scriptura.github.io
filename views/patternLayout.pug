@@ -32,7 +32,7 @@ html.no-js(lang='fr')
       //-aside.aside aside
       //-include aside
     block nav
-      nav.nav
+      nav.nav(role='navigation')
         a(href='/').logo-nav
           span.sr-only Scriptura
         include includes/mainNav
@@ -41,7 +41,7 @@ html.no-js(lang='fr')
       footer.footer(role='contentinfo')
         include includes/footer
     block alert
-      section.alert
+      .alert
         include includes/alert
     block script
       script(src='/scripts/development/main.js' async)

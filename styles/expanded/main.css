@@ -551,7 +551,7 @@ main {
   -webkit-animation: animJump 0.5s ease-in-out;
           animation: animJump 0.5s ease-in-out;
 }
-@media (max-width: 91.01em) {
+@media (max-width: 58.01em) {
   .logo-nav {
     position: absolute;
     z-index: 10;
@@ -629,17 +629,17 @@ main {
     padding-left: 3em !important;
   }
 }
-@media (min-width: 36.01em) and (max-width: 91.01em) {
+@media (min-width: 36.01em) and (max-width: 58.01em) {
   .main-nav li {
     flex-basis: 33%;
   }
 }
-@media (min-width: 50.01em) and (max-width: 91.01em) {
+@media (min-width: 50.01em) and (max-width: 58.01em) {
   .main-nav li {
     flex-basis: 25%;
   }
 }
-@media (min-width: 91.01em) {
+@media (min-width: 58.01em) {
   .nav {
     display: grid;
     grid-template-columns: 5em 1fr;
@@ -675,7 +675,7 @@ main {
     }
 }
 }
-@media (max-width: 91.01em) {
+@media (max-width: 58.01em) {
   .cmd-nav {
     position: absolute;
     right: 0;
@@ -714,7 +714,7 @@ main {
     transform: translate(-177px, -177px) rotate(-45deg);
   }
 }
-@media (min-width: 91.01em) {
+@media (min-width: 58.01em) {
   .cmd-nav {
     display: none;
   }
