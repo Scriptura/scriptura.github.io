@@ -46,8 +46,6 @@ _breadcrumbColor2 = _color2
     padding-left 1em
   & li + li
     margin-left -1em
-
-@media (max-width _sizeXS)
-
-  .breadcrumb > :nth-last-child(3) // @note Ne pas mettre :first-child, il faut penser à la page index.
-    display none
+  @media (max-width _sizeXS)
+    & > :nth-last-child(3) // @note Ne pas mettre :first-child, il faut penser à la page index.
+      display none

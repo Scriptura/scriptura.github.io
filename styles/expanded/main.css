@@ -217,9 +217,20 @@ iframe {
 .main-heading {
   word-wrap: break-word;
   text-shadow: 0.2em 0.2em 0.2em rgba(0,0,0,0.3);
+  font-size: 2em;
 }
 .main-heading span {
   color: #ff6347;
+}
+@media (min-width: 36.01em) {
+  .main-heading {
+    font-size: 2.25em;
+  }
+}
+@media (min-width: 50.01em) {
+  .main-heading {
+    font-size: 2.5em;
+  }
 }
 hr[data-hr],
 .decorative-hr hr {
@@ -256,9 +267,13 @@ hr[data-hr]::after,
   content: ' ↗';
 }
 .justify {
-  text-align: justify;
   -webkit-hyphens: auto;
           hyphens: auto;
+}
+@media (min-width: 36.01em) {
+  .justify {
+    text-align: justify;
+  }
 }
 body {
   display: grid;
@@ -448,7 +463,7 @@ main {
   margin: 0;
   padding: 2rem;
   background-color: #474747;
-  box-shadow: 0 0 1.5rem rgba(0,0,0,0.15);
+  box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
 }
 .card h2 {
   margin-bottom: 0;
@@ -470,7 +485,7 @@ main {
   padding: 1em 0;
   color: #d2b48c;
   background-color: #474747;
-  box-shadow: 0 0 1.5rem rgba(0,0,0,0.15);
+  box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
 }
 .card svg {
   transition: background-color 0.5s, fill 0.5s;
@@ -2298,10 +2313,10 @@ form > [class*="grid"] > .input {
 .article {
   display: grid;
 }
-.article [class*=grid] > * {
+.article [class^=grid] > * {
   margin-top: 0;
 }
-.article [class*=grid] {
+.article [class^=grid] {
   margin-bottom: -0.75em;
 }
 @media (max-width: 36.01em) {
@@ -2322,7 +2337,7 @@ form > [class*="grid"] > .input {
 @media (min-width: 36.01em) {
   .article > section {
     padding: 4em 6em;
-    box-shadow: 0 0 1.5rem rgba(0,0,0,0.15);
+    box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
   }
   .article > footer > div {
     position: -webkit-sticky;

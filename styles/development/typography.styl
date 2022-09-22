@@ -4,9 +4,13 @@
 .main-heading
   word-wrap break-word // @note Alias de overflow-wrap @see https://developer.mozilla.org/fr/docs/Web/CSS/overflow-wrap
   text-shadow: .2em .2em .2em rgba(0, 0, 0, .3) // offset-x | offset-y | blur-radius | color
-
-.main-heading span
+  & span
     color _color2
+  font-size 2em
+  @media (min-width _sizeXS)
+    font-size 2.25em
+  @media (min-width _sizeS)
+    font-size 2.5em
 
 //.separator
 //  width 100%
@@ -54,5 +58,9 @@ hr[data-hr]::after
   content ' ↗'
 
 .justify
-  text-align justify
   hyphens auto
+
+@media (min-width _sizeXS)
+
+  .justify
+    text-align justify

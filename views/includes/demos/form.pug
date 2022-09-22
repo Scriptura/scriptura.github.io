@@ -1,4 +1,4 @@
-form(method='get' action='./').grid3.gap.media-s-grid1.media-l-grid2
+form(method='get' action='./').grid3.gap.media-s-grid1.media-l-grid2.masonry
   fieldset
     legend.h2 Text inputs
     .input
@@ -25,7 +25,10 @@ form(method='get' action='./').grid3.gap.media-s-grid1.media-l-grid2
     .input
       label(for='input-tel') Type tel
       input#input-tel(type='tel' name='input-tel' placeholder='0477446677').validation-phone-fr_FR
-      p.message Ce champ accepte uniquement les numéros de téléphone français.
+      p.message
+        svg.icon(role='img' focusable='false')
+          use(xlink:href='/sprites/utils.svg#info')
+        | Ce champ accepte uniquement les numéros de téléphone français.
     .grid2.gap
       .input
         label(for='input-number') Type number
