@@ -22,7 +22,7 @@ block main
     div(lang='fr')
       - const date = new Date().toISOString().split('T')
       - const version = date[0].replace(/-/g, '.') + '.' + date[1].split('.')[0].replace(/:/g, '')
-      h2.h3 Version { #{version} }
+      h2.h3 Version {&nbsp;#{version}&nbsp;}
       p
         | Scriptura est un framework front-end léger dont le but est de simplifier la mise en page. Ici, pas d'ajout supperflu de balises html dans les pages web dans le but de soutenir un script ou un effet visuel, la priorité est donnée au contenu, le code html reste propre et respecte la logique du flux des données.
       p

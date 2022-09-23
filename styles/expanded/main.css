@@ -1830,7 +1830,7 @@ form > [class*="grid"] > .input {
   display: block;
   position: absolute;
   top: 0.1em;
-  left: -2em;
+  left: -1.8em;
   width: 1em;
   height: 1em;
   box-sizing: border-box;
@@ -1861,7 +1861,7 @@ form > [class*="grid"] > .input {
 }
 [type=radio].checkbox + label::after {
   top: 0.1em;
-  left: -2em;
+  left: -1.8em;
   -webkit-clip-path: circle(50% at 50% 50%);
           clip-path: circle(50% at 50% 50%);
 }
@@ -1878,7 +1878,7 @@ form > [class*="grid"] > .input {
 [type=radio].checkbox + label::before {
   border-radius: 50%;
 }
-.checkbox:disabled + Label {
+.checkbox:disabled + label {
   color: #777;
   cursor: not-allowed;
 }
@@ -1893,46 +1893,40 @@ form > [class*="grid"] > .input {
 .switch + label {
   position: relative;
   display: inline-block;
-  margin-top: 1em;
-  padding-left: 6em;
+  padding-left: 3.4em;
 }
-.switch + label::before {
-  content: '';
-  position: absolute;
-  top: -0.5em;
-  left: 0;
-  height: 2.6em;
-  width: 5.5em;
-  background-color: #282828;
-  border: 0.1em solid transparent;
-  border-radius: 0.4em;
-  box-shadow: inset 0 0.2em 0.5em rgba(0,0,0,0.2);
-}
-.switch[type=radio] + label::before {
-  border-radius: 2em;
-}
+.switch + label::before,
 .switch + label::after {
   content: '';
   position: absolute;
-  top: -0.4em;
-  left: 0.1em;
-  width: 2.4em;
-  height: 2.4em;
-  background-color: #ff6347;
+  left: 0;
   border-radius: 0.2em;
+}
+.switch + label::before {
+  height: 1.2em;
+  width: 2.4em;
+  background-color: #282828;
+  border: 0.1em solid transparent;
+  box-shadow: inset 0 0.2em 0.5em rgba(0,0,0,0.2);
+}
+.switch + label::after {
+  width: 1.2em;
+  height: 1.2em;
+  background-color: #ff6347;
   box-shadow: 0 0.2em 0.5em rgba(0,0,0,0.3);
   transition: left 0.2s;
-  background-size: 58px 61px;
-  background-repeat: repeat;
-}
-.switch[type=radio] + label::after {
-  border-radius: 50%;
 }
 .switch:checked + label::after {
-  left: 3em;
+  left: 1.2em;
 }
 .switch:focus-visible + label::before {
   border-color: #ffa500;
+}
+.switch[type=radio] + label::before {
+  border-radius: 1em;
+}
+.switch[type=radio] + label::after {
+  border-radius: 50%;
 }
 .switch:disabled + label {
   position: relative;
@@ -1943,28 +1937,31 @@ form > [class*="grid"] > .input {
 .switch:disabled + label::after {
   background-image: repeating-linear-gradient(-45deg, rgba(255,255,255,0.1) 0 3px, rgba(255,255,255,0.1) 0, transparent 0, transparent 6px);
 }
-.switch:disabled + label span::before {
-  color: #777 !important;
-}
 .switch:disabled + label::after {
   background-color: #393939;
+}
+.switch:disabled + label span::before {
+  color: #777 !important;
 }
 .switch:checked + label span,
 .switch:not(:checked) + label span::before,
 .switch:checked + label span::after {
   color: #e9dac5;
 }
-.switch:not(:checked) + label span::before {
-  content: attr(data-off);
+.switch:not(:checked) + label span::before,
+.switch:checked + label span::after {
   position: absolute;
-  top: 0;
-  left: 3.5em;
+  top: 0.5em;
+  font-size: 50%;
 }
 .switch:checked + label span::after {
   content: attr(data-on);
-  position: absolute;
-  top: 0;
-  left: 0.8em;
+  left: 1em;
+}
+.switch:not(:checked) + label span::before {
+  content: attr(data-off);
+  left: 3em;
+  color: #393939;
 }
 .range {
   display: flex;
