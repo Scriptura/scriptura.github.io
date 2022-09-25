@@ -1888,12 +1888,12 @@ form > [class*="grid"] > .input {
 }
 .switch {
   position: absolute;
-  left: -9999rem;
+  left: -200vw;
 }
 .switch + label {
   position: relative;
   display: inline-block;
-  padding-left: 3.4em;
+  padding-left: calc(2.4em + 1rem);
 }
 .switch + label::before,
 .switch + label::after {
@@ -1910,14 +1910,14 @@ form > [class*="grid"] > .input {
   box-shadow: inset 0 0.2em 0.5em rgba(0,0,0,0.2);
 }
 .switch + label::after {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 1.2em;
   height: 1.2em;
   background-color: #ff6347;
   box-shadow: 0 0.2em 0.5em rgba(0,0,0,0.3);
   transition: left 0.2s;
-}
-.switch:checked + label::after {
-  left: 1.2em;
 }
 .switch:focus-visible + label::before {
   border-color: #ffa500;
@@ -1940,28 +1940,20 @@ form > [class*="grid"] > .input {
 .switch:disabled + label::after {
   background-color: #393939;
 }
-.switch:disabled + label span::before {
-  color: #777 !important;
-}
-.switch:checked + label span,
-.switch:not(:checked) + label span::before,
-.switch:checked + label span::after {
-  color: #e9dac5;
-}
-.switch:not(:checked) + label span::before,
-.switch:checked + label span::after {
+.switch:not(:checked) + label::after,
+.switch:checked + label::after {
   position: absolute;
-  top: 0.5em;
-  font-size: 50%;
+  z-index: 10;
+  top: 0;
+  color: rgba(255,255,255,0.5);
 }
-.switch:checked + label span::after {
-  content: attr(data-on);
-  left: 1em;
-}
-.switch:not(:checked) + label span::before {
+.switch:not(:checked) + label::after {
   content: attr(data-off);
-  left: 3em;
-  color: #393939;
+  left: 0;
+}
+.switch:checked + label::after {
+  content: attr(data-on);
+  left: 1.2em;
 }
 .range {
   display: flex;

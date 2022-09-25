@@ -1,9 +1,9 @@
-.grid2.gap
-  form(method='get', action='./')
+.grid4.media-l-grid2.media-s-grid1.gap
+  form(method='get' action='./')
     p
       code [type=checkbox].checkbox
     div
-      input#test6619.checkbox(type='checkbox', checked='')
+      input#test6619.checkbox(type='checkbox' checked)
       label(for='test6619') Option 1
     div
       input#test6629.checkbox(type='checkbox')
@@ -12,60 +12,80 @@
       input#test6639.checkbox(type='checkbox')
       label(for='test6639') Option 3
     div
-      input#test6649.checkbox(type='checkbox', disabled='')
+      input#test6649.checkbox(type='checkbox' disabled)
       label(for='test6649') Option 4 (disabled)
-  form(method='get', action='./')
+  form(method='get' action='./')
     p
       code [type=radio].checkbox
     div
-      input#test49.checkbox(type='radio', name='test45', checked='')
+      input#test49.checkbox(type='radio' name='test45' checked)
       label(for='test49') Option 1
     div
-      input#test59.checkbox(type='radio', name='test45')
+      input#test59.checkbox(type='radio' name='test45')
       label(for='test59') Option 2
     div
-      input#test69.checkbox(type='radio', name='test45')
+      input#test69.checkbox(type='radio' name='test45')
       label(for='test69') Option 3
     div
-      input#test79.checkbox(type='radio', name='test45', disabled='')
+      input#test79.checkbox(type='radio' name='test45' disabled)
       label(for='test79') Option 3 (disabled)
-h2 Switches
-.grid2.gap
-  form(method='get', action='./')
+  form(method='get' action='./')
     p
       code [type=checkbox].switch
     div
-      input#test881.switch(type='checkbox', checked='')
-      label(for='test881') Option n°1
-        span(data-on='✓', data-off='✗')
+      input#test881.switch(type='checkbox' checked)
+      label(for='test881' data-on='✔' data-off='✘') Option n°1
     div
       input#test882.switch(type='checkbox')
-      label(for='test882') Option n°2
-        span(data-on='✓', data-off='✗')
+      label(for='test882' data-on='✔' data-off='✘') Option n°2
     div
       input#test883.switch(type='checkbox')
-      label(for='test883') Option n°3
-        span(data-on='✓', data-off='✗')
+      label(for='test883' data-on='✔' data-off='✘') Option n°3
     div
-      input#test884.switch(type='checkbox', disabled='')
-      label(for='test884') Option n°4 (disabled)
-        span(data-on='✓', data-off='✗')
-  form(method='get', action='./')
+      input#test884.switch(type='checkbox' disabled)
+      label(for='test884' data-on='✔' data-off='✘') Option n°4 (disabled)
+  form(method='get' action='./')
     p
       code [type=radio].switch
     div
-      input#test882114.switch(type='radio', name='test845', checked='')
-      label(for='test882114') Option n°1
-        span(data-on='✓', data-off='✗')
+      input#test882114.switch(type='radio' name='test845' checked)
+      label(for='test882114' data-on='✔' data-off='✘') Option n°1
     div
-      input#test882115.switch(type='radio', name='test845')
-      label(for='test882115') Option n°2
-        span(data-on='✓', data-off='✗')
+      input#test882115.switch(type='radio' name='test845')
+      label(for='test882115' data-on='✔' data-off='✘') Option n°2
     div
-      input#test882116.switch(type='radio', name='test845')
-      label(for='test882116') Option n°3
-        span(data-on='✓', data-off='✗')
+      input#test882116.switch(type='radio' name='test845')
+      label(for='test882116' data-on='✔' data-off='✘') Option n°3
     div
-      input#test882117.switch(type='radio', name='test845', disabled='')
-      label(for='test882117') Option n°4 (disabled)
-        span(data-on='✓', data-off='✗')
+      input#test882117.switch(type='radio' name='test845' disabled)
+      label(for='test882117' data-on='✔' data-off='✘') Option n°4 (disabled)
+  form(method='get' action='./')
+    p
+      code [type=checkbox].switch label.zoom200
+    div
+      input#test882120.switch(type='checkbox' checked)
+      label(for='test882120' data-on='✔' data-off='✘').zoom200
+        span.zoom-reset Option n°1
+    div
+      input#test882121.switch(type='checkbox')
+      label(for='test882121' data-on='✔' data-off='✘').zoom200
+        span.zoom-reset Option n°2
+    div
+      input#test882122.switch(type='checkbox')
+      label(for='test882122' data-on='✔' data-off='✘').zoom200
+        span.zoom-reset Option n°3
+  form(method='get' action='./')
+    p
+      code [type=radio].switch label.zoom200
+    div
+      input#test882130.switch(type='radio' name='test847' checked)
+      label(for='test882130' data-on='✔' data-off='✘').zoom200
+        span.zoom-reset Option n°1
+    div
+      input#test882131.switch(type='radio' name='test847')
+      label(for='test882131' data-on='✔' data-off='✘').zoom200
+        span.zoom-reset Option n°2
+    div
+      input#test882132.switch(type='radio' name='test847')
+      label(for='test882132' data-on='✔' data-off='✘').zoom200
+        span.zoom-reset Option n°3

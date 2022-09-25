@@ -77,13 +77,14 @@ _switchSize2 = 3px
 // @note Adaptation d'un tutoriel @see  http://www.creativejuiz.fr/
 
 .switch
+  //box-sizing border-box
   position absolute // @note Label des éléments frères décalés si déclaration en relatif
-  left -9999rem
+  left -200vw
   & + label
     position relative
-    display inline-block // @note Évite un clique involontaire par l'utilisateur car le label prend la règle 'width:100%' si 'display:block'
+    display inline-block // @note Évite une action involontaire de l'utilisateur sur un clic car le label prend la règle 'width:100%' si 'display:block'
     //margin-top 1em
-    padding-left _switchSize1 * 2 + 1em
+    padding-left 'calc(%s + 1rem)' % (_switchSize1 * 2) // @note L'unité rem évite des marges trop importantes avec la classe utilitaire .zoom
     &::before
     &::after
       content ''
@@ -98,13 +99,14 @@ _switchSize2 = 3px
       border .1em solid transparent
       box-shadow inset 0 .2em .5em rgba(0, 0, 0, .2)
     &::after
+      display flex
+      align-items center
+      justify-content center
       width _switchSize1
       height _switchSize1
       background-color _color2
       box-shadow 0 .2em .5em rgba(0, 0, 0, .3)
       transition left .2s
-  &:checked + label::after
-    left _switchSize1
   &:focus-visible + label::before
     border-color _color5
   &[type=radio] + label::before
@@ -120,21 +122,15 @@ _switchSize2 = 3px
       background-image repeating-linear-gradient(-45deg, _switchColor5 0 _switchSize2, _switchColor5 0, transparent 0, transparent _switchSize2 * 2)
     &::after
       background-color _colorG
-    & span::before
-      color #777 !important
-  &:checked + label span
-  &:not(:checked) + label span::before
-  &:checked + label span::after
-    color _colorT
-  &:not(:checked) + label span::before
-  &:checked + label span::after
+  &:not(:checked) + label::after
+  &:checked + label::after
     position absolute
-    top .5em // @note Fixe le pseudo-élément si label sur plusieurs lignes.
-    font-size 50%
-  &:checked + label span::after
-    content attr(data-on)
-    left 1em
-  &:not(:checked) + label span::before
+    z-index 10
+    top 0 // @note Fixe le pseudo-élément si label sur plusieurs lignes.
+    color rgba(255, 255, 255, .5)
+  &:not(:checked) + label::after
     content attr(data-off)
-    left 3em
-    color _colorG
+    left 0
+  &:checked + label::after
+    content attr(data-on)
+    left _switchSize1
