@@ -897,30 +897,30 @@ ol ol {
 ol ol ol {
   list-style-type: lower-greek;
 }
-[class*=list],
-[class*=list] > * {
+[class^=list],
+[class^=list] > * {
   padding-left: 0;
 }
-[class*=list] li {
+[class^=list] li {
   display: block;
 }
-[class*=list-stripe] {
+[class^=list-stripe] {
   display: grid;
   gap: 1em;
   margin: 0;
 }
-[class*=list-stripe] > * {
+[class^=list-stripe] > * {
   padding: 0.5em 1em;
   background-color: #474747;
   box-shadow: 0.5rem 0.5rem 2rem rgba(0,0,0,0.1);
 }
-[class*=-links] a {
+.list-stripe-links a {
   display: block;
   color: #e9dac5;
   text-decoration: none;
 }
-[class*=-links] li:focus-within,
-[class*=-links] li:hover {
+.list-stripe-links li:focus-within,
+.list-stripe-links li:hover {
   background-color: #ff6347;
   box-shadow: 0.5rem 0.5rem 2rem rgba(0,0,0,0.25);
   outline: none;
