@@ -1910,26 +1910,29 @@ form > [class*="grid"] > .input {
   box-shadow: inset 0 0.2em 0.5em rgba(0,0,0,0.2);
 }
 .switch + label::after {
+  top: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 1.2em;
   height: 1.2em;
+  color: rgba(255,255,255,0.5);
   background-color: #ff6347;
   box-shadow: 0 0.2em 0.5em rgba(0,0,0,0.3);
   transition: left 0.2s;
 }
+.switch:not(:checked) + label::after {
+  content: attr(data-off);
+  left: 0;
+}
+.switch:checked + label::after {
+  content: attr(data-on);
+  left: 1.2em;
+}
 .switch:focus-visible + label::before {
   border-color: #ffa500;
 }
-.switch[type=radio] + label::before {
-  border-radius: 1em;
-}
-.switch[type=radio] + label::after {
-  border-radius: 50%;
-}
 .switch:disabled + label {
-  position: relative;
   color: #777;
   cursor: not-allowed;
 }
@@ -1940,20 +1943,11 @@ form > [class*="grid"] > .input {
 .switch:disabled + label::after {
   background-color: #393939;
 }
-.switch:not(:checked) + label::after,
-.switch:checked + label::after {
-  position: absolute;
-  z-index: 10;
-  top: 0;
-  color: rgba(255,255,255,0.5);
+.switch[type=radio] + label::before {
+  border-radius: 1em;
 }
-.switch:not(:checked) + label::after {
-  content: attr(data-off);
-  left: 0;
-}
-.switch:checked + label::after {
-  content: attr(data-on);
-  left: 1.2em;
+.switch[type=radio] + label::after {
+  border-radius: 50%;
 }
 .range {
   display: flex;

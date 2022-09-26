@@ -1,5 +1,5 @@
-.grid4.media-l-grid2.media-s-grid1.gap
-  form(method='get' action='./')
+form(method='get' action='./').grid4
+  fieldset
     p
       code [type=checkbox].checkbox
     div
@@ -14,7 +14,7 @@
     div
       input#test6649.checkbox(type='checkbox' disabled)
       label(for='test6649') Option 4 (disabled)
-  form(method='get' action='./')
+  fieldset
     p
       code [type=radio].checkbox
     div
@@ -29,7 +29,7 @@
     div
       input#test79.checkbox(type='radio' name='test45' disabled)
       label(for='test79') Option 3 (disabled)
-  form(method='get' action='./')
+  fieldset
     p
       code [type=checkbox].switch
     div
@@ -44,7 +44,7 @@
     div
       input#test884.switch(type='checkbox' disabled)
       label(for='test884' data-on='✔' data-off='✘') Option n°4 (disabled)
-  form(method='get' action='./')
+  fieldset
     p
       code [type=radio].switch
     div
@@ -59,9 +59,9 @@
     div
       input#test882117.switch(type='radio' name='test845' disabled)
       label(for='test882117' data-on='✔' data-off='✘') Option n°4 (disabled)
-  form(method='get' action='./')
+  fieldset
     p
-      code [type=checkbox].switch label.zoom200
+      code label.zoom200
     div
       input#test882120.switch(type='checkbox' checked)
       label(for='test882120' data-on='✔' data-off='✘').zoom200
@@ -74,9 +74,9 @@
       input#test882122.switch(type='checkbox')
       label(for='test882122' data-on='✔' data-off='✘').zoom200
         span.zoom-reset Option n°3
-  form(method='get' action='./')
+  fieldset
     p
-      code [type=radio].switch label.zoom200
+      code label.zoom200
     div
       input#test882130.switch(type='radio' name='test847' checked)
       label(for='test882130' data-on='✔' data-off='✘').zoom200
@@ -89,3 +89,18 @@
       input#test882132.switch(type='radio' name='test847')
       label(for='test882132' data-on='✔' data-off='✘').zoom200
         span.zoom-reset Option n°3
+  fieldset
+    p
+      code Personalized
+    div
+      input#test882140.switch(type='checkbox')
+      label(for='test882140' data-on='☽' data-off='☀').zoom200
+        span.zoom-reset Sun & moon
+    div
+      input#test882141.switch(type='checkbox')
+      label(for='test882141' data-on='☆' data-off='★').zoom200
+        span.zoom-reset Filled star & empty star
+    div
+      input#test882142.switch(type='checkbox')
+      label(for='test882142' data-on='♀' data-off='♂').zoom200
+        span.zoom-reset Men & women
