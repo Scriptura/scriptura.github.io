@@ -1,4 +1,4 @@
-form(method='get' action='./').grid4
+form(method='get' action='./').grid4.gap.media-l-grid2
   fieldset
     p
       code [type=checkbox].checkbox
@@ -34,60 +34,60 @@ form(method='get' action='./').grid4
       code [type=checkbox].switch
     div
       input#test881.switch(type='checkbox' checked)
-      label(for='test881' data-on='✔' data-off='') Option n°1
+      label(for='test881') Option n°1
     div
       input#test882.switch(type='checkbox')
-      label(for='test882' data-on='✔' data-off='') Option n°2
+      label(for='test882') Option n°2
     div
       input#test883.switch(type='checkbox')
-      label(for='test883' data-on='✔' data-off='') Option n°3
+      label(for='test883') Option n°3
     div
       input#test884.switch(type='checkbox' disabled)
-      label(for='test884' data-on='✔' data-off='') Option n°4 (disabled)
+      label(for='test884') Option n°4 (disabled)
   fieldset
     p
       code [type=radio].switch
     div
       input#test882114.switch(type='radio' name='test845' checked)
-      label(for='test882114' data-on='✔' data-off='') Option n°1
+      label(for='test882114') Option n°1
     div
       input#test882115.switch(type='radio' name='test845')
-      label(for='test882115' data-on='✔' data-off='') Option n°2
+      label(for='test882115') Option n°2
     div
       input#test882116.switch(type='radio' name='test845')
-      label(for='test882116' data-on='✔' data-off='') Option n°3
+      label(for='test882116') Option n°3
     div
       input#test882117.switch(type='radio' name='test845' disabled)
-      label(for='test882117' data-on='✔' data-off='') Option n°4 (disabled)
+      label(for='test882117') Option n°4 (disabled)
   fieldset
     p
-      code label.zoom200
+      code [type=checkbox].switch label.zoom200
     div
       input#test882120.switch(type='checkbox' checked)
-      label(for='test882120' data-on='✔' data-off='').zoom200
+      label(for='test882120' style='--switchTrue:url(/medias/icons/sun.svg)').zoom200
         span.zoom-reset Option n°1
     div
       input#test882121.switch(type='checkbox')
-      label(for='test882121' data-on='✔' data-off='').zoom200
+      label(for='test882121').zoom200
         span.zoom-reset Option n°2
     div
       input#test882122.switch(type='checkbox')
-      label(for='test882122' data-on='✔' data-off='').zoom200
+      label(for='test882122').zoom200
         span.zoom-reset Option n°3
   fieldset
-    p
-      code label.zoom200
+    p 
+      code [type=radio].switch label.zoom200
     div
       input#test882130.switch(type='radio' name='test847' checked)
-      label(for='test882130' data-on='✔' data-off='').zoom200
+      label(for='test882130').zoom200
         span.zoom-reset Option n°1
     div
       input#test882131.switch(type='radio' name='test847')
-      label(for='test882131' data-on='✔' data-off='').zoom200
+      label(for='test882131').zoom200
         span.zoom-reset Option n°2
     div
       input#test882132.switch(type='radio' name='test847')
-      label(for='test882132' data-on='✔' data-off='').zoom200
+      label(for='test882132').zoom200
         span.zoom-reset Option n°3
   fieldset
     p
@@ -104,3 +104,8 @@ form(method='get' action='./').grid4
       input#test882142.switch(type='checkbox')
       label(for='test882142' data-on='♀' data-off='♂').zoom200
         span.zoom-reset Men or women
+.grid2.gap
+  p.message(role='alert')
+    svg.icon(role='img' focusable='false')
+      use(xlink:href='/sprites/utils.svg#info')
+    | Les bouttons checkbox et radio sont utilisés lorsqu'un choix demande à être validé après coup, au sein d'un ensemble de choix. Les switchs sont utilisés pour une validation imédiate du choix de l'utilisateur.

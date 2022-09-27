@@ -1886,9 +1886,19 @@ form > [class*="grid"] > .input {
   cursor: not-allowed;
   background: #2e2e2e repeating-linear-gradient(-45deg, transparent 0 2px, #555 2px 4px);
 }
+:root {
+  --switchTrue: url("/medias/icons/checkmark.svg");
+  --switchFalse: '';
+}
 .switch {
   position: absolute;
   left: -200vw;
+/*
+  &[type=radio] + label::before
+    border-radius 1em
+  &[type=radio] + label::after
+    border-radius 50%
+  */
 }
 .switch + label {
   position: relative;
@@ -1907,28 +1917,35 @@ form > [class*="grid"] > .input {
   width: 2.4em;
   background-color: #282828;
   border: 0.1em solid transparent;
+  border-radius: 1.2em;
   box-shadow: inset 0 0.2em 0.5em rgba(0,0,0,0.2);
 }
 .switch + label::after {
   top: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Si content utilisé poour afficher un caractère :
+      display flex
+      align-items center
+      justify-content center
+      */
   padding-top: 0.1em;
   width: 1.2em;
   height: 1.2em;
   color: rgba(255,255,255,0.5);
   background-color: #ff6347;
+  border-radius: 50%;
   box-shadow: 0 0.2em 0.5em rgba(0,0,0,0.3);
   transition: left 0.2s;
 }
 .switch:not(:checked) + label::after {
-  content: attr(data-off);
+  background-image: var(--switchFalse);
   left: 0;
 }
 .switch:checked + label::after {
-  content: attr(data-on);
   left: 1.2em;
+  background-image: var(--switchTrue);
+  background-repeat: no-repeat;
+  background-size: 0.72em 0.72em;
+  background-position: 0.23em 0.23em;
 }
 .switch:focus-visible + label::before {
   border-color: #ffa500;
@@ -1943,12 +1960,6 @@ form > [class*="grid"] > .input {
 }
 .switch:disabled + label::after {
   background-color: #393939;
-}
-.switch[type=radio] + label::before {
-  border-radius: 1em;
-}
-.switch[type=radio] + label::after {
-  border-radius: 50%;
 }
 .range {
   display: flex;
