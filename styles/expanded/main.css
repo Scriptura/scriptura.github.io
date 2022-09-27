@@ -1887,17 +1887,16 @@ form > [class*="grid"] > .input {
   background: #2e2e2e repeating-linear-gradient(-45deg, transparent 0 2px, #555 2px 4px);
 }
 :root {
-  --switchTrue: url("/medias/icons/checkmark.svg");
+  --switchTrue: url("/medias/icons/checkmark-color.svg");
   --switchFalse: '';
 }
 .switch {
   position: absolute;
   left: -200vw;
 /*
-  &[type=radio] + label::before
-    border-radius 1em
-  &[type=radio] + label::after
-    border-radius 50%
+  &:checked + label::before
+  &.two-options + label::before
+    background-color #4e667a - 30%
   */
 }
 .switch + label {

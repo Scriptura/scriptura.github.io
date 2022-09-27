@@ -93,13 +93,21 @@ form(method='get' action='./').grid4.gap.media-l-grid2
     p
       code Personalized
     div
-      input#test882140.switch(type='checkbox')
-      label(for='test882140' style='--switchTrue:url(/medias/icons/smiley-sad.svg);--switchFalse:url(/medias/icons/smiley-happy.svg)').zoom200
+      input#test882140.switch.two-options(type='checkbox')
+      label(for='test882140' style='--switchTrue:url(/medias/icons/smiley-happy-color.svg);--switchFalse:url(/medias/icons/smiley-sad-color.svg)').zoom200
         span.zoom-reset Happy or sad
     div
-      input#test882142.switch(type='checkbox')
+      input#test882141.switch.two-options(type='checkbox')
+      label(for='test882141' style='--switchTrue:url(/medias/icons/eye-color.svg);--switchFalse:url(/medias/icons/eye-blocked-color.svg)').zoom200
+        span.zoom-reset See or hide
+    //-div
+      input#test882142.switch.two-options(type='checkbox')
       label(for='test882142' style='--switchTrue:url(/medias/icons/sex-female.svg);--switchFalse:url(/medias/icons/sex-male.svg)').zoom200
         span.zoom-reset Men or women
+    div
+      input#test882143.switch.two-options(type='checkbox')
+      label(for='test882143' style='--switchTrue:url(/medias/icons/unlocked-color.svg);--switchFalse:url(/medias/icons/locked-color.svg)').zoom200
+        span.zoom-reset Locked or unlocked
 .grid2.gap
   p.message(role='alert')
     svg.icon(role='img' focusable='false')
