@@ -76,8 +76,8 @@ _switchSize2 = 3px
 // -----------------------------------------------------------------------------
 // @note Adaptation d'un tutoriel @see  http://www.creativejuiz.fr/
 :root
-  --switchTrue: url(/medias/icons/checkmark.svg)
-  --switchFalse: ''
+  --switchTrue url(/medias/icons/checkmark.svg)
+  --switchFalse ''
 
 .switch
   position absolute // @note Label des éléments frères décalés si déclaration en relatif
@@ -111,19 +111,19 @@ _switchSize2 = 3px
       height _switchSize1
       color rgba(255, 255, 255, .5)
       background-color _color2
+      background-repeat no-repeat
+      background-size (_switchSize1 * .6) (_switchSize1 * .6)
+      background-position .23em .23em
       border-radius 50%
       box-shadow 0 .2em .5em rgba(0, 0, 0, .3)
       transition left .2s
   &:not(:checked) + label::after
+    left 0
     background-image var(--switchFalse)
     //content var(--switchFalse)
-    left 0
   &:checked + label::after
     left _switchSize1
     background-image var(--switchTrue)
-    background-repeat no-repeat
-    background-size (_switchSize1 * .6) (_switchSize1 * .6)
-    background-position .23em .23em
     //filter invert(100%)
   &:focus-visible + label::before
     border-color _color5

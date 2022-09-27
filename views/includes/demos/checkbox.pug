@@ -64,7 +64,7 @@ form(method='get' action='./').grid4.gap.media-l-grid2
       code [type=checkbox].switch label.zoom200
     div
       input#test882120.switch(type='checkbox' checked)
-      label(for='test882120' style='--switchTrue:url(/medias/icons/sun.svg)').zoom200
+      label(for='test882120').zoom200
         span.zoom-reset Option n°1
     div
       input#test882121.switch(type='checkbox')
@@ -94,15 +94,11 @@ form(method='get' action='./').grid4.gap.media-l-grid2
       code Personalized
     div
       input#test882140.switch(type='checkbox')
-      label(for='test882140' data-on='$' data-off='€').zoom200
-        span.zoom-reset Euro or dollar
-    div
-      input#test882141.switch(type='checkbox')
-      label(for='test882141' data-on='☆' data-off='★').zoom200
-        span.zoom-reset Filled star or empty star
+      label(for='test882140' style='--switchTrue:url(/medias/icons/smiley-sad.svg);--switchFalse:url(/medias/icons/smiley-happy.svg)').zoom200
+        span.zoom-reset Happy or sad
     div
       input#test882142.switch(type='checkbox')
-      label(for='test882142' data-on='♀' data-off='♂').zoom200
+      label(for='test882142' style='--switchTrue:url(/medias/icons/sex-female.svg);--switchFalse:url(/medias/icons/sex-male.svg)').zoom200
         span.zoom-reset Men or women
 .grid2.gap
   p.message(role='alert')
