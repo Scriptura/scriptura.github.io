@@ -91,7 +91,6 @@ _switchSize2 = 3px
       content ''
       position absolute
       left 0
-      border-radius .2em
     &::before
       height _switchSize1
       width _switchSize1 * 2
@@ -101,19 +100,13 @@ _switchSize2 = 3px
       box-shadow inset 0 .2em .5em rgba(0, 0, 0, .2)
     &::after
       top 0 // @note Fixe le pseudo-élément si label sur plusieurs lignes.
-      /* Si content utilisé poour afficher un caractère :
-      display flex
-      align-items center
-      justify-content center
-      */
-      padding-top .1em // @note Selon la police utilisée.
       width _switchSize1
       height _switchSize1
       color rgba(255, 255, 255, .5)
       background-color _color2
       background-repeat no-repeat
-      background-size (_switchSize1 * .6) (_switchSize1 * .6)
-      background-position .23em .23em
+      background-size round(_switchSize1 * .6, 2) round(_switchSize1 * .6, 2)
+      background-position round(_switchSize1 / 5.2, 2) round(_switchSize1 / 5.2, 2)
       border-radius 50%
       box-shadow 0 .2em .5em rgba(0, 0, 0, .3)
       transition left .2s
@@ -140,3 +133,48 @@ _switchSize2 = 3px
   &.two-options + label::before
     background-color #4e667a - 30%
   */
+
+/*
+.switch2
+  position absolute // @note Label des éléments frères décalés si déclaration en relatif
+  left -200vw
+  & + label
+    position relative
+    display inline-block // @note Évite une action involontaire de l'utilisateur sur un clic car le label prend la règle 'width:100%' si 'display:block'
+    padding-left 'calc(%s + 1rem)' % (_switchSize1 * 3) // @note L'unité rem évite des marges trop importantes avec la classe utilitaire .zoom
+    &::after
+      content ''
+      position absolute
+      top 0
+      left 0
+      height _switchSize1
+      width _switchSize1 * 2
+      background-color _colorG - 30%
+      border .1em solid transparent
+      border-radius _switchSize1
+      box-shadow inset 0 .2em .5em rgba(0, 0, 0, .2)
+    & + div
+      position relative
+      top - (_switchSize1 + .3em)
+      left 0
+      display flex
+      align-items center
+      justify-content center
+      width _switchSize1
+      height _switchSize1
+      color rgba(255, 255, 255, .5)
+      background-color _color2
+      background-repeat no-repeat
+      background-size (_switchSize1 * .6) (_switchSize1 * .6)
+      background-position (_switchSize1 / 6) (_switchSize1 / 6)
+      border-radius 50%
+      box-shadow 0 .2em .5em rgba(0, 0, 0, .3)
+      transition left .2s
+  &:checked + label + div svg:first-child
+  &:not(:checked) + label + div svg:last-child
+    display none
+  & + label + div svg
+    fill _colorT
+    width (_switchSize1 * .6)
+    height (_switchSize1 * .6)
+*/

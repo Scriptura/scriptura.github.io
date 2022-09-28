@@ -1909,7 +1909,6 @@ form > [class*="grid"] > .input {
   content: '';
   position: absolute;
   left: 0;
-  border-radius: 0.2em;
 }
 .switch + label::before {
   height: 1.2em;
@@ -1921,12 +1920,6 @@ form > [class*="grid"] > .input {
 }
 .switch + label::after {
   top: 0;
-/* Si content utilisé poour afficher un caractère :
-      display flex
-      align-items center
-      justify-content center
-      */
-  padding-top: 0.1em;
   width: 1.2em;
   height: 1.2em;
   color: rgba(255,255,255,0.5);

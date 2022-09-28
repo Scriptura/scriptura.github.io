@@ -4,31 +4,31 @@ form(method='get' action='./').grid4.gap.media-l-grid2
       code [type=checkbox].checkbox
     div
       input#test6619.checkbox(type='checkbox' checked)
-      label(for='test6619') Option 1
+      label(for='test6619') Option n°1
     div
       input#test6629.checkbox(type='checkbox')
-      label(for='test6629') Option 2
+      label(for='test6629') Option n°2
     div
       input#test6639.checkbox(type='checkbox')
-      label(for='test6639') Option 3
+      label(for='test6639') Option n°3
     div
       input#test6649.checkbox(type='checkbox' disabled)
-      label(for='test6649') Option 4 (disabled)
+      label(for='test6649') Option n°4 (disabled)
   fieldset
     p
       code [type=radio].checkbox
     div
       input#test49.checkbox(type='radio' name='test45' checked)
-      label(for='test49') Option 1
+      label(for='test49') Option n°1
     div
       input#test59.checkbox(type='radio' name='test45')
-      label(for='test59') Option 2
+      label(for='test59') Option n°2
     div
       input#test69.checkbox(type='radio' name='test45')
-      label(for='test69') Option 3
+      label(for='test69') Option n°3
     div
       input#test79.checkbox(type='radio' name='test45' disabled)
-      label(for='test79') Option 3 (disabled)
+      label(for='test79') Option n°4 (disabled)
   fieldset
     p
       code [type=checkbox].switch
@@ -93,23 +93,35 @@ form(method='get' action='./').grid4.gap.media-l-grid2
     p
       code Personalized
     div
-      input#test882140.switch.two-options(type='checkbox')
+      input#test882140.switch(type='checkbox')
       label(for='test882140' style='--switchTrue:url(/medias/icons/smiley-happy-color.svg);--switchFalse:url(/medias/icons/smiley-sad-color.svg)').zoom200
         span.zoom-reset Happy or sad
     div
-      input#test882141.switch.two-options(type='checkbox')
+      input#test882141.switch(type='checkbox')
       label(for='test882141' style='--switchTrue:url(/medias/icons/eye-color.svg);--switchFalse:url(/medias/icons/eye-blocked-color.svg)').zoom200
         span.zoom-reset See or hide
     //-div
-      input#test882142.switch.two-options(type='checkbox')
+      input#test882142.switch(type='checkbox')
       label(for='test882142' style='--switchTrue:url(/medias/icons/sex-female.svg);--switchFalse:url(/medias/icons/sex-male.svg)').zoom200
         span.zoom-reset Men or women
     div
-      input#test882143.switch.two-options(type='checkbox')
+      input#test882143.switch(type='checkbox')
       label(for='test882143' style='--switchTrue:url(/medias/icons/unlocked-color.svg);--switchFalse:url(/medias/icons/locked-color.svg)').zoom200
         span.zoom-reset Locked or unlocked
+  //-fieldset
+    p
+      code Test
+    div
+      input#test882150.switch2(type='checkbox')
+      label(for='test882150').zoom200
+        span.zoom-reset See or hide
+      div.zoom200
+        svg(role='img' focusable='false')
+          use(xlink:href='/sprites/utils.svg#eye')
+        svg(role='img' focusable='false')
+          use(xlink:href='/sprites/utils.svg#eye-blocked')
 .grid2.gap
   p.message(role='alert')
     svg.icon(role='img' focusable='false')
       use(xlink:href='/sprites/utils.svg#info')
-    | Les bouttons checkbox et radio sont utilisés lorsqu'un choix demande à être validé après coup, au sein d'un ensemble de choix. Les switchs sont utilisés pour une validation imédiate du choix de l'utilisateur.
+    | Les bouttons checkbox et radio sont utilisés lorsqu'un choix demande à être validé après coup, au sein d'un ensemble de choix dans un formulaire. Les switchs sont utilisés pour une validation imédiate du choix de l'utilisateur.
