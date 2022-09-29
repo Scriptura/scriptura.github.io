@@ -1887,7 +1887,7 @@ form > [class*="grid"] > .input {
   background: #2e2e2e repeating-linear-gradient(-45deg, transparent 0 2px, #555 2px 4px);
 }
 :root {
-  --switchTrue: url("/medias/icons/checkmark-color.svg");
+  --switchTrue: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDI0IiBoZWlnaHQ9IjEwMjQiIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiIGZpbGw9IiNlOWRhYzUiPjxwYXRoIGQ9Ik04NjQgMTI4TDM4NCA2MDggMTYwIDM4NCAwIDU0NGwzODQgMzg0IDY0MC02NDB6Ii8+PC9zdmc+");
   --switchFalse: '';
 }
 .switch {

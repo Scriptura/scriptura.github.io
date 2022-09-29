@@ -1,3 +1,5 @@
+_bg = '/medias/images/site/mosaic.png'
+
 html
 .logo-nav
 .cmd-nav:focus
@@ -31,16 +33,6 @@ html
 .tab-summary
 .audio-player
 .progress-bar div
-  background-image embedurl('/medias/images/site/mosaic.png') // PNG moins lourd que WebP pour l'encodage en base64.
-  background-size 58px 61px
+  background-image embedurl(_bg) // PNG moins lourd que WebP pour l'encodage en base64.
+  background-size image-size(_bg)[0] image-size(_bg)[1]
   background-repeat repeat
-
-/*
-.breadcrumb a:focus
-.breadcrumb a:hover
-.breadcrumb a:active
-.breadcrumb a:focus::after
-.breadcrumb a:hover::after
-.breadcrumb a:active::after
-  background-image none
-*/

@@ -1,10 +1,10 @@
 // @note Règle pour les champs concernés par une classe spécifique, telle que `.input`.
-
 _inputColor1 = #444
 _inputColor2 = _color2
 _inputColor3 = _color5
 _inputColor4 = #222
-_inputSize = 3px
+_inputColor5 = _colorG - 20%
+_inputSize = 5px
 _inputBoxShadow1 = 0 1.5rem 2rem rgba(0, 0, 0, .2)
 
 //.input // ciblage trop général pose problème pour les élemnts imbriqués
@@ -125,7 +125,7 @@ form > [class*="grid"] > .input
   color #777
 
 .input.disabled input
-  background _formsColor1 repeating-linear-gradient(-45deg, transparent 0 _inputSize, #555 _inputSize _inputSize * 2)
+  background _inputColor5 repeating-linear-gradient(-45deg, transparent 0 _inputSize, _colorG _inputSize _inputSize * 2)
   background-size 100% 100%
   cursor not-allowed
 
