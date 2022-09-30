@@ -52,6 +52,21 @@ p
     |  Dieu vit que la lumière était bonne, et Dieu sépara la lumière et les ténèbres. 
     span.verse 5
     |  Dieu appela la lumière "jour" et les ténèbres "nuit." Il y eut un soir et il y eut un matin : premier jour.
+.grid2.gap.media-s-grid1
+  div
+    .message
+      p
+        svg.icon(role='img' focusable='false')
+          use(xlink:href='/sprites/utils.svg#info')
+        | Afin d'harmoniser les caractères Unicode il est bon de parser les chaines avec une fonction de normalisation NFC.
+      p En JavaScript&nbsp;: 
+        code string.normalize('NFC')
+        | . Cf. 
+        a(href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/normalize') mdn web docs.
+  .center
+    svg.size25.decorative-svg(role='img' focusable='false')
+      use(xlink:href='/sprites/various/Jeanne-D-Arc.svg#1')
+
 //-
   p
     code [lang=grc]
