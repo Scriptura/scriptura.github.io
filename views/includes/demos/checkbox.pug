@@ -112,8 +112,16 @@ form(method='get' action='./').grid4.gap.media-l-grid2
     p
       code .switch2
     div
-      input#test920.switch2(type='checkbox', checked='')
+      input#test920.switch2(type='checkbox', checked)
       label(for='test920') Option n°1
+        span(data-on='yes', data-off='no')
+    div
+      input#test921.switch2(type='checkbox', checked)
+      label(for='test921') Option n°2
+        span(data-on='yes', data-off='no')
+    div
+      input#test922.switch2(type='checkbox', checked)
+      label(for='test922') Option n°3
         span(data-on='yes', data-off='no')
   fieldset
     p
@@ -127,6 +135,24 @@ form(method='get' action='./').grid4.gap.media-l-grid2
           svg(role='img' focusable='false')
             use(xlink:href='/sprites/utils.svg#eye-blocked')
         span.zoom-reset See or hide
+    div
+      input#test882151.switch3(type='checkbox')
+      label(for='test882151').zoom200
+        span.toogle
+          svg(role='img' focusable='false')
+            use(xlink:href='/sprites/utils.svg#eye')
+          svg(role='img' focusable='false')
+            use(xlink:href='/sprites/utils.svg#eye-blocked')
+        span.zoom-reset See or hide
+    div
+      input#test882152.switch3(type='checkbox')
+      label(for='test882152').zoom200
+        span.toogle
+          svg(role='img' focusable='false')
+            use(xlink:href='/sprites/utils.svg#locked')
+          svg(role='img' focusable='false')
+            use(xlink:href='/sprites/utils.svg#unlocked')
+        span.zoom-reset Locked or unlocked
 .grid2.gap
   p.message(role='alert')
     svg.icon(role='img' focusable='false')
