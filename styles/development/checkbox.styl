@@ -74,6 +74,7 @@ _switchSize2 = 3px
 
 // @subsection Switchs
 // -----------------------------------------------------------------------------
+
 :root
   --switchTrue embedurl('/medias/icons/checkmark-color.svg')
   --switchFalse ''
@@ -84,7 +85,7 @@ _switchSize2 = 3px
   & + label
     position relative
     display inline-block // @note Évite une action involontaire de l'utilisateur sur un clic car le label prend la règle 'width:100%' si 'display:block'
-    padding-left 'calc(%s + 1rem)' % (_switchSize1 * 2) // @note L'unité rem évite des marges trop importantes avec la classe utilitaire .zoom
+    padding-left 'calc(%s + 1rem)' % round(_switchSize1 * 2, 2) // @note L'unité rem évite des marges trop importantes avec la classe utilitaire .zoom
     &::before
     &::after
       content ''
@@ -99,20 +100,19 @@ _switchSize2 = 3px
       box-shadow inset 0 .2em .5em rgba(0, 0, 0, .2)
     &::after
       top 0 // @note Fixe le pseudo-élément si label sur plusieurs lignes.
+      left 0
       width _switchSize1
       height _switchSize1
       color rgba(255, 255, 255, .5)
       background-color _color2
+      background-image var(--switchFalse)
       background-repeat no-repeat
       background-size round(_switchSize1 * .6, 2) round(_switchSize1 * .6, 2)
       background-position round(_switchSize1 / 5.2, 2) round(_switchSize1 / 5.2, 2)
       border-radius 50%
       box-shadow 0 .2em .5em rgba(0, 0, 0, .3)
       transition left .2s
-  &:not(:checked) + label::after
-    left 0
-    background-image var(--switchFalse)
-    //content var(--switchFalse)
+      //content var(--switchFalse)
   &:checked + label::after
     left _switchSize1
     background-image var(--switchTrue)
@@ -127,11 +127,6 @@ _switchSize2 = 3px
       background-image repeating-linear-gradient(-45deg, _switchColor5 0 _switchSize2, _switchColor5 0, transparent 0, transparent _switchSize2 * 2)
     &::after
       background-color _colorG
-  /*
-  &:checked + label::before
-  &.two-options + label::before
-    background-color #4e667a - 30%
-  */
 
 .switch2
   position absolute // @note Label des éléments frères décalés si déclaration en relatif
@@ -140,7 +135,7 @@ _switchSize2 = 3px
     position relative
     display inline-block // @note Évite un clique involontaire par l'utilisateur car le label prend la règle 'width:100%' si 'display:block'
     margin 1em 0
-    padding-left 'calc(%s + 1rem)' % (_switchSize1 * 4.5)
+    padding-left 'calc(%s + 1rem)' % round(_switchSize1 * 4.5, 2)
   & + label::before
     content ''
     position absolute
@@ -184,18 +179,17 @@ _switchSize2 = 3px
   &:disabled + label::after
     background-color _colorG
   &:checked + label span
-  &:not(:checked) + label span::before
-  &:checked + label span::after
+  & + label span::before
     color _colorT
-  &:not(:checked) + label span::before
-    content attr(data-off)
+  & + label span::before
+  &:checked + label span::after
     position absolute
     top 0 // @note Fixe le pseudo-élément si label sur plusieurs lignes.
+  & + label span::before
+    content attr(data-off)
     left 3.5em
   &:checked + label span::after
     content attr(data-on)
-    position absolute
-    top 0 // @note Fixe le pseudo-élément si label sur plusieurs lignes.
     left .8em
 
 .switch3
@@ -203,27 +197,25 @@ _switchSize2 = 3px
   left -200vw
   & + label
     position relative
-    //display inline-block // @note Évite une action involontaire de l'utilisateur sur un clic car le label prend la règle 'width:100%' si 'display:block'
-    display -webkit-inline-flex
-    align-items center
-    padding-left 'calc(%s + 1rem)' % (_switchSize1) // @note L'unité rem évite des marges trop importantes avec la classe utilitaire .zoom
-    padding-bottom 1em
+    display inline-block // @note Évite une action involontaire de l'utilisateur sur un clic car le label prend la règle 'width:100%' si 'display:block'
+    line-height 1.2rem
+    margin .25rem 0
+    padding-left 'calc(%s + 2rem)' % (_switchSize1 * 1.5) // @note L'unité rem évite des marges trop importantes avec la classe utilitaire .zoom
     &::after
-      content ''
+    & .toogle
       position absolute
       top 0
       left 0
-      width _switchSize1 * 2
+    &::after
+      content ''
+      width round(_switchSize1 * 2, 2)
       height _switchSize1
       background-color _colorG - 30%
       border .1em solid transparent
       border-radius _switchSize1
       box-shadow inset 0 .2em .5em rgba(0, 0, 0, .2)
     & .toogle
-      position relative
       z-index 1
-      top 0 //- round(_switchSize1 * .2, 2)
-      left - 1.7em //- round(_switchSize1 * 1.85, 2)
       display flex
       align-items center
       justify-content center
@@ -231,18 +223,15 @@ _switchSize2 = 3px
       height _switchSize1
       color rgba(255, 255, 255, .5)
       background-color _color2
-      background-repeat no-repeat
-      background-size round(_switchSize1 * .6, 2) round(_switchSize1 * .6, 2)
-      background-position round(_switchSize1 / 6, 2) round(_switchSize1 / 6, 2)
       border-radius 50%
       box-shadow 0 .2em .5em rgba(0, 0, 0, .3)
       transition left .2s
-  &:focus + label::after
+  &:focus-visible + label::after
     border-color _color5
   &:checked + label .toogle
-    left - .5em //- 1em
-  &:checked + label .toogle svg:first-child
-  &:not(:checked) + label .toogle svg:last-child
+    left _switchSize1
+  &:checked + label .toogle svg:nth-child(2) // @note Non équivalent à :last-child car il peut y avoir un seul SVG, last-child reprendrait l'unique SVG.
+  &:not(:checked) + label .toogle svg:first-child
     display none
   & + label .toogle svg
     fill _colorT

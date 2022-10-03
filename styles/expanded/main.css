@@ -1894,11 +1894,6 @@ form > [class*="grid"] > .input {
 .switch {
   position: absolute;
   left: -200vw;
-/*
-  &:checked + label::before
-  &.two-options + label::before
-    background-color #4e667a - 30%
-  */
 }
 .switch + label {
   position: relative;
@@ -1921,20 +1916,18 @@ form > [class*="grid"] > .input {
 }
 .switch + label::after {
   top: 0;
+  left: 0;
   width: 1.2em;
   height: 1.2em;
   color: rgba(255,255,255,0.5);
   background-color: #ff6347;
+  background-image: var(--switchFalse);
   background-repeat: no-repeat;
   background-size: 0.72em 0.72em;
   background-position: 0.23em 0.23em;
   border-radius: 50%;
   box-shadow: 0 0.2em 0.5em rgba(0,0,0,0.3);
   transition: left 0.2s;
-}
-.switch:not(:checked) + label::after {
-  left: 0;
-  background-image: var(--switchFalse);
 }
 .switch:checked + label::after {
   left: 1.2em;
@@ -1962,7 +1955,7 @@ form > [class*="grid"] > .input {
   position: relative;
   display: inline-block;
   margin: 1em 0;
-  padding-left: calc(5.399999999999999em + 1rem);
+  padding-left: calc(5.4em + 1rem);
 }
 .switch2 + label::before {
   content: '';
@@ -2016,20 +2009,20 @@ form > [class*="grid"] > .input {
   background-color: #393939;
 }
 .switch2:checked + label span,
-.switch2:not(:checked) + label span::before,
-.switch2:checked + label span::after {
+.switch2 + label span::before {
   color: #e9dac5;
 }
-.switch2:not(:checked) + label span::before {
-  content: attr(data-off);
+.switch2 + label span::before,
+.switch2:checked + label span::after {
   position: absolute;
   top: 0;
+}
+.switch2 + label span::before {
+  content: attr(data-off);
   left: 3.5em;
 }
 .switch2:checked + label span::after {
   content: attr(data-on);
-  position: absolute;
-  top: 0;
   left: 0.8em;
 }
 .switch3 {
@@ -2038,16 +2031,19 @@ form > [class*="grid"] > .input {
 }
 .switch3 + label {
   position: relative;
-  display: -webkit-inline-flex;
-  align-items: center;
-  padding-left: calc(1.2em + 1rem);
-  padding-bottom: 1em;
+  display: inline-block;
+  line-height: 1.2rem;
+  margin: 0.25rem 0;
+  padding-left: calc(1.8em + 2rem);
 }
-.switch3 + label::after {
-  content: '';
+.switch3 + label::after,
+.switch3 + label .toogle {
   position: absolute;
   top: 0;
   left: 0;
+}
+.switch3 + label::after {
+  content: '';
   width: 2.4em;
   height: 1.2em;
   background-color: #282828;
@@ -2056,10 +2052,7 @@ form > [class*="grid"] > .input {
   box-shadow: inset 0 0.2em 0.5em rgba(0,0,0,0.2);
 }
 .switch3 + label .toogle {
-  position: relative;
   z-index: 1;
-  top: 0;
-  left: -1.7em;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2067,21 +2060,18 @@ form > [class*="grid"] > .input {
   height: 1.2em;
   color: rgba(255,255,255,0.5);
   background-color: #ff6347;
-  background-repeat: no-repeat;
-  background-size: 0.72em 0.72em;
-  background-position: 0.2em 0.2em;
   border-radius: 50%;
   box-shadow: 0 0.2em 0.5em rgba(0,0,0,0.3);
   transition: left 0.2s;
 }
-.switch3:focus + label::after {
+.switch3:focus-visible + label::after {
   border-color: #ffa500;
 }
 .switch3:checked + label .toogle {
-  left: -0.5em;
+  left: 1.2em;
 }
-.switch3:checked + label .toogle svg:first-child,
-.switch3:not(:checked) + label .toogle svg:last-child {
+.switch3:checked + label .toogle svg:nth-child(2),
+.switch3:not(:checked) + label .toogle svg:first-child {
   display: none;
 }
 .switch3 + label .toogle svg {
