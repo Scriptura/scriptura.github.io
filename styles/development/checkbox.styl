@@ -1,3 +1,4 @@
+_checkboxColor2 = _colorG + 31.5%
 _checkboxColor5 = rgba(255, 255, 255, .2)
 _checkboxSize1 = 2px // @note Valeur en lien avec 'transform scale' sur le (pseudo-)élément.
 _switchColor5 = rgba(255, 255, 255, .1)
@@ -41,40 +42,33 @@ _switchSize2 = 3px
       clip-path polygon(17% 40%, 0 57%, 39% 100%, 100% 25%, 83% 10%, 38% 64%)
       transform scale(0)
       transition transform .2s
-
-.checkbox:checked + label::after
-  transform scale(1.3)
-
-[type=radio].checkbox + label::after
-  top .1em // @note Fixe le pseudo-élément si label sur plusieurs lignes.
-  left -1.8em
-  clip-path circle(50% at 50% 50%)
-
-[type=radio].checkbox:checked + label::before
-  border-color _color2
-
-.checkbox:focus-visible + label::before
-[type=radio].checkbox:focus-visible + label::before
-  border .1rem solid _color5
-
-[type=radio].checkbox:checked + label::after
-  transform scale(.7)
-
-[type=radio].checkbox + label::before
-  border-radius 50%
-
-.checkbox:disabled + label
-  color #777
-  cursor not-allowed
-
-.checkbox:disabled + label::before
-  cursor not-allowed
-  background _formsColor1 repeating-linear-gradient(-45deg, transparent 0 _checkboxSize1, #555 _checkboxSize1 _checkboxSize1 * 2)
+  &:checked + label::after
+    transform scale(1.3)
+  &[type=radio] + label::after
+    top .1em // @note Fixe le pseudo-élément si label sur plusieurs lignes.
+    left -1.8em
+    clip-path circle(50% at 50% 50%)
+  &[type=radio]:checked + label::before
+    border-color _color2
+  &[type=radio]:checked + label::after
+    transform scale(.7)
+  &[type=radio] + label::before
+    border-radius 50%
+  &:focus-visible + label::before
+  &[type=radio]:focus-visible + label::before
+    border .1rem solid _color5
+  &:disabled + label
+    color #777
+    cursor not-allowed
+    &::before
+      cursor not-allowed
+      background _formsColor1 repeating-linear-gradient(-45deg, transparent 0 _checkboxSize1, #555 _checkboxSize1 _checkboxSize1 * 2)
 
 
 // @subsection Switchs
 // -----------------------------------------------------------------------------
 
+/*
 :root
   --switchTrue embedurl('/medias/icons/checkmark-color.svg')
   --switchFalse ''
@@ -120,15 +114,15 @@ _switchSize2 = 3px
   &:focus-visible + label::before
     border-color _color5
   &:disabled + label
-    color #777
+    color _checkboxColor2
     cursor not-allowed
     &::before
-    &::after
       background-image repeating-linear-gradient(-45deg, _switchColor5 0 _switchSize2, _switchColor5 0, transparent 0, transparent _switchSize2 * 2)
     &::after
       background-color _colorG
+*/
 
-.switch2
+.switch-unicode
   position absolute // @note Label des éléments frères décalés si déclaration en relatif
   left -200vw
   & + label
@@ -147,9 +141,6 @@ _switchSize2 = 3px
     border .1em solid transparent
     border-radius .4em // _r1
     box-shadow inset 0 .2em .5em rgba(0, 0, 0, .2)
-    //transition background-color .2s
-  &[type=radio] + label::before
-    border-radius 2em
   & + label::after
     content ''
     position absolute
@@ -161,6 +152,8 @@ _switchSize2 = 3px
     border-radius .2em
     box-shadow 0 .2em .5em rgba(0, 0, 0, .3)
     transition left .2s
+  &[type=radio] + label::before
+    border-radius 2em
   &[type=radio] + label::after
     border-radius 50%
   &:checked + label::after
@@ -169,13 +162,13 @@ _switchSize2 = 3px
     border-color _color5
   &:disabled + label
     position relative
-    color #777
+    color _checkboxColor2
     cursor not-allowed
   &:disabled + label::before
-  &:disabled + label::after
-    background-image repeating-linear-gradient(-45deg, _switchColor5 0 _switchSize1, _switchColor5 0, transparent 0, transparent _switchSize1 * 2)
+  //&:disabled + label::after
+    background-image repeating-linear-gradient(-45deg, _switchColor5 0 _switchSize2, _switchColor5 0, transparent 0, transparent _switchSize2 * 2)
   &:disabled + label span::before
-    color #777 !important
+    color _checkboxColor2 !important
   &:disabled + label::after
     background-color _colorG
   &:checked + label span
@@ -192,17 +185,16 @@ _switchSize2 = 3px
     content attr(data-on)
     left .8em
 
-.switch3
+.switch-svg
   position absolute // @note Label des éléments frères décalés si déclaration en relatif
   left -200vw
   & + label
     position relative
     display inline-block // @note Évite une action involontaire de l'utilisateur sur un clic car le label prend la règle 'width:100%' si 'display:block'
-    line-height 1.2rem
     margin .25rem 0
     padding-left 'calc(%s + 2rem)' % (_switchSize1 * 1.5) // @note L'unité rem évite des marges trop importantes avec la classe utilitaire .zoom
     &::after
-    & .toogle
+    & span:first-child
       position absolute
       top 0
       left 0
@@ -214,7 +206,7 @@ _switchSize2 = 3px
       border .1em solid transparent
       border-radius _switchSize1
       box-shadow inset 0 .2em .5em rgba(0, 0, 0, .2)
-    & .toogle
+    & span:first-child
       z-index 1
       display flex
       align-items center
@@ -228,12 +220,21 @@ _switchSize2 = 3px
       transition left .2s
   &:focus-visible + label::after
     border-color _color5
-  &:checked + label .toogle
+  &:checked + label span:first-child
     left _switchSize1
-  &:checked + label .toogle svg:nth-child(2) // @note Non équivalent à :last-child car il peut y avoir un seul SVG, last-child reprendrait l'unique SVG.
-  &:not(:checked) + label .toogle svg:first-child
+  &:checked + label span:first-child svg:nth-child(2) // @note Non équivalent à :last-child car il peut y avoir un seul SVG, last-child reprendrait l'unique SVG.
+  &:not(:checked) + label span:first-child svg:first-child
     display none
-  & + label .toogle svg
+  & + label span:first-child svg
     fill _colorT
     width round(_switchSize1 * .6, 2)
     height round(_switchSize1 * .6, 2)
+  &:disabled + label
+    color _checkboxColor2
+    cursor not-allowed
+    &::after
+      background-image repeating-linear-gradient(-45deg, _switchColor5 0 _switchSize2, _switchColor5 0, transparent 0, transparent _switchSize2 * 2)
+    & span:first-child
+      background-color _colorG
+      & svg
+        fill _checkboxColor2

@@ -12,8 +12,8 @@ form(method='get' action='./').grid4.gap.media-l-grid2
       input#test992.checkbox(type='checkbox')
       label(for='test992') Option n°3
     div
-      input#test993.checkbox(type='checkbox' disabled)
-      label(for='test993') Option n°4 (disabled)
+      input#test999.checkbox(type='checkbox' disabled)
+      label(for='test999') Option n°4 (disabled)
   fieldset
     p
       code [type=radio].checkbox
@@ -27,176 +27,106 @@ form(method='get' action='./').grid4.gap.media-l-grid2
       input#test982.checkbox(type='radio' name='test45')
       label(for='test982') Option n°3
     div
-      input#test983.checkbox(type='radio' name='test45' disabled)
-      label(for='test983') Option n°4 (disabled)
+      input#test989.checkbox(type='radio' name='test45' disabled)
+      label(for='test989') Option n°4 (disabled)
   fieldset
     p
-      code [type=checkbox].switch
+      code .switch-unicode
     div
-      input#test970.switch(type='checkbox' checked)
-      label(for='test970') Option n°1
-    div
-      input#test971.switch(type='checkbox')
-      label(for='test971') Option n°2
-    div
-      input#test972.switch(type='checkbox')
-      label(for='test972') Option n°3
-    div
-      input#test973.switch(type='checkbox' disabled)
-      label(for='test973') Option n°4 (disabled)
-  fieldset
-    p
-      code [type=radio].switch
-    div
-      input#test960.switch(type='radio' name='test845' checked)
-      label(for='test960') Option n°1
-    div
-      input#test961.switch(type='radio' name='test845')
-      label(for='test961') Option n°2
-    div
-      input#test962.switch(type='radio' name='test845')
-      label(for='test962') Option n°3
-    div
-      input#test963.switch(type='radio' name='test845' disabled)
-      label(for='test963') Option n°4 (disabled)
-  fieldset
-    p
-      code [type=checkbox].switch label.zoom200
-    div
-      input#test950.switch(type='checkbox' checked)
-      label(for='test950').zoom200
-        span.zoom-reset Option n°1
-    div
-      input#test951.switch(type='checkbox')
-      label(for='test951').zoom200
-        span.zoom-reset Option n°2
-    div
-      input#test952.switch(type='checkbox')
-      label(for='test952').zoom200
-        span.zoom-reset Option n°3
-    div
-      input#test953.switch(type='checkbox' disabled)
-      label(for='test953').zoom200
-        span.zoom-reset Option n°4 (disabled)
-  fieldset
-    p 
-      code [type=radio].switch label.zoom200
-    div
-      input#test940.switch(type='radio' name='test847' checked)
-      label(for='test940').zoom200
-        span.zoom-reset Option n°1
-    div
-      input#test941.switch(type='radio' name='test847')
-      label(for='test941').zoom200
-        span.zoom-reset Option n°2
-    div
-      input#test942.switch(type='radio' name='test847')
-      label(for='test942').zoom200
-        span.zoom-reset Option n°3
-    div
-      input#test943.switch(type='checkbox' name='test847' disabled)
-      label(for='test943').zoom200
-        span.zoom-reset Option n°4 (disabled)
-  fieldset
-    p
-      code Personalized
-    div
-      input#test930.switch(type='checkbox')
-      label(for='test930' style='--switchTrue:url(/medias/icons/smiley-happy-color.svg);--switchFalse:url(/medias/icons/smiley-sad-color.svg)').zoom200
-        span.zoom-reset Happy or sad
-    div
-      input#test931.switch(type='checkbox')
-      label(for='test931' style='--switchTrue:url(/medias/icons/eye-color.svg);--switchFalse:url(/medias/icons/eye-blocked-color.svg)').zoom200
-        span.zoom-reset See or hide
-    //-div
-      input#test932.switch(type='checkbox')
-      label(for='test932' style='--switchTrue:url(/medias/icons/sex-female.svg);--switchFalse:url(/medias/icons/sex-male.svg)').zoom200
-        span.zoom-reset Men or women
-    div
-      input#test933.switch(type='checkbox')
-      label(for='test933' style='--switchTrue:url(/medias/icons/unlocked-color.svg);--switchFalse:url(/medias/icons/locked-color.svg)').zoom200
-        span.zoom-reset Locked or unlocked
-  fieldset
-    p
-      code .switch2
-    div
-      input#test920.switch2(type='checkbox', checked)
-      label(for='test920') Option n°1. Malesuada nunc vel risus commodo viverra. Malesuada nunc vel risus commodo viverra maecenas accumsan lacus. Cras tincidunt lobortis feugiat vivamus at augue eget arcu dictum. Faucibus purus in massa tempor nec feugiat nisl. Volutpat maecenas volutpat blandit aliquam etiam erat velit. Senectus et netus et malesuada. Scelerisque eu ultrices vitae auctor. Mauris nunc congue nisi vitae suscipit tellus. Sed augue lacus viverra vitae congue eu.
+      input#test920.switch-unicode(type='checkbox', checked)
+      label(for='test920') Option n°1. Cras tincidunt lobortis feugiat vivamus at augue eget arcu dictum.
         span(data-on='yes' data-off='no')
     div
-      input#test921.switch2(type='checkbox' checked)
+      input#test921.switch-unicode(type='checkbox')
       label(for='test921') Option n°2
         span(data-on='yes' data-off='no')
     div
-      input#test922.switch2(type='checkbox' checked)
+      input#test922.switch-unicode(type='checkbox')
       label(for='test922') Option n°3
         span(data-on='yes' data-off='no')
     div
-      input#test923.switch2(type='checkbox' checked disabled)
-      label(for='test923') Option n°4 (disabled)
+      input#test929.switch-unicode(type='checkbox' disabled)
+      label(for='test929') Option n°4 (disabled)
         span(data-on='yes' data-off='no')
   fieldset
     p
-      code .switch3
+      code .switch-svg
     div
-      input#test910.switch3(type='checkbox' checked)
-      label(for='test910') Checked
-        span.toogle
+      input#test910.switch-svg(type='checkbox' checked)
+      label(for='test910') Checked (item par défaut)
+        span
           svg(role='img' focusable='false')
             use(xlink:href='/sprites/utils.svg#checkmark')
     div
-      input#test911.switch3(type='checkbox')
-      label(for='test911') See or hide
-        span.toogle
+      input#test911.switch-svg(type='checkbox')
+      label(for='test911') Sun or moon
+        span
           svg(role='img' focusable='false')
-            use(xlink:href='/sprites/utils.svg#eye')
+            use(xlink:href='/sprites/solid.svg#sun')
           svg(role='img' focusable='false')
-            use(xlink:href='/sprites/utils.svg#eye-blocked')
+            use(xlink:href='/sprites/solid.svg#moon')
     div
-      input#test900.switch3(type='checkbox')
-      label(for='test900') Locked or unlocked. Malesuada nunc vel risus commodo viverra. Malesuada nunc vel risus commodo viverra maecenas accumsan lacus. Cras tincidunt lobortis feugiat vivamus at augue eget arcu dictum. Faucibus purus in massa tempor nec feugiat nisl. Volutpat maecenas volutpat blandit aliquam etiam erat velit. Senectus et netus et malesuada. Scelerisque eu ultrices vitae auctor. Mauris nunc congue nisi vitae suscipit tellus. Sed augue lacus viverra vitae congue eu.
-        span.toogle
+      input#test900.switch-svg(type='checkbox')
+      label(for='test900') Locked or unlocked. Cras tincidunt lobortis feugiat vivamus at augue eget arcu dictum.
+        span
           svg(role='img' focusable='false')
-            use(xlink:href='/sprites/utils.svg#locked')
+            use(xlink:href='/sprites/solid.svg#lock-open')
           svg(role='img' focusable='false')
-            use(xlink:href='/sprites/utils.svg#unlocked')
+            use(xlink:href='/sprites/solid.svg#lock')
+        span.zoom-reset Locked or unlocked
     div
-      input#test901.switch3(type='checkbox' disabled)
-      label(for='test901') See or hide (disabled)
-        span.toogle
+      input#test909.switch-svg(type='checkbox' disabled)
+      label(for='test909') See or hide (disabled)
+        span
           svg(role='img' focusable='false')
-            use(xlink:href='/sprites/emojis.svg#smiley-neutral2')
-          svg(role='img' focusable='false')
-            use(xlink:href='/sprites/emojis.svg#smiley-neutral')
+            use(xlink:href='/sprites/utils.svg#checkmark')
   fieldset
     p
-      code .switch3
+      code .switch-svg + label.zoom200
     div
-      input#test890.switch3(type='checkbox')
+      input#test890.switch-svg(type='checkbox' checked)
       label(for='test890').zoom200
-        span.toogle
+        span
           svg(role='img' focusable='false')
-            use(xlink:href='/sprites/emojis.svg#smiley-neutral2')
+            use(xlink:href='/sprites/solid.svg#sun')
           svg(role='img' focusable='false')
-            use(xlink:href='/sprites/emojis.svg#smiley-neutral')
-        span.zoom-reset See or hide. Malesuada nunc vel risus commodo viverra. Malesuada nunc vel risus commodo viverra maecenas accumsan lacus. Cras tincidunt lobortis feugiat vivamus at augue eget arcu dictum. Faucibus purus in massa tempor nec feugiat nisl. Volutpat maecenas volutpat blandit aliquam etiam erat velit. Senectus et netus et malesuada. Scelerisque eu ultrices vitae auctor. Mauris nunc congue nisi vitae suscipit tellus. Sed augue lacus viverra vitae congue eu.
+            use(xlink:href='/sprites/solid.svg#moon')
+        span.zoom-reset Sun or moon
     div
-      input#test891.switch3(type='checkbox')
+      input#test891.switch-svg(type='checkbox')
       label(for='test891').zoom200
-        span.toogle
+        span
           svg(role='img' focusable='false')
-            use(xlink:href='/sprites/utils.svg#eye')
+            use(xlink:href='/sprites/solid.svg#person')
           svg(role='img' focusable='false')
-            use(xlink:href='/sprites/utils.svg#eye-blocked')
-        span.zoom-reset See or hide.
+            use(xlink:href='/sprites/solid.svg#person-dress')
+        span.zoom-reset Men or women
     div
-      input#test892.switch3(type='checkbox')
+      input#test892.switch-svg(type='checkbox')
       label(for='test892').zoom200
-        span.toogle
+        span
           svg(role='img' focusable='false')
-            use(xlink:href='/sprites/utils.svg#unlocked')
+            use(xlink:href='/sprites/regular.svg#eye')
           svg(role='img' focusable='false')
-            use(xlink:href='/sprites/utils.svg#locked')
+            use(xlink:href='/sprites/regular.svg#eye-slash')
+        span.zoom-reset See or hide. Cras tincidunt lobortis feugiat vivamus at augue eget arcu dictum.
+    div
+      input#test893.switch-svg(type='checkbox')
+      label(for='test893').zoom200
+        span
+          svg(role='img' focusable='false')
+            use(xlink:href='/sprites/solid.svg#lock-open')
+          svg(role='img' focusable='false')
+            use(xlink:href='/sprites/solid.svg#lock')
+        span.zoom-reset Locked or unlocked
+    div
+      input#test899.switch-svg(type='checkbox' disabled)
+      label(for='test899').zoom200
+        span
+          svg(role='img' focusable='false')
+            use(xlink:href='/sprites/solid.svg#lock-open')
+          svg(role='img' focusable='false')
+            use(xlink:href='/sprites/solid.svg#lock')
         span.zoom-reset Locked or unlocked
 .grid2.gap
   p.message(role='alert')
