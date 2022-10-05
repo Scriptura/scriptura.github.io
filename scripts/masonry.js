@@ -25,16 +25,19 @@ class VGrid {
 
 }
 
-let grid = new VGrid('.masonry')
+for (const masonry of document.querySelectorAll('.masonry')) {
 
-//window.onload = grid.resizeAllGridItems() // Lancement du calcul de la grille au chargement de la page.
-window.addEventListener('load', () => { // Lancement du calcul de la grille si resize
-  grid.resizeAllGridItems()
-  setTimeout(() => {grid.resizeAllGridItems()}, 200)
-})
+  const grid = new VGrid(masonry)
 
-window.addEventListener('resize', () => { // Lancement du calcul de la grille si resize
-  let resizeTimeout
-  clearTimeout(resizeTimeout)
-  resizeTimeout = setTimeout(() => {grid.resizeAllGridItems()}, 200) // Limitation du nombre de calculs @see https://stackoverflow.com/questions/5836779/
-})
+  //window.onload = grid.resizeAllGridItems() // Lancement du calcul de la grille au chargement de la page.
+  window.addEventListener('load', () => { // Lancement du calcul de la grille si resize
+    grid.resizeAllGridItems()
+    setTimeout(() => {grid.resizeAllGridItems()}, 200)
+  })
+
+  window.addEventListener('resize', () => { // Lancement du calcul de la grille si resize
+    let resizeTimeout
+    clearTimeout(resizeTimeout)
+    resizeTimeout = setTimeout(() => {grid.resizeAllGridItems()}, 200) // Limitation du nombre de calculs @see https://stackoverflow.com/questions/5836779/
+  })
+}
