@@ -68,60 +68,6 @@ _switchSize2 = 3px
 // @subsection Switchs
 // -----------------------------------------------------------------------------
 
-/*
-:root
-  --switchTrue embedurl('/medias/icons/checkmark-color.svg')
-  --switchFalse ''
-
-.switch
-  position absolute // @note Label des éléments frères décalés si déclaration en relatif
-  left -200vw
-  & + label
-    position relative
-    display inline-block // @note Évite une action involontaire de l'utilisateur sur un clic car le label prend la règle 'width:100%' si 'display:block'
-    padding-left 'calc(%s + 1rem)' % round(_switchSize1 * 2, 2) // @note L'unité rem évite des marges trop importantes avec la classe utilitaire .zoom
-    &::before
-    &::after
-      content ''
-      position absolute
-      left 0
-    &::before
-      height _switchSize1
-      width _switchSize1 * 2
-      background-color _colorG - 30%
-      border .1em solid transparent
-      border-radius _switchSize1
-      box-shadow inset 0 .2em .5em rgba(0, 0, 0, .2)
-    &::after
-      top 0 // @note Fixe le pseudo-élément si label sur plusieurs lignes.
-      left 0
-      width _switchSize1
-      height _switchSize1
-      color rgba(255, 255, 255, .5)
-      background-color _color2
-      background-image var(--switchFalse)
-      background-repeat no-repeat
-      background-size round(_switchSize1 * .6, 2) round(_switchSize1 * .6, 2)
-      background-position round(_switchSize1 / 5.2, 2) round(_switchSize1 / 5.2, 2)
-      border-radius 50%
-      box-shadow 0 .2em .5em rgba(0, 0, 0, .3)
-      transition left .2s
-      //content var(--switchFalse)
-  &:checked + label::after
-    left _switchSize1
-    background-image var(--switchTrue)
-    //filter invert(100%)
-  &:focus-visible + label::before
-    border-color _color5
-  &:disabled + label
-    color _checkboxColor2
-    cursor not-allowed
-    &::before
-      background-image repeating-linear-gradient(-45deg, _switchColor5 0 _switchSize2, _switchColor5 0, transparent 0, transparent _switchSize2 * 2)
-    &::after
-      background-color _colorG
-*/
-
 .switch-unicode
   position absolute // @note Label des éléments frères décalés si déclaration en relatif
   left -200vw
@@ -185,7 +131,7 @@ _switchSize2 = 3px
     content attr(data-on)
     left .8em
 
-.switch-svg
+.switch
   position absolute // @note Label des éléments frères décalés si déclaration en relatif
   left -200vw
   & + label
@@ -238,3 +184,57 @@ _switchSize2 = 3px
       background-color _colorG
       & svg
         fill _checkboxColor2
+
+/*
+:root // for .switch-bg
+  --switchTrue embedurl('/medias/icons/checkmark-color.svg')
+  --switchFalse ''
+
+.switch-bg
+  position absolute // @note Label des éléments frères décalés si déclaration en relatif
+  left -200vw
+  & + label
+    position relative
+    display inline-block // @note Évite une action involontaire de l'utilisateur sur un clic car le label prend la règle 'width:100%' si 'display:block'
+    padding-left 'calc(%s + 1rem)' % round(_switchSize1 * 2, 2) // @note L'unité rem évite des marges trop importantes avec la classe utilitaire .zoom
+    &::before
+    &::after
+      content ''
+      position absolute
+      left 0
+    &::before
+      height _switchSize1
+      width _switchSize1 * 2
+      background-color _colorG - 30%
+      border .1em solid transparent
+      border-radius _switchSize1
+      box-shadow inset 0 .2em .5em rgba(0, 0, 0, .2)
+    &::after
+      top 0 // @note Fixe le pseudo-élément si label sur plusieurs lignes.
+      left 0
+      width _switchSize1
+      height _switchSize1
+      color rgba(255, 255, 255, .5)
+      background-color _color2
+      background-image var(--switchFalse)
+      background-repeat no-repeat
+      background-size round(_switchSize1 * .6, 2) round(_switchSize1 * .6, 2)
+      background-position round(_switchSize1 / 5.2, 2) round(_switchSize1 / 5.2, 2)
+      border-radius 50%
+      box-shadow 0 .2em .5em rgba(0, 0, 0, .3)
+      transition left .2s
+      //content var(--switchFalse)
+  &:checked + label::after
+    left _switchSize1
+    background-image var(--switchTrue)
+    //filter invert(100%)
+  &:focus-visible + label::before
+    border-color _color5
+  &:disabled + label
+    color _checkboxColor2
+    cursor not-allowed
+    &::before
+      background-image repeating-linear-gradient(-45deg, _switchColor5 0 _switchSize2, _switchColor5 0, transparent 0, transparent _switchSize2 * 2)
+    &::after
+      background-color _colorG
+*/
