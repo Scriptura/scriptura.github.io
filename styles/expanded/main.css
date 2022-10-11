@@ -1893,7 +1893,7 @@ form > [class*="grid"] > .input {
 .switch {
   display: flex;
   align-items: center;
-  gap: 0.5em;
+  gap: 1em;
   margin-bottom: 1em;
 }
 .switch input {
@@ -1954,11 +1954,15 @@ form > [class*="grid"] > .input {
 .switch :disabled + .switch-bg .switch-toogle {
   background-color: #393939;
 }
-.switch-state .switch input:not(:checked) + .switch-bg .switch-toogle {
-  background-color: #a85418;
+.switch [type=radio]:checked ~ * {
+  cursor: not-allowed;
 }
-.switch-state .switch input:not(:checked) ~ * {
-  color: #616161;
+.switch-state .switch input:not(:checked):not(:disabled) + .switch-bg .switch-toogle {
+  color: #acacac;
+  background-color: #4e667a;
+}
+.switch-state .switch input:not(:checked):not(:disabled) ~ * {
+  color: #939393;
 }
 .range {
   display: flex;
