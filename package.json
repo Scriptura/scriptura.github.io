@@ -19,6 +19,7 @@
     "replace": "^1.2.1",
     "sharp": "^0.30.7",
     "stylus": "^0.59.0",
+    "svg-sprite": "^2.0.0",
     "uglify-es": "^3.3.9"
   },
   "scripts": {

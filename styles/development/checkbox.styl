@@ -68,6 +68,78 @@ _switchSize2 = 3px
 // @subsection Switchs
 // -----------------------------------------------------------------------------
 
+_switchColor4 = rgba(255, 255, 255, .1)
+_switchColor5 = _colorG - 20%
+_switchSize1 = 1.2em
+_switchSize2 = 3px
+
+*
+  box-sizing border-box
+
+// @note Le design d'un switch accessible à l'aide des seuls pseudo-éléments est tout à fait possible, nous l'avons fait à une époque. Mais cette solution rend la modularité du style parfois impossible. Le label n'étant pas indépendant du switch, son positionnement sera limité, des pseudo-éléments utilisants déjà background-image ne peuvent plus être texturés, l'effets "zoom" c font-size sera problématique.
+
+.switch
+  display flex
+  align-items center
+  gap .5em
+  margin-bottom 1em
+  input
+    position absolute
+    right 200vw
+  .switch-bg
+    flex-shrink 0
+    display flex
+    align-items center
+    justify-content center
+    width _switchSize1 * 2
+    height _switchSize1
+    background-color _switchColor5
+    border .1em solid transparent
+    border-radius _switchSize1
+    box-shadow inset 0 .2em .5em rgba(0, 0, 0, .2)
+  .switch-toogle
+    position relative
+    z-index 1
+    flex-shrink 0
+    display flex
+    align-items center
+    justify-content center
+    width _switchSize1
+    height _switchSize1
+    background-color _color2
+    border-radius 50%
+    box-shadow 0 .2em .5em rgba(0, 0, 0, .3)
+    transform translateX(- round(_switchSize1 / 2, 2))
+    transition transform .2s ease-in-out
+    svg
+     flex-shrink 0
+     display block
+     margin auto
+     width round(_switchSize1 * .6, 2)
+     height round(_switchSize1 * .6, 2)
+     fill curentColor
+  & :not(:checked) + .switch-bg .switch-toogle svg:nth-child(1)
+    display none
+  & :checked + .switch-bg .switch-toogle
+    transform translateX(round(_switchSize1 / 2, 2))
+    svg:nth-child(2)
+      display none
+  & :disabled
+    & ~ *
+      color _colorG + 20%
+      cursor not-allowed
+    & + .switch-bg
+      background-image repeating-linear-gradient(-45deg, _switchColor4 0 _switchSize2, _switchColor5 0, transparent 0, transparent _switchSize2 * 2)
+    & + .switch-bg .switch-toogle
+      background-color _colorG
+
+.switch-state .switch input:not(:checked)
+  & + .switch-bg .switch-toogle
+    background-color chocolate - 20% //_colorG + 10%
+  & ~ *
+    color _colorG + 20%
+
+/*
 .switch-unicode
   position absolute // @note Label des éléments frères décalés si déclaration en relatif
   left -200vw
@@ -130,111 +202,4 @@ _switchSize2 = 3px
   &:checked + label span::after
     content attr(data-on)
     left .8em
-
-.switch
-  position absolute // @note Label des éléments frères décalés si déclaration en relatif
-  left -200vw
-  & + label
-    position relative
-    display inline-block // @note Évite une action involontaire de l'utilisateur sur un clic car le label prend la règle 'width:100%' si 'display:block'
-    margin .25rem 0
-    padding-left 'calc(%s + 2rem)' % (_switchSize1 * 1.5) // @note L'unité rem évite des marges trop importantes avec la classe utilitaire .zoom
-    &::after
-    & span:first-child
-      position absolute
-      top 0
-      left 0
-    &::after
-      content ''
-      width round(_switchSize1 * 2, 2)
-      height _switchSize1
-      background-color _colorG - 30%
-      border .1em solid transparent
-      border-radius _switchSize1
-      box-shadow inset 0 .2em .5em rgba(0, 0, 0, .2)
-    & span:first-child
-      z-index 1
-      display flex
-      align-items center
-      justify-content center
-      width _switchSize1
-      height _switchSize1
-      color rgba(255, 255, 255, .5)
-      background-color _color2
-      border-radius 50%
-      box-shadow 0 .2em .5em rgba(0, 0, 0, .3)
-      transition left .2s
-  &:focus-visible + label::after
-    border-color _color5
-  &:checked + label span:first-child
-    left _switchSize1
-  &:checked + label span:first-child svg:nth-child(2) // @note Non équivalent à :last-child car il peut y avoir un seul SVG, last-child reprendrait l'unique SVG.
-  &:not(:checked) + label span:first-child svg:first-child
-    display none
-  & + label span:first-child svg
-    fill _colorT
-    width round(_switchSize1 * .6, 2)
-    height round(_switchSize1 * .6, 2)
-  &:disabled + label
-    color _checkboxColor2
-    cursor not-allowed
-    &::after
-      background-image repeating-linear-gradient(-45deg, _switchColor5 0 _switchSize2, _switchColor5 0, transparent 0, transparent _switchSize2 * 2)
-    & span:first-child
-      background-color _colorG
-      & svg
-        fill _checkboxColor2
-
-/*
-:root // for .switch-bg
-  --switchTrue embedurl('/medias/icons/checkmark-color.svg')
-  --switchFalse ''
-
-.switch-bg
-  position absolute // @note Label des éléments frères décalés si déclaration en relatif
-  left -200vw
-  & + label
-    position relative
-    display inline-block // @note Évite une action involontaire de l'utilisateur sur un clic car le label prend la règle 'width:100%' si 'display:block'
-    padding-left 'calc(%s + 1rem)' % round(_switchSize1 * 2, 2) // @note L'unité rem évite des marges trop importantes avec la classe utilitaire .zoom
-    &::before
-    &::after
-      content ''
-      position absolute
-      left 0
-    &::before
-      height _switchSize1
-      width _switchSize1 * 2
-      background-color _colorG - 30%
-      border .1em solid transparent
-      border-radius _switchSize1
-      box-shadow inset 0 .2em .5em rgba(0, 0, 0, .2)
-    &::after
-      top 0 // @note Fixe le pseudo-élément si label sur plusieurs lignes.
-      left 0
-      width _switchSize1
-      height _switchSize1
-      color rgba(255, 255, 255, .5)
-      background-color _color2
-      background-image var(--switchFalse)
-      background-repeat no-repeat
-      background-size round(_switchSize1 * .6, 2) round(_switchSize1 * .6, 2)
-      background-position round(_switchSize1 / 5.2, 2) round(_switchSize1 / 5.2, 2)
-      border-radius 50%
-      box-shadow 0 .2em .5em rgba(0, 0, 0, .3)
-      transition left .2s
-      //content var(--switchFalse)
-  &:checked + label::after
-    left _switchSize1
-    background-image var(--switchTrue)
-    //filter invert(100%)
-  &:focus-visible + label::before
-    border-color _color5
-  &:disabled + label
-    color _checkboxColor2
-    cursor not-allowed
-    &::before
-      background-image repeating-linear-gradient(-45deg, _switchColor5 0 _switchSize2, _switchColor5 0, transparent 0, transparent _switchSize2 * 2)
-    &::after
-      background-color _colorG
 */

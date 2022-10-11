@@ -1887,148 +1887,78 @@ form > [class*="grid"] > .input {
   cursor: not-allowed;
   background: #2e2e2e repeating-linear-gradient(-45deg, transparent 0 2px, #555 2px 4px);
 }
-.switch-unicode {
-  position: absolute;
-  left: -200vw;
-}
-.switch-unicode + label {
-  position: relative;
-  display: inline-block;
-  margin: 1em 0;
-  padding-left: calc(5.4em + 1rem);
-}
-.switch-unicode + label::before {
-  content: '';
-  position: absolute;
-  top: -0.6em;
-  left: 0;
-  height: 2.6em;
-  width: 5.5em;
-  background-color: #282828;
-  border: 0.1em solid transparent;
-  border-radius: 0.4em;
-  box-shadow: inset 0 0.2em 0.5em rgba(0,0,0,0.2);
-}
-.switch-unicode + label::after {
-  content: '';
-  position: absolute;
-  top: -0.5em;
-  left: 0.1em;
-  width: 2.4em;
-  height: 2.4em;
-  background-color: #ff6347;
-  border-radius: 0.2em;
-  box-shadow: 0 0.2em 0.5em rgba(0,0,0,0.3);
-  transition: left 0.2s;
-}
-.switch-unicode[type=radio] + label::before {
-  border-radius: 2em;
-}
-.switch-unicode[type=radio] + label::after {
-  border-radius: 50%;
-}
-.switch-unicode:checked + label::after {
-  left: 3em;
-}
-.switch-unicode:focus-visible + label::before {
-  border-color: #ffa500;
-}
-.switch-unicode:disabled + label {
-  position: relative;
-  color: #777;
-  cursor: not-allowed;
-}
-.switch-unicode:disabled + label::before {
-  background-image: repeating-linear-gradient(-45deg, rgba(255,255,255,0.1) 0 3px, rgba(255,255,255,0.1) 0, transparent 0, transparent 6px);
-}
-.switch-unicode:disabled + label span::before {
-  color: #777 !important;
-}
-.switch-unicode:disabled + label::after {
-  background-color: #393939;
-}
-.switch-unicode:checked + label span,
-.switch-unicode + label span::before {
-  color: #e9dac5;
-}
-.switch-unicode + label span::before,
-.switch-unicode:checked + label span::after {
-  position: absolute;
-  top: 0;
-}
-.switch-unicode + label span::before {
-  content: attr(data-off);
-  left: 3.5em;
-}
-.switch-unicode:checked + label span::after {
-  content: attr(data-on);
-  left: 0.8em;
+* {
+  box-sizing: border-box;
 }
 .switch {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-bottom: 1em;
+}
+.switch input {
   position: absolute;
-  left: -200vw;
+  right: 200vw;
 }
-.switch + label {
-  position: relative;
-  display: inline-block;
-  margin: 0.25rem 0;
-  padding-left: calc(1.8em + 2rem);
-}
-.switch + label::after,
-.switch + label span:first-child {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-.switch + label::after {
-  content: '';
+.switch .switch-bg {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 2.4em;
   height: 1.2em;
-  background-color: #282828;
+  background-color: #2e2e2e;
   border: 0.1em solid transparent;
   border-radius: 1.2em;
   box-shadow: inset 0 0.2em 0.5em rgba(0,0,0,0.2);
 }
-.switch + label span:first-child {
+.switch .switch-toogle {
+  position: relative;
   z-index: 1;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 1.2em;
   height: 1.2em;
-  color: rgba(255,255,255,0.5);
   background-color: #ff6347;
   border-radius: 50%;
   box-shadow: 0 0.2em 0.5em rgba(0,0,0,0.3);
-  transition: left 0.2s;
+  transform: translateX(-0.6em);
+  transition: transform 0.2s ease-in-out;
 }
-.switch:focus-visible + label::after {
-  border-color: #ffa500;
-}
-.switch:checked + label span:first-child {
-  left: 1.2em;
-}
-.switch:checked + label span:first-child svg:nth-child(2),
-.switch:not(:checked) + label span:first-child svg:first-child {
-  display: none;
-}
-.switch + label span:first-child svg {
-  fill: #e9dac5;
+.switch .switch-toogle svg {
+  flex-shrink: 0;
+  display: block;
+  margin: auto;
   width: 0.72em;
   height: 0.72em;
+  fill: curentColor;
 }
-.switch:disabled + label {
-  color: #777;
+.switch :not(:checked) + .switch-bg .switch-toogle svg:nth-child(1) {
+  display: none;
+}
+.switch :checked + .switch-bg .switch-toogle {
+  transform: translateX(0.6em);
+}
+.switch :checked + .switch-bg .switch-toogle svg:nth-child(2) {
+  display: none;
+}
+.switch :disabled ~ * {
+  color: #616161;
   cursor: not-allowed;
 }
-.switch:disabled + label::after {
-  background-image: repeating-linear-gradient(-45deg, rgba(255,255,255,0.1) 0 3px, rgba(255,255,255,0.1) 0, transparent 0, transparent 6px);
+.switch :disabled + .switch-bg {
+  background-image: repeating-linear-gradient(-45deg, rgba(255,255,255,0.1) 0 3px, #2e2e2e 0, transparent 0, transparent 6px);
 }
-.switch:disabled + label span:first-child {
+.switch :disabled + .switch-bg .switch-toogle {
   background-color: #393939;
 }
-.switch:disabled + label span:first-child svg {
-  fill: #777;
+.switch-state .switch input:not(:checked) + .switch-bg .switch-toogle {
+  background-color: #a85418;
+}
+.switch-state .switch input:not(:checked) ~ * {
+  color: #616161;
 }
 .range {
   display: flex;
