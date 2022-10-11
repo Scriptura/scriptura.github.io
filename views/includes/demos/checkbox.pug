@@ -33,7 +33,7 @@ form(method='get' action='./').grid4.gap.media-l-grid2
     p
       code label.switch
     label.switch
-      input(type='checkbox')
+      input(type='checkbox' checked)
       span.switch-bg
         span.switch-toogle
           svg.icon(role='img' focusable='false')
@@ -72,7 +72,7 @@ form(method='get' action='./').grid4.gap.media-l-grid2
     p
       code .switch-state label.switch
     label.switch
-      input(type='checkbox')
+      input(type='checkbox' checked)
       span.switch-bg
         span.switch-toogle
           svg.icon(role='img' focusable='false')
@@ -256,4 +256,4 @@ form(method='get' action='./').grid4.gap.media-l-grid2
     p.message(role='alert')
       svg.icon(role='img' focusable='false')
         use(xlink:href='/sprites/utils.svg#paperclip')
-      | Le design d'un switch accessible à l'aide des seuls pseudo-éléments est tout à fait possible, nous l'avons fait à une époque. Mais cette solution rend la modularité du style parfois impossible. Le label n'étant pas indépendant du switch, son positionnement sera limité, des pseudo-éléments utilisants déjà background-image ne peuvent plus être texturés, l'effets "zoom" c font-size sera problématique.
+      | Le design d'un switch accessible à l'aide des seuls pseudo-éléments est tout à fait possible, nous l'avons fait à une époque. Mais cette solution rend la modularité du style parfois impossible. Le label n'étant pas indépendant du switch, son positionnement sera limité, des pseudo-éléments utilisants déjà background-image ne peuvent plus être texturés, l'effets "zoom" à l'aide de la propriété font-size sera problématique.
