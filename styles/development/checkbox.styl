@@ -135,7 +135,7 @@ _switchSize2 = 3px
   & [type=radio]:checked ~ *
     cursor not-allowed
 
-.switch-state .switch input:not(:checked):not(:disabled)
+:not(.switch-dual-state) > .switch input:not(:checked):not(:disabled)
   & ~ *
     color grayscale(_color6) + 30%
   & + .switch-bg .switch-toogle

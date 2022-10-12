@@ -1957,10 +1957,10 @@ form > [class*="grid"] > .input {
 .switch [type=radio]:checked ~ * {
   cursor: not-allowed;
 }
-.switch-state .switch input:not(:checked):not(:disabled) ~ * {
+:not(.switch-dual-state) > .switch input:not(:checked):not(:disabled) ~ * {
   color: #939393;
 }
-.switch-state .switch input:not(:checked):not(:disabled) + .switch-bg .switch-toogle {
+:not(.switch-dual-state) > .switch input:not(:checked):not(:disabled) + .switch-bg .switch-toogle {
   color: #979797;
   background-color: #4e667a;
 }
