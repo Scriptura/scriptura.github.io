@@ -928,6 +928,93 @@ ol ol ol {
   -webkit-animation: animList 0.05s ease-in-out;
           animation: animList 0.05s ease-in-out;
 }
+.list-straight,
+.list-rounded {
+  padding: 0;
+  color: #000;
+}
+.list-straight > li,
+.list-rounded > li {
+  display: flex;
+  counter-increment: li;
+}
+.list-straight > li a,
+.list-rounded > li a,
+.list-straight > li::before,
+.list-rounded > li::before {
+  box-shadow: 0.5rem 0.5rem 2rem rgba(0,0,0,0.1);
+}
+.list-straight > li a,
+.list-rounded > li a {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 2.5em;
+  padding: 0.5em 1em;
+  color: #d2b48c;
+  background-color: #393939;
+}
+.list-straight > li a:focus,
+.list-rounded > li a:focus,
+.list-straight > li a:hover,
+.list-rounded > li a:hover,
+.list-straight > li a:active,
+.list-rounded > li a:active {
+  color: #fff;
+}
+.list-straight > li::before,
+.list-rounded > li::before {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  content: counter(li);
+  color: #fff;
+  background-color: #ff6347;
+}
+.list-straight li {
+  position: relative;
+}
+.list-straight li a {
+  position: absolute;
+  right: 0;
+  width: calc(100% - 2.5em);
+  padding-left: 1.5em;
+  -webkit-clip-path: polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%);
+          clip-path: polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%);
+}
+.list-straight li::before {
+  width: 3em;
+  min-height: 2.5em;
+  padding-right: 0.5em;
+  -webkit-clip-path: polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%);
+          clip-path: polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%);
+}
+.list-rounded a {
+  border-radius: 1.25em;
+}
+.list-rounded > ::before {
+  border-radius: 50%;
+}
+.list-rounded li::before {
+  width: 2.5em;
+  height: 2.5em;
+  transition: transform 0.3s ease-in-out;
+}
+.list-rounded li:focus::before,
+.list-rounded li:hover::before,
+.list-rounded li:active::before {
+  transform: rotate(360deg);
+}
+[class^=grid].list-straight {
+  gap: 0.5em 1em;
+}
+[class^=grid].list-rounded {
+  gap: 0.5em 1em;
+}
+[class^=grid].list-rounded > * {
+  gap: 0.5em;
+}
 @-webkit-keyframes animList {
   to {
     transform: scale(1.03) translateZ(0);

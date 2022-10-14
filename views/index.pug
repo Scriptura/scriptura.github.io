@@ -12,7 +12,7 @@ block variables
 mixin list(name, slug)
   li
     a(href='/page/' + slug + '.html')
-      svg.icon(role='img' focusable='false')
+      //-svg.icon(role='img' focusable='false')
         use(xlink:href='/sprites/utils.svg#link')
       | #{name}
 
@@ -40,7 +40,7 @@ block main
       svg.size25.decorative-svg(role='img' focusable='false')
         use(xlink:href='/sprites/silos/195v.svg#1')
   hr
-  ul.list-stripe-links.grid4
+  ul.grid4.list-straight
     +list('Style Guide', 'styleGuide')
     +list('Typography', 'typography')
     +list('Languages', 'languages')

@@ -43,3 +43,85 @@ ol ol ol
 @keyframes animList
   to
     transform scale(1.03) translateZ(0)
+
+_listSize = 2.5em
+_listColor = #ff6347 // Tomato
+_listColor2 = #d2b48c //#e9dac5
+_listColor3 = #393939
+
+.list-straight
+.list-rounded
+  padding 0
+  color #000
+  & > li
+    display flex
+    //align-items center
+    //-content center
+    //gap 5em
+    counter-increment li
+    a
+    &::before
+      box-shadow .5rem .5rem 2rem rgba(0, 0, 0, .1)
+    a
+      display flex
+      align-items center
+      //align-content center
+      width 100%
+      min-height _listSize
+      padding .5em 1em
+      color _listColor2
+      background-color _listColor3
+      &:focus
+      &:hover
+      &:active
+        color #fff
+    &::before
+      flex-shrink 0
+      display flex
+      align-items center
+      justify-content center
+      //text-align center
+      //line-height _listSize
+      content counter(li)
+      color #fff
+      background-color tomato
+
+.list-straight
+  li
+    position relative
+    //background-color orange
+    a
+      position absolute
+      right 0
+      width calc(100% - 2.5em)
+      padding-left 1.5em
+      clip-path polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%)
+      //transform translateX(-.5em)
+    &::before
+      width _listSize + .5
+      min-height _listSize
+      padding-right .5em
+      clip-path polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%)
+
+.list-rounded
+  a
+    border-radius round(_listSize / 2, 2)
+  & > ::before
+    border-radius 50%
+  li
+    &::before
+      width _listSize
+      height _listSize
+      transition transform .3s ease-in-out
+    &:focus::before
+    &:hover::before
+    &:active::before
+      transform rotate(360deg)
+
+[class^=grid].list-straight
+  gap .5em 1em
+
+[class^=grid].list-rounded
+  gap .5em 1em
+  > *
+    gap .5em
