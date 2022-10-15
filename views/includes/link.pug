@@ -1,15 +1,34 @@
-ul.grid3.list-straight
+mixin list(icon, name, slug)
   li
-    a(href='/page/person.html') Person page
-  li
-    a(href='/page/article.html') Article page
-  li
-    a(href='/page/place.html') Place page
-  li
-    a(href='/page/imageGallery.html') Image gallery
-  li
-    a(href='/page/styleGuide.html') Style Guide
-  li
+    svg.icon(role='img' focusable='false')
+      use(xlink:href='/sprites/solid.svg#' + icon)
+    a(href='/page/' + slug + '.html') #{name}
+
+ul.grid4.list-straight
+  +list('paint-roller', 'Style Guide', 'styleGuide')
+  +list('pen-fancy', 'Typography', 'typography')
+  +list('language', 'Languages', 'languages')
+  +list('list-ul', 'Lists', 'lists')
+  +list('indent', 'Details/Summary', 'detailsSummary')
+  +list('folder', 'Tabs', 'tabs')
+  +list('square-caret-down', 'Accordions', 'accordions')
+  +list('message', 'Message Boxes', 'messageBoxes')
+  +list('code', 'Code Blocks', 'codeBlocks')
+  +list('table', 'Tables', 'tables')
+  +list('image', 'Images', 'images')
+  +list('vault', 'Audio & video players', 'players')
+  +list('table-list', 'Forms', 'forms')
+  +list('check', 'Checkboxes, radios & switches', 'checkboxes')
+  +list('sliders', 'Ranges', 'ranges')
+  +list('tablet-button', 'Buttons', 'buttons')
+  +list('bars-progress', 'Progress Bars', 'progressBars')
+  +list('spinner', 'Loaders', 'loaders')
+  +list('address-card', 'Cards', 'cards')
+  +list('ribbon', 'Ribbons', 'ribbons')
+  +list('table-cells', 'Grids', 'grids')
+  +list('table-columns', 'Columns', 'columns')
+  +list('magnifying-glass', 'Zooms', 'zooms')
+  +list('map-location-dot', 'Maps', 'maps')
+
+  //-li
     a(href='/styles/expanded/main.css' target='_blank') Styles expanded
-  li
-    a(href='//github.com/Scriptura/scriptura.github.io') Scriptura on Github

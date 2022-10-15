@@ -1,6 +1,9 @@
-_listsColor1 = _colorG + 7%
-_listsColor2 = _color2
-_listsColor3 = _colorT
+_listSize = 2.5em
+_listColor = _color2
+_listColor2 = _colorT2
+_listColor3 = #393939
+_listColor4 = _colorT
+_listColor5 = _colorG + 7%
 
 ul
   list-style-type square
@@ -25,17 +28,17 @@ ol ol ol
 
 [class^=list-stripe] > *
   padding .5em 1em
-  background-color _listsColor1
+  background-color _listColor5
   box-shadow _shadow14
 
 .list-stripe-links
   & a
     display block
-    color _listsColor3 //inherit
+    color _listColor4 //inherit
     text-decoration none
   & li:focus-within
   & li:hover
-    background-color _listsColor2
+    background-color _listColor
     box-shadow _shadow15
     outline none
     animation animList .05s ease-in-out
@@ -44,6 +47,97 @@ ol ol ol
   to
     transform scale(1.03) translateZ(0)
 
+// ----------------------------------------------------------------------------------
+
+ul.list-straight
+ul.list-rounded
+  padding 0
+  color #000
+  > li
+    display flex
+    counter-increment li
+    svg
+    a
+      box-shadow .5rem .5rem 2rem rgba(0, 0, 0, .1)
+      transition color, background-color .3s ease-in-out
+    a
+      display flex
+      align-items center
+      //align-content center
+      width 100%
+      min-height _listSize
+      padding .5em 1em
+      //color _listColor4
+      background-color _listColor3
+      &:focus
+      &:hover
+      &:active
+        color #fff
+        background-color _listColor
+        text-decoration none
+    svg
+      flex-shrink 0
+      display flex
+      align-items center
+      justify-content center
+      //text-align center
+      //line-height _listSize
+      content counter(li)
+      color _listColor4
+      background-color _listColor //tomato
+    //&:focus
+    //&:hover
+    //&:active
+      //animation animList .05s ease-in-out
+    &:focus-within svg
+    &:hover svg
+    &:active svg
+      color #fff
+      background-color _color5
+      //transform scale(1.2) translateZ(0)
+
+ul.list-straight
+  li
+    position relative
+    a
+      position absolute
+      right 0
+      width calc(100% - 2.5em)
+      padding-left 1.5em
+      clip-path polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%)
+    svg
+      width _listSize + .5
+      min-height _listSize
+      padding .7em .7em .7em .2em
+      clip-path polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%)
+
+ul.list-rounded
+  a
+    //mask-image url(https://scriptura.github.io/medias/images/moons/0.svg)
+    //mask-size _listSize _listSize
+    //mask-repeat no-repeat
+    //mask-position center
+    border-radius round(_listSize / 2, 2)
+  & svg
+    border-radius 50%
+  li
+    svg
+      width _listSize
+      height _listSize
+      padding .6em
+      transition transform .3s ease-in-out
+    &:focus svg
+    &:hover svg
+    &:active svg
+      transform rotate(360deg)
+
+[class^=grid].list-straight
+  gap .5em 1em
+
+[class^=grid].list-rounded
+  gap .5em 1em
+
+/*
 _listSize = 2.5em
 _listColor = #ff6347 // Tomato
 _listColor2 = #d2b48c //#e9dac5
@@ -125,3 +219,4 @@ _listColor3 = #393939
   gap .5em 1em
   > *
     gap .5em
+*/

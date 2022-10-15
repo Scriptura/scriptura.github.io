@@ -9,13 +9,6 @@ block variables
       _description: 'Scriptura est un framework front-end léger dont le but est de simplifier la mise en page.'
     }
 
-mixin list(name, slug)
-  li
-    a(href='/page/' + slug + '.html')
-      //-svg.icon(role='img' focusable='false')
-        use(xlink:href='/sprites/utils.svg#link')
-      | #{name}
-
 block main
   h1.main-heading!= data._name
   .grid2.gap
@@ -27,7 +20,7 @@ block main
       p
         | Scriptura est un framework front-end léger dont le but est de simplifier la mise en page. Ici, pas d'ajout supperflu de balises html dans les pages web dans le but de soutenir un script ou un effet visuel, la priorité est donnée au contenu, le code html reste propre et respecte la logique du flux des données.
       p
-        | L'idée est de partir d'un texte correctement structuré et de l'entourer d'un élément parent comportant une classe. La partie du document ainsi ciblée sera transformée en menu onglets ou accordéon, ou encore autre chose selon les besoins. Pour voir des exemples consultez notre 
+        | L'idée est de partir d'éléments html correctement structurés et de leur ajouter une classe, ou de les entourer d'un élément parent comportant une classe. La partie du document ainsi ciblée sera transformée en menu onglets ou accordéon, ou encore autre chose selon les besoins. Pour voir des exemples consultez notre 
         a(href='/page/styleGuide.html') StyleGuide
         | .
       p
@@ -40,28 +33,4 @@ block main
       svg.size25.decorative-svg(role='img' focusable='false')
         use(xlink:href='/sprites/silos/195v.svg#1')
   hr
-  ul.grid4.list-straight
-    +list('Style Guide', 'styleGuide')
-    +list('Typography', 'typography')
-    +list('Languages', 'languages')
-    +list('Lists', 'lists')
-    +list('Details/Summary', 'detailsSummary')
-    +list('Tabs', 'tabs')
-    +list('Accordions', 'accordions')
-    +list('Message Boxes', 'messageBoxes')
-    +list('Code Blocks', 'codeBlocks')
-    +list('Tables', 'tables')
-    +list('Images', 'images')
-    +list('Audio & video players', 'players')
-    +list('Forms', 'forms')
-    +list('Checkboxes, radios & switches', 'checkboxes')
-    +list('Ranges', 'ranges')
-    +list('Buttons', 'buttons')
-    +list('Progress Bars', 'progressBars')
-    +list('Loaders', 'loaders')
-    +list('Cards', 'cards')
-    +list('Ribbons', 'ribbons')
-    +list('Grids', 'grids')
-    +list('Columns', 'columns')
-    +list('Zooms', 'zooms')
-    +list('Maps', 'maps')
+  include includes/link

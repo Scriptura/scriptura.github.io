@@ -928,54 +928,65 @@ ol ol ol {
   -webkit-animation: animList 0.05s ease-in-out;
           animation: animList 0.05s ease-in-out;
 }
-.list-straight,
-.list-rounded {
+ul.list-straight,
+ul.list-rounded {
   padding: 0;
   color: #000;
 }
-.list-straight > li,
-.list-rounded > li {
+ul.list-straight > li,
+ul.list-rounded > li {
   display: flex;
   counter-increment: li;
 }
-.list-straight > li a,
-.list-rounded > li a,
-.list-straight > li::before,
-.list-rounded > li::before {
+ul.list-straight > li svg,
+ul.list-rounded > li svg,
+ul.list-straight > li a,
+ul.list-rounded > li a {
   box-shadow: 0.5rem 0.5rem 2rem rgba(0,0,0,0.1);
+  transition: color, background-color 0.3s ease-in-out;
 }
-.list-straight > li a,
-.list-rounded > li a {
+ul.list-straight > li a,
+ul.list-rounded > li a {
   display: flex;
   align-items: center;
   width: 100%;
   min-height: 2.5em;
   padding: 0.5em 1em;
-  color: #d2b48c;
   background-color: #393939;
 }
-.list-straight > li a:focus,
-.list-rounded > li a:focus,
-.list-straight > li a:hover,
-.list-rounded > li a:hover,
-.list-straight > li a:active,
-.list-rounded > li a:active {
+ul.list-straight > li a:focus,
+ul.list-rounded > li a:focus,
+ul.list-straight > li a:hover,
+ul.list-rounded > li a:hover,
+ul.list-straight > li a:active,
+ul.list-rounded > li a:active {
   color: #fff;
+  background-color: #ff6347;
+  text-decoration: none;
 }
-.list-straight > li::before,
-.list-rounded > li::before {
+ul.list-straight > li svg,
+ul.list-rounded > li svg {
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   content: counter(li);
-  color: #fff;
+  color: #e9dac5;
   background-color: #ff6347;
 }
-.list-straight li {
+ul.list-straight > li:focus-within svg,
+ul.list-rounded > li:focus-within svg,
+ul.list-straight > li:hover svg,
+ul.list-rounded > li:hover svg,
+ul.list-straight > li:active svg,
+ul.list-rounded > li:active svg {
+  color: #fff;
+  background-color: #ffa500;
+}
+ul.list-straight li {
   position: relative;
 }
-.list-straight li a {
+ul.list-straight li a {
   position: absolute;
   right: 0;
   width: calc(100% - 2.5em);
@@ -983,27 +994,28 @@ ol ol ol {
   -webkit-clip-path: polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%);
           clip-path: polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%);
 }
-.list-straight li::before {
+ul.list-straight li svg {
   width: 3em;
   min-height: 2.5em;
-  padding-right: 0.5em;
+  padding: 0.7em 0.7em 0.7em 0.2em;
   -webkit-clip-path: polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%);
           clip-path: polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%);
 }
-.list-rounded a {
+ul.list-rounded a {
   border-radius: 1.25em;
 }
-.list-rounded > ::before {
+ul.list-rounded svg {
   border-radius: 50%;
 }
-.list-rounded li::before {
+ul.list-rounded li svg {
   width: 2.5em;
   height: 2.5em;
+  padding: 0.6em;
   transition: transform 0.3s ease-in-out;
 }
-.list-rounded li:focus::before,
-.list-rounded li:hover::before,
-.list-rounded li:active::before {
+ul.list-rounded li:focus svg,
+ul.list-rounded li:hover svg,
+ul.list-rounded li:active svg {
   transform: rotate(360deg);
 }
 [class^=grid].list-straight {
@@ -1011,9 +1023,6 @@ ol ol ol {
 }
 [class^=grid].list-rounded {
   gap: 0.5em 1em;
-}
-[class^=grid].list-rounded > * {
-  gap: 0.5em;
 }
 @-webkit-keyframes animList {
   to {

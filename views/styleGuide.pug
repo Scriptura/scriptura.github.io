@@ -4,12 +4,11 @@ block variables
   - const documentType = 'styleGuide'
   - const data = {_name: 'Style Guide <span>.&nbsp;Documentation</span>', _title: 'Style Guide . Scritpura framework', _description: 'Style Guide . Scritpura framework' }
 
-mixin list(name, slug)
+mixin list(icon, name, slug)
   li
-    a(href='#section-' + slug)
-      //-svg.icon(role='img' focusable='false')
-        use(xlink:href='/sprites/solid.svg#arrow-down')
-      | #{name}
+    svg.icon(role='img' focusable='false')
+      use(xlink:href='/sprites/solid.svg#' + icon)
+    a(href='#section-' + slug) #{name}
 
 mixin section(name, slug)
   section(id='section-' + slug).ribbon-hook
@@ -23,29 +22,29 @@ block main
   h1.main-heading!= data._name
   br
   ul.grid4.list-straight
-    +list('Typography', 'typography')
-    +list('Languages', 'languages')
-    +list('Lists', 'lists')
-    +list('Details/Summary', 'detailsSummary')
-    +list('Tabs', 'tabs')
-    +list('Accordions', 'accordions')
-    +list('Message Boxes', 'messageBoxes')
-    +list('Code Blocks', 'codeBlocks')
-    +list('Tables', 'tables')
-    +list('Images', 'images')
-    +list('Audio & video players', 'players')
-    +list('Forms', 'forms')
-    +list('Checkboxes & Radio buttons', 'checkboxes')
-    +list('Ranges', 'ranges')
-    +list('Buttons', 'buttons')
-    +list('Progress Bars', 'progressBars')
-    +list('Loaders', 'loaders')
-    +list('Cards', 'cards')
-    +list('Ribbons', 'ribbons')
-    +list('Grids', 'grids')
-    +list('Columns', 'columns')
-    +list('Zooms', 'zooms')
-    +list('Maps', 'maps')
+    +list('pen-fancy', 'Typography', 'typography')
+    +list('language', 'Languages', 'languages')
+    +list('list-ul', 'Lists', 'lists')
+    +list('indent', 'Details/Summary', 'detailsSummary')
+    +list('folder', 'Tabs', 'tabs')
+    +list('square-caret-down', 'Accordions', 'accordions')
+    +list('message', 'Message Boxes', 'messageBoxes')
+    +list('code', 'Code Blocks', 'codeBlocks')
+    +list('table', 'Tables', 'tables')
+    +list('image', 'Images', 'images')
+    +list('vault', 'Audio & video players', 'players')
+    +list('table-list', 'Forms', 'forms')
+    +list('check', 'Checkboxes, radios & switches', 'checkboxes')
+    +list('sliders', 'Ranges', 'ranges')
+    +list('tablet-button', 'Buttons', 'buttons')
+    +list('bars-progress', 'Progress Bars', 'progressBars')
+    +list('spinner', 'Loaders', 'loaders')
+    +list('address-card', 'Cards', 'cards')
+    +list('ribbon', 'Ribbons', 'ribbons')
+    +list('table-cells', 'Grids', 'grids')
+    +list('table-columns', 'Columns', 'columns')
+    +list('magnifying-glass', 'Zooms', 'zooms')
+    +list('map-location-dot', 'Maps', 'maps')
   br
   hr
   //-
