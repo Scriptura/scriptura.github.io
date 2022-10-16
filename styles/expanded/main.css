@@ -1140,7 +1140,6 @@ svg {
   height: 1.2em;
   width: 1.2em;
   margin-right: 0.5em;
-  fill: curentColor;
 }
 img {
   vertical-align: middle;
@@ -2082,7 +2081,7 @@ form > [class*="grid"] > .input {
   display: flex;
   align-items: center;
   gap: 1em;
-  margin-top: 1em;
+  margin-top: 0.2em;
 }
 .switch input {
   position: absolute;
