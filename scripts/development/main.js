@@ -381,6 +381,20 @@ const progressBar = (() => {
   })
 })()
 
+const progressBarTest = (() => {
+  const cmd = document.querySelector('#progress-test-cmd'),
+        target = document.querySelector('#progress-test-target')
+  cmd.addEventListener('click', () => {
+    let value = target.dataset.value
+    setInterval(frame, 20)
+        function frame() {
+        if ( value < 100 ) {
+          value++
+          target.querySelector('div').style.width = value + '%'
+        }
+      }
+  }, false)
+})()
 
 // -----------------------------------------------------------------------------
 // @section     Postponed footnotes
