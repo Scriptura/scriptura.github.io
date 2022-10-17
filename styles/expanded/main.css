@@ -952,7 +952,7 @@ ul.list-rounded > li a {
   width: 100%;
   min-height: 2.5em;
   padding: 0.5em 1em;
-  background-color: #393939;
+  background-color: #474747;
 }
 ul.list-straight > li a:focus,
 ul.list-rounded > li a:focus,
@@ -1041,7 +1041,7 @@ ol.list-rounded > li a {
   width: 100%;
   min-height: 2.5em;
   padding: 0.5em 1em;
-  background-color: #393939;
+  background-color: #474747;
 }
 ol.list-straight > li a:focus,
 ol.list-rounded > li a:focus,
@@ -3123,6 +3123,10 @@ html,
 [class^=message]::before,
 [class*=demo-items] > *,
 [class*=list-stripe] > :not([class*=-links]),
+.list-straight li *,
+.list-straight li::before,
+.list-rounded li *,
+.list-rounded li::before,
 [class*=figure],
 .button,
 .round-button,

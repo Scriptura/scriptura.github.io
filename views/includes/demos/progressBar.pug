@@ -1,20 +1,21 @@
-p
-  code .progress-bar(data-value='0')
-.progress-bar(data-value='0')
-br
-p
-  code .progress-bar.zoom150(data-value='50')
-.progress-bar.zoom150(data-value='50')
-br
-p
-  code .progress-bar.zoom150(data-value='100' style='--progressBarColor:#4e667a')
-.progress-bar.zoom150(data-value='100' style='--progressBarColor:#4e667a')
-br
-p
-  code .progress-bar(data-value='0')
-.progress-bar.zoom150#progress-test-target(data-value='0')
-br
-button#progress-test-cmd.button(type='button') Test de 0 à 100%
+.grid2.gap
+  div
+    p
+      code .progress-bar(data-value='0')
+    .progress-bar(data-value='0')
+    br
+    p
+      code .zoom150(data-value='50')
+    .progress-bar.zoom150(data-value='50')
+    br
+    p
+      code style='--progressBarColor:#4e667a'
+    .progress-bar.zoom150(data-value='100' style='--progressBarColor:#4e667a')
+  div
+    h2 Test
+    .progress-bar.zoom150#progress-test-target(data-value='0')
+    br
+    button#progress-test-cmd.button(type='button') Test de 0 à 100%
 //-p
     code progress
   progress(max='100', value='50')
