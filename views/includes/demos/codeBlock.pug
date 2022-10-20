@@ -1,4 +1,4 @@
-.grid2.gap.masonry
+.grid2.media-s-grid1.gap.masonry
   div
     p
       code pre.pre > code
@@ -11,7 +11,7 @@
        (..)(..)
   div
     p
-      code pre.pre > code(data-select)
+      code code(data-select)
     pre.pre
       code(translate='no' data-select='Select and copy').
          OxxO
@@ -21,22 +21,22 @@
        (..)(..)
   div
     p
-      code pre.pre > code:empty
-    pre.pre
-      code(translate='no')
-  div
-    p
-      code pre.pre > code(data-select):empty
-    pre.pre
-      code(translate='no' data-select='Select and copy')
-  div
-    p
-      code pre.pre > code(data-select)
+      code code(data-select)
     pre.pre
       code(translate='no' data-select='Select and copy') Single line content
   div
     p
-      code pre.pre > code(data-code='HTML' data-select)
+      code code:empty
+    pre.pre
+      code(translate='no')
+  div
+    p
+      code code(data-select):empty
+    pre.pre
+      code(translate='no' data-select='Select and copy')
+  div
+    p
+      code code(data-code='HTML')
     -
       const htmlTest = `<!DOCTYPE html>
       <!-- a comment... -->

@@ -805,6 +805,7 @@ samp {
   background-color: #282828;
 }
 .pre {
+  overflow: hidden;
   position: relative;
   min-height: 3em;
   padding: 1em;
@@ -813,13 +814,17 @@ samp {
   box-shadow: 0 0 2rem rgba(0,0,0,0.3);
 }
 .pre code {
+  white-space: pre;
+  word-spacing: normal;
+}
+.pre code word-break normal {
   color: #e9dac5;
   transition: color 0.5s ease-in-out;
 }
-.pre code:focus-within {
+.pre code word-break normal:focus-within {
   color: #fff;
 }
-.pre code:empty::after {
+.pre code word-break normal:empty::after {
   content: '# no content...';
 }
 .pre div {

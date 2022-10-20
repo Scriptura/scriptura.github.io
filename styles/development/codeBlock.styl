@@ -21,13 +21,17 @@ samp
 // @note Pas de style par défaut pour la balise `pre`
 
 .pre
+  overflow auto
   position relative
-  min-height 3em // @note Si pas de contenu. Remplacé par .pre code:empty::after
+  min-height 3em // @note Si pas de contenu, remplacé par .pre code:empty::after
   padding 1em
   background-color _codeBlocksColor3
   border-radius _r2
   box-shadow _shadow1
   & code
+    white-space pre
+    //word-spacing normal
+    //word-break normal
     color _codeBlocksColor4
     transition color .5s ease-in-out
     &:focus-within
