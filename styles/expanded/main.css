@@ -973,6 +973,11 @@ ul.list-rounded > li svg {
   color: #e9dac5;
   background-color: #ff6347;
 }
+ul.list-straight > li svg *,
+ul.list-rounded > li svg * {
+  max-width: 1em;
+  max-height: 1em;
+}
 ul.list-straight > li:focus-within svg,
 ul.list-rounded > li:focus-within svg,
 ul.list-straight > li:hover svg,

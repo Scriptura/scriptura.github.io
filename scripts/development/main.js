@@ -56,6 +56,7 @@ const getScripts = (() => {
   if (document.querySelector('.input [type=password]')) getScript('/scripts/readablePassword.js')
   if (document.querySelector('[class*=add-line-marks]')) getScript('/scripts/lineMark.js')
   if (document.querySelector('[class*=map]')) getScript('/scripts/map.js')
+  if (document.querySelector('[class*=language-]')) getScript('/scripts/prism.js')
   if (document.querySelector('[class*=thumbnail-youtube]')) getScript('/scripts/youtubeVideo.js')
 })()
 
