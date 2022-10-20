@@ -38,8 +38,8 @@
     p
       code pre.pre > code(data-code='HTML' data-select)
     -
-      const htmlTest = `<!-- html -->
-      <!DOCTYPE html>
+      const htmlTest = `<!DOCTYPE html>
+      <!-- a comment... -->
       <html>
         <head></head>
         <body>
@@ -55,8 +55,8 @@
       code.language-html(translate='no' data-code='HTML' data-select='Select and copy')= htmlTest
   div
     pre.pre
-      code.language-css(translate='no').
-        /* css */
+      code.language-css(data-code='CSS' translate='no' data-select='Select and copy').
+        /* a comment... */
         :root {
           color-scheme: dark;
         }
@@ -83,8 +83,8 @@
         }
   div
     pre.pre
-      code.language-js(translate='no').
-        // js
+      code.language-js(data-code='JS' translate='no' data-select='Select and copy').
+        // a comment...
         const startPage = (() => {
           const html = document.documentElement,
                 c = 'start-map'
@@ -97,8 +97,8 @@
         })()
   div
     pre.pre
-      code.language-stylus(translate='no').
-        // stylus
+      code.language-stylus(data-code='Stylus' translate='no' data-select='Select and copy').
+        // a comment...
         .accordion
           display flex
           flex-direction column
@@ -110,8 +110,8 @@
             width 100%
   div
     pre.pre
-      code.language-pug(translate='no' data-code='Pug').
-        // pug
+      code.language-pug(translate='no' data-code='Pug' data-select='Select and copy').
+        // a comment...
         ul.grid4.list-straight
           li
             svg.icon(role='img' focusable='false')

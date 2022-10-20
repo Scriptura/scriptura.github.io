@@ -6,8 +6,8 @@
  X oo X
  X >< X
   XXXX~<>
-(..)(..)</code></pre></div><div><p><code>pre.pre > code:empty</code></p><pre class="pre"><code translate="no"></code></pre></div><div><p><code>pre.pre > code(data-select):empty</code></p><pre class="pre"><code translate="no" data-select="Select and copy"></code></pre></div><div><p><code>pre.pre > code(data-select)</code></p><pre class="pre"><code translate="no" data-select="Select and copy">Single line content</code></pre></div><div><p><code>pre.pre > code(data-code='HTML' data-select)</code></p><pre class="pre"><code class="language-html" translate="no" data-code="HTML" data-select="Select and copy">&lt;!-- html --&gt;
-&lt;!DOCTYPE html&gt;
+(..)(..)</code></pre></div><div><p><code>pre.pre > code:empty</code></p><pre class="pre"><code translate="no"></code></pre></div><div><p><code>pre.pre > code(data-select):empty</code></p><pre class="pre"><code translate="no" data-select="Select and copy"></code></pre></div><div><p><code>pre.pre > code(data-select)</code></p><pre class="pre"><code translate="no" data-select="Select and copy">Single line content</code></pre></div><div><p><code>pre.pre > code(data-code='HTML' data-select)</code></p><pre class="pre"><code class="language-html" translate="no" data-code="HTML" data-select="Select and copy">&lt;!DOCTYPE html&gt;
+&lt;!-- a comment... --&gt;
 &lt;html&gt;
   &lt;head&gt;&lt;/head&gt;
   &lt;body&gt;
@@ -18,7 +18,7 @@
     &lt;aside&gt;&lt;/aside&gt;
     &lt;footer&gt;&lt;/footer&gt;
   &lt;/body&gt;
-&lt;/html&gt;</code></pre></div><div><pre class="pre"><code class="language-css" translate="no">/* css */
+&lt;/html&gt;</code></pre></div><div><pre class="pre"><code class="language-css" data-code="CSS" translate="no" data-select="Select and copy">/* a comment... */
 :root {
   color-scheme: dark;
 }
@@ -42,7 +42,7 @@ html {
   html {
     scroll-behavior: auto;
   }
-}</code></pre></div><div><pre class="pre"><code class="language-js" translate="no">// js
+}</code></pre></div><div><pre class="pre"><code class="language-js" data-code="JS" translate="no" data-select="Select and copy">// a comment...
 const startPage = (() => {
   const html = document.documentElement,
         c = 'start-map'
@@ -52,7 +52,7 @@ const startPage = (() => {
       html.classList.remove(c)
     }, 1500)
   })
-})()</code></pre></div><div><pre class="pre"><code class="language-stylus" translate="no">// stylus
+})()</code></pre></div><div><pre class="pre"><code class="language-stylus" data-code="Stylus" translate="no" data-select="Select and copy">// a comment...
 .accordion
   display flex
   flex-direction column
@@ -61,7 +61,7 @@ const startPage = (() => {
     box-sizing border-box
     display flex
     align-items center
-    width 100%</code></pre></div><div><pre class="pre"><code class="language-pug" translate="no" data-code="Pug">// pug
+    width 100%</code></pre></div><div><pre class="pre"><code class="language-pug" translate="no" data-code="Pug" data-select="Select and copy">// a comment...
 ul.grid4.list-straight
   li
     svg.icon(role='img' focusable='false')
