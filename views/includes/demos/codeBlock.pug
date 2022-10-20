@@ -1,4 +1,4 @@
-.grid2.gap
+.grid2.gap.masonry
   div
     p
       code pre.pre > code
@@ -37,16 +37,87 @@
   div
     p
       code pre.pre > code(data-code='HTML' data-select)
+    -
+      const htmlTest = `<!-- html -->
+      <!DOCTYPE html>
+      <html>
+        <head></head>
+        <body>
+          <header></header>
+          <main>
+            <article></article>
+          </main>
+          <aside></aside>
+          <footer></footer>
+        </body>
+      </html>`
     pre.pre
-      code.language-html(translate='no' data-code='HTML' data-select='Select and copy').
-        &lt;html&gt;
-        &lt;head&gt;&lt;/head&gt;
-        &lt;body&gt;
-          &lt;header&gt;&lt;/header&gt;
-          &lt;main&gt;
-            &lt;article&gt;&lt;/article&gt;
-          &lt;/main&gt;
-          &lt;aside&gt;&lt;/aside&gt;
-          &lt;footer&gt;&lt;/footer&gt;
-        &lt;/body&gt;
-        &lt;/html&gt;
+      code.language-html(translate='no' data-code='HTML' data-select='Select and copy')= htmlTest
+  div
+    pre.pre
+      code.language-css(translate='no').
+        /* css */
+        :root {
+          color-scheme: dark;
+        }
+
+        *,
+        *::before,
+        *::after {
+          box-sizing: border-box;
+        }
+
+        html {
+          -webkit-text-size-adjust: 100%;
+          color: #e9dac5;
+          background-color: #393939;
+          font-family: 'Noto Sans', sans-serif;
+          line-height: 1.5;
+          scroll-behavior: smooth;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          html {
+            scroll-behavior: auto;
+          }
+        }
+  div
+    pre.pre
+      code.language-js(translate='no').
+        // js
+        const startPage = (() => {
+          const html = document.documentElement,
+                c = 'start-map'
+          html.classList.add(c)
+          window.addEventListener('load', function() {
+            setTimeout(() => {
+              html.classList.remove(c)
+            }, 1500)
+          })
+        })()
+  div
+    pre.pre
+      code.language-stylus(translate='no').
+        // stylus
+        .accordion
+          display flex
+          flex-direction column
+          gap .5em 0
+          & > * > :first-child
+            box-sizing border-box
+            display flex
+            align-items center
+            width 100%
+  div
+    pre.pre
+      code.language-pug(translate='no' data-code='Pug').
+        // pug
+        ul.grid4.list-straight
+          li
+            svg.icon(role='img' focusable='false')
+              use(xlink:href='/svgs/compiled/svgs.20ea15c6.svg#edit')
+            a(href='#index') Artichauts
+          li
+            svg.icon(role='img' focusable='false')
+              use(xlink:href='/svgs/compiled/svgs.20ea15c6.svg#check')
+            a(href='#index') Carottes
