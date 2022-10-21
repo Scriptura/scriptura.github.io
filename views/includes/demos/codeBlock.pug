@@ -11,9 +11,9 @@
        (..)(..)
   div
     p
-      code code(data-select)
+      code code(data-select='Sélectionner et copier')
     pre.pre
-      code(translate='no' data-select='Select and copy').
+      code(translate='no' data-select='Sélectionner et copier').
          OxxO
         X oo X
         X >< X
@@ -23,7 +23,7 @@
     p
       code code(data-select)
     pre.pre
-      code(translate='no' data-select='Select and copy') Single line content
+      code(translate='no') Single line content
   div
     p
       code code:empty
@@ -31,32 +31,31 @@
       code(translate='no')
   div
     p
-      code code(data-select):empty
-    pre.pre
-      code(translate='no' data-select='Select and copy')
-  div
-    p
       code code(data-code='HTML')
     -
       const htmlTest = `<!DOCTYPE html>
       <!-- a comment... -->
-      <html>
-        <head></head>
+      <html lang="fr" class="no-js">
+        <head>
+          <meta charset="utf-8">
+          <title>a title</title>
+        </head>
         <body>
           <header></header>
           <main>
-            <article></article>
+            <article>a content</article>
           </main>
           <aside></aside>
           <footer></footer>
         </body>
       </html>`
     pre.pre
-      code.language-html(translate='no' data-code='HTML' data-select='Select and copy')= htmlTest
+      code.language-html(translate='no' data-code='HTML')= htmlTest
   div
     pre.pre
-      code.language-css(data-code='CSS' translate='no' data-select='Select and copy').
+      code.language-css(data-code='CSS' translate='no').
         /* a comment... */
+
         :root {
           color-scheme: dark;
         }
@@ -83,7 +82,7 @@
         }
   div
     pre.pre
-      code.language-js(data-code='JS' translate='no' data-select='Select and copy').
+      code.language-js(data-code='JS' translate='no').
         // a comment...
         const startPage = (() => {
           const html = document.documentElement,
@@ -97,7 +96,7 @@
         })()
   div
     pre.pre
-      code.language-stylus(data-code='Stylus' translate='no' data-select='Select and copy').
+      code.language-stylus(data-code='Stylus' translate='no').
         // a comment...
         .accordion
           display flex
@@ -110,14 +109,21 @@
             width 100%
   div
     pre.pre
-      code.language-pug(translate='no' data-code='Pug' data-select='Select and copy').
+      code.language-pug(translate='no' data-code='Pug').
         // a comment...
-        ul.grid4.list-straight
-          li
-            svg.icon(role='img' focusable='false')
-              use(xlink:href='/svgs/compiled/svgs.20ea15c6.svg#edit')
-            a(href='#index') Artichauts
-          li
-            svg.icon(role='img' focusable='false')
-              use(xlink:href='/svgs/compiled/svgs.20ea15c6.svg#check')
-            a(href='#index') Carottes
+
+        extends patternLayout
+
+        block variables
+          - const documentType = 'articles'
+
+        block main
+          h1.main-heading!= data._name
+          .column4.gap
+            each e in data
+              article.card
+                h2.h2!= e._name
+                a(href='/article/' + e._id)
+                  svg
+                    use(xlink:href='/sprites/utils.svg#test')
+                p!= e._description

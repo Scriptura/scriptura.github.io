@@ -105,6 +105,7 @@ h6,
   font-size: 1em;
 }
 pre {
+  margin: 0;
   font-family: monospace, monospace;
   font-size: 1em;
   line-height: 1.15;
@@ -805,7 +806,7 @@ samp {
   background-color: #282828;
 }
 .pre {
-  overflow: hidden;
+  overflow: auto;
   position: relative;
   min-height: 3em;
   padding: 1em;
@@ -815,17 +816,14 @@ samp {
 }
 .pre code {
   white-space: pre;
-  word-spacing: normal;
-}
-.pre code word-break normal {
   color: #e9dac5;
   transition: color 0.5s ease-in-out;
 }
-.pre code word-break normal:focus-within {
+.pre code:focus-within {
   color: #fff;
 }
-.pre code word-break normal:empty::after {
-  content: '# no content...';
+.pre code:empty::after {
+  content: '# ...';
 }
 .pre div {
   position: absolute;
@@ -840,11 +838,11 @@ samp {
   display: block;
   width: 1em;
   height: 1em;
-  fill: #d2b48c;
+  fill: currentColor;
 }
 .pre button {
   position: absolute;
-  bottom: 1em;
+  bottom: 1.1em;
   right: 1em;
   padding: 0;
   border: none;

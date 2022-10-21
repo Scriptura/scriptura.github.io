@@ -20,9 +20,9 @@ const selectText = node => {
 }
 
 const selectAndCopy = (() => {
-  document.querySelectorAll('[data-select]:not(:empty)').forEach(el => {
+  document.querySelectorAll('.pre > code:not(:empty)').forEach(el => {
     const button = document.createElement('button'),
-          text = el.dataset.select
+    text = el.dataset.select || 'Select and copy'
     button.type = 'button'
     if (el.offsetHeight < 30) button.classList.add('copy-offset')
     el.parentElement.appendChild(button)
