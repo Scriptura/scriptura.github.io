@@ -823,7 +823,7 @@ samp {
   color: #fff;
 }
 .pre code:empty::after {
-  content: '# ...';
+  content: '$ ...';
 }
 .pre div {
   position: absolute;
@@ -1107,7 +1107,6 @@ ol.list-rounded li::before {
   width: 2.5em;
   height: 2.5em;
   padding: 0.6em;
-  border-radius: 50%;
   transition: transform 0.3s ease-in-out;
 }
 ol.list-rounded li:focus::before,

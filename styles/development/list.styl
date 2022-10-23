@@ -3,6 +3,7 @@ _listColor = _color2
 _listColor2 = _colorT2
 _listColor3 = _colorG + 7%
 _listColor4 = _colorT
+_listShadow1 = .5rem .5rem 2rem rgba(0, 0, 0, .1)
 
 ul
   list-style-type square
@@ -57,7 +58,7 @@ ul.list-rounded
     counter-increment li
     svg
     a
-      box-shadow .5rem .5rem 2rem rgba(0, 0, 0, .1)
+      box-shadow _listShadow1
       transition color, background-color .3s ease-in-out
     a
       display flex
@@ -118,12 +119,14 @@ ul.list-rounded
     //mask-position center
     border-radius round(_listSize / 2, 2)
   & svg
-    border-radius 50%
+    //border-radius 50%
+    clip-path circle(50%)
+    //filter drop-shadow(_listShadow1)
   li
     svg
       width _listSize
       height _listSize
-      padding .6em
+      padding .7em
       transition transform .3s ease-in-out
     &:focus svg
     &:hover svg
@@ -141,7 +144,7 @@ ol.list-rounded
     counter-increment li
     &::before
     a
-      box-shadow .5rem .5rem 2rem rgba(0, 0, 0, .1)
+      box-shadow _listShadow1
       transition color, background-color .3s ease-in-out
     a
       display flex
@@ -208,8 +211,6 @@ ol.list-rounded
       transform rotate(360deg)
   a
     border-radius round(_listSize / 2, 2)
-
-
 
 [class^=grid].list-straight
   gap .5em 1em
