@@ -1,7 +1,7 @@
 mixin list(icon, name, slug)
   li
     svg.icon(role='img' focusable='false')
-      use(xlink:href='/sprites/solid.svg#' + icon)
+      use(href='/sprites/solid.svg#' + icon)
     a(href='#section-' + slug) #{name}
 
 .grid4.gap.gap-bottom
@@ -64,7 +64,7 @@ mixin list(icon, name, slug)
               li Noir
   .center.media-xs-hidden.media-l-hidden
     svg.size25.decorative-svg(role='img' focusable='false')
-      use(xlink:href='/sprites/silos/245v-d1.svg#1')
+      use(href='/sprites/silos/245v-d1.svg#1')
 .grid4.gap
   div
     p
@@ -79,7 +79,7 @@ mixin list(icon, name, slug)
       - for (let i = 1; i < 8; i++)
         li
           svg.icon(role='img' focusable='false')
-            use(xlink:href='/sprites/utils.svg#quill')
+            use(href='/sprites/utils.svg#quill')
           | List item #{i}
   div
     p
@@ -96,7 +96,7 @@ mixin list(icon, name, slug)
         li
           a(href='#')
             svg.icon(role='img' focusable='false')
-              use(xlink:href='/sprites/utils.svg#link')
+              use(href='/sprites/utils.svg#link')
             | List item #{i}
 div
   p

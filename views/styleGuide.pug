@@ -7,7 +7,7 @@ block variables
 mixin list(icon, name, slug)
   li
     svg.icon(role='img' focusable='false')
-      use(xlink:href='/sprites/solid.svg#' + icon)
+      use(href='/sprites/solid.svg#' + icon)
     a(href='#section-' + slug) #{name}
 
 mixin section(name, slug)

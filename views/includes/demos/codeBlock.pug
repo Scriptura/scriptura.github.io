@@ -2,23 +2,19 @@
   div
     p
       code pre.pre > code
-    pre.pre
-      code(translate='no').
-         OxxO
+    -
+      const codeTest = `   OxxO
         X oo X
         X >< X
          XXXX~<>
-       (..)(..)
+       (..)(..)`
+    pre.pre
+      code(translate='no')= codeTest
   div
     p
       code code(data-select='Sélectionner et copier')
     pre.pre
-      code(translate='no' data-select='Sélectionner et copier').
-         OxxO
-        X oo X
-        X >< X
-         XXXX~<>
-       (..)(..)
+      code(translate='no' data-select='Sélectionner et copier')= codeTest
   div
     p
       code code(data-select)
@@ -125,5 +121,5 @@
                 h2.h2!= e._name
                 a(href='/article/' + e._id)
                   svg
-                    use(xlink:href='/sprites/utils.svg#test')
+                    use(href='/sprites/utils.svg#test')
                 p!= e._description

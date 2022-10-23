@@ -1,7 +1,7 @@
 mixin list(icon, name, slug)
   li
     svg.icon(role='img' focusable='false')
-      use(xlink:href='/sprites/solid.svg#' + icon)
+      use(href='/sprites/solid.svg#' + icon)
     a(href='/page/' + slug + '.html') #{name}
 
 ul.grid4.list-straight

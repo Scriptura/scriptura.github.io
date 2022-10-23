@@ -34,18 +34,18 @@ block main
         if (data._moonPhase || data._moonPhase === 0)
           .center
             svg.size4(role='img' focusable='false')
-              use(xlink:href='/sprites/moons.svg#' + data._moonPhase)
+              use(href='/sprites/moons.svg#' + data._moonPhase)
       ul.list-stripe-links.grid2
         li
           a(href=data._previousPage)
             svg.icon(role='img' focusable='false')
-              use(xlink:href='/sprites/utils.svg#arrow-left')
+              use(href='/sprites/utils.svg#arrow-left')
             = data._previousPageInfo
         li(style='direction:rtl;text-align:right')
           a(href=data._nextPage)
             svg.icon(role='img' focusable='false' style='margin-right:0;margin-left:0.5em')
-              use(xlink:href='/sprites/utils.svg#arrow-right')
+              use(href='/sprites/utils.svg#arrow-right')
             = data._nextPageInfo
     .center
       svg.size25.decorative-svg(role='img' focusable='false')
-        use(xlink:href='/sprites/silos/182r-d1-1.1.svg#1')
+        use(href='/sprites/silos/182r-d1-1.1.svg#1')
