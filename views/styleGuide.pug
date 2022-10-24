@@ -15,8 +15,7 @@ mixin section(name, slug)
     h2= name
       a.anchor(href='#section-' + slug)
     a(href='./' + slug + '.html').ribbon-bottom-right
-      span Dedicated page
-      //-See page
+      span See page
     block
 
 block main
@@ -108,7 +107,7 @@ block main
   hr
   +section('Ribbons', 'ribbons')
     include includes/demos/ribbon
-    //- Pour inclure le ribbon dédié à la page en évitant les conflits avec le dernier ribbon de démonstration
+    //- @note Pour inclure le ribbon dédié à la page en évitant les conflits avec le dernier ribbon de la démonstration.
     br
     br
     br
