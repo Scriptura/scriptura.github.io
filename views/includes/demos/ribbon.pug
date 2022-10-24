@@ -1,55 +1,56 @@
-.grid3.gap.gap-bottom
-  .demo-item.ribbon-content.r2(style='min-height:15em')
-    .ribbon-top-left Top left
-    .ribbon-top-right Top right
-    .ribbon-bottom-left Bottom left
-    .ribbon-bottom-right Bottom right
-  .demo-item.ribbon-content
+.grid2.gap.gap-bottom
+  .demo-item.ribbon-content.center
     p
-      code .ribbon-content .ribbon-top-left
+      code .ribbon-top-left
     .ribbon-top-left Top left
-  .demo-item.ribbon-content
+  .demo-item.ribbon-content.center
     p
       code .ribbon-top-right
     .ribbon-top-right Top right
-  .demo-item.ribbon-content
+  .demo-item.ribbon-content.center.c2(style='min-height:15em')
+    p
+      code .ribbon-content > .ribbon-*
+    .ribbon-top-left Top left
+    .ribbon-top-right Top right
+    .ribbon-bottom-left Bottom left
+    .ribbon-bottom-right Bottom right
+  .demo-item.ribbon-content.center
     p
       code .ribbon-bottom-left
     .ribbon-bottom-left Bottom left
-  .demo-item.ribbon-content
+  .demo-item.ribbon-content.center
     p
       code .ribbon-bottom-right
     .ribbon-bottom-right Bottom right
-.center
-  svg.size16.decorative-svg(role='img' focusable='false')
-    use(href='/sprites/silos/145v-d1.svg#1')
-.grid3.gap.gap-bottom
-  .demo-item.ribbon-content.c2.r2(style='min-height:15em')
+hr(data-hr='✻ ✻ ✻')
+.grid2.gap.gap-bottom
+  .demo-item.ribbon-content.c2(style='min-height:15em')
     .ribbon-top-left Top left
     .ribbon-top-right Top right
     .ribbon-bottom-left
       span Bottom left
     .ribbon-bottom-right
       span Bottom right
-  .demo-item.ribbon-content
+  .demo-item.ribbon-content.center
     p
       code .ribbon-bottom-left span
     .ribbon-bottom-left
       span Bottom left
-  .demo-item.ribbon-content
+  .demo-item.ribbon-content.center
     p
       code .ribbon-bottom-right span
     .ribbon-bottom-right
       span Bottom right
-.center
-  svg.size16.decorative-svg.reverse(role='img' focusable='false')
-    use(href='/sprites/silos/145v-d1.svg#1')
+hr(data-hr='✻ ✻ ✻')
 .grid2.gap
-  .demo-item.ribbon-content
+  .demo-item.ribbon-content.center
     p
       code a.ribbon-top-right
     a(href='#').ribbon-top-right Top right
-  .demo-item.ribbon-content(style='min-height:12em')
+  .demo-item.ribbon-content.center(style='min-height:12em')
     p
       code .ribbon-top-right.zoom150
     .ribbon-top-right.zoom150 Top right
+//-.center
+  svg.size16.decorative-svg(role='img' focusable='false')
+    use(href='/sprites/silos/145v-d1.svg#1')
