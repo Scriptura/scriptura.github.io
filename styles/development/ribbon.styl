@@ -1,95 +1,66 @@
 // @bug @affected Chrome @note Effet de bord indésirables si utilisation avec la propriété column-count sur l'élément parent (sauf pour le premier item). 1/ Bandeau tronqué si placé sur un élément avec la propriété. 2/ Liens non cliquables si utilisation de clip-path.
 
-_ribbonsSize = 2
-_ribbonsSize2 = _ribbonsSize * 5em
-_ribbonsCornerSize = _ribbonsSize / 4 * 1em
-_ribbonsSewingStitchesSize = 2px
-_ribbonsSewingStitches = _ribbonsSewingStitchesSize dotted rgba(0, 0, 0, .3)
+_ribbonDottedSize = 2px
+_ribbonDotted = _ribbonDottedSize dotted rgba(0, 0, 0, .3)
+_ribbonColor1 = #ff6347
+_ribbonColor2 = _color5
 
-.ribbon-hook
+.ribbon-content
   position relative
-  min-height _ribbonsSize2 * .7 + _ribbonsCornerSize // @note Minimum de hauteur nécessaire pour contenir un ribbon (prise en compte de la diagonale + hauteur d'une cornière comme marge)
-  background-image linear-gradient(-135deg, rgba(255, 255, 255, .05) 0 0, transparent 8em 100%)
-
-.ribbon-hook > [class*=ribbon]
-  overflow hidden // @note Règle nécessaire pour éviter les effets de dépassement (barre de scroll horizontale)
-  position absolute
-  z-index 500 // @note Au cas où le ribbon est placé après le contenu de .ribbon-hook. @todo Valeur importante pour passer par dessus les .map, à évaluer.
-  top - _ribbonsCornerSize
-  right - _ribbonsCornerSize
-  width _ribbonsSize2 * .7 + _ribbonsCornerSize
-  height _ribbonsSize2 * .7 + _ribbonsCornerSize
-  & a
-    position relative
+  > [class*=ribbon]
+    position absolute
+    z-index 2000 // @note Au cas où le ribbon est placé après le contenu de .ribbon-hook. @todo Valeur importante pour passer par dessus les .map.
+    line-height 10em
+    //font-size 1.5em // zoom
     display block
-    top _ribbonsCornerSize
-    right _ribbonsSize2 * .3
-    width _ribbonsSize2
-    line-height _ribbonsSize
+    width 10em // @note Le choix d'un carré plutôt que d'un rectangle permet de mieux contrôler les déplacement avec transform et conduit à produire un clip-path plus simple que pour notre essai précédent.
+    height 10em
     text-align center
-    color _colorT
-    background _color2 'linear-gradient(to top, #555 calc(%s + 2px), rgba(0, 0, 0, .1) calc(%s + 2px), rgba(255, 255, 255, .05))' % (_ribbonsCornerSize _ribbonsCornerSize)
-    padding 0 0 _ribbonsCornerSize
-    box-shadow _shadow11 //0 .3em 1em -.5em rgba(0, 0, 0, 1)
-    transform-origin bottom left
-    transform translate(29.29%, -100%) rotate(45deg)
-    clip-path 'polygon(0 0, calc(100% - 1px) 0, calc(100% - 1px) calc(100% - 1px), calc(calc(100% - 1px) - %s) calc(calc(100% - 1px) - %s), %s calc(calc(100% - 1px) - %s) , 0 calc(100% - 1px))' % (_ribbonsCornerSize _ribbonsCornerSize _ribbonsCornerSize _ribbonsCornerSize) // @Bugfixed @affected All Browsers @note La valeur `-1px` supprime un effet de bord.
-    // @affected Firefox @note Le rendu n'est pas optimal sous ce navigateur avec ces styles.
-    -webkit-mask 'linear-gradient(135deg, transparent calc(50% - %s * 0.707),#fff 0) bottom left, linear-gradient(-135deg, transparent calc(50% - %s * 0.707), #fff 0) bottom right' % (_ribbonsCornerSize _ribbonsCornerSize)
-    -webkit-mask-size 100vmax 100vmax
-    -webkit-mask-composite destination-in
-    mask-composite intersect
+    text-decoration none
+    color #e9dac5
+    background-color _ribbonColor1
+    //border-top 0 solid Transparent
+    border-bottom 4em solid #555
+    clip-path polygon(80% 40%, 100% 60%, 100% 65%, 95% 60%, 5% 60%, 0% 65%, 0% 60%, 20% 40%)
+    transform rotate(-45deg) translateY(-3.55em)
+    //filter drop-shadow(0 0 2rem #000)
     &::before
     &::after
       content ''
       position absolute
       left 0
-      height _ribbonsSewingStitchesSize
       width 100%
+      height _ribbonDottedSize
+      border-top _ribbonDotted
     &::before
-      top 1px
-      border-bottom _ribbonsSewingStitches
+      top 4.1em
     &::after
-      top 'calc(100% - %s - %s)' % (_ribbonsCornerSize (_ribbonsSewingStitchesSize + 2))
-      border-top _ribbonsSewingStitches
+      bottom .1em
     &:focus
     &:hover
     &:active
-      color #fff
-      text-decoration none
-
-.ribbon-hook > [class*=ribbon-left]
-  left - _ribbonsCornerSize
-  & a
-    left _ribbonsCornerSize
-    transform-origin bottom right
-    transform translate(-29.29%, -100%) rotate(-45deg)
-
-/*
-.test
-  --d 1em
-  --c _color2
-  //--f 16px
-  position relative
-
-.test::before
-  content 'Consulter' //attr(data-ribbon)
-  position absolute
-  //font-size var(--f)
-  top 0
-  right 0
-  transform translate(29.29%, -100%) rotate(45deg)
-  color #fff
-  text-align center
-  border 1px solid transparent
-  border-bottom 0
-  transform-origin bottom left
-  padding 5px 35px calc(var(--d) + 5px)
-  background linear-gradient(rgba(0, 0, 0, 0.5) 0 0) bottom/100% var(--d) no-repeat var(--c)
-  background-clip padding-box
-  clip-path polygon(0 0,100% 0,100% 100%,calc(100% - var(--d)) calc(100% - var(--d)),var(--d) calc(100% - var(--d)),0 100%)
-  -webkit-mask linear-gradient(135deg,transparent calc(50% - var(--d) * 0.707),#fff 0) bottom left, linear-gradient(-135deg, transparent calc(50% - var(--d) * 0.707), #fff 0)bottom right
-  -webkit-mask-size 300vmax 300vmax
-  -webkit-mask-composite destination-in
-  mask-composite intersect
-*/
+      text-decoration none !important
+      color #333 !important
+      background-color _ribbonColor2
+    span
+      display block
+      transform rotate(180deg)
+  > .ribbon-top-left
+    top 0
+    left 0
+  > .ribbon-top-right
+    top 0
+    right 0
+    transform rotate(45deg) translate(0, -3.55em)
+  > [class*=ribbon-top] //:not([class*=-bottom])
+      background-image linear-gradient(to top, rgba(0, 0, 0, .1), rgba(255, 255, 255, .1) 2em)
+  > [class*=ribbon-bottom]
+    background-image linear-gradient(to top, rgba(255, 255, 255, .1), rgba(0, 0, 0, .1) 1.25em)
+  > .ribbon-bottom-left
+    bottom 0
+    left 0
+    transform rotate(225deg) translate(0, -3.55em)
+  > .ribbon-bottom-right
+    bottom 0
+    right 0
+    transform rotate(135deg) translate(0, -3.55em)

@@ -1012,12 +1012,13 @@ ul.list-rounded a {
   border-radius: 1.25em;
 }
 ul.list-rounded svg {
-  border-radius: 50%;
+  -webkit-clip-path: circle(50%);
+          clip-path: circle(50%);
 }
 ul.list-rounded li svg {
   width: 2.5em;
   height: 2.5em;
-  padding: 0.6em;
+  padding: 0.7em;
   transition: transform 0.3s ease-in-out;
 }
 ul.list-rounded li:focus svg,
@@ -1107,6 +1108,7 @@ ol.list-rounded li::before {
   width: 2.5em;
   height: 2.5em;
   padding: 0.6em;
+  border-radius: 50%;
   transition: transform 0.3s ease-in-out;
 }
 ol.list-rounded li:focus::before,
@@ -3046,70 +3048,75 @@ a[aria-disabled=true]:active {
 * {
   scrollbar-color: #ff6347 rgba(255,255,255,0.03);
 }
-.ribbon-hook {
+.ribbon-content {
   position: relative;
-  min-height: 7.5em;
-  background-image: linear-gradient(-135deg, rgba(255,255,255,0.05) 0 0, transparent 8em 100%);
 }
-.ribbon-hook > [class*=ribbon] {
-  overflow: hidden;
+.ribbon-content > [class*=ribbon] {
   position: absolute;
-  z-index: 500;
-  top: -0.5em;
-  right: -0.5em;
-  width: 7.5em;
-  height: 7.5em;
-}
-.ribbon-hook > [class*=ribbon] a {
-  position: relative;
+  line-height: 10em;
   display: block;
-  top: 0.5em;
-  right: 3em;
   width: 10em;
-  line-height: 2;
+  height: 10em;
   text-align: center;
+  text-decoration: none;
   color: #e9dac5;
-  background: #ff6347 linear-gradient(to top, #555 calc(0.5em + 2px), rgba(0, 0, 0, .1) calc(0.5em + 2px), rgba(255, 255, 255, .05));
-  padding: 0 0 0.5em;
-  box-shadow: 0 0 2rem rgba(0,0,0,0.2);
-  transform-origin: bottom left;
-  transform: translate(29.29%, -100%) rotate(45deg);
-  -webkit-clip-path: polygon(0 0, calc(100% - 1px) 0, calc(100% - 1px) calc(100% - 1px), calc(calc(100% - 1px) - 0.5em) calc(calc(100% - 1px) - 0.5em), 0.5em calc(calc(100% - 1px) - 0.5em) , 0 calc(100% - 1px));
-          clip-path: polygon(0 0, calc(100% - 1px) 0, calc(100% - 1px) calc(100% - 1px), calc(calc(100% - 1px) - 0.5em) calc(calc(100% - 1px) - 0.5em), 0.5em calc(calc(100% - 1px) - 0.5em) , 0 calc(100% - 1px));
-  -webkit-mask: linear-gradient(135deg, transparent calc(50% - 0.5em * 0.707),#fff 0) bottom left, linear-gradient(-135deg, transparent calc(50% - 0.5em * 0.707), #fff 0) bottom right;
-  -webkit-mask-size: 100vmax 100vmax;
-  -webkit-mask-composite: destination-in;
-  mask-composite: intersect;
+  background-color: #ff6347;
+  border-bottom: 4em solid #555;
+  -webkit-clip-path: polygon(80% 40%, 100% 60%, 100% 65%, 95% 60%, 5% 60%, 0% 65%, 0% 60%, 20% 40%);
+          clip-path: polygon(80% 40%, 100% 60%, 100% 65%, 95% 60%, 5% 60%, 0% 65%, 0% 60%, 20% 40%);
+  transform: rotate(-45deg) translateY(-3.55em);
+  box-shadow: 0 0 2rem #000;
+  background-color: #ffa500;
 }
-.ribbon-hook > [class*=ribbon] a::before,
-.ribbon-hook > [class*=ribbon] a::after {
+.ribbon-content > [class*=ribbon]::before,
+.ribbon-content > [class*=ribbon]::after {
   content: '';
   position: absolute;
   left: 0;
-  height: 2px;
   width: 100%;
-}
-.ribbon-hook > [class*=ribbon] a::before {
-  top: 1px;
-  border-bottom: 2px dotted rgba(0,0,0,0.3);
-}
-.ribbon-hook > [class*=ribbon] a::after {
-  top: calc(100% - 0.5em - 4px);
+  height: 2px;
   border-top: 2px dotted rgba(0,0,0,0.3);
 }
-.ribbon-hook > [class*=ribbon] a:focus,
-.ribbon-hook > [class*=ribbon] a:hover,
-.ribbon-hook > [class*=ribbon] a:active {
+.ribbon-content > [class*=ribbon]::before {
+  top: 4.1em;
+}
+.ribbon-content > [class*=ribbon]::after {
+  bottom: 0.1em;
+}
+.ribbon-content > [class*=ribbon]:focus,
+.ribbon-content > [class*=ribbon]:hover,
+.ribbon-content > [class*=ribbon]:active {
   color: #fff;
-  text-decoration: none;
+  background-color: #ffa500;
 }
-.ribbon-hook > [class*=ribbon-left] {
-  left: -0.5em;
+.ribbon-content > [class*=ribbon] span {
+  display: block;
+  transform: rotate(180deg);
 }
-.ribbon-hook > [class*=ribbon-left] a {
-  left: 0.5em;
-  transform-origin: bottom right;
-  transform: translate(-29.29%, -100%) rotate(-45deg);
+.ribbon-content > .ribbon-top-left {
+  top: 0;
+  left: 0;
+}
+.ribbon-content > .ribbon-top-right {
+  top: 0;
+  right: 0;
+  transform: rotate(45deg) translate(0, -3.55em);
+}
+.ribbon-content > [class*=ribbon-top] {
+  background-image: linear-gradient(to top, rgba(0,0,0,0.1), rgba(255,255,255,0.1) 2em);
+}
+.ribbon-content > [class*=ribbon-bottom] {
+  background-image: linear-gradient(to top, rgba(255,255,255,0.1), rgba(0,0,0,0.1) 1.25em);
+}
+.ribbon-content > .ribbon-bottom-left {
+  bottom: 0;
+  left: 0;
+  transform: rotate(225deg) translate(0, -3.55em);
+}
+.ribbon-content > .ribbon-bottom-right {
+  bottom: 0;
+  right: 0;
+  transform: rotate(135deg) translate(0, -3.55em);
 }
 html,
 .logo-nav,

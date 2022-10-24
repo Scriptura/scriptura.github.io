@@ -11,11 +11,12 @@ mixin list(icon, name, slug)
     a(href='#section-' + slug) #{name}
 
 mixin section(name, slug)
-  section(id='section-' + slug).ribbon-hook
+  section(id='section-' + slug).ribbon-content
     h2= name
       a.anchor(href='#section-' + slug)
-    .ribbon
-      a(href='./' + slug + '.html') See page
+    a(href='./' + slug + '.html').ribbon-bottom-right
+      span Dedicated page
+      //-See page
     block
 
 block main
@@ -107,6 +108,12 @@ block main
   hr
   +section('Ribbons', 'ribbons')
     include includes/demos/ribbon
+    //- Pour inclure le ribbon dédié à la page en évitant les conflits avec le dernier ribbon de démonstration
+    br
+    br
+    br
+    br
+    br
   hr
   +section('Grids', 'grids')
     include includes/demos/grid

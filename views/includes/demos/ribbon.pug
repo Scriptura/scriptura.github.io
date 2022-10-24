@@ -1,20 +1,39 @@
-.grid2.gap.demo-items
-  .ribbon-hook
+.grid2.gap.demo-items-empty(style='--itemHeight:9em')
+  .ribbon-content
     p
-      code .ribbon-left a
-    .ribbon-left
-      a(href='#') Consulter
-  .ribbon-hook
+      code .ribbon-content a.ribbon-top-left
+    a(href='#').ribbon-top-left Top left
+  .ribbon-content
     p
-      code .ribbon a
-    .ribbon
-      a(href='#') Consulter
-  .ribbon-hook.c2
+      code .ribbon-content a.ribbon-top-right
+    a(href='#').ribbon-top-right Top right
+  .ribbon-content
     p
-      code .ribbon-left a
-      | 
-      code .ribbon a
-    .ribbon-left
-      a(href='#') Consulter
-    .ribbon
-      a(href='#') Consulter
+      code .ribbon-content a.ribbon-bottom-left
+    a(href='#').ribbon-bottom-left Bottom left
+  .ribbon-content
+    p
+      code .ribbon-content a.ribbon-bottom-right
+    a(href='#').ribbon-bottom-right Bottom right
+  .ribbon-content
+    p
+      code .ribbon-content a.ribbon-bottom-left span
+    a(href='#').ribbon-bottom-left
+      span Bottom left
+  .ribbon-content
+    p
+      code .ribbon-content a.ribbon-bottom-right span
+    a(href='#').ribbon-bottom-right
+      span Bottom right
+  .ribbon-content(style='height:16em')
+    a(href='#').ribbon-top-left Top left
+    a(href='#').ribbon-top-right Top right
+    a(href='#').ribbon-bottom-left Bottom left
+    a(href='#').ribbon-bottom-right Bottom right
+  .ribbon-content(style='height:16em')
+    a(href='#').ribbon-top-left Top left
+    a(href='#').ribbon-top-right Top right
+    a(href='#').ribbon-bottom-left
+      span Bottom left
+    a(href='#').ribbon-bottom-right
+      span Bottom right
