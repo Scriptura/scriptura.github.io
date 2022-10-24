@@ -17,7 +17,6 @@ html
 .card svg
 [class^=message]
 [class^=message]::before
-[class*=demo-items] > *
 [class*=list-stripe] > :not([class*=-links])
 .list-straight li *
 .list-straight li::before
@@ -39,6 +38,8 @@ html
 .tab-summary
 .audio-player
 .progress-bar div
+[class*=demo-items] > *
+.demo-item
   background-image embedurl(_bg) // PNG moins lourd que WebP pour l'encodage en base64.
   background-size image-size(_bg)[0] image-size(_bg)[1]
   background-repeat repeat

@@ -7,6 +7,7 @@ _ribbonColor2 = _color5
 
 .ribbon-content
   position relative
+  min-height 7.5em // Si ribbon, alors une hauteur minimum doit être présente sur l'élément parent.
   > [class*=ribbon]
     position absolute
     z-index 2000 // @note Au cas où le ribbon est placé après le contenu de .ribbon-hook. @todo Valeur importante pour passer par dessus les .map.
@@ -24,6 +25,7 @@ _ribbonColor2 = _color5
     clip-path polygon(80% 40%, 100% 60%, 100% 65%, 95% 60%, 5% 60%, 0% 65%, 0% 60%, 20% 40%)
     transform rotate(-45deg) translateY(-3.55em)
     //filter drop-shadow(0 0 2rem #000)
+    user-select none
     &::before
     &::after
       content ''
@@ -36,15 +38,15 @@ _ribbonColor2 = _color5
       top 4.1em
     &::after
       bottom .1em
-    &:focus
-    &:hover
-    &:active
-      text-decoration none !important
-      color #333 !important
-      background-color _ribbonColor2
     span
       display block
       transform rotate(180deg)
+  > a
+    &:focus
+    &:hover
+    &:active
+      color #333
+      background-color _ribbonColor2
   > .ribbon-top-left
     top 0
     left 0

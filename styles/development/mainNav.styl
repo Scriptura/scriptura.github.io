@@ -101,7 +101,7 @@ _logoNavSizeWidth = 3em
       transition-delay '%ss' % round(_abstr, 2)
 
   body.active
-    overflow hidden
+    overflow hidden // @todo À remplacer par `overflow:clip` lorsque la règle sera suffisament supportée.
     & main
     & footer
     & aside
