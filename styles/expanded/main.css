@@ -2786,91 +2786,91 @@ a[aria-disabled=true]:active {
   width: 25em;
   height: 25em;
 }
-.zoom1000 {
+.scale1000 {
   font-size: 1000%;
 }
-.zoom900 {
+.scale900 {
   font-size: 900%;
 }
-.zoom800 {
+.scale800 {
   font-size: 800%;
 }
-.zoom700 {
+.scale700 {
   font-size: 700%;
 }
-.zoom600 {
+.scale600 {
   font-size: 600%;
 }
-.zoom500 {
+.scale500 {
   font-size: 500%;
 }
-.zoom450 {
+.scale450 {
   font-size: 450%;
 }
-.zoom400 {
+.scale400 {
   font-size: 400%;
 }
-.zoom350 {
+.scale350 {
   font-size: 350%;
 }
-.zoom300 {
+.scale300 {
   font-size: 300%;
 }
-.zoom250 {
+.scale250 {
   font-size: 250%;
 }
-.zoom200 {
+.scale200 {
   font-size: 200%;
 }
-.zoom175 {
+.scale175 {
   font-size: 175%;
 }
-.zoom150 {
+.scale150 {
   font-size: 150%;
 }
-.zoom140 {
+.scale140 {
   font-size: 140%;
 }
-.zoom130 {
+.scale130 {
   font-size: 130%;
 }
-.zoom120 {
+.scale120 {
   font-size: 120%;
 }
-.zoom115 {
+.scale115 {
   font-size: 115%;
 }
-.zoom110 {
+.scale110 {
   font-size: 110%;
 }
-.zoom105 {
+.scale105 {
   font-size: 105%;
 }
-.zoom95 {
+.scale95 {
   font-size: 95%;
 }
-.zoom90 {
+.scale90 {
   font-size: 90%;
 }
-.zoom85 {
+.scale85 {
   font-size: 85%;
 }
-.zoom80 {
+.scale80 {
   font-size: 80%;
 }
-.zoom75 {
+.scale75 {
   font-size: 75%;
 }
-.zoom70 {
+.scale70 {
   font-size: 70%;
 }
-.zoom60 {
+.scale60 {
   font-size: 60%;
 }
-.zoom50 {
+.scale50 {
   font-size: 50%;
 }
-.zoom-reset {
+.rescale {
   font-size: 1rem;
 }
 .blink {
