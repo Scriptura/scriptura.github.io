@@ -15,12 +15,14 @@ mixin section(name, slug)
     h2= name
       a.anchor(href='#section-' + slug)
     a(href='./' + slug + '.html').ribbon-bottom-right
-      span See page
+      span
+        svg.icon(role='img' focusable='false')
+          use(href='/sprites/solid.svg#arrow-right-long')
+        | See page
     block
 
 block main
   h1.main-heading!= data._name
-  br
   ul.grid4.list-straight
     +list('pen-fancy', 'Typography', 'typography')
     +list('language', 'Languages', 'languages')
@@ -45,7 +47,6 @@ block main
     +list('table-columns', 'Columns', 'columns')
     +list('magnifying-glass', 'Scales', 'scales')
     +list('map-location-dot', 'Maps', 'maps')
-  br
   hr
   //-
     +section('Sprites', 'sprites')

@@ -277,8 +277,11 @@ hr[data-hr]::after,
     text-align: justify;
   }
 }
+html,
 body {
   overflow-x: hidden;
+}
+body {
   display: grid;
   grid-template-rows: repeat(3, auto) 1fr;
   grid-template-columns: minmax(1em, 1fr) minmax(0, 92em) minmax(1em, 1fr);
@@ -308,6 +311,9 @@ main {
 }
 [tabindex=-1]:focus:not(:focus-visible) {
   outline: 0 !important;
+}
+.type-article main {
+  padding-top: 0.5em;
 }
 [class^=grid] {
   display: grid;

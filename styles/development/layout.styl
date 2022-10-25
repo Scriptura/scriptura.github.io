@@ -1,5 +1,8 @@
+html
 body
-  overflow-x hidden // @note Pour des éléments en clip-path dont l'élément d'origine dépasse, tel que les Ribbons @todo En test...
+  overflow-x hidden // @note Pour des éléments en clip-path dont l'élément d'origine dépasse, tel que les Ribbons @bugfixed @affected android L'appel des deux sélecteurs `html` et `body` est nécessaire pour que cela puisse fonctionner sur Android.
+
+body
   display grid
   grid-template-rows repeat(3, auto) 1fr // permet à 'main' (4ème rangée) d'occuper tout l'espace vertical disponible
   grid-template-columns minmax(_gap, 1fr) minmax(0, _wrap) minmax(_gap, 1fr) // @bugfix @affected Chrome & Firefox @note Valeur 1fr définit si minimum car les navigateurs se comportent différemment, Chrome affecte la largeur d'une gouttière, Firefox affecte à 0.
@@ -29,6 +32,9 @@ main
 
 [tabindex=-1]:focus:not(:focus-visible)
   outline 0 !important // Future-proof rule: in browsers that support :focus-visible, suppress the focus outline on elements that programmatically receive focus but wouldn't normally show a visible focus outline. In general, this would mean that the outline is only applied if the interaction that led to the element receiving programmatic focus was a keyboard interaction, or the browser has somehow determined that the user is primarily a keyboard user and/or wants focus outlines to always be presented. @ee https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible @see https://developer.paciellogroup.com/blog/2018/03/focus-visible-and-backwards-compatibility/
+
+.type-article main
+  padding-top .5em
 
 /*
 .type-articles main // @note notammment lorsque .columns est utilisé en élément enfant @todo Solution temporaire en attendant le support de :has() :`main:has(> .columns)`
