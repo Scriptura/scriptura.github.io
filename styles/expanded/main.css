@@ -2972,18 +2972,17 @@ a[aria-disabled=true]:active {
 .ribbon-content > [class*=ribbon] {
   position: absolute;
   z-index: 2000;
-  line-height: 10em;
+  line-height: 2em;
   display: block;
   width: 10em;
-  height: 10em;
+  height: 2.5em;
   text-align: center;
   text-decoration: none;
   color: #e9dac5;
   background-color: #ff6347;
-  border-bottom: 4em solid #555;
-  -webkit-clip-path: polygon(80% 40%, 100% 60%, 100% 65%, 95% 60%, 5% 60%, 0% 65%, 0% 60%, 20% 40%);
-          clip-path: polygon(80% 40%, 100% 60%, 100% 65%, 95% 60%, 5% 60%, 0% 65%, 0% 60%, 20% 40%);
-  transform: rotate(-45deg) translateY(-3.55em);
+  border-bottom: 0.5em solid #555;
+  -webkit-clip-path: polygon(2em 0, 8em 0, 10em 2em, 10em 2.5em, 9.5em 2em, 0.5em 2em, 0 2.5em, 0 2em);
+          clip-path: polygon(2em 0, 8em 0, 10em 2em, 10em 2.5em, 9.5em 2em, 0.5em 2em, 0 2.5em, 0 2em);
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
@@ -2998,7 +2997,7 @@ a[aria-disabled=true]:active {
   border-top: 2px dotted rgba(0,0,0,0.3);
 }
 .ribbon-content > [class*=ribbon]::before {
-  top: 4.1em;
+  top: 0.1em;
 }
 .ribbon-content > [class*=ribbon]::after {
   bottom: 0.1em;
@@ -3014,33 +3013,34 @@ a[aria-disabled=true]:active {
 .ribbon-content > a[class*=ribbon]:focus,
 .ribbon-content > a[class*=ribbon]:hover,
 .ribbon-content > a[class*=ribbon]:active {
-  color: #333;
+  color: #555;
   background-color: #ffa500;
+}
+.ribbon-content > [class*=ribbon-top] {
+  background-image: linear-gradient(to top, rgba(0,0,0,0.2), rgba(0,0,0,0.1) 1.25em);
+}
+.ribbon-content > [class*=ribbon-bottom] {
+  background-image: linear-gradient(to top, rgba(0,0,0,0.1), rgba(0,0,0,0.2) 1.25em);
 }
 .ribbon-content > .ribbon-top-left {
   top: 0;
   left: 0;
+  transform: rotate(-45deg) translate(-2.65em, -0.7em);
 }
 .ribbon-content > .ribbon-top-right {
   top: 0;
   right: 0;
-  transform: rotate(45deg) translate(0, -3.55em);
-}
-.ribbon-content > [class*=ribbon-top] {
-  background-image: linear-gradient(to top, rgba(0,0,0,0.1), rgba(255,255,255,0.1) 2em);
-}
-.ribbon-content > [class*=ribbon-bottom] {
-  background-image: linear-gradient(to top, rgba(255,255,255,0.1), rgba(0,0,0,0.1) 1.25em);
+  transform: rotate(45deg) translate(2.65em, -0.7em);
 }
 .ribbon-content > .ribbon-bottom-left {
   bottom: 0;
   left: 0;
-  transform: rotate(225deg) translate(0, -3.55em);
+  transform: rotate(225deg) translate(2.65em, -0.7em);
 }
 .ribbon-content > .ribbon-bottom-right {
   bottom: 0;
   right: 0;
-  transform: rotate(135deg) translate(0, -3.55em);
+  transform: rotate(135deg) translate(-2.65em, -0.7em);
 }
 html,
 .logo-nav,
