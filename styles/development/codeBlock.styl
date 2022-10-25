@@ -30,8 +30,6 @@ samp
   box-shadow _shadow1
   & code
     white-space pre
-    //word-spacing normal
-    //word-break normal
     color _codeBlocksColor4
     transition color .5s ease-in-out
     &:focus-within
@@ -39,9 +37,12 @@ samp
     &:empty::after
       content '$ ...'
   & div
+    /*
     position absolute
     top 1em
     right 1em
+    */
+    float right
     display flex
     font-size 1em
     color _codeBlocksColor2
@@ -52,10 +53,13 @@ samp
     height 1em
     fill currentColor
   & button
+    /*
     position absolute
     bottom 1.1em
     right 1em
     padding 0
+    */
+    float right
     border none
     color _codeBlocksColor2
     background-color transparent

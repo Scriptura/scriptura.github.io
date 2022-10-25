@@ -62,6 +62,31 @@ const getScripts = (() => {
 
 
 // -----------------------------------------------------------------------------
+// @section     Get Styles
+// @description Appel de styles
+// -----------------------------------------------------------------------------
+
+/**
+ * @param {string} url : une url de script
+ * @param {string} media : le media pour lequel les styles sont destinés, par défaut : 'screen'
+ */
+
+ const getStyle = (url, media = 'screen') => new Promise((resolve, reject) => { // @see https://stackoverflow.com/questions/16839698#61903296
+  const link = document.createElement('link')
+  link.rel= 'stylesheet'
+  link.href = url
+  link.media = media
+  //document.head.appendChild(link)
+  const target = document.querySelector('[rel=stylesheet]')
+  document.head.insertBefore(link, target.nextSibling)
+})
+
+const getStyles = (() => {
+  if (document.querySelector('pre > code[class*=language]')) getStyle('/styles/prism.css')
+})()
+
+
+// -----------------------------------------------------------------------------
 // @section     Utilities
 // @description Utilitaires consommables pour les autres fonctions
 // -----------------------------------------------------------------------------
