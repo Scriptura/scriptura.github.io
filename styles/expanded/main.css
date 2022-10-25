@@ -2114,6 +2114,9 @@ form > [class*="grid"] > .input {
   color: #979797;
   background-color: #4e667a;
 }
+.switch-spaced > .switch + .switch {
+  margin-top: 1em;
+}
 .range {
   display: flex;
   flex-direction: column;
