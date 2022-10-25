@@ -24,7 +24,7 @@ _ribbonColor5 = _colorG + 14%
     background-color _ribbonColor1
     //border 2px solid transparent // @fugfixed @affected Firefox
     border-bottom .5em solid _ribbonColor3
-    clip-path polygon(2em 0, 8em 0, 10em 2em, 10em 2.5em, 9.5em 2em, .5em 2em, 0 2.5em, 0 2em)
+    clip-path polygon(2em 0, 8em 0, 10em 2em, 10em 2.5em, 9.5em 2em, .5em 2em, 0 2.5em, 0 2em) //@bugfixed @affected Firefox La propriété transform provoque des artfacts sur la découpe clip-path avec ce navigateur.
     //filter drop-shadow(0 0 2rem #000)
     user-select none
     &::before
@@ -57,19 +57,20 @@ _ribbonColor5 = _colorG + 14%
   > .ribbon-top-left
     top 0
     left 0
-    transform rotate(-45deg) translate(-2.65em, -.7em) // @note L'ordre des valeurs est importante.
+    //transform rotate(-45deg) translate(-2.65em, -.7em) // Alternative possible mais positionnement plus difficile à comprendre car tient compte de la direction imposée par rotate
+    transform translate(-2.35em, 1.4em) rotate(-45deg) // @note L'ordre des valeurs est importante.
   > .ribbon-top-right
     top 0
     right 0
-    transform rotate(45deg) translate(2.65em, -.7em)
+    transform translate(2.35em, 1.4em) rotate(45deg)
   > .ribbon-bottom-left
     bottom 0
     left 0
-    transform rotate(225deg) translate(2.65em, -.7em)
+    transform translate(-2.35em, -1.4em) rotate(225deg)
   > .ribbon-bottom-right
     bottom 0
     right 0
-    transform rotate(135deg) translate(-2.65em, -.7em)
+    transform translate(2.35em, -1.4em) rotate(135deg)
 
 /*
 .ribbon-content

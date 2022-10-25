@@ -3025,22 +3025,22 @@ a[aria-disabled=true]:active {
 .ribbon-content > .ribbon-top-left {
   top: 0;
   left: 0;
-  transform: rotate(-45deg) translate(-2.65em, -0.7em);
+  transform: translate(-2.35em, 1.4em) rotate(-45deg);
 }
 .ribbon-content > .ribbon-top-right {
   top: 0;
   right: 0;
-  transform: rotate(45deg) translate(2.65em, -0.7em);
+  transform: translate(2.35em, 1.4em) rotate(45deg);
 }
 .ribbon-content > .ribbon-bottom-left {
   bottom: 0;
   left: 0;
-  transform: rotate(225deg) translate(2.65em, -0.7em);
+  transform: translate(-2.35em, -1.4em) rotate(225deg);
 }
 .ribbon-content > .ribbon-bottom-right {
   bottom: 0;
   right: 0;
-  transform: rotate(135deg) translate(-2.65em, -0.7em);
+  transform: translate(2.35em, -1.4em) rotate(135deg);
 }
 html,
 .logo-nav,
