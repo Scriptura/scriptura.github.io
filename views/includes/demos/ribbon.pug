@@ -45,12 +45,16 @@ hr(data-hr='✻ ✻ ✻')
 .grid2.gap
   .demo-item.ribbon-content.center(style='min-height:12em')
     p
-      code .ribbon-top-right.zoom150
-    .ribbon-top-right.zoom150 Top right
+      code .ribbon-top-left.zoom150
+    .ribbon-top-left.zoom150 Top left
+    p
+      code .ribbon-bottom-right.zoom150 span.zoom-reset
+    .ribbon-bottom-right.zoom150
+      span.zoom-reset Bottom right
   .demo-item.ribbon-content.center
     p
       code a.ribbon-top-right
-    a(href='#').ribbon-top-right Top right
+    a(href='#').ribbon-top-right Link
 //-.center
   svg.size16.decorative-svg(role='img' focusable='false')
     use(href='/sprites/silos/145v-d1.svg#1')
