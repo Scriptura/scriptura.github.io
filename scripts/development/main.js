@@ -56,6 +56,7 @@ const getScripts = (() => {
   if (document.querySelector('.input [type=password]')) getScript('/scripts/readablePassword.js')
   if (document.querySelector('[class*=add-line-marks]')) getScript('/scripts/lineMark.js')
   if (document.querySelector('[class*=map]')) getScript('/scripts/map.js')
+  if (document.querySelector('[class*=map]')) getScript('/libraries/leaflet/leaflet.js')
   if (document.querySelector('[class*=language-]')) getScript('/scripts/prism.js')
   if (document.querySelector('[class*=thumbnail-youtube]')) getScript('/scripts/youtubeVideo.js')
 })()
@@ -68,10 +69,10 @@ const getScripts = (() => {
 
 /**
  * @param {string} url : une url de script
- * @param {string} media : le media pour lequel les styles sont destinés, par défaut : 'screen'
+ * @param {string} media : le media pour lequel les styles sont destinés, par défaut : 'all'
  */
 
- const getStyle = (url, media = 'screen') => new Promise((resolve, reject) => { // @see https://stackoverflow.com/questions/16839698#61903296
+ const getStyle = (url, media = 'all') => new Promise((resolve, reject) => { // @see https://stackoverflow.com/questions/16839698#61903296
   const link = document.createElement('link')
   link.rel= 'stylesheet'
   link.href = url
@@ -82,7 +83,8 @@ const getScripts = (() => {
 })
 
 const getStyles = (() => {
-  if (document.querySelector('pre > code[class*=language]')) getStyle('/styles/prism.css')
+  if (document.querySelector('pre > code[class*=language]')) getStyle('/styles/prism.css', 'screen')
+  if (document.querySelector('[class*=map]')) getStyle('/libraries/leaflet/leaflet.css', 'screen, print')
 })()
 
 

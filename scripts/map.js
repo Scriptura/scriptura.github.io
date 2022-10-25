@@ -1,5 +1,6 @@
 'use strict'
 
+/*
 const getMapStyles = (() => { // Recommandation Leaflet de charger les styles avant les scripts.
   const styles = document.createElement('link')
   styles.setAttribute('rel', 'stylesheet')
@@ -12,6 +13,7 @@ const getLeaflet = (() => {
   script.setAttribute('src', '/libraries/leaflet/leaflet.js')
   document.head.appendChild(script)
 })()
+*/
 
 const mapsIdAdd = (() => { // @note Affecter ou réafecter une id pour chaque carte afin d'éviter les conflits.
   let i = 1
