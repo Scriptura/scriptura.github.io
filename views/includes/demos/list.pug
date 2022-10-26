@@ -1,6 +1,6 @@
 mixin list(icon, name, slug)
   li
-    svg.icon(role='img' focusable='false')
+    svg.icon-inline(role='img' focusable='false')
       use(href='/sprites/solid.svg#' + icon)
     a(href='#section-' + slug) #{name}
 
@@ -78,7 +78,7 @@ mixin list(icon, name, slug)
     ul.list-stripe
       - for (let i = 1; i < 8; i++)
         li
-          svg.icon(role='img' focusable='false')
+          svg.icon-inline(role='img' focusable='false')
             use(href='/sprites/utils.svg#quill')
           | List item #{i}
   div
@@ -95,9 +95,65 @@ mixin list(icon, name, slug)
       - for (let i = 1; i < 8; i++)
         li
           a(href='#')
-            svg.icon(role='img' focusable='false')
+            svg.icon-inline(role='img' focusable='false')
               use(href='/sprites/utils.svg#link')
             | List item #{i}
+div
+  p
+    code ul.list-straight
+  ul.grid4.list-straight
+    +list('paint-roller', 'Style Guide', 'styleGuide')
+    +list('pen-fancy', 'Typography', 'typography')
+    +list('language', 'Languages', 'languages')
+    +list('list-ul', 'Lists', 'lists')
+    +list('indent', 'Details/Summary', 'detailsSummary')
+    +list('folder', 'Tabs', 'tabs')
+    +list('square-caret-down', 'Accordions', 'accordions')
+    +list('message', 'Message Boxes', 'messageBoxes')
+    +list('code', 'Code Blocks', 'codeBlocks')
+    +list('table', 'Tables', 'tables')
+    +list('image', 'Images', 'images')
+    +list('vault', 'Audio & video players', 'players')
+    +list('table-list', 'Forms', 'forms')
+    +list('check', 'Checkboxes, radios & switches', 'checkboxes')
+    +list('sliders', 'Ranges', 'ranges')
+    +list('tablet-button', 'Buttons', 'buttons')
+    +list('bars-progress', 'Progress Bars', 'progressBars')
+    +list('spinner', 'Loaders', 'loaders')
+    +list('address-card', 'Cards', 'cards')
+    +list('ribbon', 'Ribbons', 'ribbons')
+    +list('table-cells', 'Grids', 'grids')
+    +list('table-columns', 'Columns', 'columns')
+    +list('magnifying-glass', 'Zooms', 'zooms')
+    +list('map-location-dot', 'Maps', 'maps')
+div
+  p
+    code ul.list-rounded
+  ul.grid4.list-rounded
+    +list('paint-roller', 'Style Guide', 'styleGuide')
+    +list('pen-fancy', 'Typography', 'typography')
+    +list('language', 'Languages', 'languages')
+    +list('list-ul', 'Lists', 'lists')
+    +list('indent', 'Details/Summary', 'detailsSummary')
+    +list('folder', 'Tabs', 'tabs')
+    +list('square-caret-down', 'Accordions', 'accordions')
+    +list('message', 'Message Boxes', 'messageBoxes')
+    +list('code', 'Code Blocks', 'codeBlocks')
+    +list('table', 'Tables', 'tables')
+    +list('image', 'Images', 'images')
+    +list('vault', 'Audio & video players', 'players')
+    +list('table-list', 'Forms', 'forms')
+    +list('check', 'Checkboxes, radios & switches', 'checkboxes')
+    +list('sliders', 'Ranges', 'ranges')
+    +list('tablet-button', 'Buttons', 'buttons')
+    +list('bars-progress', 'Progress Bars', 'progressBars')
+    +list('spinner', 'Loaders', 'loaders')
+    +list('address-card', 'Cards', 'cards')
+    +list('ribbon', 'Ribbons', 'ribbons')
+    +list('table-cells', 'Grids', 'grids')
+    +list('table-columns', 'Columns', 'columns')
+    +list('magnifying-glass', 'Zooms', 'zooms')
+    +list('map-location-dot', 'Maps', 'maps')
 div
   p
     code ol.list-straight
@@ -282,61 +338,3 @@ div
       a(href='#index') Petits pois
     li
       a(href='#index') Courgettes
-
-div
-  p
-    code ul.list-straight
-  ul.grid4.list-straight
-    +list('paint-roller', 'Style Guide', 'styleGuide')
-    +list('pen-fancy', 'Typography', 'typography')
-    +list('language', 'Languages', 'languages')
-    +list('list-ul', 'Lists', 'lists')
-    +list('indent', 'Details/Summary', 'detailsSummary')
-    +list('folder', 'Tabs', 'tabs')
-    +list('square-caret-down', 'Accordions', 'accordions')
-    +list('message', 'Message Boxes', 'messageBoxes')
-    +list('code', 'Code Blocks', 'codeBlocks')
-    +list('table', 'Tables', 'tables')
-    +list('image', 'Images', 'images')
-    +list('vault', 'Audio & video players', 'players')
-    +list('table-list', 'Forms', 'forms')
-    +list('check', 'Checkboxes, radios & switches', 'checkboxes')
-    +list('sliders', 'Ranges', 'ranges')
-    +list('tablet-button', 'Buttons', 'buttons')
-    +list('bars-progress', 'Progress Bars', 'progressBars')
-    +list('spinner', 'Loaders', 'loaders')
-    +list('address-card', 'Cards', 'cards')
-    +list('ribbon', 'Ribbons', 'ribbons')
-    +list('table-cells', 'Grids', 'grids')
-    +list('table-columns', 'Columns', 'columns')
-    +list('magnifying-glass', 'Zooms', 'zooms')
-    +list('map-location-dot', 'Maps', 'maps')
-
-div
-  p
-    code ul.list-rounded
-  ul.grid4.list-rounded
-    +list('paint-roller', 'Style Guide', 'styleGuide')
-    +list('pen-fancy', 'Typography', 'typography')
-    +list('language', 'Languages', 'languages')
-    +list('list-ul', 'Lists', 'lists')
-    +list('indent', 'Details/Summary', 'detailsSummary')
-    +list('folder', 'Tabs', 'tabs')
-    +list('square-caret-down', 'Accordions', 'accordions')
-    +list('message', 'Message Boxes', 'messageBoxes')
-    +list('code', 'Code Blocks', 'codeBlocks')
-    +list('table', 'Tables', 'tables')
-    +list('image', 'Images', 'images')
-    +list('vault', 'Audio & video players', 'players')
-    +list('table-list', 'Forms', 'forms')
-    +list('check', 'Checkboxes, radios & switches', 'checkboxes')
-    +list('sliders', 'Ranges', 'ranges')
-    +list('tablet-button', 'Buttons', 'buttons')
-    +list('bars-progress', 'Progress Bars', 'progressBars')
-    +list('spinner', 'Loaders', 'loaders')
-    +list('address-card', 'Cards', 'cards')
-    +list('ribbon', 'Ribbons', 'ribbons')
-    +list('table-cells', 'Grids', 'grids')
-    +list('table-columns', 'Columns', 'columns')
-    +list('magnifying-glass', 'Zooms', 'zooms')
-    +list('map-location-dot', 'Maps', 'maps')

@@ -9,16 +9,16 @@ svg
   fill _colorT2 // rgba(210,180,140, .8)
   filter drop-shadow(.2em .2em .2em rgba(0, 0, 0, .3))  // offset-x | offset-y | blur-radius | color // .5rem .5rem 2rem rgba(0, 0, 0, .15)
 
+//[class^=icon] // @note Il faut éviter cet espace de nom trop générique qui pourrait générer des effets de bord.
 .icon
+.icon-inline
   display inline-block
   vertical-align sub
   height 1.2em
   width 1.2em
-  margin-right .5em
-  //fill currentColor
 
-//.svg-mask
-  //mask-border url(public/medias/masks/mask.svg) 30 repeat
+.icon-inline
+  margin-right .5em // @todo Valeur à supprimer, c'est le contexte qui doit déterminer l'espacement. Gros traf' en perspective...
 
 img
   vertical-align middle // Évite un décalage possible de l'élément suivant
@@ -39,7 +39,7 @@ figure
   background-color _imagesColor1
   box-shadow _shadow11
   user-select none
-  & figcaption
+  figcaption
     padding-top .5em
     text-align center
 
@@ -64,10 +64,7 @@ figure
     float right
     margin-left 1em
 
-  [class*=-align] ~ h2
-  [class*=-align] ~ h3
-  [class*=-align] ~ hr
-  [class*=-align] ~ aside
+  :is([class*=-alignleft], [class*=-alignright]) ~ :is(h2, h3, hr, aside)
     clear both // @note Ééments faisants suite à une image flotante @todo Le margin-top de ces éléments n'est pas pris en compte sous l'image...
 
 .js [class*=-focus]
@@ -84,7 +81,7 @@ figure
 
   [class*=-focus]:focus-within
     background-color _color5
-    & button
+    button
       color _color5
 
 [class*=-focus] button
@@ -121,11 +118,11 @@ figure
   bottom 0
   right 0
   cursor zoom-out
-  & img
+  img
     max-height 100vh
     background-color #000 // @note Pour les .png transparents.
     box-shadow _shadow13 // @bugfix @affected Chrome mobile @note box-shadox sur l'image plutôt qu'un background sur le conteneur afin d'éviter un décalage d'environ 1px en bottom.
-  & button
+  button
     bottom _gap
     right _gap
     width 2em

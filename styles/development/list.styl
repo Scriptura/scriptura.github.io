@@ -32,12 +32,12 @@ ol ol ol
   box-shadow _shadow14
 
 .list-stripe-links
-  & a
+  a
     display block
     color _listColor4 //inherit
     text-decoration none
-  & li:focus-within
-  & li:hover
+  li:focus-within
+  li:hover
     background-color _listColor
     box-shadow _shadow15
     outline none
@@ -52,94 +52,85 @@ ol ol ol
 ul.list-straight
 ul.list-rounded
   padding 0
-  color #000
-  > li
+  li
     display flex
-    counter-increment li
-    svg
-    a
-      box-shadow _listShadow1
-      transition color, background-color .3s ease-in-out
-    a
-      display flex
-      align-items center
-      //align-content center
-      width 100%
-      min-height _listSize
-      padding .5em 1em
-      //color _listColor4
-      background-color _listColor3
-      &:focus
-      &:hover
-      &:active
-        color #fff
-        background-color _listColor
-        text-decoration none
-    svg
-      flex-shrink 0
-      display flex
-      align-items center
-      justify-content center
-      color _listColor4
-      background-color _listColor //tomato
-      *
-        max-width 1em
-        max-height 1em
-    //&:focus
-    //&:hover
-    //&:active
-      //animation animList .05s ease-in-out
     &:focus-within svg
     &:hover svg
-    &:active svg
       color #fff
       background-color _color5
-      //transform scale(1.2) translateZ(0)
+  svg
+  a
+    box-shadow _listShadow1
+    transition color, background-color .3s ease-in-out
+  svg
+    flex-shrink 0
+    display flex
+    align-items center
+    justify-content center
+    color _listColor4
+    background-color _listColor
+    *
+      max-width 1em
+      max-height 1em
+  a
+    display flex
+    align-items center
+    //align-content center
+    width 100%
+    min-height _listSize
+    padding .5em 1em
+    //color _listColor4
+    background-color _listColor3
+    &:focus
+    &:hover
+    &:active
+      color #fff
+      background-color _listColor
+      text-decoration none
 
 ul.list-straight
   li
     position relative
-    a
-      position absolute
-      right 0
-      width calc(100% - 2.5em)
-      padding-left 1.5em
-      clip-path polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%)
-    svg
-      width _listSize + .5
-      min-height _listSize
-      padding .7em .7em .7em .2em
-      clip-path polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%)
+  a
+    position absolute
+    right 0
+    width calc(100% - 2.5em)
+    padding-left 1.5em
+    clip-path polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%)
+  svg
+    width _listSize + .5
+    min-height _listSize
+    padding .7em .7em .7em .2em
+    clip-path polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%)
 
 ul.list-rounded
+  li
+    &:focus-within svg
+    &:hover svg
+      transform rotate(360deg)
+  svg
+    //border-radius 50%
+    clip-path circle(50%)
+    //filter drop-shadow(_listShadow1)
+    width _listSize
+    height _listSize
+    margin-right .5em
+    padding .7em
+    transition transform .3s ease-in-out
   a
     //mask-image url(https://scriptura.github.io/medias/images/moons/0.svg)
     //mask-size _listSize _listSize
     //mask-repeat no-repeat
     //mask-position center
     border-radius round(_listSize / 2, 2)
-  & svg
-    //border-radius 50%
-    clip-path circle(50%)
-    //filter drop-shadow(_listShadow1)
-  li
-    svg
-      width _listSize
-      height _listSize
-      padding .7em
-      transition transform .3s ease-in-out
-    &:focus svg
-    &:hover svg
-    &:active svg
-      transform rotate(360deg)
+
 
 // ----------------------------------------------------------------------------------
 
 ol.list-straight
 ol.list-rounded
   padding 0
-  color #000
-  > li
+  li
     display flex
     counter-increment li
     &::before
@@ -205,99 +196,12 @@ ol.list-rounded
       padding .6em
       border-radius 50%
       transition transform .3s ease-in-out
-    &:focus::before
+    &:focus-within::before
     &:hover::before
-    &:active::before
       transform rotate(360deg)
   a
     border-radius round(_listSize / 2, 2)
 
 [class^=grid].list-straight
-  gap .5em 1em
-
 [class^=grid].list-rounded
   gap .5em 1em
-
-/*
-_listSize = 2.5em
-_listColor = #ff6347 // Tomato
-_listColor2 = #d2b48c //#e9dac5
-_listColor3 = #393939
-
-.list-straight
-.list-rounded
-  padding 0
-  color #000
-  & > li
-    display flex
-    //align-items center
-    //-content center
-    //gap 5em
-    counter-increment li
-    a
-    &::before
-      box-shadow .5rem .5rem 2rem rgba(0, 0, 0, .1)
-    a
-      display flex
-      align-items center
-      //align-content center
-      width 100%
-      min-height _listSize
-      padding .5em 1em
-      color _listColor2
-      background-color _listColor3
-      &:focus
-      &:hover
-      &:active
-        color #fff
-    &::before
-      flex-shrink 0
-      display flex
-      align-items center
-      justify-content center
-      //text-align center
-      //line-height _listSize
-      content counter(li)
-      color #fff
-      background-color tomato
-
-.list-straight
-  li
-    position relative
-    //background-color orange
-    a
-      position absolute
-      right 0
-      width calc(100% - 2.5em)
-      padding-left 1.5em
-      clip-path polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%)
-      //transform translateX(-.5em)
-    &::before
-      width _listSize + .5
-      min-height _listSize
-      padding-right .5em
-      clip-path polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%)
-
-.list-rounded
-  a
-    border-radius round(_listSize / 2, 2)
-  & > ::before
-    border-radius 50%
-  li
-    &::before
-      width _listSize
-      height _listSize
-      transition transform .3s ease-in-out
-    &:focus::before
-    &:hover::before
-    &:active::before
-      transform rotate(360deg)
-
-[class^=grid].list-straight
-  gap .5em 1em
-
-[class^=grid].list-rounded
-  gap .5em 1em
-  > *
-    gap .5em
-*/

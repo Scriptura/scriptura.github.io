@@ -8,7 +8,7 @@ _switchSize2 = 3px
 .checkbox
   position absolute // @note Label des éléments frères décalés si déclaration en relatif.
   left -200vw
-  & + label // @bugfix @affected Firefox @note Les pseudos éléments doivent impérativement partir du label et non des éléments checkbox et radio.
+  + label // @bugfix @affected Firefox @note Les pseudos éléments doivent impérativement partir du label et non des éléments checkbox et radio.
     position relative
     vertical-align middle
     display inline-block // @note Évite un clique involontaire de l'utilisateur sur un label doté d'un 'width100%' si définition 'block'.
@@ -128,22 +128,22 @@ _switchSize2 = 3px
     & ~ *
       color _colorG + 20%
       cursor not-allowed
-    & + .switch-bg
+    + .switch-bg
       background-image repeating-linear-gradient(-45deg, _switchColor4 0 _switchSize2, _switchColor5 0, transparent 0, transparent _switchSize2 * 2)
-    & + .switch-bg .switch-toogle
+    + .switch-bg .switch-toogle
       background-color _colorG
-  & [type=radio]:checked ~ *
+  [type=radio]:checked ~ *
     cursor not-allowed
 
 :not(.switch-dual-state) > .switch input:not(:checked):not(:disabled)
-  & ~ *
+  ~ *
     color grayscale(_color6) + 30%
-  & + .switch-bg .switch-toogle
+  + .switch-bg .switch-toogle
     color grayscale(_colorT) - 30%
     background-color _color6
 
 .switch-spaced > .switch + .switch // @todo En attendant de trouver mieux...
-  margin-top 1em
+  margin-top .75em
 
 /*
 .switch-unicode

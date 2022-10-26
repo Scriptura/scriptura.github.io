@@ -1,40 +1,42 @@
 _loaderColor0 = transparent
-_loaderColor1 = #222
-_loaderColor2 = #ff6347
-_loaderColor3 = #d2b48c
+_loaderColor1 = #444
+_loaderColor2 = #d2b48c
+_loaderColor3 = #ff6347
 _loaderUnit1 = .2em
 
+:root
+  --loaderFrame: 3s
+
 .loader
-.loader::before
+&::before
   box-sizing border-box
   width 2em
   height 2em
   border _loaderUnit1 solid _loaderColor0
   border-radius 50%
-  animation animLoader 2s linear infinite
   //background-image conic-gradient(red, orange, yellow, green, blue)
   //mask-composite exclude
   //padding 1em
 
 .loader
   position relative
-  border-color _loaderColor0 //_loaderColor1
+  border-color _loaderColor1
   border-top-color _loaderColor2
   border-left-color _loaderColor2
-  animation-duration 3s
-
-.loader::before
-  position absolute
-  content ''
-  display block
-  top - _loaderUnit1
-  left - _loaderUnit1
-  border-top-color _loaderColor3
-  border-left-color _loaderColor3
-  border-radius 50%
+  animation animLoader var(--loaderFrame) linear infinite
+  &::before
+    position absolute
+    content ''
+    display block
+    top - _loaderUnit1
+    left - _loaderUnit1
+    border-top-color _loaderColor3
+    border-left-color _loaderColor3
+    border-radius 50%
+    animation animLoader var(--loaderFrame) cubic-bezier(.25, .1, .25, 1) infinite
 
 @keyframes animLoader
   from
     transform rotate(0deg)
   to
-    transform rotate(360deg)
+    transform rotate(359deg)

@@ -304,11 +304,11 @@ form(method='get' action='./').grid4.gap.media-l-grid2
       span Option n°4 (disabled)
   .c2
     p.message(role='alert')
-      svg.icon(role='img' focusable='false')
+      svg.icon-inline(role='img' focusable='false')
         use(href='/sprites/utils.svg#info')
       | Les bouttons checkbox et radio sont utilisés lorsqu'un choix demande à être validé après coup, au sein d'un ensemble de choix dans un formulaire. Les switchs sont utilisés pour une validation imédiate du choix de l'utilisateur.
   .c2
     p.message(role='alert')
-      svg.icon(role='img' focusable='false')
+      svg.icon-inline(role='img' focusable='false')
         use(href='/sprites/utils.svg#paperclip')
       | Le design d'un switch accessible à l'aide des seuls pseudo-éléments est tout à fait possible, nous l'avons fait à une époque. Mais cette solution rend la modularité du style parfois impossible. Le label n'étant pas indépendant du switch, son positionnement sera limité, des pseudo-éléments utilisants déjà background-image ne peuvent plus être texturés, l'effets "zoom" à l'aide de la propriété font-size sera problématique.
