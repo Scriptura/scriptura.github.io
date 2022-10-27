@@ -1,7 +1,7 @@
-_buttonsColor1 = _color2
-_buttonsColor2 = _color2 //rgba(205, 133, 63, .5) // peru
-_buttonsColor3 =  _color2 //sienna
-_buttonsColor4 = _color5
+_buttonColor1 = _color2
+_buttonColor2 = _color2 //rgba(205, 133, 63, .5) // peru
+_buttonColor3 =  _color2 //sienna
+_buttonColor4 = _color5
 
 // @note Toujours privilégier l'élément <button> sur l'élément <input type=button> car il permet de réaliser des rendus plus complexe en acceptant des balises html.
 
@@ -10,14 +10,13 @@ _buttonsColor4 = _color5
 .round-button
   //font-size 1em // @note Modifiez la taille des bouttons avec la classe utilitaire .zoom
   color _colorT
-  background-color _buttonsColor3
-  border .5em solid _buttonsColor2
+  background-color _buttonColor3
+  border .5em solid _buttonColor2
   box-shadow _shadow6
   transition all .2s linear
   transition-property translate box-shadow
   outline 0
   user-select none
-  //&:focus
   &:focus-visible
   &:hover
     box-shadow _shadow6
@@ -26,14 +25,14 @@ _buttonsColor4 = _color5
     box-shadow _shadow7
     transform translateY(.05em) // en em, dépend de la taille du bouton
   &:focus-visible
-    border-color _buttonsColor4
+    border-color _buttonColor4
 
 .button
   padding 0 1em
   line-height 2
   white-space nowrap
   text-overflow ellipsis
-  //color lighten(_buttonsColor2, 50)
+  //color lighten(_buttonColor2, 50)
   border-radius .5em //_r4
 
 .round-button
@@ -42,13 +41,15 @@ _buttonsColor4 = _color5
   color rgba(233, 218, 197, .5)
   border-width .25em
   border-radius 50%
+  /*
   &::before
     content ''
     display inline-block
     vertical-align middle
     padding-top 100%
-  & *
+  */
+  *
     margin auto
-  & svg
+  svg
     height 1em
     width 1em

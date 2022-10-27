@@ -1,6 +1,6 @@
 html
 body
-  overflow-x hidden // @note Pour des éléments en clip-path dont l'élément d'origine dépasse, tel que les Ribbons @bugfixed @affected Android @note L'appel des deux sélecteurs `html` et `body` est nécessaire pour couper les dépassements sous ce navigateur, la sélection d'un seul des deux ne suffira pas.
+  overflow-x clip // @note Pour des éléments en clip-path dont l'élément d'origine dépasse, tel que les Ribbons @bugfixed @affected Android @note L'appel des deux sélecteurs `html` et `body` est nécessaire pour couper les dépassements sous ce navigateur, la sélection d'un seul des deux ne suffira pas. La valeur hidden pourrait faire l'affaire, mais elle entre en conflit avec position:sticky.
 
 body
   display grid

@@ -118,8 +118,9 @@ _logoNavSizeWidth = 3em
 
 @media (max-width _sizeNav)
 
+  html.active
   body.active
-    overflow hidden // @todo À remplacer par `overflow:clip` lorsque la règle sera suffisament supportée.
+    overflow clip
     main
     footer
     aside

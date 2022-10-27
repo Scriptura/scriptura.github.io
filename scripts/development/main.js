@@ -326,14 +326,11 @@ window.scrollTo({top: 0})
 const mainMenu = (() => {
   const button = document.querySelector('.cmd-nav'),
         mainNav = document.querySelector('.main-nav')
-
-  //const pannel = navigation.querySelector('a')
-  //if (window.innerWidth < '1372') Array.from(pannel).map(a => a.tabIndex = -1)
-
   button.addEventListener('click', () => {
+    document.documentElement.classList.toggle('active')
+    document.body.classList.toggle('active')
     button.classList.toggle('active')
     mainNav.classList.toggle('active')
-    document.body.classList.toggle('active')
   })
 })()
 

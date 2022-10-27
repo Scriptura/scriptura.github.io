@@ -6,7 +6,7 @@ block variables
 
 mixin list(icon, name, slug)
   li
-    svg.icon(role='img' focusable='false')
+    svg.icon-inline(role='img' focusable='false')
       use(href='/sprites/solid.svg#' + icon)
     a(href='#section-' + slug) #{name}
 
@@ -16,7 +16,7 @@ mixin section(name, slug)
       a.anchor(href='#section-' + slug)
     a(href='./' + slug + '.html').ribbon-bottom-right
       span
-        svg.icon(role='img' focusable='false')
+        svg.icon-inline(role='img' focusable='false')
           use(href='/sprites/solid.svg#arrow-right-long')
         | See page
     block
