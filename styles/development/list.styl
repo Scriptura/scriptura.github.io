@@ -41,13 +41,11 @@ ol ol ol
     background-color _listColor
     box-shadow _shadow15
     outline none
-    animation animList .05s ease-in-out
+    animation anim-list .05s ease-in-out
 
-@keyframes animList
+@keyframes anim-list
   to
     transform scale(1.03) translateZ(0)
-
-// ----------------------------------------------------------------------------------
 
 ul.list-straight
 ul.list-rounded
@@ -124,9 +122,6 @@ ul.list-rounded
     //mask-position center
     border-radius round(_listSize / 2, 2)
 
-
-// ----------------------------------------------------------------------------------
-
 ol.list-straight
 ol.list-rounded
   padding 0
@@ -162,7 +157,7 @@ ol.list-rounded
     //&:focus
     //&:hover
     //&:active
-      //animation animList .05s ease-in-out
+      //animation anim-list .05s ease-in-out
     &:focus-within::before
     &:hover::before
     &:active::before

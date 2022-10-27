@@ -76,7 +76,7 @@ _logoNavSizeWidth = 3em
     &:focus svg
     &:hover svg
     &:active svg
-      animation animJump .5s ease-in-out
+      animation anim-jump .5s ease-in-out
   @media (max-width _sizeNav)
     top _mainNavSizeHeight
     ul
@@ -137,7 +137,7 @@ _logoNavSizeWidth = 3em
     padding-left _logoNavSizeWidth !important // @note Laisse de la place au logo du site. @todo Solution à revoir.
 
 @media (min-width _sizeNav)
-  @keyframes animJump
+  @keyframes anim-jump
     30%
       transform translateY(-.3em)
 

@@ -41,10 +41,10 @@
     transform translate(-.35em, -2.5em)
   &:focus .marker-icon
   &:hover .marker-icon
-    animation animBounce .35s ease infinite alternate
+    animation anim-bounce .35s ease infinite alternate
 
 .start-map .marker-icon
-  animation animDrop 1s ease
+  animation anim-drop 1s ease
 
 .marker-icon
   filter drop-shadow(.3em .3em .3em rgba(0, 0, 0, .5))
@@ -71,11 +71,11 @@
   > :last-child
     fill DeepPink
 
-@keyframes animBounce
+@keyframes anim-bounce
   to
     transform translate(0, -16px)
 
-@keyframes animDrop
+@keyframes anim-drop
   0%
     transform translate(0, -100vh)
   50%

@@ -4,6 +4,8 @@ _inputColor2 = _color2
 _inputColor3 = _color5
 _inputColor4 = #222
 _inputColor5 = _colorG - 20%
+_inputColor6 = #777
+_inputColor7 = _colorW
 _inputSize = 5px
 _inputBoxShadow1 = 0 1.5rem 2rem rgba(0, 0, 0, .2)
 
@@ -42,7 +44,7 @@ form > [class*="grid"] > .input
 
 .color-output
   position relative
-  & output
+  output
     position absolute
     display inline-block
     left .1em
@@ -115,14 +117,14 @@ form > [class*="grid"] > .input
 .input textarea:focus:not(:disabled)
 .input textarea:hover:not(:disabled)
 .input textarea:active:not(:disabled)
-  animation animInput .05s ease-in-out
+  animation anim-input .05s ease-in-out
 
-@keyframes animInput
+@keyframes anim-input
   to
     transform scale(1.03) translateZ(0)
 
 .input.disabled label
-  color #777
+  color _inputColor6
 
 .input.disabled input
   background _inputColor5 repeating-linear-gradient(-45deg, transparent 0 _inputSize, _colorG _inputSize _inputSize * 2)
@@ -130,13 +132,12 @@ form > [class*="grid"] > .input
   cursor not-allowed
 
 .input .invalid
-  //border-color #f00
   background-position right .7em center // @note Révision de l'emplacement de l'astérisque si champ obligatoire
 
 .input .invalid
-  animation animInvalidInput 2s ease-in-out infinite !important
+  animation anim-invalid-input 2s ease-in-out infinite !important
 
-@keyframes animInvalidInput
+@keyframes anim-invalid-input
   50%
     border-color _color5
 
@@ -184,9 +185,9 @@ form > [class*="grid"] > .input
   width 100%
   height 3em
   align-items stretch
-  & *
+  *
     outline none
-  & input //[type=search]
+  input //[type=search]
     flex-grow 1
     max-height 100%
     //min-height 100%
@@ -200,8 +201,8 @@ form > [class*="grid"] > .input
     &:hover
     &:active
       border-color _inputColor3
-      animation animInput .05s ease-in-out
-  & button
+      animation anim-input .05s ease-in-out
+  button
     min-width 3.5em
     color _colorT
     background-color _color2
@@ -211,18 +212,17 @@ form > [class*="grid"] > .input
     &:focus
     &:hover
     &:active
-      color #fff
-      animation animSearch .2s ease-in-out
-    & svg
+      color _inputColor7
+      animation anim-search .2s ease-in-out
+    svg
       width 1em
       height 1em
 
-
-@keyframes animInput
+@keyframes anim-input
   to
     transform scale(1.03) translateZ(0)
 
-@keyframes animSearch
+@keyframes anim-search
   50%
     background-color _color5
     transform scale(1.1) translateZ(0)

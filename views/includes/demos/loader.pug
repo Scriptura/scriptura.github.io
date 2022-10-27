@@ -3,9 +3,19 @@
     p
       code .loader
     br
-    .loader.scale400
+    .loader
   div
     p
-      code .loader(style='--loaderFrame:5s')
+      code .loader.scale120
     br
-    .loader(style='--loaderFrame:5s').scale400
+    .loader.scale120
+  div
+    p
+      code (style='--loader-frame:5s')
+    br
+    .loader(style='--loader-frame:5s').scale120
+  div
+    p
+      code (style='--loader-color:#d2b48c')
+    br
+    .loader(style='--loader-frame:10s;--loader-color:#d2b48c').scale120

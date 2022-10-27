@@ -28,7 +28,7 @@ samp
   background-color _codeBlocksColor3
   border-radius _r2
   box-shadow _shadow1
-  & code
+  code
     white-space pre
     color _codeBlocksColor4
     transition color .5s ease-in-out
@@ -36,30 +36,24 @@ samp
       color _colorW
     &:empty::after
       content '$ ...'
-  & div
-    /*
+  div
     position absolute
     top 1em
     right 1em
-    */
-    float right
     display flex
     font-size 1em
     color _codeBlocksColor2
     gap .5em
-  & svg
+  svg
     display block
     width 1em
     height 1em
     fill currentColor
-  & button
-    /*
+  button
     position absolute
     bottom 1.1em
     right 1em
     padding 0
-    */
-    float right
     border none
     color _codeBlocksColor2
     background-color transparent
@@ -68,10 +62,10 @@ samp
     &:active
       color Orange
       outline none
-  //& code:empty + button // @todo À évaluer...
+  //code:empty + button // @todo À évaluer...
   //  display none
 
-.copy-offset
+.copy-offset + div // Si code sur une seule ligne, ajout d'une classe en JS permettant de décaler le contenu de l'un des deux éléments UI injectés en position absolute.
   right 2.5em !important
 
 /*
