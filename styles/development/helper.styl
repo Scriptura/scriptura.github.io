@@ -58,14 +58,16 @@ a[aria-disabled=true] // @tod En expérimentation.
 
 .center
   display grid
-  align-items center
-  justify-content center
+  place-items center
+  // @note Ancienne solution :
+  //align-items center
+  //justify-content center
+  // @note Alternative :
   //& > *
   //  place-self center // @support @see https://caniuse.com/?search=place-self
 
-//.centerX // @todo
-
-//.centerY // @todo
+//.center-x // @todo
+//.center-y // @todo
 
 //.push
 //  margin-left auto

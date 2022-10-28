@@ -1,34 +1,39 @@
 _loaderSize = 5px // Les pixels donnent un rendus plus précis quelque soit l'échelle.
 _loaderColor = Tomato
 
-:root
-  --loader-frame: 1s
-  --loader-color: _loaderColor
+.loader
+  --frame: 1s
+  --color: _loaderColor
 
 .loader
 .loader::before
 .loader::after
-  border _loaderSize solid var(--loader-color)
+  border _loaderSize solid var(--color)
   border-top-color transparent
   border-bottom-color transparent
   border-radius 50%
-  animation anim-loader var(--loader-frame) ease infinite
 
 .loader
   position relative
   width 6em
   height 6em
-  animation-duration var(--loader-frame)
+  animation anim-loader var(--frame) ease infinite
   &::before
   &::after
     content ''
     position absolute
   &::before
     inset 1px
-    animation-duration calc(var(--loader-frame) * 4.3) // @note Multiplicateur arbitraire, l'idée est d'éviter un multiple entier de la frame de base.
+    animation anim-loader calc(var(--frame) * 4.3) ease-in infinite // @note Multiplicateur arbitraire, l'idée est d'éviter un multiple entier de la frame de base.
   &::after
     inset _loaderSize + 2
-    animation-duration calc(var(--loader-frame) * 1.55) // @note Idem. //1.51
+    animation anim-loader calc(var(--frame) * 1.51) ease-out infinite // @note Idem.
+
+@keyframes anim-loader
+  from
+    transform rotate(0deg)
+  to
+    transform rotate(359deg)
 
 @keyframes anim-loader
   from
