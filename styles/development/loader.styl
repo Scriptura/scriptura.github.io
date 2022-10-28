@@ -17,17 +17,17 @@ _loaderColor = Tomato
   position relative
   width 6em
   height 6em
-  animation anim-loader var(--frame) ease infinite
+  animation anim-loader var(--frame) linear infinite
   &::before
   &::after
     content ''
     position absolute
   &::before
     inset 1px
-    animation anim-loader calc(var(--frame) * 4.3) ease-in infinite // @note Multiplicateur arbitraire, l'idée est d'éviter un multiple entier de la frame de base.
+    animation anim-loader calc(var(--frame) * 3) ease infinite // @note Multiplicateur arbitraire.
   &::after
     inset _loaderSize + 2
-    animation anim-loader calc(var(--frame) * 1.51) ease-out infinite // @note Idem.
+    animation anim-loader calc(var(--frame) * 1.51) ease infinite // @note Idem.
 
 @keyframes anim-loader
   from
