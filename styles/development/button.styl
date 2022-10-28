@@ -1,6 +1,6 @@
 _buttonColor1 = _color2
-_buttonColor2 = _color2 //rgba(205, 133, 63, .5) // peru
-_buttonColor3 =  _color2 //sienna
+_buttonColor2 = _color2
+_buttonColor3 =  _color2
 _buttonColor4 = _color5
 
 // @note Toujours privilégier l'élément <button> sur l'élément <input type=button> car il permet de réaliser des rendus plus complexe en acceptant des balises html.
@@ -8,15 +8,24 @@ _buttonColor4 = _color5
 //[class*=button] // @deprecated Espace de nom trop généraliste. Conflits avec les styles de certaines classes de plugins tels que Leaflet.
 .button
 .round-button
-  //font-size 1em // @note Modifiez la taille des bouttons avec la classe utilitaire .zoom
+  --color: tomato
+  position relative
   color _colorT
-  background-color _buttonColor3
-  border .5em solid _buttonColor2
+  //text-shadow 3px 3px 2px rgba(0, 0, 0, .2)
+  //text-transform uppercase
+  background-clip text
+  background var(--color) linear-gradient(to top, rgba(0, 0, 0, .2), rgba(255, 255, 255, .1))
+  border none
   box-shadow _shadow6
   transition all .2s linear
   transition-property translate box-shadow
   outline 0
   user-select none
+  &::before
+    content ''
+    position absolute
+    inset .2em
+    border 1px dashed rgba(0, 0, 0, .3)
   &:focus-visible
   &:hover
     box-shadow _shadow6
@@ -25,31 +34,34 @@ _buttonColor4 = _color5
     box-shadow _shadow7
     transform translateY(.05em) // en em, dépend de la taille du bouton
   &:focus-visible
-    border-color _buttonColor4
+    background-color _buttonColor4
+  /*
+  svg
+    filter drop-shadow(3px 3px 2px rgba(0, 0, 0, .2))
+  */
 
 .button
-  padding 0 1em
+  padding .5em 1em
   line-height 2
   white-space nowrap
   text-overflow ellipsis
-  //color lighten(_buttonColor2, 50)
-  border-radius .5em //_r4
+  border-radius .5em
+  &::before
+    border-radius .4em
+  + .button-test
+    margin-left .5em // @note Espace entre deux bouttons déclarés en inline-block.
 
 .round-button
-  display flex
-  padding .3em
-  color rgba(233, 218, 197, .5)
+  height 4em
+  width 4em
   border-width .25em
   border-radius 50%
-  /*
-  &::before
-    content ''
-    display inline-block
-    vertical-align middle
-    padding-top 100%
-  */
-  *
-    margin auto
   svg
-    height 1em
-    width 1em
+    height 1.5em
+    width 1.5em
+    margin auto
+    //padding 0
+  &::before
+    border-radius 50%
+  + .round-button-test
+    margin-left .5em // @note Espace entre deux bouttons déclarés en inline-block.

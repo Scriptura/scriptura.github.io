@@ -1,29 +1,67 @@
-.flex.gap
+.grid4.gap
   div
     p
-      code .button
-    button(type='button').button.scale120
+      code button.button
+    br
+    button(type='button').button
       svg.icon-inline(role='img' focusable='false')
         use(href='/sprites/utils.svg#pen')
       | Register
   div
     p
-      code .button
+      code .scale120
+    br
     button(type='button').button.scale120
       svg.icon-inline(role='img' focusable='false')
         use(href='/sprites/utils.svg#checkmark')
       | Submit
   div
     p
-      code .round-button
-    button(type='button').round-button.scale300
+      code (style='--color:#4e667a')
+    br
+    button(type='button' style='--color:#4e667a').button.scale120
+      svg.icon-inline(role='img' focusable='false')
+        use(href='/sprites/utils.svg#pen')
+      | Register
+  div
+    p
+      code .button.scale150
+    br
+    button(type='button').button.scale150
+      svg.icon-inline(role='img' focusable='false')
+        use(href='/sprites/utils.svg#checkmark')
+      | Submit
+hr(data-hr='✻ ✻ ✻')
+.grid4.gap
+  div
+    p
+      code button.round-button
+    br
+    button(type='button').round-button
       svg.icon-inline(role='img' focusable='false')
         use(href='/sprites/utils.svg#checkmark')
       span.sr-only Submit
   div
     p
-      code .round-button
-    button(type='button').round-button.scale300
+      code (style='--color:#4e667a')
+    br
+    button(type='button').round-button.scale120
       svg.icon-inline(role='img' focusable='false')
-        use(href='/sprites/utils.svg#bin')
+        use(href='/sprites/utils.svg#pen')
+      span.sr-only Submit
+  div
+    p
+      code button.round-button
+    br
+    button(type='button' style='--color:#4e667a').round-button.scale120
+      svg.icon-inline(role='img' focusable='false')
+        use(href='/sprites/utils.svg#checkmark')
+      span.sr-only Submit
+  div
+    p
+      code .button.scale150
+    br
+    button(type='button').round-button.scale150
+      svg.icon-inline(role='img' focusable='false')
+        use(href='/sprites/utils.svg#pen')
       span.sr-only Submit
