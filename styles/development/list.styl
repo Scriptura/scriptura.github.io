@@ -32,12 +32,12 @@ ol ol ol
   box-shadow _shadow14
 
 .list-stripe-links
-  a
+  & a
     display block
     color _listColor4 //inherit
     text-decoration none
-  li:focus-within
-  li:hover
+  & li:focus-within
+  & li:hover
     background-color _listColor
     box-shadow _shadow15
     outline none
@@ -50,27 +50,27 @@ ol ol ol
 ul.list-straight
 ul.list-rounded
   padding 0
-  li
+  & li
     display flex
     &:focus-within svg
     &:hover svg
       color #fff
       background-color _color5
-  svg
-  a
+  & svg
+  & a
     box-shadow _listShadow1
     transition color, background-color .3s ease-in-out
-  svg
+  & svg
     flex-shrink 0
     display flex
     align-items center
     justify-content center
     color _listColor4
     background-color _listColor
-    *
+    & *
       max-width 1em
       max-height 1em
-  a
+  & a
     display flex
     align-items center
     //align-content center
@@ -87,26 +87,26 @@ ul.list-rounded
       text-decoration none
 
 ul.list-straight
-  li
+  & li
     position relative
-  a
+  & a
     position absolute
     right 0
     width calc(100% - 2.5em)
     padding-left 1.5em
     clip-path polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%)
-  svg
+  & svg
     width _listSize + .5
     min-height _listSize
     padding .7em .7em .7em .2em
     clip-path polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%)
 
 ul.list-rounded
-  li
+  & li
     &:focus-within svg
     &:hover svg
       transform rotate(360deg)
-  svg
+  & svg
     //border-radius 50%
     clip-path circle(50%)
     //filter drop-shadow(_listShadow1)
@@ -115,7 +115,7 @@ ul.list-rounded
     margin-right .5em
     padding .7em
     transition transform .3s ease-in-out
-  a
+  & a
     //mask-image url(https://scriptura.github.io/medias/images/moons/0.svg)
     //mask-size _listSize _listSize
     //mask-repeat no-repeat
@@ -125,27 +125,13 @@ ul.list-rounded
 ol.list-straight
 ol.list-rounded
   padding 0
-  li
+  & li
     display flex
     counter-increment li
     &::before
-    a
+    & a
       box-shadow _listShadow1
       transition color, background-color .3s ease-in-out
-    a
-      display flex
-      align-items center
-      //align-content center
-      width 100%
-      min-height _listSize
-      padding .5em 1em
-      background-color _listColor3
-      &:focus
-      &:hover
-      &:active
-        color #fff
-        background-color _listColor
-        text-decoration none
     &::before
       flex-shrink 0
       display flex
@@ -164,12 +150,26 @@ ol.list-rounded
       color #fff
       background-color _color5
       //transform scale(1.2) translateZ(0)
+    & a
+      display flex
+      align-items center
+      //align-content center
+      width 100%
+      min-height _listSize
+      padding .5em 1em
+      background-color _listColor3
+      &:focus
+      &:hover
+      &:active
+        color #fff
+        background-color _listColor
+        text-decoration none
 
 ol.list-straight
-  li
+  & li
     position relative
     display flex
-    a
+    & a
       position absolute
       right 0
       width calc(100% - 2.5em)
@@ -182,7 +182,7 @@ ol.list-straight
       clip-path polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%)
 
 ol.list-rounded
-  li
+  & li
     display flex
     gap .5em
     &::before
@@ -194,7 +194,7 @@ ol.list-rounded
     &:focus-within::before
     &:hover::before
       transform rotate(360deg)
-  a
+  & a
     border-radius round(_listSize / 2, 2)
 
 [class^=grid].list-straight

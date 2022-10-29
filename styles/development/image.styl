@@ -39,7 +39,7 @@ figure
   background-color _imageColor1
   box-shadow _shadow11
   user-select none
-  figcaption
+  & figcaption
     padding-top .5em
     text-align center
 
@@ -81,7 +81,7 @@ figure
 
   [class*=-focus]:focus-within
     background-color _color5
-    button
+    & button
       color _color5
 
 [class*=-focus] button
@@ -118,11 +118,11 @@ figure
   bottom 0
   right 0
   cursor zoom-out
-  img
+  & img
     max-height 100vh
     background-color #000 // @note Pour les .png transparents.
     box-shadow _shadow13 // @bugfix @affected Chrome mobile @note box-shadox sur l'image plutôt qu'un background sur le conteneur afin d'éviter un décalage d'environ 1px en bottom.
-  button
+  & button
     bottom _gap
     right _gap
     width 2em

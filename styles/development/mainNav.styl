@@ -47,22 +47,22 @@ _logoNavSizeWidth = 3em
   //height _mainNavSizeHeight
   //font-size 1em
   box-shadow _shadow2
-  ul
+  & ul
     display flex
     width 100%
     margin 0
     padding 0
     background-color _mainNavColor1
-  li
+  & li
     list-style none
-    > *
+    & > *
       display block
       padding 0 1em
       line-height unit(_mainNavSizeHeight, '') // @todo Ou _mainNavSizeHeight tout simplement...
       box-shadow _shadow3
-  .current
+  & .current
     background-color _mainNavColor3
-  a
+  & a
     overflow hidden
     white-space nowrap
     text-overflow ellipsis
@@ -79,12 +79,12 @@ _logoNavSizeWidth = 3em
       animation anim-jump .5s ease-in-out
   @media (max-width _sizeNav)
     top _mainNavSizeHeight
-    ul
+    & ul
       flex-wrap wrap
       position absolute
       z-index 800
       transform translateX(-100vw)
-    li
+    & li
       flex 1
       flex-basis 50%
       background-color _mainNavColor1
@@ -95,8 +95,8 @@ _logoNavSizeWidth = 3em
     &.active li
       transform translateX(100vw) rotate(0deg)
   @media (min-width _sizeNav)
-    ul
-      .current
+    & ul
+      & .current
         position relative
         &::after
           content ''
@@ -107,13 +107,13 @@ _logoNavSizeWidth = 3em
           height 1em
           background-color _mainNavColor3
           clip-path polygon(0 0, 100% 0, 50% 100%)
-      > :last-child
+      & > :last-child
         margin-left auto
   @media (min-width _sizeXS) and (max-width _sizeNav)
-    li
+    & li
       flex-basis 33%
   @media (min-width _sizeS) and (max-width _sizeNav)
-    li
+    & li
       flex-basis 25%
 
 @media (max-width _sizeNav)
@@ -121,9 +121,9 @@ _logoNavSizeWidth = 3em
   html.active
   body.active
     overflow clip
-    main
-    footer
-    aside
+    & main
+    & footer
+    & aside
       user-select none
       pointer-events none
 
@@ -153,10 +153,10 @@ _logoNavSizeWidth = 3em
     background-color transparent
     border none
     outline none
-    svg
+    & svg
       width 100%
       height 100%
-    *
+    & *
       transform-origin center
       transition transform .3s ease
       fill _mainNavColor3

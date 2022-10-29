@@ -8,7 +8,7 @@ _switchSize2 = 3px
 .checkbox
   position absolute // @note Label des éléments frères décalés si déclaration en relatif.
   left -200vw
-  + label // @bugfix @affected Firefox @note Les pseudos éléments doivent impérativement partir du label et non des éléments checkbox et radio.
+  & + label // @bugfix @affected Firefox @note Les pseudos éléments doivent impérativement partir du label et non des éléments checkbox et radio.
     position relative
     vertical-align middle
     display inline-block // @note Évite un clique involontaire de l'utilisateur sur un label doté d'un 'width100%' si définition 'block'.
@@ -83,10 +83,10 @@ _switchSize2 = 3px
   align-items center
   gap 1em
   margin-top .2em
-  input
+  & input
     position absolute
     right 200vw
-  .switch-bg
+  & .switch-bg
     flex-shrink 0
     display flex
     align-items center
@@ -97,7 +97,7 @@ _switchSize2 = 3px
     border .1em solid transparent
     border-radius _switchSize1
     box-shadow inset 0 .2em .5em rgba(0, 0, 0, .2)
-  .switch-toogle
+  & .switch-toogle
     position relative
     z-index 1
     flex-shrink 0
@@ -111,7 +111,7 @@ _switchSize2 = 3px
     box-shadow 0 .2em .5em rgba(0, 0, 0, .3)
     transform translateX(- round(_switchSize1 / 2, 2))
     transition transform .2s ease-in-out
-    svg
+    & svg
      flex-shrink 0
      display block
      margin auto
@@ -128,17 +128,17 @@ _switchSize2 = 3px
     & ~ *
       color _colorG + 20%
       cursor not-allowed
-    + .switch-bg
+    & + .switch-bg
       background-image repeating-linear-gradient(-45deg, _switchColor4 0 _switchSize2, _switchColor5 0, transparent 0, transparent _switchSize2 * 2)
-    + .switch-bg .switch-toogle
+    & + .switch-bg .switch-toogle
       background-color _colorG
   [type=radio]:checked ~ *
     cursor not-allowed
 
 :not(.switch-dual-state) > .switch input:not(:checked):not(:disabled)
-  ~ *
+  & ~ *
     color grayscale(_color6) + 30%
-  + .switch-bg .switch-toogle
+  & + .switch-bg .switch-toogle
     color grayscale(_colorT) - 30%
     background-color _color6
 

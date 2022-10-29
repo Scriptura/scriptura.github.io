@@ -11,7 +11,7 @@ _ribbonColor5 = _colorG - 20%
 .ribbon-content
   position relative
   min-height 7.5em // Si ribbon, alors une hauteur minimum doit être présente sur l'élément parent.
-  > [class*=ribbon]
+  & > [class*=ribbon]
     position absolute
     z-index 2000 // @note Au cas où le ribbon est placé après le contenu de .ribbon-hook. @todo Valeur importante pour passer par dessus les .map.
     line-height 2em
@@ -39,10 +39,10 @@ _ribbonColor5 = _colorG - 20%
       background-color _ribbonColor1
       border-bottom .5em solid _ribbonColor3
       transition background-color .2s ease-in-out
-    span
+    & span
       display block
       transform rotate(180deg)
-  > a[class*=ribbon]
+  & > a[class*=ribbon]
     transition color .2s ease-in-out
     &:focus
     &:hover
@@ -52,28 +52,28 @@ _ribbonColor5 = _colorG - 20%
     &:hover::after
     &:active::after
       background-color _ribbonColor2
-  > [class*=ribbon-top]
+  & > [class*=ribbon-top]
       filter drop-shadow(0 .5em .5em rgba(0, 0, 0, .1))
       &::after
         background-image linear-gradient(to top, rgba(0, 0, 0, .3), rgba(0, 0, 0, .2) 1.25em)
-  > [class*=ribbon-bottom]
+  & > [class*=ribbon-bottom]
       filter drop-shadow(0 -.5rem .5rem rgba(0, 0, 0, .1))
       &::after
         background-image linear-gradient(to top, rgba(0, 0, 0, .2), rgba(0, 0, 0, .3) 1.25em)
-  > .ribbon-top-left
+  & > .ribbon-top-left
     top 0
     left 0
     //transform rotate(-45deg) translate(-2.65em, -.7em) // Alternative possible mais positionnement plus difficile à comprendre car tient compte de la direction imposée par rotate.
     transform translate(-2.35em, 1.4em) rotate(-45deg) // @note L'ordre des valeurs est importante.
-  > .ribbon-top-right
+  & > .ribbon-top-right
     top 0
     right 0
     transform translate(2.35em, 1.4em) rotate(45deg)
-  > .ribbon-bottom-left
+  & > .ribbon-bottom-left
     bottom 0
     left 0
     transform translate(-2.35em, -1.4em) rotate(225deg)
-  > .ribbon-bottom-right
+  & > .ribbon-bottom-right
     bottom 0
     right 0
     transform translate(2.35em, -1.4em) rotate(135deg)

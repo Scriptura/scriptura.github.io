@@ -7,7 +7,7 @@ _accordionTime1 = .5s
   display flex
   flex-direction column
   gap .5em 0
-  > * > :first-child
+  & > * > :first-child
     box-sizing border-box
     display flex
     align-items center
@@ -32,9 +32,9 @@ _accordionTime1 = .5s
       margin-left auto
       font-weight bold
       font-size 1.5em
-  .accordion-summary::after
+  & .accordion-summary::after
     transition transform _accordionTime1 ease-in-out // @note Sprécifique aux éléments remplacés.
-  > * > :last-child
+  & > * > :last-child
     overflow hidden
     padding 0 1em
     background-color _color1
@@ -47,8 +47,8 @@ _accordionTime1 = .5s
       max-height 0
       //border-color transparent // @note "Efface" la bordure, sinon elle apparait encore lorsque le panneau est fermé.
       //transition max-height _accordionTime1 ease-in-out, border-color _accordionTime1 cubic-bezier(1, 0, 1, 0) // @note "Efface" la bordure au dernier moment, avant la fermeture du panneau ; mais oblige aussi à répéter la propriété max-height sinon écrasement de cette propriété.
-  > details[open] summary::after
-  .open .accordion-summary::after
+  & > details[open] summary::after
+  & .open .accordion-summary::after
     transform rotate(-90deg)
 
 @media (hover hover) and (pointer fine)

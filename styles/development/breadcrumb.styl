@@ -9,25 +9,25 @@ _breadcrumbColor2 = _color2
   margin 0
   padding 0 3em 0 0
   background-color _breadcrumbColor1
-  li
+  & li
     list-style none
     filter drop-shadow(_shadow4)
     overflow hidden
-    a
+    & a
       &:focus
       &:hover
       &:active
         color #fff
         background-color _breadcrumbColor2
-  li:nth-last-child(3)
+  & li:nth-last-child(3)
     z-index 2
     flex-shrink 0
-  li:nth-last-child(2)
+  & li:nth-last-child(2)
     z-index 1
     flex-shrink 0
-  li:last-child div
+  & li:last-child div
       color _colorT
-  li > *
+  & li > *
     overflow hidden
     white-space nowrap
     text-overflow ellipsis
@@ -42,10 +42,10 @@ _breadcrumbColor2 = _color2
     background-color _breadcrumbColor1
     transition background-color .3s ease-in-out
     clip-path polygon(0 0, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0 100%)
-  li:first-child > *
+  & li:first-child > *
     padding-left 1em
-  li + li
+  & li + li
     margin-left -1em
   @media (max-width _sizeXS)
-    > :nth-last-child(3) // @note Ne pas mettre :first-child, il faut penser à la page index.
+    & > :nth-last-child(3) // @note Ne pas mettre :first-child, il faut penser à la page index.
       display none

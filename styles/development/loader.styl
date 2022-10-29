@@ -4,16 +4,6 @@ _loaderColor = Tomato
 .loader
   --frame: 1s
   --color: _loaderColor
-
-.loader
-.loader::before
-.loader::after
-  border _loaderSize solid var(--color)
-  border-top-color transparent
-  border-bottom-color transparent
-  border-radius 50%
-
-.loader
   position relative
   width 6em
   height 6em
@@ -24,16 +14,18 @@ _loaderColor = Tomato
     position absolute
   &::before
     inset 1px
-    animation anim-loader calc(var(--frame) * 3) ease infinite // @note Multiplicateur arbitraire.
+    animation anim-loader calc(var(--frame) * 4.7) ease infinite // @note Multiplicateur arbitraire.
   &::after
     inset _loaderSize + 2
     animation anim-loader calc(var(--frame) * 1.51) ease infinite // @note Idem.
 
-@keyframes anim-loader
-  from
-    transform rotate(0deg)
-  to
-    transform rotate(359deg)
+.loader
+.loader::before
+.loader::after
+  border _loaderSize solid var(--color)
+  border-top-color transparent
+  border-bottom-color transparent
+  border-radius 50%
 
 @keyframes anim-loader
   from

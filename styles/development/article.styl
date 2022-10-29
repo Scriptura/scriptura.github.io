@@ -2,12 +2,12 @@ _articlesColor = _colorG
 
 .article
   display grid
-  [class^=grid] > *
+  & [class^=grid] > *
     margin-top 0
-  [class^=grid]
+  & [class^=grid]
     margin-bottom -.75em
   @media (max-width _sizeXS)
-    > section::after
+    & > section::after
       content '✻ ✻ ✻'
       display block
       width 100%
@@ -16,28 +16,28 @@ _articlesColor = _colorG
       font-size 2em
       text-align center
       color rgba(255, 255, 255, .2)
-    > footer
+    & > footer
       margin-top .5em
   @media (min-width _sizeXS)
-    > section
+    & > section
       padding 4em 6em
       box-shadow _shadow8
-    > footer > div
+    & > footer > div
       position sticky
       top 2em
   @media (min-width _sizeXS) and (max-width _sizeL)
-    > footer
+    & > footer
       padding 2em 6em 0
   @media (min-width _sizeS) and (max-width _sizeL)
-    > *:not(header)
+    & > *:not(header)
       max-width 55em
   @media (min-width _sizeL)
     column-gap _gap * 2
     grid-template-columns repeat(5, minmax(0, 1fr))
-    > header
+    & > header
       grid-column span 5
-    > section
+    & > section
       grid-column span 3
-    > footer
+    & > footer
       grid-column span 2
       padding-top 4em

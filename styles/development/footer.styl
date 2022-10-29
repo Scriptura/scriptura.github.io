@@ -20,6 +20,16 @@ _footerColor1 = _colorG - 34%
   display flex
   max-width 90em
   margin 0 auto
+  @media (max-width _sizeXS)
+    flex-direction column
+    align-items center
+    text-align center
+    line-height 1
+    //gap _gap
+    padding _gap
+  @media (min-width _sizeXS)
+    justify-content space-between
+    align-items center
 
 .footer .wrap > :first-child
   display flex
@@ -33,18 +43,3 @@ _footerColor1 = _colorG - 34%
 
 .footer .wrap > :nth-child(2)
   text-align center
-
-@media (max-width _sizeXS)
-  .footer .wrap
-    flex-direction column
-    align-items center
-    text-align center
-    line-height 1
-    //gap _gap
-    padding _gap
-
-@media (min-width _sizeXS)
-
-  .footer .wrap
-    justify-content space-between
-    align-items center

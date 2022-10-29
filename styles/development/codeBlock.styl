@@ -23,20 +23,24 @@ samp
 .pre
   overflow auto
   position relative
-  min-height 3em // @note Si pas de contenu, remplacé par .pre code:empty::after
+  min-height 3em // @note Si pas de contenu, remplacé par .pre code:empty::after.
   padding 1em
   background-color _codeBlocksColor3
   border-radius _r2
   box-shadow _shadow1
-  code
+  line-height 1.25em // @note Rapproche le rendu de celui d'un terminal (~ 1.15).
+  & code
     white-space pre
     color _codeBlocksColor4
     transition color .5s ease-in-out
     &:focus-within
       color _colorW
+    &:empty::before
+      content '$ '
     &:empty::after
-      content '$ ...'
-  div
+      content '_'
+      animation anim-blink 1s steps(2, start) infinite
+  & div
     position absolute
     top 1em
     right 1em
@@ -44,12 +48,12 @@ samp
     font-size 1em
     color _codeBlocksColor2
     gap .5em
-  svg
+  & svg
     display block
     width 1em
     height 1em
     fill currentColor
-  button
+  & button
     position absolute
     bottom 1.1em
     right 1em
@@ -62,20 +66,6 @@ samp
     &:active
       color Orange
       outline none
-  //code:empty + button // @todo À évaluer...
-  //  display none
 
-.copy-offset + div // Si code sur une seule ligne, ajout d'une classe en JS permettant de décaler le contenu de l'un des deux éléments UI injectés en position absolute.
-  right 2.5em !important
-
-/*
-.pre button:focus::before
-.pre button:hover::before
-.pre button:active::before
-  content '> '
-  animation blink 1s steps(2, start) infinite
-
-@keyframes blink
-  to
-    visibility hidden
-*/
+.copy-offset + div // Si code sur une seule ligne, ajout d'une classe en JS permettant de décaler le contenu de l'un des deux éléments UI injectés en position absolute. @todo À reevoir à l'occasion.
+  right 2.5em

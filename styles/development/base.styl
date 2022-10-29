@@ -22,17 +22,15 @@ html
   background-color _color1
   font-family _fontList // Georgia, Serif
   //text-shadow 0 0 0.125rem _color1
-  line-height 1.5 // @bugfix Correct the line height @affected All browsers.
+  line-height 1.5 // @bugfix Correct the line height @affected All browsers. @note Le site étant entièrement scalable dans son ensemble, il n'y a pas d'utilisation de vérrou CSS (voir [1]).
   scroll-behavior smooth // Défilement fluide. @todo En conflit avec script retour vers le haut...
-
-@media (prefers-reduced-motion reduce)
-  // Désactivation du défilement fluide si réduction des animations dans les préférences utilisateur du navigateur @see https://developer.mozilla.org/fr/docs/Web/CSS/scroll-behavior#Accessibilité
-  html
+  // [1] @note La solution d'un verrou CSS semble séduisante a priori. @see https://hugogiraudel.com/2020/05/18/using-calc-to-figure-out-optimal-line-height/ 
+  // @todo Mais en raison du comportement totalement scalable de notre style cette solution ne sera peut-être jamais une bonne idée. @bugfix Constat d'effets de bord sur certains éléments (typographie, pre > code, ribbons...).
+  //& *
+  //  line-height calc(8px + 2ex + 8px)
+  @media (prefers-reduced-motion reduce)
+    // Désactivation du défilement fluide si réduction des animations dans les préférences utilisateur du navigateur @see https://developer.mozilla.org/fr/docs/Web/CSS/scroll-behavior#Accessibilité
     scroll-behavior auto
-
-// @see https://hugogiraudel.com/2020/05/18/using-calc-to-figure-out-optimal-line-height/
-//html *
-//  line-height calc(.3em + 2ex + .3em)
 
 ::selection
   color #fff
@@ -54,7 +52,6 @@ p
   margin-bottom .75em
 
 hr
-  //clear both
   overflow visible // @bugfix Show the overflow @affected Edge and IE.
   box-sizing content-box // @bugfix Add the correct box sizing @affected Firefox.
   height .5em // @bugfix Add the correct box sizing @affected Firefox @note Toujours définir une valeur.
@@ -75,14 +72,13 @@ h6
 .h4
 .h5
 .h6
-  //margin-top 0 // @bugfix Retrait des marges top pour un meilleur contrôle.
+  //margin-top 0
   //margin-bottom .67em
   font-family _fontList2
   //color Tan
   //text-shadow .5rem .5rem .5rem rgba(0, 0, 0, .1)
   // font-style
   // font-weight
-  // line-height
 
 h1
 .h1
@@ -112,7 +108,7 @@ pre
   margin 0
   font-family monospace, monospace // @bugfix Correct the inheritance and scaling of font size @affected All browsers.
   font-size 1em // @bugfix Correct the odd `em` font sizing @affected All browsers.
-  line-height 1.15 // Armonise l'aspect du code avec celui d'un terminal
+  //line-height 1.15 // Armonise l'aspect du code avec celui d'un terminal
   white-space pre-wrap
   //word-break keep-all
 
@@ -149,7 +145,7 @@ blockquote
   &::after
     content '\00BB' //'\201C'
     bottom 0
-  footer
+  & footer
     margin-top .75em
     margin-bottom .75em
     //text-align right

@@ -6,12 +6,12 @@ _tabSize1 = 1px
 _tabBoxShadow1 = 0 -1rem 1rem rgba(0, 0, 0, .05)
 
 .tabs
-  .tab-list
+  & .tab-list
     display flex
     margin-top .5em // Si onglets imbriqués.
     //margin-bottom 0
     padding 0
-    button
+    & button
       z-index 1
       overflow hidden
       display block
@@ -43,12 +43,12 @@ _tabBoxShadow1 = 0 -1rem 1rem rgba(0, 0, 0, .05)
         pointer-events none
       &:not(.current)
         user-select none
-  .tab-panel
+  & .tab-panel
     position relative
     top - _tabSize1 // Compensation de la bordure inférieure des onglets.
     margin-bottom .5em
     padding 'calc(.5em + %s) 1em .5em' % _tabSize1 // @note Idem
     border _tabSize1 solid _tabColor1
     box-shadow 0 1rem 1rem rgba(0, 0, 0, .1)
-    + .tab-panel
+    & + .tab-panel
       display none

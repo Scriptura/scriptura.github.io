@@ -1,9 +1,9 @@
 // @note En raison de leurs éventails d'utilisations les inputs ne sont pas stylés par défaut. N'ont lieux d'être ici que les règles d'harmonisation.
 
-_formsColor1 = _colorG - 20%
-_formsColor2 = _formsColor1 + 40%
-_formsColor3 = #222
-_formsSize1 = .8em
+_formColor1 = _colorG - 20%
+_formColor2 = _formColor1 + 40%
+_formColor3 = #222
+_formSize1 = .8em
 
 fieldset
   margin 0
@@ -201,7 +201,7 @@ select
   transition-delay 1000000s // ibid
 
 ::placeholder
-  color _formsColor2
+  color _formColor2
 
 :focus::placeholder
   color transparent
@@ -211,10 +211,10 @@ select
   &::before
     content ''
     position absolute
-    top - _formsSize1 + .1em // @note Légère correction de la position car décalage visible du pseudo-élément dans certaines situations.
-    left _formsSize1 //calc(50% - _formsSize1)
-    width _formsSize1 * 2
-    height _formsSize1
+    top - _formSize1 + .1em // @note Légère correction de la position car décalage visible du pseudo-élément dans certaines situations.
+    left _formSize1 //calc(50% - _formSize1)
+    width _formSize1 * 2
+    height _formSize1
     background-color _color5
     clip-path polygon(50% 0%, 0% 100%, 100% 100%)
 

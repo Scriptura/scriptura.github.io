@@ -2,12 +2,12 @@ _demoColor1 = _colorG + 7%
 
 [class*=demo-items]
   --itemHeight 2em
-  > *
+  & > *
     box-sizing border-box
     padding 1em
     background-color _demoColor1
     box-shadow _shadow5
-    code
+    & code
       margin-left .2em
       background-color rgba(0, 0, 0, .2)
 
@@ -21,12 +21,12 @@ _demoColor1 = _colorG + 7%
   box-shadow _shadow5
 
 .demo-counter
-  > *
+  & > *
     counter-increment div
-  > ::before
+  & > ::before
     display inline
     content counter(div) '.'
-  > * :first-child
+  & > * :first-child
     display inline
 
 .type-styleGuide main > .ribbon-content

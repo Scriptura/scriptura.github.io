@@ -7,23 +7,23 @@ _cardR1 = .5rem // @note [1] Mettre des unités fixes en raison de la nature dif
 _cardR2 = 2px // Idem [1]
 
 .card
-  h2
-  p
+  & h2
+  & p
     margin 0
     padding 2rem // @note Idem [1]
     background-color _cardColor2
     box-shadow _shadow8
-  h2
+  & h2
     margin-bottom 0
     text-align center
     border-radius _cardR1 _cardR1 _cardR2 _cardR2
     span
       color _color2
-  p
+  & p
     margin-top 0
     border-radius _cardR2 _cardR2 _cardR1 _cardR1
-  > a
-    svg
+  & > a
+    & svg
       display block
       width 'calc(100% - %s)' % (_cardR2 * 2)
       height 8em
@@ -32,9 +32,9 @@ _cardR2 = 2px // Idem [1]
       color _cardColor1
       background-color _cardColor3
       box-shadow _shadow8
-  svg
+  & svg
     transition background-color .5s,  fill .5s
-  svg:hover
+  & svg:hover
   &:focus-within svg
     fill _cardColor5
     background-color _cardColor4
