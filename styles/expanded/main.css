@@ -1306,6 +1306,7 @@ audio:not([controls]) {
   position: absolute;
   inset: 0;
   background-size: cover;
+  border: none;
 }
 .thumbnail-youtube:focus-within,
 .thumbnail-youtube:hover {
@@ -2032,7 +2033,7 @@ form > [class*="grid"] > .input {
 }
 .checkbox:disabled + label::before {
   cursor: not-allowed;
-  background: _formsColor1 repeating-linear-gradient(-45deg, transparent 0 2px, #555 2px 4px);
+  background: #2e2e2e repeating-linear-gradient(-45deg, transparent 0 2px, #555 2px 4px);
 }
 * {
   box-sizing: border-box;
@@ -2080,7 +2081,7 @@ form > [class*="grid"] > .input {
   margin: auto;
   width: 0.72em;
   height: 0.72em;
-  fill: curentColor;
+  fill: curentcolor;
 }
 .switch :not(:checked) + .switch-bg .switch-toogle svg:nth-child(1) {
   display: none;
@@ -2219,7 +2220,7 @@ form > [class*="grid"] > .input {
   border: none;
   box-shadow: inset 0 0 0.1em rgba(0,0,0,0.3), 0 0.5rem 2rem rgba(0,0,0,0.3);
   transition: all 0.2s linear;
-  transition-property: translate box-shadow;
+  transition-property: translate, box-shadow;
   outline: 0;
   -webkit-user-select: none;
      -moz-user-select: none;
