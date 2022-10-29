@@ -4,12 +4,12 @@
   display grid
   grid-auto-flow dense
   grid-template-columns minmax(0, 1fr)
-
-[class^=grid].gap
-  gap _gap
-
-[class^=grid].vertical-gap
-  gap 0 _gap
+  &.gap
+    gap _gap
+  &.gap-bottom
+    margin-bottom _gap
+  &.vertical-gap
+    gap 0 _gap
 
 @media (min-width _sizeXS)
 

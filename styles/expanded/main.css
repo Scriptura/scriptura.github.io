@@ -290,7 +290,6 @@ body {
 }
 main {
   grid-area: m;
-  padding: 1em 0;
   word-break: break-word;
 }
 .nav {
@@ -311,9 +310,6 @@ main {
 [tabindex=-1]:focus:not(:focus-visible) {
   outline: 0 !important;
 }
-.type-article main {
-  padding-top: 0.5em;
-}
 [class^=grid] {
   display: grid;
   grid-auto-flow: dense;
@@ -321,6 +317,9 @@ main {
 }
 [class^=grid].gap {
   gap: 1em;
+}
+[class^=grid].gap-bottom {
+  margin-bottom: 1em;
 }
 [class^=grid].vertical-gap {
   gap: 0 1em;
@@ -2704,9 +2703,6 @@ a[aria-disabled=true]:active {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-}
-.gap-bottom {
-  margin-bottom: 1em;
 }
 .center {
   display: grid;
