@@ -1,3 +1,16 @@
+mixin item(currentType, name, pageSlug, iconSlug)
+  li
+    if documentType === currentType
+      .current
+        svg.icon-inline(role='img' focusable='false')
+          use(href=iconSlug)
+        = name
+    else
+      a(href=pageSlug)
+        svg.icon-inline(role='img' focusable='false')
+          use(href=iconSlug)
+        = name
+
 button.cmd-nav(type='button' aria-label='Main Menu')
   svg(viewBox='0 0 1000 1000')
     rect(x='50' y='225' width='900' height='50')
@@ -5,63 +18,9 @@ button.cmd-nav(type='button' aria-label='Main Menu')
     rect(x='50' y='725' width='900' height='50')
 .main-nav(aria-label='Main')
   ul
-    li
-      if documentType === 'person'
-        .current
-          svg.icon-inline(role='img' focusable='false')
-            use(href='/sprites/utils.svg#frame')
-          | Person 1
-      else
-        a(href='/page/person.html')
-          svg.icon-inline(role='img' focusable='false')
-            use(href='/sprites/utils.svg#frame')
-          | Person 1
-    li
-      if documentType === 'place'
-        .current
-          svg.icon-inline(role='img' focusable='false')
-            use(href='/sprites/utils.svg#location')
-          | Place 1
-      else
-        a(href='/page/place.html')
-          svg.icon-inline(role='img' focusable='false')
-            use(href='/sprites/utils.svg#location')
-          | Place 1
-    li
-      if documentType === 'article'
-        .current
-          svg.icon-inline(role='img' focusable='false')
-            use(href='/sprites/utils.svg#quill')
-          | Article 1
-      else
-        a(href='/page/article.html')
-          svg.icon-inline(role='img' focusable='false')
-            use(href='/sprites/utils.svg#quill')
-          | Article 1
-    li
-      if documentType === 'imageGallery'
-        .current
-          svg.icon-inline(role='img' focusable='false')
-            use(href='/sprites/utils.svg#picture')
-          | Image gallery
-      else
-        a(href='/page/imageGallery.html')
-          svg.icon-inline(role='img' focusable='false')
-            use(href='/sprites/utils.svg#picture')
-          | Image gallery
-    li
-      if documentType === 'styleGuide'
-        .current
-          svg.icon-inline(role='img' focusable='false')
-            use(href='/sprites/solid.svg#paint-roller')
-          | Style Guide
-      else
-        a(href='/page/styleGuide.html')
-          svg.icon-inline(role='img' focusable='false')
-            use(href='/sprites/solid.svg#paint-roller')
-          | Style Guide
-    li
-      a(href='//github.com/Scriptura/scriptura.github.io')
-        svg.icon-inline(role='img' focusable='false')
-          use(href='/sprites/utils.svg#github')
-        | Repository
+    +item('person', 'Person 1', '/page/person.html', '/sprites/utils.svg#frame')
+    +item('place', 'Place 1', '/page/place.html', '/sprites/utils.svg#location')
+    +item('article', 'Article 1', '/page/article.html', '/sprites/utils.svg#quill')
+    +item('imageGallery', 'Image gallery', '/page/imageGallery.html', '/sprites/utils.svg#picture')
+    +item('styleGuide', 'Style Guide', '/page/styleGuide.html', '/sprites/solid.svg#paint-roller')
+    +item('', 'Repository', '//github.com/Scriptura/scriptura.github.io', '/sprites/utils.svg#github')
