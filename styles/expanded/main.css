@@ -1,4 +1,4 @@
-@charset 'utf-8';
+@charset "utf-8";
 @font-face {
   font-family: 'Noto Sans';
   src: url("../fonts/notoSans-Regular.woff2") format('woff2'), url("../fonts/notoSans-Regular.woff") format('woff');
