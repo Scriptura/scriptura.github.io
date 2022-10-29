@@ -1294,23 +1294,33 @@ audio:not([controls]) {
   display: none;
   height: 0;
 }
-.video {
+.video-youtube {
   position: relative;
   aspect-ratio: 16/9;
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
 }
-.video iframe,
-.video .thumbnail-youtube {
+.video-youtube iframe,
+.video-youtube .thumbnail-youtube {
   position: absolute;
   inset: 0;
   background-size: cover;
   border: none;
 }
+.thumbnail-youtube {
+  display: grid;
+  place-items: center;
+  padding: 0;
+}
 .thumbnail-youtube:focus-within,
 .thumbnail-youtube:hover {
   outline: 5px solid #ffa500;
+}
+.thumbnail-youtube svg {
+  width: 10em;
+  height: 10em;
+  fill: rgba(255,255,255,0.7);
 }
 .audio {
   display: none;

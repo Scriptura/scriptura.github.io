@@ -36,7 +36,7 @@ audio:not([controls])
 //video
 //  object-fit cover // @affected Firefox @note Influence sur l'image des posters
 
-.video
+.video-youtube
   position relative // [1] Évite un léger resize entre le thumbnail et le chargement de la vidéo.
   aspect-ratio 16/9
   user-select none
@@ -50,9 +50,16 @@ audio:not([controls])
     border none
 
 .thumbnail-youtube
+  display grid
+  place-items center
+  padding 0
   &:focus-within
   &:hover
     outline 5px solid _color5
+  & svg
+    width 10em
+    height 10em
+    fill rgba(255, 255, 255, .7)
 
 // BEGIN test
 .audio

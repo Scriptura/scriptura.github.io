@@ -1,4 +1,4 @@
-.grid2.media-s-grid1.gap
+.grid2.media-s-grid1.gap.gap-bottom
   //-div
     p
       code audio
@@ -29,13 +29,17 @@
       p.message-warning HTML5 video codec proposed is not supported by your browser.
   div
     p
-      code .video
-    .video.video-click
-       button.thumbnail-youtube(style='background-image:url("https://img.youtube.com/vi/3Bs4LOtIuxg/maxresdefault.jpg")')
-  //-div
+      code .video-youtube
+    .video-youtube(data-id='3Bs4LOtIuxg')
+  div
     p
-      code .video
-    .video
-      iframe(src="https://www.youtube.com/embed/tr4dkk5ThTk" title="YouTube video player" frameborder="0" allowfullscreen)
-      //- Option de l'iframe :
-      //- allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      code .video-youtube
+    .video-youtube(data-id='iQZobAhgayA')
+  div
+    p
+      code .video-youtube
+    .video-youtube(data-id='uWCGK4nneeU')
+  div
+    p
+      code .video-youtube
+    .video-youtube(data-id='xmHi0-SJ5cc')
