@@ -12,19 +12,29 @@ const youtubeVideo = (() => {
     let error = false
     const id = e.dataset.id
     const url = `https://youtube.com/oembed?url=http://www.youtube.com/watch?v=${id}` // Par défaut : `&format=json` ; alternative : `&format=xml`
+    const maxThumbnailUrl = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`
+
+    //fetch(maxThumbnailUrl)
+    //  .then(res => {
+    //    if (res.statusText === 'OK') {
+    //      thumbnail = maxThumbnailUrl
+    //    }
+    //    throw new Error(res.statusText)
+    //  })
 
     fetch(url)
       .then(response => response.json())
       .then(data => {
-        console.log(data)
-        const button = document.createElement('button')
-        button.classList.add('thumbnail-youtube')
-        button.style.backgroundImage = `url(${data.thumbnail_url})` // @note Le top qualité, mais pas toujours disponible : `https://img.youtube.com/vi/${id}/maxresdefault.jpg`
-        button.innerHTML = `<svg role="img" focusable="false"><use href="/sprites/utils.svg#video-play"></use></svg><p>${data.title}</p>`
-        e.appendChild(button)
+        let thumbnail = data.thumbnail_url
+        //if (maxThumbnailUrl) thumbnail = maxThumbnailUrl // @todo A faire : remplacer par une image de qualité suppérieure si elle existe.
+        const el = document.createElement('div')
+        el.classList.add('thumbnail-youtube')
+        el.style.backgroundImage = `url(${thumbnail})`
+        el.innerHTML = `<button><svg role="img" focusable="false"><use href="/sprites/utils.svg#video-play"></use></svg></button><div class="video-youtube-title">${data.title}</div>`
+        e.appendChild(el)
     
-        e.addEventListener('click', () => {
-          button.remove()
+        el.querySelector('button').addEventListener('click', () => {
+          el.remove()
           const iframe = document.createElement('iframe')
           iframe.src = `https://www.youtube.com/embed/${id}?feature=oembed&autoplay=1&enablejsapi=1`
           iframe.title = data.title
@@ -37,7 +47,7 @@ const youtubeVideo = (() => {
         error = true
         const div = document.createElement('div')
         div.classList.add('thumbnail-youtube')
-        div.innerHTML = `<p>Erreur : Cette vidéo n'existe pas :(</p>`
+        div.innerHTML = `<div class="video-youtube-error">Erreur : Cette vidéo n'existe pas :(</div>`
         e.appendChild(div)
         console.error('There was an error!', error)
       })

@@ -1303,40 +1303,44 @@ audio:not([controls]) {
   background-color: #000;
 }
 .video-youtube iframe,
-.video-youtube button {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  padding: 0;
-  background-size: cover;
-  background-position: 50% 50%;
-  border: none;
-  outline: none;
-}
-.video-youtube iframe:focus svg,
-.video-youtube button:focus svg,
-.video-youtube iframe:hover svg,
-.video-youtube button:hover svg {
-  fill: rgba(255,255,255,0.9);
-}
-.video-youtube iframe p,
-.video-youtube button p {
-  position: absolute;
-  top: 0;
-  right: 1em;
-}
-.video-youtube svg {
-  width: 10em;
-  height: 10em;
-  max-width: 30%;
-  fill: rgba(255,255,255,0.7);
-}
 .video-youtube > div {
   position: absolute;
   inset: 0;
+}
+.video-youtube .thumbnail-youtube {
   display: grid;
   place-items: center;
+  background-size: cover;
+  background-position: 50% 50%;
+}
+.video-youtube .thumbnail-youtube button {
+  width: 10em;
+  aspect-ratio: 1/1;
+  max-width: 30%;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: none;
+  border: none;
+  outline: none;
+}
+.video-youtube .thumbnail-youtube button svg {
+  fill: rgba(255,255,255,0.7);
+}
+.video-youtube .thumbnail-youtube button:focus svg,
+.video-youtube .thumbnail-youtube button:hover svg {
+  fill: rgba(255,255,255,0.9);
+}
+.video-youtube .video-youtube-title {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 0.5em 1em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-align: right;
+  text-overflow: ellipsis;
+  text-shadow: 0 0 0.2em rgba(0,0,0,0.8);
 }
 .audio {
   display: none;
