@@ -50,19 +50,17 @@ _accordionTime1 = .5s
   & > details[open] summary::after
   & .open .accordion-summary::after
     transform rotate(-90deg)
-
-@media (hover hover) and (pointer fine)
-
-  .accordion > * > :first-child
-    &:focus-visible
-    &:hover
-    &:active
-      background-color _accordionColor2
-    &:focus-within
-    &:hover
-      background-color _accordionColor2
-      box-shadow _shadow15
-      animation anim-accordion .1s ease-in-out
+  @media (hover hover) and (pointer fine)
+    & > * > :first-child
+      &:focus-visible
+      &:hover
+      &:active
+        background-color _accordionColor2
+      &:focus-within
+      &:hover
+        background-color _accordionColor2
+        box-shadow _shadow15
+        animation anim-accordion .1s ease-in-out
 
 @keyframes anim-accordion
   to

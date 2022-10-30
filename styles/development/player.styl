@@ -40,26 +40,39 @@ audio:not([controls])
   position relative // [1] Évite un léger resize entre le thumbnail et le chargement de la vidéo.
   aspect-ratio 16/9
   user-select none
+  background-color #000
   & iframe
   //& embed
   //& object
-  & .thumbnail-youtube
+  & button
     position absolute // [1]
     inset 0
+    display grid
+    place-items center
+    padding 0
     background-size cover
+    background-position 50% 50% // @note Pour positionner correctement les images plus petites que l'élément.
     border none
-
-.thumbnail-youtube
-  display grid
-  place-items center
-  padding 0
-  &:focus-within
-  &:hover
-    outline 5px solid _color5
+    outline none
+    //@media (hover hover) and (pointer fine)
+    &:focus svg
+    &:hover svg
+        fill rgba(255, 255, 255, .9)
+    & p 
+      position absolute
+      top 0
+      right 1em
   & svg
     width 10em
     height 10em
+    max-width 30%
     fill rgba(255, 255, 255, .7)
+  & > div
+    position absolute // [1]
+    inset 0
+    display grid
+    place-items center
+    
 
 // BEGIN test
 .audio
