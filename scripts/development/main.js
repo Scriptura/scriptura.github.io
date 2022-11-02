@@ -58,8 +58,7 @@ const getScripts = (() => {
   if (document.querySelector('.map')) getScript('/scripts/map.js')
   if (document.querySelector('.map')) getScript('/libraries/leaflet/leaflet.js')
   if (document.querySelector('[class*=language-]')) getScript('/libraries/prism/prism.js')
-  if (document.querySelector('.video-youtube')) getScript('/scripts/youtubeVideo.js')
-  //if (document.querySelector('[class*=thumbnail-youtube]')) getScript('/scripts/youtubeVideo.js')
+  if (document.querySelector('.video-youtube')) getScript('/scripts/youtube.js')
 })()
 
 

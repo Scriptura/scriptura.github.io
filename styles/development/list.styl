@@ -86,20 +86,24 @@ ul.list-rounded
       background-color _listColor
       text-decoration none
 
-ul.list-straight
+ul.list-straight // @todo En dev...
   & li
-    position relative
+    display grid
+    grid-template-columns 3em minmax(0, 1fr)
   & a
-    position absolute
-    right 0
-    width calc(100% - 2.5em)
+    position relative
+    right .5em
+    width calc(100% + .5em)
     padding-left 1.5em
     clip-path polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%)
   & svg
     width _listSize + .5
-    min-height _listSize
-    padding .7em .7em .7em .2em
+    min-height 100%
+    //padding .7em .7em .7em .2em
+    padding-left .7em
+    padding-right 1.1em
     clip-path polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%)
+  
 
 ul.list-rounded
   & li
@@ -169,6 +173,7 @@ ol.list-straight
   & li
     position relative
     display flex
+    gap 0em
     & a
       position absolute
       right 0

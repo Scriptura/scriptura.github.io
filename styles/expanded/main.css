@@ -328,7 +328,7 @@ main {
   .grid2,
   .grid3,
   .grid4 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 @media (min-width: 50.01em) {
@@ -1002,20 +1002,22 @@ ul.list-rounded a:active {
   text-decoration: none;
 }
 ul.list-straight li {
-  position: relative;
+  display: grid;
+  grid-template-columns: 3em minmax(0, 1fr);
 }
 ul.list-straight a {
-  position: absolute;
-  right: 0;
-  width: calc(100% - 2.5em);
+  position: relative;
+  right: 0.5em;
+  width: calc(100% + 0.5em);
   padding-left: 1.5em;
   -webkit-clip-path: polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%);
           clip-path: polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%);
 }
 ul.list-straight svg {
   width: 3em;
-  min-height: 2.5em;
-  padding: 0.7em 0.7em 0.7em 0.2em;
+  min-height: 100%;
+  padding-left: 0.7em;
+  padding-right: 1.1em;
   -webkit-clip-path: polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%);
           clip-path: polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%);
 }
@@ -1092,6 +1094,7 @@ ol.list-rounded li a:active {
 ol.list-straight li {
   position: relative;
   display: flex;
+  gap: 0em;
 }
 ol.list-straight li a {
   position: absolute;
@@ -1314,11 +1317,9 @@ audio:not([controls]) {
   background-position: 50% 50%;
 }
 .video-youtube .thumbnail-youtube button {
+  position: relative;
   width: 10em;
-  aspect-ratio: 1/1;
-  max-width: 30%;
-  margin: 0 !important;
-  padding: 0 !important;
+  max-width: 25%;
   background: none;
   border: none;
   outline: none;
