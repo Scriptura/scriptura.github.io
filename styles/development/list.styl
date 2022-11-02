@@ -47,37 +47,38 @@ ol ol ol
   to
     transform scale(1.03) translateZ(0)
 
-ul.list-straight
-ul.list-rounded
+.list-straight
+.list-rounded
   padding 0
   & li
-    display flex
+    display grid
+    grid-template-columns 3em minmax(0, 1fr)
     &:focus-within svg
     &:hover svg
+    &:active svg
+    &:focus-within::before
+    &:hover::before
+    &:active::before
       color #fff
       background-color _color5
+  & li::before
   & svg
   & a
     box-shadow _listShadow1
     transition color, background-color .3s ease-in-out
+  & li::before
   & svg
-    flex-shrink 0
     display flex
     align-items center
     justify-content center
     color _listColor4
     background-color _listColor
-    & *
-      max-width 1em
-      max-height 1em
   & a
     display flex
     align-items center
-    //align-content center
     width 100%
     min-height _listSize
     padding .5em 1em
-    //color _listColor4
     background-color _listColor3
     &:focus
     &:hover
@@ -86,121 +87,53 @@ ul.list-rounded
       background-color _listColor
       text-decoration none
 
-ul.list-straight // @todo En dev...
-  & li
-    display grid
-    grid-template-columns 3em minmax(0, 1fr)
+.list-straight
+  & li::before
+  & svg
+    width _listSize + .5
+    clip-path polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%)
+  & li::before
+    padding-right .7em
+  & svg
+    min-height 100%
+    padding-left .7em
+    padding-right 1.1em
   & a
     position relative
     right .5em
     width calc(100% + .5em)
     padding-left 1.5em
     clip-path polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%)
-  & svg
-    width _listSize + .5
-    min-height 100%
-    //padding .7em .7em .7em .2em
-    padding-left .7em
-    padding-right 1.1em
-    clip-path polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%)
-  
 
-ul.list-rounded
+.list-rounded
   & li
     &:focus-within svg
     &:hover svg
+    &:focus-within::before
+    &:hover::before
       transform rotate(360deg)
+  & li::before
   & svg
-    //border-radius 50%
-    clip-path circle(50%)
-    //filter drop-shadow(_listShadow1)
     width _listSize
     height _listSize
-    margin-right .5em
-    padding .7em
+    margin auto 0 // @note Pour centrer la "puce" si contenu de l'item trop important. @todo Résultat visuel à évaluer.
     transition transform .3s ease-in-out
+  & li::before
+    border-radius 50%
+  & svg
+    padding-left .7em
+    padding-right .7em
+    clip-path circle(50%)
+    //filter drop-shadow(_listShadow1)
   & a
-    //mask-image url(https://scriptura.github.io/medias/images/moons/0.svg)
-    //mask-size _listSize _listSize
-    //mask-repeat no-repeat
-    //mask-position center
     border-radius round(_listSize / 2, 2)
 
 ol.list-straight
 ol.list-rounded
-  padding 0
   & li
-    display flex
     counter-increment li
     &::before
-    & a
-      box-shadow _listShadow1
-      transition color, background-color .3s ease-in-out
-    &::before
-      flex-shrink 0
-      display flex
-      align-items center
-      justify-content center
       content counter(li)
-      color _listColor4
-      background-color _listColor //tomato
-    //&:focus
-    //&:hover
-    //&:active
-      //animation anim-list .05s ease-in-out
-    &:focus-within::before
-    &:hover::before
-    &:active::before
-      color #fff
-      background-color _color5
-      //transform scale(1.2) translateZ(0)
-    & a
-      display flex
-      align-items center
-      //align-content center
-      width 100%
-      min-height _listSize
-      padding .5em 1em
-      background-color _listColor3
-      &:focus
-      &:hover
-      &:active
-        color #fff
-        background-color _listColor
-        text-decoration none
-
-ol.list-straight
-  & li
-    position relative
-    display flex
-    gap 0em
-    & a
-      position absolute
-      right 0
-      width calc(100% - 2.5em)
-      padding-left 1.5em
-      clip-path polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%)
-    &::before
-      width _listSize + .5
-      min-height _listSize
-      padding-right .7em
-      clip-path polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%)
-
-ol.list-rounded
-  & li
-    display flex
-    gap .5em
-    &::before
-      width _listSize
-      height _listSize
-      padding .6em
-      border-radius 50%
-      transition transform .3s ease-in-out
-    &:focus-within::before
-    &:hover::before
-      transform rotate(360deg)
-  & a
-    border-radius round(_listSize / 2, 2)
 
 [class^=grid].list-straight
 [class^=grid].list-rounded

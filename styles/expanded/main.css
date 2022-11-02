@@ -328,7 +328,7 @@ main {
   .grid2,
   .grid3,
   .grid4 {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 @media (min-width: 50.01em) {
@@ -946,44 +946,51 @@ ol ol ol {
   outline: none;
   animation: anim-list 0.05s ease-in-out;
 }
-ul.list-straight,
-ul.list-rounded {
+.list-straight,
+.list-rounded {
   padding: 0;
 }
-ul.list-straight li,
-ul.list-rounded li {
-  display: flex;
+.list-straight li,
+.list-rounded li {
+  display: grid;
+  grid-template-columns: 3em minmax(0, 1fr);
 }
-ul.list-straight li:focus-within svg,
-ul.list-rounded li:focus-within svg,
-ul.list-straight li:hover svg,
-ul.list-rounded li:hover svg {
+.list-straight li:focus-within svg,
+.list-rounded li:focus-within svg,
+.list-straight li:hover svg,
+.list-rounded li:hover svg,
+.list-straight li:active svg,
+.list-rounded li:active svg,
+.list-straight li:focus-within::before,
+.list-rounded li:focus-within::before,
+.list-straight li:hover::before,
+.list-rounded li:hover::before,
+.list-straight li:active::before,
+.list-rounded li:active::before {
   color: #fff;
   background-color: #ffa500;
 }
-ul.list-straight svg,
-ul.list-rounded svg,
-ul.list-straight a,
-ul.list-rounded a {
+.list-straight li::before,
+.list-rounded li::before,
+.list-straight svg,
+.list-rounded svg,
+.list-straight a,
+.list-rounded a {
   box-shadow: 0.5rem 0.5rem 2rem rgba(0,0,0,0.1);
   transition: color, background-color 0.3s ease-in-out;
 }
-ul.list-straight svg,
-ul.list-rounded svg {
-  flex-shrink: 0;
+.list-straight li::before,
+.list-rounded li::before,
+.list-straight svg,
+.list-rounded svg {
   display: flex;
   align-items: center;
   justify-content: center;
   color: #e9dac5;
   background-color: #ff6347;
 }
-ul.list-straight svg *,
-ul.list-rounded svg * {
-  max-width: 1em;
-  max-height: 1em;
-}
-ul.list-straight a,
-ul.list-rounded a {
+.list-straight a,
+.list-rounded a {
   display: flex;
   align-items: center;
   width: 100%;
@@ -991,21 +998,31 @@ ul.list-rounded a {
   padding: 0.5em 1em;
   background-color: #474747;
 }
-ul.list-straight a:focus,
-ul.list-rounded a:focus,
-ul.list-straight a:hover,
-ul.list-rounded a:hover,
-ul.list-straight a:active,
-ul.list-rounded a:active {
+.list-straight a:focus,
+.list-rounded a:focus,
+.list-straight a:hover,
+.list-rounded a:hover,
+.list-straight a:active,
+.list-rounded a:active {
   color: #fff;
   background-color: #ff6347;
   text-decoration: none;
 }
-ul.list-straight li {
-  display: grid;
-  grid-template-columns: 3em minmax(0, 1fr);
+.list-straight li::before,
+.list-straight svg {
+  width: 3em;
+  -webkit-clip-path: polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%);
+          clip-path: polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%);
 }
-ul.list-straight a {
+.list-straight li::before {
+  padding-right: 0.7em;
+}
+.list-straight svg {
+  min-height: 100%;
+  padding-left: 0.7em;
+  padding-right: 1.1em;
+}
+.list-straight a {
   position: relative;
   right: 0.5em;
   width: calc(100% + 0.5em);
@@ -1013,121 +1030,38 @@ ul.list-straight a {
   -webkit-clip-path: polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%);
           clip-path: polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%);
 }
-ul.list-straight svg {
-  width: 3em;
-  min-height: 100%;
-  padding-left: 0.7em;
-  padding-right: 1.1em;
-  -webkit-clip-path: polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%);
-          clip-path: polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%);
-}
-ul.list-rounded li:focus-within svg,
-ul.list-rounded li:hover svg {
+.list-rounded li:focus-within svg,
+.list-rounded li:hover svg,
+.list-rounded li:focus-within::before,
+.list-rounded li:hover::before {
   transform: rotate(360deg);
 }
-ul.list-rounded svg {
-  -webkit-clip-path: circle(50%);
-          clip-path: circle(50%);
+.list-rounded li::before,
+.list-rounded svg {
   width: 2.5em;
   height: 2.5em;
-  margin-right: 0.5em;
-  padding: 0.7em;
+  margin: auto 0;
   transition: transform 0.3s ease-in-out;
 }
-ul.list-rounded a {
-  border-radius: 1.25em;
+.list-rounded li::before {
+  border-radius: 50%;
 }
-ol.list-straight,
-ol.list-rounded {
-  padding: 0;
+.list-rounded svg {
+  padding-left: 0.7em;
+  padding-right: 0.7em;
+  -webkit-clip-path: circle(50%);
+          clip-path: circle(50%);
+}
+.list-rounded a {
+  border-radius: 1.25em;
 }
 ol.list-straight li,
 ol.list-rounded li {
-  display: flex;
   counter-increment: li;
 }
 ol.list-straight li::before,
-ol.list-rounded li::before,
-ol.list-straight li a,
-ol.list-rounded li a {
-  box-shadow: 0.5rem 0.5rem 2rem rgba(0,0,0,0.1);
-  transition: color, background-color 0.3s ease-in-out;
-}
-ol.list-straight li::before,
 ol.list-rounded li::before {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   content: counter(li);
-  color: #e9dac5;
-  background-color: #ff6347;
-}
-ol.list-straight li:focus-within::before,
-ol.list-rounded li:focus-within::before,
-ol.list-straight li:hover::before,
-ol.list-rounded li:hover::before,
-ol.list-straight li:active::before,
-ol.list-rounded li:active::before {
-  color: #fff;
-  background-color: #ffa500;
-}
-ol.list-straight li a,
-ol.list-rounded li a {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  min-height: 2.5em;
-  padding: 0.5em 1em;
-  background-color: #474747;
-}
-ol.list-straight li a:focus,
-ol.list-rounded li a:focus,
-ol.list-straight li a:hover,
-ol.list-rounded li a:hover,
-ol.list-straight li a:active,
-ol.list-rounded li a:active {
-  color: #fff;
-  background-color: #ff6347;
-  text-decoration: none;
-}
-ol.list-straight li {
-  position: relative;
-  display: flex;
-  gap: 0em;
-}
-ol.list-straight li a {
-  position: absolute;
-  right: 0;
-  width: calc(100% - 2.5em);
-  padding-left: 1.5em;
-  -webkit-clip-path: polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%);
-          clip-path: polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%);
-}
-ol.list-straight li::before {
-  width: 3em;
-  min-height: 2.5em;
-  padding-right: 0.7em;
-  -webkit-clip-path: polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%);
-          clip-path: polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%);
-}
-ol.list-rounded li {
-  display: flex;
-  gap: 0.5em;
-}
-ol.list-rounded li::before {
-  width: 2.5em;
-  height: 2.5em;
-  padding: 0.6em;
-  border-radius: 50%;
-  transition: transform 0.3s ease-in-out;
-}
-ol.list-rounded li:focus-within::before,
-ol.list-rounded li:hover::before {
-  transform: rotate(360deg);
-}
-ol.list-rounded a {
-  border-radius: 1.25em;
 }
 [class^=grid].list-straight,
 [class^=grid].list-rounded {
