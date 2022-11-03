@@ -819,6 +819,7 @@ samp {
 .pre {
   overflow: auto;
   position: relative;
+  margin: 1em 0;
   min-height: 3em;
   padding: 1em;
   background-color: #1f1f1f;

@@ -28,7 +28,7 @@ const youtubeVideo = (() => {
         const el = document.createElement('div')
         el.classList.add('thumbnail-youtube')
         el.style.backgroundImage = `url(${data.thumbnail_url})`
-        el.innerHTML = `<button><svg role="img" focusable="false"><use href="/sprites/utils.svg#video-play"></use></svg></button><div class="video-youtube-title">${data.title}</div>`
+        el.innerHTML = `<button><svg role="img" focusable="false"><use href="/sprites/utils.svg#youtube"></use></svg></button><div class="video-youtube-title">${data.title}</div>`
         e.appendChild(el)
 
         el.querySelector('button').addEventListener('click', () => {
