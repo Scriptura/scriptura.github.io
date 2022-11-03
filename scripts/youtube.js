@@ -19,24 +19,22 @@ const youtubeVideo = (() => {
   document.querySelectorAll('.video-youtube').forEach(e => {
 
     const id = e.dataset.id
-    const url = `https://youtube.com/oembed?url=http://www.youtube.com/watch?v=${id}` // Par défaut : `&format=json` ; alternative : `&format=xml`
-    //let maxThumbnail = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`
+    const json = `https://youtube.com/oembed?url=http://youtube.com/watch?v=${id}` // Par défaut : `&format=json` ; alternative : `&format=xml`
+    //const maxThumbnail = `https://img.youtube.com/vi/${id}/maxresdefault.jpg` // Qualité pas toujours disponible.
 
-    fetch(url)
+    fetch(json)
       .then(response => response.json())
       .then(data => {
-        let thumbnail = data.thumbnail_url
-        //if (maxThumbnail.naturalWidth > 300) thumbnail = maxThumbnail // @todo A faire : remplacer l'image standard par une image de qualité suppérieure si elle existe.
         const el = document.createElement('div')
         el.classList.add('thumbnail-youtube')
-        el.style.backgroundImage = `url(${thumbnail})`
+        el.style.backgroundImage = `url(${data.thumbnail_url})`
         el.innerHTML = `<button><svg role="img" focusable="false"><use href="/sprites/utils.svg#video-play"></use></svg></button><div class="video-youtube-title">${data.title}</div>`
         e.appendChild(el)
-    
+
         el.querySelector('button').addEventListener('click', () => {
           el.remove()
           const iframe = document.createElement('iframe')
-          iframe.src = `https://www.youtube.com/embed/${id}?feature=oembed&autoplay=1&enablejsapi=1`
+          iframe.src = `https://www.youtube.com/embed/${id}?feature=oembed&autoplay=1`
           iframe.title = data.title
           iframe.setAttribute('allowFullScreen', '') // @todo 'allow: fullscreen' n'est pas encore supporté
           //iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture')
