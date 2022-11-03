@@ -17,12 +17,25 @@
     .video-youtube(data-id='errorId')
   div
     p
-      code .video-youtube (pas de grande miniature)
+      code .video-youtube (missing `maxresdefault.jpg`)
     .video-youtube(data-id='rnS20usFqYs')
   div
     p
-      code .video-youtube (pas de grande miniature)
+      code .video-youtube (missing `maxresdefault.jpg`)
     .video-youtube(data-id='TZFtUwAs0wk')
+.grid2.gap.gap-bottom
+  .message
+    p
+      svg.icon-inline(role='img' focusable='false')
+        use(href='/sprites/utils.svg#info')
+      | Afin de garder des pages légères les vidéos Youtubes ne sont chargées qu'à la demande de l'utilisateur, au click sur le bouton de lecture.
+  .message
+    p
+      svg.icon-inline(role='img' focusable='false')
+        use(href='/sprites/utils.svg#info')
+      | L'API youtube n'est pas utilisée afin d'éviter les limitations inhérentes à cette dernière en terme de requêtes. Ce qui évite aussi la dépendance à une clef d'API.
+//-hr(data-hr='✻ ✻ ✻')
+//-.grid3.media-l-grid2.gap.gap-bottom
   div
     p
       code audio
