@@ -17,7 +17,7 @@
     "pug": "^3.0.2",
     "sharp": "^0.31.1",
     "stylus": "^0.59.0",
-    "svg-sprite": "^2.0.0",
+    "svg-symbol-sprite": "^1.1.0",
     "uglify-es": "^3.3.9"
   },
   "scripts": {
@@ -31,6 +31,7 @@
     "cssprint": "stylus -u autoprefixer-stylus -w styles/development/print.styl -o styles/print.css -c -m",
     "cssprism": "stylus -u autoprefixer-stylus -w styles/development/prism.styl -o styles/prism.css -c -m",
     "img": "node tasks/images",
+    "svg": "svg-symbol-sprite -p '' -i medias/icons -o sprites/util.svg",
     "imglist": "node tasks/imageList",
     "bs": "browser-sync start --proxy 'scriptura.github.io.localhost' --port 9010 --reload-debounce 2000 --files 'assets' 'views' --no-notify"
   }
