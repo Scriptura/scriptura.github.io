@@ -29,8 +29,19 @@ _demoColor1 = _colorG + 7%
   & > * :first-child
     display inline
 
-.type-styleGuide main > .ribbon-content
-  background-image linear-gradient(-45deg, rgba(255, 255, 255, .05), transparent 50%)
-  background-size 15em 15em
-  background-repeat  no-repeat
-  background-position 100% 100%
+.type-styleGuide
+  //grid-template-columns minmax(_gap, 1fr) minmax(0, _wrap + 12) minmax(_gap, 1fr)
+  & main > .ribbon-content
+    /*
+    background-image linear-gradient(-135deg, rgba(255, 255, 255, .02), transparent 50%)
+    background-size 15em 15em
+    background-repeat  no-repeat
+    background-position 100% 0%
+    */
+    @media (max-width _sizeXS)
+      padding 1em
+    @media (min-width _sizeXS)
+      padding 2em 3em
+      box-shadow _shadow8
+    @media (min-width _sizeS)
+      padding 4em 6em

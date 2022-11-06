@@ -11,6 +11,9 @@
   &.vertical-gap
     gap 0 _gap
 
+.grid5
+  grid-template-columns repeat(2, minmax(0, 1fr))
+
 @media (min-width _sizeXS)
 
   .grid2
@@ -18,16 +21,25 @@
   .grid4
     grid-template-columns repeat(2, minmax(0, 1fr))
 
+  .grid5
+    grid-template-columns repeat(3, minmax(0, 1fr))
+
 @media (min-width _sizeS)
 
   .grid3
   .grid4
     grid-template-columns repeat(3, minmax(0, 1fr))
 
+  .grid5
+    grid-template-columns repeat(4, minmax(0, 1fr))
+
 @media (min-width _sizeL)
 
   .grid4
     grid-template-columns repeat(4, minmax(0, 1fr))
+
+  .grid5
+    grid-template-columns repeat(5, minmax(0, 1fr))
 
 @media (max-width _sizeXS)
 
@@ -113,7 +125,6 @@
 
   .summary
     grid-template-columns repeat(4, 1fr)
-
 
 // with flexbox:
 

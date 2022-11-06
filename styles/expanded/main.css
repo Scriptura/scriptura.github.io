@@ -218,18 +218,23 @@ iframe {
 .main-heading {
   word-wrap: break-word;
   text-shadow: 0.2em 0.2em 0.2em rgba(0,0,0,0.3);
-  font-size: 2em;
 }
 .main-heading span {
   color: #ff6347;
 }
+.main-heading,
+h1 {
+  font-size: 2em;
+}
 @media (min-width: 36.01em) {
-  .main-heading {
+  .main-heading,
+  h1 {
     font-size: 2.25em;
   }
 }
 @media (min-width: 50.01em) {
-  .main-heading {
+  .main-heading,
+  h1 {
     font-size: 2.5em;
   }
 }
@@ -324,11 +329,17 @@ main {
 [class^=grid].vertical-gap {
   gap: 0 1em;
 }
+.grid5 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
 @media (min-width: 36.01em) {
   .grid2,
   .grid3,
   .grid4 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .grid5 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 @media (min-width: 50.01em) {
@@ -336,10 +347,16 @@ main {
   .grid4 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+  .grid5 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }
 @media (min-width: 90.01em) {
   .grid4 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .grid5 {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 }
 @media (max-width: 36.01em) {
@@ -2615,11 +2632,21 @@ form > [class*="grid"] > .input {
 .demo-counter > * :first-child {
   display: inline;
 }
-.type-styleGuide main > .ribbon-content {
-  background-image: linear-gradient(-45deg, rgba(255,255,255,0.05), transparent 50%);
-  background-size: 15em 15em;
-  background-repeat: no-repeat;
-  background-position: 100% 100%;
+@media (max-width: 36.01em) {
+  .type-styleGuide main > .ribbon-content {
+    padding: 1em;
+  }
+}
+@media (min-width: 36.01em) {
+  .type-styleGuide main > .ribbon-content {
+    padding: 2em 3em;
+    box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
+  }
+}
+@media (min-width: 50.01em) {
+  .type-styleGuide main > .ribbon-content {
+    padding: 4em 6em;
+  }
 }
 .hidden,
 [hidden] {
