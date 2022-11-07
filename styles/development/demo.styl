@@ -41,7 +41,20 @@ _demoColor1 = _colorG + 7%
     @media (max-width _sizeXS)
       padding 1em
     @media (min-width _sizeXS)
-      padding 2em 3em
-      box-shadow _shadow8
-    @media (min-width _sizeS)
       padding 4em 6em
+      box-shadow _shadow8
+    // @todo En test :
+    /*
+    @media (max-width _sizeXS)
+      & .grid2
+      & .grid3
+      & .grid4
+        grid-template-columns minmax(0, 1fr)
+    @media (max-width _sizeS)
+      & .grid2
+      & .grid3
+      & .grid4
+        grid-template-columns minmax(0, 1fr)
+      & .grid5
+        grid-template-columns repeat(2, minmax(0, 1fr))
+    */

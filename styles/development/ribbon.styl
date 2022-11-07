@@ -1,7 +1,6 @@
 // @bug @affected Chrome @note Effet de bord indésirables si utilisation avec la propriété column-count sur l'élément parent (sauf pour le premier item). 1/ Bandeau tronqué si placé sur un élément avec la propriété. 2/ Liens non cliquables si utilisation de clip-path.
 
 _ribbonDottedSize = 2px //.15em
-_ribbonDotted = _ribbonDottedSize dotted rgba(0, 0, 0, .3)
 _ribbonColor1 = _color2
 _ribbonColor2 = _color5
 _ribbonColor3 = _colorG + 14%
@@ -31,12 +30,12 @@ _ribbonColor5 = _colorG - 20%
     &::before
       top .1em
       height 1.8em
-      border _ribbonDotted
+      border _ribbonDottedSize dotted rgba(255, 2545, 255, .2)
       border-left none
       border-right none
     &::after
       z-index -1
-      background-color _ribbonColor1
+      background-color _ribbonColor3
       border-bottom .5em solid _ribbonColor3
       transition background-color .2s ease-in-out
     & span
@@ -44,6 +43,10 @@ _ribbonColor5 = _colorG - 20%
       transform rotate(180deg)
   & > a[class*=ribbon]
     transition color .2s ease-in-out
+    //&::before
+      //border-color rgba(0, 0, 0, .3)
+    &::after
+      background-color _ribbonColor1
     &:focus
     &:hover
     &:active

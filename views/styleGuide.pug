@@ -14,15 +14,7 @@ mixin section(name, slug)
   section(id='section-' + slug).ribbon-content
     h1= name
       a.anchor(href='#section-' + slug)
-    a(href='./' + slug + '.html').ribbon-top-right
-      svg.icon-inline(role='img' focusable='false')
-        use(href='/sprites/util.svg#arrow-right2')
-      | See page
-    //-a(href='./' + slug + '.html').ribbon-bottom-right
-      span
-        svg.icon-inline(role='img' focusable='false')
-          use(href='/sprites/util.svg#arrow-right2')
-        | See page
+    a(href='./' + slug + '.html').ribbon-top-right See page
     block
 
 block main

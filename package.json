@@ -10,14 +10,14 @@
   "devDependencies": {
     "autoprefixer-stylus": "^1.0.0",
     "browser-sync": "^2.27.10",
-    "eslint": "^8.26.0",
+    "eslint": "^8.27.0",
     "image-size": "^1.0.2",
     "mkdirp": "^1.0.4",
     "ora": "^6.1.2",
     "pug": "^3.0.2",
-    "sharp": "^0.31.1",
+    "sharp": "^0.31.2",
     "stylus": "^0.59.0",
-    "svg-symbol-sprite": "^1.1.0",
+    "svg-symbol-sprite": "^1.2.2",
     "svgo": "^3.0.0",
     "uglify-es": "^3.3.9"
   },

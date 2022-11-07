@@ -80,9 +80,24 @@ h6
   // font-style
   // font-weight
 
+// [1] @note Un calcul, complexe, pourrait être fait pour fluidifier la taille en fonction de celle de la fenêtre @todo solution non retenue pour l'instant @see https://codepen.io/olivier-c/pen/yLaXyLb
+// [2] @affected Chrome (and more ?) @note Pour la balise h1 définition de marges différentes selon le contexte (article, aside, nav, section), les marges doivent donc être définies.
 h1
 .h1
-  font-size 2.5em
+  margin-top .83em // @note Marge par défaut, sans le contexte expliqué par la note [2], aligné sur les marges de h2 ce qui évite un rattrapage compliqué si marge de valeur inférieure.
+  margin-bottom .83em // Idem
+  @media (max-width _sizeXS)
+    //margin-top .83em // @note Marge alignée sur celle de h2 (si "rattrapage")
+    //margin-bottom .83em
+    font-size 2em
+  @media (min-width _sizeXS)
+    //margin-top .75em // @note Moyenne entre les deux extrêmes (.83em et .67em) (si "rattrapage")
+    //margin-bottom .75em
+    font-size 2.25em
+  @media (min-width _sizeS)
+    //margin-top .67em // @note Marge par défaut, sans le contexte expliqué par la note [2] (si "rattrapage")
+    //margin-bottom .67em
+    font-size 2.5em
 
 h2
 .h2

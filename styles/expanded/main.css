@@ -82,7 +82,26 @@ h6,
 }
 h1,
 .h1 {
-  font-size: 2.5em;
+  margin-top: 0.83em;
+  margin-bottom: 0.83em;
+}
+@media (max-width: 36.01em) {
+  h1,
+  .h1 {
+    font-size: 2em;
+  }
+}
+@media (min-width: 36.01em) {
+  h1,
+  .h1 {
+    font-size: 2.25em;
+  }
+}
+@media (min-width: 50.01em) {
+  h1,
+  .h1 {
+    font-size: 2.5em;
+  }
 }
 h2,
 .h2 {
@@ -222,22 +241,6 @@ iframe {
 .main-heading span {
   color: #ff6347;
 }
-.main-heading,
-h1 {
-  font-size: 2em;
-}
-@media (min-width: 36.01em) {
-  .main-heading,
-  h1 {
-    font-size: 2.25em;
-  }
-}
-@media (min-width: 50.01em) {
-  .main-heading,
-  h1 {
-    font-size: 2.5em;
-  }
-}
 hr[data-hr],
 .decorative-hr hr {
   display: block;
@@ -296,6 +299,7 @@ body {
 main {
   grid-area: m;
   word-break: break-word;
+  padding-bottom: 1em;
 }
 .nav {
   grid-area: n;
@@ -478,6 +482,9 @@ main {
 [class^=column].gap {
   -moz-column-gap: 1em;
        column-gap: 1em;
+}
+[class^=column].vertical-gap {
+  gap: 0 1em;
 }
 [class^=column].gap > :not(hr) {
   margin-bottom: 1em;
@@ -2639,13 +2646,8 @@ form > [class*="grid"] > .input {
 }
 @media (min-width: 36.01em) {
   .type-styleGuide main > .ribbon-content {
-    padding: 2em 3em;
-    box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
-  }
-}
-@media (min-width: 50.01em) {
-  .type-styleGuide main > .ribbon-content {
     padding: 4em 6em;
+    box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
   }
 }
 .hidden,
@@ -3025,13 +3027,13 @@ a[aria-disabled=true]:active {
 .ribbon-content > [class*=ribbon]::before {
   top: 0.1em;
   height: 1.8em;
-  border: 2px dotted rgba(0,0,0,0.3);
+  border: 2px dotted rgba(255,255,255,0.2);
   border-left: none;
   border-right: none;
 }
 .ribbon-content > [class*=ribbon]::after {
   z-index: -1;
-  background-color: #ff6347;
+  background-color: #555;
   border-bottom: 0.5em solid #555;
   transition: background-color 0.2s ease-in-out;
 }
@@ -3041,6 +3043,9 @@ a[aria-disabled=true]:active {
 }
 .ribbon-content > a[class*=ribbon] {
   transition: color 0.2s ease-in-out;
+}
+.ribbon-content > a[class*=ribbon]::after {
+  background-color: #ff6347;
 }
 .ribbon-content > a[class*=ribbon]:focus,
 .ribbon-content > a[class*=ribbon]:hover,
