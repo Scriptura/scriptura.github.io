@@ -3,7 +3,7 @@
 _ribbonDottedSize = 2px //.15em
 _ribbonColor1 = _color2
 _ribbonColor2 = _color5
-_ribbonColor3 = _colorG + 14%
+_ribbonColor3 = _color6 //_colorG + 14%
 _ribbonColor4 = _colorT
 _ribbonColor5 = _colorG - 20%
 
@@ -19,7 +19,6 @@ _ribbonColor5 = _colorG - 20%
     height 2.5em
     text-align center
     text-decoration none
-    //color _ribbonColor4
     user-select none
     &::before
     &::after
@@ -42,6 +41,7 @@ _ribbonColor5 = _colorG - 20%
       display block
       transform rotate(180deg)
   & > a[class*=ribbon]
+    color _colorT
     transition color .2s ease-in-out
     //&::before
       //border-color rgba(0, 0, 0, .3)

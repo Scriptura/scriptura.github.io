@@ -419,10 +419,12 @@ main {
 .flex {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
 }
 .flex.gap {
   gap: 1em;
+}
+.flex.gap-bottom {
+  margin-bottom: 1em;
 }
 [class^=column] {
   -moz-column-gap: 0;
@@ -3033,8 +3035,8 @@ a[aria-disabled=true]:active {
 }
 .ribbon-content > [class*=ribbon]::after {
   z-index: -1;
-  background-color: #555;
-  border-bottom: 0.5em solid #555;
+  background-color: #4e667a;
+  border-bottom: 0.5em solid #4e667a;
   transition: background-color 0.2s ease-in-out;
 }
 .ribbon-content > [class*=ribbon] span {
@@ -3042,6 +3044,7 @@ a[aria-disabled=true]:active {
   transform: rotate(180deg);
 }
 .ribbon-content > a[class*=ribbon] {
+  color: #e9dac5;
   transition: color 0.2s ease-in-out;
 }
 .ribbon-content > a[class*=ribbon]::after {

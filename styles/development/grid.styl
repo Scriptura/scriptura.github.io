@@ -97,10 +97,11 @@
 .flex // @todo En test...
   display flex
   flex-wrap wrap
-  justify-content space-between
-
-.flex.gap
-  gap _gap
+  //justify-content space-between
+  &.gap
+    gap _gap
+  &.gap-bottom
+    margin-bottom _gap
 
 /*
 // @note Mémento de nos (presques) équivalences grid/flex codées ultérieurement :
