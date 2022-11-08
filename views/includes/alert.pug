@@ -1,21 +1,21 @@
 
 //- @see https://www.cnil.fr/fr/reglement-europeen-protection-donnees
 template#rgpd
-  #rgpd-see.message(role='alert')
+  #rgpd-see.message-info(role='alert')
     p
       svg.icon-inline(role='img' focusable='false')
         use(href='/sprites/util.svg#info')
       | Ce site utilise des cookies et vous donne le contrôle sur ceux que vous souhaitez activer&nbsp;:
     .flex.gap.gap-bottom
-      button.button#rgpd-true-consent
+      button.button#rgpd-true-consent(style='--color:#fff;--bg-color:#4e667a')
         svg.icon-inline(role='img' focusable='false')
           use(href='/sprites/util.svg#checkmark')
         | Tout accepter
-      button.button#rgpd-false-consent
+      button.button#rgpd-false-consent(style='--color:#fff;--bg-color:#4e667a')
         svg.icon-inline(role='img' focusable='false')
           use(href='/sprites/util.svg#mark')
         | Tout refuser
-      button.button
+      button.button(style='--color:#fff;--bg-color:#4e667a')
         svg.icon-inline(role='img' focusable='false')
           use(href='/sprites/util.svg#quill')
         | Personnaliser

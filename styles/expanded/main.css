@@ -2203,12 +2203,13 @@ form > [class*="grid"] > .input {
 }
 .button,
 .round-button {
-  --color: #ff6347;
+  --color: #e9dac5;
+  --bg-color: #ff6347;
   position: relative;
-  color: #e9dac5;
+  color: var(--color);
   -webkit-background-clip: text;
           background-clip: text;
-  background: var(--color) linear-gradient(to top, rgba(0,0,0,0.2), rgba(255,255,255,0.1));
+  background: var(--bg-color) linear-gradient(to top, rgba(0,0,0,0.2), rgba(255,255,255,0.1));
   border: none;
   box-shadow: inset 0 0 0.1em rgba(0,0,0,0.3), 0 0.5rem 2rem rgba(0,0,0,0.3);
   transition: all 0.2s linear;
@@ -2223,7 +2224,7 @@ form > [class*="grid"] > .input {
   content: '';
   position: absolute;
   inset: 0.2em;
-  border: 1px dashed rgba(0,0,0,0.3);
+  border: 1px dashed rgba(255,255,255,0.3);
 }
 .button:focus-visible,
 .round-button:focus-visible,
@@ -3006,6 +3007,8 @@ a[aria-disabled=true]:active {
   min-height: 7.5em;
 }
 .ribbon-content > [class*=ribbon] {
+  --color: currentColor;
+  --bg-color: #4e667a;
   position: absolute;
   z-index: 2000;
   line-height: 2em;
@@ -3014,6 +3017,7 @@ a[aria-disabled=true]:active {
   height: 2.5em;
   text-align: center;
   text-decoration: none;
+  color: var(--color);
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
@@ -3035,8 +3039,8 @@ a[aria-disabled=true]:active {
 }
 .ribbon-content > [class*=ribbon]::after {
   z-index: -1;
-  background-color: #4e667a;
-  border-bottom: 0.5em solid #4e667a;
+  background-color: var(--bg-color);
+  border-bottom: 0.5em solid var(--bg-color);
   transition: background-color 0.2s ease-in-out;
 }
 .ribbon-content > [class*=ribbon] span {
@@ -3044,7 +3048,6 @@ a[aria-disabled=true]:active {
   transform: rotate(180deg);
 }
 .ribbon-content > a[class*=ribbon] {
-  color: #e9dac5;
   transition: color 0.2s ease-in-out;
 }
 .ribbon-content > a[class*=ribbon]::after {

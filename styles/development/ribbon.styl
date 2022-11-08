@@ -4,13 +4,14 @@ _ribbonDottedSize = 2px //.15em
 _ribbonColor1 = _color2
 _ribbonColor2 = _color5
 _ribbonColor3 = _color6 //_colorG + 14%
-_ribbonColor4 = _colorT
 _ribbonColor5 = _colorG - 20%
 
 .ribbon-content
   position relative
   min-height 7.5em // Si ribbon, alors une hauteur minimum doit être présente sur l'élément parent.
   & > [class*=ribbon]
+    --color: currentColor
+    --bg-color: _ribbonColor3
     position absolute
     z-index 2000 // @note Au cas où le ribbon est placé après le contenu de .ribbon-hook. @todo Valeur importante pour passer par dessus les .map.
     line-height 2em
@@ -19,6 +20,7 @@ _ribbonColor5 = _colorG - 20%
     height 2.5em
     text-align center
     text-decoration none
+    color var(--color)
     user-select none
     &::before
     &::after
@@ -34,14 +36,13 @@ _ribbonColor5 = _colorG - 20%
       border-right none
     &::after
       z-index -1
-      background-color _ribbonColor3
-      border-bottom .5em solid _ribbonColor3
+      background-color var(--bg-color)
+      border-bottom .5em solid var(--bg-color)
       transition background-color .2s ease-in-out
     & span
       display block
       transform rotate(180deg)
   & > a[class*=ribbon]
-    color _colorT
     transition color .2s ease-in-out
     //&::before
       //border-color rgba(0, 0, 0, .3)
