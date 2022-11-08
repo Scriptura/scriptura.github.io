@@ -902,9 +902,16 @@ samp {
   right: 2.5em;
 }
 [class^=message] {
+  --color: currentColor;
+  --bg-color: #474747;
+  --colorLink: #d2b48c;
   padding: 0.25em 1em;
-  background-color: #474747;
+  color: var(--color);
+  background-color: var(--bg-color);
   box-shadow: 0.5rem 0.5rem 2rem rgba(0,0,0,0.15);
+}
+[class^=message] a {
+  color: var(--colorLink);
 }
 main [class^=message] {
   margin-bottom: 1em;
@@ -914,26 +921,26 @@ p[class^=message] {
   padding: 1em;
 }
 .message-primary {
-  background-color: #616161;
+  --bg-color: #616161;
 }
 .message-secondary {
-  background-color: #3f3f3f;
+  --bg-color: #3f3f3f;
 }
 .message-info {
-  background-color: #4e667a;
+  --bg-color: #4e667a;
 }
 .message-success {
-  background-color: #43682b;
+  --bg-color: #43682b;
 }
 .message-error {
-  background-color: #cc4e2f;
+  --bg-color: #cc4e2f;
 }
 .message-warning {
-  color: #16253a;
-  background-color: #ffa500;
+  --color: #16253a;
+  --bg-color: #ffa500;
 }
 .message-warning a {
-  color: #fff;
+  --colorLink: #fff;
 }
 ul {
   list-style-type: square;

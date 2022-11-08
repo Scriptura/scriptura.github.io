@@ -1,33 +1,41 @@
+messageColor1 = _colorG + 7%
+
 [class^=message]
-  padding .25em 1em // @note Harmonisation avec p.message
-  background-color _colorG + 7%
-  box-shadow _shadow5
+  --color: currentColor
+  --bg-color: messageColor1
+  --colorLink: _colorT2
+  padding: .25em 1em // @note Harmonisation avec p.message
+  color: var(--color)
+  background-color: var(--bg-color)
+  box-shadow: _shadow5
   //overflow hidden // @note Evite un conflit avec les margins et padding des éléments enfants. Mais pose des problèmes avec les pseudo-éléments.
+  & a
+    color: var(--colorLink)
 
 main [class^=message]
-  margin-bottom 1em
-  border-radius _r2
+  margin-bottom: 1em
+  border-radius: _r2
 
 p[class^=message]
-  padding 1em
+  padding: 1em
 
 .message-primary
-  background-color _colorG + 20%
+  --bg-color: _colorG + 20%
 
 .message-secondary
-  background-color _colorG + 3%
+  --bg-color: _colorG + 3%
 
 .message-info
-  background-color _color6
+  --bg-color: _color6
 
 .message-success
-  background-color _color4
+  --bg-color: _color4
 
 .message-error
-  background-color _color3
+  --bg-color: _color3
 
 .message-warning
-  color invert(_colorT)
-  background-color _color5
+  --color: invert(_colorT)
+  --bg-color: _color5
   & a
-    color _colorW
+    --colorLink: _colorW
