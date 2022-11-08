@@ -9,121 +9,121 @@ _audioPlayerColor2 = _colorT2
 audio
 video
 canvas
-  width 100%
+  width: 100%
 
 audio
 video
 .video
-  box-shadow _shadow15 // @todo Ne fonctione pas avec audio sous Chrome
+  box-shadow: _shadow15 // @todo Ne fonctione pas avec audio sous Chrome
 
 video
 .video
-  background-color #000 // @bugfix @affected Google Maps @note Pas de background prédéfinit sur élément `canvas` afin d'éviter les conflits
+  background-color: #000 // @bugfix @affected Google Maps @note Pas de background prédéfinit sur élément `canvas` afin d'éviter les conflits
 
 audio
 video
-  outline none
+  outline: none
 
 audio
-  height 2em // @bugfix @affected All browsers @note Nécessaire au positionnement
-  //padding 0 0 .5rem // @bugfix @affected Chrome
+  height: 2em // @bugfix @affected All browsers @note Nécessaire au positionnement
+  //padding: 0 0 .5rem // @bugfix @affected Chrome
 
 audio:not([controls])
-  display none // @affected All browsers @note Affichage de l'audio sans contrôle
-  height 0 // @bugfix @affected iOS 5
+  display: none // @affected All browsers @note Affichage de l'audio sans contrôle
+  height: 0 // @bugfix @affected iOS 5
 
 // @bugfix Redimentionnement de l'élément video à la lecture @note La solution adoptée est de mettre un poster de même dimention que le flux vidéo
 //video
 //  object-fit cover // @affected Firefox @note Influence sur l'image des posters
 
 .video-youtube
-  position relative // [1] Évite un léger resize entre le thumbnail et le chargement de la vidéo.
-  aspect-ratio 16/9
-  user-select none
-  background-color #000
+  position: relative // [1] Évite un léger resize entre le thumbnail et le chargement de la vidéo.
+  aspect-ratio: 16/9
+  user-select: none
+  background-color: #000
   & iframe
   & > div
-    position absolute // [1]
-    inset 0
+    position: absolute // [1]
+    inset: 0
   & .thumbnail-youtube
-    display grid
-    place-items center
-    background-size cover
-    background-position 50% 50% // @note Pour positionner correctement les images plus petites que l'élément.
+    display: grid
+    place-items: center
+    background-size: cover
+    background-position: 50% 50% // @note Pour positionner correctement les images plus petites que l'élément.
     & button
-      position relative
-      width 10em
-      //aspect-ratio 1/1
-      max-width 25%
-      background none
-      border none
-      outline none
+      position: relative
+      width: 10em
+      //aspect-ratio: 1/1
+      max-width: 25%
+      background: none
+      border: none
+      outline: none
       & svg
-        fill rgba(255, 255, 255, .7)
+        fill: rgba(255, 255, 255, .7)
       &:focus svg
       &:hover svg
-        fill rgba(255, 255, 255, .9)
+        fill: rgba(255, 255, 255, .9)
   & .video-youtube-title
-    position absolute
-    top 0
-    left 0
-    right 0
-    padding .5em 1em
-    overflow hidden
-    white-space nowrap
-    text-align right
-    text-overflow ellipsis
-    text-shadow 0 0 .2em rgba(0, 0, 0, .8)
-  //@media (hover hover) and (pointer fine)
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    padding: .5em 1em
+    overflow: hidden
+    white-space: nowrap
+    text-align: right
+    text-overflow: ellipsis
+    text-shadow: 0 0 .2em rgba(0, 0, 0, .8)
+  //@media (hover: hover) and (pointer: fine)
 
 // BEGIN test
 .audio
-  display none
+  display: none
 
 .audio-player
-  display flex
-  justify-content space-between
-  align-items center
-  min-width 16em
-  height 4em
-  color _audioPlayerColor2
-  background-color _audioPlayerColor1
-  box-shadow _shadow15
-  border-radius 2em
+  display: flex
+  justify-content: space-between
+  align-items: center
+  min-width: 16em
+  height: 4em
+  color: _audioPlayerColor2
+  background-color: _audioPlayerColor1
+  box-shadow: _shadow15
+  border-radius: 2em
 
 .audio-player *
-  color _audioPlayerColor2
+  color: _audioPlayerColor2
 
 .audio-player button
-  width 3em
-  height 3em
-  padding .5em
-  background-color transparent
-  border none
-  outline none
-  cursor pointer
+  width: 3em
+  height: 3em
+  padding: .5em
+  background-color: transparent
+  border: none
+  outline: none
+  cursor: pointer
 
 .audio-player button:focus
 .audio-player button:hover
 .audio-player button:active
-  background-color #333
+  background-color: #333
 
 .audio-player .audio-play-pause
-  margin-left .5em
-  border-radius 50%
+  margin-left: .5em
+  border-radius: 50%
 
 .audio-player svg
-  width 1.5em
-  height 1.5em
-  //fill _audioPlayerColor2
+  width: 1.5em
+  height: 1.5em
+  //fill: _audioPlayerColor2
 
 .audio-player output
-  margin 0 .5em
-  //font-size 1em
+  margin: 0 .5em
+  //font-size: 1em
 
 .audio-player .progress
-  flex-grow 1
-  height .3em
-  background-color _audioPlayerColor2
+  flex-grow: 1
+  height: .3em
+  background-color: _audioPlayerColor2
 
 // END test

@@ -1,4 +1,4 @@
-.grid2.gap.gap-bottom
+.grid2.gap
   .demo-item.ribbon-content.center
     p
       code .ribbon-top-left
@@ -23,7 +23,7 @@
       code .ribbon-bottom-right
     .ribbon-bottom-right Bottom right
 hr(data-hr='✻ ✻ ✻')
-.grid2.gap.gap-bottom
+.grid2.gap
   .demo-item.ribbon-content.c2(style='min-height:15em')
     .ribbon-top-left Top left
     .ribbon-top-right Top right
@@ -53,9 +53,22 @@ hr(data-hr='✻ ✻ ✻')
       p
         code .ribbon-bottom-right.scale150 span.rescale
   .demo-item.ribbon-content.center
-    p
-      code a.ribbon-top-right
+    div
+      p
+        code a.ribbon-top-right
+      p
+        code a.ribbon-bottom-left
     a(href='#').ribbon-top-right Link
-//-.center
-  svg.size16.decorative-svg(role='img' focusable='false')
-    use(href='/sprites/silos/145v-d1.svg#1')
+    a(href='#').ribbon-bottom-left
+      span Link
+hr(data-hr='✻ ✻ ✻')
+.grid.gap
+  .demo-item.ribbon-content.center(style='min-height:15em')
+    p
+      code (style='--color:#fff;--bg-color:#4e667a')
+    .ribbon-top-left(style='--color:#fff;--bg-color:#4e667a') Custom color
+    .ribbon-top-right(style='--color:#fff;--bg-color:#43682b') Custom color
+    .ribbon-bottom-left(style='--color:#fff;--bg-color:#43682b')
+      span Custom color
+    .ribbon-bottom-right(style='--color:#fff;--bg-color:#4e667a')
+      span Custom color

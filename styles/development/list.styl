@@ -90,20 +90,20 @@ ol ol ol
 .list-straight
   & li::before
   & svg
-    width _listSize + .5
-    clip-path polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%)
+    width: _listSize + .5
+    clip-path: polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%)
   & li::before
-    padding-right .7em
+    padding-right: .7em
   & svg
-    min-height 100%
-    padding-left .7em
-    padding-right 1.1em
+    min-height: 100%
+    padding-left: .7em
+    padding-right: 1.1em
   & a
-    position relative
-    right .5em
-    width calc(100% + .5em)
-    padding-left 1.5em
-    clip-path polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%)
+    position: relative
+    right: .5em
+    width: calc(100% + .5em)
+    padding-left: 1.5em
+    clip-path: polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%)
 
 .list-rounded
   & li
@@ -111,30 +111,30 @@ ol ol ol
     &:hover svg
     &:focus-within::before
     &:hover::before
-      transform rotate(360deg)
+      transform: rotate(360deg)
   & li::before
   & svg
-    width _listSize
-    height _listSize
-    margin auto 0 // @note Pour centrer la "puce" si contenu de l'item trop important. @todo Résultat visuel à évaluer.
-    transition transform .3s ease-in-out
+    width: _listSize
+    height: _listSize
+    margin: auto 0 // @note Pour centrer la "puce" si contenu de l'item trop important. @todo Résultat visuel à évaluer.
+    transition: transform .3s ease-in-out
   & li::before
-    border-radius 50%
+    border-radius: 50%
   & svg
-    padding-left .7em
-    padding-right .7em
-    clip-path circle(50%)
-    //filter drop-shadow(_listShadow1)
+    padding-left: .7em
+    padding-right: .7em
+    clip-path: circle(50%)
+    //filter: drop-shadow(_listShadow1)
   & a
-    border-radius round(_listSize / 2, 2)
+    border-radius: round(_listSize / 2, 2)
 
 ol.list-straight
 ol.list-rounded
   & li
-    counter-increment li
+    counter-increment: li
     &::before
-      content counter(li)
+      content: counter(li)
 
 [class^=grid].list-straight
 [class^=grid].list-rounded
-  gap .5em 1em
+  gap: (_gap / 2) _gap

@@ -3,25 +3,25 @@ _scrollTopColor2 = #aaa
 _scrollTopColor3 = _color5
 
 .scroll-top
-  //display none // @note Apparition de l'élément au scrool de la page via JS.
-  position fixed
-  bottom 0
-  right 0
-  z-index 4000
-  height 3em
-  width 3em
-  background-color transparent
-  border none
-  outline none
+  //display: none // @note Apparition de l'élément au scrool de la page via JS.
+  position: fixed
+  bottom: 0
+  right: 0
+  z-index: 4000
+  height: 3em
+  width: 3em
+  background-color: transparent
+  border: none
+  outline: none
   &.hide
-    display none
+    display: none
   & svg
-    height 2em
-    width 2em
-    fill _scrollTopColor1
-    opacity .5
+    height: 2em
+    width: 2em
+    fill: _scrollTopColor1
+    opacity: .5
   &:focus svg
-    fill _scrollTopColor3
+    fill: _scrollTopColor3
   &:hover svg
   &:active svg
-    fill _scrollTopColor2
+    fill: _scrollTopColor2

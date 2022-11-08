@@ -7,58 +7,58 @@
 _hrSize = 5px
 
 :root
-  color-scheme dark
-  //font-size 1rem // Ability to the value of the root font sizes, affecting the value of `rem`. Null by default, thus nothing is generated.
+  color-scheme: dark
+  //font-size: 1rem // Ability to the value of the root font sizes, affecting the value of `rem`. Null by default, thus nothing is generated.
 
 *
 *::before
 *::after
-  box-sizing border-box // Contexte identique pour tous les élements
+  box-sizing: border-box // Contexte identique pour tous les élements
 
 html
-  -webkit-text-size-adjust 100% // @bugfix Prevent adjustments of font size after orientation changes @affected iOS.
-  //-webkit-tap-highlight-color Transparent // Change the default tap highlight to be completely transparent. @affected iOS.
-  color _colorT
-  background-color _color1
-  font-family _fontList // Georgia, Serif
-  //text-shadow 0 0 0.125rem _color1
-  line-height 1.5 // @bugfix Correct the line height @affected All browsers. @note Le site étant entièrement scalable dans son ensemble, il n'y a pas d'utilisation de vérrou CSS (voir [1]).
-  scroll-behavior smooth // Défilement fluide. @todo En conflit avec script retour vers le haut...
+  -webkit-text-size-adjust: 100% // @bugfix Prevent adjustments of font size after orientation changes @affected iOS.
+  //-webkit-tap-highlight-color: Transparent // Change the default tap highlight to be completely transparent. @affected iOS.
+  color: _colorT
+  background-color: _color1
+  font-family: _fontList // Georgia, Serif
+  //text-shadow: 0 0 0.125rem _color1
+  line-height: 1.5 // @bugfix Correct the line height @affected All browsers. @note Le site étant entièrement scalable dans son ensemble, il n'y a pas d'utilisation de vérrou CSS (voir [1]).
+  scroll-behavior: smooth // Défilement fluide. @todo En conflit avec script retour vers le haut...
   // [1] @note La solution d'un verrou CSS semble séduisante a priori. @see https://hugogiraudel.com/2020/05/18/using-calc-to-figure-out-optimal-line-height/ 
   // @todo Mais en raison du comportement totalement scalable de notre style cette solution ne sera peut-être jamais une bonne idée. @bugfix Constat d'effets de bord sur certains éléments (typographie, pre > code, ribbons...).
   //& *
-  //  line-height calc(8px + 2ex + 8px)
-  @media (prefers-reduced-motion reduce)
+  //  line-height: calc(8px + 2ex + 8px)
+  @media (prefers-reduced-motion: reduce)
     // Désactivation du défilement fluide si réduction des animations dans les préférences utilisateur du navigateur @see https://developer.mozilla.org/fr/docs/Web/CSS/scroll-behavior#Accessibilité
-    scroll-behavior auto
+    scroll-behavior: auto
 
 ::selection
-  color #fff
-  background-color _colorS
+  color: #fff
+  background-color: _colorS
 
 a
-  color _colorT2
-  text-decoration none
+  color: _colorT2
+  text-decoration: none
 
 a:focus
 a:hover
 a:active
-  color _color5
-  text-decoration underline
-  outline none
+  color: _color5
+  text-decoration: underline
+  outline: none
 
 p
-  margin-top .75em
-  margin-bottom .75em
+  margin-top: .75em
+  margin-bottom: .75em
 
 hr
-  overflow visible // @bugfix Show the overflow @affected Edge and IE.
-  box-sizing content-box // @bugfix Add the correct box sizing @affected Firefox.
-  height .5em // @bugfix Add the correct box sizing @affected Firefox @note Toujours définir une valeur.
-  margin 2.5em 0
-  color transparent // inherit // @bugfix Reset gray color. @affected Firefox.
-  background-image repeating-linear-gradient(-45deg, transparent 0 _hrSize, rgba(255, 255, 255, .1) _hrSize _hrSize * 2)
-  border none
+  overflow: visible // @bugfix Show the overflow @affected Edge and IE.
+  box-sizing: content-box // @bugfix Add the correct box sizing @affected Firefox.
+  height: .5em // @bugfix Add the correct box sizing @affected Firefox @note Toujours définir une valeur.
+  margin: 2.5em 0
+  color: transparent // inherit // @bugfix Reset gray color. @affected Firefox.
+  background-image: repeating-linear-gradient(-45deg, transparent 0 _hrSize, rgba(255, 255, 255, .1) _hrSize _hrSize * 2)
+  border: none
 
 h1
 h2
@@ -72,11 +72,11 @@ h6
 .h4
 .h5
 .h6
-  //margin-top 0
-  //margin-bottom .67em
-  font-family _fontList2
-  //color Tan
-  //text-shadow .5rem .5rem .5rem rgba(0, 0, 0, .1)
+  //margin-top: 0
+  //margin-bottom: .67em
+  font-family: _fontList2
+  //color: Tan
+  //text-shadow: .5rem .5rem .5rem rgba(0, 0, 0, .1)
   // font-style
   // font-weight
 
@@ -84,140 +84,140 @@ h6
 // [2] @affected Chrome (and more ?) @note Pour la balise h1 définition de marges différentes selon le contexte (article, aside, nav, section), les marges doivent donc être définies.
 h1
 .h1
-  margin-top .83em // @note Marge par défaut, sans le contexte expliqué par la note [2], aligné sur les marges de h2 ce qui évite un rattrapage compliqué si marge de valeur inférieure.
-  margin-bottom .83em // Idem
-  @media (max-width _sizeXS)
-    //margin-top .83em // @note Marge alignée sur celle de h2 (si "rattrapage")
-    //margin-bottom .83em
-    font-size 2em
-  @media (min-width _sizeXS)
-    //margin-top .75em // @note Moyenne entre les deux extrêmes (.83em et .67em) (si "rattrapage")
-    //margin-bottom .75em
-    font-size 2.25em
-  @media (min-width _sizeS)
-    //margin-top .67em // @note Marge par défaut, sans le contexte expliqué par la note [2] (si "rattrapage")
-    //margin-bottom .67em
-    font-size 2.5em
+  margin-top: .83em // @note Marge par défaut, sans le contexte expliqué par la note [2], aligné sur les marges de h2 ce qui évite un rattrapage compliqué si marge de valeur inférieure.
+  margin-bottom: .83em // Idem
+  @media (max-width: _sizeXS)
+    //margin-top: .83em // @note Marge alignée sur celle de h2 (si "rattrapage")
+    //margin-bottom: .83em
+    font-size: 2em
+  @media (min-width: _sizeXS)
+    //margin-top: .75em // @note Moyenne entre les deux extrêmes (.83em et .67em) (si "rattrapage")
+    //margin-bottom: .75em
+    font-size: 2.25em
+  @media (min-width: _sizeS)
+    //margin-top: .67em // @note Marge par défaut, sans le contexte expliqué par la note [2] (si "rattrapage")
+    //margin-bottom: .67em
+    font-size: 2.5em
 
 h2
 .h2
-  font-size 2em
+  font-size: 2em
 
 h3
 .h3
-  font-size 1.75em
+  font-size: 1.75em
 
 h4
 .h4
-  font-size 1.5em
+  font-size: 1.5em
 
 h5
 .h5
-  font-size 1.25em
+  font-size: 1.25em
 
 h6
 .h6
-  font-size 1em
+  font-size: 1em
 
 pre
-  margin 0
-  font-family monospace, monospace // @bugfix Correct the inheritance and scaling of font size @affected All browsers.
-  font-size 1em // @bugfix Correct the odd `em` font sizing @affected All browsers.
-  //line-height 1.15 // Armonise l'aspect du code avec celui d'un terminal
-  white-space pre-wrap
-  //word-break keep-all
+  margin: 0
+  font-family: monospace, monospace // @bugfix Correct the inheritance and scaling of font size @affected All browsers.
+  font-size: 1em // @bugfix Correct the odd `em` font sizing @affected All browsers.
+  //line-height: 1.15 // Armonise l'aspect du code avec celui d'un terminal
+  white-space: pre-wrap
+  //word-break: keep-all
 
 abbr[title]
-  border-bottom none // @bugfix Remove the bottom border @affected Chrome 57.
-  text-decoration underline // @bugfix Add the correct text decoration @affected Chrome, Edge, IE, Opera, and Safari.
-  text-decoration underline dotted // @bugfix Add the correct text decoration @affected Chrome, Edge, IE, Opera, and Safari.
+  border-bottom: none // @bugfix Remove the bottom border @affected Chrome 57.
+  text-decoration: underline // @bugfix Add the correct text decoration @affected Chrome, Edge, IE, Opera, and Safari.
+  text-decoration: underline dotted // @bugfix Add the correct text decoration @affected Chrome, Edge, IE, Opera, and Safari.
 
 b
 strong
-  font-weight bold // @bugfix Add the correct font weight @affected Chrome, Edge, and Safari.
+  font-weight: bold // @bugfix Add the correct font weight @affected Chrome, Edge, and Safari.
 
 i
 em
-  font-style italic
+  font-style: italic
 
 blockquote
-  position relative
-  margin 0
-  padding-left 2em
-  background repeating-linear-gradient(-45deg, transparent 0 _hrSize, rgba(255, 255, 255, .1) _hrSize _hrSize * 2) no-repeat
-  background-size .5em 100%
+  position: relative
+  margin: 0
+  padding-left: 2em
+  background: repeating-linear-gradient(-45deg, transparent 0 _hrSize, rgba(255, 255, 255, .1) _hrSize _hrSize * 2) no-repeat
+  background-size: .5em 100%
   &::before
   &::after
-    position absolute
-    left -.1em
-    line-height .5
-    font-size 3rem
-    color _color2
-    font-family _fontList2
+    position: absolute
+    left: -.1em
+    line-height: .5
+    font-size: 3rem
+    color: _color2
+    font-family: _fontList2
   &::before
-    content '\00AB' // '\201D'
-    top -.1em
+    content: '\00AB' // '\201D'
+    top: -.1em
   &::after
-    content '\00BB' //'\201C'
-    bottom 0
+    content: '\00BB' //'\201C'
+    bottom: 0
   & footer
-    margin-top .75em
-    margin-bottom .75em
-    //text-align right
+    margin-top: .75em
+    margin-bottom: .75em
+    //text-align: right
     &::before
-      content '\2014 \00A0'
+      content: '\2014 \00A0'
     &::after
-      content '.'
+      content: '.'
 
 q
-  quotes '\201C' '\201D' '\2018' '\2019' // Harmonisation des citations.
+  quotes: '\201C' '\201D' '\2018' '\2019' // Harmonisation des citations.
 
 mark
-  color currentColor
-  background-color _color3 //_color2
+  color: currentColor
+  background-color: _color3 //_color2
 
 small
-  font-size 80% // @bugfix Add the correct font size @affected All browsers.
+  font-size: 80% // @bugfix Add the correct font size @affected All browsers.
 
 sub
 sup
   // @bugfix Prevent `sub` and `sup` elements from affecting the line height @affected All browsers.
-  position relative
-  line-height 0
-  font-size 75%
-  vertical-align baseline
+  position: relative
+  line-height: 0
+  font-size: 75%
+  vertical-align: baseline
 
 sub
-  bottom -.25em // @bugfix Prevent `sub` and `sup` elements from affecting the line height @affected All browsers.
+  bottom: -.25em // @bugfix Prevent `sub` and `sup` elements from affecting the line height @affected All browsers.
 
 sup
-  top -.5em // @bugfix Prevent `sub` and `sup` elements from affecting the line height @affected All browsers.
+  top: -.5em // @bugfix Prevent `sub` and `sup` elements from affecting the line height @affected All browsers.
 
 details
-  display block // @bugfix Add the correct display @affected Edge, IE 10+, and Firefox.
+  display: block // @bugfix Add the correct display @affected Edge, IE 10+, and Firefox.
 
 details details
-  margin-left 2em
+  margin-left: 2em
 
 summary
-  display list-item // @bugfix Add the correct display @affected All browsers.
-  //display inline-block
-  cursor pointer
+  display: list-item // @bugfix Add the correct display @affected All browsers.
+  //display: inline-block
+  cursor: pointer
   &:focus-visible
   &:hover
-    color _color5
-    outline none
+    color: _color5
+    outline: none
     &::marker
-      color _color5
+      color: _color5
 
 template
-  display none // @bugfix Add the correct display @affected IE 10+.
+  display: none // @bugfix Add the correct display @affected IE 10+.
 
 [hidden]
-  display none // @bugfix Add the correct display @affected IE 10.
+  display: none // @bugfix Add the correct display @affected IE 10.
 
 iframe
-  overflow hidden
-  width 100%
-  height 100%
-  border none
+  overflow: hidden
+  width: 100%
+  height: 100%
+  border: none

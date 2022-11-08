@@ -3,81 +3,81 @@
 _ribbonDottedSize = 2px //.15em
 _ribbonColor1 = _color2
 _ribbonColor2 = _color5
-_ribbonColor3 = _color6 //_colorG + 14%
+_ribbonColor3 = _colorG + 14% //_color6
 _ribbonColor5 = _colorG - 20%
 
 .ribbon-content
-  position relative
-  min-height 7.5em // Si ribbon, alors une hauteur minimum doit être présente sur l'élément parent.
+  position: relative
+  min-height: 7.5em // Si ribbon, alors une hauteur minimum doit être présente sur l'élément parent.
   & > [class*=ribbon]
     --color: currentColor
     --bg-color: _ribbonColor3
-    position absolute
-    z-index 2000 // @note Au cas où le ribbon est placé après le contenu de .ribbon-hook. @todo Valeur importante pour passer par dessus les .map.
-    line-height 2em
-    display block
-    width 10em
-    height 2.5em
-    text-align center
-    text-decoration none
-    color var(--color)
-    user-select none
+    position: absolute
+    z-index: 2000 // @note Au cas où le ribbon est placé après le contenu de .ribbon-hook. @todo Valeur importante pour passer par dessus les .map.
+    line-height: 2em
+    display: block
+    width: 10em
+    height: 2.5em
+    text-align: center
+    text-decoration: none
+    color: var(--color)
+    user-select: none
     &::before
     &::after
-      content ''
-      position absolute
-      inset 0
-      clip-path polygon(2em 0, 8em 0, 10em 2em, 10em 2.5em, 9.5em 2em, .5em 2em, 0 2.5em, 0 2em) //@bugfixed @affected Firefox La propriété transform provoque des artfacts sur la découpe clip-path avec ce navigateur.
+      content: ''
+      position: absolute
+      inset: 0
+      clip-path: polygon(2em 0, 8em 0, 10em 2em, 10em 2.5em, 9.5em 2em, .5em 2em, 0 2.5em, 0 2em) //@bugfixed @affected Firefox La propriété transform provoque des artfacts sur la découpe clip-path avec ce navigateur.
     &::before
-      top .1em
-      height 1.8em
-      border _ribbonDottedSize dotted rgba(255, 2545, 255, .2)
-      border-left none
-      border-right none
+      top: .1em
+      height: 1.8em
+      border: _ribbonDottedSize dotted rgba(255, 2545, 255, .2)
+      border-left: none
+      border-right: none
     &::after
-      z-index -1
-      background-color var(--bg-color)
-      border-bottom .5em solid var(--bg-color)
-      transition background-color .2s ease-in-out
+      z-index: -1
+      background-color: var(--bg-color)
+      border-bottom: .5em solid var(--bg-color)
+      transition: background-color .2s ease-in-out
     & span
-      display block
-      transform rotate(180deg)
+      display: block
+      transform: rotate(180deg)
   & > a[class*=ribbon]
-    transition color .2s ease-in-out
+    transition: color .2s ease-in-out
     //&::before
       //border-color rgba(0, 0, 0, .3)
     &::after
-      background-color _ribbonColor1
+      background-color: _ribbonColor1
     &:focus
     &:hover
     &:active
-      color _ribbonColor5
+      color: _ribbonColor5
     &:focus::after
     &:hover::after
     &:active::after
-      background-color _ribbonColor2
+      background-color: _ribbonColor2
   & > [class*=ribbon-top]
-      filter drop-shadow(0 .5em .5em rgba(0, 0, 0, .1))
+      filter: drop-shadow(0 .5em .5em rgba(0, 0, 0, .1))
       &::after
-        background-image linear-gradient(to top, rgba(0, 0, 0, .3), rgba(0, 0, 0, .2) 1.25em)
+        background-image: linear-gradient(to top, rgba(0, 0, 0, .3), rgba(0, 0, 0, .2) 1.25em)
   & > [class*=ribbon-bottom]
-      filter drop-shadow(0 -.5rem .5rem rgba(0, 0, 0, .1))
+      filter: drop-shadow(0 -.5rem .5rem rgba(0, 0, 0, .1))
       &::after
-        background-image linear-gradient(to top, rgba(0, 0, 0, .2), rgba(0, 0, 0, .3) 1.25em)
+        background-image: linear-gradient(to top, rgba(0, 0, 0, .2), rgba(0, 0, 0, .3) 1.25em)
   & > .ribbon-top-left
-    top 0
-    left 0
+    top: 0
+    left: 0
     //transform rotate(-45deg) translate(-2.65em, -.7em) // Alternative possible mais positionnement plus difficile à comprendre car tient compte de la direction imposée par rotate.
     transform translate(-2.35em, 1.4em) rotate(-45deg) // @note L'ordre des valeurs est importante.
   & > .ribbon-top-right
-    top 0
-    right 0
-    transform translate(2.35em, 1.4em) rotate(45deg)
+    top: 0
+    right: 0
+    transform: translate(2.35em, 1.4em) rotate(45deg)
   & > .ribbon-bottom-left
-    bottom 0
-    left 0
-    transform translate(-2.35em, -1.4em) rotate(225deg)
+    bottom: 0
+    left: 0
+    transform: translate(-2.35em, -1.4em) rotate(225deg)
   & > .ribbon-bottom-right
-    bottom 0
-    right 0
-    transform translate(2.35em, -1.4em) rotate(135deg)
+    bottom: 0
+    right: 0
+    transform: translate(2.35em, -1.4em) rotate(135deg)

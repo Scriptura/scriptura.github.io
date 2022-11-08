@@ -22,12 +22,12 @@ _demoColor1 = _colorG + 7%
 
 .demo-counter
   & > *
-    counter-increment div
+    counter-increment: div
   & > ::before
-    display inline
-    content counter(div) '.'
+    content: counter(div) '.'
+    display: inline
   & > * :first-child
-    display inline
+    display: inline
 
 .type-styleGuide
   //grid-template-columns minmax(_gap, 1fr) minmax(0, _wrap + 12) minmax(_gap, 1fr)
@@ -38,23 +38,23 @@ _demoColor1 = _colorG + 7%
     background-repeat  no-repeat
     background-position 100% 0%
     */
-    @media (max-width _sizeXS)
-      padding 1em
-    @media (min-width _sizeXS)
-      padding 4em 6em
-      box-shadow _shadow8
+    @media (max-width: _sizeXS)
+      padding: 1em
+    @media (min-width: _sizeXS)
+      padding: 4em 6em
+      box-shadow: _shadow8
     // @todo En test :
     /*
-    @media (max-width _sizeXS)
+    @media (max-width: _sizeXS)
       & .grid2
       & .grid3
       & .grid4
-        grid-template-columns minmax(0, 1fr)
-    @media (max-width _sizeS)
+        grid-template-columns: minmax(0, 1fr)
+    @media (max-width: _sizeS)
       & .grid2
       & .grid3
       & .grid4
-        grid-template-columns minmax(0, 1fr)
+        grid-template-columns: minmax(0, 1fr)
       & .grid5
-        grid-template-columns repeat(2, minmax(0, 1fr))
+        grid-template-columns: repeat(2, minmax(0, 1fr))
     */

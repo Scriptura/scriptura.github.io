@@ -5,16 +5,16 @@ _scrollBarColor2 = _color2
 // 2. @affected Firefox @note Standard futur ?
 
 ::-webkit-scrollbar // [1]
-  width 11px
+  width: 11px // @note Ne doit pas être scalable.
 
 ::-webkit-scrollbar-track
-  background _scrollBarColor1
+  background: _scrollBarColor1
 
 ::-webkit-scrollbar-thumb
-  background-color _scrollBarColor2
-  //border-radius 6px
-  //border 3px solid _scrollBarColor2
+  background-color: _scrollBarColor2
+  //border-radius: 6px
+  //border: 3px solid _scrollBarColor2
 
-* // [2]
-  //scrollbar-width thin
-  scrollbar-color _scrollBarColor2 _scrollBarColor1
+*
+  //scrollbar-width: thin
+  scrollbar-color: _scrollBarColor2 _scrollBarColor1 // [2]

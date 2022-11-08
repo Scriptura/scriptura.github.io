@@ -5,49 +5,49 @@ _progressBarSize = 1em
 
 .progress-bar
   --color: _progressBarColor1
-  position relative
-  height _progressBarSize
-  background-color _progressBarColor2
-  box-shadow inset 0 .2em .5em rgba(0, 0, 0, .2)
-  border-radius round(_progressBarSize / 2, 1)
+  position: relative
+  height: _progressBarSize
+  background-color: _progressBarColor2
+  box-shadow: inset 0 .2em .5em rgba(0, 0, 0, .2)
+  border-radius: round(_progressBarSize / 2, 1)
   & div
   & div::after
-    position absolute
-    border-radius round(_progressBarSize / 2, 1)
+    position: absolute
+    border-radius: round(_progressBarSize / 2, 1)
   & div
-    height 100%
-    min-width _progressBarSize
-    max-width 100%
-    background-color var(--color)
-    box-shadow inset 0 2px 9px rgba(255, 255, 255, .3), inset 0 -2px 6px rgba(0, 0, 0, .4)
+    height: 100%
+    min-width: _progressBarSize
+    max-width: 100%
+    background-color: var(--color)
+    box-shadow: inset 0 2px 9px rgba(255, 255, 255, .3), inset 0 -2px 6px rgba(0, 0, 0, .4)
   & div::after
-    content ''
-    z-index 1
-    inset 0 //top 0 ; left 0 ; bottom 0 ; right 0
-    background-image linear-gradient(-45deg, _progressBarColor3 25%, transparent 25%, transparent 50%, _progressBarColor3 50%, _progressBarColor3 75%, transparent 75%, transparent)
-    background-size 2rem 2rem // @note Effet scalable non souhaité.
-    animation anim-progress 1.5s linear infinite
+    content: ''
+    z-index: 1
+    inset: 0 //top 0 ; left 0 ; bottom 0 ; right 0
+    background-image: linear-gradient(-45deg, _progressBarColor3 25%, transparent 25%, transparent 50%, _progressBarColor3 50%, _progressBarColor3 75%, transparent 75%, transparent)
+    background-size: 2rem 2rem // @note Effet scalable non souhaité.
+    animation: anim-progress 1.5s linear infinite
 
 @keyframes anim-progress
   0%
-    background-position 0 0
+    background-position: 0 0
   100%
-    background-position 2rem 2rem
+    background-position: 2rem 2rem
 
 /* @note La balise html progress pose des problèmes d'harmonisation des styles entre navigateurs @todo À revoir dans le temps...
 progress[value]
-  appearance none
-  vertical-align middle
-  width 100%
-  height 2rem
-  margin 0 // @bugfix @affected Chrome @note Alignement vertical décalé
-  color $color1 // @affected IE10
-  border 0 // @affected Firefox
-  background _colorProgressBar1 // @affected Opera
+  appearance: none
+  vertical-align: middle
+  width: 100%
+  height: 2rem
+  margin: 0 // @bugfix @affected Chrome @note Alignement vertical décalé
+  color: $color1 // @affected IE10
+  border: 0 // @affected Firefox
+  background: _colorProgressBar1 // @affected Opera
 
 progress::-webkit-progress-bar
-  background _colorProgressBar1
+  background: _colorProgressBar1
 
 progress::-webkit-progress-value
-  background _colorProgressBar1
+  background: _colorProgressBar1
 */

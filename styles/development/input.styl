@@ -14,77 +14,77 @@ form
   & > .input
   & fieldset > .input
   & > [class*="grid"] > .input
-    width 100%
-    margin 1em 0
+    width: 100%
+    margin: 1em 0
 
 .input
   & label
-    display inline-block
-    margin-bottom .5em
+    display: inline-block
+    margin-bottom: .5em
   & input:not([type=button])
   & select
   & textarea
-    width 100%
-    color currentColor
-    background-color _inputColor1 !important // @bugfixed @affected Chrome @note Le !important contre le style par défaut des préremplissages.
-    border 1px solid _inputColor1 // @note Permet d'anticiper le comportement des bordures colorées de '.invalid' en évitant des rattrapages en padding aléatoires selon le type d'input
-    //border-radius _r2
-    box-shadow _inputBoxShadow1 !important // @bugfixed @affected Chrome @note Le !important supplante le style par défaut des préremplissages.
+    width: 100%
+    color: currentColor
+    background-color: _inputColor1 !important // @bugfixed @affected Chrome @note Le !important contre le style par défaut des préremplissages.
+    border: 1px solid _inputColor1 // @note Permet d'anticiper le comportement des bordures colorées de '.invalid' en évitant des rattrapages en padding aléatoires selon le type d'input
+    //border-radius: _r2
+    box-shadow: _inputBoxShadow1 !important // @bugfixed @affected Chrome @note Le !important supplante le style par défaut des préremplissages.
   & input:not([type=button])
   & select:not([multiple])
-    height 2.2em // @note Permet d'approcher un alignement "pixel perfect" entre les différents champs lorqu'ils sont alignés.
-    padding .4em 1em
+    height: 2.2em // @note Permet d'approcher un alignement "pixel perfect" entre les différents champs lorqu'ils sont alignés.
+    padding: .4em 1em
   & input[type=color]
-    padding .4em // @note Les padding top et bottom doivent être les mêmes que les autres inputs pour rester verticalement aligné avec ces derniers. Ce comportement ne peut être corrigé par `box-sizing: border-box`.
+    padding: .4em // @note Les padding top et bottom doivent être les mêmes que les autres inputs pour rester verticalement aligné avec ces derniers. Ce comportement ne peut être corrigé par `box-sizing: border-box`.
     &::-webkit-color-swatch
-      border none
+      border: none
     &::-webkit-color-swatch-wrapper
-      padding 0
+      padding: 0
   & input[type=date]
   & input[type=datetime-local]
   & input[type=week]
   & input[type=month]
-    background-image url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/></svg>")
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/></svg>")
     &:focus
     &:hover
-      background-image url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='orange'><path d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/></svg>")
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='orange'><path d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/></svg>")
   & input[type=month]
-    text-transform capitalize
+    text-transform: capitalize
   & input[type=time]
-    background-image url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'/><path d='M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z'></path></svg>")
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'/><path d='M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z'></path></svg>")
     &:focus
     &:hover
-      background-image url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='orange'><path d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'/><path d='M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z'></path></svg>")
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='orange'><path d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'/><path d='M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z'></path></svg>")
   & input[type=file]
-    padding-right 3em // @note Évite que le texte ne passe sous l'icône.
-    background-image url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z'></path></svg>")
+    padding-right: 3em // @note Évite que le texte ne passe sous l'icône.
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z'></path></svg>")
     &:focus
     &:hover
     &:active
-      background-image url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='orange'><path d='M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z'></path></svg>")    
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='orange'><path d='M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z'></path></svg>")    
   & select:not([multiple])
-    background-image url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z'/></svg>")
-    background-size 1.5em 1.5em
-    background-repeat no-repeat
-    background-position calc(100% - .4em) 50%
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z'/></svg>")
+    background-size: 1.5em 1.5em
+    background-repeat: no-repeat
+    background-position: calc(100% - .4em) 50%
     &:focus
     &:hover
-      background-image url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='orange'><path d='M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z'/></svg>")
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='orange'><path d='M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z'/></svg>")
     &:active
-      background-image url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z'/></svg>")
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z'/></svg>")
   & select[multiple]
-    padding .4em 1em
+    padding: .4em 1em
   & textarea
-    min-height 9.75em
-    max-height 50vh
-    padding 1em
-    line-height 1.5
-    resize vertical
+    min-height: 9.75em
+    max-height: 50vh
+    padding: 1em
+    line-height: 1.5
+    resize: vertical
   & input:not([type=button]):focus
   & select:focus
   & textarea:focus
-    border-color _inputColor4
-    outline none
+    border-color: _inputColor4
+    outline: none
   & input:focus:not(:disabled)
   & input:hover:not(:disabled)
   & input:active:not(:disabled)
@@ -94,119 +94,119 @@ form
   & textarea:focus:not(:disabled)
   & textarea:hover:not(:disabled)
   & textarea:active:not(:disabled)
-    animation anim-input .05s ease-in-out
+    animation: anim-input .05s ease-in-out
   &.disabled label
-    color _inputColor6
+    color: _inputColor6
   &.disabled input
-    background _inputColor5 repeating-linear-gradient(-45deg, transparent 0 _inputSize, _colorG _inputSize _inputSize * 2)
-    background-size 100% 100%
-    cursor not-allowed
+    background: _inputColor5 repeating-linear-gradient(-45deg, transparent 0 _inputSize, _colorG _inputSize _inputSize * 2)
+    background-size: 100% 100%
+    cursor: not-allowed
   & .invalid
-    background-position right .7em center // @note Révision de l'emplacement de l'astérisque si champ obligatoire
+    background-position: right .7em center // @note Révision de l'emplacement de l'astérisque si champ obligatoire
   & .invalid
-    animation anim-invalid-input 2s ease-in-out infinite !important
+    animation: anim-invalid-input 2s ease-in-out infinite !important
   // @note Code intéresant si couplé à des regex :
   //.input :invalid:focus
-    // background-color #f2dede !important
+    // background-color: #f2dede !important
   //.input :valid:focus
-    // background-color #dff0d8
+    // background-color: #dff0d8
   /*
   & :required
   & .required // @note '.required' pour éléments select, et fallback all browsers
-    //background-image _image002
-    background-repeat no-repeat
-    background-position right .5em center
-    background-size 1em 1em
+    //background-image: _image002
+    background-repeat: no-repeat
+    background-position: right .5em center
+    background-size: 1em 1em
   & :required:focus
   & .required:focus
-    background-image none
+    background-image: none
   */
 
 .color-output
-  position relative
+  position: relative
   & output
-    position absolute
-    display inline-block
-    left .1em
-    bottom .2em
-    height 1.8em
-    padding .2em .5em .2em .9em
-    background-color #444
-    //filter invert(1) saturate(0) grayscale(1) brightness(.7) contrast(10)
+    position: absolute
+    display: inline-block
+    left: .1em
+    bottom: .2em
+    height: 1.8em
+    padding: .2em .5em .2em .9em
+    background-color: #444 // @todo Color...
+    //filter: invert(1) saturate(0) grayscale(1) brightness(.7) contrast(10)
 
 :root .input-password input
-  padding-right 3em // @note Évite que le texte ne passe sous l'icône.
-  letter-spacing .4em
+  padding-right: 3em // @note Évite que le texte ne passe sous l'icône.
+  letter-spacing: .4em
 
 .input-password
-  position relative
+  position: relative
   & button
-    position absolute
-    top 2em
-    right .5em
-    width 2.1em
-    height 2.1em
-    padding .5em
-    color #777
-    background-color transparent
-    border none
+    position: absolute
+    top: 2em
+    right: .5em
+    width: 2.1em
+    height: 2.1em
+    padding: .5em
+    color: #777
+    background-color: transparent
+    border: none
     &:focus
-      outline none
+      outline: none
     &:focus
     &:hover
     &:active
-      color Orange
+      color: _color5
     & svg
-      width 100%
-      height 100%
+      width: 100%
+      height: 100%
 
 .search
-  display flex
-  width 100%
-  height 3em
-  align-items stretch
+  display: flex
+  width: 100%
+  height: 3em
+  align-items: stretch
   & *
-    outline none
+    outline: none
   & input //[type=search]
-    flex-grow 1
-    max-height 100%
-    //min-height 100%
-    padding .4em 1em
-    color currentColor
-    background-color _inputColor1
-    border none
-    border-radius 1.5em 0 0 1.5em
-    box-shadow _inputBoxShadow1
+    flex-grow: 1
+    max-height: 100%
+    //min-height: 100%
+    padding: .4em 1em
+    color: currentColor
+    background-color: _inputColor1
+    border: none
+    border-radius: 1.5em 0 0 1.5em
+    box-shadow: _inputBoxShadow1
     &:focus
     &:hover
     &:active
-      border-color _inputColor3
-      animation anim-input .05s ease-in-out
+      border-color: _inputColor3
+      animation: anim-input .05s ease-in-out
   & button
-    min-width 3.5em
-    color _colorT
-    background-color _color2
-    border none
-    border-radius 0 1.5em 1.5em 0
-    box-shadow _inputBoxShadow1
+    min-width: 3.5em
+    color: _colorT
+    background-color: _color2
+    border: none
+    border-radius: 0 1.5em 1.5em 0
+    box-shadow: _inputBoxShadow1
     &:focus
     &:hover
     &:active
-      color _inputColor7
-      animation anim-search .2s ease-in-out
+      color: _inputColor7
+      animation: anim-search .2s ease-in-out
     & svg
-      width 1em
-      height 1em
+      width: 1em
+      height: 1em
 
 @keyframes anim-input
   to
-    transform scale(1.03) translateZ(0)
+    transform: scale(1.03) translateZ(0)
 
 @keyframes anim-invalid-input
   50%
-    border-color _color5
+    border-color: _color5
 
 @keyframes anim-search
   50%
-    background-color _color5
-    transform scale(1.1) translateZ(0)
+    background-color: _color5
+    transform: scale(1.1) translateZ(0)

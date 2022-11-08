@@ -1,43 +1,35 @@
 html
 body
-  overflow-x clip // @note Pour des éléments en clip-path dont l'élément d'origine dépasse, tel que les Ribbons @bugfixed @affected Android @note L'appel des deux sélecteurs `html` et `body` est nécessaire pour couper les dépassements sous ce navigateur, la sélection d'un seul des deux ne suffira pas. La valeur hidden pourrait faire l'affaire, mais elle entre en conflit avec position:sticky.
+  overflow-x: clip // @note Pour des éléments en clip-path dont l'élément d'origine dépasse, tel que les Ribbons @bugfixed @affected Android @note L'appel des deux sélecteurs `html` et `body` est nécessaire pour couper les dépassements sous ce navigateur, la sélection d'un seul des deux ne suffira pas. La valeur hidden pourrait faire l'affaire, mais elle entre en conflit avec position:sticky.
 
 body
-  display grid
-  grid-template-rows repeat(3, auto) 1fr // permet à 'main' (4ème rangée) d'occuper tout l'espace vertical disponible
-  grid-template-columns minmax(_gap, 1fr) minmax(0, _wrap) minmax(_gap, 1fr) // @bugfix @affected Chrome & Firefox @note Valeur 1fr définit si minimum car les navigateurs se comportent différemment, Chrome affecte la largeur d'une gouttière, Firefox affecte à 0.
-  grid-template-areas 'n n n' '. h .' 'i i i' '. m .' 'a a a' 'f f f'
-  min-height 100vh // Gabarit sur la totalité de la hauteur de la page, même si le contenu ne permet pas d'atteindre le fond de la page
-  margin 0 // @bugfix Remove the margin @affected All browser
+  display: grid
+  grid-template-rows: repeat(3, auto) 1fr // permet à 'main' (4ème rangée) d'occuper tout l'espace vertical disponible
+  grid-template-columns: minmax(_gap, 1fr) minmax(0, _wrap) minmax(_gap, 1fr) // @bugfix @affected Chrome & Firefox @note Valeur 1fr définit si minimum car les navigateurs se comportent différemment, Chrome affecte la largeur d'une gouttière, Firefox affecte à 0.
+  grid-template-areas: 'n n n' '. h .' 'i i i' '. m .' 'a a a' 'f f f'
+  min-height: 100vh // Gabarit sur la totalité de la hauteur de la page, même si le contenu ne permet pas d'atteindre le fond de la page
+  margin: 0 // @bugfix Remove the margin @affected All browser
 
 main
-  grid-area m
+  grid-area: m
   //padding _gap 0 // @note Surtout pas : après il faut compenser partout !
-  word-break break-word // @note Évite d'exploser le design sur les mots insécables, raison pour laquelle cette règle est située au niveau du layout. @todo En test.
-  padding-bottom _gap // @todo En test...
+  word-break: break-word // @note Évite d'exploser le design sur les mots insécables, raison pour laquelle cette règle est située au niveau du layout. @todo En test.
+  padding-bottom: _gap // @todo En test...
 
 .nav
-  grid-area n
+  grid-area: n
 
 .header
-  grid-area h
+  grid-area: h
 
 .alert
-  grid-area i
+  grid-area: i
 
 .aside
-  grid-area a
+  grid-area: a
 
 .footer
-  grid-area f
+  grid-area: f
 
 [tabindex=-1]:focus:not(:focus-visible)
-  outline 0 !important // Future-proof rule: in browsers that support :focus-visible, suppress the focus outline on elements that programmatically receive focus but wouldn't normally show a visible focus outline. In general, this would mean that the outline is only applied if the interaction that led to the element receiving programmatic focus was a keyboard interaction, or the browser has somehow determined that the user is primarily a keyboard user and/or wants focus outlines to always be presented. @ee https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible @see https://developer.paciellogroup.com/blog/2018/03/focus-visible-and-backwards-compatibility/
-
-/*
-.type-articles main // @note notammment lorsque .columns est utilisé en élément enfant @todo Solution temporaire en attendant le support de :has() :`main:has(> .columns)`
-.type-imageGallery main
-.type-keyword main
-.type-place main
-  padding-bottom 0
-*/
+  outline: 0 !important // Future-proof rule: in browsers that support :focus-visible, suppress the focus outline on elements that programmatically receive focus but wouldn't normally show a visible focus outline. In general, this would mean that the outline is only applied if the interaction that led to the element receiving programmatic focus was a keyboard interaction, or the browser has somehow determined that the user is primarily a keyboard user and/or wants focus outlines to always be presented. @ee https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible @see https://developer.paciellogroup.com/blog/2018/03/focus-visible-and-backwards-compatibility/

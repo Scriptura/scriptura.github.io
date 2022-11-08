@@ -1,130 +1,127 @@
 _imageColor1 = _colorG + 7%
 
 svg
-  max-width 100%
-  fill currentColor
+  max-width: 100%
+  fill: currentColor
 
 .decorative-svg
   //height 10em // @note Modifier la taille de l'image avec la classe utilitaire .zoom
-  fill _colorT2 // rgba(210,180,140, .8)
-  filter drop-shadow(.2em .2em .2em rgba(0, 0, 0, .3))  // offset-x | offset-y | blur-radius | color // .5rem .5rem 2rem rgba(0, 0, 0, .15)
+  fill: _colorT2 // rgba(210,180,140, .8)
+  filter: drop-shadow(.2em .2em .2em rgba(0, 0, 0, .3))  // offset-x | offset-y | blur-radius | color // .5rem .5rem 2rem rgba(0, 0, 0, .15)
 
 //[class^=icon] // @note Il faut éviter cet espace de nom trop générique qui pourrait générer des effets de bord.
 .icon
 .icon-inline
-  display inline-block
-  vertical-align sub
-  height 1.2em
-  width 1.2em
+  display: inline-block
+  vertical-align: sub
+  height: 1.2em
+  width: 1.2em
 
 .icon-inline
-  margin-right .5em // @todo Valeur à supprimer, c'est le contexte qui doit déterminer l'espacement. Gros traf' en perspective...
+  margin-right: .5em // @todo Valeur à supprimer, c'est le contexte qui doit déterminer l'espacement. Gros traf' en perspective...
 
 img
-  vertical-align middle // Évite un décalage possible de l'élément suivant
-  //width 100% // @bugfix @todo Depuis l'introduction des attributs 'srcset' et 'sizes' la largeur ne doit plus dépendre de l'image par défaut
-  max-width 100%
-  height auto
-  border-style none // @bugfix Remove the border on images inside links @affected IE 10.
-  user-select none // @note N'a pas pour vocation ici de "protéger" l'image, mais d'éviter la surbrillance non attendue suite à une sélection involontaire.
+  vertical-align: middle // Évite un décalage possible de l'élément suivant
+  //width: 100% // @bugfix @todo Depuis l'introduction des attributs 'srcset' et 'sizes' la largeur ne doit plus dépendre de l'image par défaut
+  max-width: 100%
+  height: auto
+  border-style: none // @bugfix Remove the border on images inside links @affected IE 10.
+  user-select: none // @note N'a pas pour vocation ici de "protéger" l'image, mais d'éviter la surbrillance non attendue suite à une sélection involontaire.
 
 figure
-  margin 0 // @bugfix @affected All browers
+  margin: 0 // @bugfix @affected All browers
 
 [class*=figure]
-  //vertical-align middle
-  width 100%
-  padding .5em
-  color _colorT
-  background-color _imageColor1
-  box-shadow _shadow11
-  user-select none
+  //vertical-align: middle
+  width: 100%
+  padding: .5em
+  color: _colorT
+  background-color: _imageColor1
+  box-shadow: _shadow11
+  user-select: none
   & figcaption
-    padding-top .5em
-    text-align center
+    padding-top: .5em
+    text-align: center
 
 //:not('.masonry') > [class*=figure] + [class*=figure] // @note Solution avantageusement remplacée par un layout, grid (+ masonry) ou columns
-  //margin-top 2em
+  //margin-top: 2em
 
 [class*=-thumbnail]
-  width 100% // Important à appliquer pour le responsive si le width n'est pas définit préalablement
+  width: 100% // Important à appliquer pour le responsive si le width n'est pas définit préalablement
 
-@media (min-width _sizeS)
+@media (min-width: _sizeS)
 
   [class*=-thumbnail]
-    max-width 'calc(50% - %s)' % (_gap / 2)
+    max-width: 'calc(50% - %s)' % (_gap / 2)
 
-@media (min-width _sizeS)
+@media (min-width: _sizeS)
 
   [class*=-alignleft]
-    float left
-    margin-right 1em
+    float: left
+    margin-right: 1em
 
   [class*=-alignright]
-    float right
-    margin-left 1em
+    float: right
+    margin-left: 1em
 
   :is([class*=-alignleft], [class*=-alignright]) ~ :is(h2, h3, hr, aside)
-    clear both // @note Ééments faisants suite à une image flotante @todo Le margin-top de ces éléments n'est pas pris en compte sous l'image...
+    clear: both // @note Ééments faisants suite à une image flotante @todo Le margin-top de ces éléments n'est pas pris en compte sous l'image...
 
 .js [class*=-focus]
-  position relative
-  z-index 1 // @note Évite un conflit avec d'autres éléments html positionnés en relatifs dans la mise en page, tel que les ancres line-mark.
-  cursor zoom-in
-  transition .15s transform
+  position: relative
+  z-index: 1 // @note Évite un conflit avec d'autres éléments html positionnés en relatifs dans la mise en page, tel que les ancres line-mark.
+  cursor: zoom-in
+  transition: .15s transform
   &:focus-within
   &:hover
-    box-shadow _shadow12
-    transform scale(1.01)
+    box-shadow: _shadow12
+    transform: scale(1.01)
 
-@media (hover hover) and (pointer fine)
+@media (hover: hover) and (pointer: fine)
 
   [class*=-focus]:focus-within
-    background-color _color5
+    background-color: _color5
     & button
-      color _color5
+      color: _color5
 
 [class*=-focus] button
 .focus-off button
-  position absolute
-  z-index 1
-  padding 0
-  color #aaa
-  background-color transparent
-  border none
-  outline none !important // @affected Firefox La propriété !important est obligatoire pour que ce navigateur prenne en compte la règle.
-  cursor zoom-in
+  position: absolute
+  z-index: 1
+  padding: 0
+  color: #aaa
+  background-color: transparent
+  border: none
+  outline: none !important // @affected Firefox La propriété !important est obligatoire pour que ce navigateur prenne en compte la règle.
+  cursor: zoom-in
 
 [class*=-focus] button svg
 .focus-off button svg
-  width 100%
-  height 100%
-  //filter drop-shadow(0 0 .8rem rgba(0, 0, 1px, 1)) // @bug Avec la propriété css columns @affected Chrome
+  width: 100%
+  height: 100%
+  //filter: drop-shadow(0 0 .8rem rgba(0, 0, 1px, 1)) // @bug Avec la propriété css columns @affected Chrome
 
 [class*=-focus] button
-  top _gap
-  right _gap
-  width 1.2em
-  height 1.2em
+  top: _gap
+  right: _gap
+  width: 1.2em
+  height: 1.2em
 
 .focus-off
-  position fixed
-  display grid
-  align-items center
-  justify-content center
-  z-index 4001 // @note Doit passer au dessus de tout autre élément, notamment le scroll top.
-  top 0
-  left 0
-  bottom 0
-  right 0
-  cursor zoom-out
+  position: fixed
+  display: grid
+  align-items: center
+  justify-content: center
+  z-index: 4001 // @note Doit passer au dessus de tout autre élément, notamment le scroll top.
+  inset: 0
+  cursor: zoom-out
   & img
-    max-height 100vh
-    background-color #000 // @note Pour les .png transparents.
-    box-shadow _shadow13 // @bugfix @affected Chrome mobile @note box-shadox sur l'image plutôt qu'un background sur le conteneur afin d'éviter un décalage d'environ 1px en bottom.
+    max-height: 100vh
+    background-color: #000 // @note Pour les .png transparents.
+    box-shadow: _shadow13 // @bugfix @affected Chrome mobile @note box-shadox sur l'image plutôt qu'un background sur le conteneur afin d'éviter un décalage d'environ 1px en bottom.
   & button
-    bottom _gap
-    right _gap
-    width 2em
-    height 2em
-    cursor zoom-out
+    bottom: _gap
+    right: _gap
+    width: 2em
+    height: 2em
+    cursor: zoom-out

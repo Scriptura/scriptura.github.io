@@ -1,59 +1,59 @@
 ::marker
-  color _color2
+  color: _color2
 
 .main-heading
-  word-wrap break-word // @note Alias de overflow-wrap @see https://developer.mozilla.org/fr/docs/Web/CSS/overflow-wrap
+  word-wrap: break-word // @note Alias de overflow-wrap @see https://developer.mozilla.org/fr/docs/Web/CSS/overflow-wrap
   text-shadow: .2em .2em .2em rgba(0, 0, 0, .3)
   span
-    color _color2
+    color: _color2
 
 //.separator
-//  width 100%
-//  height 10em
-//  fill currentColor
-//  margin 2em auto
+//  width: 100%
+//  height: 10em
+//  fill: currentColor
+//  margin: 2em auto
 
 hr[data-hr]
 .decorative-hr hr
-  display block
-  //clear both
-  width 100%
-  height 2em
-  margin 2em 0
-  //font-family _fontList2
-  line-height 1
-  //letter-spacing .5em
-  background-image none
+  display: block
+  //clear: both
+  width: 100%
+  height: 2em
+  margin: 2em 0
+  //font-family: _fontList2
+  line-height: 1
+  //letter-spacing: .5em
+  background-image: none
 
 hr[data-hr]::after
 .decorative-hr hr::after
-  content attr(data-hr)
-  display block
-  width 100%
-  height 100%
-  font-size 2em
-  text-align center
-  color rgba(255, 255, 255, .2)
+  content: attr(data-hr)
+  display: block
+  width: 100%
+  height: 100%
+  font-size: 2em
+  text-align: center
+  color: rgba(255, 255, 255, .2)
 
 .decorative-hr hr::after
-  content '✻ ✻ ✻'
+  content: '✻ ✻ ✻'
 
 //:lang(grc) // @note Grec ancien (grec moderne : 'el')
 
 :lang(he) // @note Hébreu
-  direction rtl
-  //font-family _fontList2
+  direction: rtl
+  //font-family: _fontList2
 
 .verse
-  color _color2
+  color: _color2
 
 .links p a:not([href^="#"])::after // Liens internes, sauf les ancres.
-  content ' ↩' //⤶
+  content: ' ↩' //⤶
 
 .links p a[href*="//"]::after // @note Liens externes.
-  content ' ↗'
+  content: ' ↗'
 
 .justify
-  hyphens auto
-  @media (min-width _sizeXS)
-    text-align justify
+  hyphens: auto
+  @media (min-width: _sizeXS)
+    text-align: justify
