@@ -1,0 +1,9 @@
+.alert
+  & [class^=message]
+    display: grid
+    grid-template-columns: minmax(_gap, 1fr) minmax(0, _wrap) minmax(_gap, 1fr)
+    padding: 1em 0 1.5em
+    & > *
+      grid-column: 2 / 3
+  & .message-warning
+    padding: 1em 0

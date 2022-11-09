@@ -319,6 +319,17 @@ main {
 [tabindex=-1]:focus:not(:focus-visible) {
   outline: 0 !important;
 }
+.alert [class^=message] {
+  display: grid;
+  grid-template-columns: minmax(1em, 1fr) minmax(0, 92em) minmax(1em, 1fr);
+  padding: 1em 0 1.5em;
+}
+.alert [class^=message] > * {
+  grid-column: 2/3;
+}
+.alert .message-warning {
+  padding: 1em 0;
+}
 [class^=grid] {
   display: grid;
   grid-auto-flow: dense;
@@ -916,15 +927,6 @@ samp {
 main [class^=message] {
   margin-bottom: 1em;
   border-radius: 0.2em;
-}
-.alert [class^=message] {
-  display: grid;
-  grid-template-columns: minmax(1em, 1fr) minmax(0, 92em) minmax(1em, 1fr);
-  grid-template-areas: '. m .';
-  padding: 1.5em 0 2em;
-}
-.alert [class^=message] > div {
-  grid-column: 2/3;
 }
 p[class^=message] {
   padding: 1em;

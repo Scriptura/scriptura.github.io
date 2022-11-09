@@ -172,10 +172,9 @@ const cmdPrint = (() => {
 // -----------------------------------------------------------------------------
 
 const rgpd = (() => {
-  const rgpdConsent = localStorage.getItem('rgpdConsent')
+  //const rgpdConsent = localStorage.getItem('rgpdConsent')
   const template = document.getElementById('rgpd')
   console.log(template)
-  //const target = document.getElementsByTagName('main')[0]
   const target = document.querySelector('.alert')
   //document.importNode(panel.content, true)
   const clone = template.content.cloneNode(true)
@@ -190,7 +189,7 @@ const rgpd = (() => {
   }, false)
   falseConsentButton.addEventListener('click', () => {
     localStorage.setItem('rgpdConsent', 'no')
-    panel.style.display = 'block'
+    panel.style.display = 'grid'
   }, false)
 })()
 

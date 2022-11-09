@@ -16,15 +16,6 @@ main [class^=message]
   margin-bottom: 1em
   border-radius: _r2
 
-.alert
-  & [class^=message]
-    display: grid
-    grid-template-columns: minmax(_gap, 1fr) minmax(0, _wrap) minmax(_gap, 1fr)
-    grid-template-areas: '. m .'
-    padding: 1.5em 0 2em
-    & > div
-      grid-column: 2 / 3
-
 p[class^=message]
   padding: 1em
 
