@@ -167,28 +167,28 @@ const cmdPrint = (() => {
 })()
 
 // -----------------------------------------------------------------------------
-// @section     RGPD
+// @section     GDPR / gdpr
 // @description Règlement Général sur la Protection des Données
 // -----------------------------------------------------------------------------
 
-const rgpd = (() => {
-  //const rgpdConsent = localStorage.getItem('rgpdConsent')
-  const template = document.getElementById('rgpd')
+const gdpr = (() => {
+  //const gdprConsent = localStorage.getItem('gdprConsent')
+  const template = document.getElementById('gdpr')
   console.log(template)
   const target = document.querySelector('.alert')
   //document.importNode(panel.content, true)
   const clone = template.content.cloneNode(true)
   target.appendChild(clone)
-  const panel = document.getElementById('rgpd-see')
-  const trueConsentButton = document.getElementById('rgpd-true-consent')
-  const falseConsentButton = document.getElementById('rgpd-false-consent')
-  if (localStorage.getItem('rgpdConsent') === 'yes') panel.style.display = 'none'
+  const panel = document.getElementById('gdpr-see')
+  const trueConsentButton = document.getElementById('gdpr-true-consent')
+  const falseConsentButton = document.getElementById('gdpr-false-consent')
+  if (localStorage.getItem('gdprConsent') === 'yes') panel.style.display = 'none'
   trueConsentButton.addEventListener('click', () => {
-    localStorage.setItem('rgpdConsent', 'yes')
+    localStorage.setItem('gdprConsent', 'yes')
     panel.style.display = 'none'
   }, false)
   falseConsentButton.addEventListener('click', () => {
-    localStorage.setItem('rgpdConsent', 'no')
+    localStorage.setItem('gdprConsent', 'no')
     panel.style.display = 'grid'
   }, false)
 })()
