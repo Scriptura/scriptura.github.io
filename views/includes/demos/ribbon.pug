@@ -28,30 +28,30 @@ hr(data-hr='✻ ✻ ✻')
     .ribbon-top-left Top left
     .ribbon-top-right Top right
     .ribbon-bottom-left
-      span Bottom left
+      .rotate180 Bottom left
     .ribbon-bottom-right
-      span Bottom right
+      .rotate180 Bottom right
   .demo-item.ribbon-content.center
     p
-      code .ribbon-bottom-left span
+      code .ribbon-bottom-left .rotate180
     .ribbon-bottom-left
-      span Bottom left
+      .rotate180 Bottom left
   .demo-item.ribbon-content.center
     p
-      code .ribbon-bottom-right span
+      code .ribbon-bottom-right .rotate180
     .ribbon-bottom-right
-      span Bottom right
+      .rotate180 Bottom right
 hr(data-hr='✻ ✻ ✻')
 .grid2.gap
   .demo-item.ribbon-content.center(style='min-height:12em')
     .ribbon-top-left.scale150 Top left
     .ribbon-bottom-right.scale150
-      span.rescale Bottom right
+      .rotate180.rescale Bottom right
     div
       p
         code .ribbon-top-left.scale150
       p
-        code .ribbon-bottom-right.scale150 span.rescale
+        code .ribbon-bottom-right.scale150 .rotate180.rescale
   .demo-item.ribbon-content.center
     div
       p
@@ -60,7 +60,7 @@ hr(data-hr='✻ ✻ ✻')
         code a.ribbon-bottom-left
     a(href='#').ribbon-top-right Link
     a(href='#').ribbon-bottom-left
-      span Link
+      .rotate180 Link
 hr(data-hr='✻ ✻ ✻')
 .grid.gap
   .demo-item.ribbon-content.center(style='min-height:15em')
@@ -69,6 +69,6 @@ hr(data-hr='✻ ✻ ✻')
     .ribbon-top-left(style='--color:#fff;--bg-color:#4e667a') Custom color
     .ribbon-top-right(style='--color:#fff;--bg-color:#43682b') Custom color
     .ribbon-bottom-left(style='--color:#fff;--bg-color:#43682b')
-      span Custom color
+      .rotate180 Custom color
     .ribbon-bottom-right(style='--color:#fff;--bg-color:#4e667a')
-      span Custom color
+      .rotate180 Custom color

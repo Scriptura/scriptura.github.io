@@ -3062,10 +3062,6 @@ a[aria-disabled=true]:active {
   border-bottom: 0.5em solid var(--bg-color);
   transition: background-color 0.2s ease-in-out;
 }
-.ribbon-content > [class*=ribbon] span {
-  display: block;
-  transform: rotate(180deg);
-}
 .ribbon-content > a[class*=ribbon] {
   transition: color 0.2s ease-in-out;
 }
