@@ -1229,11 +1229,11 @@ figure {
 }
 .focus-off {
   position: fixed;
+  z-index: 4001;
+  inset: 0;
   display: grid;
   align-items: center;
   justify-content: center;
-  z-index: 4001;
-  inset: 0;
   cursor: zoom-out;
 }
 .focus-off img {

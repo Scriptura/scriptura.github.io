@@ -19,7 +19,7 @@ const imageFocus = (() => {
     images.forEach(e => {
       e.addEventListener('click', () => {
         cloneImage(e)
-        document.body.style.overflow = 'hidden'
+        document.documentElement.style.overflow = 'clip'
       })
     })
   })()
@@ -46,7 +46,7 @@ const imageFocus = (() => {
     const el = document.querySelector('.' + targetClass)
     el.addEventListener('click', () => {
       el.parentElement.removeChild(el)
-      document.body.removeAttribute('style')
+      document.documentElement.removeAttribute('style')
       image.querySelector('button').focus() // Retour du focus sur l'image cliquée au départ.
     })
   }

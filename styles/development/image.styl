@@ -109,11 +109,12 @@ figure
 
 .focus-off
   position: fixed
+  z-index: 4001 // @note Doit passer au dessus de tout autre élément, notamment le scroll top.
+  inset: 0
   display: grid
   align-items: center
   justify-content: center
-  z-index: 4001 // @note Doit passer au dessus de tout autre élément, notamment le scroll top.
-  inset: 0
+  //background-color: #222
   cursor: zoom-out
   & img
     max-height: 100vh
