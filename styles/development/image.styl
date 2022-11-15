@@ -1,4 +1,5 @@
 _imageColor1 = _colorG + 7%
+_imageColor2 = _colorG - 40%
 
 svg
   max-width: 100%
@@ -114,12 +115,11 @@ figure
   display: grid
   align-items: center
   justify-content: center
-  //background-color: #222
+  background-color: _imageColor2
   cursor: zoom-out
   & img
     max-height: 100vh
     background-color: #000 // @note Pour les .png transparents.
-    box-shadow: _shadow13 // @bugfix @affected Chrome mobile @note box-shadox sur l'image plutôt qu'un background sur le conteneur afin d'éviter un décalage d'environ 1px en bottom.
   & button
     bottom: _gap
     right: _gap
