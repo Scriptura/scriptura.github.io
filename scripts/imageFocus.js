@@ -19,7 +19,7 @@ const imageFocus = (() => {
     images.forEach(e => {
       e.addEventListener('click', () => {
         cloneImage(e)
-        document.documentElement.style.overflow = 'clip'
+        document.documentElement.style.overflow = 'hidden' // 'clip' inefficace sous Firefox.
       })
     })
   })()
