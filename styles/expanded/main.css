@@ -84,24 +84,21 @@ h1,
 .h1 {
   margin-top: 0.83em;
   margin-bottom: 0.83em;
-}
-@media (max-width: 36.01em) {
-  h1,
-  .h1 {
-    font-size: 2em;
-  }
-}
-@media (min-width: 36.01em) {
-  h1,
-  .h1 {
-    font-size: 2.25em;
-  }
-}
-@media (min-width: 50.01em) {
-  h1,
-  .h1 {
-    font-size: 2.5em;
-  }
+  font-size: clamp(2em, 5vw, 2.5em);
+/*
+  @media (max-width: _sizeXS)
+    //margin-top: .83em // @note Marge alignée sur celle de h2 (si "rattrapage")
+    //margin-bottom: .83em
+    font-size: 2em
+  @media (min-width: _sizeXS)
+    //margin-top: .75em // @note Moyenne entre les deux extrêmes (.83em et .67em) (si "rattrapage")
+    //margin-bottom: .75em
+    font-size: 2.25em
+  @media (min-width: _sizeS)
+    //margin-top: .67em // @note Marge par défaut, sans le contexte expliqué par la note [1] (si "rattrapage")
+    //margin-bottom: .67em
+    font-size: 2.5em
+  */
 }
 h2,
 .h2 {
@@ -331,73 +328,77 @@ main {
   padding: 1em 0;
 }
 [class^=grid] {
+  --n: 1;
   display: grid;
   grid-auto-flow: dense;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
 }
 [class^=grid].gap {
   gap: 1em;
 }
 [class^=grid].gap-bottom {
-  margin-bottom: 1em;
+  padding-bottom: 1em;
 }
 [class^=grid].vertical-gap {
   gap: 0 1em;
 }
+.grid-auto {
+  grid-template-columns: repeat(auto-fill, minmax(18em, 1fr));
+}
 .grid5 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  --n: 2;
 }
 @media (min-width: 36.01em) {
   .grid2,
   .grid3,
   .grid4 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    --n: 2;
   }
   .grid5 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    --n: 3;
   }
 }
 @media (min-width: 50.01em) {
   .grid3,
   .grid4 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    --n: 3;
   }
   .grid5 {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    --n: 4;
   }
 }
 @media (min-width: 90.01em) {
   .grid4 {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    --n: 4;
   }
   .grid5 {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    --n: 5;
   }
 }
 @media (max-width: 36.01em) {
   .media-xs-grid2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    --n: 2;
   }
 }
 @media (min-width: 36.01em) and (max-width: 50.01em) {
   :root .media-s-grid1 {
-    grid-template-columns: minmax(0, 1fr);
+    --n: 1;
   }
   :root .media-s-grid2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    --n: 2;
   }
 }
 @media (min-width: 50.01em) and (max-width: 90.01em) {
   :root .media-l-grid1 {
-    grid-template-columns: minmax(0, 1fr);
+    --n: 1;
   }
   :root .media-l-grid2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    --n: 2;
   }
 }
 @media (min-width: 90.01em) and (max-width: 120.01em) {
   :root .media-xl-grid2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    --n: 2;
   }
 }
 @media (min-width: 36.01em) {

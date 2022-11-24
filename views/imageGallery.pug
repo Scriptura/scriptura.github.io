@@ -10,6 +10,7 @@ block variables
     }
   -
     const img = {
+          //class: '',
           name: 'Name',
           src: '/medias/images/uploads/',
           ext: 'webp',
@@ -22,28 +23,31 @@ block variables
 
 block main
   h1.main-heading!= data._name
-  .grid4.gap.masonry
+  .grid-auto.gap.masonry
     figure.figure-focus
       picture
-        source(srcset='/medias/images/demo/test-w600.webp, /medias/images/demo/test-w1000.webp 2x' type='image/webp')
+        source(srcset='/medias/images/demo/test-w1000.webp, /medias/images/demo/test-w2000.webp 2x' type='image/webp')
+        //-source(srcset='/medias/images/demo/test-w600.webp, /medias/images/demo/test-w1000.webp 2x' type='image/webp')
         img(src='/medias/images/demo/test-original.webp' /*loading='lazy'*/ alt='Image test' width='5301' height='3534')
       figcaption Responsive Images / Art Direction.
         br
         | Image test.
-    //-include includes/imageList 
+    //-include includes/imageList
     -
-      img.name = 'clay-banks'
-      img.width = '2002'
-      img.height = '3000'
-      img.alt = 'Yaquina Head, Newport, États-Unis'
-      img.author = 'Clay Banks'
-    include helpers/picture4
-    -
+      img.class = 'c2'
       img.name = 'aleksandra-boguslawska'
       img.width = '4288'
       img.height = '2848'
       img.alt = 'Chemin en bois vers la plage'
       img.author = 'Aleksandra Boguslawska'
+    include helpers/picture4
+    -
+      img.class = ''
+      img.name = 'clay-banks'
+      img.width = '2002'
+      img.height = '3000'
+      img.alt = 'Yaquina Head, Newport, États-Unis'
+      img.author = 'Clay Banks'
     include helpers/picture4
     -
       img.name = 'sapan-patel'

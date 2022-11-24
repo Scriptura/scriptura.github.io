@@ -5,7 +5,7 @@ mixin list(icon, name, slug)
     //- slug non utilisé.
     a(href='#') #{name}
 
-.grid4.gap.gap-bottom
+.grid-auto.gap.gap-bottom
   div
     p
       code ul
@@ -66,7 +66,7 @@ mixin list(icon, name, slug)
   .center.media-xs-hidden.media-l-hidden
     svg.size25.decorative-svg(role='img' focusable='false')
       use(href='/sprites/silos/245v-d1.svg#1')
-.grid4.gap
+.grid-auto.gap
   div
     p
       code ul.list-stripe
@@ -102,7 +102,7 @@ mixin list(icon, name, slug)
 div
   p
     code ul.list-straight
-  ul.grid4.list-straight
+  ul.grid-auto.list-straight
     +list('paint-roller', 'Style Guide', 'styleGuide')
     +list('ampersand', 'Typography', 'typography')
     +list('language', 'Languages', 'languages')
@@ -130,7 +130,7 @@ div
 div
   p
     code ul.list-rounded
-  ul.grid4.list-rounded
+  ul.grid-auto.list-rounded
     +list('paint-roller', 'Style Guide', 'styleGuide')
     +list('ampersand', 'Typography', 'typography')
     +list('language', 'Languages', 'languages')
@@ -158,7 +158,7 @@ div
 div
   p
     code ol.list-straight
-  ol.grid4.list-straight
+  ol.grid-auto.list-straight
     li
        a(href='#index') Artichauts
     li
@@ -250,7 +250,7 @@ div
 div
   p
     code ol.list-rounded
-  ol.grid4.list-rounded
+  ol.grid-auto.list-rounded
     li
        a(href='#index') Artichauts
     li

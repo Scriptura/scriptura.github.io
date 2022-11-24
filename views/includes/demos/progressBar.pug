@@ -11,11 +11,14 @@
     p
       code style='--color:#4e667a'
     .progress-bar.scale150(data-value='100' style='--color:#4e667a')
-  div
     h2 Test
     .progress-bar.scale150#progress-test-target(data-value='0')
     br
     button#progress-test-cmd.button(type='button') Test de 0 à 100%
-//-p
-    code progress
-  progress(max='100', value='50')
+  .center
+    svg.size25.reverse.decorative-svg(role='img' focusable='false')
+      use(href='/sprites/silos/126r-d1.svg#1')
+  //-div
+    p
+        code progress
+      progress(max='100', value='50')

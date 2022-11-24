@@ -1,71 +1,75 @@
 // @note Avec `minmax` la grille ne sera pas tributaire de son contenu en responsive @see https://css-tricks.com/equal-width-columns-in-css-grid-are-kinda-weird/
 
 [class^=grid]
+  --n: 1 // Nombre de colonnes
   display: grid
   grid-auto-flow: dense
-  grid-template-columns: minmax(0, 1fr)
+  grid-template-columns: repeat(var(--n), minmax(0, 1fr))
   &.gap
     gap: _gap
   &.gap-bottom
-    margin-bottom: _gap
+    padding-bottom: _gap // @note padding et non margin, car ne doit pas pouvoir fusionner avec les marges de l'élément suivant.
   &.vertical-gap
     gap: 0 _gap
 
+.grid-auto
+  grid-template-columns: repeat(auto-fill, minmax(18em, 1fr))
+
 .grid5
-  grid-template-columns: repeat(2, minmax(0, 1fr))
+  --n: 2
 
 @media (min-width: _sizeXS)
 
   .grid2
   .grid3
   .grid4
-    grid-template-columns: repeat(2, minmax(0, 1fr))
+    --n: 2
 
   .grid5
-    grid-template-columns: repeat(3, minmax(0, 1fr))
+    --n: 3
 
 @media (min-width: _sizeS)
 
   .grid3
   .grid4
-    grid-template-columns: repeat(3, minmax(0, 1fr))
+    --n: 3
 
   .grid5
-    grid-template-columns: repeat(4, minmax(0, 1fr))
+    --n: 4
 
 @media (min-width: _sizeL)
 
   .grid4
-    grid-template-columns: repeat(4, minmax(0, 1fr))
+    --n: 4
 
   .grid5
-    grid-template-columns: repeat(5, minmax(0, 1fr))
+    --n: 5
 
 @media (max-width: _sizeXS)
 
   .media-xs-grid2
-    grid-template-columns: repeat(2, minmax(0, 1fr))
+    --n: 2
 
 @media (min-width: _sizeXS) and (max-width: _sizeS)
 
   :root .media-s-grid1
-    grid-template-columns: minmax(0, 1fr)
+    --n: 1
 
   :root .media-s-grid2
-    grid-template-columns: repeat(2, minmax(0, 1fr))
+    --n: 2
 
 @media (min-width: _sizeS) and (max-width: _sizeL)
 
   :root .media-l-grid1
-    grid-template-columns: minmax(0, 1fr)
+    --n: 1
 
   :root .media-l-grid2
-    grid-template-columns: repeat(2, minmax(0, 1fr))
+    --n: 2
 
 @media (min-width: _sizeL) and (max-width: _sizeXL)
 
   :root .media-xl-grid2
-    grid-template-columns: repeat(2, minmax(0, 1fr))
+    --n: 2
 
 @media (min-width: _sizeXS)
 
