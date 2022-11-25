@@ -284,13 +284,13 @@ hr[data-hr]::after,
 html,
 body {
   overflow-x: clip;
+  height: 100%;
 }
 body {
   display: grid;
   grid-template-rows: repeat(3, auto) 1fr;
   grid-template-columns: minmax(1em, 1fr) minmax(0, 92em) minmax(1em, 1fr);
   grid-template-areas: 'n n n' '. h .' 'i i i' '. m .' 'a a a' 'f f f';
-  min-height: 100vh;
   margin: 0;
 }
 main {
@@ -343,7 +343,13 @@ main {
   gap: 0 1em;
 }
 .grid-auto {
-  grid-template-columns: repeat(auto-fill, minmax(18em, 1fr));
+  --w: 14em;
+  grid-template-columns: repeat(auto-fit, minmax(var(--w), 1fr));
+}
+@media (min-width: 42em) {
+  .grid-auto {
+    --w: 18em;
+  }
 }
 .grid5 {
   --n: 2;

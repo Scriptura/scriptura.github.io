@@ -1,5 +1,7 @@
 // @note Avec `minmax` la grille ne sera pas tributaire de son contenu en responsive @see https://css-tricks.com/equal-width-columns-in-css-grid-are-kinda-weird/
 
+_grid-w = 14em
+
 [class^=grid]
   --n: 1 // Nombre de colonnes
   display: grid
@@ -13,7 +15,10 @@
     gap: 0 _gap
 
 .grid-auto
-  grid-template-columns: repeat(auto-fill, minmax(18em, 1fr))
+  --w: _grid-w
+  grid-template-columns: repeat(auto-fit, minmax(var(--w), 1fr))
+  @media (min-width: _grid-w *3) // @note Cette valeur n'est pas en lien avec les points de rupture du site @todo En test.
+    --w: _grid-w + 4
 
 .grid5
   --n: 2

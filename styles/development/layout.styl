@@ -1,13 +1,14 @@
 html
 body
   overflow-x: clip // @note Pour des éléments en clip-path dont l'élément d'origine dépasse, tel que les Ribbons @bugfixed @affected Android @note L'appel des deux sélecteurs `html` et `body` est nécessaire pour couper les dépassements sous ce navigateur, la sélection d'un seul des deux ne suffira pas. La valeur hidden pourrait faire l'affaire, mais elle entre en conflit avec position:sticky.
+  height: 100% // @note Alternative plus fiable sur mobile que `min-height:100vh` sur le body.
 
 body
   display: grid
-  grid-template-rows: repeat(3, auto) 1fr // permet à 'main' (4ème rangée) d'occuper tout l'espace vertical disponible
-  grid-template-columns: minmax(_gap, 1fr) minmax(0, _wrap) minmax(_gap, 1fr) // @bugfix @affected Chrome & Firefox @note Valeur 1fr définit si minimum car les navigateurs se comportent différemment, Chrome affecte la largeur d'une gouttière, Firefox affecte à 0.
+  grid-template-rows: repeat(3, auto) 1fr // permet à 'main' (4ème rangée) d'occuper tout l'espace vertical disponible.
+  grid-template-columns: minmax(_gap, 1fr) minmax(0, _wrap) minmax(_gap, 1fr) // @bugfix @affected All browser @note définition d'une valeur minimum obligatoire pour harmoniser le comportement des différents navigateurs : par défaut Chrome affecte la largeur d'une gouttière, Firefox affecte à 0.
   grid-template-areas: 'n n n' '. h .' 'i i i' '. m .' 'a a a' 'f f f'
-  min-height: 100vh // Gabarit sur la totalité de la hauteur de la page, même si le contenu ne permet pas d'atteindre le fond de la page
+  //min-height: 100vh // @note Gabarit sur la totalité de la hauteur de la fenêtre, même si le contenu ne permet pas d'atteindre le bas de la fenêtre.
   margin: 0 // @bugfix Remove the margin @affected All browser
 
 main
