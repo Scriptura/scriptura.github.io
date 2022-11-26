@@ -65,7 +65,7 @@ figure
     float: right
     margin-left: 1em
 
-  :is([class*=-alignleft], [class*=-alignright]) ~ :is(h2, h3, hr, aside)
+  :where([class*=-alignleft], [class*=-alignright]) ~ :is(h2, h3, hr, aside)
     clear: both // @note Ééments faisants suite à une image flotante @todo Le margin-top de ces éléments n'est pas pris en compte sous l'image...
 
 .js [class*=-focus]

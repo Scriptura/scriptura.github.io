@@ -329,6 +329,7 @@ main {
 }
 [class^=grid] {
   --n: 1;
+  --width: 20em;
   display: grid;
   grid-auto-flow: dense;
   grid-template-columns: repeat(var(--n), minmax(0, 1fr));
@@ -343,13 +344,7 @@ main {
   gap: 0 1em;
 }
 .grid-auto {
-  --w: 14em;
-  grid-template-columns: repeat(auto-fit, minmax(var(--w), 1fr));
-}
-@media (min-width: 42em) {
-  .grid-auto {
-    --w: 18em;
-  }
+  grid-template-columns: repeat(auto-fit, minmax(var(--width), 1fr));
 }
 .grid5 {
   --n: 2;
@@ -1185,7 +1180,7 @@ figure {
     float: right;
     margin-left: 1em;
   }
-  :is([class*=-alignleft],
+  :where([class*=-alignleft],
   [class*=-alignright]) ~ :is(h2,
   h3,
   hr,
@@ -2668,15 +2663,35 @@ form > [class*="grid"] > .input {
 .demo-counter > * :first-child {
   display: inline;
 }
-@media (max-width: 36.01em) {
-  .type-styleGuide main > .ribbon-content {
-    padding: 1em;
+@media (max-width: 50.01em) {
+  .type-styleGuide main > section {
+    position: relative;
+    padding: 0;
   }
 }
-@media (min-width: 36.01em) {
-  .type-styleGuide main > .ribbon-content {
+@media (min-width: 50.01em) {
+  .type-styleGuide main > section {
     padding: 4em 6em;
     box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
+  }
+}
+@media (max-width: 50.01em) {
+  .type-styleGuide main > section.ribbon-content::before {
+    content: '';
+    position: absolute;
+    top: -0.5em;
+    right: -0.5em;
+    width: 14em;
+    height: 14em;
+    background-image: linear-gradient(-135deg, rgba(255,255,255,0.03), transparent 50%);
+    background-size: 15em 15em;
+    background-repeat: no-repeat;
+    background-position: 100% 0%;
+  }
+}
+@media (max-width: 50.01em) {
+  .type-styleGuide main > section > .ribbon-top-right {
+    transform: translate(2.85em, 0.9em) rotate(45deg) !important;
   }
 }
 .hidden,

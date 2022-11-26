@@ -30,34 +30,28 @@ _demoColor1 = _colorG + 7%
     display: inline
 
 .type-styleGuide
-  //grid-template-columns minmax(_gap, 1fr) minmax(0, _wrap + 12) minmax(_gap, 1fr)
-  & main > .ribbon-content
-    /*
-    background-image linear-gradient(-135deg, rgba(255, 255, 255, .02), transparent 50%)
-    background-size 15em 15em
-    background-repeat  no-repeat
-    background-position 100% 0%
-    */
-    @media (max-width: _sizeXS)
-      padding: 1em
-    @media (min-width: _sizeXS)
+  & main > section
+    @media (max-width: _sizeS)
+      position: relative
+      padding: 0
+    @media (min-width: _sizeS)
       padding: 4em 6em
       box-shadow: _shadow8
-    // @todo En test :
-    /*
-    @media (max-width: _sizeXS)
-      & .grid2
-      & .grid3
-      & .grid4
-        grid-template-columns: minmax(0, 1fr)
-    @media (max-width: _sizeS)
-      & .grid2
-      & .grid3
-      & .grid4
-        grid-template-columns: minmax(0, 1fr)
-      & .grid5
-        grid-template-columns: repeat(2, minmax(0, 1fr))
-    */
+    &.ribbon-content::before
+      @media (max-width: _sizeS)
+        content: ''
+        position: absolute
+        top: -.5em
+        right: -.5em
+        width: 14em
+        height: 14em
+        background-image: linear-gradient(-135deg, rgba(255, 255, 255, .03), transparent 50%)
+        background-size: 15em 15em
+        background-repeat:  no-repeat
+        background-position: 100% 0%
+    & > .ribbon-top-right
+      @media (max-width: _sizeS)
+        transform: translate(2.85em, .9em) rotate(45deg) !important
 
 //.type-styleGuide section:not(:first-child)
   //content-visibility: auto
