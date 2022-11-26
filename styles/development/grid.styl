@@ -2,7 +2,7 @@
 
 [class^=grid]
   --n: 1 // Nombre de colonnes
-  --width: 20em
+  --width: 15em
   display: grid
   grid-auto-flow: dense
   grid-template-columns: repeat(var(--n), minmax(0, 1fr))
@@ -15,8 +15,12 @@
 
 .grid-auto
   grid-template-columns: repeat(auto-fit, minmax(var(--width), 1fr))
-  //@media (min-width: _gridWidth *3) // @note Cette valeur n'est pas en lien avec les points de rupture du site @todo En test.
-  //  --width: _gridWidth + 4
+  @media (min-width: _sizeXS)
+    --width: 16em // @note Attention, cette valeur est précise, à ne pas toucher sans vérifier les effets de bord.
+  @media (min-width: _sizeS)
+    --width: 17em
+  @media (min-width: _sizeL)
+    --width: 20em
 
 .grid5
   --n: 2

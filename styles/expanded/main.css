@@ -329,7 +329,7 @@ main {
 }
 [class^=grid] {
   --n: 1;
-  --width: 20em;
+  --width: 15em;
   display: grid;
   grid-auto-flow: dense;
   grid-template-columns: repeat(var(--n), minmax(0, 1fr));
@@ -345,6 +345,21 @@ main {
 }
 .grid-auto {
   grid-template-columns: repeat(auto-fit, minmax(var(--width), 1fr));
+}
+@media (min-width: 36.01em) {
+  .grid-auto {
+    --width: 16em;
+  }
+}
+@media (min-width: 50.01em) {
+  .grid-auto {
+    --width: 17em;
+  }
+}
+@media (min-width: 90.01em) {
+  .grid-auto {
+    --width: 20em;
+  }
 }
 .grid5 {
   --n: 2;
@@ -2652,6 +2667,15 @@ form > [class*="grid"] > .input {
   padding: 1em;
   background-color: #474747;
   box-shadow: 0.5rem 0.5rem 2rem rgba(0,0,0,0.15);
+}
+.demo-items-color > :nth-child(1n) {
+  background-color: #ff4000;
+}
+.demo-items-color > :nth-child(2n) {
+  background-color: #ff8000;
+}
+.demo-items-color > :nth-child(3n) {
+  background-color: #ffbf00;
 }
 .demo-counter > * {
   counter-increment: div;

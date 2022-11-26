@@ -1,4 +1,6 @@
 _demoColor1 = _colorG + 7%
+_demoColorDeg = 15
+_demoColorDeviation = 15
 
 [class*=demo-items]
   --itemHeight 2em
@@ -19,6 +21,11 @@ _demoColor1 = _colorG + 7%
   padding 1em
   background-color _demoColor1
   box-shadow _shadow5
+
+for _i in 1...4
+  .demo-items-color > :nth-child({_i}n)
+    _c = unit(_demoColorDeg, deg) + _i * _demoColorDeviation - _demoColorDeviation
+    background-color: hsl(_c 100% 50%)
 
 .demo-counter
   & > *
