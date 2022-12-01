@@ -1,6 +1,6 @@
 _demoColor1 = _colorG + 7%
 _demoColorDeg = 15
-_demoColorDeviation = 15
+_demoColorDeviation = 10
 
 [class*=demo-items]
   --itemHeight 2em
@@ -22,10 +22,14 @@ _demoColorDeviation = 15
   background-color _demoColor1
   box-shadow _shadow5
 
-for _i in 1...4
-  .demo-items-color > :nth-child({_i}n)
-    _c = unit(_demoColorDeg, deg) + _i * _demoColorDeviation - _demoColorDeviation
-    background-color: hsl(_c 100% 50%)
+.demo-items-color
+  color: #333
+  for _i in 1...15
+    & > :nth-child({_i}n)
+      _c = unit(_demoColorDeg, deg) + _i * _demoColorDeviation - _demoColorDeviation
+      background-color: hsl(_c 100% 50%)
+  & code
+    background-color: #444
 
 .demo-counter
   & > *
@@ -63,3 +67,29 @@ for _i in 1...4
 //.type-styleGuide section:not(:first-child)
   //content-visibility: auto
   //contain-intrinsic-size: 1px 5000px
+
+/*
+body::after
+  position: fixed
+  z-index: 5000
+  bottom: .3em
+  right: .3em
+  width: 3em
+  height: 3em
+  line-height: 3em
+  text-align: center
+  color: #fff
+  background-color: orange
+  border-radius: 50%
+  content: 'XS'
+  @media (min-width: _sizeS)
+    content: 'S'
+  @media (min-width: _sizeM)
+    content: 'M'
+  @media (min-width: _sizeL)
+    content: 'L'
+  @media (min-width: _sizeXL)
+    content: 'XL'
+  @media (min-width: _sizeXXL)
+    content: 'XXL'
+*/

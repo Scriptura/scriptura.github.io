@@ -2,7 +2,6 @@
 
 [class^=grid]
   --n: 1 // Nombre de colonnes
-  --width: 15em
   display: grid
   grid-auto-flow: dense
   grid-template-columns: repeat(var(--n), minmax(0, 1fr))
@@ -14,13 +13,9 @@
     gap: 0 _gap
 
 .grid-auto
-  grid-template-columns: repeat(auto-fit, minmax(var(--width), 1fr))
   @media (min-width: _sizeXS)
-    --width: 16em // @note Attention, cette valeur est précise, à ne pas toucher sans vérifier les effets de bord.
-  @media (min-width: _sizeS)
-    --width: 17em
-  @media (min-width: _sizeL)
-    --width: 20em
+    --width: 18em // Permet une grille à 4 colonnes max selon la définition de la largeur max. Augmenter cette valeur pour disposer de 5 colonnes.
+    grid-template-columns: repeat(auto-fit, minmax(var(--width), 1fr))
 
 .grid5
   --n: 2
@@ -78,21 +73,18 @@
   :root .media-xl-grid2
     --n: 2
 
-@media (min-width: _sizeXS)
-
+@media (min-width: _sizeS)
   .c2
   .c3
   .c4
     grid-column: span 2
 
-@media (min-width: _sizeS)
-
+@media (min-width: _sizeM)
   .c3
   .c4
     grid-column: span 3
 
 @media (min-width: _sizeL)
-
   .c4
     grid-column: span 4
 

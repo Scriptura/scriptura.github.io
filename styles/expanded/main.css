@@ -329,7 +329,6 @@ main {
 }
 [class^=grid] {
   --n: 1;
-  --width: 15em;
   display: grid;
   grid-auto-flow: dense;
   grid-template-columns: repeat(var(--n), minmax(0, 1fr));
@@ -343,22 +342,10 @@ main {
 [class^=grid].vertical-gap {
   gap: 0 1em;
 }
-.grid-auto {
-  grid-template-columns: repeat(auto-fit, minmax(var(--width), 1fr));
-}
 @media (min-width: 36.01em) {
   .grid-auto {
-    --width: 16em;
-  }
-}
-@media (min-width: 50.01em) {
-  .grid-auto {
-    --width: 17em;
-  }
-}
-@media (min-width: 90.01em) {
-  .grid-auto {
-    --width: 20em;
+    --width: 18em;
+    grid-template-columns: repeat(auto-fit, minmax(var(--width), 1fr));
   }
 }
 .grid5 {
@@ -417,14 +404,14 @@ main {
     --n: 2;
   }
 }
-@media (min-width: 36.01em) {
+@media (min-width: 50.01em) {
   .c2,
   .c3,
   .c4 {
     grid-column: span 2;
   }
 }
-@media (min-width: 50.01em) {
+@media (min-width: 65.01em) {
   .c3,
   .c4 {
     grid-column: span 3;
@@ -2505,11 +2492,8 @@ form > [class*="grid"] > .input {
 .article {
   display: grid;
 }
-.article [class^=grid] > * {
+.article [class^=grid] * {
   margin-top: 0;
-}
-.article [class^=grid] {
-  margin-bottom: -0.75em;
 }
 @media (max-width: 36.01em) {
   .article > section::after {
@@ -2668,14 +2652,53 @@ form > [class*="grid"] > .input {
   background-color: #474747;
   box-shadow: 0.5rem 0.5rem 2rem rgba(0,0,0,0.15);
 }
+.demo-items-color {
+  color: #333;
+}
 .demo-items-color > :nth-child(1n) {
   background-color: #ff4000;
 }
 .demo-items-color > :nth-child(2n) {
-  background-color: #ff8000;
+  background-color: #ff6a00;
 }
 .demo-items-color > :nth-child(3n) {
+  background-color: #ff9500;
+}
+.demo-items-color > :nth-child(4n) {
   background-color: #ffbf00;
+}
+.demo-items-color > :nth-child(5n) {
+  background-color: #ffea00;
+}
+.demo-items-color > :nth-child(6n) {
+  background-color: #eaff00;
+}
+.demo-items-color > :nth-child(7n) {
+  background-color: #bfff00;
+}
+.demo-items-color > :nth-child(8n) {
+  background-color: #95ff00;
+}
+.demo-items-color > :nth-child(9n) {
+  background-color: #6aff00;
+}
+.demo-items-color > :nth-child(10n) {
+  background-color: #40ff00;
+}
+.demo-items-color > :nth-child(11n) {
+  background-color: #15ff00;
+}
+.demo-items-color > :nth-child(12n) {
+  background-color: #00ff15;
+}
+.demo-items-color > :nth-child(13n) {
+  background-color: #00ff40;
+}
+.demo-items-color > :nth-child(14n) {
+  background-color: #00ff6a;
+}
+.demo-items-color code {
+  background-color: #444;
 }
 .demo-counter > * {
   counter-increment: div;
