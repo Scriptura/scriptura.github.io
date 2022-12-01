@@ -328,10 +328,9 @@ main {
   padding: 1em 0;
 }
 [class^=grid] {
-  --n: 1;
   display: grid;
   grid-auto-flow: dense;
-  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  grid-template-columns: repeat(var(--n, 1), minmax(0, 1fr));
 }
 [class^=grid].gap {
   gap: 1em;
@@ -344,8 +343,7 @@ main {
 }
 @media (min-width: 36.01em) {
   .grid-auto {
-    --width: 18em;
-    grid-template-columns: repeat(auto-fit, minmax(var(--width), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(var(--width, 18em), 1fr));
   }
 }
 .grid5 {
