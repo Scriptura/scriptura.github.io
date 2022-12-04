@@ -10,19 +10,35 @@ _rangeSize1 = 2.2em
 _rangeSize2 = 4em
 _rangeSize3 = 3px
 
-.range
-  display: flex
-  flex-direction: column
-  justify-content: center
-  align-items: center
-  margin-bottom: 2em
+_rangeColor1 = rgba(255, 255, 255, .1)
+_rangeColor2 = #333
+_rangeColor3 = rgba(255, 255, 255, .1)
+_rangeColor5 = _color2
+_rangeColor6 = _color2
+_rangeColor7 = _colorT
+_rangeColor8 = _color5
+_rangeColor9 = _colorG - 20%
+_rangeSize1 = 2.2em
+_rangeSize2 = 4em
+_rangeSize3 = 3px
+
+[class^=range]
+  display: grid
+  //justify-content: center
+  //margin-bottom: 2em
   & input
+    grid-column: 1
+    grid-row: 2
+    //grid-template-columns: 1fr
+    pointer-events: none
     -webkit-appearance: none
     width: 100%
     height: 3px //.2em
     max-width: 100%
     cursor: pointer
     background-color: _rangeColor1
+    & ~ input
+      background-color: transparent // @note Précision de la sélection @affected Firefox en particulier.
     &:disabled
       //background-color: _rangeColor2
       cursor: not-allowed
@@ -39,6 +55,9 @@ _rangeSize3 = 3px
   1. Les deux solutions ne peuvent pas être factorisées.
   */
   & ::-webkit-slider-thumb // @affected Chrome @note Curseur [1]
+    position: relative
+    //z-index: 1
+    pointer-events: auto
     -webkit-appearance: none
     width: _rangeSize1
     height: _rangeSize1
@@ -52,6 +71,8 @@ _rangeSize3 = 3px
     border-color: _colorG + 10%
     background: _rangeColor9 repeating-linear-gradient(-45deg, transparent 0 _rangeSize3, _colorG _rangeSize3 _rangeSize3 * 2)
   & ::-moz-range-thumb // @affected Firefox @note Curseur [1]
+    pointer-events: auto
+    //-webkit-appearance: none // ??? @todo A voir...
     box-sizing: border-box // @affected Firefox @note Définition obligatoire de cette règle malgré sa déclaration en globale.
     width: _rangeSize1
     height: _rangeSize1
@@ -67,12 +88,12 @@ _rangeSize3 = 3px
     background: _rangeColor9 repeating-linear-gradient(-45deg, transparent 0 _rangeSize3, _colorG _rangeSize3 _rangeSize3 * 2)
   & output
     position: relative
-    order: -1
-    display: block
-    box-sizing: content-box
+    //order: -1
+    //display: block
+    //box-sizing: content-box
     width: _rangeSize2
     height: _rangeSize2
-    margin-bottom: 2em
+    margin: 0 auto 2em
     line-height: _rangeSize2
     vertical-align: middle
     text-align: center

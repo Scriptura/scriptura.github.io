@@ -241,6 +241,45 @@ const rangeInput = (() => {
 
 
 // -----------------------------------------------------------------------------
+// @section     Slidebar multithumb
+// @description Slide multipouces
+// -----------------------------------------------------------------------------
+
+const rangeMultithumb = (() => {
+  document.querySelectorAll('.range-multithumb').forEach(range => {
+	  const input = range.querySelectorAll('input')
+	  const output = range.querySelector('output')
+    const step = Number(input[0].getAttribute('step'))
+    let valStart = Number(input[0].value)
+    let valStop = Number(input[1].value)
+		output.textContent = `${valStart}-${valStop}`
+		input[0].oninput = function() {
+      valStop = Number(input[1].value)
+			output.textContent = `${this.value}-${valStop}`
+      input[1].value = (valStop > Number(this.value)) ? valStop : (valStop + step)
+		}
+    /*
+		input[0].onchange = function() {
+      valStop = Number(input[1].value)
+      input[1].value = (valStop > Number(this.value)) ? valStop : (valStop + step)
+		}
+    */
+		input[1].oninput = function() {
+      valStart = Number(input[0].value)
+			output.textContent = `${valStart}-${this.value}`
+      input[0].value = (valStart < Number(this.value)) ? valStart : (valStart - step)
+		}
+    /*
+		input[1].onchange = function() {
+      valStart = Number(input[0].value)
+      input[0].value = (valStart < Number(this.value)) ? valStart : (valStart - step)
+		}
+    */
+  })
+})()
+
+
+// -----------------------------------------------------------------------------
 // @section     Color inputs
 // @description Champs pour les couleurs
 // -----------------------------------------------------------------------------

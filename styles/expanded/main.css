@@ -432,6 +432,13 @@ main {
 .flex {
   display: flex;
   flex-wrap: wrap;
+/* @todo
+   * @see https://github.com/w3c/csswg-drafts/issues/3559#issuecomment-557711824
+  @supports(gap: 1em)
+    & > * + *
+      float: left
+      margin-left: 1em
+  */
 }
 .flex.gap {
   gap: 1em;
@@ -680,20 +687,18 @@ main {
   }
 }
 @media (max-width: 58.01em) {
-  html.active,
-  body.active {
+  :where(html,
+  body).active {
     overflow: clip;
   }
-  html.active main,
-  body.active main,
-  html.active footer,
-  body.active footer,
-  html.active aside,
-  body.active aside {
+  body.active :where(main,
+  footer,
+  aside) {
     -webkit-user-select: none;
        -moz-user-select: none;
             user-select: none;
     pointer-events: none;
+    filter: blur(2px) grayscale(1);
   }
   .nav li:nth-child(1) {
     transition-delay: 0.08s;
@@ -2126,12 +2131,8 @@ form > [class*="grid"] > .input {
 .switch-spaced > .switch + .switch {
   margin-top: 0.75em;
 }
-.range {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 2em;
+[class^=range] {
+  display: grid;
 /*
   & ::-webkit-slider-runnable-track // @note Barre
     background-color: _rangeColor1
@@ -2139,7 +2140,10 @@ form > [class*="grid"] > .input {
   1. Les deux solutions ne peuvent pas être factorisées.
   */
 }
-.range input {
+[class^=range] input {
+  grid-column: 1;
+  grid-row: 2;
+  pointer-events: none;
   -webkit-appearance: none;
   width: 100%;
   height: 3px;
@@ -2147,19 +2151,24 @@ form > [class*="grid"] > .input {
   cursor: pointer;
   background-color: rgba(255,255,255,0.1);
 }
-.range input:disabled {
+[class^=range] input ~ input {
+  background-color: transparent;
+}
+[class^=range] input:disabled {
   cursor: not-allowed;
 }
-.range input:disabled + output {
+[class^=range] input:disabled + output {
   color: #747474;
 }
-.range input:disabled + output::after {
+[class^=range] input:disabled + output::after {
   background: #2e2e2e repeating-linear-gradient(-90deg, rgba(255,255,255,0.1) 0 3px, rgba(255,255,255,0.1) 0, transparent 0, transparent 6px);
 }
-.range input:focus {
+[class^=range] input:focus {
   outline: none;
 }
-.range ::-webkit-slider-thumb {
+[class^=range] ::-webkit-slider-thumb {
+  position: relative;
+  pointer-events: auto;
   -webkit-appearance: none;
   width: 2.2em;
   height: 2.2em;
@@ -2168,14 +2177,15 @@ form > [class*="grid"] > .input {
   border-radius: 50%;
   box-shadow: inset 0 0 0.1em rgba(0,0,0,0.3), 0 0.5rem 2rem rgba(0,0,0,0.3);
 }
-.range:focus-visible::-webkit-slider-thumb {
+[class^=range]:focus-visible::-webkit-slider-thumb {
   border-color: #ffa500;
 }
-.range input:disabled::-webkit-slider-thumb {
+[class^=range] input:disabled::-webkit-slider-thumb {
   border-color: #4d4d4d;
   background: #2e2e2e repeating-linear-gradient(-45deg, transparent 0 3px, #393939 3px 6px);
 }
-.range ::-moz-range-thumb {
+[class^=range] ::-moz-range-thumb {
+  pointer-events: auto;
   box-sizing: border-box;
   width: 2.2em;
   height: 2.2em;
@@ -2185,28 +2195,25 @@ form > [class*="grid"] > .input {
   border-radius: 50%;
   box-shadow: inset 0 0 0.1em rgba(0,0,0,0.3), 0 0.5rem 2rem rgba(0,0,0,0.3);
 }
-.range:focus-visible::-moz-range-thumb {
+[class^=range]:focus-visible::-moz-range-thumb {
   border-color: #ffa500;
 }
-.range input:disabled::-moz-range-thumb {
+[class^=range] input:disabled::-moz-range-thumb {
   border-color: #4d4d4d;
   background: #2e2e2e repeating-linear-gradient(-45deg, transparent 0 3px, #393939 3px 6px);
 }
-.range output {
+[class^=range] output {
   position: relative;
-  order: -1;
-  display: block;
-  box-sizing: content-box;
   width: 4em;
   height: 4em;
-  margin-bottom: 2em;
+  margin: 0 auto 2em;
   line-height: 4em;
   vertical-align: middle;
   text-align: center;
   color: #e9dac5;
   border-radius: 50%;
 }
-.range output::after {
+[class^=range] output::after {
   content: '';
   position: absolute;
   z-index: -1;

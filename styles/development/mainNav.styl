@@ -118,14 +118,13 @@ _logoNavSizeWidth = 3em
 
 @media (max-width: _sizeNav)
 
-  html.active
-  body.active
+  :where(html, body).active
     overflow: clip
-    & main
-    & footer
-    & aside
-      user-select: none
-      pointer-events: none
+
+  body.active :where(main, footer, aside)
+    user-select: none
+    pointer-events: none
+    filter: blur(2px) grayscale(1)
 
   _x = 12
   for _i in 1.._x

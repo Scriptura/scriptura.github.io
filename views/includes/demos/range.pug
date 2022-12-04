@@ -27,3 +27,30 @@
       label.sr-only Quatrième évaluation
       input(type='range' min='0' max='100' step='1' value='0' disabled)
       output
+  div
+    p
+      code .range-multithumb
+    .range-multithumb
+      label(for='range-start').sr-only start
+      input(type='range' name='range-start' min='0' max='100' step='1' value='25')
+      label(for='range-stop').sr-only stop
+      input(type='range' name='range-stop' min='0' max='100' step='1' value='75')
+      output
+  div
+    p
+      code .range-multithumb
+    .range-multithumb
+      label(for='range-start1').sr-only start
+      input(type='range' name='range-start1' min='0' max='100' step='1' value='0')
+      label(for='range-stop1').sr-only stop
+      input(type='range' name='range-stop1' min='0' max='100' step='1' value='100')
+      output
+  div
+    p
+      code .range-multithumb
+    .range-multithumb
+      label(for='range-start').sr-only start
+      input(type='range' name='range-start' min='0' max='100' step='1' value='25' disabled)
+      label(for='range-stop').sr-only stop
+      input(type='range' name='range-stop' min='0' max='100' step='1' value='75' disabled)
+      output
