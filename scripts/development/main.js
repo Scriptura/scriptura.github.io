@@ -253,28 +253,18 @@ const rangeMultithumb = (() => {
     let valStart = Number(input[0].value)
     let valStop = Number(input[1].value)
 		output.textContent = `${valStart}-${valStop}`
+
 		input[0].oninput = function() {
       valStop = Number(input[1].value)
 			output.textContent = `${this.value}-${valStop}`
       input[1].value = (valStop > Number(this.value)) ? valStop : (valStop + step)
 		}
-    /*
-		input[0].onchange = function() {
-      valStop = Number(input[1].value)
-      input[1].value = (valStop > Number(this.value)) ? valStop : (valStop + step)
-		}
-    */
+
 		input[1].oninput = function() {
       valStart = Number(input[0].value)
 			output.textContent = `${valStart}-${this.value}`
       input[0].value = (valStart < Number(this.value)) ? valStart : (valStart - step)
 		}
-    /*
-		input[1].onchange = function() {
-      valStart = Number(input[0].value)
-      input[0].value = (valStart < Number(this.value)) ? valStart : (valStart - step)
-		}
-    */
   })
 })()
 
