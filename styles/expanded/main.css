@@ -2146,7 +2146,7 @@ form > [class*="grid"] > .input {
   pointer-events: none;
   -webkit-appearance: none;
   width: 100%;
-  height: 3px;
+  height: 0.3em;
   max-width: 100%;
   cursor: pointer;
   background-color: rgba(255,255,255,0.1);
@@ -2170,10 +2170,10 @@ form > [class*="grid"] > .input {
   position: relative;
   pointer-events: auto;
   -webkit-appearance: none;
-  width: 2.2em;
-  height: 2.2em;
+  width: 2.3em;
+  height: 2.3em;
   background-color: #e9563c;
-  border: 0.3em solid #ff6347;
+  border: 0.2em solid #ff6347;
   border-radius: 50%;
   box-shadow: inset 0 0 0.1em rgba(0,0,0,0.3), 0 0.5rem 2rem rgba(0,0,0,0.3);
 }
@@ -2187,8 +2187,8 @@ form > [class*="grid"] > .input {
 [class^=range] ::-moz-range-thumb {
   pointer-events: auto;
   box-sizing: border-box;
-  width: 2.2em;
-  height: 2.2em;
+  width: 2.3em;
+  height: 2.3em;
   background-color: #e9563c;
   border: none;
   border: 0.3em solid #ff6347;
@@ -2204,10 +2204,10 @@ form > [class*="grid"] > .input {
 }
 [class^=range] output {
   position: relative;
-  width: 4em;
-  height: 4em;
+  width: 5em;
+  height: 5em;
   margin: 0 auto 2em;
-  line-height: 4em;
+  line-height: 5em;
   vertical-align: middle;
   text-align: center;
   color: #e9dac5;

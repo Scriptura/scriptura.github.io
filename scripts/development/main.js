@@ -247,24 +247,40 @@ const rangeInput = (() => {
 
 const rangeMultithumb = (() => {
   document.querySelectorAll('.range-multithumb').forEach(range => {
+
 	  const input = range.querySelectorAll('input')
 	  const output = range.querySelector('output')
     const step = Number(input[0].getAttribute('step'))
     let valStart = Number(input[0].value)
     let valStop = Number(input[1].value)
 		output.textContent = `${valStart}-${valStop}`
+    
+    // @see https://stackoverflow.com/questions/8796988/binding-multiple-events-to-a-listener-without-jquery
 
 		input[0].oninput = function() {
       valStop = Number(input[1].value)
 			output.textContent = `${this.value}-${valStop}`
-      input[1].value = (valStop > Number(this.value)) ? valStop : (valStop + step)
+      input[1].value = (valStop > Number(this.value)) ? valStop : (Number(this.value) + step)
 		}
 
 		input[1].oninput = function() {
       valStart = Number(input[0].value)
 			output.textContent = `${valStart}-${this.value}`
-      input[0].value = (valStart < Number(this.value)) ? valStart : (valStart - step)
+      input[0].value = (valStart < Number(this.value)) ? valStart : (Number(this.value) - step)
 		}
+
+		input[0].onchange = function() {
+      valStop = Number(input[1].value)
+			output.textContent = `${this.value}-${valStop}`
+      input[1].value = (valStop > Number(this.value)) ? valStop : (Number(this.value) + step)
+		}
+
+		input[1].onchange = function() {
+      valStart = Number(input[0].value)
+			output.textContent = `${valStart}-${this.value}`
+      input[0].value = (valStart < Number(this.value)) ? valStart : (Number(this.value) - step)
+		}
+
   })
 })()
 
