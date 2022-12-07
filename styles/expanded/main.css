@@ -2133,6 +2133,7 @@ form > [class*="grid"] > .input {
 }
 [class^=range] {
   display: grid;
+  margin-bottom: 1em;
 /*
   & ::-webkit-slider-runnable-track // @note Barre
     background-color: _rangeColor1
