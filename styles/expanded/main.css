@@ -2134,12 +2134,6 @@ form > [class*="grid"] > .input {
 [class^=range] {
   display: grid;
   margin-bottom: 1em;
-/*
-  & ::-webkit-slider-runnable-track // @note Barre
-    background-color: _rangeColor1
-    box-shadow: inset 0px 0px 4px rgba(0, 0, 0, .2)
-  1. Les deux solutions ne peuvent pas être factorisées.
-  */
 }
 [class^=range] input {
   grid-column: 1;
@@ -2150,10 +2144,10 @@ form > [class*="grid"] > .input {
   height: 0.3em;
   max-width: 100%;
   cursor: pointer;
-  background-color: rgba(255,255,255,0.1);
+  background: linear-gradient(to top, rgba(255,255,255,0.05) 0, rgba(255,255,255,0.05) 33.3%, #222 33.3%, #222 66.6%, rgba(255,255,255,0.05) 66.6%, rgba(255,255,255,0.05)) no-repeat;
 }
 [class^=range] input ~ input {
-  background-color: transparent;
+  background: initial;
 }
 [class^=range] input:disabled {
   cursor: not-allowed;
@@ -2167,7 +2161,7 @@ form > [class*="grid"] > .input {
 [class^=range] input:focus {
   outline: none;
 }
-[class^=range] ::-webkit-slider-thumb {
+::-webkit-slider-thumb {
   position: relative;
   pointer-events: auto;
   -webkit-appearance: none;
@@ -2178,14 +2172,14 @@ form > [class*="grid"] > .input {
   border-radius: 50%;
   box-shadow: inset 0 0 0.1em rgba(0,0,0,0.3), 0 0.5rem 2rem rgba(0,0,0,0.3);
 }
-[class^=range]:focus-visible::-webkit-slider-thumb {
-  border-color: #ffa500;
+:focus-visible::-webkit-slider-thumb {
+  border-color: #ffa500 !important;
 }
-[class^=range] input:disabled::-webkit-slider-thumb {
+input:disabled::-webkit-slider-thumb {
   border-color: #4d4d4d;
   background: #2e2e2e repeating-linear-gradient(-45deg, transparent 0 3px, #393939 3px 6px);
 }
-[class^=range] ::-moz-range-thumb {
+::-moz-range-thumb {
   pointer-events: auto;
   box-sizing: border-box;
   width: 2.3em;
@@ -2196,33 +2190,31 @@ form > [class*="grid"] > .input {
   border-radius: 50%;
   box-shadow: inset 0 0 0.1em rgba(0,0,0,0.3), 0 0.5rem 2rem rgba(0,0,0,0.3);
 }
-[class^=range]:focus-visible::-moz-range-thumb {
+:focus-visible::-moz-range-thumb {
   border-color: #ffa500;
 }
-[class^=range] input:disabled::-moz-range-thumb {
+input:disabled::-moz-range-thumb {
   border-color: #4d4d4d;
   background: #2e2e2e repeating-linear-gradient(-45deg, transparent 0 3px, #393939 3px 6px);
 }
-[class^=range] output {
+output {
+  --size: 5em;
   position: relative;
-  width: 5em;
-  height: 5em;
+  width: var(--size);
+  height: var(--size);
   margin: 0 auto 2em;
-  line-height: 5em;
+  line-height: var(--size);
   vertical-align: middle;
   text-align: center;
   color: #e9dac5;
   border-radius: 50%;
 }
-[class^=range] output::after {
+output::after {
+  box-sizing: border-box;
   content: '';
   position: absolute;
   z-index: -1;
-  display: block;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background-color: #ff6347;
   border-radius: 50% 50% 0 50%;
   box-shadow: inset 0 0 0.1em rgba(0,0,0,0.3), 0 0.5rem 2rem rgba(0,0,0,0.3);

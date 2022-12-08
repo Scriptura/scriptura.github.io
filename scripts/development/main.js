@@ -54,6 +54,7 @@ const getScripts = (() => {
   if (document.querySelector('[class*=tabs]')) getScript('/scripts/tab.js')
   if (document.querySelector('.pre')) getScript('/scripts/codeBlock.js')
   if (document.querySelector('.input [type=password]')) getScript('/scripts/readablePassword.js')
+  if (document.querySelector('[class^=range]')) getScript('/scripts/range.js')
   if (document.querySelector('.add-line-marks')) getScript('/scripts/lineMark.js')
   if (document.querySelector('.map')) getScript('/scripts/map.js')
   if (document.querySelector('.map')) getScript('/libraries/leaflet/leaflet.js')
@@ -219,61 +220,6 @@ const multipleSelectCustom = (() => {
     } else {
       select.size = maxLength
     }
-  })
-})()
-
-
-// -----------------------------------------------------------------------------
-// @section     Range inputs
-// @description Slide de valeurs
-// -----------------------------------------------------------------------------
-
-const rangeInput = (() => {
-  document.querySelectorAll('.range').forEach(range => {
-	  const input = range.querySelector('input')
-	  const output = range.querySelector('output')
-		output.textContent = input.value
-		input.oninput = function() {
-			output.textContent = this.value
-		}
-  })
-})()
-
-
-// -----------------------------------------------------------------------------
-// @section     Slidebar multithumb
-// @description Slide multipouces
-// -----------------------------------------------------------------------------
-
-const rangeMultithumb = (() => {
-  document.querySelectorAll('.range-multithumb').forEach(range => {
-
-    const [start, stop] = range.querySelectorAll('input')
-	  const output = range.querySelector('output')
-    const step = Number(start.getAttribute('step'))
-    let valStart = Number(start.value)
-    let valStop = Number(stop.value)
-
-		output.textContent = `${valStart}-${valStop}`
-    
-		function plus(){
-      valStop = Number(stop.value)
-			output.textContent = `${this.value}-${valStop}`
-      stop.value = (valStop > Number(this.value)) ? valStop : (Number(this.value) + step)
-		}
-
-		function moins(){
-      valStart = Number(start.value)
-			output.textContent = `${valStart}-${this.value}`
-      start.value = (valStart < Number(this.value)) ? valStart : (Number(this.value) - step)
-		}
-
-    start.oninput = plus
-		start.onchange = plus
-
-		stop.oninput = moins
-		stop.onchange = moins
-
   })
 })()
 
