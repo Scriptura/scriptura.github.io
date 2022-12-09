@@ -18,19 +18,28 @@ const rangeMultithumb = (() => {
     const step = Number(start.getAttribute('step'))
     let valStart = Number(start.value)
     let valStop = Number(stop.value)
-
+    let scope = Number(stop.max) - Number(stop.min)
+    let percentStart = (100 / Number(stop.max)) * valStart
+    let percentStop = (100 / Number(stop.max)) * valStop
+    
+    range.style.setProperty('--start', `${percentStart}%`)
+    range.style.setProperty('--stop', `${percentStop}%`)
 		output.textContent = `${valStart}-${valStop}`
     
 		function plus(){
       valStop = Number(stop.value)
 			output.textContent = `${this.value}-${valStop}`
       stop.value = (valStop > Number(this.value)) ? valStop : (Number(this.value) + step)
+      range.style.setProperty('--start', `${(100 / Number(stop.max)) * this.value}%`)
+      range.style.setProperty('--stop', `${(100 / Number(stop.max)) * stop.value}%`)
 		}
 
 		function moins(){
       valStart = Number(start.value)
 			output.textContent = `${valStart}-${this.value}`
       start.value = (valStart < Number(this.value)) ? valStart : (Number(this.value) - step)
+      range.style.setProperty('--start', `${(100 / Number(stop.max)) * start.value}%`)
+      range.style.setProperty('--stop', `${(100 / Number(stop.max)) * this.value}%`)
 		}
 
     start.oninput = plus
