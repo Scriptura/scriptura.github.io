@@ -2133,7 +2133,7 @@ form > [class*="grid"] > .input {
 }
 [class^=range] {
   display: grid;
-  margin-bottom: 1em;
+  gap: 0 0 2em;
 }
 [class^=range] input {
   grid-column: 1;
