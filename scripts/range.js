@@ -1,11 +1,21 @@
 const rangeInput = (() => {
   document.querySelectorAll('.range').forEach(range => {
-	  const input = range.querySelector('input')
-	  const output = range.querySelector('output')
-		output.textContent = input.value
-		input.oninput = function() {
-			output.textContent = this.value
-		}
+
+    const input = range.querySelector('input')
+    const output = range.querySelector('output')
+
+    function display(val){
+      if (range.dataset.currency) val = new Intl.NumberFormat(range.dataset.intl, {style: 'currency', currency: range.dataset.currency}).format(val)
+      else if (range.dataset.intl) stop = new Intl.NumberFormat(range.dataset.intl).format(val)
+      output.textContent = val
+    }
+
+    display(input.value)
+
+    input.oninput = function() {
+      display(this.value)
+    }
+
   })
 })()
 
@@ -13,7 +23,7 @@ const rangeMultithumb = (() => {
   document.querySelectorAll('.range-multithumb').forEach(range => {
 
     const [start, stop] = range.querySelectorAll('input')
-	  const output = range.querySelector('output')
+    const output = range.querySelector('output')
     const step = Number(start.getAttribute('step'))
     let valStart = Number(start.value)
     let valStop = Number(stop.value)
@@ -23,38 +33,50 @@ const rangeMultithumb = (() => {
     
     range.style.setProperty('--start', `${percentStart}%`)
     range.style.setProperty('--stop', `${percentStop}%`)
-		output.textContent = `${valStart}-${valStop}`
+    output.textContent = `${valStart}-${valStop}`
     display(valStart, valStop)
-    
-		function display(start, stop){
-      if (range.dataset.currency) start = new Intl.NumberFormat(range.dataset.intl, {style: 'currency', currency: range.dataset.currency}).format(start)
-      else if (range.dataset.intl) stop = new Intl.NumberFormat(range.dataset.intl).format(stop)
-      if (range.dataset.currency) stop = new Intl.NumberFormat(range.dataset.intl, {style: 'currency', currency: range.dataset.currency}).format(stop)
-      else if (range.dataset.intl) start = new Intl.NumberFormat(range.dataset.intl).format(start)
-		  output.textContent = `${start}-${stop}`
-		}
-    
-		function plus(){
+
+    /*
+    function intl(valStart, valStop){
+      [valStart, valStop].forEach(ss => {
+        if (range.dataset.currency) ss = new Intl.NumberFormat(range.dataset.intl, {style: 'currency', currency: range.dataset.currency}).format(ss)
+        else if (range.dataset.intl) ss = new Intl.NumberFormat(range.dataset.intl).format(ss)
+      })
+    }
+    */
+
+    function display(valStart, valStop){
+      //intl(valStart, valStop)
+      /**/
+      if (range.dataset.currency) valStart = new Intl.NumberFormat(range.dataset.intl, {style: 'currency', currency: range.dataset.currency}).format(valStart)
+      else if (range.dataset.intl) valStop = new Intl.NumberFormat(range.dataset.intl).format(valStop)
+      if (range.dataset.currency) valStop = new Intl.NumberFormat(range.dataset.intl, {style: 'currency', currency: range.dataset.currency}).format(valStop)
+      else if (range.dataset.intl) valStart = new Intl.NumberFormat(range.dataset.intl).format(valStart)
+      /**/
+      output.textContent = `${valStart} - ${valStop}`
+    }
+
+    function startThumb(){
       valStop = Number(stop.value)
       display(this.value, valStop)
       stop.value = (valStop > Number(this.value)) ? valStop : (Number(this.value) + step)
       range.style.setProperty('--start', `${(100 / Number(stop.max)) * this.value}%`)
       range.style.setProperty('--stop', `${(100 / Number(stop.max)) * stop.value}%`)
-		}
+    }
 
-		function moins(){
+    function stopThumb(){
       valStart = Number(start.value)
       display(valStart, this.value)
       start.value = (valStart < Number(this.value)) ? valStart : (Number(this.value) - step)
       range.style.setProperty('--start', `${(100 / Number(stop.max)) * start.value}%`)
       range.style.setProperty('--stop', `${(100 / Number(stop.max)) * this.value}%`)
-		}
+    }
 
-    start.oninput = plus
-		start.onchange = plus
+    start.oninput = startThumb
+    start.onchange = startThumb
 
-		stop.oninput = moins
-		stop.onchange = moins
+    stop.oninput = stopThumb
+    stop.onchange = stopThumb
 
   })
 })()

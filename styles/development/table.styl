@@ -39,7 +39,7 @@ _tableShadow1 = _shadow11
       content: attr(data-thead) ' ' // '\00a0: '
       color: _colorT2
     & tbody td:empty::before
-      content: attr(data-thead) ' ● ● ●'
+      content: attr(data-thead) ' ...'
   @media (min-width: _sizeS)
     box-shadow: _shadow5
     & th
@@ -60,7 +60,7 @@ _tableShadow1 = _shadow11
     & tbody tr:nth-child(even)
       background-color: _tableColor4
     & tbody :empty::after
-      content: '● ● ●'
+      content: '/'
       //background-image: repeating-linear-gradient(-45deg, transparent 0 _tableSize, rgba(255, 255, 255, .05) _tableSize _tableSize * 2)
 
 .table-fixed

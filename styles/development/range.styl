@@ -10,8 +10,10 @@ _rangeSize1 = 2.3em
 _rangeSize3 = 3px
 
 [class^=range]
+  --color: _rangeColor6
   display: grid
-  gap: 0 0 2em
+  gap: .5em
+  margin-bottom: 1em
   & input
     grid-column: 1 // @see https://css-tricks.com/multi-thumb-sliders-particular-two-thumb-case/
     grid-row: 2 // Idem.
@@ -72,14 +74,16 @@ _rangeSize3 = 3px
     border-color: _colorG + 10%
     background: _rangeColor9 repeating-linear-gradient(-45deg, transparent 0 _rangeSize3, _colorG _rangeSize3 _rangeSize3 * 2)
   & output
-    --size: 5em // @note Ne pas descendre en dessous de cette valeur, les navigateurs interprêtent différement @todo Comportement à suivre...
     position: relative
+    //justify-self: center
+    margin: 0 auto 2em
+    text-align: center
+  & output:not(.phylactery)
+    --size: 5em // @note Ne pas descendre en dessous de cette valeur, les navigateurs interprêtent différement @todo Comportement à suivre...
     width: var(--size)
     height: var(--size)
-    margin: 0 auto 2em
     line-height: var(--size)
     vertical-align: middle
-    text-align: center
     color: _rangeColor7
     border-radius: 50%
     &::after
@@ -88,10 +92,25 @@ _rangeSize3 = 3px
       position: absolute
       z-index: -1
       inset: 0
-      background-color: _rangeColor6
+      background-color: var(--color)
       border-radius: 50% 50% 0 50%
       box-shadow: _shadow6
       transform: rotate(45deg)
+  & .phylactery
+    //overflow-wrap: normal
+    min-width: var(--size, 4em)
+    padding: 1em
+    background-color: var(--color)
+    border-radius: .3em
+    &::after
+      position: absolute
+      content ''
+      bottom: -1em
+      left: calc(50% - 1em)
+      width: 2em
+      height: 1.5em
+      background-color: var(--color)
+      clip-path: polygon(50% 100%, 0 0, 100% 0)
 
 .range-multithumb input
   --colorSlide: _rangeColor5
