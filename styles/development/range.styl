@@ -37,9 +37,11 @@ _rangeSize3 = 3px
           background: _rangeColor9 repeating-linear-gradient(-90deg, _rangeColor3 0 _rangeSize3, _rangeColor3 0, transparent 0, transparent _rangeSize3 * 2)
     &:focus
       outline: none
-  //& ::-webkit-slider-runnable-track // @note Barre
-    //background-color: _rangeColor1
-    //box-shadow: inset 0px 0px 4px rgba(0, 0, 0, .2)
+  /*
+  & ::-webkit-slider-runnable-track // @note Barre
+    background-color: _rangeColor1
+    box-shadow: inset 0px 0px 4px rgba(0, 0, 0, .2)
+  */
   //1. Les deux solutions ne peuvent pas être factorisées.
   & ::-webkit-slider-thumb // @affected Chrome @note Curseur [1]
     position: relative

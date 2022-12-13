@@ -2136,6 +2136,11 @@ form > [class*="grid"] > .input {
   display: grid;
   gap: 0.5em;
   margin-bottom: 1em;
+/*
+  & ::-webkit-slider-runnable-track // @note Barre
+    background-color: _rangeColor1
+    box-shadow: inset 0px 0px 4px rgba(0, 0, 0, .2)
+  */
 }
 [class^=range] input {
   grid-column: 1;
@@ -2163,7 +2168,7 @@ form > [class*="grid"] > .input {
 [class^=range] input:focus {
   outline: none;
 }
-::-webkit-slider-thumb {
+[class^=range] ::-webkit-slider-thumb {
   position: relative;
   pointer-events: auto;
   -webkit-appearance: none;
@@ -2174,14 +2179,14 @@ form > [class*="grid"] > .input {
   border-radius: 50%;
   box-shadow: inset 0 0 0.1em rgba(0,0,0,0.3), 0 0.5rem 2rem rgba(0,0,0,0.3);
 }
-:focus-visible::-webkit-slider-thumb {
+[class^=range]:focus-visible::-webkit-slider-thumb {
   border-color: #ffa500 !important;
 }
-input:disabled::-webkit-slider-thumb {
+[class^=range] input:disabled::-webkit-slider-thumb {
   border-color: #4d4d4d;
   background: #2e2e2e repeating-linear-gradient(-45deg, transparent 0 3px, #393939 3px 6px);
 }
-::-moz-range-thumb {
+[class^=range] ::-moz-range-thumb {
   pointer-events: auto;
   box-sizing: border-box;
   width: 2.3em;
@@ -2192,19 +2197,19 @@ input:disabled::-webkit-slider-thumb {
   border-radius: 50%;
   box-shadow: inset 0 0 0.1em rgba(0,0,0,0.3), 0 0.5rem 2rem rgba(0,0,0,0.3);
 }
-:focus-visible::-moz-range-thumb {
+[class^=range]:focus-visible::-moz-range-thumb {
   border-color: #ffa500;
 }
-input:disabled::-moz-range-thumb {
+[class^=range] input:disabled::-moz-range-thumb {
   border-color: #4d4d4d;
   background: #2e2e2e repeating-linear-gradient(-45deg, transparent 0 3px, #393939 3px 6px);
 }
-output {
+[class^=range] output {
   position: relative;
   margin: 0 auto 2em;
   text-align: center;
 }
-output:not(.phylactery) {
+[class^=range] output:not(.phylactery) {
   --size: 5em;
   width: var(--size);
   height: var(--size);
@@ -2213,7 +2218,7 @@ output:not(.phylactery) {
   color: #e9dac5;
   border-radius: 50%;
 }
-output:not(.phylactery)::after {
+[class^=range] output:not(.phylactery)::after {
   box-sizing: border-box;
   content: '';
   position: absolute;
@@ -2224,13 +2229,13 @@ output:not(.phylactery)::after {
   box-shadow: inset 0 0 0.1em rgba(0,0,0,0.3), 0 0.5rem 2rem rgba(0,0,0,0.3);
   transform: rotate(45deg);
 }
-.phylactery {
+[class^=range] .phylactery {
   min-width: var(--size, 4em);
   padding: 1em;
   background-color: var(--color);
   border-radius: 0.3em;
 }
-.phylactery::after {
+[class^=range] .phylactery::after {
   position: absolute;
   content: '';
   bottom: -1em;
