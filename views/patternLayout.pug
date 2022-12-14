@@ -8,7 +8,7 @@ block variables
     }
 
 doctype html
-html.no-js(lang='fr')
+html.no-js.no-overscroll(lang='fr')
   head
     meta(charset='utf-8')
     title=data._title
@@ -29,7 +29,7 @@ html.no-js(lang='fr')
     link(rel='preload' href='/fonts/notoSerif-Regular.woff2' as='font' type='font/woff2' crossorigin)
     meta(name='msapplication-TileColor' content='#da532c')
     meta(name='msapplication-config' content='/browserconfig.xml')
-  body(class='type-' + documentType)
+  body.no-overscroll(class='type-' + documentType)
     a(href='#main').sr-only Aller au contenu
     main#main(role='main')
       block main

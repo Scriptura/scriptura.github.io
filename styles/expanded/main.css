@@ -3032,6 +3032,9 @@ a[aria-disabled=true]:active {
 .blink {
   animation: anim-blink 1s steps(2, start) infinite;
 }
+.no-overscroll {
+  overscroll-behavior-x: none;
+}
 @keyframes anim-blink {
   to {
     visibility: hidden;
