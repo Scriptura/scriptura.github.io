@@ -5,7 +5,7 @@ _articlesColor = _colorG
   & [class^=grid] *
     margin-top: 0
   @media (max-width: _sizeXS)
-    & > section::after
+    & .wrapper::after
       content: '✻ ✻ ✻'
       display: block
       width: 100%
@@ -17,7 +17,7 @@ _articlesColor = _colorG
     & > footer
       margin-top: .5em
   @media (min-width: _sizeXS)
-    & > section
+    & .wrapper
       padding: 4em 6em
       box-shadow: _shadow8
     & > footer > div
@@ -34,7 +34,7 @@ _articlesColor = _colorG
     grid-template-columns: repeat(5, minmax(0, 1fr))
     & > header
       grid-column: span 5
-    & > section
+    & .wrapper
       grid-column: span 3
     & > footer
       grid-column: span 2

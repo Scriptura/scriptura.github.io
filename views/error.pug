@@ -4,10 +4,11 @@ block variables
   - var documentType = 'error'
 
 block main
-  h1.main-heading Error 500 
-    span . Internal Server Error
-    //-#{error.status}
-    //-#{error.message}
+  header(role='banner')
+    h1.main-heading Error 500 
+      span . Internal Server Error
+      //-#{error.status}
+      //-#{error.message}
   if data._dev
     pre.pre
       code(translate='no' data-select='Select and copy')= error.stack

@@ -4,7 +4,8 @@ block variables
   - var documentType = 'persons'
 
 block main
-  h1.main-heading!= data._name
+  header(role='banner')
+    h1.main-heading!= data._name
   ul.list-stripe-links.grid3
     each e in data
       - if (e._given_name === null) e._given_name = 'Anonyme ' + e._id

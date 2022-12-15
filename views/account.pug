@@ -4,8 +4,9 @@ block variables
   - var documentType = 'account'
 
 block main
-  h1.main-heading !{data._name} 
-    span .&nbsp;Compte utilisateur
+  header(role='banner')
+    h1.main-heading !{data._name} 
+      span .&nbsp;Compte utilisateur
   .grid2.gap.media-s-grid1
     ul
       li Id : #{data._id}

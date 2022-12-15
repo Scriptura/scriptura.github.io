@@ -4,7 +4,8 @@ block variables
   - var documentType = 'login'
 
 block main
-  h1.main-heading!= data._name
+  header(role='banner')
+    h1.main-heading!= data._name
   .grid2.media-s-grid1.gap
     form(action='/login' method='post')
       .input

@@ -31,17 +31,17 @@ html.no-js.no-overscroll(lang='fr')
     meta(name='msapplication-config' content='/browserconfig.xml')
   body.no-overscroll(class='type-' + documentType)
     a(href='#main').sr-only Aller au contenu
-    main#main(role='main')
-      block main
-    //-block aside
-      //-aside.aside aside
-      //-include aside
     block nav
       nav.nav(role='navigation')
         a(href='/').logo-nav
           span.sr-only Scriptura
         include includes/mainNav
         include includes/breadcrumb
+    main#main(role='main')
+      block main
+    //-block aside
+      //-aside.aside aside
+      //-include aside
     block footer
       footer.footer(role='contentinfo')
         include includes/footer

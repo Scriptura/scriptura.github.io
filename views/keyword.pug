@@ -4,8 +4,9 @@ block variables
   - var documentType = 'keyword'
 
 block main
-  h1.main-heading #{data._name} 
-    span .&nbsp;Articles liés
+  header(role='banner')
+    h1.main-heading #{data._name} 
+      span .&nbsp;Articles liés
   .column4.gap
     each e in data
       article.card

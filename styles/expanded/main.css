@@ -2527,7 +2527,7 @@ form > [class*="grid"] > .input {
   margin-top: 0;
 }
 @media (max-width: 36.01em) {
-  .article > section::after {
+  .article .wrapper::after {
     content: '✻ ✻ ✻';
     display: block;
     width: 100%;
@@ -2542,7 +2542,7 @@ form > [class*="grid"] > .input {
   }
 }
 @media (min-width: 36.01em) {
-  .article > section {
+  .article .wrapper {
     padding: 4em 6em;
     box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
   }
@@ -2570,7 +2570,7 @@ form > [class*="grid"] > .input {
   .article > header {
     grid-column: span 5;
   }
-  .article > section {
+  .article .wrapper {
     grid-column: span 3;
   }
   .article > footer {

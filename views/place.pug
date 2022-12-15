@@ -16,8 +16,9 @@ block variables
     }
 
 block main
-  h1.main-heading Cathédrale Notre-Dame de Paris 
-    span .&nbsp;Localisation
+  header(role='banner')
+    h1.main-heading Cathédrale Notre-Dame de Paris 
+      span .&nbsp;Localisation
   ul
     if data._street && data._postal_code && data._locality
       li Adresse : #{data._street}, #{data._postal_code}, #{data._locality}

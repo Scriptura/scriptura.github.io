@@ -10,7 +10,8 @@ block variables
     }
 
 block main
-  h1.main-heading!= data._name
+  header(role='banner')
+    h1.main-heading!= data._name
   svg.size25.decorative-svg(role='img' focusable='false')
     use(href='/sprites/silos/131v-d1.svg#1')
   hr

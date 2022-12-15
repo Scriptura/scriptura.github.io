@@ -4,7 +4,8 @@ block variables
   - var documentType = 'keywords'
 
 block main
-  h1.main-heading!= data._name
+  header(role='banner')
+    h1.main-heading!= data._name
   ul.list-stripe-links.grid3.media-xs-grid2
     each e in data
       li
