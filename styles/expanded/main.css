@@ -2215,7 +2215,6 @@ form > [class*="grid"] > .input {
   height: var(--size);
   line-height: var(--size);
   vertical-align: middle;
-  color: #e9dac5;
   border-radius: 50%;
 }
 [class^=range] output:not(.phylactery)::after {
@@ -2802,15 +2801,8 @@ a[aria-disabled=true]:active {
 }
 .sr-only {
   position: absolute;
-  overflow: hidden;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  white-space: nowrap;
-  border: 0;
-  -webkit-clip-path: rect(0, 0, 0, 0);
-          clip-path: rect(0, 0, 0, 0);
+  -webkit-clip-path: inset(50%);
+          clip-path: inset(50%);
 }
 .protected {
   -webkit-user-select: none;
