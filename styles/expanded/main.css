@@ -2808,9 +2808,9 @@ a[aria-disabled=true]:active {
   margin: -1px;
   padding: 0;
   white-space: nowrap;
-  -webkit-clip-path: circle(0);
-          clip-path: circle(0);
   border: 0;
+  -webkit-clip-path: rect(0, 0, 0, 0);
+          clip-path: rect(0, 0, 0, 0);
 }
 .protected {
   -webkit-user-select: none;
