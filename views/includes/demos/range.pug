@@ -3,29 +3,29 @@
     p
       code .range
     .range
-      label.sr-only Première évaluation
-      input(type='range' min='0' max='100' step='1' value='0')
+      label#range-1(for='range-1').sr-only Première évaluation
+      input(type='range' name='range-1' min='0' max='100' step='1' value='0')
       output
   div
     p
       code .range
     .range
-      label.sr-only Troisème évaluation
-      input(type='range' min='-100' max='100' step='1' value='-100')
+      label#range-2(for='range-2').sr-only Troisème évaluation
+      input(type='range' name='range-2' min='-100' max='100' step='1' value='-100')
       output
   div
     p
       code .range(data-intl='fr-FR' data-currency='EUR')
     .range(data-intl='fr-FR' data-currency='EUR')
-      label.sr-only Deuxième évaluation
-      input(type='range' min='0' max='5000' step='50' value='2500')
+      label#range-3(for='range-3').sr-only Deuxième évaluation
+      input(type='range' name='range-3' min='0' max='5000' step='50' value='2500')
       output(style='--size:6em')
   div
     p
       code .range input[disabled]
     .range
-      label.sr-only Quatrième évaluation
-      input(type='range' min='0' max='100' step='1' value='0' disabled)
+      label#range-4(for='range-4').sr-only Quatrième évaluation
+      input(type='range' name='range-4' min='0' max='100' step='1' value='0' disabled)
       output
   div
     p
