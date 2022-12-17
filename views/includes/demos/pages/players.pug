@@ -9,5 +9,6 @@ block variables
       _description: 'Audio & video players, documentation'
     }
 block main
-  h1.main-heading!= data._name
+  header(role='banner')
+    h1.main-heading!= data._name
   include ../player

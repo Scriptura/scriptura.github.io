@@ -10,5 +10,6 @@ block variables
     }
 
 block main
-  h1.main-heading!= data._name
+  header(role='banner')
+    h1.main-heading!= data._name
   include ../tab
