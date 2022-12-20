@@ -2169,7 +2169,6 @@ form > [class*="grid"] > .input {
   outline: none;
 }
 [class^=range] ::-webkit-slider-thumb {
-  position: relative;
   pointer-events: auto;
   -webkit-appearance: none;
   width: 2.3em;
@@ -2179,8 +2178,9 @@ form > [class*="grid"] > .input {
   border-radius: 50%;
   box-shadow: inset 0 0 0.1em rgba(0,0,0,0.3), 0 0.5rem 2rem rgba(0,0,0,0.3);
 }
-[class^=range]:focus-visible::-webkit-slider-thumb {
-  border-color: #ffa500 !important;
+[class^=range] :focus-visible::-webkit-slider-thumb {
+  background-color: #ffa500;
+  border-color: #ffa500;
 }
 [class^=range] input:disabled::-webkit-slider-thumb {
   border-color: #4d4d4d;
@@ -2197,7 +2197,8 @@ form > [class*="grid"] > .input {
   border-radius: 50%;
   box-shadow: inset 0 0 0.1em rgba(0,0,0,0.3), 0 0.5rem 2rem rgba(0,0,0,0.3);
 }
-[class^=range]:focus-visible::-moz-range-thumb {
+[class^=range] :focus-visible::-moz-range-thumb {
+  background-color: #ffa500;
   border-color: #ffa500;
 }
 [class^=range] input:disabled::-moz-range-thumb {
@@ -2225,7 +2226,7 @@ form > [class*="grid"] > .input {
   inset: 0;
   background-color: var(--color);
   border-radius: 50% 50% 0 50%;
-  box-shadow: inset 0 0 0.1em rgba(0,0,0,0.3), 0 0.5rem 2rem rgba(0,0,0,0.3);
+  box-shadow: 0 0.5rem 2rem rgba(0,0,0,0.3);
   transform: rotate(45deg);
 }
 [class^=range] .phylactery {
@@ -2233,6 +2234,7 @@ form > [class*="grid"] > .input {
   padding: 1em;
   background-color: var(--color);
   border-radius: 0.3em;
+  box-shadow: 0 0.5rem 2rem rgba(0,0,0,0.3);
 }
 [class^=range] .phylactery::after {
   position: absolute;
@@ -2244,6 +2246,7 @@ form > [class*="grid"] > .input {
   background-color: var(--color);
   -webkit-clip-path: polygon(50% 100%, 0 0, 100% 0);
           clip-path: polygon(50% 100%, 0 0, 100% 0);
+  filter: drop-shadow(0 0.5rem 2rem rgba(0,0,0,0.3));
 }
 .range-multithumb input {
   --colorSlide: #ff6347;

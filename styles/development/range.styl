@@ -8,6 +8,7 @@ _rangeColor8 = _color5
 _rangeColor9 = _colorG - 20%
 _rangeSize1 = 2.3em
 _rangeSize3 = 3px
+_rangeShadow1 = 0 .5rem 2rem rgba(0, 0, 0, .3)
 
 [class^=range]
   --color: _rangeColor6
@@ -44,7 +45,7 @@ _rangeSize3 = 3px
   */
   //1. Les deux solutions ne peuvent pas être factorisées.
   & ::-webkit-slider-thumb // @affected Chrome @note Curseur [1]
-    position: relative
+    //position: relative
     //z-index: 1
     pointer-events: auto
     -webkit-appearance: none
@@ -54,8 +55,9 @@ _rangeSize3 = 3px
     border: .2em solid _rangeColor5
     border-radius: 50%
     box-shadow: _shadow6
-  &:focus-visible::-webkit-slider-thumb
-    border-color: _rangeColor8 !important // @affected Chrome @note Déclaration !important nécessaire.
+  & :focus-visible::-webkit-slider-thumb
+    background-color: _rangeColor8
+    border-color: _rangeColor8
   & input:disabled::-webkit-slider-thumb
     border-color: _colorG + 10%
     background: _rangeColor9 repeating-linear-gradient(-45deg, transparent 0 _rangeSize3, _colorG _rangeSize3 _rangeSize3 * 2)
@@ -70,7 +72,8 @@ _rangeSize3 = 3px
     border: .3em solid _rangeColor5
     border-radius: 50%
     box-shadow: _shadow6
-  &:focus-visible::-moz-range-thumb
+  & :focus-visible::-moz-range-thumb
+    background-color: _rangeColor8
     border-color: _rangeColor8 // @affected Firefox @note La déclaration !important n'est pas nécessaire.
   & input:disabled::-moz-range-thumb
     border-color: _colorG + 10%
@@ -95,13 +98,14 @@ _rangeSize3 = 3px
       inset: 0
       background-color: var(--color)
       border-radius: 50% 50% 0 50%
-      box-shadow: _shadow6
+      box-shadow: _rangeShadow1
       transform: rotate(45deg)
   & .phylactery
     min-width: var(--size, 4em)
     padding: 1em
     background-color: var(--color)
     border-radius: .3em
+    box-shadow: _rangeShadow1
     &::after
       position: absolute
       content ''
@@ -111,6 +115,7 @@ _rangeSize3 = 3px
       height: 1.5em
       background-color: var(--color)
       clip-path: polygon(50% 100%, 0 0, 100% 0)
+      filter: drop-shadow(0 .5rem 2rem rgba(0, 0, 0, .3)) // _rangeShadow1
 
 .range-multithumb input
   --colorSlide: _rangeColor5
