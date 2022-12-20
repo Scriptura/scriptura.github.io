@@ -994,7 +994,6 @@ ol ol ol {
 .list-stripe-links li:focus-within,
 .list-stripe-links li:hover {
   background-color: #ff6347;
-  box-shadow: 0.5rem 0.5rem 2rem rgba(0,0,0,0.25);
   outline: none;
   animation: anim-list 0.05s ease-in-out;
 }
@@ -1060,6 +1059,9 @@ ol ol ol {
   background-color: #ff6347;
   text-decoration: none;
 }
+.list-straight li {
+  box-shadow: 0.5rem 0.5rem 2rem rgba(0,0,0,0.1);
+}
 .list-straight li::before,
 .list-straight svg {
   width: 3em;
@@ -1099,6 +1101,7 @@ ol ol ol {
   border-radius: 50%;
 }
 .list-rounded svg {
+  position: relative;
   padding-left: 0.7em;
   padding-right: 0.7em;
   -webkit-clip-path: circle(50%);

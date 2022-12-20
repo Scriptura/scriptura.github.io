@@ -3,91 +3,96 @@ _listColor = _color2
 _listColor2 = _colorT2
 _listColor3 = _colorG + 7%
 _listColor4 = _colorT
-_listShadow1 = .5rem .5rem 2rem rgba(0, 0, 0, .1)
+_listShadow1 = _shadow14
 
 ul
-  list-style-type square
+  list-style-type: square
 
 ol ol
-  list-style-type lower-latin
+  list-style-type: lower-latin
 
 ol ol ol
-  list-style-type lower-greek
+  list-style-type: lower-greek
 
 [class^=list]
 [class^=list] > *
-  padding-left 0
+  padding-left: 0
 
 [class^=list] li
-  display block
+  display: block
 
 [class^=list-stripe]
-  display grid
-  gap _gap
-  margin 0
+  display: grid
+  gap: _gap
+  margin: 0
 
 [class^=list-stripe] > *
-  padding .5em 1em
-  background-color _listColor3
-  box-shadow _shadow14
+  padding: .5em 1em
+  background-color: _listColor3
+  box-shadow: _shadow14
+  //filter: drop-shadow(_shadow14)
 
 .list-stripe-links
   & a
-    display block
-    color _listColor4 //inherit
-    text-decoration none
+    display: block
+    color: _listColor4 //inherit
+    text-decoration: none
   & li:focus-within
   & li:hover
-    background-color _listColor
-    box-shadow _shadow15
-    outline none
-    animation anim-list .05s ease-in-out
+    background-color: _listColor
+    //box-shadow: _shadow15
+    outline: none
+    animation: anim-list .05s ease-in-out
 
 @keyframes anim-list
   to
-    transform scale(1.03) translateZ(0)
+    transform: scale(1.03) translateZ(0)
 
 .list-straight
 .list-rounded
-  padding 0
+  padding: 0
   & li
-    display grid
-    grid-template-columns 3em minmax(0, 1fr)
+    display: grid
+    grid-template-columns: 3em minmax(0, 1fr)
+    //box-shadow: _listShadow1
     &:focus-within svg
     &:hover svg
     &:active svg
     &:focus-within::before
     &:hover::before
     &:active::before
-      color #fff
-      background-color _color5
+      color: #fff
+      background-color: _color5
   & li::before
   & svg
   & a
-    box-shadow _listShadow1
-    transition color, background-color .3s ease-in-out
+    box-shadow: _listShadow1
+    //filter: drop-shadow(_listShadow1)
+    transition: color, background-color .3s ease-in-out
   & li::before
   & svg
-    display flex
-    align-items center
-    justify-content center
-    color _listColor4
-    background-color _listColor
+    display: flex
+    align-items: center
+    justify-content: center
+    color: _listColor4
+    background-color: _listColor
   & a
-    display flex
-    align-items center
-    width 100%
-    min-height _listSize
-    padding .5em 1em
-    background-color _listColor3
+    display: flex
+    align-items: center
+    width: 100%
+    min-height: _listSize
+    padding: .5em 1em
+    background-color: _listColor3
     &:focus
     &:hover
     &:active
-      color #fff
-      background-color _listColor
-      text-decoration none
+      color: #fff
+      background-color: _listColor
+      text-decoration: none
 
 .list-straight
+  & li
+    box-shadow: _listShadow1
   & li::before
   & svg
     width: _listSize + .5
@@ -121,10 +126,10 @@ ol ol ol
   & li::before
     border-radius: 50%
   & svg
+    position: relative
     padding-left: .7em
     padding-right: .7em
     clip-path: circle(50%)
-    //filter: drop-shadow(_listShadow1)
   & a
     border-radius: round(_listSize / 2, 2)
 
