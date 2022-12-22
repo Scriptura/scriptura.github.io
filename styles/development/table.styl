@@ -4,12 +4,13 @@ _tableColor2 = _color2
 _tableColor3 = _colorG - 30%
 _tableColor4 = _colorG - 10%
 _tableShadow1 = _shadow11
+_tableShadow2 = inset 0 0 1px #222
 
-[role="region"][aria-labelledby][tabindex]
-  overflow-x: auto
-
-[role="region"][aria-labelledby][tabindex]:focus
-  outline: .1em solid _color5
+[role=region][aria-labelledby][tabindex] // @see https://css-tricks.com/under-engineered-responsive-tables/
+  overflow: auto // clip
+  box-shadow: _tableShadow1
+  &:focus
+    outline: .1em solid _color5
 
 [class*=table]
   width: 100%
@@ -17,18 +18,16 @@ _tableShadow1 = _shadow11
   border-collapse: collapse // separate
   font-weight: normal
   //overflow-wrap: normal
+  word-break: normal
   text-align: left
-  & > *
-    word-break: normal
   & th
     font-weight: normal
-  box-shadow: _shadow5
   & th
   & td
     vertical-align: top
     padding: .5em 1em
-    box-shadow: _shadow16
-  & thead th
+    box-shadow: _tableShadow2
+  &:not(.table-responsive) thead th
     position: sticky
     top: 0
     z-index: 1
@@ -42,36 +41,34 @@ _tableShadow1 = _shadow11
     background-color: _tableColor4
   & tbody :empty::after
     content: '/'
-    //background-image: repeating-linear-gradient(-45deg, transparent 0 _tableSize, rgba(255, 255, 255, .05) _tableSize _tableSize * 2)
-
-[class*=table][class*=-fixed]
-  table-layout: fixed
-
-[class*=table][class*=-responsive]
-  @media (max-width: _sizeS)
-    border-collapse: separate
-    border-spacing: 0 .5em
-    & thead
-    & tfoot
-      display: none
-    & th
-    & td
-      display: block
-      background-color: _tableColor1
-    & tr > :first-child
-      padding-top: 1em
-    & td:last-child
-      padding-bottom: 1em
-    & tfoot :empty
-      display none
-    & tbody tr
-      border-radius: _r2
-      box-shadow: _tableShadow1
-      > *
-        padding: 0 1em
-    & tbody th::before
-    & tbody td::before
-      content: attr(data-thead) ' ' // '\00a0: '
-      color: _colorT2
-    & tbody td:empty::before
-      content: attr(data-thead) ' ...'
+  //&[class*=-fixed]
+  //  table-layout: fixed
+  //  width: content
+  &[class*=-responsive]
+    @media (max-width: _sizeS)
+      border-collapse: separate
+      border-spacing: 0 .5em
+      & thead
+      & tfoot
+        display: none
+      & th
+      & td
+        display: block
+        background-color: _tableColor1
+      & tr > :first-child
+        padding-top: 1em
+      & td:last-child
+        padding-bottom: 1em
+      & tfoot :empty
+        display none
+      & tbody tr
+        border-radius: _r2
+        box-shadow: _tableShadow1
+        > *
+          padding: 0 1em
+      & tbody th::before
+      & tbody td::before
+        content: attr(data-thead) ' ' // '\00a0: '
+        color: _colorT2
+      & tbody :empty::after
+        content: '...'
