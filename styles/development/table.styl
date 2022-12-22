@@ -5,17 +5,52 @@ _tableColor3 = _colorG - 30%
 _tableColor4 = _colorG - 10%
 _tableShadow1 = _shadow11
 
+[role="region"][aria-labelledby][tabindex]
+  overflow-x: auto
+
+[role="region"][aria-labelledby][tabindex]:focus
+  outline: .1em solid _color5
+
 [class*=table]
   width: 100%
+  //min-width: min-content
   border-collapse: collapse // separate
   font-weight: normal
-  word-wrap: break-word // @note Alias de overflow-wrap @see https://developer.mozilla.org/fr/docs/Web/CSS/overflow-wrap
+  //overflow-wrap: normal
   text-align: left
+  & > *
+    word-break: normal
   & th
     font-weight: normal
+  box-shadow: _shadow5
+  & th
+  & td
+    vertical-align: top
+    padding: .5em 1em
+    box-shadow: _shadow16
+  & thead th
+    position: sticky
+    top: 0
+    z-index: 1
+    background-color: _tableColor2
+  & tfoot
+  & tbody th
+    background-color: _tableColor3
+  & tbody tr:nth-child(odd)
+    background-color: _tableColor1
+  & tbody tr:nth-child(even)
+    background-color: _tableColor4
+  & tbody :empty::after
+    content: '/'
+    //background-image: repeating-linear-gradient(-45deg, transparent 0 _tableSize, rgba(255, 255, 255, .05) _tableSize _tableSize * 2)
+
+[class*=table][class*=-fixed]
+  table-layout: fixed
+
+[class*=table][class*=-responsive]
   @media (max-width: _sizeS)
     border-collapse: separate
-    border-spacing: 0 1em
+    border-spacing: 0 .5em
     & thead
     & tfoot
       display: none
@@ -40,28 +75,3 @@ _tableShadow1 = _shadow11
       color: _colorT2
     & tbody td:empty::before
       content: attr(data-thead) ' ...'
-  @media (min-width: _sizeS)
-    box-shadow: _shadow5
-    & th
-    & td
-      vertical-align: top
-      padding: .5em 1em
-      box-shadow: _shadow16
-    & thead th
-      position: sticky
-      top: 0
-      z-index: 1
-      background-color: _tableColor2
-    & tfoot
-    & tbody th
-      background-color: _tableColor3
-    & tbody tr:nth-child(odd)
-      background-color: _tableColor1
-    & tbody tr:nth-child(even)
-      background-color: _tableColor4
-    & tbody :empty::after
-      content: '/'
-      //background-image: repeating-linear-gradient(-45deg, transparent 0 _tableSize, rgba(255, 255, 255, .05) _tableSize _tableSize * 2)
-
-.table-fixed
-  table-layout: fixed
