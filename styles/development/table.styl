@@ -9,10 +9,11 @@ _tableShadow2 = inset 0 0 1px #222
 [role=region][aria-labelledby][tabindex] // @see https://css-tricks.com/under-engineered-responsive-tables/
   overflow: auto // clip
   box-shadow: _tableShadow1
+  max-height: 80vh
   &:focus
     outline: .1em solid _color5
 
-[class*=table]
+[class^=table]
   width: 100%
   //min-width: min-content
   border-collapse: collapse // separate
@@ -27,10 +28,10 @@ _tableShadow2 = inset 0 0 1px #222
     vertical-align: top
     padding: .5em 1em
     box-shadow: _tableShadow2
-  &:not(.table-responsive) thead th
-    //position: sticky
-    //top: 0
-    //z-index: 1
+  & thead th
+    position: sticky
+    top: 0
+    z-index: 1
     background-color: _tableColor2
   & tfoot
   & tbody th

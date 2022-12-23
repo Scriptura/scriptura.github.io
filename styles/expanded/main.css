@@ -1473,40 +1473,44 @@ audio:not([controls]) {
 [role=region][aria-labelledby][tabindex] {
   overflow: auto;
   box-shadow: 0 0 2rem rgba(0,0,0,0.2);
+  max-height: 80vh;
 }
 [role=region][aria-labelledby][tabindex]:focus {
   outline: 0.1em solid #ffa500;
 }
-[class*=table] {
+[class^=table] {
   width: 100%;
   border-collapse: collapse;
   font-weight: normal;
   word-break: normal;
   text-align: left;
 }
-[class*=table] th {
+[class^=table] th {
   font-weight: normal;
 }
-[class*=table] th,
-[class*=table] td {
+[class^=table] th,
+[class^=table] td {
   vertical-align: top;
   padding: 0.5em 1em;
   box-shadow: inset 0 0 1px #222;
 }
-[class*=table]:not(.table-responsive) thead th {
+[class^=table] thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
   background-color: #ff6347;
 }
-[class*=table] tfoot,
-[class*=table] tbody th {
+[class^=table] tfoot,
+[class^=table] tbody th {
   background-color: #282828;
 }
-[class*=table] tbody tr:nth-child(odd) {
+[class^=table] tbody tr:nth-child(odd) {
   background-color: #474747;
 }
-[class*=table] tbody tr:nth-child(even) {
+[class^=table] tbody tr:nth-child(even) {
   background-color: #333;
 }
-[class*=table] tbody :empty::after {
+[class^=table] tbody :empty::after {
   content: '/';
 }
 @media (max-width: 50.01em) {
