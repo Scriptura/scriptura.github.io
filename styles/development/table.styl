@@ -28,9 +28,9 @@ _tableShadow2 = inset 0 0 1px #222
     padding: .5em 1em
     box-shadow: _tableShadow2
   &:not(.table-responsive) thead th
-    position: sticky
-    top: 0
-    z-index: 1
+    //position: sticky
+    //top: 0
+    //z-index: 1
     background-color: _tableColor2
   & tfoot
   & tbody th
@@ -44,31 +44,34 @@ _tableShadow2 = inset 0 0 1px #222
   //&[class*=-fixed]
   //  table-layout: fixed
   //  width: content
-  &[class*=-responsive]
-    @media (max-width: _sizeS)
-      border-collapse: separate
-      border-spacing: 0 .5em
-      & thead
-      & tfoot
-        display: none
-      & th
-      & td
-        display: block
-        background-color: _tableColor1
-      & tr > :first-child
-        padding-top: 1em
-      & td:last-child
-        padding-bottom: 1em
-      & tfoot :empty
-        display none
-      & tbody tr
-        border-radius: _r2
-        box-shadow: _tableShadow1
-        > *
-          padding: 0 1em
-      & tbody th::before
-      & tbody td::before
-        content: attr(data-thead) ' ' // '\00a0: '
-        color: _colorT2
-      & tbody :empty::after
-        content: '...'
+
+.table-responsive
+  @media (max-width: _sizeS)
+    border-collapse: separate
+    border-spacing: 0 .5em
+    & thead
+    & tfoot
+      display: none
+    //& th
+    & td
+      display: block
+    & td:last-child
+      padding-bottom: 1em
+    & td
+      box-shadow: none
+    & tr > :first-child
+      padding-top: 1em
+    & tfoot :empty
+      display none
+    & tbody tr
+      background-color: _tableColor1 !important
+      //border-radius: _r2
+      box-shadow: _tableShadow1
+      > *
+        padding: 0 1em
+    & tbody th::before
+    & tbody td::before
+      content: attr(data-thead) ' '
+      color: _colorT2
+    & tbody :empty::after
+      content: '...'

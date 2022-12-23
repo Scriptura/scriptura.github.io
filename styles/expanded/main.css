@@ -1494,9 +1494,6 @@ audio:not([controls]) {
   box-shadow: inset 0 0 1px #222;
 }
 [class*=table]:not(.table-responsive) thead th {
-  position: sticky;
-  top: 0;
-  z-index: 1;
   background-color: #ff6347;
 }
 [class*=table] tfoot,
@@ -1513,41 +1510,42 @@ audio:not([controls]) {
   content: '/';
 }
 @media (max-width: 50.01em) {
-  [class*=table][class*=-responsive] {
+  .table-responsive {
     border-collapse: separate;
     border-spacing: 0 0.5em;
   }
-  [class*=table][class*=-responsive] thead,
-  [class*=table][class*=-responsive] tfoot {
+  .table-responsive thead,
+  .table-responsive tfoot {
     display: none;
   }
-  [class*=table][class*=-responsive] th,
-  [class*=table][class*=-responsive] td {
+  .table-responsive td {
     display: block;
-    background-color: #474747;
   }
-  [class*=table][class*=-responsive] tr > :first-child {
-    padding-top: 1em;
-  }
-  [class*=table][class*=-responsive] td:last-child {
+  .table-responsive td:last-child {
     padding-bottom: 1em;
   }
-  [class*=table][class*=-responsive] tfoot :empty {
+  .table-responsive td {
+    box-shadow: none;
+  }
+  .table-responsive tr > :first-child {
+    padding-top: 1em;
+  }
+  .table-responsive tfoot :empty {
     display: none;
   }
-  [class*=table][class*=-responsive] tbody tr {
-    border-radius: 0.2em;
+  .table-responsive tbody tr {
+    background-color: #474747 !important;
     box-shadow: 0 0 2rem rgba(0,0,0,0.2);
   }
-  [class*=table][class*=-responsive] tbody tr > * {
+  .table-responsive tbody tr > * {
     padding: 0 1em;
   }
-  [class*=table][class*=-responsive] tbody th::before,
-  [class*=table][class*=-responsive] tbody td::before {
+  .table-responsive tbody th::before,
+  .table-responsive tbody td::before {
     content: attr(data-thead) ' ';
     color: #d2b48c;
   }
-  [class*=table][class*=-responsive] tbody :empty::after {
+  .table-responsive tbody :empty::after {
     content: '...';
   }
 }
