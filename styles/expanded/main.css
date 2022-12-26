@@ -1470,7 +1470,7 @@ audio:not([controls]) {
     transform: translate(0, 0);
   }
 }
-[role=region][aria-labelledby][tabindex] {
+[role=region][aria-labelledby][tabindex]:has(.table) {
   overflow: auto;
   box-shadow: 0 0 2rem rgba(0,0,0,0.2);
   max-height: 80vh;
@@ -1517,6 +1517,7 @@ audio:not([controls]) {
   .table-responsive {
     border-collapse: separate;
     border-spacing: 0 0.5em;
+    margin: -0.5em 0;
   }
   .table-responsive thead,
   .table-responsive tfoot {

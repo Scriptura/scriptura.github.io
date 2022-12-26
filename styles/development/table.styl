@@ -6,10 +6,11 @@ _tableColor4 = _colorG - 10%
 _tableShadow1 = _shadow11
 _tableShadow2 = inset 0 0 1px #222
 
-[role=region][aria-labelledby][tabindex] // @see https://css-tricks.com/under-engineered-responsive-tables/
-  overflow: auto // clip
-  box-shadow: _tableShadow1
-  max-height: 80vh
+[role=region][aria-labelledby][tabindex]
+  &:has(.table) // @see https://css-tricks.com/under-engineered-responsive-tables/
+    overflow: auto // clip
+    box-shadow: _tableShadow1
+    max-height: 80vh
   &:focus
     outline: .1em solid _color5
 
@@ -50,6 +51,7 @@ _tableShadow2 = inset 0 0 1px #222
   @media (max-width: _sizeS)
     border-collapse: separate
     border-spacing: 0 .5em
+    margin: -.5em 0
     & thead
     & tfoot
       display: none

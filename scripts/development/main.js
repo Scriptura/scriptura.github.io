@@ -392,19 +392,16 @@ const progressBar = (() => {
 const progressBarTest = (() => {
   const cmd = document.querySelector('#progress-test-cmd'),
         target = document.querySelector('#progress-test-target')
-  if (cmd) {
-    cmd.addEventListener('click', () => {
-      let value = target.dataset.value
-      setInterval(frame, 10)
-          function frame() {
-          if ( value < 100 ) {
-            value++
-            target.querySelector('div').style.width = value + '%'
-          }
+  cmd.addEventListener('click', () => {
+    let value = target.dataset.value
+    setInterval(frame, 10)
+        function frame() {
+        if (value < 100) {
+          value++
+          target.querySelector('div').style.width = value + '%'
         }
-    }, false)
-  }
-
+      }
+  }, false)
 })()
 
 // -----------------------------------------------------------------------------
