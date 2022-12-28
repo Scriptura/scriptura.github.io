@@ -62,6 +62,11 @@ _accordionTime1 = .5s
         box-shadow: _shadow15
         animation: anim-accordion .1s ease-in-out
 
+.tab-panel
+  //& > :first-child
+  & details:first-child // @note Correctif @todo À revoir...
+    margin-top: .75em
+
 @keyframes anim-accordion
   to
     transform: scale(1.01) translateZ(0)
