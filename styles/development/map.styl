@@ -1,6 +1,10 @@
+_mapColor1 = hsl(16, 100%, 66%) // Coral
+
 .map
   width: 100%
-  height: 100vh
+  aspect-ratio: 9/16
+  @media (orientation: landscape)
+    aspect-ratio: 16/9
   margin: auto
   background-color: #e6e4e0 // Couleur en lien avec le background dominant des tuiles choisies pour les cartes Leaflet.
   overflow: hidden // Évite à l'occasion un débordement des tuiles. Solution imparfaite.
@@ -47,31 +51,22 @@
   animation: anim-drop 1s ease
 
 .marker-icon
-  --color: Coral
-  --color2: Tomato
   filter: drop-shadow(.3em .3em .3em rgba(0, 0, 0, .5))
   & > :first-child
-    fill: var(--color)
+    fill: var(--color, _mapColor1)
   & > :last-child
-    fill: var(--color2)
+    fill: var(--color2, _mapColor1 - 10%)
 
-.map:nth-child(2) .marker-icon
-  & > :first-child
-    fill: MediumSeaGreen
-  & > :last-child
-    fill: #1FA055
+/*
+MediumSeaGreen
+#1FA055
 
-.map:nth-child(3) .marker-icon
-  & > :first-child
-    fill: CornflowerBlue
-  & > :last-child
-    fill: MediumSlateBlue
+CornflowerBlue
+MediumSlateBlue
 
-.map:nth-child(4) .marker-icon
-  & > :first-child
-    fill: HotPink
-  & > :last-child
-    fill: DeepPink
+HotPink
+DeepPink
+*/
 
 @keyframes anim-bounce
   to

@@ -33,7 +33,7 @@ block main
   if data._location
     .gap-bottom
       .map(
-        style='height: 50vh; max-height: calc(100vw - 2em)'
+        style='max-height:50vh'
         data-name=data._name
         data-places=`["${data._markerDescription}", [${data._location.y}, ${data._location.x}]]`
         data-zoom='15'
