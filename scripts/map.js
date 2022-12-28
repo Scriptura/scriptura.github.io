@@ -32,8 +32,9 @@ const maps = (() => {
             //console.table(P)
       L.tileLayer(
         el.dataset.tileserver || titleServerDefault, {
-          minZoom: 2,
-          maxZoom: el.dataset.zoom || 18, // Certains jeux de tuiles sont moins profonds que d'autres, d'où l'intérêt de définir un maxZoom.
+          minZoom: el.dataset.minzoom || 2,
+          maxZoom: el.dataset.maxzoom || 18, // Certains jeux de tuiles sont moins profonds que d'autres, d'où l'intérêt de définir un maxZoom.
+          zoom: el.dataset.zoom || el.dataset.maxzoom,
           attribution: el.dataset.attribution || ''
         }
       ).addTo(map)
@@ -53,6 +54,7 @@ const maps = (() => {
       }
       const group = new L.featureGroup(markers)
       map.fitBounds(group.getBounds())
+      el.dataset.zoom && map.setZoom(el.dataset.zoom)
     }
     window.addEventListener('load', () => mapInit())
   })

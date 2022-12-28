@@ -33,12 +33,14 @@ block main
   if data._location
     .gap-bottom
       .map(
-        style='height: 50vh; max-height: calc(100vw - 2em)',
-        data-name=data._name,
-        data-places=`["${data._markerDescription}", [${data._location.y}, ${data._location.x}]]`,
-        data-zoom='15',
-        data-color='#ff654f',
-        data-tileserver='https://wxs.ign.fr/choisirgeoportail/geoportail/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE=normal&TILEMATRIXSET=PM&FORMAT=image/png&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}',
+        style='height: 50vh; max-height: calc(100vw - 2em)'
+        data-name=data._name
+        data-places=`["${data._markerDescription}", [${data._location.y}, ${data._location.x}]]`
+        data-zoom='15'
+        data-minzoom='10'
+        data-maxzoom='19'
+        data-color='#ff654f'
+        data-tileserver='https://wxs.ign.fr/decouverte/geoportail/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE=normal&TILEMATRIXSET=PM&FORMAT=image/png&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}'
         data-attribution='<a target="_blank" href="https://www.geoportail.gouv.fr/">Geoportail France</a>'
       )
   //-
