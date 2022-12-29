@@ -27,7 +27,7 @@ const maps = (() => {
     const mapInit = () => {
       const map = L.map(item.id),
             el = document.getElementById(item.id),
-            P = [JSON.parse(el.dataset.places)],
+            P = JSON.parse(el.dataset.places),
             markers = []
             //console.table(P)
       L.tileLayer(

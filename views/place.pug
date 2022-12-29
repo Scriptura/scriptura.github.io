@@ -35,7 +35,7 @@ block main
       .map(
         style='max-height:50vh'
         data-name=data._name
-        data-places=`["${data._markerDescription}", [${data._location.y}, ${data._location.x}]]`
+        data-places=`[["${data._markerDescription}", [${data._location.y}, ${data._location.x}]]]`
         data-zoom='15'
         data-minzoom='10'
         data-maxzoom='19'

@@ -1,8 +1,9 @@
+h2 Multiple maps
 .grid2
   .map(
     style='max-height:30vh'
     data-name='Map 1'
-    data-places='["Cathédrale Notre-Dame de Paris", [48.852974303572104, 2.3499731759450433]]'
+    data-places='[["Cathédrale Notre-Dame de Paris", [48.852974303572104, 2.3499731759450433]]]'
     data-zoom='15'
     data-maxzoom='21'
     data-color='#ff654f'
@@ -12,7 +13,7 @@
   .map(
     style='max-height:30vh'
     data-name='Map 2'
-    data-places='["Cathédrale Notre-Dame de Paris", [48.852974303572104, 2.3499731759450433]]',
+    data-places='[["Cathédrale Notre-Dame de Paris", [48.852974303572104, 2.3499731759450433]]]',
     data-zoom='15',
     data-maxzoom='19'
     data-color='#ff654f',
@@ -22,7 +23,7 @@
   .map(
     style='max-height:30vh;--color:CornflowerBlue;--color2:MediumSlateBlue'
     data-name='Map 3'
-    data-places='["Abbaye de la Chaise-Dieu", [45.321153730874585, 3.696077550805857]]'
+    data-places='[["Abbaye de la Chaise-Dieu", [45.321153730874585, 3.696077550805857]]]'
     data-zoom='16'
     data-maxzoom='19'
     data-color='#ff654f'
@@ -32,12 +33,25 @@
   .map(
     style='max-height:30vh;--color:CornflowerBlue;--color2:MediumSlateBlue'
     data-name='Map 4'
-    data-places='["Abbaye de la Chaise-Dieu", [45.321153730874585, 3.696077550805857]]'
+    data-places='[["Abbaye de la Chaise-Dieu", [45.321153730874585, 3.696077550805857]]]'
     data-zoom='16'
     data-maxzoom='21'
     data-color='#ff654f'
     data-tileserver='https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoib2xpdmllcmMiLCJhIjoiY2s5dnNnZWoyMDIzNDNzb2Y1dmQ4MGNtMCJ9.m4U-wYcS4EPcKe9nVXIbUA'
     data-attribution='<a href=\"//www.openstreetmap.org/\">OSM</a> | <a href=\"//www.mapbox.com/\">Mapbox</a>'
+  )
+//-hr(data-hr='✻ ✻ ✻')
+br
+h2 Multiple markers
+div
+  .map(
+    style='max-height:30vh'
+    data-name='Map 5'
+    data-places='[["Rome", [41.88804, 12.48766]],["Carthage", [36.85788, 10.33121]]]'
+    data-maxzoom='7'
+    data-color='#ff654f'
+    data-tileserver='https://wxs.ign.fr/decouverte/geoportail/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE=normal&TILEMATRIXSET=PM&FORMAT=image/png&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}'
+    data-attribution='<a target="_blank" href="https://www.geoportail.gouv.fr/">Geoportail France</a>'
   )
 //- Serveurs de tuiles disponibles @see https://wiki.openstreetmap.org/wiki/Tile_servers
 //- Alternative : 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png'
