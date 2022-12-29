@@ -1,4 +1,4 @@
-_mapColor1 = hsl(16, 100%, 66%) // Coral
+_mapColor = hsl(16, 100%, 66%) // Coral
 
 .map
   width: 100%
@@ -53,20 +53,10 @@ _mapColor1 = hsl(16, 100%, 66%) // Coral
 .marker-icon
   filter: drop-shadow(.3em .3em .3em rgba(0, 0, 0, .5))
   & > :first-child
-    fill: var(--color, _mapColor1)
+    fill: var(--color, _mapColor)
   & > :last-child
-    fill: var(--color2, _mapColor1 - 10%)
-
-/*
-MediumSeaGreen
-#1FA055
-
-CornflowerBlue
-MediumSlateBlue
-
-HotPink
-DeepPink
-*/
+    fill: #000
+    opacity: .15
 
 @keyframes anim-bounce
   to

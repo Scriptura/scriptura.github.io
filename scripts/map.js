@@ -21,8 +21,8 @@ const startPage = (() => {
 })()
 
 const maps = (() => {
-  const titleServerDefault = 'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png'
-  const svgIcon = '<svg class="marker-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="#E74C3C" d="M256 14C146 14 57 102 57 211c0 172 199 295 199 295s199-120 199-295c0-109-89-197-199-197zm0 281a94 94 0 1 1 0-187 94 94 0 0 1 0 187z"/><path fill="#C0392B" d="M256 14v94a94 94 0 0 1 0 187v211s199-120 199-295c0-109-89-197-199-197z"/></svg>'
+  const titleServerDefault = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
+  const svgIcon = '<svg class="marker-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 14C146 14 57 102 57 211c0 172 199 295 199 295s199-120 199-295c0-109-89-197-199-197zm0 281a94 94 0 1 1 0-187 94 94 0 0 1 0 187z"/><path d="M256 14v94a94 94 0 0 1 0 187v211s199-120 199-295c0-109-89-197-199-197z"/></svg>'
   document.querySelectorAll('.map').forEach(function(item) {
     const mapInit = () => {
       const map = L.map(item.id),

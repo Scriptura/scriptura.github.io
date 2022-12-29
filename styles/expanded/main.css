@@ -1434,7 +1434,8 @@ audio:not([controls]) {
   fill: var(--color, #ff8052);
 }
 .marker-icon > :last-child {
-  fill: var(--color2, #ff6730);
+  fill: #000;
+  opacity: 0.15;
 }
 @keyframes anim-bounce {
   to {
