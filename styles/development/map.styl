@@ -2,12 +2,35 @@ _mapColor = hsl(16, 100%, 66%) // Coral
 
 .map
   width: 100%
+  min-width: 100% // @bugfix @affected Old browsers.
+  min-height: 30em
   aspect-ratio: 9/16
   @media (orientation: landscape)
     aspect-ratio: 16/9
   margin: auto
   background-color: #e6e4e0 // Couleur en lien avec le background dominant des tuiles choisies pour les cartes Leaflet.
   overflow: hidden // Évite à l'occasion un débordement des tuiles. Solution imparfaite.
+
+.map-grayscale .leaflet-layer
+  filter: grayscale(1)
+
+.map-dark .leaflet-layer
+  filter: grayscale(1) invert(1) brightness(1.1) contrast(.7)
+
+.map-vintage
+  position: relative
+  filter: sepia(1)
+  &::before
+  &::after
+    content: ''
+    position: absolute
+    z-index: 500
+    inset: 0
+    pointer-events: none
+  &::before
+    background-image: radial-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .5))
+  &::after
+    filter: url(../sprites/filter.svg#noise) sepia(1) opacity(.4)
 
 //.leaflet-container
   //outline-color: _color5 !important
