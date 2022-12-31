@@ -19,7 +19,7 @@ _mapColor = hsl(16, 100%, 66%) // Coral
 
 .map-vintage
   position: relative
-  filter: sepia(1)
+  filter: sepia(1) // @note On ne peut pas appliquer de filtre SVG directement sur les tuiles, on passe par un pseudo-élément.
   &::before
   &::after
     content: ''
