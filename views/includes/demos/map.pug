@@ -71,28 +71,27 @@
     data-tileserver='https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png'
     data-attribution='<a href="//www.openstreetmap.org/">OSM France</a>'
   )
-  .map.map-vintage(
-    style='max-height:30vh'
-    data-name='La Chaise-Dieu'
-    data-places='[["Abbaye de la Chaise-Dieu", [45.321153730874585, 3.696077550805857]]]'
-    data-zoom='16'
-    data-maxzoom='20'
-    data-tileserver='https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png'
-    data-attribution='<a href="//www.openstreetmap.org/">OSM France</a>'
-  )
-.grid2.vertical-gap
   div
     p.message
       svg.icon-inline(role='img' focusable='false')
         use(href='/sprites/util.svg#info')
       | Les cartes sont produites avec la librairie 
       a(href='//leafletjs.com/') Leaflet.js.
-    //- Serveurs de tuiles disponibles @see https://wiki.openstreetmap.org/wiki/Tile_servers
-    //- Alternative de tuiles : https://leaflet-extras.github.io/leaflet-providers/preview/
-  div
     p.message
       svg.icon-inline(role='img' focusable='false')
         use(href='/sprites/util.svg#link')
       | Pour les exemples de définition des cartes ici-présentes voir sur cette page&nbsp;: 
       a(href='//github.com/Scriptura/scriptura.github.io/blob/master/views/includes/demos/map.pug') map.pug
+      | .
+    p.message
+      svg.icon-inline(role='img' focusable='false')
+        use(href='/sprites/util.svg#link')
+      | Serveurs de tuiles disponibles 
+      a(href='//wiki.openstreetmap.org/wiki/Tile_servers') référencés ici
+      | .
+    p.message
+      svg.icon-inline(role='img' focusable='false')
+        use(href='/sprites/util.svg#link')
+      | Alternative de tuiles 
+      a(href='//leaflet-extras.github.io/leaflet-providers/preview/') référencés ici
       | .
