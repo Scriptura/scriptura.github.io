@@ -36,5 +36,15 @@ html
 [class*=demo-items] > *
 .demo-item
   background-image: embedurl(_bg) // PNG moins lourd que WebP pour l'encodage en base64.
-  background-size: image-size(_bg)[0] image-size(_bg)[1]
+  background-size: image-size(_bg)[0] image-size(_bg)[1] // Taile en px par défaut, c'est très bien car ce paramètre ne doit pas être scalable.
   background-repeat: repeat // Propriété nécéssaire pour les éléments avec clip-path
+
+/*
+html
+  position: relative
+  &::before
+    content: ''
+    position: fixed
+    inset: 0
+    filter: url('../sprites/filter.svg#noise') sepia(1) opacity(.2) // hue-rotate(0deg) // @affected All browsers @note Très mauvaise performance de SVG <feTurbulence>.
+*/

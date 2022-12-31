@@ -59,3 +59,31 @@ const maps = (() => {
     window.addEventListener('load', () => mapInit())
   })
 })()
+
+/**
+ * @note Coloration des tuiles d'une carte après son chargement.
+ * Spécificité élevé pour ne cibler que les tuiles en évitant les marqueurs et autres éléments de contrôle de la carte.
+ */
+window.addEventListener('load', () => {
+  const mapsGrayscale = (() => {
+    document.querySelectorAll('.map-grayscale > :first-child > :first-child').forEach(function(map) {
+      map.style.filter = 'grayscale(1)'
+    })
+  })()
+  const mapsDark = (() => {
+    document.querySelectorAll('.map-dark > :first-child > :first-child').forEach(function(map) { // Spécificité élevé pour ne cibler que les tuiles en évitant les marqueurs.
+      map.style.filter = 'grayscale(1) invert(1) brightness(1.1) contrast(.7)'
+    })
+  })()
+  const mapsOld = (() => {
+    document.querySelectorAll('.map-old > :first-child > :first-child').forEach(function(map) { // Spécificité élevé pour ne cibler que les tuiles en évitant les marqueurs.
+      map.style.filter = 'sepia(1)'
+      //map.style.backgroundImage = 'radial-gradient(#e66465, #9198e5)'
+    })
+  })()
+  const mapsArtist = (() => {
+    document.querySelectorAll('.map-artist > :first-child > :first-child').forEach(function(map) { // Spécificité élevé pour ne cibler que les tuiles en évitant les marqueurs.
+      map.style.filter = 'url(../sprites/filter.svg#noise)' // Attention aux mauvaises performance du filtre sur les navigateurs. À n'utiliser que sur de petites surfaces.
+    })
+  })()
+})
