@@ -90,6 +90,14 @@ const getStyles = (() => {
 
 
 // -----------------------------------------------------------------------------
+// @section     Polyfill
+// @description Permettent de compenser un manque de support CSS dans certains navigateurs
+// -----------------------------------------------------------------------------
+
+// @affected Firefox 108- @note Compense :has()
+document.querySelectorAll('[class^=grid]').forEach(grid => grid.parentElement.classList.add('parent-grid'))
+
+// -----------------------------------------------------------------------------
 // @section     Utilities
 // @description Utilitaires consommables pour les autres fonctions
 // -----------------------------------------------------------------------------

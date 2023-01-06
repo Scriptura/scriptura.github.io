@@ -1,9 +1,15 @@
 // @note Avec `minmax` la grille ne sera pas tributaire de son contenu en responsive @see https://css-tricks.com/equal-width-columns-in-css-grid-are-kinda-weird/
 
+:has(> [class^=grid])
+.parent-grid // fallback JS
+  container: grid / inline-size
+
 [class^=grid]
   display: grid
   grid-auto-flow: dense
   grid-template-columns: repeat(var(--n, 1), minmax(0, 1fr))
+  &.row-defines // @note Permet aux spans de la propriété grid-row de se caler sur les lignes. Intéressant mais pas souhaitable d'emblée en production.
+    grid-auto-rows: minmax(0, 1fr)
   &.gap
     gap: _gap
   &.gap-bottom
@@ -11,13 +17,49 @@
   &.vertical-gap
     gap: 0 _gap
 
-.grid-auto
-  @media (min-width: _sizeXS)
-    grid-template-columns: repeat(auto-fit, minmax(var(--width, 18em), 1fr)) // Permet une grille à 4 colonnes max selon la définition de la largeur max. Diminuer cette valeur inline pour disposer de 5 colonnes ou plus.
+@container grid (min-width: 30em)
 
-.grid5
-  --n: 2
+  .grid-auto
+  .grid2
+  .grid3
+  .grid4
+    --n: 2
 
+  .c2
+  .c3
+  .c4
+    grid-column: span 2
+
+@container grid (min-width: 60em)
+
+  .grid-auto
+  .grid3
+  .grid4
+    --n: 3
+
+  .c3
+  .c4
+    grid-column: span 3
+
+@container grid (min-width: 90em)
+
+  .grid-auto
+  .grid4
+    --n: 4
+
+  .c4
+    grid-column: span 4
+
+.r2
+  grid-row: span 2
+
+.r3
+  grid-row: span 3
+
+.r4
+  grid-row: span 4
+
+/*
 @media (min-width: _sizeXS)
 
   .grid2
@@ -44,7 +86,7 @@
 
   .grid5
     --n: 5
-
+*/
 @media (max-width: _sizeXS)
 
   .media-xs-grid2
@@ -70,30 +112,6 @@
 
   :root .media-xl-grid2
     --n: 2
-
-@media (min-width: _sizeS)
-  .c2
-  .c3
-  .c4
-    grid-column: span 2
-
-@media (min-width: _sizeM)
-  .c3
-  .c4
-    grid-column: span 3
-
-@media (min-width: _sizeL)
-  .c4
-    grid-column: span 4
-
-.r2
-  grid-row: span 2
-
-.r3
-  grid-row: span 3
-
-.r4
-  grid-row: span 4
 
 .flex // @todo En test...
   display: flex

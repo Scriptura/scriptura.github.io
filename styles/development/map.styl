@@ -19,7 +19,8 @@ _mapColor = hsl(16, 100%, 66%) // Coral
 
 .map-vintage
   position: relative
-  filter: sepia(1) // @note On ne peut pas appliquer de filtre SVG directement sur les tuiles, on passe par un pseudo-élément.
+  & .leaflet-layer
+    filter: sepia(.5) // @note On ne peut pas appliquer de filtre SVG directement sur les tuiles, on passe par un pseudo-élément.
   &::before
   &::after
     content: ''
@@ -28,7 +29,7 @@ _mapColor = hsl(16, 100%, 66%) // Coral
     inset: 0
     pointer-events: none
   &::before
-    background-image: radial-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .5))
+    background-image: radial-gradient(rgba(0, 0, 0, 0), hsl(30 31.4% 53.7%)) // transparent - sepia
   &::after
     filter: url(../sprites/filter.svg#noise) sepia(1) opacity(.4)
 

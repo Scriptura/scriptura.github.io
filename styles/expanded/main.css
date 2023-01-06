@@ -327,10 +327,17 @@ main {
 .alert .message-warning {
   padding: 1em 0;
 }
+:has(> [class^=grid]),
+.parent-grid {
+  container: grid/inline-size;
+}
 [class^=grid] {
   display: grid;
   grid-auto-flow: dense;
   grid-template-columns: repeat(var(--n, 1), minmax(0, 1fr));
+}
+[class^=grid].row-defines {
+  grid-auto-rows: minmax(0, 1fr);
 }
 [class^=grid].gap {
   gap: 1em;
@@ -341,40 +348,47 @@ main {
 [class^=grid].vertical-gap {
   gap: 0 1em;
 }
-@media (min-width: 36.01em) {
-  .grid-auto {
-    grid-template-columns: repeat(auto-fit, minmax(var(--width, 18em), 1fr));
-  }
-}
-.grid5 {
-  --n: 2;
-}
-@media (min-width: 36.01em) {
+@container grid (min-width: 30em) {
+  .grid-auto,
   .grid2,
   .grid3,
   .grid4 {
     --n: 2;
   }
-  .grid5 {
-    --n: 3;
+  .c2,
+  .c3,
+  .c4 {
+    grid-column: span 2;
   }
 }
-@media (min-width: 50.01em) {
+@container grid (min-width: 60em) {
+  .grid-auto,
   .grid3,
   .grid4 {
     --n: 3;
   }
-  .grid5 {
-    --n: 4;
+  .c3,
+  .c4 {
+    grid-column: span 3;
   }
 }
-@media (min-width: 90.01em) {
+@container grid (min-width: 90em) {
+  .grid-auto,
   .grid4 {
     --n: 4;
   }
-  .grid5 {
-    --n: 5;
+  .c4 {
+    grid-column: span 4;
   }
+}
+.r2 {
+  grid-row: span 2;
+}
+.r3 {
+  grid-row: span 3;
+}
+.r4 {
+  grid-row: span 4;
 }
 @media (max-width: 36.01em) {
   .media-xs-grid2 {
@@ -401,33 +415,6 @@ main {
   :root .media-xl-grid2 {
     --n: 2;
   }
-}
-@media (min-width: 50.01em) {
-  .c2,
-  .c3,
-  .c4 {
-    grid-column: span 2;
-  }
-}
-@media (min-width: 65.01em) {
-  .c3,
-  .c4 {
-    grid-column: span 3;
-  }
-}
-@media (min-width: 90.01em) {
-  .c4 {
-    grid-column: span 4;
-  }
-}
-.r2 {
-  grid-row: span 2;
-}
-.r3 {
-  grid-row: span 3;
-}
-.r4 {
-  grid-row: span 4;
 }
 .flex {
   display: flex;
@@ -1398,7 +1385,9 @@ audio:not([controls]) {
 }
 .map-vintage {
   position: relative;
-  filter: sepia(1);
+}
+.map-vintage .leaflet-layer {
+  filter: sepia(0.5);
 }
 .map-vintage::before,
 .map-vintage::after {
@@ -1409,7 +1398,7 @@ audio:not([controls]) {
   pointer-events: none;
 }
 .map-vintage::before {
-  background-image: radial-gradient(rgba(0,0,0,0), rgba(0,0,0,0.5));
+  background-image: radial-gradient(rgba(0,0,0,0), #ae8964);
 }
 .map-vintage::after {
   filter: url("../sprites/filter.svg#noise") sepia(1) opacity(0.4);
