@@ -94,7 +94,7 @@ const getStyles = (() => {
 // @description Permettent de compenser un manque de support CSS dans certains navigateurs
 // -----------------------------------------------------------------------------
 
-// @affected Firefox 108- @note Compense :has()
+// @affected Firefox =< v108 @note Compense le non support de :has()
 document.querySelectorAll('[class^=grid]').forEach(grid => grid.parentElement.classList.add('parent-grid'))
 
 // -----------------------------------------------------------------------------

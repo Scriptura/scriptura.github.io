@@ -390,31 +390,44 @@ main {
 .r4 {
   grid-row: span 4;
 }
-@media (max-width: 36.01em) {
+
+
+@container grid (max-width: 30em) {
+
   .media-xs-grid2 {
     --n: 2;
   }
+
 }
-@media (min-width: 36.01em) and (max-width: 50.01em) {
+
+@container grid (min-width: 30.01em) and (max-width: 60em) {
+
   :root .media-s-grid1 {
     --n: 1;
   }
+
   :root .media-s-grid2 {
     --n: 2;
   }
 }
-@media (min-width: 50.01em) and (max-width: 90.01em) {
+
+@container grid (min-width: 60.01em) and (max-width: 90em) {
+
   :root .media-l-grid1 {
     --n: 1;
   }
+
   :root .media-l-grid2 {
     --n: 2;
   }
 }
-@media (min-width: 90.01em) and (max-width: 120.01em) {
+
+@container grid (min-width: 90.01em) and (max-width: 100em) {
+
   :root .media-xl-grid2 {
-    --n: 2;
+      --n: 2;
   }
+
 }
 .flex {
   display: flex;
