@@ -348,7 +348,7 @@ main {
 [class^=grid].vertical-gap {
   gap: 0 1em;
 }
-@container grid (min-width: 30em) {
+@container grid (min-width: 35em) {
   .grid-auto,
   .grid2,
   .grid3,
@@ -361,7 +361,7 @@ main {
     grid-column: span 2;
   }
 }
-@container grid (min-width: 60em) {
+@container grid (min-width: 50em) {
   .grid-auto,
   .grid3,
   .grid4 {
@@ -372,7 +372,7 @@ main {
     grid-column: span 3;
   }
 }
-@container grid (min-width: 90em) {
+@container grid (min-width: 70em) {
   .grid-auto,
   .grid4 {
     --n: 4;
@@ -392,39 +392,44 @@ main {
 }
 
 
-@container grid (max-width: 30em) {
+@container grid (max-width: 35em) {
 
-  .media-xs-grid2 {
+  .grid-xs-2 {
     --n: 2;
   }
 
 }
 
-@container grid (min-width: 30.01em) and (max-width: 60em) {
+@container grid (min-width: 35.01em) and (max-width: 50em) {
 
-  :root .media-s-grid1 {
+  :root .grid-s-1 {
     --n: 1;
   }
 
-  :root .media-s-grid2 {
+  :root .grid-s-2 {
     --n: 2;
   }
 }
 
-@container grid (min-width: 60.01em) and (max-width: 90em) {
+@container grid (min-width: 50.01em) and (max-width: 70em) {
 
-  :root .media-l-grid1 {
+  :root .grid-l-1 {
     --n: 1;
   }
 
-  :root .media-l-grid2 {
+  :root .grid-l-2 {
     --n: 2;
   }
+
+  :root .grid-l-4 {
+    --n: 4;
+  }
+
 }
 
-@container grid (min-width: 90.01em) and (max-width: 100em) {
+@container grid (min-width: 70.01em) and (max-width: 92em) {
 
-  :root .media-xl-grid2 {
+  :root .grid-xl-2 {
       --n: 2;
   }
 

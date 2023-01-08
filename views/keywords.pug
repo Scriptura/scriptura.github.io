@@ -6,7 +6,7 @@ block variables
 block main
   header(role='banner')
     h1.main-heading!= data._name
-  ul.list-stripe-links.grid3.media-xs-grid2
+  ul.list-stripe-links.grid3.grid-xs-2
     each e in data
       li
         a(href='/keyword/' + e._slug)= e._name
