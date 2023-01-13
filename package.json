@@ -26,7 +26,6 @@
     "html": "node tasks/htmlRendering",
     "js": "uglifyjs scripts/development/main.js -o scripts/main.js -c -m",
     "css": "yarn cssexp | yarn cssprint | yarn cssprism | yarn cssmain",
-    "csst": "node tasks/stylesBuild",
     "cssmain": "stylus -u autoprefixer-stylus -w styles/development/main.styl -o styles/main.css -c -m",
     "cssexp": "stylus -u autoprefixer-stylus -w styles/development/main.styl -o styles/expanded/main.css",
     "cssprint": "stylus -u autoprefixer-stylus -w styles/development/print.styl -o styles/print.css -c -m",

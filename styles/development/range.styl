@@ -10,6 +10,23 @@ _rangeSize1 = 2.3em
 _rangeSize3 = 3px
 _rangeShadow1 = 0 .5rem 2rem rgba(0, 0, 0, .3)
 
+_rangeBlockThumb =
+  pointer-events: auto
+  width: _rangeSize1
+  height: _rangeSize1
+  background-color: saturation(_rangeColor5 - 10%, 80%)
+  border: .2em solid _rangeColor5
+  border-radius: 50%
+  box-shadow: _shadow6
+
+_rangeBlockThumbVisible =
+  background-color: _rangeColor8
+  border-color: _rangeColor8
+
+_rangeBlockThumbDisabled =
+  border-color: _colorG + 10%
+  background: _rangeColor9 repeating-linear-gradient(-45deg, transparent 0 _rangeSize3, _colorG _rangeSize3 _rangeSize3 * 2)
+
 [class^=range]
   --color: _rangeColor6
   display: grid
@@ -45,39 +62,20 @@ _rangeShadow1 = 0 .5rem 2rem rgba(0, 0, 0, .3)
   */
   //1. Les deux solutions ne peuvent pas être factorisées.
   & ::-webkit-slider-thumb // @affected Chrome @note Curseur [1]
-    //position: relative
-    //z-index: 1
-    pointer-events: auto
     -webkit-appearance: none
-    width: _rangeSize1
-    height: _rangeSize1
-    background-color: saturation(_rangeColor5 - 10%, 80%)
-    border: .2em solid _rangeColor5
-    border-radius: 50%
-    box-shadow: _shadow6
+    {_rangeBlockThumb}
   & :focus-visible::-webkit-slider-thumb
-    background-color: _rangeColor8
-    border-color: _rangeColor8
+    {_rangeBlockThumbVisible}
   & input:disabled::-webkit-slider-thumb
-    border-color: _colorG + 10%
-    background: _rangeColor9 repeating-linear-gradient(-45deg, transparent 0 _rangeSize3, _colorG _rangeSize3 _rangeSize3 * 2)
+    {_rangeBlockThumbDisabled}
   & ::-moz-range-thumb // @affected Firefox @note Curseur [1]
-    pointer-events: auto
-    //-webkit-appearance: none // ??? @todo A voir...
     box-sizing: border-box // @affected Firefox @note Définition obligatoire de cette règle malgré sa déclaration en globale.
-    width: _rangeSize1
-    height: _rangeSize1
-    background-color: saturation(_rangeColor5 - 10%, 80%)
     border: none // @affected Firefox @note Définition obligatoire.
-    border: .3em solid _rangeColor5
-    border-radius: 50%
-    box-shadow: _shadow6
+    {_rangeBlockThumb}
   & :focus-visible::-moz-range-thumb
-    background-color: _rangeColor8
-    border-color: _rangeColor8 // @affected Firefox @note La déclaration !important n'est pas nécessaire.
+    {_rangeBlockThumbVisible}
   & input:disabled::-moz-range-thumb
-    border-color: _colorG + 10%
-    background: _rangeColor9 repeating-linear-gradient(-45deg, transparent 0 _rangeSize3, _colorG _rangeSize3 _rangeSize3 * 2)
+    {_rangeBlockThumbDisabled}
   & output
     position: relative
     //justify-self: center

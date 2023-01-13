@@ -348,7 +348,12 @@ main {
 [class^=grid].vertical-gap {
   gap: 0 1em;
 }
-@container grid (min-width: 35em) {
+@container grid (max-width: 35em) {
+  .grid-xs-2 {
+    --n: 2;
+  }
+}
+@container grid (35em < width) {
   .grid-auto,
   .grid2,
   .grid3,
@@ -361,7 +366,15 @@ main {
     grid-column: span 2;
   }
 }
-@container grid (min-width: 50em) {
+@container grid (35em < width < 50em) {
+  :root .grid-s-1 {
+    --n: 1;
+  }
+  :root .grid-s-2 {
+    --n: 2;
+  }
+}
+@container grid (50em < width) {
   .grid-auto,
   .grid3,
   .grid4 {
@@ -370,6 +383,22 @@ main {
   .c3,
   .c4 {
     grid-column: span 3;
+  }
+}
+@container grid (50em < width < 70em) {
+  :root .grid-l-1 {
+    --n: 1;
+  }
+  :root .grid-l-2 {
+    --n: 2;
+  }
+  :root .grid-l-4 {
+    --n: 4;
+  }
+}
+@container grid (70em < width < 92em) {
+  :root .grid-xl-2 {
+    --n: 2;
   }
 }
 @container grid (min-width: 70em) {
@@ -389,50 +418,6 @@ main {
 }
 .r4 {
   grid-row: span 4;
-}
-
-
-@container grid (max-width: 35em) {
-
-  .grid-xs-2 {
-    --n: 2;
-  }
-
-}
-
-@container grid (min-width: 35.01em) and (max-width: 50em) {
-
-  :root .grid-s-1 {
-    --n: 1;
-  }
-
-  :root .grid-s-2 {
-    --n: 2;
-  }
-}
-
-@container grid (min-width: 50.01em) and (max-width: 70em) {
-
-  :root .grid-l-1 {
-    --n: 1;
-  }
-
-  :root .grid-l-2 {
-    --n: 2;
-  }
-
-  :root .grid-l-4 {
-    --n: 4;
-  }
-
-}
-
-@container grid (min-width: 70.01em) and (max-width: 92em) {
-
-  :root .grid-xl-2 {
-      --n: 2;
-  }
-
 }
 .flex {
   display: flex;
@@ -2193,8 +2178,8 @@ form > [class*="grid"] > .input {
   outline: none;
 }
 [class^=range] ::-webkit-slider-thumb {
-  pointer-events: auto;
   -webkit-appearance: none;
+  pointer-events: auto;
   width: 2.3em;
   height: 2.3em;
   background-color: #e9563c;
@@ -2211,13 +2196,13 @@ form > [class*="grid"] > .input {
   background: #2e2e2e repeating-linear-gradient(-45deg, transparent 0 3px, #393939 3px 6px);
 }
 [class^=range] ::-moz-range-thumb {
-  pointer-events: auto;
   box-sizing: border-box;
+  border: none;
+  pointer-events: auto;
   width: 2.3em;
   height: 2.3em;
   background-color: #e9563c;
-  border: none;
-  border: 0.3em solid #ff6347;
+  border: 0.2em solid #ff6347;
   border-radius: 50%;
   box-shadow: inset 0 0 0.1em rgba(0,0,0,0.3), 0 0.5rem 2rem rgba(0,0,0,0.3);
 }
