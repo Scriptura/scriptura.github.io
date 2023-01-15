@@ -1,23 +1,27 @@
-// Clases utilitaires
-
-// @note Cacher l'élément  @affected Lecteurs d'écran inclus
 .hidden
 [hidden]
   display: none !important
 
-@media (max-width: _sizeXS)
+// @note container-name "grid" définit dans grid.styl.
 
-  .media-xs-hidden
+@container grid (35.01em < width)
+
+  .hidden-xs
     display: none !important
 
-@media (min-width: _sizeXS) and (max-width: _sizeS)
+@container grid (35.01em < width < 50.01em)
 
-  .media-s-hidden
+  .hidden-s
     display: none !important
 
-@media (min-width: _sizeS) and (max-width: _sizeL)
+@container grid (50.01em < width < 70.01em)
 
-  .media-l-hidden
+  .hidden-m
+    display: none !important
+
+@container grid (70.01em < width < 92.01em)
+
+  .hidden-l
     display: none !important
 
 .invisible // @note Cacher l'élément en laissant son emplacement @affected Lecteurs d'écran inclus

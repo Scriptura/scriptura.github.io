@@ -17,11 +17,6 @@
   &.vertical-gap
     gap: 0 _gap
 
-@container grid (max-width: 35em)
-
-  .grid-xs-2
-    --n: 2
-
 @container grid (35em < width)
 
   .grid-auto
@@ -35,14 +30,6 @@
   .c4
     grid-column: span 2
 
-@container grid (35em < width < 50em)
-
-  :root .grid-s-1
-    --n: 1
-
-  :root .grid-s-2
-    --n: 2
-
 @container grid (50em < width)
 
   .grid-auto
@@ -54,23 +41,7 @@
   .c4
     grid-column: span 3
 
-@container grid (50em < width < 70em)
-
-  :root .grid-l-1
-    --n: 1
-
-  :root .grid-l-2
-    --n: 2
-
-  :root .grid-l-4
-    --n: 4
-
-@container grid (70em < width < 92em)
-
-  :root .grid-xl-2
-    --n: 2
-
-@container grid (min-width: 70em)
+@container grid (70em < width)
 
   .grid-auto
   .grid4
@@ -87,6 +58,35 @@
 
 .r4
   grid-row: span 4
+
+@container grid (35em < width)
+
+  .grid-xs-2
+    --n: 2
+
+@container grid (35em < width < 50em)
+
+  :root .grid-s-1
+    --n: 1
+
+  :root .grid-s-2
+    --n: 2
+
+@container grid (50em < width < 70em)
+
+  :root .grid-l-1
+    --n: 1
+
+  :root .grid-l-2
+    --n: 2
+
+  :root .grid-l-4
+    --n: 4
+
+@container grid (70em < width < 92em)
+
+  :root .grid-xl-2
+    --n: 2
 
 /*
 @media (min-width: _sizeXS)
@@ -142,6 +142,7 @@
   :root .grid-xl-2
     --n: 2
 */
+
 .flex // @todo En test...
   display: flex
   flex-wrap: wrap
