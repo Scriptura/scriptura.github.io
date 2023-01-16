@@ -23,13 +23,13 @@ _articlesColor = _colorG
     & > footer > div
       position: sticky
       top: 2em
-  @media (min-width: _sizeXS) and (max-width: _sizeL)
+  @media (min-width: _sizeXS) and (max-width: _sizeXL)
     & > footer
       padding: 2em 6em 0
-  @media (min-width: _sizeS) and (max-width: _sizeL)
+  @media (min-width: _sizeS) and (max-width: _sizeXL)
     & > *:not(header)
       max-width: 55em
-  @media (min-width: _sizeL)
+  @media (min-width: _sizeXL)
     column-gap: _gap * 2
     grid-template-columns: repeat(5, minmax(0, 1fr))
     & > header

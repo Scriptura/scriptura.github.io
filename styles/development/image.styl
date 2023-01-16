@@ -49,11 +49,7 @@ figure
 
 [class*=-thumbnail]
   width: 100% // Important à appliquer pour le responsive si le width n'est pas définit préalablement
-
-@media (min-width: _sizeS)
-
-  [class*=-thumbnail]
-    max-width: 'calc(50% - %s)' % (_gap / 2) // @todo max(calc(50% - $gap / 2)
+  max-width: 'calc(50% - %s)' % (_gap / 2)
 
 @media (min-width: _sizeS)
 
@@ -65,8 +61,14 @@ figure
     float: right
     margin-left: 1em
 
-  :where([class*=-alignleft], [class*=-alignright]) ~ :is(h2, h3, hr, aside)
+  :where([class*=-alignleft], [class*=-alignright]) ~ :where(h2, h3, hr, aside)
     clear: both // @note Ééments faisants suite à une image flotante @todo Le margin-top de ces éléments n'est pas pris en compte sous l'image...
+
+@media (max-width: _sizeS)
+
+  [class*=-thumbnail]
+    max-width: 20em
+    margin-inline auto
 
 .js [class*=-focus]
   position: relative

@@ -54,8 +54,7 @@ a:active {
   outline: none;
 }
 p {
-  margin-top: 0.75em;
-  margin-bottom: 0.75em;
+  margin-block: 0.75em;
 }
 hr {
   overflow: visible;
@@ -82,21 +81,17 @@ h6,
 }
 h1,
 .h1 {
-  margin-top: 0.83em;
-  margin-bottom: 0.83em;
+  margin-block: 0.83em;
   font-size: clamp(2em, 5vw, 2.5em);
 /*
   @media (max-width: _sizeXS)
-    //margin-top: .83em // @note Marge alignée sur celle de h2 (si "rattrapage")
-    //margin-bottom: .83em
+    //margin-block: .83em // @note Marge alignée sur celle de h2 (si "rattrapage")
     font-size: 2em
   @media (min-width: _sizeXS)
-    //margin-top: .75em // @note Moyenne entre les deux extrêmes (.83em et .67em) (si "rattrapage")
-    //margin-bottom: .75em
+    //margin-block: .75em // @note Moyenne entre les deux extrêmes (.83em et .67em) (si "rattrapage")
     font-size: 2.25em
   @media (min-width: _sizeS)
-    //margin-top: .67em // @note Marge par défaut, sans le contexte expliqué par la note [1] (si "rattrapage")
-    //margin-bottom: .67em
+    //margin-block: .67em // @note Marge par défaut, sans le contexte expliqué par la note [1] (si "rattrapage")
     font-size: 2.5em
   */
 }
@@ -165,8 +160,7 @@ blockquote::after {
   bottom: 0;
 }
 blockquote footer {
-  margin-top: 0.75em;
-  margin-bottom: 0.75em;
+  margin-block: 0.75em;
 }
 blockquote footer::before {
   content: '\2014 \00A0';
@@ -1092,8 +1086,7 @@ ol ol ol {
 }
 .list-rounded svg {
   position: relative;
-  padding-left: 0.7em;
-  padding-right: 0.7em;
+  padding-inline: 0.7em;
   -webkit-clip-path: circle(50%);
           clip-path: circle(50%);
 }
@@ -1163,11 +1156,7 @@ figure {
 }
 [class*=-thumbnail] {
   width: 100%;
-}
-@media (min-width: 50.01em) {
-  [class*=-thumbnail] {
-    max-width: calc(50% - 0.5em);
-  }
+  max-width: calc(50% - 0.5em);
 }
 @media (min-width: 50.01em) {
   [class*=-alignleft] {
@@ -1179,11 +1168,17 @@ figure {
     margin-left: 1em;
   }
   :where([class*=-alignleft],
-  [class*=-alignright]) ~ :is(h2,
+  [class*=-alignright]) ~ :where(h2,
   h3,
   hr,
   aside) {
     clear: both;
+  }
+}
+@media (max-width: 50.01em) {
+  [class*=-thumbnail] {
+    max-width: 20em;
+    margin-inline: auto;
   }
 }
 .js [class*=-focus] {
@@ -1573,8 +1568,7 @@ legend {
   font-weight: bold;
 }
 form [class*=grid] {
-  margin-top: 1em;
-  margin-bottom: 1em;
+  margin-block: 1em;
 }
 label:focus,
 label:hover,
@@ -2544,17 +2538,17 @@ form > [class*="grid"] > .input {
     top: 2em;
   }
 }
-@media (min-width: 35.01em) and (max-width: 92.01) {
+@media (min-width: 35.01em) and (max-width: 120.01em) {
   .article > footer {
     padding: 2em 6em 0;
   }
 }
-@media (min-width: 50.01em) and (max-width: 92.01) {
+@media (min-width: 50.01em) and (max-width: 120.01em) {
   .article > *:not(header) {
     max-width: 55em;
   }
 }
-@media (min-width: 92.01) {
+@media (min-width: 120.01em) {
   .article {
     -moz-column-gap: 2em;
          column-gap: 2em;
@@ -2769,7 +2763,7 @@ form > [class*="grid"] > .input {
 [hidden] {
   display: none !important;
 }
-@container grid (35.01em < width) {
+@container grid (width < 35.01em) {
   .hidden-xs {
     display: none !important;
   }
@@ -3148,8 +3142,7 @@ a[aria-disabled=true]:active {
   top: 0.1em;
   height: 1.8em;
   border: 2px dotted rgba(255,255,255,0.2);
-  border-left: none;
-  border-right: none;
+  border-inline: none;
 }
 .ribbon-content > [class*=ribbon]::after {
   z-index: -1;
