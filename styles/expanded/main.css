@@ -361,6 +361,9 @@ main {
   .grid4 {
     --n: 3;
   }
+  .grid2 {
+    --n: 2;
+  }
   .c3,
   .c4 {
     grid-column: span 3;
@@ -838,7 +841,7 @@ samp {
   font-size: 1em;
   word-break: break-all;
   color: #d2b48c;
-  border-radius: 0.2em;
+  border-radius: 0.3em;
 }
 :not(pre) > code {
   padding: 0.2em;
@@ -851,7 +854,7 @@ samp {
   min-height: 3em;
   padding: 1em;
   background-color: #1f1f1f;
-  border-radius: 0.2em;
+  border-radius: 0.3em;
   box-shadow: 0 0 2rem rgba(0,0,0,0.3);
   line-height: 1.25em;
 }
@@ -917,7 +920,7 @@ samp {
 }
 main [class^=message] {
   margin-bottom: 1em;
-  border-radius: 0.2em;
+  border-radius: 0.3em;
 }
 p[class^=message] {
   padding: 1em;
@@ -1614,11 +1617,6 @@ input[type=reset]:-moz-focusring,
 input[type=submit]:-moz-focusring {
   outline: 1px dotted ButtonText;
 }
-input:not([type=button],
-[type=submit],
-[type=range]) {
-  max-height: 2.2em;
-}
 select {
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -1769,23 +1767,29 @@ form > [class*="grid"] > .input {
   display: inline-block;
   margin-bottom: 0.5em;
 }
-.input input:not([type=button]),
+.input input:not([type=button],
+.input [type=submit],
+.input [type=range]),
 .input select,
 .input textarea {
   width: 100%;
   color: currentColor;
   background-color: #252525 !important;
   border: 2px solid #3b3b3b;
-  border-radius: 0.2em;
+  border-radius: 0.3em;
   box-shadow: inset 0 0.2em 0.5em rgba(0,0,0,0.2) !important;
 }
-.input input:not([type=button]),
+.input input:not([type=button],
+.input [type=submit],
+.input [type=range]),
 .input select:not([multiple]) {
-  height: 2.2em;
-  padding: 0.4em 1em;
+  height: 3em;
+  max-height: 3em;
+  line-height: 3em;
+  padding-inline: 1em;
 }
 .input input[type=color] {
-  padding: 0.4em;
+  padding: 2px !important;
 }
 .input input[type=color]::-webkit-color-swatch {
   border: none;
@@ -1871,16 +1875,19 @@ form > [class*="grid"] > .input {
 .input .invalid {
   animation: anim-invalid-input 2s ease-in-out infinite !important;
 }
-.color-output {
+.color-output,
+:has(> input[type=color] + output) {
   position: relative;
 }
-.color-output output {
+.color-output output,
+:has(> input[type=color] + output) output {
   position: absolute;
   display: inline-block;
-  left: 0.1em;
-  bottom: 0.2em;
-  height: 1.8em;
-  padding: 0.2em 0.5em 0.2em 0.9em;
+  left: 2px;
+  bottom: calc(4px + 1px);
+  height: calc(3em - 4px - 2px);
+  line-height: calc(3em - 4px - 2px);
+  padding-inline: 0.5em;
   background-color: #252525;
 }
 :root .input-password input {
@@ -1892,10 +1899,10 @@ form > [class*="grid"] > .input {
 }
 .input-password button {
   position: absolute;
-  top: 2em;
+  bottom: 3em/2;
   right: 0.5em;
   width: 2.1em;
-  height: 2.1em;
+  height: 2.8em;
   padding: 0.5em;
   color: #777;
   background-color: transparent;
@@ -2323,7 +2330,7 @@ form > [class*="grid"] > .input {
   color: #e9dac5;
   background-color: #474747;
   border: none;
-  border-radius: 0.2em;
+  border-radius: 0.3em;
   box-shadow: 0 1rem 1rem rgba(0,0,0,0.1);
   cursor: pointer;
   outline: none;
@@ -2345,7 +2352,7 @@ form > [class*="grid"] > .input {
   overflow: hidden;
   padding: 0 1em;
   background-color: #393939;
-  border-radius: calc(0.2em + 1px);
+  border-radius: calc(0.3em + 1px);
   box-shadow: 0 1rem 1rem rgba(0,0,0,0.1), inset 0 -1px 0 1px rgba(255,255,255,0.1);
   transition: max-height 0.5s ease-in-out;
 }

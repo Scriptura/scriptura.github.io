@@ -1,10 +1,10 @@
-form(method='get' action='./').grid3.gap.grid-s-1.grid-l-2.masonry
+form(method='get' action='./').grid3.gap.masonry
   fieldset
     legend.h2 Text inputs
     .input
       label(for='input-text') Type text
       input#input-text(type='text' name='input-text' placeholder='John Smith' required='required' autocomplete='off')
-    .grid2.gap.grid-l-1
+    .grid2.gap
       .input
         label(for='input-text1') Type text & regex name
         input#input-text1(type='text' name='input-text1' placeholder='John' required='required' autocomplete='given-name').validation-name
@@ -29,10 +29,13 @@ form(method='get' action='./').grid3.gap.grid-s-1.grid-l-2.masonry
         svg.icon-inline(role='img' focusable='false')
           use(href='/sprites/util.svg#info')
         | Ce champ accepte uniquement les numéros de téléphone français.
-    .grid2.gap
-      .input
+    .grid4.grid-xs-2.gap
+      .input.c2
         label(for='input-number') Type number
         input#input-number(type='number' name='input-number' step='1' min='-5' max='100' value='50')
+      .input.c2
+        label(for='input-password') Type password
+        input#input-password(type='password' name='input-password' placeholder='••••••••')
       .input
         label(for='input-color') Type color
         input#input-color(type='color' name='input-color' value='#ffa500')
@@ -40,16 +43,9 @@ form(method='get' action='./').grid3.gap.grid-s-1.grid-l-2.masonry
         label(for='input-color2')
           code .color-output
         input#input-color2(type='color' name='input-color2' value='#ff6347')
-      .input.color-output
-        label(for='input-color3')
-          code .color-output
-        input#input-color3(type='color' name='input-color3' value='#ffa500')
-      .input
-        label(for='input-password') Type password
-        input#input-password(type='password' name='input-password' placeholder='••••••••')
-      .input
-        label(for='input-file') Type file
-        input#input-file(type='file' name='input-file')
+    .input
+      label(for='input-file') Type file
+      input#input-file(type='file' name='input-file')
     .input
       label(for='input-url') Type url
       input#input-url(type='url' name='input-url' placeholder='https://example.com/').validation-url

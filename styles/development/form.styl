@@ -74,9 +74,9 @@ input[type=reset]:-moz-focusring
 input[type=submit]:-moz-focusring
   outline: 1px dotted ButtonText // @bugfix Restore the focus styles unset by the previous rule.
 
-input:not([type=button], [type=submit], [type=range])
+//input:not([type=button], [type=submit], [type=range])
 //select:not([multiple])
-  max-height: 2.2em // @note Permet de contrôler la hauteur des champs invalides + les imput type date, color, etc...
+//  max-height: 2.2em // @note Permet de contrôler la hauteur des champs invalides + les imput type date, color, etc...
 
 select
   //padding: 0 // @affected Firefox
@@ -191,7 +191,6 @@ select
 
 [type=time]::-webkit-clear-button
   transform: translateX(-1.4em)
-
 
 :-webkit-autofill // @note Préremplissage des champs par le navigateur @affected Chrome
   -webkit-text-fill-color: _colorT

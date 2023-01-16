@@ -7,7 +7,9 @@ _inputColor5 = _colorG - 20%
 _inputColor6 = #777
 _inputColor7 = _colorW
 _inputColor8 = _inputColor1 + 10%
-_inputSize = 5px
+_inputSize1 = 3em
+_inputSize2 = 5px
+_inputSize3 = 2px
 _inputBoxShadow1 = inset 0 .2em .5em rgba(0, 0, 0, .2) //0 1.5rem 2rem rgba(0, 0, 0, .2)
 
 //.input // ciblage trop général pose problème pour les élemnts imbriqués
@@ -22,21 +24,23 @@ form
   & label
     display: inline-block
     margin-bottom: .5em
-  & input:not([type=button])
+  & input:not([type=button], [type=submit], [type=range])
   & select
   & textarea
     width: 100%
     color: currentColor
     background-color: _inputColor1 !important // @bugfixed @affected Chrome @note Le !important contre le style par défaut des préremplissages.
-    border: 2px solid _inputColor8 // @note Permet d'anticiper le comportement des bordures colorées de '.invalid' en évitant des rattrapages en padding aléatoires selon le type d'input
+    border: _inputSize3 solid _inputColor8 // @note Permet d'anticiper le comportement des bordures colorées de '.invalid' en évitant des rattrapages en padding aléatoires selon le type d'input
     border-radius: _r2
     box-shadow: _inputBoxShadow1 !important // @bugfixed @affected Chrome @note Le !important supplante le style par défaut des préremplissages.
-  & input:not([type=button])
+  & input:not([type=button], [type=submit], [type=range])
   & select:not([multiple])
-    height: 2.2em // @note Permet d'approcher un alignement "pixel perfect" entre les différents champs lorqu'ils sont alignés.
-    padding: .4em 1em
+    height: _inputSize1 // @note Permet d'approcher un alignement "pixel perfect" entre les différents champs lorqu'ils sont alignés.
+    max-height: _inputSize1
+    line-height: _inputSize1
+    padding-inline: 1em
   & input[type=color]
-    padding: .4em // @note Les padding top et bottom doivent être les mêmes que les autres inputs pour rester verticalement aligné avec ces derniers. Ce comportement ne peut être corrigé par `box-sizing: border-box`.
+    padding: _inputSize3 !important //.4em // @note Les padding top et bottom doivent être les mêmes que les autres inputs pour rester verticalement aligné avec ces derniers. Ce comportement ne peut être corrigé par `box-sizing: border-box`.
     &::-webkit-color-swatch
       border: none
     &::-webkit-color-swatch-wrapper
@@ -101,7 +105,7 @@ form
   &.disabled label
     color: _inputColor6
   &.disabled input
-    background: _inputColor5 repeating-linear-gradient(-45deg, transparent 0 _inputSize, _colorG _inputSize _inputSize * 2)
+    background: _inputColor5 repeating-linear-gradient(-45deg, transparent 0 _inputSize2, _colorG _inputSize2 _inputSize2 * 2)
     background-size: 100% 100%
     cursor: not-allowed
   & .invalid
@@ -126,14 +130,16 @@ form
   */
 
 .color-output
+:has(> input[type=color] + output)
   position: relative
   & output
     position: absolute
     display: inline-block
-    left: .1em
-    bottom: .2em
-    height: 1.8em
-    padding: .2em .5em .2em .9em
+    left: _inputSize3
+    bottom: 'calc(%s + 1px)' % (_inputSize3 * 2)
+    height: 'calc(%s - %s - 2px)' % (_inputSize1 (_inputSize3 * 2))
+    line-height: 'calc(%s - %s - 2px)' % (_inputSize1 (_inputSize3 * 2))
+    padding-inline: .5em
     background-color: _inputColor1 // @todo Color...
     //filter: invert(1) saturate(0) grayscale(1) brightness(.7) contrast(10)
 
@@ -145,10 +151,10 @@ form
   position: relative
   & button
     position: absolute
-    top: 2em
+    bottom: _inputSize1 / 2
     right: .5em
     width: 2.1em
-    height: 2.1em
+    height: 2.8em
     padding: .5em
     color: #777
     background-color: transparent
