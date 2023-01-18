@@ -7,6 +7,8 @@ _inputColor5 = _colorG - 20%
 _inputColor6 = #777
 _inputColor7 = _colorW
 _inputColor8 = _inputColor1 + 10%
+_inputColor9 = #fff
+_inputColor10 = rgba(0, 0, 0, .5)
 _inputSize1 = 3em
 _inputSize2 = 5px
 _inputSize3 = 2px
@@ -135,13 +137,16 @@ form
   & output
     position: absolute
     display: inline-block
-    left: _inputSize3
-    bottom: 'calc(%s + 1px)' % (_inputSize3 * 2)
-    height: 'calc(%s - %s - 2px)' % (_inputSize1 (_inputSize3 * 2))
-    line-height: 'calc(%s - %s - 2px)' % (_inputSize1 (_inputSize3 * 2))
-    padding-inline: .5em
-    background-color: _inputColor1 // @todo Color...
-    //filter: invert(1) saturate(0) grayscale(1) brightness(.7) contrast(10)
+    left: .5em
+    bottom: .6em
+    margin: _inputSize3
+    padding: .2em .7em
+    //font-family: _fontList
+    color: _inputColor9
+    background-color: _inputColor10
+    //border: _inputSize3 solid transparent
+    border-radius: _r2
+    pointer-events: none
 
 :root .input-password input
   padding-right: 3em // @note Évite que le texte ne passe sous l'icône.

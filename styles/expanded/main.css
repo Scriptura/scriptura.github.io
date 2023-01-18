@@ -343,7 +343,6 @@ main {
   gap: 0 1em;
 }
 @container grid (35em < width) {
-  .grid-auto,
   .grid2,
   .grid3,
   .grid4 {
@@ -356,13 +355,9 @@ main {
   }
 }
 @container grid (50em < width) {
-  .grid-auto,
   .grid3,
   .grid4 {
     --n: 3;
-  }
-  .grid2 {
-    --n: 2;
   }
   .c3,
   .c4 {
@@ -370,13 +365,15 @@ main {
   }
 }
 @container grid (70em < width) {
-  .grid-auto,
   .grid4 {
     --n: 4;
   }
   .c4 {
     grid-column: span 4;
   }
+}
+.n2 {
+  --n: 2;
 }
 .r2 {
   grid-row: span 2;
@@ -388,31 +385,31 @@ main {
   grid-row: span 4;
 }
 @container grid (35em < width) {
-  .grid-xs-2 {
+  .xs-grid2 {
     --n: 2;
   }
 }
 @container grid (35em < width < 50em) {
-  :root .grid-s-1 {
+  :root .s-grid1 {
     --n: 1;
   }
-  :root .grid-s-2 {
+  :root .s-grid2 {
     --n: 2;
   }
 }
 @container grid (50em < width < 70em) {
-  :root .grid-l-1 {
+  :root .l-grid1 {
     --n: 1;
   }
-  :root .grid-l-2 {
+  :root .l-grid2 {
     --n: 2;
   }
-  :root .grid-l-4 {
+  :root .l-grid4 {
     --n: 4;
   }
 }
 @container grid (70em < width < 92em) {
-  :root .grid-xl-2 {
+  :root .xl-grid2 {
     --n: 2;
   }
 }
@@ -1883,12 +1880,14 @@ form > [class*="grid"] > .input {
 :has(> input[type=color] + output) output {
   position: absolute;
   display: inline-block;
-  left: 2px;
-  bottom: calc(4px + 1px);
-  height: calc(3em - 4px - 2px);
-  line-height: calc(3em - 4px - 2px);
-  padding-inline: 0.5em;
-  background-color: #252525;
+  left: 0.5em;
+  bottom: 0.6em;
+  margin: 2px;
+  padding: 0.2em 0.7em;
+  color: #fff;
+  background-color: rgba(0,0,0,0.5);
+  border-radius: 0.3em;
+  pointer-events: none;
 }
 :root .input-password input {
   padding-right: 3em;

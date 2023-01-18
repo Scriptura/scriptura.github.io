@@ -19,7 +19,6 @@
 
 @container grid (35em < width)
 
-  .grid-auto
   .grid2
   .grid3
   .grid4
@@ -32,13 +31,9 @@
 
 @container grid (50em < width)
 
-  .grid-auto
   .grid3
   .grid4
     --n: 3
-
-  .grid2
-    --n: 2
 
   .c3
   .c4
@@ -46,12 +41,14 @@
 
 @container grid (70em < width)
 
-  .grid-auto
   .grid4
     --n: 4
 
   .c4
     grid-column: span 4
+
+.n2
+  --n: 2
 
 .r2
   grid-row: span 2
@@ -64,31 +61,31 @@
 
 @container grid (35em < width)
 
-  .grid-xs-2
+  .xs-grid2
     --n: 2
 
 @container grid (35em < width < 50em)
 
-  :root .grid-s-1
+  :root .s-grid1
     --n: 1
 
-  :root .grid-s-2
+  :root .s-grid2
     --n: 2
 
 @container grid (50em < width < 70em)
 
-  :root .grid-l-1
+  :root .l-grid1
     --n: 1
 
-  :root .grid-l-2
+  :root .l-grid2
     --n: 2
 
-  :root .grid-l-4
+  :root .l-grid4
     --n: 4
 
 @container grid (70em < width < 92em)
 
-  :root .grid-xl-2
+  :root .xl-grid2
     --n: 2
 
 /*
@@ -121,28 +118,28 @@
 
 @media (max-width: _sizeXS)
 
-  .grid-xs-2
+  .xs-grid2
     --n: 2
 
 @media (min-width: _sizeXS) and (max-width: _sizeS)
 
-  :root .grid-s-1
+  :root .s-grid1
     --n: 1
 
-  :root .grid-s-2
+  :root .s-grid2
     --n: 2
 
 @media (min-width: _sizeS) and (max-width: _sizeL)
 
-  :root .grid-l-1
+  :root .l-grid1
     --n: 1
 
-  :root .grid-l-2
+  :root .l-grid2
     --n: 2
 
 @media (min-width: _sizeL) and (max-width: _sizeXL)
 
-  :root .grid-xl-2
+  :root .xl-grid2
     --n: 2
 */
 
