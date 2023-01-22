@@ -1,7 +1,7 @@
 // @note Avec `minmax` la grille ne sera pas tributaire de son contenu en responsive @see https://css-tricks.com/equal-width-columns-in-css-grid-are-kinda-weird/
 
 :has(> [class^=grid])
-.parent-grid // fallback JS
+.parent-grid // @bugfixed @affected Firefox @note Fallback pour le sélecteur :has(), ajout de la classe via JS.
   container: grid / inline-size
 
 [class^=grid]

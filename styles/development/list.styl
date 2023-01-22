@@ -44,10 +44,6 @@ ol ol ol
     outline: none
     animation: anim-list .05s ease-in-out
 
-@keyframes anim-list
-  to
-    transform: scale(1.03) translateZ(0)
-
 .list-straight
 .list-rounded
   padding: 0
@@ -55,6 +51,9 @@ ol ol ol
     display: grid
     grid-template-columns: 3em minmax(0, 1fr)
     //box-shadow: _listShadow1
+    &:focus-within
+    &:hover
+      animation: anim-list .05s ease-in-out
     &:focus-within svg
     &:hover svg
     &:active svg
@@ -142,3 +141,7 @@ ol.list-rounded
 [class^=grid].list-straight
 [class^=grid].list-rounded
   gap: (_gap / 2) _gap
+
+@keyframes anim-list
+  to
+    transform: scale(1.03) translateZ(0)

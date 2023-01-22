@@ -1012,6 +1012,12 @@ ol ol ol {
   display: grid;
   grid-template-columns: 3em minmax(0, 1fr);
 }
+.list-straight li:focus-within,
+.list-rounded li:focus-within,
+.list-straight li:hover,
+.list-rounded li:hover {
+  animation: anim-list 0.05s ease-in-out;
+}
 .list-straight li:focus-within svg,
 .list-rounded li:focus-within svg,
 .list-straight li:hover svg,
