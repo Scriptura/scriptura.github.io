@@ -372,8 +372,13 @@ main {
     grid-column: span 4;
   }
 }
-.n2 {
+[class^=grid] .grid2 {
   --n: 2;
+}
+@container grid (25em > width) {
+  [class^=grid] .grid2 > * {
+    grid-column: span 2;
+  }
 }
 .r2 {
   grid-row: span 2;
@@ -398,17 +403,34 @@ main {
   }
 }
 @container grid (50em < width < 70em) {
+  :root .m-grid1 {
+    --n: 1;
+  }
+  :root .m-grid2 {
+    --n: 2;
+  }
+  :root .m-grid3 {
+    --n: 3;
+  }
+  :root .m-grid4 {
+    --n: 4;
+  }
+}
+@container grid (70em < width < 92em) {
   :root .l-grid1 {
     --n: 1;
   }
   :root .l-grid2 {
     --n: 2;
   }
+  :root .l-grid3 {
+    --n: 3;
+  }
   :root .l-grid4 {
     --n: 4;
   }
 }
-@container grid (70em < width < 92em) {
+@container grid (92em < width) {
   :root .xl-grid2 {
     --n: 2;
   }
@@ -471,7 +493,7 @@ main {
          column-count: 4;
   }
 }
-@media (min-width: 92.01) {
+@media (min-width: 92.01em) {
   .column4 {
     -moz-column-count: 4;
          column-count: 4;
@@ -2544,17 +2566,17 @@ form > [class*="grid"] > .input {
     top: 2em;
   }
 }
-@media (min-width: 35.01em) and (max-width: 120.01em) {
+@media (min-width: 35.01em) and (max-width: 92.01em) {
   .article > footer {
     padding: 2em 6em 0;
   }
 }
-@media (min-width: 50.01em) and (max-width: 120.01em) {
+@media (min-width: 50.01em) and (max-width: 92.01em) {
   .article > *:not(header) {
     max-width: 55em;
   }
 }
-@media (min-width: 120.01em) {
+@media (min-width: 92.01em) {
   .article {
     -moz-column-gap: 2em;
          column-gap: 2em;

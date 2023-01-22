@@ -47,8 +47,11 @@
   .c4
     grid-column: span 4
 
-.n2
+[class^=grid] .grid2 // @note Si éléments de grille imbriqués @todo En test ; espace de nom pour éviter les effets de bord peut-être inutile.
   --n: 2
+  @container grid (25em > width)
+    & > *
+      grid-column: span 2
 
 .r2
   grid-row: span 2
@@ -74,19 +77,43 @@
 
 @container grid (50em < width < 70em)
 
+  :root .m-grid1
+    --n: 1
+
+  :root .m-grid2
+    --n: 2
+
+  :root .m-grid3
+    --n: 3
+
+  :root .m-grid4
+    --n: 4
+
+@container grid (70em < width < 92em)
+
   :root .l-grid1
     --n: 1
 
   :root .l-grid2
     --n: 2
 
+  :root .l-grid3
+    --n: 3
+
   :root .l-grid4
     --n: 4
 
-@container grid (70em < width < 92em)
+@container grid (92em < width)
 
   :root .xl-grid2
     --n: 2
+/*
+  :root .xl-grid3
+    --n: 3
+
+  :root .xl-grid4
+    --n: 4
+*/
 
 /*
 @media (min-width: _sizeXS)
