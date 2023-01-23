@@ -4,16 +4,22 @@ ol.breadcrumb(aria-label='Breadcrumb')
       a(href='/') Home
   if documentType === 'article'
     li
-      a(href='/articles') Articles
+      a(href='/page/cards.html') Articles
   else if documentType === 'keyword'
     li
       a(href='/keywords') Keywords
   else if documentType === 'person'
     li
-      a(href='/persons') Persons
+      a(href='/page/cards.html') Persons
   else if documentType === 'place'
     li
-      a(href='/places') Places
+      a(href='/page/cards.html') Places
+  else if documentType === 'imageGallery'
+    li
+      a(href='/page/cards.html') Galleries
+  else if documentType === 'map'
+    li
+      a(href='/page/cards.html') Maps
   li
     //- @note L'attribut aria-current='page' n'est pas obligatoire pour l'accessibilité. Donc, sppression du lien pour la page courante car sa desactivation via CSS (pointer-events:none) peut toujours être contournée par le focus.
     //- a(href=data._url.path aria-current='page' aria-disabled='true')!= data._name
