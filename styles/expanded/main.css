@@ -542,16 +542,16 @@ main {
   height: 8em;
   margin: 0 auto;
   padding: 1em 0;
-  color: #d2b48c;
-  background-color: #474747;
+  color: #e9dac5;
+  background-color: #495f71;
   box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
 }
 .card svg {
-  transition: background-color 0.5s, fill 0.5s;
+  transition: background-color 0.5s, color 0.5s;
 }
 .card svg:hover,
 .card:focus-within svg {
-  fill: #fff;
+  color: #fff;
   background-color: #ff6347;
 }
 .nav {

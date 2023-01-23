@@ -47,7 +47,7 @@ const youtubeVideo = (() => {
         div.classList.add('thumbnail-youtube')
         div.innerHTML = `<div class="video-youtube-error">Erreur : Cette vidéo n'existe pas :(</div>`
         e.appendChild(div)
-        console.error('La requête a échoué.', error)
+        console.error('Une requête pour une vidéo YouTube a échoué.', error)
       })
 
   })
