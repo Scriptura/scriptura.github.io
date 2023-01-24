@@ -103,6 +103,7 @@ if (!supportsContainerQueries) getStyle('/styles/gridFallback.css', 'screen')
 // @affected Firefox =< v108 @note Compense le non support de :has() sur les grilles.
 document.querySelectorAll('[class^=grid]').forEach(grid => grid.parentElement.classList.add('parent-grid'))
 
+
 // -----------------------------------------------------------------------------
 // @section     Utilities
 // @description Utilitaires consommables pour les autres fonctions

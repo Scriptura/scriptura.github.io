@@ -132,8 +132,8 @@ form
     background-image: none
   */
 
+//.input:has(> output) // @bugfixed Fonctionne sous Chrome mais bug sous Firefox.
 .color-output
-:has(> input[type=color] + output)
   position: relative
   & output
     position: absolute

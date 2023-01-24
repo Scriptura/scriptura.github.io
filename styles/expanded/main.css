@@ -1901,12 +1901,10 @@ form > [class*="grid"] > .input {
 .input .invalid {
   animation: anim-invalid-input 2s ease-in-out infinite !important;
 }
-.color-output,
-:has(> input[type=color] + output) {
+.color-output {
   position: relative;
 }
-.color-output output,
-:has(> input[type=color] + output) output {
+.color-output output {
   position: absolute;
   display: inline-block;
   left: 0.5em;
