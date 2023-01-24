@@ -1871,6 +1871,7 @@ form > [class*="grid"] > .input {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z'/></svg>");
 }
 .input select[multiple] {
+  min-height: 3em;
   padding: 0.4em 1em;
 }
 .input textarea {
@@ -2508,7 +2509,7 @@ form > [class*="grid"] > .input {
 }
 .footer .wrap {
   display: flex;
-  max-width: 90em;
+  max-width: 92em;
   margin: 0 auto;
 }
 @media (max-width: 35.01em) {

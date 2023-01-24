@@ -80,6 +80,7 @@ form
     &:active
       background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z'/></svg>")
   & select[multiple]
+    min-height: _inputSize1 // @affected Chrome Androïd.
     padding: .4em 1em
   & textarea
     min-height: 9.75em
