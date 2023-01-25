@@ -1,6 +1,19 @@
+.grid2.s-grid1.gap
+  div
+    p.message(role='alert')
+      svg.icon-inline(role='img' focusable='false')
+        use(href='/sprites/util.svg#paperclip')
+      | À titre expérimental, les grilles du framework utilisent les modules CSS Grid Layout, Container Queries et les opérateurs logiques (Media Queries Level 4). En raison du support limité de @container, 
+      a(href='https://caniuse.com/mdn-css_properties_container') y compris pour des navigateurs récents
+      | , un polyfill JS/CSS faisant appel à une feuille de style plus classique (mais toujours avec grid layout) est prévu pour palier à cette situation provisoire.
+  .center
+    svg.decorative-svg(role='img' focusable='false')
+      use(href='/sprites/silos/39r.svg#1')
 p
   code .grid4.gap
 .grid4.row-defines.gap.gap-bottom.demo-counter.demo-items-empty.demo-items-color(style='--itemHeight:5em')
+  - for (let i = 0; i < 4; i++)
+    div
   .c4
     code .c4
   .r4
@@ -14,12 +27,14 @@ p
     code .r3
   .c3
     code .c3
-  - for (let i = 0; i < 9; i++)
+  - for (let i = 0; i < 5; i++)
     div
 hr(data-hr='✻ ✻ ✻')
 p
   code .grid4
 .grid4.row-defines.gap-bottom.demo-counter.demo-items-empty.demo-items-color(style='--itemHeight:5em')
+  - for (let i = 0; i < 4; i++)
+    div
   .c4
     code .c4
   .r4
@@ -33,7 +48,7 @@ p
     code .r3
   .c3
     code .c3
-  - for (let i = 0; i < 9; i++)
+  - for (let i = 0; i < 5; i++)
     div
 hr(data-hr='✻ ✻ ✻')
 p

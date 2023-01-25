@@ -543,7 +543,7 @@ main {
   margin: 0 auto;
   padding: 1em 0;
   color: #e9dac5;
-  background-color: #495f71;
+  background-color: #474747;
   box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
 }
 .card svg {
@@ -1497,7 +1497,7 @@ audio:not([controls]) {
     transform: translate(0, 0);
   }
 }
-[role=region][aria-labelledby][tabindex]:has(.table) {
+[role=region][aria-labelledby][tabindex]:has([class^=table]) {
   overflow: auto;
   box-shadow: 0 0 2rem rgba(0,0,0,0.2);
   max-height: 80vh;
@@ -1540,11 +1540,14 @@ audio:not([controls]) {
 [class^=table] tbody :empty::after {
   content: '/';
 }
-@media (max-width: 50.01em) {
+@container (35em > width) {
+  [role=region][aria-labelledby][tabindex]:has(.table-responsive) {
+    all: unset;
+  }
   .table-responsive {
+    margin-top: -0.5em;
     border-collapse: separate;
     border-spacing: 0 0.5em;
-    margin: -0.5em 0;
   }
   .table-responsive thead,
   .table-responsive tfoot {

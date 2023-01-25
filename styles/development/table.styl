@@ -7,7 +7,7 @@ _tableShadow1 = _shadow11
 _tableShadow2 = inset 0 0 1px #222
 
 [role=region][aria-labelledby][tabindex]
-  &:has(.table) // @see https://css-tricks.com/under-engineered-responsive-tables/
+  &:has([class^=table]) // @see https://css-tricks.com/under-engineered-responsive-tables/
     overflow: auto // clip
     box-shadow: _tableShadow1
     max-height: 80vh
@@ -47,11 +47,15 @@ _tableShadow2 = inset 0 0 1px #222
   //  table-layout: fixed
   //  width: content
 
-.table-responsive
-  @media (max-width: _sizeS)
+@container (35em > width)
+
+  [role=region][aria-labelledby][tabindex]:has(.table-responsive)
+    all: unset
+
+  .table-responsive
+    margin-top: -.5em
     border-collapse: separate
     border-spacing: 0 .5em
-    margin: -.5em 0
     & thead
     & tfoot
       display: none
