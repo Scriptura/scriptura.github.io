@@ -418,7 +418,7 @@ main {
     transform: rotate(90deg);
     transition: transform 0.4s ease-in-out;
   }
-  .sub-nav li a {
+  .sub-nav li > * {
     line-height: 3;
   }
   .sub-nav.active li {
