@@ -355,11 +355,8 @@ main {
 .sub-nav {
   grid-area: subnav;
   position: relative;
-  display: flex;
   z-index: 2000;
   box-shadow: 0.5rem 0.5rem 0.5rem rgba(0,0,0,0.2);
-}
-.sub-nav ul {
   display: flex;
   width: 100%;
   margin: 0;
@@ -403,13 +400,11 @@ main {
     top: 3em;
     left: 0;
     width: 100vw;
-    transform: translateX(-100vw);
+    flex-wrap: wrap;
+    transform: translateX(-110vw);
   }
   .sub-nav.active {
     box-shadow: 0 100vh 0 100vh rgba(0,0,0,0.5);
-  }
-  .sub-nav ul {
-    flex-wrap: wrap;
   }
   .sub-nav li {
     flex: 1;
@@ -422,14 +417,14 @@ main {
     line-height: 3;
   }
   .sub-nav.active li {
-    transform: translateX(100vw) rotate(0deg);
+    transform: translateX(110vw) rotate(0deg);
   }
 }
 @media (min-width: 58.01em) {
-  .sub-nav ul .current {
+  .sub-nav .current {
     position: relative;
   }
-  .sub-nav ul .current::after {
+  .sub-nav .current::after {
     content: '';
     position: absolute;
     top: 100%;
@@ -440,7 +435,7 @@ main {
     -webkit-clip-path: polygon(0 0, 100% 0, 50% 100%);
             clip-path: polygon(0 0, 100% 0, 50% 100%);
   }
-  .sub-nav ul > :last-child {
+  .sub-nav > :last-child {
     margin-left: auto;
   }
 }

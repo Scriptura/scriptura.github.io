@@ -1,5 +1,6 @@
 _navigationSizeRow = 2.5em
 _navigationSizeRowXS = 3em
+_navigationSizeTranslate = 110vw
 _navigationFix = 177px
 _navigationColor1 = _colorG - 34%
 _navigationColor2 = _colorT2
@@ -42,15 +43,13 @@ _navigationColor5 = _color2
 .sub-nav
   grid-area: subnav
   position: relative
-  display: flex
   z-index: 2000 // @note Permet de passer au-dessus de certains éléments définis par des sources externes, comme les Maps Leaflet.
   box-shadow: _shadow2
-  & ul
-    display: flex
-    width: 100%
-    margin: 0
-    padding: 0
-    background-color: _navigationColor1
+  display: flex
+  width: 100%
+  margin: 0
+  padding: 0
+  background-color: _navigationColor1
   & li
     list-style: none
     & > *
@@ -81,11 +80,10 @@ _navigationColor5 = _color2
     top: _navigationSizeRowXS
     left: 0
     width: 100vw
-    transform: translateX(-100vw) // @note L'utilisation des pourcentages provoque un effet de bord avec overflow:clip sur le body ; à éviter.
+    flex-wrap: wrap
+    transform: translateX(- _navigationSizeTranslate) // @note L'utilisation des pourcentages provoque un effet de bord avec overflow:clip sur le body ; à éviter. Valeur au-delà de 100vw afin de cacher les ombres des boîtes.
     &.active
       box-shadow: 0 100vh 0 100vh rgba(0, 0, 0, .5)
-    & ul
-      flex-wrap: wrap
     & li
       flex: 1
       flex-basis: 50%
@@ -95,22 +93,21 @@ _navigationColor5 = _color2
       & > *
         line-height: unit(_navigationSizeRowXS, '')
     &.active li
-      transform: translateX(100vw) rotate(0deg)
+      transform: translateX(_navigationSizeTranslate) rotate(0deg)
   @media (min-width _sizeNav)
-    & ul
-      & .current
-        position: relative
-        &::after
-          content: ''
-          position: absolute
-          top: 100%
-          left: calc(50% - 1em)
-          width: 2em
-          height: 1em
-          background-color: _navigationColor3
-          clip-path: polygon(0 0, 100% 0, 50% 100%)
-      & > :last-child
-        margin-left: auto
+    & .current
+      position: relative
+      &::after
+        content: ''
+        position: absolute
+        top: 100%
+        left: calc(50% - 1em)
+        width: 2em
+        height: 1em
+        background-color: _navigationColor3
+        clip-path: polygon(0 0, 100% 0, 50% 100%)
+    & > :last-child
+      margin-left: auto
   @media (min-width: _sizeXS) and (max-width: _sizeNav)
     & li
       flex-basis: 33%
