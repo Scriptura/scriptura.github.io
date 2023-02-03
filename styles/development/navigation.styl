@@ -1,0 +1,170 @@
+_navigationSizeRow = 2.5em
+_navigationSizeRowXS = 3em
+_navigationFix = 177px
+_navigationColor1 = _colorG - 34%
+_navigationColor2 = _colorT2
+_navigationColor3 = _color2
+_navigationColor4 = _color5
+_navigationColor5 = _color2
+
+.nav
+  display: grid
+  user-select: none
+  @media (max-width: _sizeNav)
+    grid-template-rows: _navigationSizeRowXS
+    grid-template-columns: _navigationSizeRowXS minmax(0, 1fr) _navigationSizeRowXS // @note Laisse une place au logo du site.
+    grid-template-areas: 'logo breadcrumb cmd'
+  @media (min-width: _sizeNav)
+    grid-template-rows: repeat(2, _navigationSizeRow)
+    grid-template-columns: (_navigationSizeRow * 2) minmax(0, 1fr) // @note Laisse une place au logo du site.
+    grid-template-areas: 'logo subnav' 'logo breadcrumb'
+
+.logo-nav
+  grid-area: logo
+  display: block
+  background-color: _navigationColor5
+  box-shadow: _shadow2
+  &:focus
+  &:hover
+  &:active
+    background-color: _color5
+  &::after
+    content: ''
+    display: block
+    width: 100%
+    height: 100%
+    background-image: url(../medias/images/logo/195v.svg)
+    background-repeat: no-repeat
+    background-position: 50% 50%
+    background-size: auto 70%
+    box-shadow: _shadow3
+
+.sub-nav
+  grid-area: subnav
+  position: relative
+  display: flex
+  z-index: 2000 // @note Permet de passer au-dessus de certains éléments définis par des sources externes, comme les Maps Leaflet.
+  box-shadow: _shadow2
+  & ul
+    display: flex
+    width: 100%
+    margin: 0
+    padding: 0
+    background-color: _navigationColor1
+  & li
+    list-style: none
+    & > *
+      display: block
+      padding: 0 1em
+      line-height: unit(_navigationSizeRow, '') // @todo Ou _navigationSizeRow tout simplement...
+      box-shadow: _shadow3
+  & .current
+    background-color: _navigationColor3
+  & a
+    overflow: hidden
+    white-space: nowrap
+    text-overflow: ellipsis
+    color: _navigationColor2
+    text-decoration: none
+    &:focus
+    &:hover
+    &:active
+      color: #fff
+      background-color: _navigationColor3
+    &:focus svg
+    &:hover svg
+    &:active svg
+      animation: anim-jump .5s ease-in-out
+  @media (max-width: _sizeNav)
+    position: absolute
+    z-index: 800
+    top: _navigationSizeRowXS
+    left: 0
+    width: 100vw
+    transform: translateX(-100vw) // @note L'utilisation des pourcentages provoque un effet de bord avec overflow:clip sur le body ; à éviter.
+    &.active
+      box-shadow: 0 100vh 0 100vh rgba(0, 0, 0, .5)
+    & ul
+      flex-wrap: wrap
+    & li
+      flex: 1
+      flex-basis: 50%
+      background-color: _navigationColor1
+      transform: rotate(90deg)
+      transition: transform .4s ease-in-out
+      & a
+        line-height: unit(_navigationSizeRowXS, '')
+    &.active li
+      transform: translateX(100vw) rotate(0deg)
+  @media (min-width _sizeNav)
+    & ul
+      & .current
+        position: relative
+        &::after
+          content: ''
+          position: absolute
+          top: 100%
+          left: calc(50% - 1em)
+          width: 2em
+          height: 1em
+          background-color: _navigationColor3
+          clip-path: polygon(0 0, 100% 0, 50% 100%)
+      & > :last-child
+        margin-left: auto
+  @media (min-width: _sizeXS) and (max-width: _sizeNav)
+    & li
+      flex-basis: 33%
+  @media (min-width: _sizeS) and (max-width: _sizeNav)
+    & li
+      flex-basis: 25%
+
+@media (max-width: _sizeNav)
+
+  :where(html, body).active
+    overflow: clip
+
+  body.active :where(main, footer, aside)
+    user-select: none
+    pointer-events: none
+    filter: blur(2px) grayscale(1)
+
+  _x = 12
+  for _i in 1.._x
+    _abstr = _i / _x
+    .sub-nav li:nth-child({_i})
+      transition-delay: '%ss' % round(_abstr, 2)
+
+@media (min-width: _sizeNav)
+  @keyframes anim-jump
+    30%
+      transform: translateY(-.3em)
+
+.cmd-nav
+  grid-area: cmd
+  @media (max-width: _sizeNav)
+    padding: (_navigationSizeRow / 10)
+    cursor: pointer
+    background-color: _navigationColor1
+    border: none
+    outline: none
+    & svg
+      width: 100%
+      height: 100%
+    & *
+      transform-origin: center
+      transition: transform .3s ease
+      fill: _navigationColor3
+    &:focus
+    &:hover
+      background-color: _navigationColor3
+    &:focus svg *
+    &:hover svg *
+      fill: #fff
+    &.active svg :nth-child(1)
+      transform: translate(- _navigationFix, _navigationFix) rotate(45deg)
+    &.active svg :nth-child(2)
+      transform: rotate(-45deg)
+    &.active svg :nth-child(3)
+      transform: translate(- _navigationFix, - _navigationFix) rotate(-45deg)
+  @media (min-width _sizeNav)
+    display: none

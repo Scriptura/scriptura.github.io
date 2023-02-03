@@ -323,12 +323,12 @@ window.scrollTo({top: 0})
 
 const mainMenu = (() => {
   const button = document.querySelector('.cmd-nav'),
-        mainNav = document.querySelector('.main-nav')
+        subNav = document.querySelector('.sub-nav')
   button.addEventListener('click', () => {
     document.documentElement.classList.toggle('active')
     document.body.classList.toggle('active')
     button.classList.toggle('active')
-    mainNav.classList.toggle('active')
+    subNav.classList.toggle('active')
   })
 })()
 

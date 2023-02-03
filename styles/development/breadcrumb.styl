@@ -1,13 +1,15 @@
 _breadcrumbSize = 2.5em
+_breadcrumbSizeXS = 3em
 _breadcrumbColor = _colorT2
 _breadcrumbColor1 = _colorG - 34%
 _breadcrumbColor2 = _color2
 //_breadcrumbColor3 = _color5
 
 .breadcrumb
+  grid-area: breadcrumb
   display: flex
   margin: 0
-  padding: 0 3em 0 0
+  padding: 0 //3em 0 0
   background-color: _breadcrumbColor1
   & li
     list-style: none
@@ -46,6 +48,19 @@ _breadcrumbColor2 = _color2
     padding-left: 1em
   & li + li
     margin-left: -1em
-  @media (max-width: _sizeXS)
-    & > :nth-last-child(3) // @note Ne pas mettre :first-child, il faut penser à la page index.
+  @media (max-width: _sizeNav)
+    /*
+    li
+      flex-shrink: 0
+      flex-grow: 0
+    */
+    & li > *
+      line-height: unit(_breadcrumbSizeXS, '')
+      padding: 0 ceil(_breadcrumbSizeXS * .75, 2)
+    // @note [1] Ne pas mettre :first-child car les premiers items peuvent être en display:none
+    & > :nth-last-child(3) // [1]
       display: none
+    & > :nth-last-child(2) // [1]
+      margin-left: 0
+      & a
+        padding-left: 1em
