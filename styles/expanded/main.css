@@ -315,6 +315,7 @@ main {
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
+  background-color: #262626;
 }
 @media (max-width: 58.01em) {
   .nav {
@@ -361,7 +362,6 @@ main {
   width: 100%;
   margin: 0;
   padding: 0;
-  background-color: #262626;
 }
 .sub-nav li {
   list-style: none;
@@ -404,7 +404,7 @@ main {
     transform: translateX(-110vw);
   }
   .sub-nav.active {
-    box-shadow: 0 100vh 0 100vh rgba(0,0,0,0.5);
+    box-shadow: 0 200vh 0 200vh rgba(0,0,0,0.5);
   }
   .sub-nav li {
     flex: 1;
@@ -555,7 +555,6 @@ main {
   display: flex;
   margin: 0;
   padding: 0;
-  background-color: #262626;
 }
 .breadcrumb li {
   list-style: none;
@@ -997,7 +996,7 @@ ol ol ol {
 }
 [class^=list-stripe] > * {
   padding: 0.5em 1em;
-  background-color: #474747;
+  background-color: #434343;
   box-shadow: 0.5rem 0.5rem 2rem rgba(0,0,0,0.1);
 }
 .list-stripe-links a {
@@ -1067,7 +1066,7 @@ ol ol ol {
   width: 100%;
   min-height: 2.5em;
   padding: 0.5em 1em;
-  background-color: #474747;
+  background-color: #434343;
 }
 .list-straight a:focus,
 .list-rounded a:focus,
@@ -3244,13 +3243,10 @@ a[aria-disabled=true]:active {
 }
 html,
 .logo-nav,
+.nav,
 .cmd-nav,
-.sub-nav ul,
-.sub-nav a,
-.sub-nav .current,
+.sub-nav li > *,
 .sub-nav .current::after,
-.breadcrumb,
-.breadcrumb ol,
 .breadcrumb li > *,
 .footer,
 .card h2,

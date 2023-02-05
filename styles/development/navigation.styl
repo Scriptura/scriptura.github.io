@@ -19,6 +19,7 @@ _navigationColor5 = _color2
     grid-template-rows: repeat(2, _navigationSizeRow)
     grid-template-columns: (_navigationSizeRow * 2) minmax(0, 1fr) // @note Laisse une place au logo du site.
     grid-template-areas: 'logo subnav' 'logo breadcrumb'
+  background-color: _navigationColor1
 
 .logo-nav
   grid-area: logo
@@ -49,7 +50,6 @@ _navigationColor5 = _color2
   width: 100%
   margin: 0
   padding: 0
-  background-color: _navigationColor1
   & li
     list-style: none
     & > *
@@ -83,7 +83,7 @@ _navigationColor5 = _color2
     flex-wrap: wrap
     transform: translateX(- _navigationSizeTranslate) // @note L'utilisation des pourcentages provoque un effet de bord avec overflow:clip sur le body ; à éviter. Valeur au-delà de 100vw afin de cacher les ombres des boîtes.
     &.active
-      box-shadow: 0 100vh 0 100vh rgba(0, 0, 0, .5)
+      box-shadow: 0 200vh 0 200vh rgba(0, 0, 0, .5) // @note 100vh pourrait suffire, mais ajouter à cette valeur permet d'éviter un effet de bord losque l'inspecteur du navigateur est ouvert.
     & li
       flex: 1
       flex-basis: 50%
