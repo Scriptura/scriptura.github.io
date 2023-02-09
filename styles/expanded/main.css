@@ -512,7 +512,7 @@ main {
 }
 @media (max-width: 58.01em) {
   .cmd-nav {
-    padding: 0.25em;
+    padding: 0.5em;
     cursor: pointer;
     background-color: #262626;
     border: none;
