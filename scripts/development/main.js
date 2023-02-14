@@ -323,10 +323,14 @@ window.scrollTo({top: 0})
 
 const mainMenu = (() => {
   const button = document.querySelector('.cmd-nav'),
-        subNav = document.querySelector('.sub-nav')
+        subNav = document.querySelector('.sub-nav'),
+        main = document.querySelector('main'),
+        footer = document.querySelector('.footer')
   button.addEventListener('click', () => {
     document.documentElement.classList.toggle('active')
     document.body.classList.toggle('active')
+    main.hasAttribute('inert') ? main.removeAttribute('inert') : main.setAttribute('inert', '')
+    footer.hasAttribute('inert') ? footer.removeAttribute('inert') : footer.setAttribute('inert', '')
     button.classList.toggle('active')
     subNav.classList.toggle('active')
   })
