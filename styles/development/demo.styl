@@ -54,12 +54,14 @@ _demoColorDeviation = 10
         position: absolute
         top: -.5em
         right: -.5em
-        width: 14em
-        height: 14em
-        background-image: linear-gradient(-135deg, rgba(255, 255, 255, .03), transparent 50%)
-        background-size: 15em 15em
-        background-repeat:  no-repeat
+        width: 100%
+        max-width: 20em
+        aspect-ratio: 1/1
+        background-image: linear-gradient(-135deg, rgba(255, 255, 255, .05), transparent 50%)
+        //background-size: 100% 100%
+        background-repeat: no-repeat
         background-position: 100% 0%
+        pointer-events: none
     & > .ribbon-top-right
       @media (max-width: _sizeS)
         transform: translate(2.85em, .9em) rotate(45deg) !important
