@@ -9,6 +9,8 @@ _navigationColor4 = _color5
 _navigationColor5 = _color2
 
 .nav
+  position: relative
+  z-index: 2000 // @note Permet de passer au-dessus le pseudo élément de body et aussi de certains éléments définis par des sources externes (comme les Maps Leaflet).
   display: grid
   user-select: none
   @media (max-width: _sizeNav)
@@ -43,8 +45,6 @@ _navigationColor5 = _color2
 
 .sub-nav
   grid-area: subnav
-  position: relative
-  z-index: 2000 // @note Permet de passer au-dessus de certains éléments définis par des sources externes, comme les Maps Leaflet.
   box-shadow: _shadow2
   display: flex
   width: 100%
@@ -82,8 +82,6 @@ _navigationColor5 = _color2
     width: 100vw
     flex-wrap: wrap
     transform: translateX(- _navigationSizeTranslate) // @note L'utilisation des pourcentages provoque un effet de bord avec overflow:clip sur le body ; à éviter. Valeur au-delà de 100vw afin de cacher les ombres des boîtes.
-    &.active
-      box-shadow: 0 200vh 0 200vh rgba(0, 0, 0, .5) // @note 100vh pourrait suffire, mais ajouter à cette valeur permet d'éviter un effet de bord losque l'inspecteur du navigateur est ouvert.
     & li
       flex: 1
       flex-basis: 50%
@@ -120,10 +118,18 @@ _navigationColor5 = _color2
   :where(html, body).active
     overflow: clip
 
-  body.active :where(main, footer, aside)
-    user-select: none
-    pointer-events: none
-    filter: blur(2px) grayscale(1)
+  body.active
+    &::before
+      content: ''
+      position: absolute
+      inset: 0
+      width: 100vw
+      height: 100vh
+      background-color: rgba(0, 0, 0, .5)
+    & :where(main, footer, aside)
+      user-select: none
+      pointer-events: none
+      filter: blur(2px) grayscale(1)
 
   _x = 12
   for _i in 1.._x

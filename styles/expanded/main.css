@@ -311,6 +311,8 @@ main {
   outline: 0 !important;
 }
 .nav {
+  position: relative;
+  z-index: 2000;
   display: grid;
   -webkit-user-select: none;
      -moz-user-select: none;
@@ -355,8 +357,6 @@ main {
 }
 .sub-nav {
   grid-area: subnav;
-  position: relative;
-  z-index: 2000;
   box-shadow: 0.5rem 0.5rem 0.5rem rgba(0,0,0,0.2);
   display: flex;
   width: 100%;
@@ -402,9 +402,6 @@ main {
     width: 100vw;
     flex-wrap: wrap;
     transform: translateX(-110vw);
-  }
-  .sub-nav.active {
-    box-shadow: 0 200vh 0 200vh rgba(0,0,0,0.5);
   }
   .sub-nav li {
     flex: 1;
@@ -454,9 +451,17 @@ main {
   body).active {
     overflow: clip;
   }
+  body.active::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.5);
+  }
   body.active :where(main,
-  footer,
-  aside) {
+  body.active footer,
+  body.active aside) {
     -webkit-user-select: none;
        -moz-user-select: none;
             user-select: none;
