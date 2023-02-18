@@ -441,3 +441,21 @@ const footnotes = (() => {
   }
 })()
 */
+
+
+// -----------------------------------------------------------------------------
+// @section     Buttons test
+// @description Boutons de test
+// -----------------------------------------------------------------------------
+
+// @todo Boutons en dev...
+const butonTest = (() => {
+  const cmd = document.querySelector('button.test')
+    cmd && cmd.addEventListener('click', () => {
+    if ('vibrate' in navigator && 'ontouchstart' in window) {
+      navigator.vibrate(2000) // Déclencher la vibration pendant 2 secondes
+    } else {
+      document.documentElement.style.filter = 'invert(1)'
+    }
+      }, false)
+})()

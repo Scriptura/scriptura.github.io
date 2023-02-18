@@ -454,10 +454,11 @@ main {
   body.active::before {
     content: '';
     position: absolute;
+    z-index: 1;
     inset: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0,0,0,0.7);
   }
   body.active :where(main,
   body.active footer,
@@ -2085,9 +2086,6 @@ form > [class*="grid"] > .input {
   cursor: not-allowed;
   background: #2e2e2e repeating-linear-gradient(-45deg, transparent 0 2px, #555 2px 4px);
 }
-* {
-  box-sizing: border-box;
-}
 .switch {
   display: flex;
   align-items: center;
@@ -2097,6 +2095,9 @@ form > [class*="grid"] > .input {
 .switch input {
   position: absolute;
   right: 200vw;
+}
+.switch input:focus-visible + .switch-bg {
+  border-color: #ffa500;
 }
 .switch .switch-bg {
   flex-shrink: 0;
@@ -2151,9 +2152,6 @@ form > [class*="grid"] > .input {
 }
 .switch :disabled + .switch-bg .switch-toogle {
   background-color: #393939;
-}
-.switch [type=radio]:checked ~ * {
-  cursor: not-allowed;
 }
 :not(.switch-dual-state) > .switch input:not(:checked):not(:disabled) ~ * {
   color: #939393;

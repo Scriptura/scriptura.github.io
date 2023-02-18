@@ -1,8 +1,13 @@
 _checkboxColor1 = _colorG - 20%
 _checkboxColor2 = _colorG + 31.5%
-_checkboxColor5 = rgba(255, 255, 255, .2)
+_checkboxColor3 = _color2
+_checkboxColor5 = _color5
 _checkboxSize1 = 2px // @note Valeur en lien avec 'transform scale' sur le (pseudo-)élément.
-_switchColor5 = rgba(255, 255, 255, .1)
+
+_switchColor1 = rgba(255, 255, 255, .1)
+_switchColor2 = _colorG - 20%
+_switchColor3 = _color2
+_switchColor5 = _color5
 _switchSize1 = 1.2em
 _switchSize2 = 3px
 
@@ -33,13 +38,13 @@ _switchSize2 = 3px
       transition: all .2s
       transform: scale(1.4)
     &::after
-      content: '' //'✔'
+      content: ''
       position: absolute
       top: 0 // @note Fixe le pseudo-élément si label sur plusieurs lignes.
       left: -1.8em
       width: 1em
       height: 1em
-      background-color: _color2
+      background-color: _checkboxColor3
       clip-path: polygon(17% 40%, 0 57%, 39% 100%, 100% 25%, 83% 10%, 38% 64%)
       transform: scale(0)
       transition: transform .2s
@@ -50,14 +55,14 @@ _switchSize2 = 3px
     left: -1.8em
     clip-path: circle(50% at 50% 50%)
   &[type=radio]:checked + label::before
-    border-color: _color2
+    border-color: _checkboxColor3
   &[type=radio]:checked + label::after
     transform: scale(.7)
   &[type=radio] + label::before
     border-radius: 50%
   &:focus-visible + label::before
   &[type=radio]:focus-visible + label::before
-    border: .1rem solid _color5
+    border: .1rem solid _checkboxColor5
   &:disabled + label
     color: #777
     cursor: not-allowed
@@ -66,18 +71,7 @@ _switchSize2 = 3px
       background: _checkboxColor1 repeating-linear-gradient(-45deg, transparent 0 _checkboxSize1, #555 _checkboxSize1 _checkboxSize1 * 2)
 
 
-// @subsection Switchs
-// -----------------------------------------------------------------------------
-
-_switchColor4 = rgba(255, 255, 255, .1)
-_switchColor5 = _colorG - 20%
-_switchSize1 = 1.2em
-_switchSize2 = 3px
-
-*
-  box-sizing: border-box
-
-// @note Le design d'un switch accessible à l'aide des seuls pseudo-éléments est tout à fait possible, nous l'avons fait à une époque. Mais cette solution rend la modularité du style parfois impossible. Le label n'étant pas indépendant du switch, son positionnement sera limité, des pseudo-éléments utilisants déjà background-image ne peuvent plus être texturés, l'effets "zoom" c font-size sera problématique.
+// @note Le design d'un switch accessible à l'aide des seuls pseudo-éléments est tout à fait possible, mais cette solution rend la modularité du style délicate. Le label n'étant pas indépendant du switch, son positionnement sera limité, des pseudo-éléments utilisants déjà background-image ne peuvent plus être texturés, l'effets "zoom" via font-size sera problématique.
 
 .switch
   display: flex
@@ -87,6 +81,8 @@ _switchSize2 = 3px
   & input
     position: absolute
     right: 200vw
+    &:focus-visible + .switch-bg
+      border-color: _checkboxColor5
   & .switch-bg
     flex-shrink: 0
     display: flex
@@ -94,7 +90,7 @@ _switchSize2 = 3px
     justify-content: center
     width: _switchSize1 * 2
     height: _switchSize1
-    background-color: _switchColor5
+    background-color: _switchColor2
     border: .1em solid transparent
     border-radius: _switchSize1
     box-shadow: inset 0 .2em .5em rgba(0, 0, 0, .2)
@@ -130,11 +126,11 @@ _switchSize2 = 3px
       color: _colorG + 20%
       cursor: not-allowed
     & + .switch-bg
-      background-image: repeating-linear-gradient(-45deg, _switchColor4 0 _switchSize2, _switchColor5 0, transparent 0, transparent _switchSize2 * 2)
+      background-image: repeating-linear-gradient(-45deg, _switchColor1 0 _switchSize2, _switchColor2 0, transparent 0, transparent _switchSize2 * 2)
     & + .switch-bg .switch-toogle
       background-color: _colorG
-  [type=radio]:checked ~ *
-    cursor: not-allowed
+  //&[type=radio]:checked ~ *
+  //  cursor: not-allowed
 
 :not(.switch-dual-state) > .switch input:not(:checked):not(:disabled)
   & ~ *
@@ -191,7 +187,7 @@ _switchSize2 = 3px
     cursor: not-allowed
   &:disabled + label::before
   //&:disabled + label::after
-    background-image: repeating-linear-gradient(-45deg, _switchColor5 0 _switchSize2, _switchColor5 0, transparent 0, transparent _switchSize2 * 2)
+    background-image: repeating-linear-gradient(-45deg, _switchColor2 0 _switchSize2, _switchColor2 0, transparent 0, transparent _switchSize2 * 2)
   &:disabled + label span::before
     color: _checkboxColor2 !important
   &:disabled + label::after
