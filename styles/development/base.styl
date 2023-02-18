@@ -198,14 +198,22 @@ details details
 
 summary
   display: list-item // @bugfix Add the correct display @affected All browsers.
-  //display: inline-block
+  list-style: none
   cursor: pointer
   &:focus-visible
   &:hover
     color: _color5
     outline: none
-    &::marker
-      color: _color5
+    //&::marker // @note Nous n'utilisons pas ::marker car le rendu diffère sur mobiles, ceci nous permet aussi de personnaliser la puce. @affected Chrome mobile.
+    //  color: _color5
+  &::before
+    content: '►' //➔
+    display: inline-block
+    margin-right: .5em
+    color: _color2
+
+details[open] summary::before
+  transform: rotate(90deg)
 
 template
   display: none // @bugfix Add the correct display @affected IE 10+.

@@ -199,6 +199,7 @@ details details {
 }
 summary {
   display: list-item;
+  list-style: none;
   cursor: pointer;
 }
 summary:focus-visible,
@@ -206,9 +207,14 @@ summary:hover {
   color: #ffa500;
   outline: none;
 }
-summary:focus-visible::marker,
-summary:hover::marker {
-  color: #ffa500;
+summary::before {
+  content: '►';
+  display: inline-block;
+  margin-right: 0.5em;
+  color: #ff6347;
+}
+details[open] summary::before {
+  transform: rotate(90deg);
 }
 template {
   display: none;
