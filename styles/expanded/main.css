@@ -214,7 +214,7 @@ summary::before {
   color: #ff6347;
   transform: rotate(90deg);
 }
-details[open] summary::before {
+details[open] > summary::before {
   transform: rotate(180deg);
 }
 template {
