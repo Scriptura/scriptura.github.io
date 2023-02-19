@@ -444,18 +444,24 @@ const footnotes = (() => {
 
 
 // -----------------------------------------------------------------------------
-// @section     Buttons test
-// @description Boutons de test
+// @section     Horizontal progress bar
+// @description Barre de progression horizontale
 // -----------------------------------------------------------------------------
+/*
+// @note Intéressant techniquement, mais pas forcément oportun sur le site car fait double emploi avec la barre verticale.
+// @note Notre script est une version améliorée du lien suivant.
+// @see https://nouvelle-techno.fr/articles/creer-une-barre-de-progression-horizontale-en-haut-de-page
 
-// @todo Boutons en dev...
-const butonTest = (() => {
-  const cmd = document.querySelector('button.test')
-    cmd && cmd.addEventListener('click', () => {
-    if ('vibrate' in navigator && 'ontouchstart' in window) {
-      navigator.vibrate(2000) // Déclencher la vibration pendant 2 secondes
-    } else {
-      document.documentElement.style.filter = 'invert(1)'
-    }
-      }, false)
-})()
+window.onload = () => {
+  const el = document.createElement('div')
+  el.id = 'progress-page'
+  document.body.appendChild(el)
+  window.addEventListener('scroll', () => {
+    const height = document.documentElement.scrollHeight - window.innerHeight,
+          position = window.scrollY,
+          width = document.documentElement.clientWidth,
+          value = position / height * width
+    el.style.width = value + 'px'
+  })
+}
+*/

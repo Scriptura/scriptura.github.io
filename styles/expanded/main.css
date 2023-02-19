@@ -427,6 +427,7 @@ main {
 @media (min-width: 58.01em) {
   .sub-nav .current {
     position: relative;
+    z-index: 10;
   }
   .sub-nav .current::after {
     content: '';

@@ -10,7 +10,7 @@ _navigationColor5 = _color2
 
 .nav
   position: relative
-  z-index: 2000 // @note Permet de passer au-dessus le pseudo élément de body et aussi de certains éléments définis par des sources externes (comme les Maps Leaflet).
+  z-index: 2000 // @note Permet de passer au-dessus du pseudo élément de body (ce dernier faisant un effet d'ombrage sur le contenu en version mobile) et aussi de certains éléments définis par des sources externes (comme les Maps Leaflet).
   display: grid
   user-select: none
   @media (max-width: _sizeNav)
@@ -95,6 +95,7 @@ _navigationColor5 = _color2
   @media (min-width _sizeNav)
     & .current
       position: relative
+      z-index: 10 // @note La valeur doit être suffisante pour passer au-dessus des items de .breadcrumb
       &::after
         content: ''
         position: absolute
