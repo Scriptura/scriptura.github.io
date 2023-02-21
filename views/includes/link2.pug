@@ -1,0 +1,17 @@
+mixin list(icon, name, slug)
+  li
+    svg.icon(role='img' focusable='false')
+      use(href='/sprites/util.svg#' + icon)
+    a(href='/page/' + slug + '.html') #{name}
+
+ul.grid4.list-straight
+  +list('login', 'Login', 'login')
+  +list('user', 'Register', 'register')
+  +list('picture', 'Image gallery', 'imageGallery')
+  +list('ampersand', 'Cards', 'cards')
+  +list('quill', 'Article', 'article')
+  +list('location', 'Place', 'place')
+  +list('address-card', 'Person', 'person')
+  +list('warning', '404', '404')
+  //-li
+    a(href='/styles/expanded/main.css' target='_blank') Styles expanded

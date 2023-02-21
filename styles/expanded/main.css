@@ -208,14 +208,13 @@ summary:hover {
   outline: none;
 }
 summary::before {
-  content: '▲';
+  content: '➤';
   display: inline-block;
   margin-right: 0.5em;
   color: #ff6347;
-  transform: rotate(90deg);
 }
 details[open] > summary::before {
-  transform: rotate(180deg);
+  transform: rotate(90deg);
 }
 template {
   display: none;

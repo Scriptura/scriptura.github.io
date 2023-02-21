@@ -471,7 +471,7 @@ window.onload = () => {
 // @description Effect lors du click sur les boutons
 // -----------------------------------------------------------------------------
 
-// @affected Chrome mobile uniquement @note Firefox a adopté une politique restrictive de cet usage via Content Security Policy, iPhone et Mac ne supportent pas l'API vibration.
+// @affected Chrome mobile uniquement. @note Firefox a adopté une politique restrictive de cet usage via Content Security Policy, iPhone et Mac ne supportent pas l'API vibration.
 // @see https://caniuse.com/vibration
 
 function buttonEffect(e) {

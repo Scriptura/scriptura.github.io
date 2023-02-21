@@ -2,11 +2,16 @@ extends patternLayout
 
 block variables
   - const documentType = 'styleGuide'
-  - const data = {_name: 'Style Guide <span>.&nbsp;Documentation</span>', _title: 'Style Guide . Scritpura framework', _description: 'Style Guide . Scritpura framework' }
+  -
+    const data = {
+      _name: 'Style Guide <span>.&nbsp;Documentation</span>',
+      _title: 'Style Guide . Scritpura framework',
+      _description: 'Style Guide . Scritpura framework'
+    }
 
 mixin list(icon, name, slug)
   li
-    svg.icon-inline(role='img' focusable='false')
+    svg.icon(role='img' focusable='false')
       use(href='/sprites/util.svg#' + icon)
     a(href='#section-' + slug) #{name}
 

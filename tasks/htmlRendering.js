@@ -3,7 +3,10 @@ import { renderFile } from 'pug'
 
 writeFileSync('index.html', renderFile('views/index.pug'))
 writeFileSync('404.html', renderFile('views/404.pug'))
+writeFileSync('page/login.html', renderFile('views/login.pug'))
+writeFileSync('page/register.html', renderFile('views/register.pug'))
 writeFileSync('page/styleGuide.html', renderFile('views/styleGuide.pug'))
+writeFileSync('page/templates.html', renderFile('views/templates.pug'))
 writeFileSync('page/person.html', renderFile('views/person.pug'))
 writeFileSync('page/place.html', renderFile('views/place.pug'))
 writeFileSync('page/article.html', renderFile('views/article.pug'))

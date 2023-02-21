@@ -1,7 +1,13 @@
 extends patternLayout
 
 block variables
-  - var documentType = 'register'
+  - const documentType = 'register'
+  -
+    const data = {
+      _name: 'Register',
+      _title: 'Register page',
+      _description: 'Page d\'inscription.'
+    }
 
 block main
   header(role='banner')
@@ -19,7 +25,7 @@ block main
         input(type='password' name='password2' placeholder='• • • • • • • •' required='required')
       div
         button.button.scale120
-          svg.icon(role='img' focusable='false')
+          svg.icon-inline(role='img' focusable='false')
             use(href='/sprites/util.svg#bookmark')
           | Enregistrer
     .center

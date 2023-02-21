@@ -207,14 +207,14 @@ summary
     //&::marker // @note Nous n'utilisons pas ::marker car le rendu diffère sur mobiles, ceci nous permet aussi de personnaliser la puce. @affected Chrome mobile.
     //  color: _color5
   &::before
-    content: '▲' //➔
+    content: '➤' //➔▲
     display: inline-block
     margin-right: .5em
     color: _color2
-    transform: rotate(90deg)
+    //transform: rotate(90deg)
 
 details[open] > summary::before
-  transform: rotate(180deg)
+  transform: rotate(90deg)
 
 template
   display: none // @bugfix Add the correct display @affected IE 10+.

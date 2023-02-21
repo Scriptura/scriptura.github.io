@@ -1,7 +1,13 @@
 extends patternLayout
 
 block variables
-  - var documentType = 'login'
+  - const documentType = 'login'
+  -
+    const data = {
+      _name: 'Login',
+      _title: 'Login page',
+      _description: 'Page de connexion.'
+    }
 
 block main
   header(role='banner')
@@ -16,7 +22,7 @@ block main
         input(type='password' name='password' placeholder='• • • • • • • •' required='required')
       div
         button.button.scale120
-          svg.icon(role='img' focusable='false')
+          svg.icon-inline(role='img' focusable='false')
             use(href='/sprites/util.svg#checkmark')
           | Connexion
     .center
