@@ -465,3 +465,17 @@ window.onload = () => {
   })
 }
 */
+
+// -----------------------------------------------------------------------------
+// @section     Button Effect
+// @description Effect lors du click sur les boutons
+// -----------------------------------------------------------------------------
+
+// @affected Chrome mobile uniquement @note Firefox a adopté une politique restrictive de cet usage via Content Security Policy, iPhone et Mac ne supportent pas l'API vibration.
+// @see https://caniuse.com/vibration
+
+function buttonEffect(e) {
+  const frame = e.dataset.frame
+  if ('vibrate' in navigator) navigator.vibrate(frame ? frame : 200)
+}
+document.querySelectorAll('button[class*=button]').forEach(e => e && e.addEventListener('click', () => buttonEffect(e), false))
