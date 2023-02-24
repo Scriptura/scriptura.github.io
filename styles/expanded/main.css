@@ -2817,6 +2817,47 @@ form > [class*="grid"] > .input {
     transform: translate(2.85em, 0.9em) rotate(45deg) !important;
   }
 }
+.topic {
+  --url: url("/medias/images/uploads/dawid-zawila-w300.webp");
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+}
+.topic > a {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.topic > :not(first-child) a {
+  position: relative;
+  z-index: 3;
+}
+.topic > :nth-child(2) {
+  width: 3.5em;
+  aspect-ratio: 1;
+  margin: auto 1em auto 0;
+  border-radius: 50%;
+  background-image: var(--url);
+  background-size: cover;
+}
+.topic > :last-child {
+  margin-left: auto;
+  text-align: right;
+}
+.topic > :last-child > :last-child {
+  display: flex;
+  gap: 0.5em;
+}
+.topic > :last-child > :last-child a {
+  padding: 0.25em 0.5em 0.25em 1.25em;
+  background-color: #333;
+  -webkit-clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
+          clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
+}
+.topic h2 {
+  font-size: 1em;
+  margin-block: 0.75em;
+}
 .hidden,
 [hidden] {
   display: none !important;

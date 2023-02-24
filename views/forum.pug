@@ -10,44 +10,71 @@ block variables
     }
 
 mixin topic(icon, name, date, time, pseudoAuthor, nbrResponse, pseudoResponse, slug)
-  .message
-    .grid.m-grid2.l-grid2
-      div
+  .message.topic(style='position:relative')
+    a(href='/page/' + slug + '.html')
+      span(aria-hidden='true' style='position:absolute;inset:0')
+    .grid.m-grid3.l-grid3(style='position:relative')
+      .c2
         p
           svg.icon-inline(role='img' focusable='false')
             use(href='/sprites/util.svg#' + icon)
-          a(href='/page/' + slug + '.html' style='text-transform:uppercase') #{name}
+          a(href='/page/' + slug + '.html' style='font-variant:small-caps') #{name}
           | , #{date}, #{time} par 
           a.author(href='/page/person.html') #{pseudoAuthor}
-          | .
       div
         p(style='text-align:right')
           svg.icon-inline(role='img' focusable='false')
             use(href='/sprites/util.svg#bubbles')
-          |  #{nbrResponse} par 
-          a.author(href='/page/person.html') #{pseudoResponse}.
+          | #{nbrResponse}
+          if nbrResponse != 0
+            svg.icon-inline.scale70(role='img' focusable='false' style='margin-bottom:.2em; margin-left:1em')
+              use(href='/sprites/util.svg#arrow-right2')
+            a.author(href='/page/person.html') #{pseudoResponse}
 
 block main
   header(role='banner')
     h1.main-heading!= data._name
-  .grid.vertical-gap
-    +topic('quill', 'Title lorem ipsum dolor', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1 réponse', 'Jeanne d\'Arc', 'article')
-    +topic('quill', 'Title lorem ipsum dolor', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1 réponse', 'Jeanne d\'Arc', 'article')
-    +topic('quill', 'Title lorem ipsum dolor', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1 réponse', 'Jeanne d\'Arc', 'article')
-    +topic('quill', 'Title lorem ipsum dolor', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1 réponse', 'Jeanne d\'Arc', 'article')
-    +topic('quill', 'Title lorem ipsum dolor', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1 réponse', 'Jeanne d\'Arc', 'article')
-    +topic('quill', 'Title lorem ipsum dolor', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1 réponse', 'Jeanne d\'Arc', 'article')
-    +topic('quill', 'Title lorem ipsum dolor', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1 réponse', 'Jeanne d\'Arc', 'article')
-    +topic('quill', 'Title lorem ipsum dolor', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1 réponse', 'Jeanne d\'Arc', 'article')
-    +topic('quill', 'Title lorem ipsum dolor', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1 réponse', 'Jeanne d\'Arc', 'article')
-    +topic('quill', 'Title lorem ipsum dolor', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1 réponse', 'Jeanne d\'Arc', 'article')
-    +topic('quill', 'Title lorem ipsum dolor', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1 réponse', 'Jeanne d\'Arc', 'article')
-    +topic('quill', 'Title lorem ipsum dolor', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1 réponse', 'Jeanne d\'Arc', 'article')
-    +topic('quill', 'Title lorem ipsum dolor', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1 réponse', 'Jeanne d\'Arc', 'article')
-    +topic('quill', 'Title lorem ipsum dolor', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1 réponse', 'Jeanne d\'Arc', 'article')
-    +topic('quill', 'Title lorem ipsum dolor', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1 réponse', 'Jeanne d\'Arc', 'article')
-    +topic('quill', 'Title lorem ipsum dolor', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1 réponse', 'Jeanne d\'Arc', 'article')
-    +topic('quill', 'Title lorem ipsum dolor', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1 réponse', 'Jeanne d\'Arc', 'article')
-    +topic('quill', 'Title lorem ipsum dolor', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1 réponse', 'Jeanne d\'Arc', 'article')
-    +topic('quill', 'Title lorem ipsum dolor', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1 réponse', 'Jeanne d\'Arc', 'article')
-    +topic('quill', 'Title lorem ipsum dolor', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1 réponse', 'Jeanne d\'Arc', 'article')
+  - for (let i = 0; i < 11; i++)
+    .message.topic
+      a(href='/' aria-hidden='true')
+      div
+      div
+        h2
+          a(href='/')
+            //svg.icon-inline(role='img' focusable='false')
+            //  use(href='/svgs/compiled/svgs.20ea15c6.svg#edit')
+            | Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        p
+          svg.icon-inline(role='img' focusable='false')
+            use(href='/sprites/util.svg#quill')
+          | le 17 janvier 2022 par 
+          a(href='/') Jeanne d'Arc
+      div
+        p
+          svg.icon-inline(role='img' focusable='false')
+            use(href='/sprites/util.svg#bubbles')
+          | 3
+        p
+          a(href='#') Écriture & Tradition
+          a(href='#') Métaphysique
+//-
+  +topic('quill', 'Lorem ipsum dolor sit amet', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1', 'Jeanne d\'Arc', 'article')
+  +topic('quill', 'Consectetur adipiscing elit', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '0', '', 'article')
+  +topic('quill', 'Pellentesque gravida euismod nisl ac sodales', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1', 'Jeanne d\'Arc', 'article')
+  +topic('quill', 'Aliquam erat volutpat', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '3', 'Jeanne d\'Arc', 'article')
+  +topic('quill', 'Aenean volutpat diam eu tristique faucibus', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '2', 'Jeanne d\'Arc', 'article')
+  +topic('quill', 'Vestibulum vitae laoreet ligula', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1', 'Jeanne d\'Arc', 'article')
+  +topic('quill', 'Suspendisse potenti', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '4', 'Jeanne d\'Arc', 'article')
+  +topic('quill', 'Donec vel faucibus quam, vitae bibendum odio', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '5', 'Jeanne d\'Arc', 'article')
+  +topic('quill', 'In hac habitasse platea dictumst', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1', 'Jeanne d\'Arc', 'article')
+  +topic('quill', 'Ut vel libero ac velit tincidunt pellentesque eget at odio', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '0', '', 'article')
+  +topic('quill', 'Cras ac leo ut tortor ornare aliquam', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1', 'Jeanne d\'Arc', 'article')
+  +topic('quill', 'Mauris quis justo orci', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '3', 'Jeanne d\'Arc', 'article')
+  +topic('quill', 'Etiam ut sagittis est, id ultrices ipsum', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '2', 'Jeanne d\'Arc', 'article')
+  +topic('quill', 'In vel odio aliquet, ultrices tortor sit amet, dignissim purus', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1', 'Jeanne d\'Arc', 'article')
+  +topic('quill', 'Pellentesque hendrerit blandit placerat', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '5', 'Jeanne d\'Arc', 'article')
+  +topic('quill', 'Class aptent taciti sociosqu ad litora torquent per conubia nostra', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '7', 'Jeanne d\'Arc', 'article')
+  +topic('quill', 'Curabitur hendrerit sapien sed metus consectetur', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '9', 'Jeanne d\'Arc', 'article')
+  +topic('quill', 'Nam non lacus consequat, bibendum nisl eu', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '3', 'Jeanne d\'Arc', 'article')
+  +topic('quill', 'In id nunc vel ex efficitur venenatis id ac massa', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '8', 'Jeanne d\'Arc', 'article')
+  +topic('quill', 'Ut ultrices, velit eu finibus condimentum', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '2', 'Jeanne d\'Arc', 'article')

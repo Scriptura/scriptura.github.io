@@ -95,3 +95,49 @@ body::after
   @media (min-width: _sizeXXL)
     content: 'XXL'
 */
+
+.topic
+  --url: url(/medias/images/uploads/dawid-zawila-w300.webp)
+  position: relative
+  //display: grid
+  //grid-template-columns: 1fr 1fr
+  display: flex
+  flex-wrap: wrap
+  & > a // @note Permet à tout l'élément d'être cliquable (simulation d'imbrication des liens)
+    position: absolute
+    inset: 0
+    z-index: 1
+  & > :not(first-child) a // @note Rétablit le clique des liens de base.
+    position: relative
+    z-index: 3
+  & > :nth-child(2)
+    width: 3.5em
+    aspect-ratio: 1
+    margin: auto 1em auto 0
+    border-radius: 50%
+    //background-color: #d2b48c //#e9dac5
+    background-image: var(--url)
+    background-size: cover
+  & > :last-child
+    //margin: 1em 0 0 auto
+    margin-left: auto
+    text-align: right
+    & > :last-child
+      display: flex
+      gap: .5em
+      & a
+        //margin-left: .5em
+        padding: .25em .5em .25em 1.25em
+        background-color: #333
+        clip-path: polygon(.75em 0, 100% 0, 100% 100%, .75em 100%, 0 50%)
+  & h2
+    //all: unset
+    //font-variant: small-caps
+    //font-weight: normal
+    font-size: 1em
+    margin-block: .75em
+    //& a
+    //  color: #ff6347
+
+//svg.icon-inline
+//  background-color: #e9dac5
