@@ -37,25 +37,42 @@ block main
   - for (let i = 0; i < 11; i++)
     .message.topic
       a(href='/' aria-hidden='true')
-      div
-      div
+      .aaa(style='--img:url(/medias/images/uploads/dawid-zawila-w300.webp)')
+      .ttt
         h2
-          a(href='/')
-            //svg.icon-inline(role='img' focusable='false')
-            //  use(href='/svgs/compiled/svgs.20ea15c6.svg#edit')
-            | Lorem ipsum dolor sit amet, consectetur adipiscing elit
+          a(href='/') Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        p
+          svg.icon-inline(role='img' focusable='false')
+            use(href='/sprites/util.svg#bubbles')
+          | 5
+      .uuu
         p
           svg.icon-inline(role='img' focusable='false')
             use(href='/sprites/util.svg#quill')
           | le 17 janvier 2022 par 
-          a(href='/') Jeanne d'Arc
-      div
+          a(href='/page/person.html') Jeanne d'Arc
+        p
+          a(href='#') Écriture & Tradition
+          a(href='#') Origène
+          a(href='#') Paroles des Pères
+    .message.topic
+      a(href='/' aria-hidden='true')
+      .aaa(style='--img:url(/medias/images/uploads/tanner-mardis-w300.webp)')
+      .ttt
+        h2
+          a(href='/') Vestibulum ut facilisis turpis, vitae efficitur magna
         p
           svg.icon-inline(role='img' focusable='false')
             use(href='/sprites/util.svg#bubbles')
-          | 3
+          | 17
+      .uuu
         p
-          a(href='#') Écriture & Tradition
+          svg.icon-inline(role='img' focusable='false')
+            use(href='/sprites/util.svg#quill')
+          | le 17 janvier 2022 par 
+          a(href='/page/person.html') Henri de Lubac
+        p
+          a(href='#') Sur le mal
           a(href='#') Métaphysique
 //-
   +topic('quill', 'Lorem ipsum dolor sit amet', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1', 'Jeanne d\'Arc', 'article')
