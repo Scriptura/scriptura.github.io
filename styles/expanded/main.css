@@ -2894,7 +2894,7 @@ form > [class*="grid"] > .input {
 .topic .uuu > :last-child {
   display: flex;
   flex-wrap: wrap;
-  gap: 0 0.5em;
+  gap: 0.5em 0.5em;
   font-size: 0.8em;
 }
 .topic .uuu > :last-child a {
