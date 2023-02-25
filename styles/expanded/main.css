@@ -2824,13 +2824,13 @@ form > [class*="grid"] > .input {
   grid-template-rows: repeat(2, auto);
   gap: 0 1em;
 }
-@media (max-width: 55em) {
+@media (max-width: 32.01em) {
   .topic {
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas: 'ttt' 'uuu';
   }
 }
-@media (min-width: 55em) {
+@media (min-width: 32.01em) {
   .topic {
     grid-template-columns: 4em minmax(0, 1fr);
     grid-template-areas: 'aaa ttt' 'aaa uuu';
@@ -2841,6 +2841,11 @@ form > [class*="grid"] > .input {
   inset: 0;
   z-index: 1;
 }
+.topic > a:focus ~ * h2 a,
+.topic > a:hover ~ * h2 a,
+.topic > a:active ~ * h2 a {
+  text-decoration: underline;
+}
 .topic > * a {
   position: relative;
   z-index: 3;
@@ -2848,12 +2853,12 @@ form > [class*="grid"] > .input {
 .topic .aaa {
   grid-area: aaa;
 }
-@media (max-width: 55em) {
+@media (max-width: 32.01em) {
   .topic .aaa {
     display: none;
   }
 }
-@media (min-width: 55em) {
+@media (min-width: 32.01em) {
   .topic .aaa {
     width: 3.5em;
     aspect-ratio: 1;

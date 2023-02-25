@@ -36,11 +36,11 @@ block main
     h1.main-heading!= data._name
   - for (let i = 0; i < 11; i++)
     .message.topic
-      a(href='/' aria-hidden='true')
+      a(href='/page/article.html' aria-hidden='true')
       .aaa(style='--img:url(/medias/images/uploads/dawid-zawila-w300.webp)')
       .ttt
         h2
-          a(href='/') Lorem ipsum dolor sit amet, consectetur adipiscing elit
+          a(href='/page/article.html') Lorem ipsum dolor sit amet consectetur adipiscing elit
         p
           svg.icon-inline(role='img' focusable='false')
             use(href='/sprites/util.svg#bubbles')
@@ -52,15 +52,15 @@ block main
           | le 17 janvier 2023 par 
           a(href='/page/person.html') Jeanne d'Arc
         p
-          a(href='#') Écriture & Tradition
-          a(href='#') Apologétique
-          a(href='#') Paroles des Pères
+          a(href='/page/cards.html') Écriture & Tradition
+          a(href='/page/cards.html') Apologétique
+          a(href='/page/cards.html') Paroles des Pères
     .message.topic
-      a(href='/' aria-hidden='true')
+      a(href='/page/article.html' aria-hidden='true')
       .aaa(style='--img:url(/medias/images/uploads/tanner-mardis-w300.webp)')
       .ttt
         h2
-          a(href='/') Vestibulum ut facilisis turpis, vitae efficitur magna
+          a(href='/page/article.html') Vestibulum ut facilisis turpis, vitae efficitur magna
         p
           svg.icon-inline(role='img' focusable='false')
             use(href='/sprites/util.svg#bubbles')
@@ -72,8 +72,29 @@ block main
           | le 2 février 2023 par 
           a(href='/page/person.html') Henri de Lubac
         p
-          a(href='#') Sur le mal
-          a(href='#') Métaphysique
+          a(href='/page/cards.html') Sur le mal
+          a(href='/page/cards.html') Métaphysique
+    .message.topic
+      a(href='/page/article.html' aria-hidden='true')
+      .aaa(style='--img:url(/medias/images/uploads/nicolas-hoizey-w300.webp')
+      .ttt
+        h2
+          a(href='/page/article.html') Praesent in neque pharetra tincidunt metus sed lobortis neque
+        p
+          svg.icon-inline(role='img' focusable='false')
+            use(href='/sprites/util.svg#bubbles')
+          | 2
+      .uuu
+        p
+          svg.icon-inline(role='img' focusable='false')
+            use(href='/sprites/util.svg#share')
+          | le 2 février 2023 par 
+          a(href='/page/person.html') Origène
+        p
+          a(href='/page/cards.html') Apologétique
+          a(href='/page/cards.html') Sacrements
+          a(href='/page/cards.html') Filiation
+          a(href='/page/cards.html') Traduction
 //-
   +topic('quill', 'Lorem ipsum dolor sit amet', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1', 'Jeanne d\'Arc', 'article')
   +topic('quill', 'Consectetur adipiscing elit', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '0', '', 'article')

@@ -96,7 +96,7 @@ body::after
     content: 'XXL'
 */
 
-_sizeT = 55em
+_sizeT = 32.01em
 
 .topic
   --img: url(/medias/images/uploads/dawid-zawila-w300.webp)
@@ -114,6 +114,11 @@ _sizeT = 55em
     position: absolute
     inset: 0
     z-index: 1
+    &:focus
+    &:hover
+    &:active
+      & ~ * h2 a
+        text-decoration: underline
   & > * a // @note Rétablit le clique des liens de base.
     position: relative
     z-index: 3
