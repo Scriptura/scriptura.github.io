@@ -2875,6 +2875,10 @@ form > [class*="grid"] > .input {
 }
 .topic .uuu {
   grid-area: uuu;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  gap: 1em;
 }
 .topic .uuu p {
   margin-top: -0.5em;
@@ -2884,6 +2888,7 @@ form > [class*="grid"] > .input {
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 0.5em;
+  font-size: 0.8em;
 }
 .topic .uuu > :last-child a {
   padding: 0.25em 0.5em 0.25em 1.25em;

@@ -136,13 +136,20 @@ body::after
       flex-shrink: 0
   & .uuu
     grid-area: uuu
+    display: flex
+    flex-wrap: nowrap
+    justify-content: space-between
+    gap: _gap
     & p
       margin-top: -.5em
+    //& > :first-child
+    //  flex-shrink: 0
     & > :last-child
       display: flex
       flex-wrap: wrap
       justify-content: flex-end
       gap: .5em
+      font-size: .8em
       & a
         padding: .25em .5em .25em 1.25em
         white-space: nowrap
