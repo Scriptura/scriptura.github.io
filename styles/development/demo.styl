@@ -96,15 +96,17 @@ body::after
     content: 'XXL'
 */
 
+_sizeT = 55em
+
 .topic
   --img: url(/medias/images/uploads/dawid-zawila-w300.webp)
   position: relative
   display: grid
   grid-template-rows: repeat(2, auto)
-  @media (max-width: 60em)
+  @media (max-width: _sizeT)
     grid-template-columns: minmax(0, 1fr)
     grid-template-areas: 'ttt' 'uuu'
-  @media (min-width: 60em)
+  @media (min-width: _sizeT)
     grid-template-columns: 4em minmax(0, 1fr)
     grid-template-areas: 'aaa ttt' 'aaa uuu'
   gap: 0 _gap
@@ -117,38 +119,38 @@ body::after
     z-index: 3
   & .aaa
     grid-area: aaa
-    @media (max-width: 60em)
+    @media (max-width: _sizeT)
       display: none
-    @media (min-width: 60em)
+    @media (min-width: _sizeT)
       width: 3.5em
       aspect-ratio: 1
-      margin: auto 1em auto 0
+      margin: auto
       border-radius: 50%
       background: #222 var(--img)
       background-size: cover
   & > .ttt
     grid-area: ttt
     display: flex
-    flex-wrap: nowrap
+    //flex-wrap: nowrap
     justify-content: space-between
-    gap: _gap
+    gap: 0 _gap
+    & > *
+      margin-bottom: .15em
     & p
       flex-shrink: 0
   & .uuu
     grid-area: uuu
     display: flex
-    flex-wrap: nowrap
+    flex-wrap: wrap
     justify-content: space-between
-    gap: _gap
-    & p
-      margin-top: -.5em
-    //& > :first-child
-    //  flex-shrink: 0
+    align-items: baseline
+    gap: 0 _gap
+    & > *
+      margin-top: .15em
     & > :last-child
       display: flex
       flex-wrap: wrap
-      justify-content: flex-end
-      gap: .5em
+      gap: 0 (_gap / 2)
       font-size: .8em
       & a
         padding: .25em .5em .25em 1.25em
