@@ -2817,6 +2817,9 @@ form > [class*="grid"] > .input {
     transform: translate(2.85em, 0.9em) rotate(45deg) !important;
   }
 }
+.forum {
+  padding-left: 0;
+}
 .topic {
   --img: url("/medias/images/uploads/dawid-zawila-w300.webp");
   position: relative;
@@ -2836,30 +2839,30 @@ form > [class*="grid"] > .input {
     grid-template-areas: 'aaa ttt' 'aaa uuu';
   }
 }
-.topic > a {
+.topic > .topic-link {
   position: absolute;
   inset: 0;
   z-index: 1;
 }
-.topic > a:focus ~ * h2 a,
-.topic > a:hover ~ * h2 a,
-.topic > a:active ~ * h2 a {
+.topic > .topic-link:focus ~ * h2 a,
+.topic > .topic-link:hover ~ * h2 a,
+.topic > .topic-link:active ~ * h2 a {
   text-decoration: underline;
 }
 .topic > * a {
   position: relative;
   z-index: 3;
 }
-.topic .aaa {
+.topic > :nth-child(2) {
   grid-area: aaa;
 }
 @media (max-width: 32.01em) {
-  .topic .aaa {
+  .topic > :nth-child(2) {
     display: none;
   }
 }
 @media (min-width: 32.01em) {
-  .topic .aaa {
+  .topic > :nth-child(2) {
     width: 3.5em;
     aspect-ratio: 1;
     margin: auto;
@@ -2868,36 +2871,45 @@ form > [class*="grid"] > .input {
     background-size: cover;
   }
 }
-.topic > .ttt {
-  grid-area: ttt;
+.topic > :nth-child(3),
+.topic > :nth-child(4) {
   display: flex;
-  justify-content: space-between;
-  gap: 0 1em;
-}
-.topic > .ttt > * {
-  margin-bottom: 0.15em;
-}
-.topic > .ttt p {
-  flex-shrink: 0;
-}
-.topic .uuu {
-  grid-area: uuu;
-  display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
   align-items: baseline;
   gap: 0 1em;
 }
-.topic .uuu > * {
+.topic > :nth-child(3) {
+  grid-area: ttt;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0 1em;
+}
+.topic > :nth-child(3) > * {
+  margin-bottom: 0.15em;
+}
+.topic > :nth-child(3) > div {
+  flex-shrink: 0;
+}
+.topic > :nth-child(4) {
+  flex-wrap: wrap;
+}
+.topic > :nth-child(4) p {
   margin-top: 0.15em;
 }
-.topic .uuu > :last-child {
+.topic > :nth-child(4) ul {
+  all: unset;
+  list-style: none;
   display: flex;
   flex-wrap: wrap;
   gap: 0.5em 0.5em;
   font-size: 0.8em;
+  margin-bottom: 0.5em;
 }
-.topic .uuu > :last-child a {
+.topic > :nth-child(4) ul li {
+  margin-bottom: 0.5em;
+}
+.topic > :nth-child(4) ul a {
   padding: 0.25em 0.5em 0.25em 1.25em;
   white-space: nowrap;
   background-color: #333;

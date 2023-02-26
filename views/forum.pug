@@ -11,90 +11,81 @@ block variables
 
 mixin topic(icon, name, date, time, pseudoAuthor, nbrResponse, pseudoResponse, slug)
   .message.topic(style='position:relative')
-    a(href='/page/' + slug + '.html')
-      span(aria-hidden='true' style='position:absolute;inset:0')
-    .grid.m-grid3.l-grid3(style='position:relative')
-      .c2
-        p
-          svg.icon-inline(role='img' focusable='false')
-            use(href='/sprites/util.svg#' + icon)
-          a(href='/page/' + slug + '.html' style='font-variant:small-caps') #{name}
-          | , #{date}, #{time} par 
-          a.author(href='/page/person.html') #{pseudoAuthor}
-      div
-        p(style='text-align:right')
-          svg.icon-inline(role='img' focusable='false')
-            use(href='/sprites/util.svg#bubbles')
-          | #{nbrResponse}
-          if nbrResponse != 0
-            svg.icon-inline.scale70(role='img' focusable='false' style='margin-bottom:.2em; margin-left:1em')
-              use(href='/sprites/util.svg#arrow-right2')
-            a.author(href='/page/person.html') #{pseudoResponse}
 
 block main
   header(role='banner')
     h1.main-heading!= data._name
-  - for (let i = 0; i < 7; i++)
-    .message.topic
-      a(href='/page/article.html' aria-hidden='true')
-      .aaa(style='--img:url(/medias/images/uploads/dawid-zawila-w300.webp)')
-      .ttt
-        h2
-          a(href='/page/article.html') Lorem ipsum dolor sit amet consectetur adipiscing elit
-        p
-          svg.icon-inline(role='img' focusable='false')
-            use(href='/sprites/util.svg#bubbles')
-          | 5
-      .uuu
-        p
-          svg.icon-inline(role='img' focusable='false')
-            use(href='/sprites/util.svg#quill')
-          | le 17 janvier 2023 par 
-          a(href='/page/person.html') Jeanne d'Arc
-        p
-          a(href='/page/cards.html') Écriture & Tradition
-          a(href='/page/cards.html') Apologétique
-          a(href='/page/cards.html') Paroles des Pères
-    .message.topic
-      a(href='/page/article.html' aria-hidden='true')
-      .aaa(style='--img:url(/medias/images/uploads/tanner-mardis-w300.webp)')
-      .ttt
-        h2
-          a(href='/page/article.html') Vestibulum ut facilisis turpis, vitae efficitur magna
-        p
-          svg.icon-inline(role='img' focusable='false')
-            use(href='/sprites/util.svg#bubbles')
-          | 17
-      .uuu
-        p
-          svg.icon-inline(role='img' focusable='false')
-            use(href='/sprites/util.svg#share')
-          | le 2 février 2023 par 
-          a(href='/page/person.html') Henri de Lubac
-        p
-          a(href='/page/cards.html') Sur le mal
-          a(href='/page/cards.html') Métaphysique
-    .message.topic
-      a(href='/page/article.html' aria-hidden='true')
-      .aaa(style='--img:url(/medias/images/uploads/nicolas-hoizey-w300.webp')
-      .ttt
-        h2
-          a(href='/page/article.html') Praesent in neque pharetra tincidunt metus sed lobortis neque
-        p
-          svg.icon-inline(role='img' focusable='false')
-            use(href='/sprites/util.svg#bubbles')
-          | 2
-      .uuu
-        p
-          svg.icon-inline(role='img' focusable='false')
-            use(href='/sprites/util.svg#share')
-          | le 2 février 2023 par 
-          a(href='/page/person.html') Origène
-        p
-          a(href='/page/cards.html') Apologétique
-          a(href='/page/cards.html') Sacrements
-          a(href='/page/cards.html') Filiation
-          a(href='/page/cards.html') Traduction
+  ul.forum
+    - for (let i = 0; i < 7; i++)
+      li.message.topic
+        a.topic-link(href='/page/article.html' aria-hidden='true')
+        div(style='--img:url(/medias/images/uploads/dawid-zawila-w300.webp)')
+        div
+          h2
+            a(href='/page/article.html') Lorem ipsum dolor sit amet consectetur adipiscing elit
+          div
+            svg.icon-inline(role='img' focusable='false')
+              use(href='/sprites/util.svg#bubbles')
+            | 5
+        div
+          p
+            svg.icon-inline(role='img' focusable='false')
+              use(href='/sprites/util.svg#quill')
+            | le 17 janvier 2023 par 
+            a(href='/page/person.html') Jeanne d'Arc
+          ul
+            li
+              a(href='/page/cards.html') Écriture & Tradition
+            li
+              a(href='/page/cards.html') Apologétique
+            li
+              a(href='/page/cards.html') Paroles des Pères
+      .message.topic
+        a.topic-link(href='/page/article.html' aria-hidden='true')
+        div(style='--img:url(/medias/images/uploads/tanner-mardis-w300.webp)')
+        div
+          h2
+            a(href='/page/article.html') Vestibulum ut facilisis turpis, vitae efficitur magna
+          div
+            svg.icon-inline(role='img' focusable='false')
+              use(href='/sprites/util.svg#bubbles')
+            | 17
+        div
+          p
+            svg.icon-inline(role='img' focusable='false')
+              use(href='/sprites/util.svg#share')
+            | le 2 février 2023 par 
+            a(href='/page/person.html') Henri de Lubac
+          ul
+            li
+              a(href='/page/cards.html') Sur le mal
+            li
+              a(href='/page/cards.html') Métaphysique
+      .message.topic
+        a.topic-link(href='/page/article.html' aria-hidden='true')
+        div(style='--img:url(/medias/images/uploads/nicolas-hoizey-w300.webp')
+        div
+          h2
+            a(href='/page/article.html') Praesent in neque pharetra tincidunt metus sed lobortis neque
+          div
+            svg.icon-inline(role='img' focusable='false')
+              use(href='/sprites/util.svg#bubbles')
+            | 2
+        div
+          p
+            svg.icon-inline(role='img' focusable='false')
+              use(href='/sprites/util.svg#share')
+            | le 2 février 2023 par 
+            a(href='/page/person.html') Origène
+          ul
+            li
+              a(href='/page/cards.html') Apologétique
+            li
+              a(href='/page/cards.html') Sacrements
+            li
+              a(href='/page/cards.html') Filiation
+            li
+              a(href='/page/cards.html') Traduction
 //-
   +topic('quill', 'Lorem ipsum dolor sit amet', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1', 'Jeanne d\'Arc', 'article')
   +topic('quill', 'Consectetur adipiscing elit', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '0', '', 'article')
