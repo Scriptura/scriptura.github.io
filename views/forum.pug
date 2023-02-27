@@ -17,7 +17,7 @@ block main
     h1.main-heading!= data._name
   ul.forum
     - for (let i = 0; i < 7; i++)
-      li.message.topic
+      li.topic
         a.topic-link(href='/page/article.html' aria-hidden='true')
         div(style='--img:url(/medias/images/uploads/dawid-zawila-w300.webp)')
         div
@@ -26,7 +26,7 @@ block main
           div
             svg.icon-inline(role='img' focusable='false')
               use(href='/sprites/util.svg#bubbles')
-            | 5
+            | 0
         div
           p
             svg.icon-inline(role='img' focusable='false')
@@ -40,7 +40,7 @@ block main
               a(href='/page/cards.html') Apologétique
             li
               a(href='/page/cards.html') Paroles des Pères
-      .message.topic
+      li.topic
         a.topic-link(href='/page/article.html' aria-hidden='true')
         div(style='--img:url(/medias/images/uploads/tanner-mardis-w300.webp)')
         div
@@ -61,7 +61,7 @@ block main
               a(href='/page/cards.html') Sur le mal
             li
               a(href='/page/cards.html') Métaphysique
-      .message.topic
+      li.topic
         a.topic-link(href='/page/article.html' aria-hidden='true')
         div(style='--img:url(/medias/images/uploads/nicolas-hoizey-w300.webp')
         div

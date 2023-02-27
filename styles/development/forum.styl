@@ -1,0 +1,83 @@
+_forumSize = 32.01em
+_forumColor1 = _colorG + 7%
+
+.forum
+  all: unset
+  display: grid
+  gap: _gap
+
+.topic
+  --img: url(/medias/images/uploads/dawid-zawila-w300.webp)
+  position: relative
+  display: grid
+  grid-template-rows: repeat(2, auto)
+  padding-inline: 1em
+  background-color: _forumColor1
+  border-radius: _r2
+  box-shadow: _shadow5
+  @media (max-width: _forumSize)
+    grid-template-columns: minmax(0, 1fr)
+    grid-template-areas: 'ttt' 'uuu'
+  @media (min-width: _forumSize)
+    grid-template-columns: 4em minmax(0, 1fr)
+    grid-template-areas: 'aaa ttt' 'aaa uuu'
+  gap: 0 _gap
+  & > .topic-link // @note Permet à tout l'élément d'être cliquable (simulation d'imbrication des liens)
+    position: absolute
+    inset: 0
+    z-index: 1
+    &:focus
+    &:hover
+    &:active
+      & ~ * h2 a
+        text-decoration: underline
+  & > * a // @note Rétablit le clique des liens de base.
+    position: relative
+    z-index: 3
+  & > :nth-child(2)
+    grid-area: aaa
+    @media (max-width: _forumSize)
+      display: none
+    @media (min-width: _forumSize)
+      width: 3.5em
+      aspect-ratio: 1
+      margin: auto
+      border-radius: 50%
+      background: #222 var(--img)
+      background-size: cover
+  & > :nth-child(3)
+  & > :nth-child(4)
+    display: flex
+    justify-content: space-between
+    align-items: baseline
+    gap: 0 _gap
+  & :where(p, ul, li)
+    all: unset
+  & > :nth-child(3)
+    grid-area: ttt
+    gap: 0 _gap
+    & h2
+      margin-block: 1.1em 0
+    & div
+      flex-shrink: 0
+  & > :nth-child(4)
+    flex-wrap: wrap
+    & p
+      margin-block: .25em 1em
+    & ul
+      display: flex
+      flex-wrap: wrap
+      gap: (_gap / 2) (_gap / 2)
+      font-size: .8em
+      & li
+        margin-bottom: .5em
+      & a
+        padding: .25em .5em .25em 1.25em
+        white-space: nowrap
+        background-color: #333
+        clip-path: polygon(.75em 0, 100% 0, 100% 100%, .75em 100%, 0 50%)
+  & h2
+    //all: unset
+    //font-variant: small-caps
+    //font-weight: normal
+    font-size: 1em

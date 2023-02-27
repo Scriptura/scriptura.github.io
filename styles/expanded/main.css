@@ -2817,111 +2817,6 @@ form > [class*="grid"] > .input {
     transform: translate(2.85em, 0.9em) rotate(45deg) !important;
   }
 }
-.forum {
-  padding-left: 0;
-}
-.topic {
-  --img: url("/medias/images/uploads/dawid-zawila-w300.webp");
-  position: relative;
-  display: grid;
-  grid-template-rows: repeat(2, auto);
-  gap: 0 1em;
-}
-@media (max-width: 32.01em) {
-  .topic {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: 'ttt' 'uuu';
-  }
-}
-@media (min-width: 32.01em) {
-  .topic {
-    grid-template-columns: 4em minmax(0, 1fr);
-    grid-template-areas: 'aaa ttt' 'aaa uuu';
-  }
-}
-.topic > .topic-link {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-}
-.topic > .topic-link:focus ~ * h2 a,
-.topic > .topic-link:hover ~ * h2 a,
-.topic > .topic-link:active ~ * h2 a {
-  text-decoration: underline;
-}
-.topic > * a {
-  position: relative;
-  z-index: 3;
-}
-.topic > :nth-child(2) {
-  grid-area: aaa;
-}
-@media (max-width: 32.01em) {
-  .topic > :nth-child(2) {
-    display: none;
-  }
-}
-@media (min-width: 32.01em) {
-  .topic > :nth-child(2) {
-    width: 3.5em;
-    aspect-ratio: 1;
-    margin: auto;
-    border-radius: 50%;
-    background: #222 var(--img);
-    background-size: cover;
-  }
-}
-.topic > :nth-child(3),
-.topic > :nth-child(4) {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 0 1em;
-}
-.topic > :nth-child(3) {
-  grid-area: ttt;
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 0 1em;
-}
-.topic > :nth-child(3) > * {
-  margin-bottom: 0.15em;
-}
-.topic > :nth-child(3) > div {
-  flex-shrink: 0;
-}
-.topic > :nth-child(4) {
-  flex-wrap: wrap;
-}
-.topic > :nth-child(4) p {
-  margin-top: 0.15em;
-}
-.topic > :nth-child(4) ul {
-  all: unset;
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5em 0.5em;
-  font-size: 0.8em;
-  margin-bottom: 0.5em;
-}
-.topic > :nth-child(4) ul li {
-  margin-bottom: 0.5em;
-}
-.topic > :nth-child(4) ul a {
-  padding: 0.25em 0.5em 0.25em 1.25em;
-  white-space: nowrap;
-  background-color: #333;
-  -webkit-clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
-          clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
-}
-.topic h2 {
-  font-size: 1em;
-}
-.topic {
-  margin-block: 0.75em 0;
-}
 .hidden,
 [hidden] {
   display: none !important;
@@ -3361,6 +3256,113 @@ a[aria-disabled=true]:active {
   right: 0;
   transform: translate(2.35em, -1.4em) rotate(135deg);
 }
+.forum {
+  all: unset;
+  display: grid;
+  gap: 1em;
+}
+.topic {
+  --img: url("/medias/images/uploads/dawid-zawila-w300.webp");
+  position: relative;
+  display: grid;
+  grid-template-rows: repeat(2, auto);
+  padding-inline: 1em;
+  background-color: #474747;
+  border-radius: 0.3em;
+  box-shadow: 0.5rem 0.5rem 2rem rgba(0,0,0,0.15);
+  gap: 0 1em;
+}
+@media (max-width: 32.01em) {
+  .topic {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'ttt' 'uuu';
+  }
+}
+@media (min-width: 32.01em) {
+  .topic {
+    grid-template-columns: 4em minmax(0, 1fr);
+    grid-template-areas: 'aaa ttt' 'aaa uuu';
+  }
+}
+.topic > .topic-link {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.topic > .topic-link:focus ~ * h2 a,
+.topic > .topic-link:hover ~ * h2 a,
+.topic > .topic-link:active ~ * h2 a {
+  text-decoration: underline;
+}
+.topic > * a {
+  position: relative;
+  z-index: 3;
+}
+.topic > :nth-child(2) {
+  grid-area: aaa;
+}
+@media (max-width: 32.01em) {
+  .topic > :nth-child(2) {
+    display: none;
+  }
+}
+@media (min-width: 32.01em) {
+  .topic > :nth-child(2) {
+    width: 3.5em;
+    aspect-ratio: 1;
+    margin: auto;
+    border-radius: 50%;
+    background: #222 var(--img);
+    background-size: cover;
+  }
+}
+.topic > :nth-child(3),
+.topic > :nth-child(4) {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0 1em;
+}
+.topic :where(p,
+.topic ul,
+.topic li) {
+  all: unset;
+}
+.topic > :nth-child(3) {
+  grid-area: ttt;
+  gap: 0 1em;
+}
+.topic > :nth-child(3) h2 {
+  margin-block: 1.1em 0;
+}
+.topic > :nth-child(3) div {
+  flex-shrink: 0;
+}
+.topic > :nth-child(4) {
+  flex-wrap: wrap;
+}
+.topic > :nth-child(4) p {
+  margin-block: 0.25em 1em;
+}
+.topic > :nth-child(4) ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em 0.5em;
+  font-size: 0.8em;
+}
+.topic > :nth-child(4) ul li {
+  margin-bottom: 0.5em;
+}
+.topic > :nth-child(4) ul a {
+  padding: 0.25em 0.5em 0.25em 1.25em;
+  white-space: nowrap;
+  background-color: #333;
+  -webkit-clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
+          clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
+}
+.topic h2 {
+  font-size: 1em;
+}
 html,
 .logo-nav,
 .nav,
@@ -3390,6 +3392,7 @@ html,
 .tab-summary,
 .audio-player,
 .progress-bar div,
+.topic,
 [class*=demo-items] > *,
 .demo-item {
   background-image: url("data:image/png;base64,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");
