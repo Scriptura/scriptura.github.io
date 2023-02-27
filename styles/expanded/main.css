@@ -3349,6 +3349,7 @@ a[aria-disabled=true]:active {
   flex-wrap: wrap;
   gap: 0.5em 0.5em;
   font-size: 0.8em;
+  margin-bottom: 1em;
 }
 .topic > :nth-child(4) ul li {
   margin-bottom: 0.5em;
