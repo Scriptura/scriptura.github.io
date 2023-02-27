@@ -3359,7 +3359,7 @@ a[aria-disabled=true]:active {
           clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
 }
 .topic h2 {
-  margin-bottom: 0;
+  margin-block: 1.25em 0;
   font-size: 1em;
 }
 html,
