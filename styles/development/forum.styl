@@ -1,4 +1,4 @@
-_forumSize = 32.01em
+_forumSize = 35.01em
 _forumColor1 = _colorG + 7%
 
 .forum
@@ -26,10 +26,11 @@ _forumColor1 = _colorG + 7%
     position: absolute
     inset: 0
     z-index: 1
-    &:focus
+    //&:focus // @note Pas de focus car tabindex='-1'
     &:hover
     &:active
       & ~ * h2 a
+        color: _color5
         text-decoration: underline
   & > * a // @note Rétablit le clique des liens de base.
     position: relative
@@ -55,7 +56,6 @@ _forumColor1 = _colorG + 7%
     all: unset
   & > :nth-child(3)
     grid-area: ttt
-    gap: 0 _gap
     & div
       flex-shrink: 0
   & > :nth-child(4)
@@ -68,6 +68,7 @@ _forumColor1 = _colorG + 7%
       gap: (_gap / 2) (_gap / 2)
       font-size: .8em
       margin-bottom: 1em
+      margin-left: auto
       & li
         margin-bottom: .5em
       & a
@@ -76,9 +77,8 @@ _forumColor1 = _colorG + 7%
         background-color: #333
         clip-path: polygon(.75em 0, 100% 0, 100% 100%, .75em 100%, 0 50%)
   & h2
-    //all: unset
-    //font-variant: small-caps
-    //font-weight: normal
+    all: unset
     margin-block: 1.25em 0
-
-    font-size: 1em
+    //font-family: _fontName
+    font-weight: bold
+    //font-size: 1em

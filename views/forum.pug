@@ -9,31 +9,28 @@ block variables
       _description: 'Forum de démonstration.'
     }
 
-mixin topic(icon, name, date, time, pseudoAuthor, nbrResponse, pseudoResponse, slug)
-  .message.topic(style='position:relative')
-
 block main
   header(role='banner')
     h1.main-heading!= data._name
   ul.forum
     - for (let i = 0; i < 7; i++)
       li.topic
-        a.topic-link(href='/page/article.html' aria-hidden='true')
+        a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
         div(style='--img:url(/medias/images/uploads/dawid-zawila-w300.webp)')
         div
           h2
             a(href='/page/article.html') Lorem ipsum dolor sit amet consectetur adipiscing elit
-          div
+          div(aria-label='Nombre de commentaires')
             svg.icon-inline(role='img' focusable='false')
               use(href='/sprites/util.svg#bubbles')
             | 0
         div
-          p
+          p(aria-label='Sujet créé')
             svg.icon-inline(role='img' focusable='false')
               use(href='/sprites/util.svg#quill')
-            | le 17 janvier 2023 par 
+            | le 17 janvier 2023 à 9h31 par 
             a(href='/page/person.html') Jeanne d'Arc
-          ul
+          ul(aria-label=' Mots clefs')
             li
               a(href='/page/cards.html') Écriture & Tradition
             li
@@ -41,43 +38,43 @@ block main
             li
               a(href='/page/cards.html') Paroles des Pères
       li.topic
-        a.topic-link(href='/page/article.html' aria-hidden='true')
+        a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
         div(style='--img:url(/medias/images/uploads/tanner-mardis-w300.webp)')
         div
           h2
             a(href='/page/article.html') Vestibulum ut facilisis turpis, vitae efficitur magna
-          div
+          div(aria-label='Nombre de commentaires')
             svg.icon-inline(role='img' focusable='false')
               use(href='/sprites/util.svg#bubbles')
             | 17
         div
-          p
+          p(aria-label='Dernière réponse')
             svg.icon-inline(role='img' focusable='false')
               use(href='/sprites/util.svg#share')
-            | le 2 février 2023 par 
+            | le 15 janvier 2023 à 21h15 par 
             a(href='/page/person.html') Henri de Lubac
-          ul
+          ul(aria-label=' Mots clefs')
             li
               a(href='/page/cards.html') Sur le mal
             li
               a(href='/page/cards.html') Métaphysique
       li.topic
-        a.topic-link(href='/page/article.html' aria-hidden='true')
+        a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
         div(style='--img:url(/medias/images/uploads/nicolas-hoizey-w300.webp')
         div
           h2
             a(href='/page/article.html') Praesent in neque pharetra tincidunt metus sed lobortis neque
-          div
+          div(aria-label='Nombre de commentaires')
             svg.icon-inline(role='img' focusable='false')
               use(href='/sprites/util.svg#bubbles')
             | 2
         div
-          p
+          p(aria-label='Dernière réponse')
             svg.icon-inline(role='img' focusable='false')
               use(href='/sprites/util.svg#share')
-            | le 2 février 2023 par 
+            | le 15 janvier 2023 à 17h42 par 
             a(href='/page/person.html') Origène
-          ul
+          ul(aria-label=' Mots clefs')
             li
               a(href='/page/cards.html') Apologétique
             li
@@ -87,7 +84,7 @@ block main
             li
               a(href='/page/cards.html') Traduction
 //-
-  +topic('quill', 'Lorem ipsum dolor sit amet', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1', 'Jeanne d\'Arc', 'article')
+  +topic('/medias/images/uploads/dawid-zawila-w300.webp', 'Lorem ipsum dolor sit amet', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1', 'Jeanne d\'Arc', 'article')
   +topic('quill', 'Consectetur adipiscing elit', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '0', '', 'article')
   +topic('quill', 'Pellentesque gravida euismod nisl ac sodales', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1', 'Jeanne d\'Arc', 'article')
   +topic('quill', 'Aliquam erat volutpat', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '3', 'Jeanne d\'Arc', 'article')
