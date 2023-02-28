@@ -28,8 +28,9 @@ block main
           p(aria-label='Sujet créé')
             svg.icon-inline(role='img' focusable='false')
               use(href='/sprites/util.svg#quill')
-            | le 17 janvier 2023 à 9h31 par 
+            | par 
             a(href='/page/person.html') Jeanne d'Arc
+            |  aujourd'hui à 9h31
           ul(aria-label=' Mots clefs')
             li
               a(href='/page/cards.html') Écriture & Tradition
@@ -51,8 +52,9 @@ block main
           p(aria-label='Dernière réponse')
             svg.icon-inline(role='img' focusable='false')
               use(href='/sprites/util.svg#share')
-            | le 15 janvier 2023 à 21h15 par 
+            | par 
             a(href='/page/person.html') Henri de Lubac
+            |  le 15 janvier 2023
           ul(aria-label=' Mots clefs')
             li
               a(href='/page/cards.html') Sur le mal
@@ -72,8 +74,9 @@ block main
           p(aria-label='Dernière réponse')
             svg.icon-inline(role='img' focusable='false')
               use(href='/sprites/util.svg#share')
-            | le 15 janvier 2023 à 17h42 par 
+            | par 
             a(href='/page/person.html') Origène
+            |  le 9 janvier 2023
           ul(aria-label=' Mots clefs')
             li
               a(href='/page/cards.html') Apologétique
@@ -83,6 +86,28 @@ block main
               a(href='/page/cards.html') Filiation
             li
               a(href='/page/cards.html') Traduction
+      li.topic
+        a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
+        div(style='--img:url(/medias/images/uploads/pisit-heng-w300.webp')
+        div
+          h2
+            a(href='/page/article.html') Cras viverra nunc ut ex egestas
+          div(aria-label='Nombre de commentaires')
+            svg.icon-inline(role='img' focusable='false')
+              use(href='/sprites/util.svg#bubbles')
+            | 5
+        div
+          p(aria-label='Dernière réponse')
+            svg.icon-inline(role='img' focusable='false')
+              use(href='/sprites/util.svg#share')
+            | par 
+            a(href='/page/person.html') Eusèbe de Césarée
+            |  le 16 janvier 2023
+          ul(aria-label=' Mots clefs')
+            li
+              a(href='/page/cards.html') Apologétique
+            li
+              a(href='/page/cards.html') Filioque
 //-
   +topic('/medias/images/uploads/dawid-zawila-w300.webp', 'Lorem ipsum dolor sit amet', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1', 'Jeanne d\'Arc', 'article')
   +topic('quill', 'Consectetur adipiscing elit', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '0', '', 'article')
