@@ -3365,6 +3365,9 @@ a[aria-disabled=true]:active {
   margin-block: 1.25em 0;
   font-weight: bold;
 }
+.topic-solved > :nth-child(3) svg {
+  color: #7db956;
+}
 html,
 .logo-nav,
 .nav,
