@@ -103,7 +103,7 @@ _forumAvatarsY = _forumAvatarsSize / 3
 .avatars
   grid-area: aaa
   @media (max-width: _forumSize)
-    margin: .5em 0 1em auto
+    margin: auto 0 1em auto
   @media (min-width: _forumSize)
     margin: auto
   position: relative
@@ -116,5 +116,5 @@ _forumAvatarsY = _forumAvatarsSize / 3
   & > :nth-child(3)
     transform: 'translate(%s, %s) scale(.5)' % (_forumAvatarsX (_forumAvatarsY + 2 * -1))
 
-//.topic-solved > :nth-child(3) svg:first-child
-//  color: _color4 + 34%
+.topic-solved > :nth-child(3) svg:first-child
+  color: _color4 + 34%

@@ -3365,7 +3365,7 @@ a[aria-disabled=true]:active {
 }
 @media (max-width: 35.01em) {
   .avatars {
-    margin: 0.5em 0 1em auto;
+    margin: auto 0 1em auto;
   }
 }
 @media (min-width: 35.01em) {
@@ -3384,6 +3384,9 @@ a[aria-disabled=true]:active {
 }
 .avatars > :nth-child(3) {
   transform: translate(1.166666666666667em, -0.833333333333333em) scale(.5);
+}
+.topic-solved > :nth-child(3) svg:first-child {
+  color: #7db956;
 }
 html,
 .logo-nav,
