@@ -2727,6 +2727,9 @@ form > [class*="grid"] > .input {
   background-color: #474747;
   box-shadow: 0.5rem 0.5rem 2rem rgba(0,0,0,0.15);
 }
+.demo-item.ribbon-content {
+  min-height: 7.5em;
+}
 .demo-items-color {
   color: #333;
 }
@@ -3170,7 +3173,6 @@ a[aria-disabled=true]:active {
 }
 .ribbon-content {
   position: relative;
-  min-height: 7.5em;
 }
 .ribbon-content > [class*=ribbon] {
   --color: currentColor;
@@ -3274,8 +3276,8 @@ a[aria-disabled=true]:active {
 }
 @media (max-width: 35.01em) {
   .topic {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: 'ttt' 'uuu';
+    grid-template-columns: minmax(0, 1fr) 4em;
+    grid-template-areas: 'ttt ttt' 'uuu aaa';
   }
 }
 @media (min-width: 35.01em) {
@@ -3297,24 +3299,6 @@ a[aria-disabled=true]:active {
 .topic > * a {
   position: relative;
   z-index: 3;
-}
-.topic > :nth-child(2) {
-  grid-area: aaa;
-}
-@media (max-width: 35.01em) {
-  .topic > :nth-child(2) {
-    display: none;
-  }
-}
-@media (min-width: 35.01em) {
-  .topic > :nth-child(2) {
-    width: 3.5em;
-    aspect-ratio: 1;
-    margin: auto;
-    border-radius: 50%;
-    background: #222 var(--img);
-    background-size: cover;
-  }
 }
 .topic > :nth-child(3),
 .topic > :nth-child(4) {
@@ -3365,8 +3349,41 @@ a[aria-disabled=true]:active {
   margin-block: 1.25em 0;
   font-weight: bold;
 }
-.topic-solved > :nth-child(3) svg {
-  color: #7db956;
+.avatars,
+.avatars > * {
+  --img: '';
+  width: 3.5em;
+  height: 3.5em;
+  background-image: var(--img);
+  background-color: #222;
+  background-size: cover;
+  border-radius: 50%;
+}
+.avatars {
+  grid-area: aaa;
+  position: relative;
+}
+@media (max-width: 35.01em) {
+  .avatars {
+    margin: 0.5em 0 1em auto;
+  }
+}
+@media (min-width: 35.01em) {
+  .avatars {
+    margin: auto;
+  }
+}
+.avatars > * {
+  position: absolute;
+}
+.avatars > :nth-child(1) {
+  transform: translate(1.166666666666667em, 1.166666666666667em) scale(.5);
+}
+.avatars > :nth-child(2) {
+  transform: translate(1.166666666666667em, 0.166666666666667em) scale(.5);
+}
+.avatars > :nth-child(3) {
+  transform: translate(1.166666666666667em, -0.833333333333333em) scale(.5);
 }
 html,
 .logo-nav,

@@ -14,9 +14,9 @@ block main
     h1.main-heading!= data._name
   ul.forum
     - for (let i = 0; i < 7; i++)
-      li.topic
+      li.topic.ribbon-content
         a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
-        div(style='--img:url(/medias/images/uploads/dawid-zawila-w300.webp)')
+        .avatars(style='--img:url(/medias/images/uploads/dawid-zawila-w300.webp)')
         div
           h2
             a(href='/page/article.html') Lorem ipsum dolor sit amet consectetur adipiscing elit
@@ -28,7 +28,6 @@ block main
           p(aria-label='Sujet créé')
             svg.icon-inline(role='img' focusable='false')
               use(href='/sprites/util.svg#quill')
-            | par 
             a(href='/page/person.html') Jeanne d'Arc
             |  aujourd'hui à 9h31
           ul(aria-label=' Mots clefs')
@@ -38,9 +37,14 @@ block main
               a(href='/page/cards.html') Apologétique
             li
               a(href='/page/cards.html') Paroles des Pères
+        - if (i == 0)
+          .ribbon-top-left.scale70 Épinglé
       li.topic.topic-solved
         a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
-        div(style='--img:url(/medias/images/uploads/tanner-mardis-w300.webp)')
+        .avatars(style='--img:url(/medias/images/uploads/tanner-mardis-w300.webp)')
+          div(style='--img:url(https://scriptura.github.io/medias/images/uploads/tanner-mardis-w300.webp)')
+          div(style='--img:url(https://scriptura.github.io/medias/images/uploads/nicolas-hoizey-w300.webp)')
+          div(style='--img:url(https://scriptura.github.io/medias/images/uploads/pisit-heng-w300.webp)')
         div
           h2
             a(href='/page/article.html') Vestibulum ut facilisis turpis, vitae efficitur magna
@@ -52,7 +56,6 @@ block main
           p(aria-label='Dernière réponse')
             svg.icon-inline(role='img' focusable='false')
               use(href='/sprites/util.svg#share')
-            | par 
             a(href='/page/person.html') Henri de Lubac
             |  le 15 janvier 2023
           ul(aria-label=' Mots clefs')
@@ -62,7 +65,7 @@ block main
               a(href='/page/cards.html') Métaphysique
       li.topic
         a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
-        div(style='--img:url(/medias/images/uploads/nicolas-hoizey-w300.webp')
+        .avatars(style='--img:url(/medias/images/uploads/nicolas-hoizey-w300.webp')
         div
           h2
             a(href='/page/article.html') Praesent in neque pharetra tincidunt metus sed lobortis neque
@@ -74,7 +77,6 @@ block main
           p(aria-label='Dernière réponse')
             svg.icon-inline(role='img' focusable='false')
               use(href='/sprites/util.svg#share')
-            | par 
             a(href='/page/person.html') Origène
             |  le 9 janvier 2023
           ul(aria-label=' Mots clefs')
@@ -88,7 +90,7 @@ block main
               a(href='/page/cards.html') Traduction
       li.topic
         a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
-        div(style='--img:url(/medias/images/uploads/pisit-heng-w300.webp')
+        .avatars(style='--img:url(/medias/images/uploads/pisit-heng-w300.webp')
         div
           h2
             a(href='/page/article.html') Cras viverra nunc ut ex egestas
@@ -100,7 +102,6 @@ block main
           p(aria-label='Dernière réponse')
             svg.icon-inline(role='img' focusable='false')
               use(href='/sprites/util.svg#share')
-            | par 
             a(href='/page/person.html') Eusèbe de Césarée
             |  le 16 janvier 2023
           ul(aria-label=' Mots clefs')

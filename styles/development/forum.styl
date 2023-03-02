@@ -16,8 +16,8 @@ _forumColor1 = _colorG + 7%
   border-radius: _r2
   box-shadow: _shadow5
   @media (max-width: _forumSize)
-    grid-template-columns: minmax(0, 1fr)
-    grid-template-areas: 'ttt' 'uuu'
+    grid-template-columns: minmax(0, 1fr) 4em
+    grid-template-areas: 'ttt ttt' 'uuu aaa'
   @media (min-width: _forumSize)
     grid-template-columns: 4em minmax(0, 1fr)
     grid-template-areas: 'aaa ttt' 'aaa uuu'
@@ -35,17 +35,17 @@ _forumColor1 = _colorG + 7%
   & > * a // @note Rétablit le clique des liens de base.
     position: relative
     z-index: 3
-  & > :nth-child(2)
-    grid-area: aaa
-    @media (max-width: _forumSize)
-      display: none
-    @media (min-width: _forumSize)
-      width: 3.5em
-      aspect-ratio: 1
-      margin: auto
-      border-radius: 50%
-      background: #222 var(--img)
-      background-size: cover
+  //& .avatars
+  //  grid-area: aaa
+  //  @media (max-width: _forumSize)
+  //    display: none
+  //  @media (min-width: _forumSize)
+  //    width: 3.5em
+  //    aspect-ratio: 1
+  //    margin: auto
+  //    border-radius: 50%
+  //    background: #222 var(--img)
+  //    background-size: cover
   & > :nth-child(3)
   & > :nth-child(4)
     display: flex
@@ -85,5 +85,36 @@ _forumColor1 = _colorG + 7%
     font-weight: bold
     //font-size: 1em
 
-.topic-solved > :nth-child(3) svg
-  color: _color4 + 34%
+_forumAvatarsSize = 3.5em
+_forumAvatarsS = _forumAvatarsSize / 2
+_forumAvatarsX = _forumAvatarsSize / 3
+_forumAvatarsY = _forumAvatarsSize / 3
+
+.avatars
+.avatars > *
+  --img: ''
+  width: _forumAvatarsSize
+  height: _forumAvatarsSize
+  background-image: var(--img)
+  background-color: #222
+  background-size: cover
+  border-radius: 50%
+
+.avatars
+  grid-area: aaa
+  @media (max-width: _forumSize)
+    margin: .5em 0 1em auto
+  @media (min-width: _forumSize)
+    margin: auto
+  position: relative
+  & > *
+    position: absolute
+  & > :nth-child(1)
+    transform: 'translate(%s, %s) scale(.5)' % (_forumAvatarsX _forumAvatarsY)
+  & > :nth-child(2)
+    transform: 'translate(%s, %s) scale(.5)' % (_forumAvatarsX (_forumAvatarsY + 1 * -1))
+  & > :nth-child(3)
+    transform: 'translate(%s, %s) scale(.5)' % (_forumAvatarsX (_forumAvatarsY + 2 * -1))
+
+//.topic-solved > :nth-child(3) svg:first-child
+//  color: _color4 + 34%
