@@ -42,13 +42,13 @@ block main
       li.topic.topic-solved
         a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
         .avatars(style='--img:url(/medias/images/uploads/tanner-mardis-w300.webp)')
-          div(style='--img:url(https://scriptura.github.io/medias/images/uploads/tanner-mardis-w300.webp)')
+          div(style='--img:url(https://scriptura.github.io/medias/images/uploads/willian-justen-de-vasconcellos-w300.webp)')
           div(style='--img:url(https://scriptura.github.io/medias/images/uploads/nicolas-hoizey-w300.webp)')
           div(style='--img:url(https://scriptura.github.io/medias/images/uploads/pisit-heng-w300.webp)')
         div
           h2
             a(href='/page/article.html') Vestibulum ut facilisis turpis, vitae efficitur magna
-          div(aria-label='Nombre de commentaires')
+          div(aria-label='Sujet résolu . Nombre de commentaires')
             svg.icon-inline(role='img' focusable='false')
               use(href='/sprites/util.svg#check2')
             | 17
@@ -57,7 +57,7 @@ block main
             svg.icon-inline(role='img' focusable='false')
               use(href='/sprites/util.svg#share')
             a(href='/page/person.html') Henri de Lubac
-            |  le 15 janvier 2023
+            |  hier à 15h05
           ul(aria-label=' Mots clefs')
             li
               a(href='/page/cards.html') Sur le mal
@@ -66,6 +66,8 @@ block main
       li.topic
         a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
         .avatars(style='--img:url(/medias/images/uploads/nicolas-hoizey-w300.webp')
+          div(style='--img:url(https://scriptura.github.io/medias/images/uploads/willian-justen-de-vasconcellos-w300.webp)')
+          div(style='--img:url(https://scriptura.github.io/medias/images/uploads/pisit-heng-w300.webp)')
         div
           h2
             a(href='/page/article.html') Praesent in neque pharetra tincidunt metus sed lobortis neque
@@ -91,6 +93,31 @@ block main
       li.topic
         a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
         .avatars(style='--img:url(/medias/images/uploads/pisit-heng-w300.webp')
+          div(style='--img:url(https://scriptura.github.io/medias/images/uploads/nicolas-hoizey-w300.webp)')
+        div
+          h2
+            a(href='/page/article.html') Cras viverra nunc ut ex egestas
+          div(aria-label='Nombre de commentaires')
+            svg.icon-inline(role='img' focusable='false')
+              use(href='/sprites/util.svg#bubbles')
+            | 1
+        div
+          p(aria-label='Dernière réponse')
+            svg.icon-inline(role='img' focusable='false')
+              use(href='/sprites/util.svg#share')
+            a(href='/page/person.html') Eusèbe de Césarée
+            |  le 16 janvier 2023
+          ul(aria-label=' Mots clefs')
+            li
+              a(href='/page/cards.html') Écriture & Tradition
+            li
+              a(href='/page/cards.html') Traduction
+      li.topic
+        a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
+        .avatars(style='--img:url(/medias/images/uploads/willian-justen-de-vasconcellos-w300.webp')
+          div(style='--img:url(https://scriptura.github.io/medias/images/uploads/pisit-heng-w300.webp)')
+          div(style='--img:url(https://scriptura.github.io/medias/images/uploads/dawid-zawila-w300.webp)')
+          div(style='--img:url(https://scriptura.github.io/medias/images/uploads/nicolas-hoizey-w300.webp)')
         div
           h2
             a(href='/page/article.html') Cras viverra nunc ut ex egestas
@@ -102,13 +129,35 @@ block main
           p(aria-label='Dernière réponse')
             svg.icon-inline(role='img' focusable='false')
               use(href='/sprites/util.svg#share')
-            a(href='/page/person.html') Eusèbe de Césarée
-            |  le 16 janvier 2023
+            a(href='/page/person.html') Thomas d'Aquin
+            |  le 2 février 2023
           ul(aria-label=' Mots clefs')
             li
-              a(href='/page/cards.html') Apologétique
+              a(href='/page/cards.html') Sur le mal
             li
-              a(href='/page/cards.html') Filioque
+              a(href='/page/cards.html') Métaphysique
+      li.topic
+        a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
+        .avatars(style='--img:url(/medias/images/uploads/aleksandra-boguslawska-w300.webp')
+          div(style='--img:url(https://scriptura.github.io/medias/images/uploads/pisit-heng-w300.webp)')
+        div
+          h2
+            a(href='/page/article.html') Nulla at pellentesque libero
+          div(aria-label='Nombre de commentaires')
+            svg.icon-inline(role='img' focusable='false')
+              use(href='/sprites/util.svg#bubbles')
+            | 1
+        div
+          p(aria-label='Dernière réponse')
+            svg.icon-inline(role='img' focusable='false')
+              use(href='/sprites/util.svg#share')
+            a(href='/page/person.html') Romanos le Mélode
+            |  le 17 janvier 2023
+          ul(aria-label=' Mots clefs')
+            li
+              a(href='/page/cards.html') Hymnes
+            li
+              a(href='/page/cards.html') Liturgie des heures
 //-
   +topic('/medias/images/uploads/dawid-zawila-w300.webp', 'Lorem ipsum dolor sit amet', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1', 'Jeanne d\'Arc', 'article')
   +topic('quill', 'Consectetur adipiscing elit', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '0', '', 'article')
