@@ -32,11 +32,11 @@ block main
             |  aujourd'hui à 9h31
           ul(aria-label=' Mots clefs')
             li
-              a(href='/page/cards.html') Écriture & Tradition
+              a(href='/page/forum.html') Écriture & Tradition
             li
-              a(href='/page/cards.html') Apologétique
+              a(href='/page/forum.html') Apologétique
             li
-              a(href='/page/cards.html') Paroles des Pères
+              a(href='/page/forum.html') Paroles des Pères
         - if (i == 0)
           .ribbon-top-left.scale70 Épinglé
       li.topic.topic-solved
@@ -60,9 +60,9 @@ block main
             |  hier à 15h05
           ul(aria-label=' Mots clefs')
             li
-              a(href='/page/cards.html') Sur le mal
+              a(href='/page/forum.html') Sur le mal
             li
-              a(href='/page/cards.html') Métaphysique
+              a(href='/page/forum.html') Métaphysique
       li.topic
         a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
         .avatars(aria-label='Initiateur du sujet : Pseudo ; derniers participants : Pseudo1, Pseudo2' style='--img:url(/medias/images/uploads/nicolas-hoizey-w300.webp')
@@ -83,13 +83,13 @@ block main
             |  le 9 janvier 2023
           ul(aria-label=' Mots clefs')
             li
-              a(href='/page/cards.html') Apologétique
+              a(href='/page/forum.html') Apologétique
             li
-              a(href='/page/cards.html') Sacrements
+              a(href='/page/forum.html') Sacrements
             li
-              a(href='/page/cards.html') Filiation
+              a(href='/page/forum.html') Filiation
             li
-              a(href='/page/cards.html') Traduction
+              a(href='/page/forum.html') Traduction
       li.topic
         a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
         .avatars(aria-label='Initiateur du sujet : Pseudo ; premier participant : Pseudo1' style='--img:url(/medias/images/uploads/pisit-heng-w300.webp')
@@ -109,9 +109,9 @@ block main
             |  le 16 janvier 2023
           ul(aria-label=' Mots clefs')
             li
-              a(href='/page/cards.html') Écriture & Tradition
+              a(href='/page/forum.html') Écriture & Tradition
             li
-              a(href='/page/cards.html') Traduction
+              a(href='/page/forum.html') Traduction
       li.topic
         a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
         .avatars(aria-label='Initiateur du sujet : Pseudo ; derniers participants : Pseudo1, Pseudo2, Pseudo3' style='--img:url(/medias/images/uploads/willian-justen-de-vasconcellos-w300.webp')
@@ -133,9 +133,9 @@ block main
             |  le 2 février 2023
           ul(aria-label=' Mots clefs')
             li
-              a(href='/page/cards.html') Sur le mal
+              a(href='/page/forum.html') Sur le mal
             li
-              a(href='/page/cards.html') Métaphysique
+              a(href='/page/forum.html') Métaphysique
       li.topic
         a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
         .avatars(aria-label='Initiateur du sujet : Pseudo ; premier participant : Pseudo1' style='--img:url(/medias/images/uploads/aleksandra-boguslawska-w300.webp')
@@ -143,9 +143,9 @@ block main
         div
           h2
             a(href='/page/article.html') Nulla at pellentesque libero
-          div(aria-label='Nombre de commentaires')
+          div(aria-label='Sujet vérouillé. Nombre de commentaires')
             svg.icon-inline(role='img' focusable='false')
-              use(href='/sprites/util.svg#bubbles')
+              use(href='/sprites/util.svg#locked')
             | 1
         div
           p(aria-label='Dernière réponse')
@@ -155,9 +155,9 @@ block main
             |  le 17 janvier 2023
           ul(aria-label=' Mots clefs')
             li
-              a(href='/page/cards.html') Hymnes
+              a(href='/page/forum.html') Hymnes
             li
-              a(href='/page/cards.html') Liturgie des heures
+              a(href='/page/forum.html') Liturgie des heures
 //-
   +topic('/medias/images/uploads/dawid-zawila-w300.webp', 'Lorem ipsum dolor sit amet', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1', 'Jeanne d\'Arc', 'article')
   +topic('quill', 'Consectetur adipiscing elit', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '0', '', 'article')
