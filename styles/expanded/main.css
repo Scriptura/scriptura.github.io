@@ -3393,40 +3393,34 @@ a[aria-disabled=true]:active {
   display: grid;
   gap: 1em 0;
 }
-.topic .wrapper,
+.topic .wrapper {
+  max-width: 55em;
+}
 .topic article {
   background-color: #393939;
   border-radius: 0.3em;
   max-width: 55em;
 }
 @media (min-width: 35.01em) {
-  .topic .wrapper,
   .topic article {
     padding: 4em 6em;
     box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
   }
 }
-@media (min-width: 35.01em) and (max-width: 92.01em) {
-  .topic article:nth-child(odd) {
-    margin-left: auto;
-  }
+.topic article:nth-child(4n+1) {
+  margin-left: 0;
 }
-@media (min-width: 92.01em) {
-  .topic article:nth-child(3n+2) {
-    margin-left: 0;
-  }
-  .topic article:nth-child(3n) {
-    margin: auto;
-  }
-  .topic article:nth-child(3n+1) {
-    margin-left: auto;
-  }
-  .topic article:nth-child(3n+2) {
-    margin: auto;
-  }
-  .topic article:nth-child(3n+3) {
-    margin-left: 0;
-  }
+.topic article:nth-child(4n+4) {
+  margin-inline: auto;
+}
+.topic article:nth-child(4n+5) {
+  margin-left: auto;
+}
+.topic article:nth-child(4n+6) {
+  margin-inline: auto;
+}
+.topic address {
+  font-variant: small-caps;
 }
 html,
 .logo-nav,
@@ -3458,7 +3452,6 @@ html,
 .audio-player,
 .progress-bar div,
 .topic-item,
-.topic .wrapper,
 .topic article,
 [class*=demo-items] > *,
 .demo-item {

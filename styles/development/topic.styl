@@ -4,6 +4,7 @@ _topicColor1 = _colorG
   display: grid
   gap: _gap 0
   & .wrapper
+    max-width: 55em
   & article
     background-color: _topicColor1
     border-radius: _r2
@@ -11,18 +12,13 @@ _topicColor1 = _colorG
     @media (min-width: _sizeXS)
       padding: 4em 6em
       box-shadow: _shadow8
-  & article
-    @media (min-width: _sizeXS) and (max-width: _sizeL)
-      &:nth-child(odd)
-        margin-left: auto
-    @media (min-width: _sizeL)
-      &:nth-child(3n+2)
-        margin-left: 0
-      &:nth-child(3n)
-        margin: auto
-      &:nth-child(3n+1)
-        margin-left: auto
-      &:nth-child(3n+2)
-        margin: auto
-      &:nth-child(3n+3)
-        margin-left: 0
+    &:nth-child(4n+1)
+      margin-left: 0
+    &:nth-child(4n+4)
+      margin-inline: auto
+    &:nth-child(4n+5)
+      margin-left: auto
+    &:nth-child(4n+6)
+      margin-inline: auto
+  & address
+    font-variant: small-caps
