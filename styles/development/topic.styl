@@ -1,4 +1,28 @@
-_topicColor1 = _colorG + 7%
+_topicColor1 = _colorG
 
 .topic
-  background-color: _topicColor1
+  display: grid
+  gap: _gap 0
+  & .wrapper
+  & article
+    background-color: _topicColor1
+    border-radius: _r2
+    max-width: 55em
+    @media (min-width: _sizeXS)
+      padding: 4em 6em
+      box-shadow: _shadow8
+  & article
+    @media (min-width: _sizeXS) and (max-width: _sizeL)
+      &:nth-child(odd)
+        margin-left: auto
+    @media (min-width: _sizeL)
+      &:nth-child(3n+2)
+        margin-left: 0
+      &:nth-child(3n)
+        margin: auto
+      &:nth-child(3n+1)
+        margin-left: auto
+      &:nth-child(3n+2)
+        margin: auto
+      &:nth-child(3n+3)
+        margin-left: 0

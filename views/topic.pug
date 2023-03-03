@@ -1,11 +1,11 @@
 extends patternLayout
 
 block variables
-  - const documentType = 'forum'
+  - const documentType = 'topic'
   -
     const data = {
-      _name: 'Topic <span>.&nbsp;Template example</span>',
-      _title: 'Sample topic . Scriptura framework',
+      _name: 'Topic <span>.&nbsp;Sample topic template</span>',
+      _title: 'Sample topic template . Scriptura framework',
       _description: 'Sujet de forum de démonstration.'
     }
 
@@ -13,4 +13,93 @@ block main
   article.topic
     header(role='banner')
       h1.main-heading!= data._name
-    p Bla bla...
+      footer
+        div
+          p
+            svg.icon-inline(role='img' focusable='false')
+              use(href='/sprites/util.svg#quill')
+            | Auteur&nbsp;: 
+            a(href='/page/person.html') Henri de Lubac
+          p
+            svg.icon-inline(role='img' focusable='false')
+              use(href='/sprites/util.svg#calendar')
+            |  Contenu publi&eacute; le 17.07.2017, modifi&eacute; le 01.02.2022.
+          p
+            svg.icon-inline(role='img' focusable='false')
+              use(href='/sprites/util.svg#info')
+            | Une description...
+          p.keywords
+            svg.icon-inline(role='img' focusable='false')
+              use(href='/sprites/util.svg#old-key')
+            |  Mots clefs&nbsp;: 
+            a(href='/keyword/lion') Lion
+            |  &bull; 
+            a(href='/keyword/lion') Antilope
+            |  &bull; 
+            a(href='/keyword/lion') Crocodile
+    .wrapper.links.decorative-hr
+      p Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus sapien eros vitae ligula. Pellentesque rhoncus nunc et augue.
+      pre.pre
+        code.language-css(data-code='CSS' translate='no').
+          :root {
+            color-scheme: dark;
+          }
+
+          *,
+          *::before,
+          *::after {
+            box-sizing: border-box;
+          }
+      p Integer quis metus vitae elit lobortis egestas. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi vel erat non mauris convallis vehicula. Nulla et sapien. Integer tortor tellus, aliquam faucibus, convallis id, congue eu, quam. Mauris ullamcorper felis vitae erat. Proin feugiat, augue non elementum posuere, metus purus iaculis lectus, et tristique ligula justo vitae magna.
+    article
+      header(role='banner')
+        h2 Response
+      p Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus sapien eros vitae ligula. Pellentesque rhoncus nunc et augue.
+      pre.pre
+        code.language-css(data-code='CSS' translate='no').
+          @media (prefers-reduced-motion: reduce) {
+            html {
+              scroll-behavior: auto;
+            }
+          }
+    article
+      header(role='banner')
+        h2 Response
+      p Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus sapien eros vitae ligula. Pellentesque rhoncus nunc et augue.
+    article
+      header(role='banner')
+        h2 Response
+      p Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus sapien eros vitae ligula. Pellentesque rhoncus nunc et augue.
+    article
+      header(role='banner')
+        h2 Response
+      p Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus sapien eros vitae ligula. Pellentesque rhoncus nunc et augue.
+    article
+      header(role='banner')
+        h2 Response
+      p Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus sapien eros vitae ligula. Pellentesque rhoncus nunc et augue.
+    article
+      header(role='banner')
+        h2 Response
+      p Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus sapien eros vitae ligula. Pellentesque rhoncus nunc et augue.
+    article
+      header(role='banner')
+        h2 Response
+      p Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus sapien eros vitae ligula. Pellentesque rhoncus nunc et augue.
+    article
+      header(role='banner')
+        h2 Response
+      p Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus sapien eros vitae ligula. Pellentesque rhoncus nunc et augue.
+    article
+      header(role='banner')
+        h2 Response
+      p Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus sapien eros vitae ligula. Pellentesque rhoncus nunc et augue.
+    article
+      header(role='banner')
+        h2 Response
+      p Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus sapien eros vitae ligula. Pellentesque rhoncus nunc et augue.
+    article
+      header(role='banner')
+        h2 Response
+      p Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus sapien eros vitae ligula. Pellentesque rhoncus nunc et augue.
+      

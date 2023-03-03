@@ -4,8 +4,8 @@ block variables
   - const documentType = 'forum'
   -
     const data = {
-      _name: 'Forum <span>.&nbsp;Template example</span>',
-      _title: 'Sample forum . Scriptura framework',
+      _name: 'Lorem ipsum <span>.&nbsp;Sample forum template</span>',
+      _title: 'Sample forum template . Scriptura framework',
       _description: 'Forum de démonstration.'
     }
 
@@ -15,10 +15,10 @@ block main
   ul.forum
     - for (let i = 0; i < 5; i++)
       li.topic-item
-        a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
+        a.topic-link(href='/page/topic.html' aria-hidden='true' tabindex='-1')
         div
           h2
-            a(href='/page/article.html') Lorem ipsum dolor sit amet consectetur adipiscing elit
+            a(href='/page/topic.html') Lorem ipsum dolor sit amet consectetur adipiscing elit
           div(aria-label='Nombre de commentaires')
             - if(i == 0)
               svg.icon-inline(role='img' focusable='false')
@@ -40,10 +40,10 @@ block main
               a(href='/page/forum.html') Apologétique
         .avatars(aria-label='Initiateur du sujet : Pseudo' style='--img:url(/medias/images/uploads/dawid-zawila-w300.webp)')
       li.topic-item.topic-solved
-        a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
+        a.topic-link(href='/page/topic.html' aria-hidden='true' tabindex='-1')
         div
           h2
-            a(href='/page/article.html') Vestibulum ut facilisis turpis, vitae efficitur magna
+            a(href='/page/topic.html') Vestibulum ut facilisis turpis, vitae efficitur magna
           div(aria-label='Sujet résolu . Nombre de commentaires')
             svg.icon-inline(role='img' focusable='false')
               use(href='/sprites/util.svg#check2')
@@ -64,10 +64,10 @@ block main
           div(style='--img:url(https://scriptura.github.io/medias/images/uploads/nicolas-hoizey-w300.webp)')
           div(style='--img:url(https://scriptura.github.io/medias/images/uploads/pisit-heng-w300.webp)')
       li.topic-item
-        a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
+        a.topic-link(href='/page/topic.html' aria-hidden='true' tabindex='-1')
         div
           h2
-            a(href='/page/article.html') Praesent in neque pharetra tincidunt metus sed lobortis neque
+            a(href='/page/topic.html') Praesent in neque pharetra tincidunt metus sed lobortis neque
           div(aria-label='Nombre de commentaires')
             svg.icon-inline(role='img' focusable='false')
               use(href='/sprites/util.svg#bubbles')
@@ -89,10 +89,10 @@ block main
           div(style='--img:url(https://scriptura.github.io/medias/images/uploads/willian-justen-de-vasconcellos-w300.webp)')
           div(style='--img:url(https://scriptura.github.io/medias/images/uploads/pisit-heng-w300.webp)')
       li.topic-item
-        a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
+        a.topic-link(href='/page/topic.html' aria-hidden='true' tabindex='-1')
         div
           h2
-            a(href='/page/article.html') Cras viverra nunc ut ex egestas
+            a(href='/page/topic.html') Cras viverra nunc ut ex egestas
           div(aria-label='Nombre de commentaires')
             svg.icon-inline(role='img' focusable='false')
               use(href='/sprites/util.svg#bubbles')
@@ -111,10 +111,10 @@ block main
         .avatars(aria-label='Initiateur du sujet : Pseudo ; premier participant : Pseudo1' style='--img:url(/medias/images/uploads/pisit-heng-w300.webp')
           div(style='--img:url(https://scriptura.github.io/medias/images/uploads/nicolas-hoizey-w300.webp)')
       li.topic-item
-        a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
+        a.topic-link(href='/page/topic.html' aria-hidden='true' tabindex='-1')
         div
           h2
-            a(href='/page/article.html') Cras viverra nunc ut ex egestas
+            a(href='/page/topic.html') Cras viverra nunc ut ex egestas
           div(aria-label='Nombre de commentaires')
             svg.icon-inline(role='img' focusable='false')
               use(href='/sprites/util.svg#bubbles')
@@ -135,10 +135,10 @@ block main
           div(style='--img:url(https://scriptura.github.io/medias/images/uploads/dawid-zawila-w300.webp)')
           div(style='--img:url(https://scriptura.github.io/medias/images/uploads/nicolas-hoizey-w300.webp)')
       li.topic-item
-        a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
+        a.topic-link(href='/page/topic.html' aria-hidden='true' tabindex='-1')
         div
           h2
-            a(href='/page/article.html') Nulla at pellentesque libero
+            a(href='/page/topic.html') Nulla at pellentesque libero
           div(aria-label='Sujet vérouillé. Nombre de commentaires')
             svg.icon-inline(role='img' focusable='false')
               use(href='/sprites/util.svg#locked')
