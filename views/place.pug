@@ -4,9 +4,9 @@ block variables
   - const documentType = 'place'
   -
     const data = {
-      _name: 'Place <span>.&nbsp;example</span>',
-      _title: 'Place . Scritpura framework',
-      _description: 'Place . Scritpura framework',
+      _name: 'Place <span>.&nbsp;Template example</span>',
+      _title: 'Sample place . Scriptura framework',
+      _description: 'Page de localisation de démonstration',
       _street: '6 Parvis Notre-Dame - Pl. Jean-Paul II',
       _postal_code: '75004',
       _locality: 'Paris',
@@ -17,8 +17,7 @@ block variables
 
 block main
   header(role='banner')
-    h1.main-heading Cathédrale Notre-Dame de Paris 
-      span .&nbsp;Localisation
+    h1.main-heading!= data._name
   ul
     if data._street && data._postal_code && data._locality
       li Adresse : #{data._street}, #{data._postal_code}, #{data._locality}

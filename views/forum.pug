@@ -4,8 +4,8 @@ block variables
   - const documentType = 'forum'
   -
     const data = {
-      _name: 'Forum <span>.&nbsp;Example</span>',
-      _title: 'Forum de démonstration',
+      _name: 'Forum <span>.&nbsp;Template example</span>',
+      _title: 'Sample forum . Scriptura framework',
       _description: 'Forum de démonstration.'
     }
 
@@ -13,16 +13,19 @@ block main
   header(role='banner')
     h1.main-heading!= data._name
   ul.forum
-    - for (let i = 0; i < 7; i++)
-      li.topic.ribbon-content
+    - for (let i = 0; i < 5; i++)
+      li.topic-item
         a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
-        .avatars(aria-label='Initiateur du sujet : Pseudo' style='--img:url(/medias/images/uploads/dawid-zawila-w300.webp)')
         div
           h2
             a(href='/page/article.html') Lorem ipsum dolor sit amet consectetur adipiscing elit
           div(aria-label='Nombre de commentaires')
-            svg.icon-inline(role='img' focusable='false')
-              use(href='/sprites/util.svg#bubbles')
+            - if(i == 0)
+              svg.icon-inline(role='img' focusable='false')
+                use(href='/sprites/util.svg#thumbtack')
+            - else
+              svg.icon-inline(role='img' focusable='false')
+                use(href='/sprites/util.svg#bubbles')
             | 0
         div
           p(aria-label='Sujet créé')
@@ -35,16 +38,9 @@ block main
               a(href='/page/forum.html') Écriture & Tradition
             li
               a(href='/page/forum.html') Apologétique
-            li
-              a(href='/page/forum.html') Paroles des Pères
-        - if (i == 0)
-          .ribbon-top-left.scale70 Épinglé
-      li.topic.topic-solved
+        .avatars(aria-label='Initiateur du sujet : Pseudo' style='--img:url(/medias/images/uploads/dawid-zawila-w300.webp)')
+      li.topic-item.topic-solved
         a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
-        .avatars(aria-label='Initiateur du sujet : Pseudo ; derniers participants : Pseudo1, Pseudo2, Pseudo3' style='--img:url(/medias/images/uploads/tanner-mardis-w300.webp)')
-          div(style='--img:url(https://scriptura.github.io/medias/images/uploads/willian-justen-de-vasconcellos-w300.webp)')
-          div(style='--img:url(https://scriptura.github.io/medias/images/uploads/nicolas-hoizey-w300.webp)')
-          div(style='--img:url(https://scriptura.github.io/medias/images/uploads/pisit-heng-w300.webp)')
         div
           h2
             a(href='/page/article.html') Vestibulum ut facilisis turpis, vitae efficitur magna
@@ -63,11 +59,12 @@ block main
               a(href='/page/forum.html') Sur le mal
             li
               a(href='/page/forum.html') Métaphysique
-      li.topic
-        a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
-        .avatars(aria-label='Initiateur du sujet : Pseudo ; derniers participants : Pseudo1, Pseudo2' style='--img:url(/medias/images/uploads/nicolas-hoizey-w300.webp')
+        .avatars(aria-label='Initiateur du sujet : Pseudo ; derniers participants : Pseudo1, Pseudo2, Pseudo3' style='--img:url(/medias/images/uploads/tanner-mardis-w300.webp)')
           div(style='--img:url(https://scriptura.github.io/medias/images/uploads/willian-justen-de-vasconcellos-w300.webp)')
+          div(style='--img:url(https://scriptura.github.io/medias/images/uploads/nicolas-hoizey-w300.webp)')
           div(style='--img:url(https://scriptura.github.io/medias/images/uploads/pisit-heng-w300.webp)')
+      li.topic-item
+        a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
         div
           h2
             a(href='/page/article.html') Praesent in neque pharetra tincidunt metus sed lobortis neque
@@ -87,13 +84,12 @@ block main
             li
               a(href='/page/forum.html') Sacrements
             li
-              a(href='/page/forum.html') Filiation
-            li
               a(href='/page/forum.html') Traduction
-      li.topic
+        .avatars(aria-label='Initiateur du sujet : Pseudo ; derniers participants : Pseudo1, Pseudo2' style='--img:url(/medias/images/uploads/nicolas-hoizey-w300.webp')
+          div(style='--img:url(https://scriptura.github.io/medias/images/uploads/willian-justen-de-vasconcellos-w300.webp)')
+          div(style='--img:url(https://scriptura.github.io/medias/images/uploads/pisit-heng-w300.webp)')
+      li.topic-item
         a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
-        .avatars(aria-label='Initiateur du sujet : Pseudo ; premier participant : Pseudo1' style='--img:url(/medias/images/uploads/pisit-heng-w300.webp')
-          div(style='--img:url(https://scriptura.github.io/medias/images/uploads/nicolas-hoizey-w300.webp)')
         div
           h2
             a(href='/page/article.html') Cras viverra nunc ut ex egestas
@@ -112,12 +108,10 @@ block main
               a(href='/page/forum.html') Écriture & Tradition
             li
               a(href='/page/forum.html') Traduction
-      li.topic
-        a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
-        .avatars(aria-label='Initiateur du sujet : Pseudo ; derniers participants : Pseudo1, Pseudo2, Pseudo3' style='--img:url(/medias/images/uploads/willian-justen-de-vasconcellos-w300.webp')
-          div(style='--img:url(https://scriptura.github.io/medias/images/uploads/pisit-heng-w300.webp)')
-          div(style='--img:url(https://scriptura.github.io/medias/images/uploads/dawid-zawila-w300.webp)')
+        .avatars(aria-label='Initiateur du sujet : Pseudo ; premier participant : Pseudo1' style='--img:url(/medias/images/uploads/pisit-heng-w300.webp')
           div(style='--img:url(https://scriptura.github.io/medias/images/uploads/nicolas-hoizey-w300.webp)')
+      li.topic-item
+        a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
         div
           h2
             a(href='/page/article.html') Cras viverra nunc ut ex egestas
@@ -136,10 +130,12 @@ block main
               a(href='/page/forum.html') Sur le mal
             li
               a(href='/page/forum.html') Métaphysique
-      li.topic
-        a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
-        .avatars(aria-label='Initiateur du sujet : Pseudo ; premier participant : Pseudo1' style='--img:url(/medias/images/uploads/aleksandra-boguslawska-w300.webp')
+        .avatars(aria-label='Initiateur du sujet : Pseudo ; derniers participants : Pseudo1, Pseudo2, Pseudo3' style='--img:url(/medias/images/uploads/willian-justen-de-vasconcellos-w300.webp')
           div(style='--img:url(https://scriptura.github.io/medias/images/uploads/pisit-heng-w300.webp)')
+          div(style='--img:url(https://scriptura.github.io/medias/images/uploads/dawid-zawila-w300.webp)')
+          div(style='--img:url(https://scriptura.github.io/medias/images/uploads/nicolas-hoizey-w300.webp)')
+      li.topic-item
+        a.topic-link(href='/page/article.html' aria-hidden='true' tabindex='-1')
         div
           h2
             a(href='/page/article.html') Nulla at pellentesque libero
@@ -158,24 +154,5 @@ block main
               a(href='/page/forum.html') Hymnes
             li
               a(href='/page/forum.html') Liturgie des heures
-//-
-  +topic('/medias/images/uploads/dawid-zawila-w300.webp', 'Lorem ipsum dolor sit amet', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1', 'Jeanne d\'Arc', 'article')
-  +topic('quill', 'Consectetur adipiscing elit', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '0', '', 'article')
-  +topic('quill', 'Pellentesque gravida euismod nisl ac sodales', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1', 'Jeanne d\'Arc', 'article')
-  +topic('quill', 'Aliquam erat volutpat', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '3', 'Jeanne d\'Arc', 'article')
-  +topic('quill', 'Aenean volutpat diam eu tristique faucibus', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '2', 'Jeanne d\'Arc', 'article')
-  +topic('quill', 'Vestibulum vitae laoreet ligula', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1', 'Jeanne d\'Arc', 'article')
-  +topic('quill', 'Suspendisse potenti', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '4', 'Jeanne d\'Arc', 'article')
-  +topic('quill', 'Donec vel faucibus quam, vitae bibendum odio', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '5', 'Jeanne d\'Arc', 'article')
-  +topic('quill', 'In hac habitasse platea dictumst', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1', 'Jeanne d\'Arc', 'article')
-  +topic('quill', 'Ut vel libero ac velit tincidunt pellentesque eget at odio', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '0', '', 'article')
-  +topic('quill', 'Cras ac leo ut tortor ornare aliquam', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1', 'Jeanne d\'Arc', 'article')
-  +topic('quill', 'Mauris quis justo orci', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '3', 'Jeanne d\'Arc', 'article')
-  +topic('quill', 'Etiam ut sagittis est, id ultrices ipsum', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '2', 'Jeanne d\'Arc', 'article')
-  +topic('quill', 'In vel odio aliquet, ultrices tortor sit amet, dignissim purus', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '1', 'Jeanne d\'Arc', 'article')
-  +topic('quill', 'Pellentesque hendrerit blandit placerat', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '5', 'Jeanne d\'Arc', 'article')
-  +topic('quill', 'Class aptent taciti sociosqu ad litora torquent per conubia nostra', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '7', 'Jeanne d\'Arc', 'article')
-  +topic('quill', 'Curabitur hendrerit sapien sed metus consectetur', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '9', 'Jeanne d\'Arc', 'article')
-  +topic('quill', 'Nam non lacus consequat, bibendum nisl eu', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '3', 'Jeanne d\'Arc', 'article')
-  +topic('quill', 'In id nunc vel ex efficitur venenatis id ac massa', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '8', 'Jeanne d\'Arc', 'article')
-  +topic('quill', 'Ut ultrices, velit eu finibus condimentum', 'lundi 17 janvier 2022', '9h00', 'Henri de Lubac', '2', 'Jeanne d\'Arc', 'article')
+        .avatars(aria-label='Initiateur du sujet : Pseudo ; premier participant : Pseudo1' style='--img:url(/medias/images/uploads/aleksandra-boguslawska-w300.webp')
+          div(style='--img:url(https://scriptura.github.io/medias/images/uploads/pisit-heng-w300.webp)')

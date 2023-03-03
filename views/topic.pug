@@ -1,0 +1,16 @@
+extends patternLayout
+
+block variables
+  - const documentType = 'forum'
+  -
+    const data = {
+      _name: 'Topic <span>.&nbsp;Template example</span>',
+      _title: 'Sample topic . Scriptura framework',
+      _description: 'Sujet de forum de démonstration.'
+    }
+
+block main
+  article.topic
+    header(role='banner')
+      h1.main-heading!= data._name
+    p Bla bla...

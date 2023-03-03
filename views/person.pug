@@ -4,9 +4,9 @@ block variables
   - const documentType = 'person'
   -
     const data = {
-      _name: 'Person <span>.&nbsp;example</span>',
-      _title: 'Person . Scritpura framework',
-      _description: 'Person . Scritpura framework',
+      _name: 'Person <span>.&nbsp;Template example</span>',
+      _title: 'Person . Scriptura framework',
+      _description: 'Person . Scriptura framework',
       _user_id: '1',
       _sexe: '1',
       _given_name: 'Henri',
@@ -23,8 +23,7 @@ block variables
 
 block main
   header(role='banner')
-    h1.main-heading Henri Sonier de Lubac 
-      span .&nbsp;Personnalité
+    h1.main-heading!= data._name
   .grid2.gap.s-grid1
     div
       ul

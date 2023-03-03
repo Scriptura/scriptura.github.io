@@ -11,6 +11,7 @@ writeFileSync('page/person.html', renderFile('views/person.pug'))
 writeFileSync('page/place.html', renderFile('views/place.pug'))
 writeFileSync('page/article.html', renderFile('views/article.pug'))
 writeFileSync('page/forum.html', renderFile('views/forum.pug'))
+writeFileSync('page/topic.html', renderFile('views/topic.pug'))
 writeFileSync('page/imageGallery.html', renderFile('views/imageGallery.pug'))
 
 const files = readdirSync('./views/includes/demos/pages/')

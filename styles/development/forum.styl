@@ -6,7 +6,7 @@ _forumColor1 = _colorG + 7%
   display: grid
   gap: _gap
 
-.topic
+.topic-item
   --img: url(/medias/images/uploads/dawid-zawila-w300.webp)
   position: relative
   display: grid
@@ -22,14 +22,14 @@ _forumColor1 = _colorG + 7%
     grid-template-columns: 4em minmax(0, 1fr)
     grid-template-areas: 'aaa ttt' 'aaa uuu'
   gap: 0 _gap
-  & > .topic-link // @note Permet à tout l'élément d'être cliquable (simulation d'imbrication des liens)
+  & .topic-link // @note Permet à tout l'élément d'être cliquable (simulation d'imbrication des liens)
     position: absolute
     inset: 0
     z-index: 1
     //&:focus // @note Pas de focus car tabindex='-1'
     &:hover
     &:active
-      & ~ * h2 a
+      & + * h2 a
         color: _color5
         text-decoration: underline
   & > * a // @note Rétablit le clique des liens de base.
@@ -46,19 +46,19 @@ _forumColor1 = _colorG + 7%
   //    border-radius: 50%
   //    background: #222 var(--img)
   //    background-size: cover
+  & > :nth-child(2)
   & > :nth-child(3)
-  & > :nth-child(4)
     display: flex
     justify-content: space-between
     align-items: baseline
     gap: 0 _gap
   & :where(p, ul, li)
     all: unset
-  & > :nth-child(3)
+  & > :nth-child(2)
     grid-area: ttt
     & div
       flex-shrink: 0
-  & > :nth-child(4)
+  & > :nth-child(3)
     flex-wrap: wrap
     & p
       margin-block: .25em 1em
@@ -86,9 +86,8 @@ _forumColor1 = _colorG + 7%
     //font-size: 1em
 
 _forumAvatarsSize = 3.5em
-_forumAvatarsS = _forumAvatarsSize / 2
 _forumAvatarsX = _forumAvatarsSize / 3
-_forumAvatarsY = _forumAvatarsSize / 3
+_forumAvatarsY = _forumAvatarsSize / 3 - .2em
 
 .avatars
 .avatars > *
@@ -109,12 +108,13 @@ _forumAvatarsY = _forumAvatarsSize / 3
   position: relative
   & > *
     position: absolute
+    border: .2em solid _colorG + 10%
   & > :nth-child(1)
     transform: 'translate(%s, %s) scale(.5)' % (_forumAvatarsX _forumAvatarsY)
   & > :nth-child(2)
-    transform: 'translate(%s, %s) scale(.5)' % (_forumAvatarsX (_forumAvatarsY + 1 * -1))
+    transform: 'translate(%s, %s) scale(.5)' % (_forumAvatarsX (_forumAvatarsY - .8))
   & > :nth-child(3)
-    transform: 'translate(%s, %s) scale(.5)' % (_forumAvatarsX (_forumAvatarsY + 2 * -1))
+    transform: 'translate(%s, %s) scale(.5)' % (_forumAvatarsX (_forumAvatarsY - 1.6))
 
-.topic-solved > :nth-child(3) svg:first-child
+.topic-solved > :nth-child(2) svg:first-child
   color: _color4 + 34%

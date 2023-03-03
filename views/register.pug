@@ -4,14 +4,14 @@ block variables
   - const documentType = 'register'
   -
     const data = {
-      _name: 'Register',
-      _title: 'Register page',
-      _description: 'Page d\'inscription.'
+      _name: 'Register <span>.&nbsp;Template example</span>',
+      _title: 'Sample register . Scriptura framework',
+      _description: 'Exemple de page d\'inscription.'
     }
 
 block main
   header(role='banner')
-    h1.main-heading= data._name
+    h1.main-heading!= data._name
   .grid2.s-grid1.gap
     form(action='/register' method='post')
       .input
