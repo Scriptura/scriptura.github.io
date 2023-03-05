@@ -5,6 +5,8 @@ _topicColor1 = _colorG
   grid-template-columns: minmax(0, 1fr)
   gap: _gap 0
   max-width: 60em
+  & h1
+    margin-bottom: .44em // @note Compense de manière "artisanale" le gap entre header et .wrapper @todo À revoir.
   & .wrapper
   & article
     background-color: _topicColor1

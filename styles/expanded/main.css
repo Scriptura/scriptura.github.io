@@ -3397,6 +3397,9 @@ a[aria-disabled=true]:active {
   gap: 1em 0;
   max-width: 60em;
 }
+.topic h1 {
+  margin-bottom: 0.44em;
+}
 .topic .wrapper,
 .topic article {
   background-color: #393939;
