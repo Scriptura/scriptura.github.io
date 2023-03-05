@@ -2,23 +2,49 @@ _topicColor1 = _colorG
 
 .topic
   display: grid
+  grid-template-columns: minmax(0, 1fr)
   gap: _gap 0
+  max-width: 60em
   & .wrapper
-    max-width: 55em
   & article
     background-color: _topicColor1
     border-radius: _r2
-    max-width: 55em
     @media (min-width: _sizeXS)
       padding: 4em 6em
       box-shadow: _shadow8
-    &:nth-child(4n+1)
-      margin-left: 0
-    &:nth-child(4n+4)
-      margin-inline: auto
-    &:nth-child(4n+5)
-      margin-left: auto
-    &:nth-child(4n+6)
-      margin-inline: auto
+  & .wrapper
+  & article
+  & form
+    max-width: 55em
+    @media (min-width: _sizeXS)
+      &:first-child
+        margin-left: auto
+      &:nth-child(odd)
+        margin-left: auto
+      &:nth-child(even)
+        margin-right: auto
+    & header
+      display: grid
+      grid-template-columns: 4em minmax(0,1fr);
+      grid-template-areas: 'aa tt' 'aa uu'
+  & form
+    width: 100%
+  & .avatar
+    grid-area: aa
+    --img: ''
+    width: 3em
+    aspect-ratio: 1
+    background: #222 var(--img)
+    background-size: cover
   & address
+    grid-area: tt
+    font-style: normal
+    font-weight: bold
     font-variant: small-caps
+  & time
+    grid-area: uu
+
+/*
+*
+  outline: 1px solid orange !important
+*/

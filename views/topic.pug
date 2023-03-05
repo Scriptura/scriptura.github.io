@@ -13,20 +13,21 @@ block main
   article.topic
     header(role='banner')
       h1.main-heading!= data._name
-      address
-        a(href='/page/person.html') Henri de Lubac
-      time(datetime='2017-04-23 20:33:21')
-        svg.icon-inline(role='img' focusable='false')
-          use(href='/sprites/util.svg#quill')
-        | Le 23 avril 2017 à 20h33
-      p.keywords
-        svg.icon-inline(role='img' focusable='false')
-          use(href='/sprites/util.svg#old-key')
-        a(href='/keyword/lion') Lion
-        |  &bull; 
-        a(href='/keyword/lion') Antilope
-        |  &bull; 
-        a(href='/keyword/lion') Crocodile
+      //
+        address
+          a(href='/page/person.html') Henri de Lubac
+        time(datetime='2017-04-23 20:33:21')
+          svg.icon-inline(role='img' focusable='false')
+            use(href='/sprites/util.svg#quill')
+          | Le 23 avril 2017 à 20h33
+        p.keywords
+          svg.icon-inline(role='img' focusable='false')
+            use(href='/sprites/util.svg#old-key')
+          a(href='/keyword/lion') Lion
+          |  &bull; 
+          a(href='/keyword/lion') Antilope
+          |  &bull; 
+          a(href='/keyword/lion') Crocodile
     .wrapper.links.decorative-hr
       p Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus sapien eros vitae ligula. Pellentesque rhoncus nunc et augue.
       pre.pre
@@ -39,13 +40,13 @@ block main
       article.links.decorative-hr
         header
           h2.sr-only Commentaire numéro #{i} du sujet en cours.
-          div(style='--img:url(/medias/images/uploads/pisit-heng-w300.webp)')
+          - if (i % 2)
+           .avatar(style='--img:url(/medias/images/uploads/pisit-heng-w300.webp)')
+          - else
+           .avatar(style='--img:url(/medias/images/uploads/nicolas-hoizey-w300.webp)')
           address
             a(href='/page/person.html') Pseudo #{i + 1}
-          time(datetime='2017-04-23 20:33:21')
-            svg.icon-inline(role='img' focusable='false')
-              use(href='/sprites/util.svg#quill')
-            | Le 23 avril 2017 à 20h33
+          time(datetime='2017-04-23 20:33:21') Le 23 avril 2017 à 20h33
         p Lorem ipsum dolor sit amet. Aut fuga laborum eos ipsam corrupti et aspernatur eligendi 33 voluptatem veniam et nulla voluptas? Est beataesint cum dolores dolorem est doloremque quia ut autem numquam ea error voluptas.
         - if (i % 5 == 0)
           pre.pre
@@ -56,4 +57,12 @@ block main
                 }
               }
         p Ab eaque commodi est fugiat temporibus qui consequatur galisum quo facilis quia non sint dignissimos. Qui consequuntur enim est voluptatemmolestias et voluptas velit.
-        a(href='#comment-1' aria-label='Ajouter un commentaire') #
+        a(href='#comment-' + (i + 1) aria-label='Commentaire n°' + (i + 1)) ##{i + 1}
+    form(method='get' action='./')
+      .input
+        label.sr-only Répondre
+        textarea
+        button.button
+          svg.icon-inline(role='img' focusable='false')
+            use(href='/sprites/util.svg#share')
+          | Répondre

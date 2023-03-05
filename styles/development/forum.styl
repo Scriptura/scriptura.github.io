@@ -1,9 +1,10 @@
 _forumSize = 35.01em
-_forumColor1 = _colorG + 7%
+_forumColor1 = _colorG + 3% // 7%
 
 .forum
   all: unset
   display: grid
+  grid-template-columns: minmax(0, 1fr)
   gap: _gap
 
 .topic-item
