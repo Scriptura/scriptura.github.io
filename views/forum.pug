@@ -28,11 +28,13 @@ block main
                 use(href='/sprites/util.svg#bubbles')
             | 0
         div
-          p(aria-label='Sujet créé')
-            svg.icon-inline(role='img' focusable='false')
+          p
+            |
+            svg.icon-inline(role='img' focusable='false' aria-label='Sujet créé par')
               use(href='/sprites/util.svg#quill')
             a(href='/page/person.html') Jeanne d'Arc
-            |  aujourd'hui à 9h31
+            |  aujourd'hui à 
+            time(datetime='2023-03-07 09:31:17') 9h31
           ul(aria-label=' Mots clefs')
             li
               a(href='/page/forum.html') Écriture & Tradition
@@ -49,8 +51,8 @@ block main
               use(href='/sprites/util.svg#check2')
             | 17
         div
-          p(aria-label='Dernière réponse')
-            svg.icon-inline(role='img' focusable='false')
+          p
+            svg.icon-inline(role='img' focusable='false' aria-label='Dernière réponse')
               use(href='/sprites/util.svg#share')
             a(href='/page/person.html') Henri de Lubac
             |  hier à 15h05
@@ -68,8 +70,8 @@ block main
         div
           h2
             a(href='/page/topic.html') Praesent in neque pharetra tincidunt metus sed lobortis neque
-          div(aria-label='Nombre de commentaires')
-            svg.icon-inline(role='img' focusable='false')
+          div
+            svg.icon-inline(role='img' focusable='false' aria-label='Nombre de commentaires')
               use(href='/sprites/util.svg#bubbles')
             | 2
         div

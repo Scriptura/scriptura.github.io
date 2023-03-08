@@ -47,7 +47,12 @@ block main
           address
             a(href='/page/person.html') Pseudo #{i + 1}
           time(datetime='2017-04-23 20:33:21') Le 23 avril 2017 à 20h33
-        p Lorem ipsum dolor sit amet. Aut fuga laborum eos ipsam corrupti et aspernatur eligendi 33 voluptatem veniam et nulla voluptas? Est beataesint cum dolores dolorem est doloremque quia ut autem numquam ea error voluptas.
+        p
+          | Lorem ipsum dolor sit amet. Aut fuga laborum eos 
+          a(href='/') ipsam corrupti
+          |  et aspernatur eligendi voluptatem veniam et nulla voluptas? Est beataesint cum 
+          a(href='https://github.com') dolores dolorem
+          |  est doloremque quia ut autem numquam ea error voluptas.
         - if (i % 5 == 0)
           pre.pre
             code.language-css(data-code='CSS' translate='no').

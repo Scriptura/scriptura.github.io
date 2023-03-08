@@ -3342,7 +3342,7 @@ a[aria-disabled=true]:active {
 .topic-item > :nth-child(3) ul a {
   padding: 0.25em 0.5em 0.25em 1.25em;
   white-space: nowrap;
-  background-color: #333;
+  background-color: #2b2b2b;
   -webkit-clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
           clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
 }
