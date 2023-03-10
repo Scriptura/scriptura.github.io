@@ -1,7 +1,8 @@
 import { readdirSync, writeFileSync, readFileSync } from 'fs'
 import { renderFile } from 'pug'
 
-//const sprites = readFileSync('sprites/util.svg')
+const sprites = readFileSync('sprites/util.svg', 'utf8')
+//sprites.forEach(symbols => sprite)
 
 writeFileSync('index.html', renderFile('views/index.pug'))
 writeFileSync('404.html', renderFile('views/404.pug'))
