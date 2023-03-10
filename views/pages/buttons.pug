@@ -1,0 +1,16 @@
+extends ../patternLayout
+
+block variables
+  - const documentType = 'button'
+  - const pageType = 'component'
+  -
+    const data = {
+      _name: 'Buttons <span>.&nbsp;Documentation</span>',
+      _title: 'Buttons, documentation',
+      _description: 'Buttons, documentation'
+    }
+
+block main
+  header(role='banner')
+    h1.main-heading!= data._name
+  include ../demos/button

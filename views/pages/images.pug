@@ -1,0 +1,16 @@
+extends ../patternLayout
+
+block variables
+  - const documentType = 'image'
+  - const pageType = 'component'
+  -
+    const data = {
+      _name: 'Images <span>.&nbsp;Documentation</span>',
+      _title: 'Images, documentation',
+      _description: 'Images, documentation'
+    }
+
+block main
+  header(role='banner')
+    h1.main-heading!= data._name
+  include ../demos/image

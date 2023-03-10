@@ -1,0 +1,16 @@
+extends ../patternLayout
+
+block variables
+  - const documentType = 'typography'
+  - const pageType = 'component'
+  -
+    const data = {
+      _name: 'Typography <span>.&nbsp;Documentation</span>',
+      _title: 'Typography, documentation',
+      _description: 'Typography, documentation'
+    }
+
+block main
+  header(role='banner')
+    h1.main-heading!= data._name
+  include ../demos/typography

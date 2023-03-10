@@ -1,0 +1,134 @@
+extends ../patternLayout
+
+block variables
+  - const documentType = 'styleGuide'
+  -
+    const data = {
+      _name: 'Style Guide <span>.&nbsp;Documentation</span>',
+      _title: 'Style Guide . Scriptura framework',
+      _description: 'Style Guide . Scriptura framework'
+    }
+
+mixin list(icon, name, slug)
+  li
+    svg.icon(role='img' focusable='false')
+      use(href='/sprites/util.svg#' + icon)
+    a(href='#section-' + slug) #{name}
+
+mixin section(name, slug)
+  section(id='section-' + slug).ribbon-content
+    h1= name
+      a.anchor(href='#section-' + slug)
+    a(href='./' + slug + '.html').ribbon-top-right See page
+    block
+
+block main
+  header(role='banner')
+    h1.main-heading!= data._name
+  ul.grid4.list-straight
+    +list('ampersand', 'Typography', 'typography')
+    +list('language', 'Languages', 'languages')
+    +list('gopuram', 'Icons', 'icons')
+    +list('list-ul', 'Lists', 'lists')
+    +list('indent', 'Details/Summary', 'detailsSummary')
+    +list('folder-closed', 'Tabs', 'tabs')
+    +list('indent', 'Accordions', 'accordions')
+    +list('message', 'Message Boxes', 'messageBoxes')
+    +list('code', 'Code Blocks', 'codeBlocks')
+    +list('table', 'Tables', 'tables')
+    +list('picture', 'Images', 'images')
+    +list('compact-disc', 'Audio & video players', 'players')
+    +list('table-list', 'Forms', 'forms')
+    +list('sliders', 'Ranges', 'ranges')
+    +list('check2', 'Checkboxes, radios & switches', 'checkboxes')
+    +list('power-off', 'Buttons', 'buttons')
+    +list('bars-progress', 'Progress Bars', 'progressBars')
+    +list('spinner', 'Loaders', 'loaders')
+    +list('address-card', 'Cards', 'cards')
+    +list('ribbon', 'Ribbons', 'ribbons')
+    +list('border-none', 'Grids', 'grids')
+    +list('grip', 'Columns', 'columns')
+    +list('search', 'Scales', 'scales')
+    +list('map-location-dot', 'Maps', 'maps')
+  hr
+  //-
+    +section('Sprites', 'sprites')
+      include ../demos/sprite
+    hr
+  +section('Typography', 'typography')
+    include ../demos/typography
+  hr
+  +section('Languages', 'languages')
+    include ../demos/language
+  hr
+  +section('Icons', 'icons')
+    include ../demos/icon
+  hr
+  +section('Lists', 'lists')
+    include ../demos/list
+  hr
+  +section('Details/Summary', 'detailsSummary')
+    include ../demos/detailsSummary
+  hr
+  +section('Tabs', 'tabs')
+    include ../demos/tab
+  hr
+  +section('Accordions', 'accordions')
+    include ../demos/accordion
+  hr
+  +section('Message Boxes', 'messageBoxes')
+    include ../demos/messageBox
+  hr
+  +section('Code Blocks', 'codeBlocks')
+    include ../demos/codeBlock
+  hr
+  +section('Tables', 'tables')
+    include ../demos/table
+  hr
+  +section('Images', 'images')
+    include ../demos/image
+  hr
+  +section('Audio & video players', 'players')
+    include ../demos/player
+  hr
+  +section('Forms', 'forms')
+    include ../demos/form
+  hr
+  +section('Ranges', 'ranges')
+    include ../demos/range
+  hr
+  +section('Checkboxes & Radio buttons', 'checkboxes')
+    include ../demos/checkbox
+  hr
+  +section('Buttons', 'buttons')
+    include ../demos/button
+  hr
+  +section('Progress Bars', 'progressBars')
+    include ../demos/progressBar
+  hr
+  +section('Loaders', 'loaders')
+    include ../demos/loader
+  hr
+  +section('Cards', 'cards')
+    include ../demos/card
+  hr
+  +section('Ribbons', 'ribbons')
+    include ../demos/ribbon
+    //- @note Pour inclure le ribbon dédié à la page en évitant les conflits avec le dernier ribbon de la démonstration.
+    br
+    br
+    br
+    br
+    br
+  hr
+  +section('Grids', 'grids')
+    include ../demos/grid
+  hr
+  +section('Columns', 'columns')
+    include ../demos/column
+  hr
+  +section('Scales', 'scales')
+    include ../demos/scale
+  hr
+  +section('Maps', 'maps')
+    include ../demos/map

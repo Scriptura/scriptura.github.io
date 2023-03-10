@@ -1,0 +1,16 @@
+extends ../patternLayout
+
+block variables
+  - const documentType = 'tab'
+  - const pageType = 'component'
+  -
+    const data = {
+      _name: 'Tabs <span>.&nbsp;Documentation</span>',
+      _title: 'Tabs, documentation',
+      _description: 'Tabs, documentation'
+    }
+
+block main
+  header(role='banner')
+    h1.main-heading!= data._name
+  include ../demos/tab

@@ -228,6 +228,13 @@ iframe {
   height: 100%;
   border: none;
 }
+ruby {
+  display: grid;
+  gap: 0.5em;
+}
+ruby * {
+  margin: auto;
+}
 ::marker {
   color: #ff6347;
 }
@@ -3324,6 +3331,7 @@ a[aria-disabled=true]:active {
   flex-wrap: wrap;
 }
 .topic-item > :nth-child(3) p {
+  justify-content: start;
   margin-block: 0.25em 1em;
 }
 .topic-item > :nth-child(3) ul {

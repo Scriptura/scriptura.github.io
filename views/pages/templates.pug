@@ -1,0 +1,15 @@
+extends ../patternLayout
+
+block variables
+  - const documentType = 'templates'
+  -
+    const data = {
+      _name: 'Templates <span>.&nbsp;Examples</span>',
+      _title: 'Templates . Scriptura framework',
+      _description: 'Example of templates'
+    }
+
+block main
+  header(role='banner')
+    h1.main-heading!= data._name
+  include ../includes/link2

@@ -1,0 +1,16 @@
+extends ../patternLayout
+
+block variables
+  - const documentType = 'scale'
+  - const pageType = 'component'
+  -
+    const data = {
+      _name: 'Scales <span>.&nbsp;Documentation</span>',
+      _title: 'Scales, documentation',
+      _description: 'Scales, documentation'
+    }
+
+block main
+  header(role='banner')
+    h1.main-heading!= data._name
+  include ../demos/scale

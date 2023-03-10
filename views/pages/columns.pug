@@ -1,0 +1,16 @@
+extends ../patternLayout
+
+block variables
+  - const documentType = 'column'
+  - const pageType = 'component'
+  -
+    const data = {
+      _name: 'Columns <span>.&nbsp;Documentation</span>',
+      _title: 'Columns, documentation',
+      _description: 'Columns, documentation'
+    }
+
+block main
+  header(role='banner')
+    h1.main-heading!= data._name
+  include ../demos/column

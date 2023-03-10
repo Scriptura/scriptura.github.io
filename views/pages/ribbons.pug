@@ -1,0 +1,16 @@
+extends ../patternLayout
+
+block variables
+  - const documentType = 'ribbon'
+  - const pageType = 'component'
+  -
+    const data = {
+      _name: 'Ribbons <span>.&nbsp;Documentation</span>',
+      _title: 'Ribbons, documentation',
+      _description: 'Ribbons, documentation'
+    }
+
+block main
+  header(role='banner')
+    h1.main-heading!= data._name
+  include ../demos/ribbon

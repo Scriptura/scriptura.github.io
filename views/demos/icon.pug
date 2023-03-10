@@ -1,0 +1,18 @@
+mixin icon(name)
+  ruby
+    svg.icon(role='img' focusable='false')
+      use(href='/sprites/util.svg#' + name)
+    rt #{name}
+
+
+.flex.gap.gap-bottom.scale200
+    +icon('ampersand')
+    +icon('language')
+    +icon('gopuram')
+    +icon('old-key')
+.grid2.gap
+  .message
+    p
+      | Icones disponibles à partir d'un fichier composé de sprites SVG. Celui-ci est compilé (et peut être recompilé si besoin de personnalisation) à partir de SVGs situés dans un même dossier. Optimisation avec SVGO. Voir la configuation du 
+      code package.json
+      | .

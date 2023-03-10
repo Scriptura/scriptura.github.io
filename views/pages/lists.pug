@@ -1,0 +1,16 @@
+extends ../patternLayout
+
+block variables
+  - const documentType = 'list'
+  - const pageType = 'component'
+  -
+    const data = {
+      _name: 'Lists <span>.&nbsp;Documentation</span>',
+      _title: 'Lists, documentation',
+      _description: 'Lists, documentation'
+    }
+
+block main
+  header(role='banner')
+    h1.main-heading!= data._name
+  include ../demos/list

@@ -1,0 +1,16 @@
+extends ../patternLayout
+
+block variables
+  - const documentType = 'icon'
+  - const pageType = 'component'
+  -
+    const data = {
+      _name: 'Icons <span>.&nbsp;Documentation</span>',
+      _title: 'Icons, documentation',
+      _description: 'Icons, documentation'
+    }
+
+block main
+  header(role='banner')
+    h1.main-heading!= data._name
+  include ../demos/icon

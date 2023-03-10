@@ -1,0 +1,16 @@
+extends ../patternLayout
+
+block variables
+  - const documentType = 'card'
+  - const pageType = 'component'
+  -
+    const data = {
+      _name: 'Cards <span>.&nbsp;Documentation</span>',
+      _title: 'Cards, documentation',
+      _description: 'Cards, documentation'
+    }
+
+block main
+  header(role='banner')
+    h1.main-heading!= data._name
+  include ../demos/card
