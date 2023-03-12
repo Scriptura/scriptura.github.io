@@ -4,10 +4,10 @@ ol.breadcrumb(aria-label='Breadcrumb')
       a(href='/') Home
   if pageType === 'component'
     li
-      a(href='/page/styleGuide.html') Style Guide
+      a(href='/page/components.html') Components
   else if pageType === 'template'
     li
-      a(href='/page/templates.html') Template examples
+      a(href='/page/templates.html') Templates
   //- Attention : ici la comparaison se fait avec documentType, et non pageType
   li
     //- @note L'attribut aria-current='page' n'est pas obligatoire pour l'accessibilité. Donc, sppression du lien pour la page courante car sa desactivation via CSS (pointer-events:none) peut toujours être contournée par le focus.

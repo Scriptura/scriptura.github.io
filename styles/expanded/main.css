@@ -2797,19 +2797,19 @@ form > [class*="grid"] > .input {
   display: inline;
 }
 @media (max-width: 50.01em) {
-  .type-styleGuide main > section {
+  .type-components main > section {
     position: relative;
     padding: 0;
   }
 }
 @media (min-width: 50.01em) {
-  .type-styleGuide main > section {
+  .type-components main > section {
     padding: 4em 6em;
     box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
   }
 }
 @media (max-width: 50.01em) {
-  .type-styleGuide main > section.ribbon-content::before {
+  .type-components main > section.ribbon-content::before {
     content: '';
     position: absolute;
     top: -0.5em;
@@ -2824,7 +2824,7 @@ form > [class*="grid"] > .input {
   }
 }
 @media (max-width: 50.01em) {
-  .type-styleGuide main > section > .ribbon-top-right {
+  .type-components main > section > .ribbon-top-right {
     transform: translate(2.85em, 0.9em) rotate(45deg) !important;
   }
 }
