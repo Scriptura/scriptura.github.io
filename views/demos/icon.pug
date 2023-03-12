@@ -4,7 +4,7 @@ mixin icon(name)
       use(href='/sprites/util.svg#' + name)
     rt #{name}
 
-.grid.gap.scale200(style='grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr))')
+.grid.gap.gap-bottom.scale200(style='grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr))')
     +icon('ampersand')
     +icon('language')
     +icon('gopuram')
