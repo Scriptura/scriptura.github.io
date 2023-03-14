@@ -5,6 +5,7 @@ block variables
   - const pageType = 'component'
   -
     const data = {
+      _id: '1',
       _name: 'Henri Sonier de Lubac <span>.&nbsp;Sample person template</span>',
       _title: 'Sample person template . Scriptura framework',
       _description: 'Exemple de page dédiée pour une personne',
@@ -26,9 +27,24 @@ block main
   header(role='banner')
     h1.main-heading!= data._name
   .grid2.gap.s-grid1
+    .center
+      figure.figure-focus-thumbnail(style='border-radius:50%;overflow:hidden')
+        picture
+          source(srcset='/medias/images/uploads/henri-de-lubac-w600.webp, /medias/images/uploads/henri-de-lubac-w1000.webp 2x' type='image/webp')
+          img(src='/medias/images/uploads/henri-de-lubac-original.webp' loading='lazy' alt="Cardinal Henri de Lubac, s.j." width='600' height='600' style='border-radius:50%')
+      if data._devise
+        br
+        .message
+          .grid.gap(style='grid-template-columns: 2.5em 1fr 2.5em')
+            svg.icon.scale200(role='img' focusable='false' style='color:tomato')
+              use(href='/sprites/util.svg#quotes-left')
+            p #{data._devise}
+            svg.icon.scale200(role='img' focusable='false' style='color:tomato')
+              use(href='/sprites/util.svg#quotes-right')
     div
       ul
-        li Id : #{data._id}
+        if data._id
+          li Id : #{data._id}
         if data._user_id
           li User id : #{data._user_id}
         li Sexe : 
@@ -79,12 +95,4 @@ block main
           li Pays : #{data._nationality}
         if data._phone
           li Téléphone : #{data._phone}
-        if data._devise
-          li Devise : 
-            em "#{data._devise}"
       p Henri Sonier de Lubac, né à Cambrai le 20 février 1896 et mort à Paris le 4 septembre 1991, est un jésuite, théologien catholique et cardinal français.
-    .center
-      figure.figure-focus-thumbnail
-        picture
-          source(srcset='/medias/images/uploads/henri-de-lubac-w600.webp, /medias/images/uploads/henri-de-lubac-w1000.webp 2x' type='image/webp')
-          img(src='/medias/images/uploads/henri-de-lubac-original.webp' loading='lazy' alt="Cardinal Henri de Lubac, s.j." width='2565' height='3634')

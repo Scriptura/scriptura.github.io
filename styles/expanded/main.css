@@ -137,37 +137,7 @@ em {
   font-style: italic;
 }
 blockquote {
-  position: relative;
   margin: 0;
-  padding-left: 2em;
-  background: repeating-linear-gradient(-45deg, transparent 0 5px, rgba(255,255,255,0.1) 5px 10px) no-repeat;
-  background-size: 0.5em 100%;
-}
-blockquote::before,
-blockquote::after {
-  position: absolute;
-  left: -0.1em;
-  line-height: 0.5;
-  font-size: 3rem;
-  color: #ff6347;
-  font-family: 'Noto Serif', serif;
-}
-blockquote::before {
-  content: '\00AB';
-  top: -0.1em;
-}
-blockquote::after {
-  content: '\00BB';
-  bottom: 0;
-}
-blockquote footer {
-  margin-block: 0.75em;
-}
-blockquote footer::before {
-  content: '\2014 \00A0';
-}
-blockquote footer::after {
-  content: '.';
 }
 q {
   quotes: '\201C' '\201D' '\2018' '\2019';
@@ -264,6 +234,39 @@ hr[data-hr]::after,
   font-size: 2em;
   text-align: center;
   color: rgba(255,255,255,0.2);
+}
+.blockquote blockquote {
+  position: relative;
+  margin: 0;
+  padding-left: 2em;
+  background: repeating-linear-gradient(-45deg, transparent 0 5px, rgba(255,255,255,0.1) 5px 10px) no-repeat;
+  background-size: 0.5em 100%;
+}
+.blockquote blockquote::before,
+.blockquote blockquote::after {
+  position: absolute;
+  left: -0.1em;
+  line-height: 0.5;
+  font-size: 3rem;
+  color: #ff6347;
+  font-family: 'Noto Serif', serif;
+}
+.blockquote blockquote::before {
+  content: '\00AB';
+  top: -0.1em;
+}
+.blockquote blockquote::after {
+  content: '\00BB';
+  bottom: 0;
+}
+.blockquote blockquote footer {
+  margin-block: 0.75em;
+}
+.blockquote blockquote footer::before {
+  content: '\2014 \00A0';
+}
+.blockquote blockquote footer::after {
+  content: '.';
 }
 .decorative-hr hr::after {
   content: '✻ ✻ ✻';
@@ -660,6 +663,7 @@ main {
 :has(> [class^=grid]),
 .parent-grid {
   container: grid/inline-size;
+  width: 100%;
 }
 [class^=grid] {
   display: grid;
