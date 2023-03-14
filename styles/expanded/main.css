@@ -1340,6 +1340,9 @@ audio:not([controls]) {
   position: absolute;
   inset: 0;
 }
+.video-youtube .video-youtube-error {
+  text-align: center;
+}
 .video-youtube .thumbnail-youtube {
   display: grid;
   place-items: center;
