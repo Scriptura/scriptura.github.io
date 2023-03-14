@@ -81,7 +81,8 @@ h6,
 }
 h1,
 .h1 {
-  margin-block: 0.83em;
+  margin-block: clamp(0.83em, 5vw, 0.67em);
+  font-size: clamp(2em, 5vw, 2.5em);
   font-size: 2.5em;
 /*
   @media (max-width: _sizeXS)
@@ -2830,6 +2831,20 @@ form > [class*="grid"] > .input {
   .type-components main > section > .ribbon-top-right {
     transform: translate(2.85em, 0.9em) rotate(45deg) !important;
   }
+}
+.demo-icons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+}
+.demo-icons ruby:hover * {
+  color: #ffa500;
+}
+.demo-icons svg {
+  font-size: 2em;
+}
+.demo-icons rt {
+  font-size: 0.8em;
+  color: #616161;
 }
 .hidden,
 [hidden] {

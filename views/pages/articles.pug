@@ -1,0 +1,16 @@
+extends ../patternLayout
+
+block variables
+  - const documentType = 'articles'
+  - const pageType = 'template'
+  -
+    const data = {
+      _name: 'Articles <span>.&nbsp;Documentation</span>',
+      _title: 'Articles, documentation',
+      _description: 'Articles, documentation'
+    }
+
+block main
+  header(role='banner')
+    h1.main-heading!= data._name
+  include ../demos/articles

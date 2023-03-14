@@ -12,9 +12,9 @@ function createIcons(names) {
   for (const name of names) {
     icon += `
 ruby
-  svg.icon.scale200(role='img' focusable='false')
+  svg.icon(role='img' focusable='false')
     use(href='/sprites/util.svg#${name}')
-  rt.scale80 ${name}`
+  rt ${name}`
   }
   return icon
 }

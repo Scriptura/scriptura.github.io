@@ -4,14 +4,14 @@ mixin list(icon, name, slug)
       use(href='/sprites/util.svg#' + icon)
     a(href='/page/' + slug + '.html') #{name}
 
-ul.grid4.list-straight
+block templateLink
   +list('login', 'Login', 'login')
   +list('user', 'Register', 'register')
   +list('picture', 'Image gallery', 'imageGallery')
-  +list('ampersand', 'Cards', 'cards')
+  +list('quill', 'Articles', 'articles')
   +list('quill', 'Article', 'article')
   +list('bubbles', 'Forum', 'forum')
   +list('bubbles', 'Topic', 'topic')
   +list('location', 'Place', 'place')
   +list('address-card', 'Person', 'person')
-  +list('warning', '404', '404')
+  +list('warning', 'Error 404', '404')

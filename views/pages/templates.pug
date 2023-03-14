@@ -12,4 +12,11 @@ block variables
 block main
   header(role='banner')
     h1.main-heading!= data._name
-  include ../includes/link2
+  .grid3.gap
+    .c2
+      ul.grid2.list-straight
+        include ../includes/templateLinks
+    .center
+      svg.size25.decorative-svg(role='img' focusable='false')
+        use(href='/sprites/various/Jeanne-D-Arc.svg#1')
+        //-use(href='/sprites/silos/79v-d1.svg#1')

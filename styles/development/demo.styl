@@ -68,6 +68,17 @@ _demoColorDeviation = 10
       @media (max-width: _sizeS)
         transform: translate(2.85em, .9em) rotate(45deg) !important
 
+.demo-icons
+  display: grid
+  grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr))
+  & ruby:hover *
+      color: _color5
+  & svg
+    font-size: 2em
+  & rt
+    font-size: .8em
+    color: _colorG + 20%
+
 //.type-components section:not(:first-child)
   //content-visibility: auto
   //contain-intrinsic-size: 1px 5000px
