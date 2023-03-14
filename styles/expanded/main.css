@@ -279,6 +279,15 @@ hr[data-hr]::after,
 }
 .links p a[href*="//"]::after {
   content: ' ↗';
+/*
+  content: embedurl(_go)
+  display: inline-block
+  height: 1em
+  width: 1em
+  color: var(--color)
+  fill: var(--color)
+  margin: -.5em 0 -.5em .2em
+  */
 }
 .justify {
   -webkit-hyphens: auto;

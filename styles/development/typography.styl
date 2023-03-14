@@ -50,8 +50,19 @@ hr[data-hr]::after
 .links p a:not([href^="#"])::after // Liens internes, sauf les ancres.
   content: ' ↩' //⤶
 
+//_go = '/medias/icons/dest/external-link.svg'
+
 .links p a[href*="//"]::after // @note Liens externes.
   content: ' ↗'
+  /*
+  content: embedurl(_go)
+  display: inline-block
+  height: 1em
+  width: 1em
+  color: var(--color)
+  fill: var(--color)
+  margin: -.5em 0 -.5em .2em
+  */
 
 .justify
   hyphens: auto
