@@ -2658,13 +2658,13 @@ form > [class*="grid"] > .input {
   margin-right: 0;
 }
 .article .keywords li {
-  margin-bottom: 0.5em;
+  margin-bottom: 0.75em;
   filter: drop-shadow(0.5rem 0.5rem 0.5rem rgba(0,0,0,0.2));
 }
 .article .keywords a {
   padding: 0.25em 0.5em 0.25em 1.25em;
   white-space: nowrap;
-  background-color: #363636;
+  background-color: #292929;
   -webkit-clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
           clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
 }
@@ -3550,6 +3550,7 @@ html,
 .tab-summary,
 .audio-player,
 .progress-bar div,
+.article .keywords a,
 .topic-item,
 .topic .wrapper,
 .topic article,
