@@ -83,7 +83,6 @@ h1,
 .h1 {
   margin-block: clamp(0.83em, 5vw, 0.67em);
   font-size: clamp(2em, 5vw, 2.5em);
-  font-size: 2.5em;
 /*
   @media (max-width: _sizeXS)
     //margin-block: .83em // @note Marge alignée sur celle de h2 (si "rattrapage")
@@ -2646,6 +2645,28 @@ form > [class*="grid"] > .input {
     grid-column: span 2;
     padding-top: 4em;
   }
+}
+.article .keywords {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em 0.5em;
+  margin-block: 2em 0;
+  padding-left: 0;
+}
+.article .keywords > :last-child {
+  margin-right: 0;
+}
+.article .keywords li {
+  margin-bottom: 0.5em;
+  filter: drop-shadow(0.5rem 0.5rem 0.5rem rgba(0,0,0,0.2));
+}
+.article .keywords a {
+  padding: 0.25em 0.5em 0.25em 1.25em;
+  white-space: nowrap;
+  background-color: #363636;
+  -webkit-clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
+          clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
 }
 .drop-cap,
 .no-js .add-drop-cap > :not(*) + p:first-child::first-letter {

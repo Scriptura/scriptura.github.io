@@ -81,12 +81,10 @@ block main
           svg.icon-inline(role='img' focusable='false')
             use(href='/sprites/util.svg#calendar')
           |  Contenu publi&eacute; le 17.07.2017, modifi&eacute; le 01.02.2022.
-        p.keywords
-          svg.icon-inline(role='img' focusable='false')
-            use(href='/sprites/util.svg#old-key')
-          |  Mots clefs&nbsp;: 
-          a(href='/keyword/lion') Lion
-          |  &bull; 
-          a(href='/keyword/lion') Antilope
-          |  &bull; 
-          a(href='/keyword/lion') Crocodile
+        ul.keywords
+          li
+            a(href='/keyword/lion') Lion
+          li
+            a(href='/keyword/lion') Antilope
+          li 
+            a(href='/keyword/lion') Crocodile

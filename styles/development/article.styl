@@ -38,3 +38,21 @@
     & > footer
       grid-column: span 2
       padding-top: 4em
+  & .keywords
+    list-style: none
+    display: flex
+    flex-wrap: wrap
+    gap: (_gap / 2) (_gap / 2)
+    //font-size: .8em
+    margin-block: 2em 0
+    padding-left: 0
+    & > :last-child
+      margin-right: 0
+    & li
+      margin-bottom: .5em
+      filter: drop-shadow(_shadow2)
+    & a
+      padding: .25em .5em .25em 1.25em
+      white-space: nowrap
+      background-color: _colorG - 5%
+      clip-path: polygon(.75em 0, 100% 0, 100% 100%, .75em 100%, 0 50%)
