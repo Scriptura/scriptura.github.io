@@ -344,14 +344,14 @@ main {
           user-select: none;
   background-color: #262626;
 }
-@media (max-width: 80.01em) {
+@media (max-width: 86.01em) {
   .nav {
     grid-template-rows: 3em;
     grid-template-columns: 3em minmax(0, 1fr) 3em;
     grid-template-areas: 'logo breadcrumb cmd';
   }
 }
-@media (min-width: 80.01em) {
+@media (min-width: 86.01em) {
   .nav {
     grid-template-rows: repeat(2, 2.5em);
     grid-template-columns: 5em minmax(0, 1fr);
@@ -418,7 +418,7 @@ main {
 .sub-nav a:active svg {
   animation: anim-jump 0.5s ease-in-out;
 }
-@media (max-width: 80.01em) {
+@media (max-width: 86.01em) {
   .sub-nav {
     position: absolute;
     z-index: 800;
@@ -442,7 +442,7 @@ main {
     transform: translateX(110vw) rotate(0deg);
   }
 }
-@media (min-width: 80.01em) {
+@media (min-width: 86.01em) {
   .sub-nav .current {
     position: relative;
     z-index: 10;
@@ -462,17 +462,17 @@ main {
     margin-left: auto;
   }
 }
-@media (min-width: 35.01em) and (max-width: 80.01em) {
+@media (min-width: 35.01em) and (max-width: 86.01em) {
   .sub-nav li {
     flex-basis: 33%;
   }
 }
-@media (min-width: 50.01em) and (max-width: 80.01em) {
+@media (min-width: 50.01em) and (max-width: 86.01em) {
   .sub-nav li {
     flex-basis: 25%;
   }
 }
-@media (max-width: 80.01em) {
+@media (max-width: 86.01em) {
   :where(html,
   body).active {
     overflow: clip;
@@ -532,7 +532,7 @@ main {
     transition-delay: 1s;
   }
 }
-@media (min-width: 80.01em) {
+@media (min-width: 86.01em) {
 @keyframes anim-jump {
     30% {
       transform: translateY(-0.3em);
@@ -542,7 +542,7 @@ main {
 .cmd-nav {
   grid-area: cmd;
 }
-@media (max-width: 80.01em) {
+@media (max-width: 86.01em) {
   .cmd-nav {
     padding: 0.5em;
     cursor: pointer;
@@ -577,7 +577,7 @@ main {
     transform: translate(-177px, -177px) rotate(-45deg);
   }
 }
-@media (min-width: 80.01em) {
+@media (min-width: 86.01em) {
   .cmd-nav {
     display: none;
   }
@@ -633,7 +633,7 @@ main {
 .breadcrumb li + li {
   margin-left: -1em;
 }
-@media (max-width: 80.01em) {
+@media (max-width: 86.01em) {
   .breadcrumb li > * {
     line-height: 3;
     padding: 0 2.25em;
@@ -680,6 +680,9 @@ main {
 }
 [class^=grid].vertical-gap {
   gap: 0 1em;
+}
+.grid-auto {
+  grid-template-columns: repeat(auto-fit, minmax(var(--s, 15em), 1fr));
 }
 @container grid (35em < width) {
   .grid2,
@@ -2865,10 +2868,6 @@ form > [class*="grid"] > .input {
   .type-components main > section > .ribbon-top-right {
     transform: translate(2.85em, 0.9em) rotate(45deg) !important;
   }
-}
-.demo-icons {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
 }
 .demo-icons ruby:hover * {
   color: #ffa500;

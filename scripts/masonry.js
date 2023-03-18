@@ -40,4 +40,5 @@ for (const masonry of document.querySelectorAll('.masonry')) {
     clearTimeout(resizeTimeout)
     resizeTimeout = setTimeout(() => {grid.resizeAllGridItems()}, 200) // Limitation du nombre de calculs @see https://stackoverflow.com/questions/5836779/
   })
+
 }

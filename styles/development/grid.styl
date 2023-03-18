@@ -18,6 +18,9 @@
   &.vertical-gap
     gap: 0 _gap
 
+.grid-auto
+  grid-template-columns: repeat(auto-fit, minmax(var(--s, 15em), 1fr)) // @note Ne pas monter la variable au-dessus de sa définition par défaut, sinon passer en gille classique pour éviter des dépassement sur les écrans de petite définition ; de même il faut faire attention à l'utilisation des spans de colonnes.
+
 @container grid (35em < width)
 
   .grid2

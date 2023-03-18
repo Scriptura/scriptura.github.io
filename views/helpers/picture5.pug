@@ -1,0 +1,13 @@
+figure.figure-focus(class=img.class)
+  picture
+    source(
+      srcset=img.src + img.name + '-w300' + '.' + img.ext
+      type=img.typesMime
+    )
+    img(
+      src=img.src + img.name + '-original.' + img.ext
+      alt=img.alt
+      width=img.width
+      height=img.height
+    )
+  //-figcaption!= img.alt + '.<br>Crédit&nbsp;: ' + img.author

@@ -121,3 +121,15 @@ p
   div(style='height:5em')
   div(style='height:6em')
   div(style='height:7em')
+hr(data-hr='✻ ✻ ✻')
+p
+  code .grid-auto.gap
+.grid-auto.gap.demo-items-empty.demo-items-color(style='--itemHeight:5em')
+  - for (let i = 0; i < 20; i++)
+    div
+hr(data-hr='✻ ✻ ✻')
+p
+  code .grid-auto.gap(style='--s:5em')
+.grid-auto.gap.demo-items-empty.demo-items-color(style='--s:5em;--itemHeight:5em')
+  - for (let i = 0; i < 30; i++)
+    div
