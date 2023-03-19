@@ -1,4 +1,4 @@
-import { readdirSync, writeFileSync, readFileSync } from 'fs'
+import { rmSync, mkdirSync, readdirSync, writeFileSync, readFileSync } from 'fs'
 import { renderFile } from 'pug'
 
 const files = readdirSync('views/pages/')
@@ -23,6 +23,9 @@ writeFileSync('views/includes/iconList.pug', createIcons(names))
 
 writeFileSync('index.html', renderFile('views/index.pug'))
 writeFileSync('404.html', renderFile('views/404.pug'))
+
+rmSync('page', {recursive: true}) // Suppression du dossier.
+mkdirSync('page') // Recréation du dossier.
 
 for (let file of files) {
   file = file.toString().slice(0, -4)
