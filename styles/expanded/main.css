@@ -2879,6 +2879,20 @@ form > [class*="grid"] > .input {
   font-size: 0.8em;
   color: #616161;
 }
+.demo-mosaic figure {
+  padding: 0.2em;
+}
+.demo-mosaic img {
+  aspect-ratio: 1;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.demo-mosaic button {
+  top: 0.7em;
+  right: 0.7em;
+  width: 1em;
+  height: 1em;
+}
 .hidden,
 [hidden] {
   display: none !important;

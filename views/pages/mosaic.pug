@@ -25,15 +25,7 @@ block variables
 block main
   header(role='banner')
     h1.main-heading!= data._name
-  .grid-auto.gap.masonry.demo-mosaic(style='--s:10em')
-    figure.figure-focus
-      picture
-        source(srcset='/medias/images/demo/test-w300.webp' type='image/webp')
-        img(src='/medias/images/demo/test-original.webp' /*loading='lazy'*/ alt='Image test' width='5301' height='3534')
-      //figcaption Responsive Images / Art Direction.
-        br
-        | Image test.
-    //-include includes/imageList
+  .grid-auto.gap.demo-mosaic(style='--s:8em')
     -
       img.name = 'matthew-smith'
       img.width = '5000'
@@ -49,25 +41,18 @@ block main
       img.author = 'Clay Banks'
     include ../helpers/picture5
     -
+      img.name = 'nicolas-hoizey'
+      img.width = '3715'
+      img.height = '3715'
+      img.alt = 'Intérieur d\'un phare'
+      img.author = 'Nicolas Hoizey'
+    include ../helpers/picture5
+    -
       img.name = 'sapan-patel'
       img.width = '2931'
       img.height = '4396'
       img.alt = 'Coucher de soleil sur un champ, Los Angeles, États-Unis'
       img.author = 'Sapan Patel'
-    include ../helpers/picture5
-    -
-      img.name = 'andrew-charney'
-      img.width = '5760'
-      img.height = '3840'
-      img.alt = 'Phare et maison du gardien'
-      img.author = 'Andrew Charney'
-    include ../helpers/picture5
-    -
-      img.name = 'gabriella-clare-marino'
-      img.width = '4000'
-      img.height = '6000'
-      img.alt = 'Une rue médiévale de la ville d\'Assise, Ombrie, Italie'
-      img.author = 'Gabriella Clare Marino'
     include ../helpers/picture5
     -
       img.name = 'marita-kavelashvili'
@@ -103,7 +88,7 @@ block main
       img.height = '1289'
       img.alt = 'Dunes en bord de mer'
       img.author = 'David Haughton'
-    include ../helpers/picture5  
+    include ../helpers/picture5
     -
       img.name = 'girl-with-red-hat'
       img.width = '4024'
@@ -138,13 +123,6 @@ block main
       img.height = '3000'
       img.alt = 'Tournesol'
       img.author = 'Dawid Zawila'
-    include ../helpers/picture5 
-    -
-      img.name = 'nicolas-hoizey'
-      img.width = '3715'
-      img.height = '3715'
-      img.alt = 'Intérieur d\'un phare'
-      img.author = 'Nicolas Hoizey'
     include ../helpers/picture5
     -
       img.name = 'mr-bochelly'
@@ -159,7 +137,7 @@ block main
       img.height = '3534'
       img.alt = 'Lac de Bled, Slovénie'
       img.author = 'Artem Sapegin'
-    include ../helpers/picture5  
+    include ../helpers/picture5
     -
       img.name = 'pisit-heng'
       img.width = '3024'
@@ -208,7 +186,7 @@ block main
       img.height = '6000'
       img.alt = 'Notre-Dame de Paris sous la neige'
       img.author = 'Robin Ooode (Pseudo)'
-    include ../helpers/picture5   
+    include ../helpers/picture5
     -
       img.name = 'birger-strahl'
       img.width = '4928'
@@ -292,7 +270,7 @@ block main
       img.height = '4160'
       img.alt = 'Une touche de violet dans les montagnes suisses'
       img.author = 'Robin Billy'
-    include ../helpers/picture5 
+    include ../helpers/picture5
     -
       img.name = 'luis-vidal'
       img.width = '6240'
@@ -313,4 +291,18 @@ block main
       img.height = '2745'
       img.alt = 'Cascade, Islande'
       img.author = 'Sarah Hu'
+    include ../helpers/picture5
+    -
+      img.name = 'gabriella-clare-marino'
+      img.width = '4000'
+      img.height = '6000'
+      img.alt = 'Une rue médiévale de la ville d\'Assise, Ombrie, Italie'
+      img.author = 'Gabriella Clare Marino'
+    include ../helpers/picture5
+    -
+      img.name = 'andrew-charney'
+      img.width = '5760'
+      img.height = '3840'
+      img.alt = 'Phare et maison du gardien'
+      img.author = 'Andrew Charney'
     include ../helpers/picture5
