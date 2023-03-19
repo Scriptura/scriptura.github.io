@@ -1,3 +1,4 @@
+// @note Utiliser .grid2 pour avoir deux colonnes, etc., au-delà de .grid4 utiliser .grid-auto (qui par défaut aura 5 colonnes max pour la largeur prévue de notre site).
 // @note Avec `minmax` la grille ne sera pas tributaire de son contenu en responsive @see https://css-tricks.com/equal-width-columns-in-css-grid-are-kinda-weird/
 
 :has(> [class^=grid])
@@ -19,7 +20,7 @@
     gap: 0 _gap
 
 .grid-auto
-  grid-template-columns: repeat(auto-fit, minmax(var(--s, 15em), 1fr)) // @note Ne pas monter la variable au-dessus de sa définition par défaut, sinon passer en gille classique pour éviter des dépassement sur les écrans de petite définition ; de même il faut faire attention à l'utilisation des spans de colonnes.
+  grid-template-columns: repeat(auto-fit, minmax(var(--s, 15em), 1fr)) // @note Ne pas définir la variable au-dessus de sa valeur par défaut afin d'éviter des dépassement sur les écrans de petites définitions. Préférer alors les grilles prédéfinies.
 
 @container grid (35em < width)
 

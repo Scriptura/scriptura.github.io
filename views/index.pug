@@ -13,21 +13,28 @@ block main
   header(role='banner')
     h1.main-heading!= data._name
   .grid2.gap
-    div(lang='fr')
-      - const date = new Date().toISOString().split('T')
-      - const version = date[0].replace(/-/g, '.') + '.' + Math.round(date[1].split('.')[0].replace(/:/g, '') / 500)
-      p
-        code Draft version (#{version})
-      br
-      p Scriptura est un framework front-end léger dont le but est de simplifier la mise en page. Ici, pas d'ajout supperflu de balises html dans les pages web dans le but de soutenir un script ou un effet visuel, la priorité est donnée au contenu, le code html reste propre et respecte la logique du flux des données.
-      p L'idée est de partir d'éléments html correctement structurés et de leur ajouter une classe, ou de les entourer d'un élément parent comportant une classe. La partie du document ainsi ciblée sera transformée en menu onglets ou accordéon, ou encore autre chose selon les besoins. Pour voir des exemples consultez la page regroupant nos 
-        a(href='/page/components.html') composants
-        | .
-      p Le framework permet des 
-        a(href='/page/grids.html') mises en page complexes
-        |  gr&acirc;ce &agrave; un système de grille basé sur le module css grid layout.
-      p Les choix techniques impliquent une limitation de la rétrocompatibilité aux navigateurs récents, un parti pris de notre part qui nous permet l'utilisation des dernières technologies du web sans compromis.
-      p Ce site est une base documentaire pour le framework destinée à servir avant tout... à son auteur&nbsp;!
+    .accordion(data-singletab='true')
+      details
+        summary Présentation
+        div
+          p Scriptura est un framework front-end léger dont le but est de simplifier la mise en page. Ici, pas d'ajout supperflu de balises html dans les pages web dans le but de soutenir un script ou un effet visuel, la priorité est donnée au contenu, le code html reste propre et respecte la logique du flux des données.
+          p L'idée est de partir d'éléments html correctement structurés et de leur ajouter une classe, ou de les entourer d'un élément parent comportant une classe. La partie du document ainsi ciblée sera transformée en menu onglets ou accordéon, ou encore autre chose selon les besoins. Pour voir des exemples consultez la page regroupant nos 
+            a(href='/page/components.html') composants
+            | .
+          p Le framework permet des 
+            a(href='/page/grids.html') mises en page complexes
+            |  gr&acirc;ce &agrave; un système de grille basé sur le module css grid layout.
+          p Les choix techniques impliquent une limitation de la rétrocompatibilité aux navigateurs récents, un parti pris de notre part qui nous permet l'utilisation des dernières technologies du web sans compromis.
+          p Ce site est une base documentaire pour le framework destinée à servir avant tout... à son auteur&nbsp;!
+      details
+        summary Last version
+        div
+          - const date = new Date().toISOString().split('T')
+          - const version = date[0].replace(/-/g, '.') + '.' + Math.round(date[1].split('.')[0].replace(/:/g, '') / 500)
+          p
+            //-svg.icon-inline(role='img' focusable='false')
+              use(href='/sprites/util.svg#paperclip')
+            code Draft version (#{version})
     .center
       svg.size25.decorative-svg(role='img' focusable='false')
         use(href='/sprites/silos/195v.svg#1')
