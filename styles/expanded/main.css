@@ -3453,13 +3453,13 @@ a[aria-disabled=true]:active {
   border: 0.2em solid #4d4d4d;
 }
 .avatars > :nth-child(1) {
-  transform: translate(1.166666666666667em, 0.966666666666667em) scale(.5);
+  transform: translate(1.2em, 1em) scale(.5);
 }
 .avatars > :nth-child(2) {
-  transform: translate(1.166666666666667em, 0.166666666666667em) scale(.5);
+  transform: translate(1.2em, 0.2em) scale(.5);
 }
 .avatars > :nth-child(3) {
-  transform: translate(1.166666666666667em, -0.633333333333333em) scale(.5);
+  transform: translate(1.2em, -0.6em) scale(.5);
 }
 .topic-solved > :nth-child(2) svg:first-child {
   color: #7db956;

@@ -209,7 +209,7 @@ select
   &::before
     content: ''
     position: absolute
-    top: - _formSize1 + .1em // @note Légère correction de la position car décalage visible du pseudo-élément dans certaines situations.
+    top: - round(_formSize1 - .1em, 1) // @note Légère correction de la position car décalage visible du pseudo-élément dans certaines situations.
     left: _formSize1 //calc(50% - _formSize1)
     width: _formSize1 * 2
     height: _formSize1
