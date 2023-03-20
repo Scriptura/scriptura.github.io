@@ -20,20 +20,22 @@ block variables
       _birth_place_id: 'Cambrai',
       _death_date: '04/09/1991',
       _death_place_id: 'Paris',
-      _devise: 'L\'Église a pour unique mission de rendre Jésus Christ présent aux hommes.'
+      _devise: 'L\'Église a pour unique mission de rendre Jésus Christ présent aux hommes.',
+      _nationality: 'Française',
+      _phone: '01 01 01 01 01'
     }
 
 block main
   header(role='banner')
     h1.main-heading!= data._name
-  .grid2.gap.s-grid1
+  .grid2.s-grid1.gap
     .center
       figure.figure-focus-thumbnail(style='border-radius:50%;overflow:hidden')
         picture
           source(srcset='/medias/images/uploads/henri-de-lubac-w600.webp, /medias/images/uploads/henri-de-lubac-w1000.webp 2x' type='image/webp')
           img(src='/medias/images/uploads/henri-de-lubac-original.webp' loading='lazy' alt="Cardinal Henri de Lubac, s.j." width='600' height='600' style='border-radius:50%')
-      if data._devise
-        br
+    .center
+      .no-margin-bottom-last-child
         .message
           .grid.gap(style='grid-template-columns: 2.5em 1fr 2.5em')
             svg.icon.scale200(role='img' focusable='false' style='color:tomato')
@@ -41,58 +43,33 @@ block main
             p #{data._devise}
             svg.icon.scale200(role='img' focusable='false' style='color:tomato')
               use(href='/sprites/util.svg#quotes-right')
-    div
-      ul
-        if data._id
-          li Id : #{data._id}
-        if data._user_id
-          li User id : #{data._user_id}
-        li Sexe : 
-          if !data._sexe
-            | non renseigné
-          if data._sexe == 0
-            | inconnu
-          if data._sexe == 1
-            | homme
-          else if data._sexe == 2
-            | femme
-          else if data._sexe == 9
-            | non applicable
-        if data._given_name
-          li= data._given_name
-        if data._additional_name
-          li= data._additional_name
-        if data._family_name
-          li= data._family_name
-        if data._usual_name
-          li= data._usual_name
-        if data._nickname
-          li= data._nickname
-        if data._prefix
-          li= data._prefix
-        if data._suffix
-          li= data._suffix
-        if data._birth_date
-          li
-            if data._sexe != 2
-              | Né
-            else
-              | Née
-            |  le #{data._birth_date}
-            if data._birth_place_id
-              |  à #{data._birth_place_id}
-        if data._death_date
-          li
-            if data._sexe == ('1' || '9')
-              | Décédé
-            else 
-              | Décédée
-            |  le #{data._death_date}
-            if data._death_place_id
-              |  à
-              a(href='/page/place.html')  #{data._death_place_id}
-        if data._nationality
-          li Pays : #{data._nationality}
-        if data._phone
-          li Téléphone : #{data._phone}
-      p Henri Sonier de Lubac, né à Cambrai le 20 février 1896 et mort à Paris le 4 septembre 1991, est un jésuite, théologien catholique et cardinal français.
+        .message
+          p Henri Sonier de Lubac, né à Cambrai le 20 février 1896 et mort à Paris le 4 septembre 1991, est un jésuite, théologien catholique et cardinal français.
+  hr
+  ul.grid4.gap.list-stripe
+    li Id : #{data._id}
+    li User id : #{data._user_id}
+    li Sexe : 
+      if !data._sexe
+        | non renseigné
+      if data._sexe == 0
+        | inconnu
+      if data._sexe == 1
+        | homme
+      else if data._sexe == 2
+        | femme
+      else if data._sexe == 9
+        | non applicable
+    li Prénom&nbsp;: #{data._given_name}
+    li Deuxième prénom&nbsp;: #{data._additional_name}
+    li Nom de famille&nbsp;: #{data._family_name}
+    //-li Nom usuel&nbsp;: #{data._usual_name}
+    //-li Surnom&nbsp;: #{data._nickname}
+    li Préfix&nbsp;: #{data._prefix}
+    li Suffix&nbsp;: #{data._suffix}
+    li Né le #{data._birth_date} à 
+      a(href='/page/place.html')= data._birth_place_id
+    li Décédé le #{data._death_date} à 
+      a(href='/page/place.html')= data._death_place_id
+    li Nationnalité&nbsp;: #{data._nationality}
+    li Téléphone&nbsp;: #{data._phone}

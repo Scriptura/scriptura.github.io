@@ -14,23 +14,19 @@ ol ol
 ol ol ol
   list-style-type: lower-greek
 
-[class^=list]
-[class^=list] > *
-  padding-left: 0
-
-[class^=list] li
-  display: block
-
-[class^=list-stripe]
-  display: grid
-  gap: _gap
+.list-stripe
+.list-stripe-links
+  //all: unset // @note Ne pas utiliser : ne travaille pas de concert avec la classe `.grid`.
   margin: 0
+  padding-left: 0
+  & li
+    display: block
+  & > *
+    padding: .5em 1em
+    background-color: _listColor3
+    box-shadow: _shadow14
+    //filter: drop-shadow(_shadow14)
 
-[class^=list-stripe] > *
-  padding: .5em 1em
-  background-color: _listColor3
-  box-shadow: _shadow14
-  //filter: drop-shadow(_shadow14)
 
 .list-stripe-links
   & a
@@ -46,7 +42,8 @@ ol ol ol
 
 .list-straight
 .list-rounded
-  padding: 0
+  margin: 0
+  padding-left: 0
   & li
     display: grid
     grid-template-columns: 3em minmax(0, 1fr)
@@ -138,9 +135,13 @@ ol.list-rounded
     &::before
       content: counter(li)
 
-[class^=grid].list-straight
-[class^=grid].list-rounded
-  gap: (_gap / 2) _gap
+[class^=grid]
+  &.list-stripe
+  &.list-stripe-links
+    gap: _gap
+  &.list-straight
+  &.list-rounded
+    gap: (_gap / 2) _gap
 
 @keyframes anim-list
   to

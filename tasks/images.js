@@ -1,5 +1,4 @@
-import fs from 'fs'
-import mkdirp from 'mkdirp'
+import { rmSync, mkdirSync, readdir } from 'fs'
 import sharp from 'sharp'
 import ora from 'ora'
 
@@ -13,10 +12,13 @@ const src = './medias/images/src/',
       sizeL = 1500,
       sizeXL = 2000
 
-fs.readdir(src, (err, files) => {
+rmSync(dest, {recursive: true}) // Suppression du dossier.
+mkdirSync(dest)
+
+readdir(src, (err, files) => {
   const spinner = ora('Begin image task...\n').start()
   files.forEach(async fileName => {
-    await mkdirp(dest) // création d'un dossier de destination
+    //await mkdirSync(dest) // création d'un dossier de destination
     await webpImage(fileName)
     spinner.stop()
   })

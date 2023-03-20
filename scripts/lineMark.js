@@ -7,7 +7,7 @@ const lineMarks = (el => {
   const els = document.querySelectorAll('.add-line-marks > :is(p, h2, h3, h4, h5, h6, blockquote, ul, ol, [class*=grid])')
   const lineMarksAdd = el => {
     const a = document.createElement('a')
-    a.setAttribute('name', 'mark' + i)
+    a.id = 'mark' + i
     a.setAttribute('href', '#mark' + i)
     const text = document.createTextNode(i)
     a.appendChild(text)

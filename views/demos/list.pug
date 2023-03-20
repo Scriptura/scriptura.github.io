@@ -44,39 +44,20 @@ mixin list(icon, name, slug)
               li Magenta
               li Jaune
               li Noir
-  div
-    p
-      code ul.list
-    ul.list
-      li Artichauts
-      li Carottes
-      li Concombres
-      li Poireaux
-      li Choux
-        ul
-          li Composition
-          li Saveur
-          li Taille
-          li Couleurs
-            ul
-              li Cyan
-              li Magenta
-              li Jaune
-              li Noir
-  .center.hidden-m
+  .c2.center.hidden-m
     svg.size25.decorative-svg(role='img' focusable='false')
       use(href='/sprites/silos/245v-d1.svg#1')
-.grid4.gap
+.grid-auto.gap.gap-bottom
   div
     p
       code ul.list-stripe
-    ul.list-stripe
+    ul.grid.list-stripe
       - for (let i = 1; i < 8; i++)
         li List item #{i}
   div
     p
       code ul.list-stripe
-    ul.list-stripe
+    ul.grid.list-stripe
       - for (let i = 1; i < 8; i++)
         li
           svg.icon-inline(role='img' focusable='false')
@@ -85,14 +66,14 @@ mixin list(icon, name, slug)
   div
     p
       code ul.list-stripe li a
-    ul.list-stripe
+    ul.grid.list-stripe
       - for (let i = 1; i < 8; i++)
         li
           a(href='#') List item #{i}
   div
     p
       code ul.list-stripe-links
-    ul.list-stripe-links
+    ul.grid.list-stripe-links
       - for (let i = 1; i < 8; i++)
         li
           a(href='#')
@@ -102,7 +83,7 @@ mixin list(icon, name, slug)
 div
   p
     code ul.list-straight
-  ul.grid4.list-straight
+  ul.grid4.gap-bottom.list-straight
     +list('paint-roller', 'Components', 'components')
     +list('ampersand', 'Typography', 'typography')
     +list('language', 'Languages', 'languages')
@@ -130,7 +111,7 @@ div
 div
   p
     code ul.list-rounded
-  ul.grid4.list-rounded
+  ul.grid4.gap-bottom.list-rounded
     +list('paint-roller', 'Components', 'components')
     +list('ampersand', 'Typography', 'typography')
     +list('language', 'Languages', 'languages')
@@ -158,7 +139,7 @@ div
 div
   p
     code ol.list-straight
-  ol.grid4.list-straight
+  ol.grid4.gap-bottom.list-straight
     li
        a(href='#index') Artichauts
     li
