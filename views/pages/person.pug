@@ -9,7 +9,7 @@ block variables
       _name: 'Henri Sonier de Lubac <span>.&nbsp;Sample person template</span>',
       _title: 'Sample person template . Scriptura framework',
       _description: 'Exemple de page dédiée pour une personne',
-      _user_id: '1',
+      _user_id: '83bc6bd8-c765-11ed-afa1-0242ac120002',
       _sexe: '1',
       _given_name: 'Henri',
       _additional_name: 'Sonier',
@@ -46,7 +46,7 @@ block main
         .message
           p Henri Sonier de Lubac, né à Cambrai le 20 février 1896 et mort à Paris le 4 septembre 1991, est un jésuite, théologien catholique et cardinal français.
   hr
-  ul.grid4.gap.list-stripe
+  ul.grid3.gap.list-stripe
     li Id : #{data._id}
     li User id : #{data._user_id}
     li Sexe : 
@@ -65,11 +65,11 @@ block main
     li Nom de famille&nbsp;: #{data._family_name}
     //-li Nom usuel&nbsp;: #{data._usual_name}
     //-li Surnom&nbsp;: #{data._nickname}
-    li Préfix&nbsp;: #{data._prefix}
-    li Suffix&nbsp;: #{data._suffix}
+    li Préfixe&nbsp;: #{data._prefix}
+    li Suffixe&nbsp;: #{data._suffix}
+    li Nationnalité&nbsp;: #{data._nationality}
     li Né le #{data._birth_date} à 
       a(href='/page/place.html')= data._birth_place_id
     li Décédé le #{data._death_date} à 
       a(href='/page/place.html')= data._death_place_id
-    li Nationnalité&nbsp;: #{data._nationality}
     li Téléphone&nbsp;: #{data._phone}

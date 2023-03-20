@@ -2674,6 +2674,15 @@ form > [class*="grid"] > .input {
   -webkit-clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
           clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
 }
+@media (min-width: 35.01em) {
+  .type-login form,
+  .type-register form,
+  .type-topic form {
+    padding: 4em 6em;
+    border-radius: 0.3em;
+    box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
+  }
+}
 .drop-cap,
 .no-js .add-drop-cap > :not(*) + p:first-child::first-letter {
   float: left;
