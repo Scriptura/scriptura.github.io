@@ -5,7 +5,7 @@ block variables
   - const pageType = 'template'
   -
     const data = {
-      _name: 'Nature <span>.&nbsp;Sample mosaic template</span>',
+      _name: 'Lorem ipsum <span>.&nbsp;Sample mosaic template</span>',
       _title: 'Sample mosaic template . Scriptura framework',
       _description: 'Présentation d\'une mosaïque d\'images.'
     }
@@ -25,7 +25,7 @@ block variables
 block main
   header(role='banner')
     h1.main-heading!= data._name
-  .grid-auto.gap.demo-mosaic(style='--s:7em')
+  .grid-auto.gap.demo-mosaic(style='--size-grid:7em')
     -
       img.name = 'matthew-smith'
       img.width = '5000'

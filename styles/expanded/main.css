@@ -682,7 +682,12 @@ main {
   gap: 0 1em;
 }
 .grid-auto {
-  grid-template-columns: repeat(auto-fit, minmax(var(--s, 15em), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(var(--size-grid, 15em), 1fr));
+}
+@media (max-width: 35.01em) {
+  .xs-grid-auto {
+    grid-template-columns: repeat(auto-fit, minmax(var(--xs-size-grid, 11em), 1fr));
+  }
 }
 @container grid (35em < width) {
   .grid2,

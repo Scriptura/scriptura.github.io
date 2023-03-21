@@ -5,9 +5,9 @@ block variables
   - const pageType = 'template'
   -
     const data = {
-      _name: 'Nature <span>.&nbsp;Sample image gallery template</span>',
+      _name: 'Lorem ipsum <span>.&nbsp;Sample image gallery template</span>',
       _title: 'Sample image gallery template . Scriptura framework',
-      _description: 'Présentation d\'une Gallerie d\images.'
+      _description: 'Exemple de démonstration pour une Gallerie d\images.'
     }
   -
     const img = {
@@ -25,7 +25,7 @@ block variables
 block main
   header(role='banner')
     h1.main-heading!= data._name
-  .grid-auto.gap.masonry
+  .grid-auto.xs-grid-auto.gap.masonry
     figure.figure-focus
       picture
         //-source(srcset='/medias/images/demo/test-w1000.webp, /medias/images/demo/test-w2000.webp 2x' type='image/webp')

@@ -20,7 +20,11 @@
     gap: 0 _gap
 
 .grid-auto
-  grid-template-columns: repeat(auto-fit, minmax(var(--s, 15em), 1fr)) // @note Ne pas définir la variable au-dessus de sa valeur par défaut afin d'éviter des dépassement sur les écrans de petites définitions. Préférer alors les grilles prédéfinies.
+  grid-template-columns: repeat(auto-fit, minmax(var(--size-grid, 15em), 1fr)) // @note Ne pas définir la variable au-dessus de sa valeur par défaut afin d'éviter des dépassement sur les écrans de petites définitions. Préférer alors les grilles prédéfinies.
+
+.xs-grid-auto
+  @media (max-width: _sizeXS)
+    grid-template-columns: repeat(auto-fit, minmax(var(--xs-size-grid, 11em), 1fr)) // @todo Valeur arbitraire à redéfinir.
 
 @container grid (35em < width)
 
