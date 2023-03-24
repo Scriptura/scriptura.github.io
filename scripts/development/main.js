@@ -60,6 +60,7 @@ const getScripts = (() => {
   if (document.querySelector('.map')) getScript('/libraries/leaflet/leaflet.js')
   if (document.querySelector('[class*=language-]')) getScript('/libraries/prism/prism.js')
   if (document.querySelector('.video-youtube')) getScript('/scripts/youtube.js')
+  if (document.querySelector('.client-test')) getScript('/scripts/clientTest.js')
 })()
 
 
