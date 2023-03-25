@@ -3125,7 +3125,7 @@ form > [class*="grid"] > .input {
 .topic .sub-header,
 .topic article header {
   display: grid;
-  grid-template-columns: 4em minmax(0, 1fr);
+  grid-template-columns: 3.5em minmax(0, 1fr);
   grid-template-areas: 'aa tt' 'aa uu';
 }
 @media (max-width: 35.01em) {
