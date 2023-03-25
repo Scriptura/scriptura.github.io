@@ -14,21 +14,20 @@ block main
   article.topic
     header(role='banner')
       h1.main-heading!= data._name
-      //
+      .sub-header
+        .avatar(style='--img:url(/medias/images/uploads/henri-de-lubac-w300.webp)')
         address
           a(href='/page/person.html') Henri de Lubac
-        time(datetime='2017-04-23 20:33:21')
-          svg.icon-inline(role='img' focusable='false')
-            use(href='/sprites/util.svg#quill')
-          | Le 23 avril 2017 à 20h33
-        p.keywords
-          svg.icon-inline(role='img' focusable='false')
-            use(href='/sprites/util.svg#old-key')
-          a(href='/keyword/lion') Lion
-          |  &bull; 
-          a(href='/keyword/lion') Antilope
-          |  &bull; 
-          a(href='/keyword/lion') Crocodile
+        time(datetime='2017-04-23 20:33:21') Le 23 avril 2017 à 20h33
+      ul.keywords
+        li
+          a(href='/page/cards.html') Écriture & Tradition
+        li
+          a(href='/page/cards.html') Apologétique
+        li 
+          a(href='/page/cards.html') Sur le mal
+        li 
+          a(href='/page/cards.html') Métaphysique
     .wrapper.links.decorative-hr
       p Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus sapien eros vitae ligula. Pellentesque rhoncus nunc et augue.
       pre.pre

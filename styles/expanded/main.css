@@ -3119,7 +3119,10 @@ form > [class*="grid"] > .input {
     box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
   }
 }
-.topic .wrapper header,
+.topic .sub-header {
+  margin-block: 2em 1em;
+}
+.topic .sub-header,
 .topic article header {
   display: grid;
   grid-template-columns: 4em minmax(0, 1fr);
@@ -3163,6 +3166,7 @@ form > [class*="grid"] > .input {
   aspect-ratio: 1;
   background: #222 var(--img);
   background-size: cover;
+  border-radius: 50%;
 }
 .topic address {
   grid-area: tt;
@@ -3172,6 +3176,28 @@ form > [class*="grid"] > .input {
 }
 .topic time {
   grid-area: uu;
+}
+.topic .keywords {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em 0.5em;
+  margin-block: 0.75em 0;
+  padding-left: 0;
+}
+.topic .keywords > :last-child {
+  margin-right: 0;
+}
+.topic .keywords li {
+  margin-bottom: 0.75em;
+  filter: drop-shadow(0.5rem 0.5rem 0.5rem rgba(0,0,0,0.2));
+}
+.topic .keywords a {
+  padding: 0.25em 0.5em 0.25em 1.25em;
+  white-space: nowrap;
+  background-color: #292929;
+  -webkit-clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
+          clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
 }
 html,
 .logo-nav,
