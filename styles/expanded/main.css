@@ -929,6 +929,10 @@ samp {
   box-shadow: 0 0 2rem rgba(0,0,0,0.3);
   line-height: 1.25em;
 }
+.pre:focus,
+.pre:active {
+  outline: 0.1em solid #ff6347;
+}
 .pre code {
   white-space: pre;
   color: #e9dac5;
@@ -2662,6 +2666,7 @@ form > [class*="grid"] > .input {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5em 0.5em;
+  font-size: 0.8em;
   margin-block: 2em 0;
   padding-left: 0;
 }
@@ -3182,6 +3187,7 @@ form > [class*="grid"] > .input {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5em 0.5em;
+  font-size: 0.8em;
   margin-block: 0.75em 0;
   padding-left: 0;
 }
