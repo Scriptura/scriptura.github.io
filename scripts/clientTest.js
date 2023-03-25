@@ -26,8 +26,27 @@ const browserName = (function (agent) {
   }
 })(window.navigator.userAgent.toLowerCase())
 
+
+let windowWidth = window.innerWidth
+let windowHeight = window.innerHeight
+
+/*
+let windowSizeWidth = (() => windowWidth = window.innerWidth)
+let windowSizeHeight = (() => windowHeight = window.innerHeight)
+
+window.addEventListener('resize', () => windowSizeWidth())
+window.addEventListener('resize', () => windowSizeHeight())
+*/
+
+function reportWindowSize() {
+  windowWidth = window.innerWidth
+  windowHeight.textContent = window.innerHeight
+}
+
+window.onresize = reportWindowSize
+
 el.innerHTML = `<li>Système d'exploitation&nbsp;: ${os}</i>`
 el.innerHTML += `<li>Profondeur de l'écran&nbsp;: ${screen.pixelDepth} bits</i>`
-el.innerHTML += `<li>Définition écran&nbsp;: ${screen.width} x ${screen.height}</i>`
-el.innerHTML += `<li>Fenêtre de navigation&nbsp;: ${window.innerWidth} x ${window.innerHeight}</i>`
+el.innerHTML += `<li>Définition écran&nbsp;: ${screen.width} x ${screen.height} px</i>`
+el.innerHTML += `<li>Fenêtre de navigation&nbsp;: ${windowWidth} x ${windowHeight} px</i>`
 el.innerHTML += `<li>Navigateur&nbsp;: ${browserName}</i>`

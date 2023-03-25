@@ -37,8 +37,8 @@ block main
             color-scheme: dark;
           }
       p Integer quis metus vitae elit lobortis egestas. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi vel erat non mauris convallis vehicula. Nulla et sapien. Integer tortor tellus, aliquam faucibus, convallis id, congue eu, quam. Mauris ullamcorper felis vitae erat. Proin feugiat, augue non elementum posuere, metus purus iaculis lectus, et tristique ligula justo vitae magna.
-    - for (let i = 0; i < 12; i++)
-      article.links.decorative-hr
+    - for (let i = 0; i < 20; i++)
+      article.links.decorative-hr(id='comment-' + (i + 1))
         header
           h2.sr-only Commentaire numéro #{i} du sujet en cours.
           - if (i % 2)
@@ -63,7 +63,7 @@ block main
                 }
               }
         p Ab eaque commodi est fugiat temporibus qui consequatur galisum quo facilis quia non sint dignissimos. Qui consequuntur enim est voluptatemmolestias et voluptas velit.
-        a(href='#comment-' + (i + 1) id='comment-' + (i + 1) aria-label='Commentaire n°' + (i + 1)) ##{i + 1}
+        a.anchor(href='#comment-' + (i + 1) aria-label='Commentaire n°' + (i + 1)) ##{i + 1}
     form(method='get' action='./')
       .input
         label.sr-only Répondre
