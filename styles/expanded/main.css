@@ -3148,17 +3148,24 @@ form > [class*="grid"] > .input {
 }
 .topic .anchor {
   position: absolute;
-  right: 2em;
   color: #6f6f6f;
+}
+.topic .anchor:focus,
+.topic .anchor:hover,
+.topic .anchor:active {
+  text-decoration: none;
+  color: #ffa500;
 }
 @media (max-width: 35.01em) {
   .topic .anchor {
     top: 2em;
+    right: 0;
   }
 }
 @media (min-width: 35.01em) {
   .topic .anchor {
     top: 4em;
+    right: 2em;
   }
 }
 .topic form {

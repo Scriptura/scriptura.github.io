@@ -46,12 +46,18 @@ _topicColor2 = _colorG + 27.5%
     position: relative
   & .anchor
     position: absolute
-    right: 2em
     color: _topicColor2
+    &:focus
+    &:hover
+    &:active
+      text-decoration: none
+      color: _color5
     @media (max-width: _sizeXS)
       top: 2em
+      right: 0
     @media (min-width: _sizeXS)
       top: 4em
+      right: 2em
   & form
     width: 100%
   & .avatar
