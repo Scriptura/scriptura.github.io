@@ -2336,26 +2336,26 @@ form > [class*="grid"] > .input {
 .round-button {
   --color: #e9dac5;
   --bg-color: #ff6347;
+  all: unset;
   position: relative;
   color: var(--color);
   -webkit-background-clip: text;
           background-clip: text;
   background: var(--bg-color) linear-gradient(to top, rgba(0,0,0,0.2), rgba(255,255,255,0.1));
-  border: none;
   box-shadow: inset 0 0 0.1em rgba(0,0,0,0.3), 0 0.5rem 2rem rgba(0,0,0,0.3);
   transition: all 0.2s linear;
   transition-property: translate, box-shadow;
-  outline: 0;
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
-}
-.button::before,
-.round-button::before {
-  content: '';
-  position: absolute;
-  inset: 0.2em;
-  border: 1px dashed rgba(255,255,255,0.3);
+  cursor: pointer;
+/*
+  &::before
+    content: ''
+    position: absolute
+    inset: .2em
+    border: 1px dashed rgba(255, 255, 255, .3) //rgba(0, 0, 0, .3)
+  */
 }
 .button:focus-visible,
 .round-button:focus-visible,
@@ -2378,7 +2378,6 @@ form > [class*="grid"] > .input {
   line-height: 2;
   white-space: nowrap;
   text-overflow: ellipsis;
-  border-radius: 0.5em;
 }
 .button::before {
   border-radius: 0.4em;
@@ -2387,6 +2386,7 @@ form > [class*="grid"] > .input {
   margin-left: 0.5em;
 }
 .round-button {
+  display: grid;
   height: 4em;
   width: 4em;
   border-width: 0.25em;
@@ -2482,14 +2482,13 @@ form > [class*="grid"] > .input {
   overflow: hidden;
   display: block;
   height: 2.5em;
-  padding: 0.5em 1em;
+  padding: 0 1em;
   white-space: nowrap;
   text-overflow: ellipsis;
   text-decoration: none;
   color: inherit;
   background-color: #474747;
   border: 1px solid rgba(255,255,255,0.1);
-  border-bottom-color: rgba(255,255,255,0.1);
   border-radius: 0.5em 0.5em 0 0;
   box-shadow: 0 -1rem 1rem rgba(0,0,0,0.05);
   cursor: pointer;
@@ -3262,6 +3261,7 @@ html,
 [class*=table] tbody td,
 .accordion > * > :first-child,
 .accordion > * > :last-child,
+.tab-list > button,
 .tab-summary,
 .audio-player,
 .progress-bar div,
