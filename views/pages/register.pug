@@ -24,8 +24,8 @@ block main
       .input
         label Réentrez votre mot de passe
         input(type='password' name='password2' placeholder='• • • • • • • •' required='required')
-      div
-        button.button
+      .flex
+        button.button.item-push
           svg.icon-inline(role='img' focusable='false')
             use(href='/sprites/util.svg#quill')
           | Enregistrer

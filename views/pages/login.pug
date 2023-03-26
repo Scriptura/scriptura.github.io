@@ -21,8 +21,8 @@ block main
       .input
         label Mot de passe :
         input(type='password' name='password' placeholder='• • • • • • • •' required='required')
-      div
-        button.button
+      .flex
+        button.button.item-push
           svg.icon-inline(role='img' focusable='false')
             use(href='/sprites/util.svg#login')
           | Connexion

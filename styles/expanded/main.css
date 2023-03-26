@@ -799,6 +799,9 @@ main {
 .flex.gap-bottom {
   margin-bottom: 1em;
 }
+.flex .item-push {
+  margin-left: auto;
+}
 [class^=column] {
   -moz-column-gap: 0;
        column-gap: 0;
