@@ -2658,8 +2658,32 @@ form > [class*="grid"] > .input {
   }
   .article > footer {
     grid-column: span 2;
-    padding-top: 4em;
+    padding-top: 4.7em;
   }
+}
+.article > footer > div > div {
+  display: grid;
+  grid-template-columns: 3.5em minmax(0, 1fr);
+  grid-template-areas: 'aa tt' 'aa uu';
+}
+.article > footer > div > div .avatar {
+  grid-area: aa;
+  --img: '';
+  width: 3em;
+  aspect-ratio: 1;
+  background: #222 var(--img);
+  background-size: cover;
+  border-radius: 50%;
+}
+.article > footer > div > div address {
+  grid-area: tt;
+  font-style: normal;
+  font-weight: bold;
+  font-variant: small-caps;
+}
+.article > footer > div > div > :last-child {
+  grid-area: uu;
+  margin-block: 0;
 }
 .article .keywords {
   list-style: none;
@@ -3095,7 +3119,7 @@ form > [class*="grid"] > .input {
 .topic form {
   max-width: 55em;
 }
-@media (min-width: 35.01em) {
+@media (min-width: 50.01em) {
   .topic .wrapper:first-child,
   .topic article:first-child,
   .topic form:first-child {
@@ -3117,7 +3141,7 @@ form > [class*="grid"] > .input {
   background-color: #393939;
   border-radius: 0.3em;
 }
-@media (min-width: 35.01em) {
+@media (min-width: 50.01em) {
   .topic .wrapper,
   .topic article {
     padding: 4em 6em;
@@ -3133,7 +3157,7 @@ form > [class*="grid"] > .input {
   grid-template-columns: 3.5em minmax(0, 1fr);
   grid-template-areas: 'aa tt' 'aa uu';
 }
-@media (max-width: 35.01em) {
+@media (max-width: 50.01em) {
   .topic article::before,
   .topic form::before {
     content: '';
@@ -3156,13 +3180,13 @@ form > [class*="grid"] > .input {
   text-decoration: none;
   color: #ffa500;
 }
-@media (max-width: 35.01em) {
+@media (max-width: 50.01em) {
   .topic .anchor {
     top: 2em;
     right: 0;
   }
 }
-@media (min-width: 35.01em) {
+@media (min-width: 50.01em) {
   .topic .anchor {
     top: 4em;
     right: 2em;

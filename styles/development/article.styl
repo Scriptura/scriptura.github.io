@@ -37,7 +37,27 @@
       grid-column: span 3
     & > footer
       grid-column: span 2
-      padding-top: 4em
+      padding-top: 4.7em
+  & > footer > div > div
+    display: grid
+    grid-template-columns: 3.5em minmax(0,1fr)
+    grid-template-areas: 'aa tt' 'aa uu'
+    & .avatar
+      grid-area: aa
+      --img: ''
+      width: 3em
+      aspect-ratio: 1
+      background: #222 var(--img)
+      background-size: cover
+      border-radius: 50%
+    & address
+      grid-area: tt
+      font-style: normal
+      font-weight: bold
+      font-variant: small-caps
+    & > :last-child
+      grid-area: uu
+      margin-block: 0
   & .keywords
     list-style: none
     display: flex
