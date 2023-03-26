@@ -135,6 +135,19 @@
   & .item-push
     margin-left: auto
 
+.order
+  order: var(--o, -1) // @note Valeur négative car l'utilisation de cette classe est souvent utilisée pour une monté des éléments frères plutôt qu'une descente.
+
+@container grid (35em > width)
+
+  .xs-order
+    order: var(--o, -1)
+
+@container grid (35em < width < 50em)
+
+  .s-order
+    order: var(--o, -1)
+
 /*
 // @note Mémento de nos (presques) équivalences grid/flex codées ultérieurement :
 

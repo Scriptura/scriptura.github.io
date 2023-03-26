@@ -79,3 +79,16 @@
 
   :root .xl-grid2
     --n: 2
+
+.order
+  order: var(--o, -1)
+
+@media (max-width: 35em)
+
+  .xs-order
+    order: var(--o, -1)
+
+@media (min-width: 35em) and (max-width: 50em)
+
+  .s-order
+    order: var(--o, -1)
