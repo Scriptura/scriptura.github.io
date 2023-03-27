@@ -19,7 +19,9 @@ _topicColor2 = _colorG + 27.5%
     max-width: 55em
     border-radius: _r2
     box-shadow: _shadow8
-    @media (max-width: _sizeS)
+    @media (max-width: _sizeXS)
+      padding: 1em
+    @media (min-width: _sizeXS) and (max-width: _sizeS)
       padding: 2em
     @media (min-width: _sizeS)
       padding: 4em 6em
@@ -36,6 +38,12 @@ _topicColor2 = _colorG + 27.5%
     display: grid
     grid-template-columns: 3.5em minmax(0,1fr)
     grid-template-areas: 'aa tt' 'aa uu'
+  & article header
+    position: relative
+    margin-bottom: 1em
+    padding-bottom: 1em
+    border-bottom: 2px solid _colorG + 5%
+
   & article
     position: relative
   & .anchor
@@ -47,10 +55,15 @@ _topicColor2 = _colorG + 27.5%
     &:active
       text-decoration: none
       color: _color5
-    @media (max-width: _sizeS)
+    @media (max-width: _sizeXS)
+      top: 1em
+      right: 1em
+    @media (min-width: _sizeXS) and (max-width: _sizeS)
       top: 2em
+      right: 2em
     @media (min-width: _sizeS)
       top: 4em
+      right: 2em
   & form
     width: 100%
   & .avatar

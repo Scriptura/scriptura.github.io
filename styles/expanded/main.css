@@ -1607,13 +1607,13 @@ audio:not([controls]) {
 }
 [class^=table] tfoot,
 [class^=table] tbody th {
-  background-color: #282828;
+  background-color: #2e2e2e;
 }
 [class^=table] tbody tr:nth-child(odd) {
   background-color: #474747;
 }
 [class^=table] tbody tr:nth-child(even) {
-  background-color: #333;
+  background-color: #393939;
 }
 [class^=table] tbody :empty::after {
   content: '/';
@@ -3142,7 +3142,14 @@ form > [class*="grid"] > .input {
   border-radius: 0.3em;
   box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
 }
-@media (max-width: 50.01em) {
+@media (max-width: 35.01em) {
+  .topic .wrapper,
+  .topic article,
+  .topic form {
+    padding: 1em;
+  }
+}
+@media (min-width: 35.01em) and (max-width: 50.01em) {
   .topic .wrapper,
   .topic article,
   .topic form {
@@ -3180,6 +3187,12 @@ form > [class*="grid"] > .input {
   grid-template-columns: 3.5em minmax(0, 1fr);
   grid-template-areas: 'aa tt' 'aa uu';
 }
+.topic article header {
+  position: relative;
+  margin-bottom: 1em;
+  padding-bottom: 1em;
+  border-bottom: 2px solid #434343;
+}
 .topic article {
   position: relative;
 }
@@ -3194,14 +3207,22 @@ form > [class*="grid"] > .input {
   text-decoration: none;
   color: #ffa500;
 }
-@media (max-width: 50.01em) {
+@media (max-width: 35.01em) {
+  .topic .anchor {
+    top: 1em;
+    right: 1em;
+  }
+}
+@media (min-width: 35.01em) and (max-width: 50.01em) {
   .topic .anchor {
     top: 2em;
+    right: 2em;
   }
 }
 @media (min-width: 50.01em) {
   .topic .anchor {
     top: 4em;
+    right: 2em;
   }
 }
 .topic form {
