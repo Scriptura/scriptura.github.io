@@ -2725,8 +2725,7 @@ form > [class*="grid"] > .input {
 }
 @media (min-width: 35.01em) {
   .type-login form,
-  .type-register form,
-  .type-topic form {
+  .type-register form {
     padding: 4em 6em;
     border-radius: 0.3em;
     box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
@@ -3124,43 +3123,48 @@ form > [class*="grid"] > .input {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 1em 0;
-  max-width: 60em;
 }
 .topic h1 {
   margin-bottom: 0.44em;
 }
 .topic .wrapper,
+.topic article {
+  background-color: #393939;
+}
+.topic .wrapper,
 .topic article,
 .topic form {
   max-width: 55em;
+  border-radius: 0.3em;
+  box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
+}
+@media (max-width: 50.01em) {
+  .topic .wrapper,
+  .topic article,
+  .topic form {
+    padding: 2em;
+  }
 }
 @media (min-width: 50.01em) {
+  .topic .wrapper,
+  .topic article,
+  .topic form {
+    padding: 4em 6em;
+  }
   .topic .wrapper:first-child,
   .topic article:first-child,
   .topic form:first-child {
-    margin-left: auto;
+    margin-left: 6em;
   }
   .topic .wrapper:nth-child(odd),
   .topic article:nth-child(odd),
   .topic form:nth-child(odd) {
-    margin-left: auto;
+    margin-left: 6em;
   }
   .topic .wrapper:nth-child(even),
   .topic article:nth-child(even),
   .topic form:nth-child(even) {
-    margin-right: auto;
-  }
-}
-.topic .wrapper,
-.topic article {
-  background-color: #393939;
-  border-radius: 0.3em;
-}
-@media (min-width: 50.01em) {
-  .topic .wrapper,
-  .topic article {
-    padding: 4em 6em;
-    box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
+    margin-right: 6em;
   }
 }
 .topic .sub-header {
@@ -3172,21 +3176,12 @@ form > [class*="grid"] > .input {
   grid-template-columns: 3.5em minmax(0, 1fr);
   grid-template-areas: 'aa tt' 'aa uu';
 }
-@media (max-width: 50.01em) {
-  .topic article::before,
-  .topic form::before {
-    content: '';
-    display: block;
-    height: 0.5em;
-    margin-bottom: 1.5em;
-    background-image: repeating-linear-gradient(-45deg, transparent 0 5px, rgba(255,255,255,0.1) 5px 10px);
-  }
-}
 .topic article {
   position: relative;
 }
 .topic .anchor {
   position: absolute;
+  right: 2em;
   color: #6f6f6f;
 }
 .topic .anchor:focus,
@@ -3198,13 +3193,11 @@ form > [class*="grid"] > .input {
 @media (max-width: 50.01em) {
   .topic .anchor {
     top: 2em;
-    right: 0;
   }
 }
 @media (min-width: 50.01em) {
   .topic .anchor {
     top: 4em;
-    right: 2em;
   }
 }
 .topic form {

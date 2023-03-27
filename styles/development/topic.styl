@@ -5,27 +5,36 @@ _topicColor2 = _colorG + 27.5%
   display: grid
   grid-template-columns: minmax(0, 1fr)
   gap: _gap 0
-  max-width: 60em
+  //max-width: 60em
   & h1
     margin-bottom: .44em // @note Compense de manière "artisanale" le gap entre header et .wrapper @todo À revoir.
   & .wrapper
   & article
+    background-color: _topicColor1
+  & .wrapper
+  & article
   & form
     max-width: 55em
+    border-radius: _r2
+    box-shadow: _shadow8
+    @media (max-width: _sizeS)
+      padding: 2em
     @media (min-width: _sizeS)
+      padding: 4em 6em
+      &:first-child
+        margin-left: 6em
+      &:nth-child(odd)
+        margin-left: 6em
+      &:nth-child(even)
+        margin-right: 6em
+      /*
       &:first-child
         margin-left: auto
       &:nth-child(odd)
         margin-left: auto
       &:nth-child(even)
         margin-right: auto
-  & .wrapper
-  & article
-    background-color: _topicColor1
-    border-radius: _r2
-    @media (min-width: _sizeS)
-      padding: 4em 6em
-      box-shadow: _shadow8
+      */
   & .sub-header
     margin-block: 2em 1em
   & .sub-header
@@ -34,18 +43,10 @@ _topicColor2 = _colorG + 27.5%
     grid-template-columns: 3.5em minmax(0,1fr)
     grid-template-areas: 'aa tt' 'aa uu'
   & article
-  & form
-    @media (max-width: _sizeS)
-      &::before
-        content: ''
-        display: block
-        height: .5em
-        margin-bottom: 1.5em
-        background-image: repeating-linear-gradient(-45deg, transparent 0 _hrSize, rgba(255, 255, 255, .1) _hrSize _hrSize * 2)
-  & article
     position: relative
   & .anchor
     position: absolute
+    right: 2em
     color: _topicColor2
     &:focus
     &:hover
@@ -54,10 +55,8 @@ _topicColor2 = _colorG + 27.5%
       color: _color5
     @media (max-width: _sizeS)
       top: 2em
-      right: 0
     @media (min-width: _sizeS)
       top: 4em
-      right: 2em
   & form
     width: 100%
   & .avatar
