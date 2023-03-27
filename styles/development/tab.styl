@@ -1,5 +1,4 @@
-_tabColor1 = rgba(255, 255, 255, .1) //_colorG + 40%
-//_tabColor2 = rgba(255, 255, 255, .05) //_colorG + 20%
+_tabColor1 = rgba(255, 255, 255, .1)
 _tabColor3 = _color2
 _tabColor4 = #fff
 _tabSize1 = 1px
@@ -22,7 +21,7 @@ _tabBoxShadow1 = 0 -1rem 1rem rgba(0, 0, 0, .05)
       text-decoration: none
       color: inherit
       background-color: _colorG + 7%
-      border: _tabSize1 solid _tabColor1 //_tabColor2
+      border: _tabSize1 dashed _tabColor1 //_tabColor2
       border-radius: .5em .5em 0 0
       box-shadow: _tabBoxShadow1
       //filter: drop-shadow(0 -.5rem .5rem rgba(0, 0, 0, .1))
@@ -47,7 +46,7 @@ _tabBoxShadow1 = 0 -1rem 1rem rgba(0, 0, 0, .05)
     top: - _tabSize1 // Compensation de la bordure inférieure des onglets.
     margin-bottom: .5em
     padding: 'calc(.5em + %s) 1em .5em' % _tabSize1 // @note Idem
-    border: _tabSize1 solid _tabColor1
+    border: _tabSize1 dashed _tabColor1
     box-shadow: 0 1rem 1rem rgba(0, 0, 0, .1)
     & + .tab-panel
       display: none

@@ -2504,7 +2504,7 @@ form > [class*="grid"] > .input {
   text-decoration: none;
   color: inherit;
   background-color: #474747;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px dashed rgba(255,255,255,0.1);
   border-radius: 0.5em 0.5em 0 0;
   box-shadow: 0 -1rem 1rem rgba(0,0,0,0.05);
   cursor: pointer;
@@ -2535,7 +2535,7 @@ form > [class*="grid"] > .input {
   top: -1px;
   margin-bottom: 0.5em;
   padding: calc(.5em + 1px) 1em .5em;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px dashed rgba(255,255,255,0.1);
   box-shadow: 0 1rem 1rem rgba(0,0,0,0.1);
 }
 .tabs .tab-panel + .tab-panel {
@@ -3121,8 +3121,11 @@ form > [class*="grid"] > .input {
 }
 .topic {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: minmax(0, 60em) minmax(0, 1fr);
   gap: 1em 0;
+}
+.topic > header {
+  grid-column: span 2;
 }
 .topic h1 {
   margin-bottom: 0.44em;
@@ -3134,6 +3137,7 @@ form > [class*="grid"] > .input {
 .topic .wrapper,
 .topic article,
 .topic form {
+  grid-column: 1;
   max-width: 55em;
   border-radius: 0.3em;
   box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
@@ -3154,17 +3158,17 @@ form > [class*="grid"] > .input {
   .topic .wrapper:first-child,
   .topic article:first-child,
   .topic form:first-child {
-    margin-left: 6em;
+    margin-left: auto;
   }
   .topic .wrapper:nth-child(odd),
   .topic article:nth-child(odd),
   .topic form:nth-child(odd) {
-    margin-left: 6em;
+    margin-left: auto;
   }
   .topic .wrapper:nth-child(even),
   .topic article:nth-child(even),
   .topic form:nth-child(even) {
-    margin-right: 6em;
+    margin-right: auto;
   }
 }
 .topic .sub-header {

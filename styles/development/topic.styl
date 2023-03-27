@@ -3,9 +3,10 @@ _topicColor2 = _colorG + 27.5%
 
 .topic
   display: grid
-  grid-template-columns: minmax(0, 1fr)
+  grid-template-columns: minmax(0, 60em) minmax(0, 1fr)
   gap: _gap 0
-  //max-width: 60em
+  & > header
+    grid-column: span 2
   & h1
     margin-bottom: .44em // @note Compense de manière "artisanale" le gap entre header et .wrapper @todo À revoir.
   & .wrapper
@@ -14,6 +15,7 @@ _topicColor2 = _colorG + 27.5%
   & .wrapper
   & article
   & form
+    grid-column: 1
     max-width: 55em
     border-radius: _r2
     box-shadow: _shadow8
@@ -22,19 +24,11 @@ _topicColor2 = _colorG + 27.5%
     @media (min-width: _sizeS)
       padding: 4em 6em
       &:first-child
-        margin-left: 6em
-      &:nth-child(odd)
-        margin-left: 6em
-      &:nth-child(even)
-        margin-right: 6em
-      /*
-      &:first-child
         margin-left: auto
       &:nth-child(odd)
         margin-left: auto
       &:nth-child(even)
         margin-right: auto
-      */
   & .sub-header
     margin-block: 2em 1em
   & .sub-header
