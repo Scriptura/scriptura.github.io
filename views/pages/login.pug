@@ -13,19 +13,25 @@ block variables
 block main
   header(role='banner')
     h1.main-heading!= data._name
-  .grid2.s-grid1.gap
-    form(action='/login' method='post')
-      .input
-        label Utilisateur :
-        input(type='text' name='username' placeholder='user' autocorrect='off' autocapitalize='off' spellcheck='false' required='required')
-      .input
-        label Mot de passe :
-        input(type='password' name='password' placeholder='• • • • • • • •' required='required')
-      .flex
-        button.button.item-push
-          svg.icon-inline(role='img' focusable='false')
-            use(href='/sprites/util.svg#login')
-          | Connexion
+  .grid2.s-grid1.m-grid1.gap
+    .boxx
+      form(action='/login' method='post')
+        .input
+          label Utilisateur :
+          input(type='text' name='username' placeholder='user' autocorrect='off' autocapitalize='off' spellcheck='false' required='required')
+        .input
+          label Mot de passe :
+          input(type='password' name='password' placeholder='• • • • • • • •' required='required')
+        .flex
+          button.button.item-push
+            svg.icon-inline(role='img' focusable='false')
+              use(href='/sprites/util.svg#login')
+            | Connexion
+      p Pas encore inscrit&nbsp;?
+      p
+        svg.icon-inline(role='img' focusable='false')
+          use(href='/sprites/util.svg#quill')
+        a(href='/page/register.html') S'inscrire
     .center
       svg.size25.decorative-svg(role='img' focusable='false')
         use(href='/sprites/silos/195v.svg#1')
