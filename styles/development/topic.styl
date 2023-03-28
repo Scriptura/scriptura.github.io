@@ -1,5 +1,8 @@
 _topicColor1 = _colorG
 _topicColor2 = _colorG + 27.5%
+_topicColor3 = _colorG - 10%
+_topicHeight1 = 4em
+_topicBorder1 = .1em dashed _colorG + 15%
 
 .topic
   display: grid
@@ -9,28 +12,35 @@ _topicColor2 = _colorG + 27.5%
     grid-column: span 2
   & h1
     margin-bottom: .44em // @note Compense de manière "artisanale" le gap entre header et .wrapper @todo À revoir.
-  & .wrapper
   & article
-    background-color: _topicColor1
+    @media (max-width: _sizeXS)
+      padding-block: 1em
   & .wrapper
   & article
   & form
     grid-column: 1
     max-width: 55em
-    border-radius: _r2
-    box-shadow: _shadow8
-    @media (max-width: _sizeXS)
-      padding: 1em
+    @media (min-width: _sizeXS)
+      border-radius: _r2
+      box-shadow: _shadow8
     @media (min-width: _sizeXS) and (max-width: _sizeS)
       padding: 2em
     @media (min-width: _sizeS)
       padding: 4em 6em
-      &:first-child
-        margin-left: auto
       &:nth-child(odd)
         margin-left: auto
       &:nth-child(even)
         margin-right: auto
+      /*
+      &:nth-child(4n+2) // @note Sur 3 rangées (minmax de topic à 65em) : le résultat n'est pas probant selon nous car donne l'impression d'un désordre ; 2 rangées sont amplement suffisantes.
+        margin-left: 0
+      &:nth-child(4n+3)
+        margin-inline: auto
+      &:nth-child(4n+4)
+        margin-left: auto
+      &:nth-child(4n+5)
+        margin-inline: auto
+      */      
   & .sub-header
     margin-block: 2em 1em
   & .sub-header
@@ -42,7 +52,7 @@ _topicColor2 = _colorG + 27.5%
     position: relative
     margin-bottom: 1em
     padding-bottom: 1em
-    border-bottom: 2px solid _colorG + 5%
+    border-bottom: _topicBorder1
 
   & article
     position: relative
@@ -93,7 +103,7 @@ _topicColor2 = _colorG + 27.5%
       margin-right: 0
     & li
       margin-bottom: .75em
-      filter: drop-shadow(_shadow2)
+      //filter: drop-shadow(_shadow8)
     & a
       padding: .25em .5em .25em 1.25em
       white-space: nowrap
