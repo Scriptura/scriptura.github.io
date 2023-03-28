@@ -3130,6 +3130,9 @@ form > [class*="grid"] > .input {
   margin-bottom: 0.44em;
 }
 @media (max-width: 35.01em) {
+  .topic .wrapper {
+    margin-top: -1em;
+  }
   .topic article {
     padding-block: 1em;
   }

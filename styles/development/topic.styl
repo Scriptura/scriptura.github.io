@@ -12,8 +12,10 @@ _topicBorder1 = .1em dashed _colorG + 15%
     grid-column: span 2
   & h1
     margin-bottom: .44em // @note Compense de manière "artisanale" le gap entre header et .wrapper @todo À revoir.
-  & article
-    @media (max-width: _sizeXS)
+  @media (max-width: _sizeXS)
+    & .wrapper
+      margin-top: - _gap
+    & article
       padding-block: 1em
   & .wrapper
   & article
