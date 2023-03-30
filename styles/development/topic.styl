@@ -2,7 +2,6 @@ _topicColor1 = _colorG
 _topicColor2 = _colorG + 27.5%
 _topicColor3 = _colorG - 10%
 _topicHeight1 = 4em
-_topicBorder1 = .1em dashed _colorG + 15%
 
 .topic
   display: grid
@@ -17,24 +16,23 @@ _topicBorder1 = .1em dashed _colorG + 15%
       margin-top: - _gap
     & article
       padding-block: 1em
-  & .wrapper
-  & article
-  & form
+  & > :not(header)
     grid-column: 1
     max-width: 55em
     @media (min-width: _sizeXS)
       border-radius: _r2
       box-shadow: _shadow8
     @media (min-width: _sizeXS) and (max-width: _sizeS)
-      padding: 2em
+      padding: 2.5em 4em
     @media (min-width: _sizeS)
       padding: 4em 6em
       &:nth-child(odd)
         margin-left: auto
       &:nth-child(even)
         margin-right: auto
+      // @note Sur 3 rangées (minmax de topic à 65em), résultat non satisfaisant : impression visuelle d'un désordre.
       /*
-      &:nth-child(4n+2) // @note Sur 3 rangées (minmax de topic à 65em) : le résultat n'est pas probant selon nous car donne l'impression d'un désordre ; 2 rangées sont amplement suffisantes.
+      &:nth-child(4n+2)
         margin-left: 0
       &:nth-child(4n+3)
         margin-inline: auto
@@ -42,9 +40,7 @@ _topicBorder1 = .1em dashed _colorG + 15%
         margin-left: auto
       &:nth-child(4n+5)
         margin-inline: auto
-      */      
-  & .sub-header
-    margin-block: 2em 1em
+      */
   & .sub-header
   & article header
     display: grid
@@ -54,28 +50,11 @@ _topicBorder1 = .1em dashed _colorG + 15%
     position: relative
     margin-bottom: 1em
     padding-bottom: 1em
-    border-bottom: _topicBorder1
-
+    border-bottom: .1em solid _colorG + 5%
+  & .sub-header
+    margin-block: 2em 1em
   & article
     position: relative
-  & .anchor
-    position: absolute
-    right: 2em
-    color: _topicColor2
-    &:focus
-    &:hover
-    &:active
-      text-decoration: none
-      color: _color5
-    @media (max-width: _sizeXS)
-      top: 1em
-      right: 1em
-    @media (min-width: _sizeXS) and (max-width: _sizeS)
-      top: 2em
-      right: 2em
-    @media (min-width: _sizeS)
-      top: 4em
-      right: 2em
   & form
     width: 100%
   & .avatar
@@ -111,8 +90,21 @@ _topicBorder1 = .1em dashed _colorG + 15%
       white-space: nowrap
       background-color: _colorG - 28%
       clip-path: polygon(.75em 0, 100% 0, 100% 100%, .75em 100%, 0 50%)
-
-/*
-*
-  outline: 1px solid orange !important
-*/
+  & .anchor
+    position: absolute
+    right: 2em
+    color: _topicColor2
+    &:focus
+    &:hover
+    &:active
+      text-decoration: none
+      color: _color5
+    @media (max-width: _sizeXS)
+      top: 1em
+      right: 0
+    @media (min-width: _sizeXS) and (max-width: _sizeS)
+      top: 2.5em
+      right: 1.5em
+    @media (min-width: _sizeS)
+      top: 4em
+      right: 2em

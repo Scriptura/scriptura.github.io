@@ -3137,46 +3137,31 @@ form > [class*="grid"] > .input {
     padding-block: 1em;
   }
 }
-.topic .wrapper,
-.topic article,
-.topic form {
+.topic > :not(header) {
   grid-column: 1;
   max-width: 55em;
 }
 @media (min-width: 35.01em) {
-  .topic .wrapper,
-  .topic article,
-  .topic form {
+  .topic > :not(header) {
     border-radius: 0.3em;
     box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
   }
 }
 @media (min-width: 35.01em) and (max-width: 50.01em) {
-  .topic .wrapper,
-  .topic article,
-  .topic form {
-    padding: 2em;
+  .topic > :not(header) {
+    padding: 2.5em 4em;
   }
 }
 @media (min-width: 50.01em) {
-  .topic .wrapper,
-  .topic article,
-  .topic form {
+  .topic > :not(header) {
     padding: 4em 6em;
   }
-  .topic .wrapper:nth-child(odd),
-  .topic article:nth-child(odd),
-  .topic form:nth-child(odd) {
+  .topic > :not(header):nth-child(odd) {
     margin-left: auto;
   }
-  .topic .wrapper:nth-child(even),
-  .topic article:nth-child(even),
-  .topic form:nth-child(even) {
+  .topic > :not(header):nth-child(even) {
     margin-right: auto;
   }
-}
-.topic .sub-header {
-  margin-block: 2em 1em;
 }
 .topic .sub-header,
 .topic article header {
@@ -3188,39 +3173,13 @@ form > [class*="grid"] > .input {
   position: relative;
   margin-bottom: 1em;
   padding-bottom: 1em;
-  border-bottom: 0.1em dashed #575757;
+  border-bottom: 0.1em solid #434343;
+}
+.topic .sub-header {
+  margin-block: 2em 1em;
 }
 .topic article {
   position: relative;
-}
-.topic .anchor {
-  position: absolute;
-  right: 2em;
-  color: #6f6f6f;
-}
-.topic .anchor:focus,
-.topic .anchor:hover,
-.topic .anchor:active {
-  text-decoration: none;
-  color: #ffa500;
-}
-@media (max-width: 35.01em) {
-  .topic .anchor {
-    top: 1em;
-    right: 1em;
-  }
-}
-@media (min-width: 35.01em) and (max-width: 50.01em) {
-  .topic .anchor {
-    top: 2em;
-    right: 2em;
-  }
-}
-@media (min-width: 50.01em) {
-  .topic .anchor {
-    top: 4em;
-    right: 2em;
-  }
 }
 .topic form {
   width: 100%;
@@ -3264,6 +3223,35 @@ form > [class*="grid"] > .input {
   background-color: #292929;
   -webkit-clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
           clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
+}
+.topic .anchor {
+  position: absolute;
+  right: 2em;
+  color: #6f6f6f;
+}
+.topic .anchor:focus,
+.topic .anchor:hover,
+.topic .anchor:active {
+  text-decoration: none;
+  color: #ffa500;
+}
+@media (max-width: 35.01em) {
+  .topic .anchor {
+    top: 1em;
+    right: 0;
+  }
+}
+@media (min-width: 35.01em) and (max-width: 50.01em) {
+  .topic .anchor {
+    top: 2.5em;
+    right: 1.5em;
+  }
+}
+@media (min-width: 50.01em) {
+  .topic .anchor {
+    top: 4em;
+    right: 2em;
+  }
 }
 html,
 .logo-nav,
