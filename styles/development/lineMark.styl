@@ -1,12 +1,12 @@
 _lineMarkUnit1 = 1em
 _lineMarkColor1 = _colorG + 27.5%
 
-@media (max-width: _sizeXS)
+@media (max-width: _sizeS)
 
   .line-mark
     display: none
 
-@media (min-width: _sizeXS)
+@media (min-width: _sizeS)
 
   .add-line-marks > *
     position: relative
@@ -20,7 +20,7 @@ _lineMarkColor1 = _colorG + 27.5%
     padding-top: _lineMarkUnit1
     vertical-align: sub
     //font-family: _fontList2
-    font-size: 1rem // rem obligatoire
+    font-size: 1rem // Unité rem obligatoire car ne doit pas dépendre de l'élément parent.
     font-weight: normal
     //text-align: right
     text-decoration: none

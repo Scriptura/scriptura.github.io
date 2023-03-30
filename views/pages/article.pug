@@ -14,6 +14,20 @@ block main
   article.article
     header(role='banner')
       h1.main-heading!= data._name
+      .sub-header
+        .avatar(style='--img:url(/medias/images/uploads/henri-de-lubac-w300.webp)')
+        address
+          a(href='/page/person.html') Henri de Lubac
+        time(datetime='2017-04-23 20:33:21') Le 23 avril 2017 à 20h33
+      ul.keywords
+        li
+          a(href='/page/forum.html') Écriture & Tradition
+        li
+          a(href='/page/forum.html') Apologétique
+        li 
+          a(href='/page/forum.html') Sur le mal
+        li 
+          a(href='/page/forum.html') Métaphysique
     .wrapper.add-line-marks.links.add-drop-cap.decorative-hr.justify.ribbon-content
       p Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus sapien eros vitae ligula. Pellentesque rhoncus nunc et augue.
       p Integer quis metus vitae elit lobortis egestas. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi vel erat non mauris convallis vehicula. Nulla et sapien. Integer tortor tellus, aliquam faucibus, convallis id, congue eu, quam. Mauris ullamcorper felis vitae erat. Proin feugiat, augue non elementum posuere, metus purus iaculis lectus, et tristique ligula justo vitae magna.
@@ -70,21 +84,3 @@ block main
       p Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius, ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus sapien eros vitae ligula. Pellentesque rhoncus nunc et augue. Integer id felis. Curabitur aliquet pellentesque diam. Integer quis metus vitae elit lobortis egestas. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi vel erat non mauris convallis vehicula. Nulla et sapien. Integer tortor tellus, aliquam faucibus, convallis id, congue eu, quam. Mauris ullamcorper felis vitae erat. Proin feugiat, augue non elementum posuere, metus purus iaculis lectus, et tristique ligula justo vitae magna.
       p Aliquam convallis sollicitudin purus. Praesent aliquam, enim at fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus, felis magna fermentum augue, et ultricies lacus lorem varius purus. Curabitur eu amet.
       .ribbon-top-right.hidden-xs Nouveau
-    footer
-      div
-        div
-          .avatar(style='--img:url(/medias/images/uploads/henri-de-lubac-w300.webp)')
-          address
-            a(href='/page/person.html') Henri de Lubac
-          time Le 17.07.2017, modifi&eacute; le 01.02.2022.
-        ul.keywords
-          li
-            a(href='/page/articles.html') Écriture & Tradition
-          li
-            a(href='/page/articles.html') Apologétique
-          li
-            a(href='/page/articles.html') Liturgie des heures
-          li 
-            a(href='/page/articles.html') Sur le mal
-          li 
-            a(href='/page/articles.html') Métaphysique
