@@ -2,7 +2,7 @@
 
 // @note Marqueurs pour les pages article
 
-const lineMarks = (el => {
+const lineMarks = el => {
   // @note Pour un meilleur contrôle il est préférable de définir explicitement les items plutôt que d'utiliser le sélecteur universel '*' et de procéder par exclusion.
   const els = document.querySelectorAll('.add-line-marks > :is(p, h2, h3, h4, h5, h6, blockquote, ul, ol, [class*=grid])')
   const lineMarksAdd = el => {
@@ -21,4 +21,18 @@ const lineMarks = (el => {
     //el.classList.add('relative')
     lineMarksAdd(el)
   }
-})()
+}
+
+lineMarks()
+
+/*
+const sizeM = '800px'
+
+if (window.matchMedia(`(width > ${sizeM})`).matches) lineMarks()
+
+onresize = (event) => {
+  setTimeout(() => {
+    if (window.matchMedia(`(width > ${sizeM})`).matches) lineMarks()
+  }, 200)
+}
+*/
