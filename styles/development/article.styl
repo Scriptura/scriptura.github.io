@@ -16,7 +16,10 @@ _articleHeight1 = 4em
       margin-top: - _gap
     & article
       padding-block: 1em
-  & > :not(header)
+  //& > :not(header)
+  & > .wrapper
+  & > article
+  & > form
     grid-column: 1
     max-width: 55em
     @media (min-width: _sizeXS)
@@ -100,6 +103,19 @@ _articleHeight1 = 4em
     &:active
       text-decoration: none
       color: _color5
+  /*
+  & > footer
+    grid-column: 1
+    display: flex
+    gap: _gap
+    justify-content: end
+    max-width: 55em
+    padding-inline: 6em
+    & button
+      all: unset
+      & svg
+        color: _colorT
+  */
 
 @media (min-width: _sizeXS)
   .boxx

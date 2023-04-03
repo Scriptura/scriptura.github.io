@@ -171,7 +171,8 @@ details
 details details
   margin-left: 2em
 
-summary
+:not(.accordion) > * > summary // @todo À réévaluer avec une solution plus robuste pour évincer les accordéons.
+//summary
   display: list-item // @bugfix Add the correct display @affected All browsers.
   list-style: none
   cursor: pointer

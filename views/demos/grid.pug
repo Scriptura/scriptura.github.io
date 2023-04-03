@@ -11,7 +11,8 @@
       use(href='/sprites/silos/39r.svg#1')
 p
   code .grid4.gap
-.grid4.row-defines.gap.gap-bottom.demo-counter.demo-items-empty.demo-items-color(style='--itemHeight:5em')
+.grid4.row-defines.gap.gap-bottom.demo-counter.demo-items-empty(style='--itemHeight:5em')
+  //-.demo-items-color
   - for (let i = 0; i < 4; i++)
     div
   .c4
@@ -32,7 +33,7 @@ p
 hr(data-hr='✻ ✻ ✻')
 p
   code .grid4
-.grid4.row-defines.gap-bottom.demo-counter.demo-items-empty.demo-items-color(style='--itemHeight:5em')
+.grid4.row-defines.gap-bottom.demo-counter.demo-items-empty(style='--itemHeight:5em')
   - for (let i = 0; i < 4; i++)
     div
   .c4
@@ -53,7 +54,7 @@ p
 hr(data-hr='✻ ✻ ✻')
 p
   code .grid2.gap
-.grid2.row-defines.gap.gap-bottom.demo-counter.demo-items-empty.demo-items-color(style='--itemHeight:5em')
+.grid2.row-defines.gap.gap-bottom.demo-counter.demo-items-empty(style='--itemHeight:5em')
   div
   div
   .c2
@@ -63,7 +64,7 @@ p
 hr(data-hr='✻ ✻ ✻')
 p
   code .grid3.gap
-.grid3.row-defines.gap.gap-bottom.demo-counter.demo-items-empty.demo-items-color(style='--itemHeight:5em')
+.grid3.row-defines.gap.gap-bottom.demo-counter.demo-items-empty(style='--itemHeight:5em')
   div
   div
   div
@@ -86,7 +87,7 @@ hr(data-hr='✻ ✻ ✻')
 //-
   p
     code .grid5.gap
-  .grid5.row-defines.gap.gap-bottom.demo-counter.demo-items-empty.demo-items-color(style='--itemHeight:5em')
+  .grid5.row-defines.gap.gap-bottom.demo-counter.demo-items-empty(style='--itemHeight:5em')
     .r4
       code .r4
     div
@@ -105,7 +106,7 @@ hr(data-hr='✻ ✻ ✻')
   hr(data-hr='✻ ✻ ✻')
 p
   code .grid4.gap.masonry
-.grid4.gap.masonry.demo-counter.demo-items-empty.demo-items-color(style='--itemHeight:5em')
+.grid4.gap.masonry.demo-counter.demo-items-empty(style='--itemHeight:5em')
   div(style='height:5em')
   .c2(style='height:12em')
     code .c2
@@ -124,12 +125,12 @@ p
 hr(data-hr='✻ ✻ ✻')
 p
   code .grid-auto.gap
-.grid-auto.gap.demo-items-empty.demo-items-color(style='--itemHeight:5em')
+.grid-auto.gap.demo-items-empty(style='--itemHeight:5em')
   - for (let i = 0; i < 20; i++)
     div
 hr(data-hr='✻ ✻ ✻')
 p
-  code .grid-auto.gap(style='--s:5em')
-.grid-auto.gap.demo-items-empty.demo-items-color(style='--s:5em;--itemHeight:5em')
+  code .grid-auto.gap(style='--size-grid:5em')
+.grid-auto.gap.demo-items-empty(style='--size-grid:5em;--itemHeight:5em')
   - for (let i = 0; i < 30; i++)
     div
