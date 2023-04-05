@@ -14,13 +14,14 @@ block main
   header(role='banner')
     h1.main-heading!= data._name
   .grid2.s-grid1.gap.gap-bottom
-    .tabs
-      details
+    .accordion(data-singletab='true')
+      details(open='open')
         summary
           svg.icon-inline (role='img' focusable='false')
             use(href='/sprites/util.svg#users')
           | Users
         div
+          h2.h6 Statistiques&nbsp;:
           ul
             li 36 utilisateurs
             li 1 administrateur
@@ -30,23 +31,47 @@ block main
             li 7 contributeurs
             li 19 commentateurs
             li 2 abonnés
+          h2.h6 Derniers utilisateurs enregistrés&nbsp;:
+          ul
+            li Pseudo 1
+            li Pseudo 2
+            li Pseudo 3
+            li Pseudo 4
+            li Pseudo 5
+          h2.h6 Derniers utilisateurs en activité&nbsp;:
+          ul
+            //- sans l'utilisateur courant bien sûr...
+            li Pseudo 1
+            li Pseudo 2
+            li Pseudo 3
+            li Pseudo 4
+            li Pseudo 5
       details
         summary
           svg.icon-inline (role='img' focusable='false')
             use(href='/sprites/util.svg#ampersand')
           | Articles
         div
+          h2.h6 Statistiques&nbsp;:
           ul
             li 237 articles
             li 232 articles publiés
             li 5 articles non publiés
             li 25 articles sans mot clef
+          h2.h6 Derniers articles publiés&nbsp;:
+          ul
+            li Titre de l'article 1
+            li Titre de l'article 2
+            li Titre de l'article 3
+            li Titre de l'article 4
+            li Titre de l'article 5
       details
         summary
           svg.icon-inline (role='img' focusable='false')
             use(href='/sprites/util.svg#bubbles')
           | Forums
         div
+          h2.h6 Statistiques&nbsp;:
           ul
             li 237 sujets
             li 25 sujets sans mot clef
@@ -57,44 +82,43 @@ block main
             use(href='/sprites/util.svg#bubbles')
           | Comments
         div
+          h2.h6 Statistiques&nbsp;:
           ul
             li 324 commentaires
             li 12 commentaires en attente de modération
             li 49 commentaires retirés
-  hr
-  .grid-auto.gap.gap-bottom
-    - for (let i = 0; i < 3; i++)
-      .accordion(data-singletab='true')
-        details
-          summary
-            svg.icon-inline (role='img' focusable='false')
-              use(href='/sprites/util.svg#users')
-            | Users
-          div
-            ul
-              - for (let i = 1; i < 25; i++)
-                li
-                  a(href='#') Item #{i}
-        details
-          summary
-            svg.icon-inline (role='img' focusable='false')
-              use(href='/sprites/util.svg#ampersand')
-            | Articles
-          div
-            ul
-              - for (let i = 1; i < 25; i++)
-                li
-                  a(href='#') Item #{i}
-        details
-          summary
-            svg.icon-inline (role='img' focusable='false')
-              use(href='/sprites/util.svg#bubbles')
-            | Comments
-          div
-            ul
-              - for (let i = 1; i < 25; i++)
-                li
-                  a(href='#') Item #{i}
+      details
+        summary
+          svg.icon-inline (role='img' focusable='false')
+            use(href='/sprites/util.svg#picture')
+          | Medias
+        div
+          h2.h6 Statistiques&nbsp;:
+          ul
+            li 274 images
+            li 37 musiques
+            li 16 vidéos
+          h2.h6 Dernières images publiées&nbsp;:
+          ul
+            li Titre de l'image 1
+            li Titre de l'image 2
+            li Titre de l'image 3
+            li Titre de l'image 4
+            li Titre de l'image 5
+          h2.h6 Dernières musiques publiées&nbsp;:
+          ul
+            li Titre de la musique 1
+            li Titre de la musique 2
+            li Titre de la musique 3
+            li Titre de la musique 4
+            li Titre de la musique 5
+          h2.h6 Dernières vidéos publiées&nbsp;:
+          ul
+            li Titre de la vidéo 1
+            li Titre de la vidéo 2
+            li Titre de la vidéo 3
+            li Titre de la vidéo 4
+            li Titre de la vidéo 5
   hr
   ul.grid4.gap.gap-bottom.list-stripe-links
     - for (let i = 1; i < 25; i++)
