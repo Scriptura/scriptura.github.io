@@ -15,7 +15,49 @@ block main
     h1.main-heading!= data._name
   .grid2.s-grid1.gap.gap-bottom
     .accordion(data-singletab='true')
-      details(open='open')
+      details
+        summary
+          svg.icon-inline (role='img' focusable='false')
+            use(href='/sprites/util.svg#share')
+          | Activité récente
+        div
+          h2.h6 Derniers utilisateurs en activité&nbsp;:
+          ul
+            //- sans l'utilisateur courant bien sûr...
+            li Pseudo 1
+            li Pseudo 2
+            li Pseudo 3
+            li Pseudo 4
+            li Pseudo 5
+          h2.h6 Derniers utilisateurs enregistrés&nbsp;:
+          ul
+            li Pseudo 1
+            li Pseudo 2
+            li Pseudo 3
+            li Pseudo 4
+            li Pseudo 5
+          h2.h6 Derniers articles publiés&nbsp;:
+          ul
+            li Titre de l'article 1
+            li Titre de l'article 2
+            li Titre de l'article 3
+            li Titre de l'article 4
+            li Titre de l'article 5
+          h2.h6 Derniers forums publiés&nbsp;:
+          ul
+            li Titre du forum 1
+            li Titre du forum 2
+            li Titre du forum 3
+            li Titre du forum 4
+            li Titre du forum 5
+          h2.h6 Derniers commentaires publiés&nbsp;:
+          ul
+            li Titre du commentaire 1
+            li Titre du commentaire 2
+            li Titre du commentaire 3
+            li Titre du commentaire 4
+            li Titre du commentaire 5
+      details
         summary
           svg.icon-inline (role='img' focusable='false')
             use(href='/sprites/util.svg#users')
@@ -76,6 +118,13 @@ block main
             li 237 sujets
             li 25 sujets sans mot clef
             li 31 sujets retirés
+          h2.h6 Derniers forums publiés&nbsp;:
+          ul
+            li Titre du forum 1
+            li Titre du forum 2
+            li Titre du forum 3
+            li Titre du forum 4
+            li Titre du forum 5
       details
         summary
           svg.icon-inline (role='img' focusable='false')
@@ -87,6 +136,13 @@ block main
             li 324 commentaires
             li 12 commentaires en attente de modération
             li 49 commentaires retirés
+          h2.h6 Derniers commentaires publiés&nbsp;:
+          ul
+            li Titre du commentaire 1
+            li Titre du commentaire 2
+            li Titre du commentaire 3
+            li Titre du commentaire 4
+            li Titre du commentaire 5
       details
         summary
           svg.icon-inline (role='img' focusable='false')
@@ -119,15 +175,15 @@ block main
             li Titre de la vidéo 3
             li Titre de la vidéo 4
             li Titre de la vidéo 5
-  hr
-  ul.grid4.gap.gap-bottom.list-stripe-links
-    - for (let i = 1; i < 25; i++)
-      li
-        a(href='#')
-          svg.icon-inline(role='img' focusable='false')
-            use(href='/sprites/util.svg#link')
-          | List item #{i}
-  hr
+    //-
+      div
+        ul.grid-auto.gap.list-stripe-links
+          - for (let i = 1; i < 25; i++)
+            li
+              a(href='#')
+                svg.icon-inline(role='img' focusable='false')
+                  use(href='/sprites/util.svg#link')
+                | List item #{i}
   p.message
     svg.icon-inline(role='img' focusable='false')
       use(href='/sprites/util.svg#logout')
