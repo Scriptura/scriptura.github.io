@@ -31,6 +31,7 @@
     "cssgf": "stylus -u autoprefixer-stylus -w styles/development/gridFallback.styl -o styles/gridFallback.css -c -m",
     "cssprism": "stylus -u autoprefixer-stylus -w styles/development/prism.styl -o styles/prism.css -c -m",
     "img": "node tasks/images",
+    "icon": "yarn svgo && yarn sprite && yarn html",
     "svgo": "node tasks/icons && svgo --config tasks/svgoConfig.cjs -f medias/icons/src -o medias/icons/dest",
     "sprite": "svg-symbol-sprite -p '' -a 'xmlns=\"http://www.w3.org/2000/svg\"' -s '' -c false -i medias/icons/dest -o sprites/util.svg",
     "imglist": "node tasks/imageList",

@@ -20,7 +20,11 @@
     gap: 0 _gap
 
 .grid-auto
+.grid-auto-min
   grid-template-columns: repeat(auto-fit, minmax(var(--size-grid, 15em), 1fr)) // @note Ne pas définir la variable au-dessus de sa valeur par défaut afin d'éviter des dépassement sur les écrans de petites définitions. Préférer alors les grilles prédéfinies.
+
+.grid-auto-min // @note Valeur réduite évitant de définir trop fréquement la variagle de .grid-auto via du style en ligne.
+  --size-grid: 10em
 
 .xs-grid-auto
   @media (max-width: _sizeXS)
@@ -55,13 +59,13 @@
 
   .c4
     grid-column: span 4
-
+/*
 [class^=grid] .grid2 // @note Si éléments de grille imbriqués @todo En test ; espace de nom pour éviter les effets de bord peut-être inutile.
   --n: 2
   @container grid (25em > width)
     & > *
       grid-column: span 2
-
+*/
 .r2
   grid-row: span 2
 

@@ -684,8 +684,12 @@ main {
 [class^=grid].vertical-gap {
   gap: 0 1em;
 }
-.grid-auto {
+.grid-auto,
+.grid-auto-min {
   grid-template-columns: repeat(auto-fit, minmax(var(--size-grid, 15em), 1fr));
+}
+.grid-auto-min {
+  --size-grid: 10em;
 }
 @media (max-width: 35.01em) {
   .xs-grid-auto {
@@ -720,14 +724,6 @@ main {
   }
   .c4 {
     grid-column: span 4;
-  }
-}
-[class^=grid] .grid2 {
-  --n: 2;
-}
-@container grid (25em > width) {
-  [class^=grid] .grid2 > * {
-    grid-column: span 2;
   }
 }
 .r2 {

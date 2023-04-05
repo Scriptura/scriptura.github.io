@@ -13,19 +13,28 @@ block variables
 block main
   header(role='banner')
     h1.main-heading!= data._name
-  .grid3.gap.gap-bottom
-    - for (let i = 0; i < 3; i++)
+  .grid-auto.gap.gap-bottom
+    - for (let i = 0; i < 2; i++)
       .tabs
         details
-          summary Item 1
+          summary
+            svg.icon-inline (role='img' focusable='false')
+              use(href='/sprites/util.svg#users')
+            | Users
           div
             p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lectus velit, bibendum nec augue id, faucibus egestas quam. Aenean auctor auctor varius. Fusce tincidunt consequat ante, at efficitur leo sollicitudin vel. Etiam ut dictum ipsum, sit amet tempor odio. Nulla vitae molestie odio, eu blandit velit. Phasellus tincidunt suscipit scelerisque. Donec id maximus metus. Curabitur laoreet nibh non imperdiet aliquam. Etiam nisi nisl, vestibulum ac magna ac, posuere molestie sem.
         details
-          summary Item 2
+          summary
+            svg.icon-inline (role='img' focusable='false')
+              use(href='/sprites/util.svg#ampersand')
+            | Articles
           div
             p Duis elementum libero sit amet ligula consectetur laoreet. Suspendisse non pulvinar tellus. Nullam mollis vitae metus in efficitur. Cras at est feugiat, aliquam justo eu, bibendum nibh. Suspendisse sit amet magna dolor. Phasellus at elit eu nisi lacinia rhoncus non ac felis. Nulla sit amet orci interdum, dictum nunc eu, convallis libero. Cras pulvinar quam dolor, ut pharetra purus vestibulum et. Pellentesque quis tincidunt velit. Pellentesque leo magna, pharetra eu suscipit quis, pharetra non massa. Nunc non libero justo. In commodo dui id facilisis venenatis.
         details
-          summary Item 3
+          summary
+            svg.icon-inline (role='img' focusable='false')
+              use(href='/sprites/util.svg#bubbles')
+            | Comments
           div
             p Morbi hendrerit nec justo consequat tempor. Fusce vestibulum sapien vel purus consequat, vel ultricies dolor fermentum. Maecenas eleifend, nisi nec tempor ornare, nulla est vestibulum elit, eu feugiat risus erat vitae dui. Duis condimentum pulvinar feugiat. Donec pulvinar nibh sit amet mi fringilla varius in ac dolor. Vivamus molestie tincidunt tortor, vitae tincidunt arcu malesuada viverra. Sed vel auctor eros. Morbi quis nulla ut massa pretium accumsan a a quam. Nullam eu mauris id ligula luctus molestie.
   hr
@@ -33,44 +42,32 @@ block main
     - for (let i = 0; i < 3; i++)
       .accordion(data-singletab='true')
         details
-          summary Item 1
+          summary
+            svg.icon-inline (role='img' focusable='false')
+              use(href='/sprites/util.svg#users')
+            | Users
           div
             p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lectus velit, bibendum nec augue id, faucibus egestas quam. Aenean auctor auctor varius. Fusce tincidunt consequat ante, at efficitur leo sollicitudin vel. Etiam ut dictum ipsum, sit amet tempor odio. Nulla vitae molestie odio, eu blandit velit. Phasellus tincidunt suscipit scelerisque. Donec id maximus metus. Curabitur laoreet nibh non imperdiet aliquam. Etiam nisi nisl, vestibulum ac magna ac, posuere molestie sem.
         details
-          summary Item 2
+          summary
+            svg.icon-inline (role='img' focusable='false')
+              use(href='/sprites/util.svg#ampersand')
+            | Articles
           div
             p Duis elementum libero sit amet ligula consectetur laoreet. Suspendisse non pulvinar tellus. Nullam mollis vitae metus in efficitur. Cras at est feugiat, aliquam justo eu, bibendum nibh. Suspendisse sit amet magna dolor. Phasellus at elit eu nisi lacinia rhoncus non ac felis. Nulla sit amet orci interdum, dictum nunc eu, convallis libero. Cras pulvinar quam dolor, ut pharetra purus vestibulum et. Pellentesque quis tincidunt velit. Pellentesque leo magna, pharetra eu suscipit quis, pharetra non massa. Nunc non libero justo. In commodo dui id facilisis venenatis.
         details
-          summary Item 3
+          summary
+            svg.icon-inline (role='img' focusable='false')
+              use(href='/sprites/util.svg#bubbles')
+            | Comments
           div
             p Morbi hendrerit nec justo consequat tempor. Fusce vestibulum sapien vel purus consequat, vel ultricies dolor fermentum. Maecenas eleifend, nisi nec tempor ornare, nulla est vestibulum elit, eu feugiat risus erat vitae dui. Duis condimentum pulvinar feugiat. Donec pulvinar nibh sit amet mi fringilla varius in ac dolor. Vivamus molestie tincidunt tortor, vitae tincidunt arcu malesuada viverra. Sed vel auctor eros. Morbi quis nulla ut massa pretium accumsan a a quam. Nullam eu mauris id ligula luctus molestie.
   hr
-  .grid-auto.gap.gap-bottom
-    ul.grid.list-stripe-links
-      - for (let i = 1; i < 8; i++)
-        li
-          a(href='#')
-            svg.icon-inline(role='img' focusable='false')
-              use(href='/sprites/util.svg#link')
-            | List item #{i}
-    ul.grid.list-stripe-links
-      - for (let i = 1; i < 8; i++)
-        li
-          a(href='#')
-            svg.icon-inline(role='img' focusable='false')
-              use(href='/sprites/util.svg#link')
-            | List item #{i}
-    ul.grid.list-stripe-links
-      - for (let i = 1; i < 8; i++)
-        li
-          a(href='#')
-            svg.icon-inline(role='img' focusable='false')
-              use(href='/sprites/util.svg#link')
-            | List item #{i}
-    ul.grid.list-stripe-links
-      - for (let i = 1; i < 8; i++)
-        li
-          a(href='#')
-            svg.icon-inline(role='img' focusable='false')
-              use(href='/sprites/util.svg#link')
-            | List item #{i}
+  
+  ul.grid4.gap.gap-bottom.list-stripe-links
+    - for (let i = 1; i < 24; i++)
+      li
+        a(href='#')
+          svg.icon-inline(role='img' focusable='false')
+            use(href='/sprites/util.svg#link')
+          | List item #{i}

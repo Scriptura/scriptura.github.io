@@ -4,7 +4,7 @@ form(method='get' action='./').grid3.m-grid2.gap.masonry
     .input
       label(for='input-text') Type text
       input#input-text(type='text' name='input-text' placeholder='John Smith' required='required' autocomplete='off')
-    .grid2.gap
+    .grid-auto-min.gap
       .input
         label(for='input-text1') Type text & regex name
         input#input-text1(type='text' name='input-text1' placeholder='John' required='required' autocomplete='given-name').validation-name
@@ -29,13 +29,14 @@ form(method='get' action='./').grid3.m-grid2.gap.masonry
         svg.icon-inline(role='img' focusable='false')
           use(href='/sprites/util.svg#info')
         | Ce champ accepte uniquement les numéros de téléphone français.
-    .grid2.gap
+    .grid-auto-min.gap
       .input
         label(for='input-number') Type number
         input#input-number(type='number' name='input-number' step='1' min='-5' max='100' value='50')
       .input
         label(for='input-password') Type password
         input#input-password(type='password' name='input-password' placeholder='••••••••')
+    .grid-auto-min.gap
       .input
         label(for='input-color') Type color
         input#input-color(type='color' name='input-color' value='#ffa500')
@@ -65,13 +66,14 @@ form(method='get' action='./').grid3.m-grid2.gap.masonry
       label(for='input-date3') Type date, with 
         code .today-date
       input#input-date3(type='date' name='input-date3').today-date
-    .grid2.gap
+    .grid-auto-min.gap
       .input
         label(for='input-time') Type time
         input#input-time(type='time' name='input-time' value='13:30')
       .input
         label(for='input-datetime-local') Type datetime-local
         input#input-datetime-local(type='datetime-local' name='input-datetime-local' value='2021-07-17T04:49' min='2017-07-17T00:00' max='2022-07-17T00:00')
+    .grid-auto-min.gap
       .input
         label(for='input-week') Type week
         input#input-week(type='week' name='input-week')
