@@ -2631,19 +2631,6 @@ form > [class*="grid"] > .input {
   display: grid;
   grid-template-columns: minmax(0, 60em) minmax(0, 1fr);
   gap: 1em 0;
-/*
-  & > footer
-    grid-column: 1
-    display: flex
-    gap: _gap
-    justify-content: end
-    max-width: 55em
-    padding-inline: 6em
-    & button
-      all: unset
-      & svg
-        color: _colorT
-  */
 }
 .article > header {
   grid-column: span 2;
@@ -2768,6 +2755,33 @@ form > [class*="grid"] > .input {
 .article .anchor:hover,
 .article .anchor:active {
   text-decoration: none;
+  color: #ffa600;
+}
+.article > footer {
+  grid-column: 1;
+  display: flex;
+  gap: 2em;
+  justify-content: flex-end;
+  max-width: 55em;
+}
+@media (min-width: 35.01em) and (max-width: 50.01em) {
+  .article > footer {
+    padding-inline: 4em;
+  }
+}
+@media (min-width: 50.01em) {
+  .article > footer {
+    padding-inline: 6em;
+  }
+}
+.article > footer button {
+  all: unset;
+  color: #6a6a6a;
+  cursor: pointer;
+}
+.article > footer button:focus,
+.article > footer button:hover,
+.article > footer button:active {
   color: #ffa600;
 }
 @media (min-width: 35.01em) {

@@ -103,20 +103,24 @@ _articleHeight1 = 4em
     &:active
       text-decoration: none
       color: _color5
-  /*
   & > footer
     grid-column: 1
     display: flex
-    gap: _gap
-    justify-content: end
+    gap: _gap * 2
+    justify-content: flex-end
     max-width: 55em
-    padding-inline: 6em
+    @media (min-width: _sizeXS) and (max-width: _sizeS)
+      padding-inline: 4em
+    @media (min-width: _sizeS)
+      padding-inline: 6em
     & button
       all: unset
-      & svg
-        color: _colorT
-  */
-
+      color: _colorG + 25%
+      cursor: pointer
+      &:focus
+      &:hover
+      &:active
+        color: _color5
 @media (min-width: _sizeXS)
   .boxx
     padding: 4em 6em
