@@ -26,8 +26,8 @@ ul.sub-nav(aria-label='Main')
   +item('dashboard', 'Dashboard', '/page/dashboard.html', 'cogwheel3')
   if documentType === 'dashboard'
     li
-      .avatar(style='--img:url(/medias/images/uploads/henri-de-lubac-w300.webp)')
-      address
-        a(href='/page/person.html') Henri de Lubac
+      a(href='/page/person.html')
+        .avatar(style='--img:url(/medias/images/uploads/henri-de-lubac-w300.webp)')
+        | Henri de Lubac
   else
     +item('', 'Repository', '//github.com/Scriptura/scriptura.github.io', 'github')

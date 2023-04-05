@@ -358,6 +358,17 @@ main {
     grid-template-areas: 'logo subnav' 'logo breadcrumb';
   }
 }
+.nav .avatar {
+  display: inline-block;
+  vertical-align: -0.5em;
+  width: 1.7em;
+  aspect-ratio: 1;
+  margin-right: 0.5em;
+  background-color: #111;
+  background-image: var(--img);
+  background-size: cover;
+  border-radius: 50%;
+}
 .logo-nav {
   grid-area: logo;
   display: block;
@@ -1225,7 +1236,7 @@ svg {
   display: inline-block;
   vertical-align: sub;
   height: 1.2em;
-  width: 1.2em;
+  aspect-ratio: 1;
 }
 .icon-inline {
   margin-right: 0.5em;
