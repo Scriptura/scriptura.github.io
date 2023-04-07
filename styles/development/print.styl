@@ -1,8 +1,7 @@
 // @note Permet de choisir une feuille de styles spécifique si plusieurs thèmes CSS plutôt que de passer par le thème courant avec link(rel='stylesheet').
 @import url('/styles/main.css')
 
-//body > footer
-body > nav
+body > :not(main,footer)
 form
 fieldset
 //input
@@ -11,6 +10,7 @@ button
 audio
 video
 [class*=player]
+//.map
 .accordion
 .card
 pre button
@@ -19,12 +19,29 @@ pre div
 
 *
   text-shadow: none !important
-  //box-shadow: none !important
 
 *
 ::before
 ::after
   color: black !important
+
+pre
+blockquote
+tr
+img
+figure
+[class*=figure]
+  break-inside: avoid
+
+p
+h2
+h3
+  orphans: 3
+  widows: 3
+
+h2
+h3
+  break-after: avoid
 
 a
 h1 span
@@ -34,8 +51,19 @@ h1 span
   box-shadow: none !important
   border: 1px solid #ddd
 
+.article
+  text-align: justify
+  & .wrapper
+    box-shadow: none !important // @affected Firefox
+    padding: 0 !important
+
+
+.keywords a
+  background: #efefef !important
+
 .avatar
 .avatars
+.keywords
   -webkit-print-color-adjust: exact !important
   print-color-adjust: exact !important
 
@@ -69,17 +97,14 @@ pre
   white-space: pre-wrap !important
   border: none
 
-pre
-blockquote
-  //border: 1px solid #999
-  page-break-inside: avoid
-
 thead
   display: table-header-group
 
+pre
+blockquote
 tr
 img
-  page-break-inside: avoid
+  break-inside: avoid
 
 p
 h2
@@ -89,7 +114,7 @@ h3
 
 h2
 h3
-  page-break-after: avoid
+  break-after: avoid
 
 body > footer
 nav

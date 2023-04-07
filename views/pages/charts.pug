@@ -1,0 +1,16 @@
+extends ../patternLayout
+
+block variables
+  - const documentType = 'loader'
+  - const pageType = 'component'
+  -
+    const data = {
+      _name: 'Charts <span>.&nbsp;Documentation</span>',
+      _title: 'Charts . Scriptura framework',
+      _description: 'Charts, documentation.'
+    }
+
+block main
+  header(role='banner')
+    h1.main-heading!= data._name
+  include ../demos/chart

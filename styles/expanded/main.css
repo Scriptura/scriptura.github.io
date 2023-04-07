@@ -2760,8 +2760,8 @@ form > [class*="grid"] > .input {
 .article > footer {
   grid-column: 1;
   display: flex;
-  gap: 2em;
   justify-content: flex-end;
+  gap: 1em;
   max-width: 55em;
 }
 @media (min-width: 35.01em) and (max-width: 50.01em) {
@@ -2775,14 +2775,24 @@ form > [class*="grid"] > .input {
   }
 }
 .article > footer button {
+  --button-color: #606060;
   all: unset;
-  color: #6a6a6a;
+  width: 3em;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  color: var(--button-color);
+  border: 0.15em dotted var(--button-color);
+  border-radius: 50%;
+  box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
   cursor: pointer;
+  transition: transform 0.5s;
 }
 .article > footer button:focus,
 .article > footer button:hover,
 .article > footer button:active {
-  color: #ffa600;
+  --button-color: #ffa600;
+  transform: rotate(360deg);
 }
 @media (min-width: 35.01em) {
   .boxx {
@@ -2946,6 +2956,13 @@ form > [class*="grid"] > .input {
   to {
     transform: rotate(359deg);
   }
+}
+.pie-chart {
+  --tooltip-bg: #383838;
+  fill: #ff6347;
+  width: 100%;
+  aspect-ratio: 1;
+  filter: drop-shadow(0 1.5rem 2rem rgba(0,0,0,0.4));
 }
 ::-webkit-scrollbar {
   width: 11px;

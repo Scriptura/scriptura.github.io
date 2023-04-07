@@ -106,21 +106,31 @@ _articleHeight1 = 4em
   & > footer
     grid-column: 1
     display: flex
-    gap: _gap * 2
     justify-content: flex-end
+    gap: _gap
     max-width: 55em
     @media (min-width: _sizeXS) and (max-width: _sizeS)
       padding-inline: 4em
     @media (min-width: _sizeS)
       padding-inline: 6em
     & button
+      --button-color: _colorG + 20%
       all: unset
-      color: _colorG + 25%
+      width: 3em
+      aspect-ratio: 1
+      display: grid
+      place-items center
+      color: var(--button-color)
+      border: .15em dotted var(--button-color)
+      border-radius: 50%
+      box-shadow: _shadow8
       cursor: pointer
+      transition: transform .5s
       &:focus
       &:hover
       &:active
-        color: _color5
+        --button-color: _color5
+        transform: rotate(360deg)
 @media (min-width: _sizeXS)
   .boxx
     padding: 4em 6em
