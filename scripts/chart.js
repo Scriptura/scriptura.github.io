@@ -48,10 +48,10 @@ class PieChart extends HTMLElement {
 
       // On prépare les paramètres
       const labels = this.getAttribute('labels')?.split(';') ?? []
-      const donut = this.getAttribute('donut') ?? '0.005'
+      const donut = this.getAttribute('donut') ?? '0.7'
       const colors = this.getAttribute('colors')?.split(';') ?? ['#333', '#444', '#555', '#666', '#777', '#888', '#999', '#aaa', '#bbb', '#ccc'];
       this.data = this.getAttribute('data').split(';').map(v => parseFloat(v))
-      const gap = this.getAttribute('gap') ?? '0.015'
+      const gap = this.getAttribute('gap') ?? '0.04'
 
       // On génère la structure du DOM nécessaire pour la suite
       const svg = strToDom(`<svg viewBox="-1 -1 2 2">
@@ -110,7 +110,7 @@ class PieChart extends HTMLElement {
             background-color: var(--tooltip-bg, #222);
             opacity: 0;
             transition: opacity .3s;
-            pointer-event: none;
+            pointer-events: none;
           }
           .active {
             opacity: 1;
@@ -154,7 +154,8 @@ class PieChart extends HTMLElement {
           angle += ratio * 2 * Math.PI
           const end = Point.fromAngle(angle)
           const largeFlag = ratio > .5 ? '1' : '0'
-          this.paths[k].setAttribute('d', `M 0 0 L ${start.toSvgPath()} A 1 1 0 ${largeFlag} 1 ${end.toSvgPath()} L 0 0`)
+            //this.paths[k].setAttribute('d', `M 0 0 L 0 -1 A 1 1 0 1 1 -0.0074 -0.9999 L 0 0`)
+            this.paths[k].setAttribute('d', `M 0 0 L ${start.toSvgPath()} A 1 1 0 ${largeFlag} 1 ${end.toSvgPath()} L 0 0`)
           start = end
       }
   }
