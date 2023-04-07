@@ -15,7 +15,7 @@ block main
     h1.main-heading!= data._name
   .grid2.s-grid1.gap.gap-bottom
     .accordion(data-singletab='true')
-      details
+      details(open='open')
         summary
           svg.icon-inline (role='img' focusable='false')
             use(href='/sprites/util.svg#share')
@@ -57,7 +57,8 @@ block main
             li Titre du commentaire 3
             li Titre du commentaire 4
             li Titre du commentaire 5
-      details
+    .accordion(data-singletab='true')
+      details(open='open')
         summary
           svg.icon-inline (role='img' focusable='false')
             use(href='/sprites/util.svg#users')
@@ -169,6 +170,22 @@ block main
             li Titre de la musique 4
             li Titre de la musique 5
           h2.h6 Dernières vidéos publiées&nbsp;:
+          ul
+            li Titre de la vidéo 1
+            li Titre de la vidéo 2
+            li Titre de la vidéo 3
+            li Titre de la vidéo 4
+            li Titre de la vidéo 5
+      details
+        summary
+          svg.icon-inline (role='img' focusable='false')
+            use(href='/sprites/util.svg#old-key')
+          | Mots clefs
+        div
+          h2.h6 Statistiques&nbsp;:
+          ul
+            li 114 mots clefs
+          h2.h6 Derniers mots clefs créés&nbsp;:
           ul
             li Titre de la vidéo 1
             li Titre de la vidéo 2
