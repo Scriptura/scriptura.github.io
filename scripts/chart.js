@@ -138,7 +138,7 @@ class PieChart extends HTMLElement {
 
   /**
    * Dessine le graphique
-   * @param {number} progress 
+   * @param {number} progress
    */
   draw (progress = 1) {
       const total = this.data.reduce((acc, v) => acc + v, 0)
