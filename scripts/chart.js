@@ -49,7 +49,7 @@ class PieChart extends HTMLElement {
       // On prépare les paramètres
       const labels = this.getAttribute('labels')?.split(';') ?? []
       const donut = this.getAttribute('donut') ?? '0.7'
-      const colors = this.getAttribute('colors')?.split(';') ?? ['#333', '#444', '#555', '#666', '#777', '#888', '#999', '#aaa', '#bbb', '#ccc'];
+      const colors = this.getAttribute('colors')?.split(';') ?? ['hsl(9, 100%, 64%)', 'hsl(29, 100%, 64%)', 'hsl(49, 100%, 64%)', 'hsl(69, 100%, 64%)', 'hsl(89, 100%, 64%)', 'hsl(109, 100%, 64%)', 'hsl(129, 100%, 64%)', 'hsl(149, 100%, 64%)', 'hsl(169, 100%, 64%)', 'hsl(189, 100%, 64%)']
       this.data = this.getAttribute('data').split(';').map(v => parseFloat(v))
       const gap = this.getAttribute('gap') ?? '0.04'
 
