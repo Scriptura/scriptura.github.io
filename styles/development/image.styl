@@ -56,11 +56,11 @@ figure
 
   [class*=-alignleft]
     float: left
-    margin-right: 1em
+    margin-right: _gap
 
   [class*=-alignright]
     float: right
-    margin-left: 1em
+    margin-left: _gap
 
   :where([class*=-alignleft], [class*=-alignright]) ~ :where(h2, h3, hr, aside)
     clear: both // @note Ééments faisants suite à une image flotante @todo Le margin-top de ces éléments n'est pas pris en compte sous l'image...
