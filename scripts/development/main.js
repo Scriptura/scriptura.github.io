@@ -56,7 +56,7 @@ const getScripts = (() => {
   if (document.querySelector('.input [type=password]')) getScript('/scripts/readablePassword.js')
   if (document.querySelector('[class^=range]')) getScript('/scripts/range.js')
   if (document.querySelector('.add-line-marks')) getScript('/scripts/lineMark.js')
-  if (document.querySelector('.pie-chart')) getScript('/scripts/chart.js')
+  if (document.querySelector('pie-chart')) getScript('/scripts/chart.js')
   if (document.querySelector('.map')) getScript('/scripts/map.js')
   if (document.querySelector('.map')) getScript('/libraries/leaflet/leaflet.js')
   if (document.querySelector('[class*=language-]')) getScript('/libraries/prism/prism.js')

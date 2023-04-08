@@ -142,6 +142,7 @@ class PieChart extends HTMLElement {
    */
   draw (progress = 1) {
       const total = this.data.reduce((acc, v) => acc + v, 0)
+      const patch = 0.0000001 // L'ajout d'un correcteur évite à un path de ne jamais correspondre parfaitement à 100% de la totalité du graphique (s'il est seul dans le graphique par exemple) ce qui évite sa "disparition".
       let angle = Math.PI / -2
       let start = new Point(0, -1)
       for (let k = 0; k < this.data.length; k++) {
@@ -151,10 +152,9 @@ class PieChart extends HTMLElement {
           if (progress === 1) {
               this.positionLabel(this.labels[k], angle + ratio * Math.PI)
           }
-          angle += ratio * 2 * Math.PI
+          angle += ratio * 2 * Math.PI - patch
           const end = Point.fromAngle(angle)
           const largeFlag = ratio > .5 ? '1' : '0'
-            //this.paths[k].setAttribute('d', `M 0 0 L 0 -1 A 1 1 0 1 1 -0.0074 -0.9999 L 0 0`)
             this.paths[k].setAttribute('d', `M 0 0 L ${start.toSvgPath()} A 1 1 0 ${largeFlag} 1 ${end.toSvgPath()} L 0 0`)
           start = end
       }

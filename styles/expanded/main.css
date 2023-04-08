@@ -2957,7 +2957,7 @@ form > [class*="grid"] > .input {
     transform: rotate(359deg);
   }
 }
-.pie-chart {
+pie-chart {
   --tooltip-bg: #383838;
   fill: #ff6347;
   width: 100%;
