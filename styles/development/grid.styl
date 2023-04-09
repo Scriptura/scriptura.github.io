@@ -13,11 +13,11 @@
   &.row-defines // @note Permet aux spans de la propriété grid-row de se caler sur les lignes. Intéressant mais pas souhaitable d'emblée en production.
     grid-auto-rows: minmax(0, 1fr)
   &.gap
-    gap: _gap
+    gap: var(--gap, _gap)
   &.gap-bottom
-    padding-bottom: _gap // @note padding et non margin, car ne doit pas pouvoir fusionner avec les marges de l'élément suivant.
+    padding-bottom: var(--gap, _gap) // @note padding et non margin, car ne doit pas pouvoir fusionner avec les marges de l'élément suivant.
   &.vertical-gap
-    gap: 0 _gap
+    gap: 0 var(--gap, _gap)
 
 .grid-auto
 .grid-auto-min

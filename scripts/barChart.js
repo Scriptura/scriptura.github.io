@@ -6,7 +6,7 @@
  * @param {string} str 
  * @returns {HTMLElement}
  */
- function strToDom(str) {
+function strToDom(str) {
   return document.createRange().createContextualFragment(str).firstChild;
 }
 
@@ -40,7 +40,7 @@ class Point {
 * @property {SVGLineElement[]} lines
 * @property {HTMLDivElement[]} labels
 */
-class PieChart extends HTMLElement {
+class BarChart extends HTMLElement {
 
   constructor() {
       super()
@@ -107,7 +107,7 @@ class PieChart extends HTMLElement {
             padding: .2em .5em;
             white-space: nowrap;
             transform: translate(-50%, -50%);
-            background-color: var(--tooltip-bg, #222);
+            background-color: var(--bar-chart-color-label, #222);
             opacity: 0;
             transition: opacity .3s;
             pointer-events: none;
@@ -121,19 +121,6 @@ class PieChart extends HTMLElement {
   }
 
   connectedCallback () {
-      const now = Date.now()
-      const duration = 1000
-      const draw = () => {
-          const t = (Date.now() - now) / duration
-          this.draw(1)
-          if (t < 1) {
-              this.draw(easeOutExpo(t))
-              window.requestAnimationFrame(draw)
-          } else {
-              this.draw(1)
-          }
-      }
-      window.requestAnimationFrame(draw)
   }
 
   /**
@@ -141,23 +128,6 @@ class PieChart extends HTMLElement {
    * @param {number} progress
    */
   draw (progress = 1) {
-      const total = this.data.reduce((acc, v) => acc + v, 0)
-      const patch = 0.0000001 // L'ajout d'un correcteur évite à un path de ne jamais correspondre parfaitement à 100% de la totalité du graphique (s'il est seul dans le graphique par exemple) ce qui évite sa "disparition".
-      let angle = Math.PI / -2
-      let start = new Point(0, -1)
-      for (let k = 0; k < this.data.length; k++) {
-          this.lines[k].setAttribute('x2', start.x)
-          this.lines[k].setAttribute('y2', start.y)
-          const ratio = (this.data[k] / total) * progress
-          if (progress === 1) {
-              this.positionLabel(this.labels[k], angle + ratio * Math.PI)
-          }
-          angle += ratio * 2 * Math.PI - patch
-          const end = Point.fromAngle(angle)
-          const largeFlag = ratio > .5 ? '1' : '0'
-            this.paths[k].setAttribute('d', `M 0 0 L ${start.toSvgPath()} A 1 1 0 ${largeFlag} 1 ${end.toSvgPath()} L 0 0`)
-          start = end
-      }
   }
 
   /**
@@ -179,17 +149,11 @@ class PieChart extends HTMLElement {
 
   /**
    * Positionne le label en fonction de l'angle
-   * @param {HTMLDivElement|undefined} label 
-   * @param {number} angle 
+   * @param {HTMLDivElement|undefined} label
+   * @param {number} angle
    */
   positionLabel (label, angle) {
-      if (!label || !angle) {
-          return;
-      }
-      const point = Point.fromAngle(angle)
-      label.style.setProperty('top', `${(point.y * 0.5 + 0.5) * 100}%`)
-      label.style.setProperty('left', `${(point.x * 0.5 + 0.5) * 100}%`)
   }
 }
 
-customElements.define('pie-chart', PieChart)
+customElements.define('bar-chart', BarChart)

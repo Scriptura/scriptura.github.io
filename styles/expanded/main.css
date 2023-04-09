@@ -687,13 +687,13 @@ main {
   grid-auto-rows: minmax(0, 1fr);
 }
 [class^=grid].gap {
-  gap: 1em;
+  gap: var(--gap, 1em);
 }
 [class^=grid].gap-bottom {
-  padding-bottom: 1em;
+  padding-bottom: var(--gap, 1em);
 }
 [class^=grid].vertical-gap {
-  gap: 0 1em;
+  gap: 0 var(--gap, 1em);
 }
 .grid-auto,
 .grid-auto-min {
@@ -2958,10 +2958,11 @@ form > [class*="grid"] > .input {
   }
 }
 pie-chart {
-  --tooltip-bg: #383838;
-  fill: #ff6347;
-  width: 100%;
-  aspect-ratio: 1;
+  --pie-chart-color-label: #383838;
+  filter: drop-shadow(0 1.5rem 2rem rgba(0,0,0,0.4));
+}
+bar-chart {
+  --bar-chart-color-label: #383838;
   filter: drop-shadow(0 1.5rem 2rem rgba(0,0,0,0.4));
 }
 ::-webkit-scrollbar {

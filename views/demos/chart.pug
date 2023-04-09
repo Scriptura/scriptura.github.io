@@ -1,46 +1,51 @@
-.grid3.gap
+.grid3.gap(style='--gap:3em')
   .center
     p
       code pie-chart
     div
-      pie-chart.size15(data='40;30;30;20;10' labels='Cherry;Banana;Apricot;Peach;Raspberry')
+      pie-chart(data='40;30;30;20;10' labels='Cherry;Banana;Apricot;Peach;Raspberry')
   .center
     p
       code (data='60;30')
     div
-      pie-chart.size15(data='60;30' labels='Cherry;Raspberry')
+      pie-chart(data='60;30' labels='Cherry;Raspberry')
   .center
     p
       code (data='60;0')
     div
-      pie-chart.size15(data='60;0' labels='Cherry;Raspberry')
+      pie-chart(data='60;0' labels='Cherry;Raspberry')
   .center
     p
       code (labels='Apricot;Peach')
     div
-      pie-chart.size15(data='60;30' labels='Apricot;Peach')
+      pie-chart(data='60;30' labels='Apricot;Peach')
   .center
     p
       code (gap='0.1' donut='0.9')
     div
-      pie-chart.size15(data='60;10;30' labels='Apricot;Peach;Raspberry' gap='0.1' donut='0.9')
+      pie-chart(data='60;10;30' labels='Apricot;Peach;Raspberry' gap='0.1' donut='0.9')
   .center
     p
       code (gap='0' donut='0')
     div
-      pie-chart.size15(data='60;10;30' labels='Apricot;Peach;Raspberry' gap='0' donut='0')
+      pie-chart(data='60;10;30' labels='Apricot;Peach;Raspberry' gap='0' donut='0')
   .center
     p
       code (colors='hsl(30, 100%, 65%); hsl(90, 100%, 65%)')
     div
-      pie-chart.size15(data='60;30' labels='Apricot;Peach' colors='hsl(30, 100%, 65%);hsl(200, 100%, 65%)')
+      pie-chart(data='60;30' labels='Apricot;Peach' colors='hsl(30, 100%, 65%);hsl(200, 100%, 65%)')
   .center
     p
       code pie-chart
     div
-      pie-chart.size15(data='60;10;30' labels='Apricot;Peach;Raspberry' colors='hsl(30, 100%, 65%);hsl(90, 100%, 65%);hsl(200, 100%, 65%)')
+      pie-chart(data='60;10;30' labels='Apricot;Peach;Raspberry' colors='hsl(30, 100%, 65%);hsl(90, 100%, 65%);hsl(200, 100%, 65%)')
   .center
     p
       code pie-chart
     div
-      pie-chart.size15(data='40;30;30;20;10' labels='Cherry;Banana;Apricot;Peach;Raspberry' colors='hsl(30, 100%, 65%);hsl(90, 100%, 65%);hsl(200, 100%, 65%);hsl(160, 100%, 65%);hsl(10, 100%, 65%)')
+      pie-chart(data='40;30;30;20;10' labels='Cherry;Banana;Apricot;Peach;Raspberry' colors='hsl(30, 100%, 65%);hsl(90, 100%, 65%);hsl(200, 100%, 65%);hsl(160, 100%, 65%);hsl(10, 100%, 65%)')
+  .center
+    p
+      code bar-chart
+    div
+      bar-chart(data='40;30;30;20;10' labels='Cherry;Banana;Apricot;Peach;Raspberry' colors='hsl(30, 100%, 65%);hsl(90, 100%, 65%);hsl(200, 100%, 65%);hsl(160, 100%, 65%);hsl(10, 100%, 65%)')
