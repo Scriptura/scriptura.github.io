@@ -747,8 +747,14 @@ main {
   grid-row: span 4;
 }
 @container grid (35em < width) {
-  .xs-grid2 {
+  :root .xs-grid2 {
     --n: 2;
+  }
+  .xs-c1 {
+    grid-column: span 1;
+  }
+  .xs-c2 {
+    grid-column: span 2;
   }
 }
 @container grid (35em < width < 50em) {
@@ -757,6 +763,12 @@ main {
   }
   :root .s-grid2 {
     --n: 2;
+  }
+  .s-c1 {
+    grid-column: span 1;
+  }
+  .s-c2 {
+    grid-column: span 2;
   }
 }
 @container grid (50em < width < 70em) {
@@ -771,6 +783,12 @@ main {
   }
   :root .m-grid4 {
     --n: 4;
+  }
+  .m-c1 {
+    grid-column: span 1;
+  }
+  .m-c2 {
+    grid-column: span 2;
   }
 }
 @container grid (70em < width < 92em) {
@@ -930,6 +948,36 @@ main {
 }
 .card:hover svg:hover {
   background-color: #ffa600;
+}
+@media (min-width: 35.01em) {
+  .boxx {
+    padding: 4em 6em;
+    border-radius: 0.3em;
+    box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
+  }
+}
+.user-def {
+  display: grid;
+  grid-template-columns: 3.5em minmax(0, 1fr);
+  grid-template-areas: 'aa tt' 'aa uu';
+}
+.user-def .avatar {
+  grid-area: aa;
+  --img: '';
+  width: 3em;
+  aspect-ratio: 1;
+  background: #222 var(--img);
+  background-size: cover;
+  border-radius: 50%;
+}
+.user-def address {
+  grid-area: tt;
+  font-style: normal;
+  font-weight: bold;
+  font-variant: small-caps;
+}
+.user-def time {
+  grid-area: uu;
 }
 code,
 kbd,
@@ -1355,6 +1403,20 @@ figure {
   width: 2em;
   height: 2em;
   cursor: zoom-out;
+}
+.mosaic figure {
+  padding: 0.2em;
+}
+.mosaic img {
+  aspect-ratio: 1;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.mosaic button {
+  top: 0.7em;
+  right: 0.7em;
+  width: 1em;
+  height: 1em;
 }
 audio,
 video,
@@ -2794,13 +2856,6 @@ form > [class*="grid"] > .input {
     padding-inline: 6em;
   }
 }
-@media (min-width: 35.01em) {
-  .boxx {
-    padding: 4em 6em;
-    border-radius: 0.3em;
-    box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
-  }
-}
 .drop-cap,
 .no-js .add-drop-cap > :not(*) + p:first-child::first-letter {
   float: left;
@@ -3477,20 +3532,6 @@ html,
 .demo-icons rt {
   font-size: 0.8em;
   color: #606060;
-}
-.demo-mosaic figure {
-  padding: 0.2em;
-}
-.demo-mosaic img {
-  aspect-ratio: 1;
-  -o-object-fit: cover;
-     object-fit: cover;
-}
-.demo-mosaic button {
-  top: 0.7em;
-  right: 0.7em;
-  width: 1em;
-  height: 1em;
 }
 .hidden,
 [hidden] {

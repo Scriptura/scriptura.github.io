@@ -77,8 +77,14 @@
 
 @container grid (35em < width)
 
-  .xs-grid2
+  :root .xs-grid2
     --n: 2
+
+  .xs-c1
+    grid-column: span 1
+
+  .xs-c2
+    grid-column: span 2
 
 @container grid (35em < width < 50em)
 
@@ -87,6 +93,12 @@
 
   :root .s-grid2
     --n: 2
+
+  .s-c1
+    grid-column: span 1
+
+  .s-c2
+    grid-column: span 2
 
 @container grid (50em < width < 70em)
 
@@ -101,6 +113,12 @@
 
   :root .m-grid4
     --n: 4
+
+  .m-c1
+    grid-column: span 1
+
+  .m-c2
+    grid-column: span 2
 
 @container grid (70em < width < 92em)
 

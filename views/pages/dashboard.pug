@@ -25,186 +25,188 @@ block variables
 block main
   header(role='banner')
     h1.main-heading!= data._name
-  .grid2.s-grid1.gap.gap-bottom.masonry
-    .accordion(data-singletab='true')
-      details
-        summary
-          svg.icon-inline (role='img' focusable='false')
-            use(href='/sprites/util.svg#share')
-          | Activité récente
-        div
-          h2.h6 Derniers utilisateurs en activité&nbsp;:
-          ul
-            // sans l'utilisateur courant bien sûr...
-            li Pseudo 1
-            li Pseudo 2
-            li Pseudo 3
-            li Pseudo 4
-            li Pseudo 5
-          h2.h6 Derniers utilisateurs enregistrés&nbsp;:
-          ul
-            li Pseudo 1
-            li Pseudo 2
-            li Pseudo 3
-            li Pseudo 4
-            li Pseudo 5
-          h2.h6 Derniers articles publiés&nbsp;:
-          ul
-            li Titre de l'article 1
-            li Titre de l'article 2
-            li Titre de l'article 3
-            li Titre de l'article 4
-            li Titre de l'article 5
-          h2.h6 Derniers forums publiés&nbsp;:
-          ul
-            li Titre du forum 1
-            li Titre du forum 2
-            li Titre du forum 3
-            li Titre du forum 4
-            li Titre du forum 5
-          h2.h6 Derniers commentaires publiés&nbsp;:
-          ul
-            li Titre du commentaire 1
-            li Titre du commentaire 2
-            li Titre du commentaire 3
-            li Titre du commentaire 4
-            li Titre du commentaire 5
-      details
-        summary
-          svg.icon-inline (role='img' focusable='false')
-            use(href='/sprites/util.svg#users')
-          | Users
-        div
-          h2.h6 Statistiques&nbsp;:
-          ul
-            li 36 utilisateurs
-            li 1 administrateur
-            li 2 auteurs
-            li 2 éditeurs
-            li 3 modérateurs
-            li 7 contributeurs
-            li 19 commentateurs
-            li 2 abonnés
-          h2.h6 Derniers utilisateurs enregistrés&nbsp;:
-          ul
-            li Pseudo 1
-            li Pseudo 2
-            li Pseudo 3
-            li Pseudo 4
-            li Pseudo 5
-          h2.h6 Derniers utilisateurs en activité&nbsp;:
-          ul
-            //- sans l'utilisateur courant bien sûr...
-            li Pseudo 1
-            li Pseudo 2
-            li Pseudo 3
-            li Pseudo 4
-            li Pseudo 5
-      details
-        summary
-          svg.icon-inline (role='img' focusable='false')
-            use(href='/sprites/util.svg#ampersand')
-          | Articles
-        div
-          h2.h6 Statistiques&nbsp;:
-          ul
-            li 237 articles
-            li 232 articles publiés
-            li 5 articles non publiés
-            li 25 articles sans mot clef
-          h2.h6 Derniers articles publiés&nbsp;:
-          ul
-            li Titre de l'article 1
-            li Titre de l'article 2
-            li Titre de l'article 3
-            li Titre de l'article 4
-            li Titre de l'article 5
-      details
-        summary
-          svg.icon-inline (role='img' focusable='false')
-            use(href='/sprites/util.svg#bubbles')
-          | Forums
-        div
-          h2.h6 Statistiques&nbsp;:
-          ul
-            li 237 sujets
-            li 25 sujets sans mot clef
-            li 31 sujets retirés
-          h2.h6 Derniers forums publiés&nbsp;:
-          ul
-            li Titre du forum 1
-            li Titre du forum 2
-            li Titre du forum 3
-            li Titre du forum 4
-            li Titre du forum 5
-      details
-        summary
-          svg.icon-inline (role='img' focusable='false')
-            use(href='/sprites/util.svg#bubbles')
-          | Comments
-        div
-          h2.h6 Statistiques&nbsp;:
-          ul
-            li 324 commentaires
-            li 12 commentaires en attente de modération
-            li 49 commentaires retirés
-          h2.h6 Derniers commentaires publiés&nbsp;:
-          ul
-            li Titre du commentaire 1
-            li Titre du commentaire 2
-            li Titre du commentaire 3
-            li Titre du commentaire 4
-            li Titre du commentaire 5
-      details
-        summary
-          svg.icon-inline (role='img' focusable='false')
-            use(href='/sprites/util.svg#picture')
-          | Medias
-        div
-          h2.h6 Statistiques&nbsp;:
-          ul
-            li 274 images
-            li 37 musiques
-            li 16 vidéos
-          h2.h6 Dernières images publiées&nbsp;:
-          ul
-            li Titre de l'image 1
-            li Titre de l'image 2
-            li Titre de l'image 3
-            li Titre de l'image 4
-            li Titre de l'image 5
-          h2.h6 Dernières musiques publiées&nbsp;:
-          ul
-            li Titre de la musique 1
-            li Titre de la musique 2
-            li Titre de la musique 3
-            li Titre de la musique 4
-            li Titre de la musique 5
-          h2.h6 Dernières vidéos publiées&nbsp;:
-          ul
-            li Titre de la vidéo 1
-            li Titre de la vidéo 2
-            li Titre de la vidéo 3
-            li Titre de la vidéo 4
-            li Titre de la vidéo 5
-      details
-        summary
-          svg.icon-inline (role='img' focusable='false')
-            use(href='/sprites/util.svg#old-key')
-          | Mots clefs
-        div
-          h2.h6 Statistiques&nbsp;:
-          ul
-            li 114 mots clefs
-          h2.h6 Derniers mots clefs créés&nbsp;:
-          ul
-            li Titre de la vidéo 1
-            li Titre de la vidéo 2
-            li Titre de la vidéo 3
-            li Titre de la vidéo 4
-            li Titre de la vidéo 5
-    .boxx
-      h2.h3 Pages les plus visitées
+  .grid3.m-grid2.s-grid1.gap.masonry
+    article.boxx.c2
+      h2.sr-only Menu principal
+      .accordion(data-singletab='true')
+        details
+          summary
+            svg.icon-inline (role='img' focusable='false')
+              use(href='/sprites/util.svg#share')
+            | Activité récente
+          div
+            h2.h6 Derniers utilisateurs en activité&nbsp;:
+            ul
+              // sans l'utilisateur courant bien sûr...
+              li Pseudo 1
+              li Pseudo 2
+              li Pseudo 3
+              li Pseudo 4
+              li Pseudo 5
+            h2.h6 Derniers utilisateurs enregistrés&nbsp;:
+            ul
+              li Pseudo 1
+              li Pseudo 2
+              li Pseudo 3
+              li Pseudo 4
+              li Pseudo 5
+            h2.h6 Derniers articles publiés&nbsp;:
+            ul
+              li Titre de l'article 1
+              li Titre de l'article 2
+              li Titre de l'article 3
+              li Titre de l'article 4
+              li Titre de l'article 5
+            h2.h6 Derniers forums publiés&nbsp;:
+            ul
+              li Titre du forum 1
+              li Titre du forum 2
+              li Titre du forum 3
+              li Titre du forum 4
+              li Titre du forum 5
+            h2.h6 Derniers commentaires publiés&nbsp;:
+            ul
+              li Titre du commentaire 1
+              li Titre du commentaire 2
+              li Titre du commentaire 3
+              li Titre du commentaire 4
+              li Titre du commentaire 5
+        details
+          summary
+            svg.icon-inline (role='img' focusable='false')
+              use(href='/sprites/util.svg#users')
+            | Users
+          div
+            h2.h6 Statistiques&nbsp;:
+            ul
+              li 36 utilisateurs
+              li 1 administrateur
+              li 2 auteurs
+              li 2 éditeurs
+              li 3 modérateurs
+              li 7 contributeurs
+              li 19 commentateurs
+              li 2 abonnés
+            h2.h6 Derniers utilisateurs enregistrés&nbsp;:
+            ul
+              li Pseudo 1
+              li Pseudo 2
+              li Pseudo 3
+              li Pseudo 4
+              li Pseudo 5
+            h2.h6 Derniers utilisateurs en activité&nbsp;:
+            ul
+              //- sans l'utilisateur courant bien sûr...
+              li Pseudo 1
+              li Pseudo 2
+              li Pseudo 3
+              li Pseudo 4
+              li Pseudo 5
+        details
+          summary
+            svg.icon-inline (role='img' focusable='false')
+              use(href='/sprites/util.svg#ampersand')
+            | Articles
+          div
+            h2.h6 Statistiques&nbsp;:
+            ul
+              li 237 articles
+              li 232 articles publiés
+              li 5 articles non publiés
+              li 25 articles sans mot clef
+            h2.h6 Derniers articles publiés&nbsp;:
+            ul
+              li Titre de l'article 1
+              li Titre de l'article 2
+              li Titre de l'article 3
+              li Titre de l'article 4
+              li Titre de l'article 5
+        details
+          summary
+            svg.icon-inline (role='img' focusable='false')
+              use(href='/sprites/util.svg#bubbles')
+            | Forums
+          div
+            h2.h6 Statistiques&nbsp;:
+            ul
+              li 237 sujets
+              li 25 sujets sans mot clef
+              li 31 sujets retirés
+            h2.h6 Derniers forums publiés&nbsp;:
+            ul
+              li Titre du forum 1
+              li Titre du forum 2
+              li Titre du forum 3
+              li Titre du forum 4
+              li Titre du forum 5
+        details
+          summary
+            svg.icon-inline (role='img' focusable='false')
+              use(href='/sprites/util.svg#bubbles')
+            | Comments
+          div
+            h2.h6 Statistiques&nbsp;:
+            ul
+              li 324 commentaires
+              li 12 commentaires en attente de modération
+              li 49 commentaires retirés
+            h2.h6 Derniers commentaires publiés&nbsp;:
+            ul
+              li Titre du commentaire 1
+              li Titre du commentaire 2
+              li Titre du commentaire 3
+              li Titre du commentaire 4
+              li Titre du commentaire 5
+        details
+          summary
+            svg.icon-inline (role='img' focusable='false')
+              use(href='/sprites/util.svg#picture')
+            | Medias
+          div
+            h2.h6 Statistiques&nbsp;:
+            ul
+              li 274 images
+              li 37 musiques
+              li 16 vidéos
+            h2.h6 Dernières images publiées&nbsp;:
+            ul
+              li Titre de l'image 1
+              li Titre de l'image 2
+              li Titre de l'image 3
+              li Titre de l'image 4
+              li Titre de l'image 5
+            h2.h6 Dernières musiques publiées&nbsp;:
+            ul
+              li Titre de la musique 1
+              li Titre de la musique 2
+              li Titre de la musique 3
+              li Titre de la musique 4
+              li Titre de la musique 5
+            h2.h6 Dernières vidéos publiées&nbsp;:
+            ul
+              li Titre de la vidéo 1
+              li Titre de la vidéo 2
+              li Titre de la vidéo 3
+              li Titre de la vidéo 4
+              li Titre de la vidéo 5
+        details
+          summary
+            svg.icon-inline (role='img' focusable='false')
+              use(href='/sprites/util.svg#old-key')
+            | Mots clefs
+          div
+            h2.h6 Statistiques&nbsp;:
+            ul
+              li 114 mots clefs
+            h2.h6 Derniers mots clefs créés&nbsp;:
+            ul
+              li Titre de la vidéo 1
+              li Titre de la vidéo 2
+              li Titre de la vidéo 3
+              li Titre de la vidéo 4
+              li Titre de la vidéo 5
+    article.boxx.s-c2
+      h2.h4 Pages les plus visitées
       .center
         pie-chart(data='40;30;30;20;10' labels='Cherry;Banana;Apricot;Peach;Raspberry' colors='hsl(30, 100%, 65%);hsl(90, 100%, 65%);hsl(200, 100%, 65%);hsl(160, 100%, 65%);hsl(10, 100%, 65%)')
     //-
@@ -216,9 +218,37 @@ block main
                 svg.icon-inline(role='img' focusable='false')
                   use(href='/sprites/util.svg#link')
                 | List item #{i}
-    .boxx
-      h2.h3 Dernières images téléchargées
-      .grid-auto.gap.demo-mosaic(style='--size-grid:5em')
+    article.boxx.s-c2
+      h2.h4 Utilisateurs actifs
+      .grid-auto.gap
+        .user-def
+          .avatar(style='--img:url(/medias/images/uploads/henri-de-lubac-w300.webp)')
+          address
+            a(href='/page/person.html') Henri de Lubac
+          time(datetime='2017-04-23 20:33:21') Le 23 avril 2017 à 20h33
+        .user-def
+          .avatar(style='--img:url(/medias/images/uploads/dawid-zawila-w300.webp)')
+          address
+            a(href='/page/person.html') Jeanne d'Arc
+          time(datetime='2017-04-23 20:33:21') Le 23 avril 2017 à 18h51
+        .user-def
+          .avatar(style='--img:url(/medias/images/uploads/willian-justen-de-vasconcellos-w300.webp)')
+          address
+            a(href='/page/person.html') Thomas d'Aquin
+          time(datetime='2017-04-23 20:33:21') Le 23 avril 2017 à 02h28
+        .user-def
+          .avatar(style='--img:url(/medias/images/uploads/aleksandra-boguslawska-w300.webp)')
+          address
+            a(href='/page/person.html') Romanos le Mélode
+          time(datetime='2017-04-23 20:33:21') Le 22 avril 2017 à 14h47
+        .user-def
+          .avatar(style='--img:url(/medias/images/uploads/pisit-heng-w300.webp)')
+          address
+            a(href='/page/person.html') Eusèbe de Césarée
+          time(datetime='2017-04-23 20:33:21') Le 22 avril 2017 à 09h30
+    article.boxx.c2
+      h2.h4 Dernières images téléchargées
+      .grid-auto.gap.mosaic(style='--size-grid:5em')
         -
           img.name = 'matthew-smith'
           img.width = '5000'
@@ -323,6 +353,13 @@ block main
           img.height = '3451'
           img.alt = 'Abbaye du Mont-Saint-Michel'
           img.author = 'Mr Bochelly'
+        include ../helpers/picture5
+        -
+          img.name = 'artem-sapegin'
+          img.width = '5301'
+          img.height = '3534'
+          img.alt = 'Lac de Bled, Slovénie'
+          img.author = 'Artem Sapegin'
         include ../helpers/picture5
   hr
   button.button2(type='button' aria-label='Se déconnecter')

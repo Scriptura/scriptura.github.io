@@ -40,3 +40,30 @@ _cardR2 = 2px // Idem [1]
     background-color: _cardColor4
   &:hover svg:hover
     background-color: _color5
+
+@media (min-width: _sizeXS)
+  .boxx
+    padding: 4em 6em
+    border-radius: _r2
+    box-shadow: _shadow8
+
+.user-def
+  display: grid
+  grid-template-columns: 3.5em minmax(0,1fr)
+  grid-template-areas: 'aa tt' 'aa uu'
+  //margin-block: 2em 1em
+  & .avatar
+    grid-area: aa
+    --img: ''
+    width: 3em
+    aspect-ratio: 1
+    background: #222 var(--img)
+    background-size: cover
+    border-radius: 50%
+  & address
+    grid-area: tt
+    font-style: normal
+    font-weight: bold
+    font-variant: small-caps
+  & time
+    grid-area: uu
