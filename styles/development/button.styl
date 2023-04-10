@@ -69,3 +69,22 @@ _buttonColor4 = _color5
     border-radius: 50%
   & + .round-button-test
     margin-left: .5em // @note Espace entre deux bouttons déclarés en inline-block.
+
+.button2
+  --button-color: _colorG + 20%
+  all: unset
+  width: 3em
+  aspect-ratio: 1
+  display: grid
+  place-items center
+  color: var(--button-color)
+  border: .15em dotted var(--button-color)
+  border-radius: 50%
+  box-shadow: _shadow8
+  cursor: pointer
+  transition: transform .5s
+  &:focus
+  &:hover
+  &:active
+    --button-color: _color5
+    transform: rotate(360deg)

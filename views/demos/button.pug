@@ -3,7 +3,7 @@
     p
       code button.button
     br
-    button(type='submit').button
+    button.button(type='submit')
       svg.icon-inline(role='img' focusable='false')
         use(href='/sprites/util.svg#share')
       | Share
@@ -11,7 +11,7 @@
     p
       code (style='--color:#fff;--bg-color:#4e667a')
     br
-    button(type='submit' style='--color:#fff;--bg-color:#4e667a').button
+    button.button(type='submit' style='--color:#fff;--bg-color:#4e667a')
       svg.icon-inline(role='img' focusable='false')
         use(href='/sprites/util.svg#share')
       | Share
@@ -19,7 +19,7 @@
     p
       code .scale150
     br
-    button(type='submit').button.scale150
+    button.button.scale150(type='submit')
       svg.icon-inline(role='img' focusable='false')
         use(href='/sprites/util.svg#share')
       | Share
@@ -29,20 +29,28 @@ hr(data-hr='✻ ✻ ✻')
     p
       code button.round-button
     br
-    button(type='button' aria-label='Button test').round-button
+    button.round-button(type='button' aria-label='Button test')
       svg.icon(role='img' focusable='false')
         use(href='/sprites/util.svg#print')
   div
     p
       code (style='--color:#fff;--bg-color:#4e667a')
     br
-    button(type='button' aria-label='Button test' style='--color:#fff;--bg-color:#4e667a').round-button
+    button.round-button(type='button' aria-label='Button test' style='--color:#fff;--bg-color:#4e667a')
       svg.icon(role='img' focusable='false')
         use(href='/sprites/util.svg#print')
   div
     p
       code .scale150
     br
-    button(type='button' aria-label='Button test').round-button.scale150
+    button.round-button.scale150(type='button' aria-label='Button test')
+      svg.icon(role='img' focusable='false')
+        use(href='/sprites/util.svg#print')
+.grid-auto.gap
+  div
+    p
+      code button.button2
+    br
+    button.button2(type='button' aria-label='Button test')
       svg.icon(role='img' focusable='false')
         use(href='/sprites/util.svg#print')

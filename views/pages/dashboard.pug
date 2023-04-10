@@ -9,13 +9,25 @@ block variables
       _title: 'Dashboard . Scriptura',
       _description: 'Tableau de bord de démonstration.'
     }
+  -
+    const img = {
+          //class: '',
+          name: 'Name',
+          src: '/medias/images/uploads/',
+          ext: 'webp',
+          width: 'Width',
+          height: 'Height',
+          alt: 'Alt',
+          author: 'Author',
+          sources: []
+        }
 
 block main
   header(role='banner')
     h1.main-heading!= data._name
-  .grid2.s-grid1.gap.gap-bottom
+  .grid2.s-grid1.gap.gap-bottom.masonry
     .accordion(data-singletab='true')
-      details(open='open')
+      details
         summary
           svg.icon-inline (role='img' focusable='false')
             use(href='/sprites/util.svg#share')
@@ -23,7 +35,7 @@ block main
         div
           h2.h6 Derniers utilisateurs en activité&nbsp;:
           ul
-            //- sans l'utilisateur courant bien sûr...
+            // sans l'utilisateur courant bien sûr...
             li Pseudo 1
             li Pseudo 2
             li Pseudo 3
@@ -57,8 +69,7 @@ block main
             li Titre du commentaire 3
             li Titre du commentaire 4
             li Titre du commentaire 5
-    .accordion(data-singletab='true')
-      details(open='open')
+      details
         summary
           svg.icon-inline (role='img' focusable='false')
             use(href='/sprites/util.svg#users')
@@ -192,6 +203,10 @@ block main
             li Titre de la vidéo 3
             li Titre de la vidéo 4
             li Titre de la vidéo 5
+    .boxx
+      h2.h3 Pages les plus visitées
+      .center
+        pie-chart(data='40;30;30;20;10' labels='Cherry;Banana;Apricot;Peach;Raspberry' colors='hsl(30, 100%, 65%);hsl(90, 100%, 65%);hsl(200, 100%, 65%);hsl(160, 100%, 65%);hsl(10, 100%, 65%)')
     //-
       div
         ul.grid-auto.gap.list-stripe-links
@@ -201,7 +216,115 @@ block main
                 svg.icon-inline(role='img' focusable='false')
                   use(href='/sprites/util.svg#link')
                 | List item #{i}
-  p.message
-    svg.icon-inline(role='img' focusable='false')
+    .boxx
+      h2.h3 Dernières images téléchargées
+      .grid-auto.gap.demo-mosaic(style='--size-grid:5em')
+        -
+          img.name = 'matthew-smith'
+          img.width = '5000'
+          img.height = '3333'
+          img.alt = 'Prairie'
+          img.author = 'Matthew Smith'
+        include ../helpers/picture5
+        -
+          img.name = 'clay-banks'
+          img.width = '2002'
+          img.height = '3000'
+          img.alt = 'Yaquina Head, Newport, États-Unis'
+          img.author = 'Clay Banks'
+        include ../helpers/picture5
+        -
+          img.name = 'nicolas-hoizey'
+          img.width = '3715'
+          img.height = '3715'
+          img.alt = 'Intérieur d\'un phare'
+          img.author = 'Nicolas Hoizey'
+        include ../helpers/picture5
+        -
+          img.name = 'sapan-patel'
+          img.width = '2931'
+          img.height = '4396'
+          img.alt = 'Coucher de soleil sur un champ, Los Angeles, États-Unis'
+          img.author = 'Sapan Patel'
+        include ../helpers/picture5
+        -
+          img.name = 'marita-kavelashvili'
+          img.width = '3424'
+          img.height = '5136'
+          img.alt = 'Forêt dans la brume, hautes montagnes d\'Adjarie, Géorgie'
+          img.author = 'Marita Kavelashvili'
+        include ../helpers/picture5
+        -
+          img.name = 'robin-billy'
+          img.width = '2565'
+          img.height = '3634'
+          img.alt = 'Forêt par temps d\'orage, Suisse'
+          img.author = 'Robin Billy'
+        include ../helpers/picture5
+        -
+          img.name = 'petr-vysohlid'
+          img.width = '4429'
+          img.height = '2953'
+          img.alt = 'Phare de Talacre, Point of Ayr, Pays de Galles, Royaume-Uni'
+          img.author = 'Petr Vysohlid'
+        include ../helpers/picture5
+        -
+          img.name = 'tanner-mardis'
+          img.width = '6000'
+          img.height = '4000'
+          img.alt = 'Sefer Torah, Bibliothèque du Congrès, Washington, États-Unis'
+          img.author = 'Tanner Mardis'
+        include ../helpers/picture5
+        -
+          img.name = 'david-haughton'
+          img.width = '2000'
+          img.height = '1289'
+          img.alt = 'Dunes en bord de mer'
+          img.author = 'David Haughton'
+        include ../helpers/picture5
+        -
+          img.name = 'girl-with-red-hat'
+          img.width = '4024'
+          img.height = '6048'
+          img.alt = 'Détails de l\'intérieur de la Capilla Real, Cathédrale de Cordoue, Espagne'
+          img.author = 'Girl With Red Hat (Pseudo)'
+        include ../helpers/picture5
+        -
+          img.name = 'willian-justen-de-vasconcellos'
+          img.width = '6000'
+          img.height = '4000'
+          img.alt = 'Désert de Huacachina, Perou'
+          img.author = 'Willian Justen de Vasconcellos'
+        include ../helpers/picture5
+        -
+          img.name = 'hannah-falk'
+          img.width = '4608'
+          img.height = '3072'
+          img.alt = 'Longue vue, Tour Eiffel'
+          img.author = 'Hannah Falk'
+        include ../helpers/picture5
+        -
+          img.name = 'alice'
+          img.width = '4496'
+          img.height = '3000'
+          img.alt = 'Silp Pa Phra Nakhon Si Ayutthaya, Thaïlande'
+          img.author = 'Alice (Pseudo)'
+        include ../helpers/picture5
+        -
+          img.name = 'dawid-zawila'
+          img.width = '4496'
+          img.height = '3000'
+          img.alt = 'Tournesol'
+          img.author = 'Dawid Zawila'
+        include ../helpers/picture5
+        -
+          img.name = 'mr-bochelly'
+          img.width = '2121'
+          img.height = '3451'
+          img.alt = 'Abbaye du Mont-Saint-Michel'
+          img.author = 'Mr Bochelly'
+        include ../helpers/picture5
+  hr
+  button.button2(type='button' aria-label='Se déconnecter')
+    svg.icon(role='img' focusable='false')
       use(href='/sprites/util.svg#logout')
-    a(href='/') Se déconnecter
