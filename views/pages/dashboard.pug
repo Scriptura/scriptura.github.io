@@ -34,43 +34,48 @@ block main
             svg.icon-inline (role='img' focusable='false')
               use(href='/sprites/util.svg#share')
             | Activité récente
-          div
-            h2.h6 Derniers utilisateurs en activité&nbsp;:
-            ul
-              // sans l'utilisateur courant bien sûr...
-              li Pseudo 1
-              li Pseudo 2
-              li Pseudo 3
-              li Pseudo 4
-              li Pseudo 5
-            h2.h6 Derniers utilisateurs enregistrés&nbsp;:
-            ul
-              li Pseudo 1
-              li Pseudo 2
-              li Pseudo 3
-              li Pseudo 4
-              li Pseudo 5
-            h2.h6 Derniers articles publiés&nbsp;:
-            ul
-              li Titre de l'article 1
-              li Titre de l'article 2
-              li Titre de l'article 3
-              li Titre de l'article 4
-              li Titre de l'article 5
-            h2.h6 Derniers forums publiés&nbsp;:
-            ul
-              li Titre du forum 1
-              li Titre du forum 2
-              li Titre du forum 3
-              li Titre du forum 4
-              li Titre du forum 5
-            h2.h6 Derniers commentaires publiés&nbsp;:
-            ul
-              li Titre du commentaire 1
-              li Titre du commentaire 2
-              li Titre du commentaire 3
-              li Titre du commentaire 4
-              li Titre du commentaire 5
+          .grid-auto.gap
+            div
+              h2.h6 Derniers utilisateurs en activité&nbsp;:
+              ul
+                // sans l'utilisateur courant bien sûr...
+                li Pseudo 1
+                li Pseudo 2
+                li Pseudo 3
+                li Pseudo 4
+                li Pseudo 5
+            div
+              h2.h6 Derniers utilisateurs enregistrés&nbsp;:
+              ul
+                li Pseudo 1
+                li Pseudo 2
+                li Pseudo 3
+                li Pseudo 4
+                li Pseudo 5
+            div
+              h2.h6 Derniers articles publiés&nbsp;:
+              ul
+                li Titre de l'article 1
+                li Titre de l'article 2
+                li Titre de l'article 3
+                li Titre de l'article 4
+                li Titre de l'article 5
+            div
+              h2.h6 Derniers forums publiés&nbsp;:
+              ul
+                li Titre du forum 1
+                li Titre du forum 2
+                li Titre du forum 3
+                li Titre du forum 4
+                li Titre du forum 5
+            div
+              h2.h6 Derniers commentaires publiés&nbsp;:
+              ul
+                li Titre du commentaire 1
+                li Titre du commentaire 2
+                li Titre du commentaire 3
+                li Titre du commentaire 4
+                li Titre du commentaire 5
         details
           summary
             svg.icon-inline (role='img' focusable='false')
@@ -86,22 +91,25 @@ block main
               li 3 modérateurs
               li 7 contributeurs
               li 19 commentateurs
-              li 2 abonnés
-            h2.h6 Derniers utilisateurs enregistrés&nbsp;:
-            ul
-              li Pseudo 1
-              li Pseudo 2
-              li Pseudo 3
-              li Pseudo 4
-              li Pseudo 5
-            h2.h6 Derniers utilisateurs en activité&nbsp;:
-            ul
-              //- sans l'utilisateur courant bien sûr...
-              li Pseudo 1
-              li Pseudo 2
-              li Pseudo 3
-              li Pseudo 4
-              li Pseudo 5
+              li 2 abonnés.grid-auto.gap
+            .grid-auto.gap
+              div
+                h2.h6 Derniers utilisateurs enregistrés&nbsp;:
+                ul
+                  li Pseudo 1
+                  li Pseudo 2
+                  li Pseudo 3
+                  li Pseudo 4
+                  li Pseudo 5
+              div
+                h2.h6 Derniers utilisateurs en activité&nbsp;:
+                ul
+                  //- sans l'utilisateur courant bien sûr...
+                  li Pseudo 1
+                  li Pseudo 2
+                  li Pseudo 3
+                  li Pseudo 4
+                  li Pseudo 5
         details
           summary
             svg.icon-inline (role='img' focusable='false')
@@ -168,27 +176,31 @@ block main
               li 274 images
               li 37 musiques
               li 16 vidéos
-            h2.h6 Dernières images publiées&nbsp;:
-            ul
-              li Titre de l'image 1
-              li Titre de l'image 2
-              li Titre de l'image 3
-              li Titre de l'image 4
-              li Titre de l'image 5
-            h2.h6 Dernières musiques publiées&nbsp;:
-            ul
-              li Titre de la musique 1
-              li Titre de la musique 2
-              li Titre de la musique 3
-              li Titre de la musique 4
-              li Titre de la musique 5
-            h2.h6 Dernières vidéos publiées&nbsp;:
-            ul
-              li Titre de la vidéo 1
-              li Titre de la vidéo 2
-              li Titre de la vidéo 3
-              li Titre de la vidéo 4
-              li Titre de la vidéo 5
+            .grid-auto.gap
+              div
+                h2.h6 Dernières images publiées&nbsp;:
+                ul
+                  li Titre de l'image 1
+                  li Titre de l'image 2
+                  li Titre de l'image 3
+                  li Titre de l'image 4
+                  li Titre de l'image 5
+              div
+                h2.h6 Dernières musiques publiées&nbsp;:
+                ul
+                  li Titre de la musique 1
+                  li Titre de la musique 2
+                  li Titre de la musique 3
+                  li Titre de la musique 4
+                  li Titre de la musique 5
+              div
+                h2.h6 Dernières vidéos publiées&nbsp;:
+                ul
+                  li Titre de la vidéo 1
+                  li Titre de la vidéo 2
+                  li Titre de la vidéo 3
+                  li Titre de la vidéo 4
+                  li Titre de la vidéo 5
         details
           summary
             svg.icon-inline (role='img' focusable='false')
@@ -198,20 +210,23 @@ block main
             h2.h6 Statistiques&nbsp;:
             ul
               li 114 mots clefs
-            h2.h6 Derniers mots clefs sollicités&nbsp;:
-            ul
-              li Keyword1
-              li Keyword2
-              li Keyword3
-              li Keyword4
-              li Keyword5
-            h2.h6 Derniers mots clefs créés&nbsp;:
-            ul
-              li Keyword1
-              li Keyword2
-              li Keyword3
-              li Keyword4
-              li Keyword5
+            .grid-auto.gap
+              div
+                h2.h6 Derniers mots clefs sollicités&nbsp;:
+                ul
+                  li Keyword1
+                  li Keyword2
+                  li Keyword3
+                  li Keyword4
+                  li Keyword5
+              div
+                h2.h6 Derniers mots clefs créés&nbsp;:
+                ul
+                  li Keyword1
+                  li Keyword2
+                  li Keyword3
+                  li Keyword4
+                  li Keyword5
     article.boxx.s-c2
       h2.h4 Pages les plus visitées
       .center

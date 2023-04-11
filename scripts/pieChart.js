@@ -1,3 +1,5 @@
+'use strict'
+
 // @see https://grafikart.fr/tutoriels/graph-pie-camembert-1965
 // @see https://grafikart.fr/demo/JS/PieChart/index.html
 
@@ -20,6 +22,7 @@ function easeOutExpo(x) {
 * @property {number} y
 */
 class Point {
+
   constructor (x, y) {
       this.x = x 
       this.y = y 
@@ -66,7 +69,6 @@ class PieChart extends HTMLElement {
       this.paths = this.data.map((_, k) => {
           const color = colors[k % colors.length].trim() //colors[k % (colors.length - 1)] // Le code de Grafikart est sensé compensé une couleur manquante, mais bug si pas de séparateur final dans l'attribut "colors".
           const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-          //path.setAttribute('style', `--pie-chart-color-path:${color}`)
           path.setAttribute('fill', color)
           pathGroup.appendChild(path)
           path.addEventListener('mouseover', () => this.handlePathHover(k))
@@ -82,45 +84,51 @@ class PieChart extends HTMLElement {
           maskGroup.appendChild(line)
           return line
       })
-      this.labels = labels.map((label) => {
+      this.labels = labels.map((label, id) => {
           const div = document.createElement('div')
+          div.id = 'label' + id
           div.innerText = label
+          div.setAttribute('tabindex', '0')
           shadow.appendChild(div)
           return div
       })
       const style = document.createElement('style');
       style.innerHTML = `
-          :host {
-            display: block;
-            position: relative;
-          }
-          svg {
-            width: 100%;
-            height: 100%;
-          }
-          path {
-            cursor: pointer;
-            transition: filter .3s;
-          }
-          path:hover {
-            filter: invert(1);
-          }
-          div {
-            position: absolute;
-            top: 0;
-            left: 0;
-            padding: .2em .5em;
-            white-space: nowrap;
-            transform: translate(-50%, -50%);
-            background-color: var(--pie-chart-color-label, #222);
-            opacity: 0;
-            transition: opacity .3s;
-            pointer-events: none;
-          }
-          .active {
-            opacity: 1;
-          }
-      `
+:host {
+  display: block;
+  position: relative;
+}
+svg {
+  width: 100%;
+  height: 100%;
+}
+path {
+  cursor: pointer;
+  transition: filter .3s;
+}
+path:hover,
+path.active {
+  filter: invert(1);
+}
+div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: .2em .5em;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+  background-color: var(--pie-chart-color-label, #222);
+  opacity: 0;
+  transition: opacity .3s;
+  pointer-events: none;
+}
+div:focus,
+div:active,
+div.active {
+  opacity: 1;
+  outline: none;
+}
+`
       shadow.appendChild(style)
       shadow.appendChild(svg)
   }
