@@ -34,9 +34,9 @@ block main
             svg.icon-inline (role='img' focusable='false')
               use(href='/sprites/util.svg#share')
             | Activité récente
-          .grid-auto.gap
+          .grid2.gap
             div
-              h2.h6 Derniers utilisateurs en activité&nbsp;:
+              h2.h5 Derniers utilisateurs en activité&nbsp;:
               ul
                 // sans l'utilisateur courant bien sûr...
                 li Pseudo 1
@@ -45,7 +45,7 @@ block main
                 li Pseudo 4
                 li Pseudo 5
             div
-              h2.h6 Derniers utilisateurs enregistrés&nbsp;:
+              h2.h5 Derniers utilisateurs enregistrés&nbsp;:
               ul
                 li Pseudo 1
                 li Pseudo 2
@@ -53,7 +53,7 @@ block main
                 li Pseudo 4
                 li Pseudo 5
             div
-              h2.h6 Derniers articles publiés&nbsp;:
+              h2.h5 Derniers articles publiés&nbsp;:
               ul
                 li Titre de l'article 1
                 li Titre de l'article 2
@@ -61,7 +61,7 @@ block main
                 li Titre de l'article 4
                 li Titre de l'article 5
             div
-              h2.h6 Derniers forums publiés&nbsp;:
+              h2.h5 Derniers forums publiés&nbsp;:
               ul
                 li Titre du forum 1
                 li Titre du forum 2
@@ -69,7 +69,7 @@ block main
                 li Titre du forum 4
                 li Titre du forum 5
             div
-              h2.h6 Derniers commentaires publiés&nbsp;:
+              h2.h5 Derniers commentaires publiés&nbsp;:
               ul
                 li Titre du commentaire 1
                 li Titre du commentaire 2
@@ -82,7 +82,7 @@ block main
               use(href='/sprites/util.svg#users')
             | Users
           div
-            h2.h6 Statistiques&nbsp;:
+            h2.h5 Statistiques&nbsp;:
             ul
               li 36 utilisateurs
               li 1 administrateur
@@ -91,10 +91,10 @@ block main
               li 3 modérateurs
               li 7 contributeurs
               li 19 commentateurs
-              li 2 abonnés.grid-auto.gap
-            .grid-auto.gap
+              li 2 abonnés
+            .grid2.gap
               div
-                h2.h6 Derniers utilisateurs enregistrés&nbsp;:
+                h2.h5 Derniers utilisateurs enregistrés&nbsp;:
                 ul
                   li Pseudo 1
                   li Pseudo 2
@@ -102,7 +102,7 @@ block main
                   li Pseudo 4
                   li Pseudo 5
               div
-                h2.h6 Derniers utilisateurs en activité&nbsp;:
+                h2.h5 Derniers utilisateurs en activité&nbsp;:
                 ul
                   //- sans l'utilisateur courant bien sûr...
                   li Pseudo 1
@@ -116,13 +116,13 @@ block main
               use(href='/sprites/util.svg#ampersand')
             | Articles
           div
-            h2.h6 Statistiques&nbsp;:
+            h2.h5 Statistiques&nbsp;:
             ul
               li 237 articles
               li 232 articles publiés
               li 5 articles non publiés
               li 25 articles sans mot clef
-            h2.h6 Derniers articles publiés&nbsp;:
+            h2.h5 Derniers articles publiés&nbsp;:
             ul
               li Titre de l'article 1
               li Titre de l'article 2
@@ -135,12 +135,12 @@ block main
               use(href='/sprites/util.svg#bubbles')
             | Forums
           div
-            h2.h6 Statistiques&nbsp;:
+            h2.h5 Statistiques&nbsp;:
             ul
-              li 237 sujets
+              li 142 sujets
               li 25 sujets sans mot clef
-              li 31 sujets retirés
-            h2.h6 Derniers forums publiés&nbsp;:
+              li 11 sujets retirés
+            h2.h5 Derniers forums publiés&nbsp;:
             ul
               li Titre du forum 1
               li Titre du forum 2
@@ -153,12 +153,12 @@ block main
               use(href='/sprites/util.svg#bubbles')
             | Comments
           div
-            h2.h6 Statistiques&nbsp;:
+            h2.h5 Statistiques&nbsp;:
             ul
               li 324 commentaires
               li 12 commentaires en attente de modération
               li 49 commentaires retirés
-            h2.h6 Derniers commentaires publiés&nbsp;:
+            h2.h5 Derniers commentaires publiés&nbsp;:
             ul
               li Titre du commentaire 1
               li Titre du commentaire 2
@@ -171,14 +171,14 @@ block main
               use(href='/sprites/util.svg#picture')
             | Medias
           div
-            h2.h6 Statistiques&nbsp;:
+            h2.h5 Statistiques&nbsp;:
             ul
               li 274 images
               li 37 musiques
               li 16 vidéos
-            .grid-auto.gap
+            .grid2.gap
               div
-                h2.h6 Dernières images publiées&nbsp;:
+                h2.h5 Dernières images publiées&nbsp;:
                 ul
                   li Titre de l'image 1
                   li Titre de l'image 2
@@ -186,7 +186,7 @@ block main
                   li Titre de l'image 4
                   li Titre de l'image 5
               div
-                h2.h6 Dernières musiques publiées&nbsp;:
+                h2.h5 Dernières musiques publiées&nbsp;:
                 ul
                   li Titre de la musique 1
                   li Titre de la musique 2
@@ -194,7 +194,7 @@ block main
                   li Titre de la musique 4
                   li Titre de la musique 5
               div
-                h2.h6 Dernières vidéos publiées&nbsp;:
+                h2.h5 Dernières vidéos publiées&nbsp;:
                 ul
                   li Titre de la vidéo 1
                   li Titre de la vidéo 2
@@ -207,12 +207,12 @@ block main
               use(href='/sprites/util.svg#old-key')
             | Mots clefs
           div
-            h2.h6 Statistiques&nbsp;:
+            h2.h5 Statistiques&nbsp;:
             ul
               li 114 mots clefs
-            .grid-auto.gap
+            .grid2.gap
               div
-                h2.h6 Derniers mots clefs sollicités&nbsp;:
+                h2.h5 Derniers mots clefs sollicités&nbsp;:
                 ul
                   li Keyword1
                   li Keyword2
@@ -220,7 +220,7 @@ block main
                   li Keyword4
                   li Keyword5
               div
-                h2.h6 Derniers mots clefs créés&nbsp;:
+                h2.h5 Derniers mots clefs créés&nbsp;:
                 ul
                   li Keyword1
                   li Keyword2
