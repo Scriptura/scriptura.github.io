@@ -335,6 +335,241 @@ main {
 [tabindex=-1]:focus:not(:focus-visible) {
   outline: 0 !important;
 }
+:has(> [class^=grid]),
+.parent-grid {
+  container: grid/inline-size;
+  width: 100%;
+}
+[class^=grid] {
+  display: grid;
+  grid-auto-flow: dense;
+  grid-template-columns: repeat(var(--n, 1), minmax(0, 1fr));
+}
+[class^=grid].row-defines {
+  grid-auto-rows: minmax(0, 1fr);
+}
+[class^=grid].gap {
+  gap: var(--gap, 1em);
+}
+[class^=grid].gap-bottom {
+  padding-bottom: var(--gap, 1em);
+}
+[class^=grid].vertical-gap {
+  gap: 0 var(--gap, 1em);
+}
+.grid-auto,
+.grid-auto-min {
+  grid-template-columns: repeat(auto-fit, minmax(var(--size-grid, 15em), 1fr));
+}
+.grid-auto-min {
+  --size-grid: 10em;
+}
+@media (max-width: 35.01em) {
+  .xs-grid-auto {
+    grid-template-columns: repeat(auto-fit, minmax(var(--xs-size-grid, 11em), 1fr));
+  }
+}
+@container grid (35em < width) {
+  .grid2,
+  .grid3,
+  .grid4 {
+    --n: 2;
+  }
+  .c2,
+  .c3,
+  .c4 {
+    grid-column: span 2;
+  }
+}
+@container grid (50em < width) {
+  .grid3,
+  .grid4 {
+    --n: 3;
+  }
+  .c3,
+  .c4 {
+    grid-column: span 3;
+  }
+}
+@container grid (70em < width) {
+  .grid4 {
+    --n: 4;
+  }
+  .c4 {
+    grid-column: span 4;
+  }
+}
+.r2 {
+  grid-row: span 2;
+}
+.r3 {
+  grid-row: span 3;
+}
+.r4 {
+  grid-row: span 4;
+}
+@container grid (35em < width) {
+  :root .xs-grid2 {
+    --n: 2;
+  }
+  .xs-c1 {
+    grid-column: span 1;
+  }
+  .xs-c2 {
+    grid-column: span 2;
+  }
+}
+@container grid (35em < width < 50em) {
+  :root .s-grid1 {
+    --n: 1;
+  }
+  :root .s-grid2 {
+    --n: 2;
+  }
+  .s-c1 {
+    grid-column: span 1;
+  }
+  .s-c2 {
+    grid-column: span 2;
+  }
+}
+@container grid (50em < width < 70em) {
+  :root .m-grid1 {
+    --n: 1;
+  }
+  :root .m-grid2 {
+    --n: 2;
+  }
+  :root .m-grid3 {
+    --n: 3;
+  }
+  :root .m-grid4 {
+    --n: 4;
+  }
+  .m-c1 {
+    grid-column: span 1;
+  }
+  .m-c2 {
+    grid-column: span 2;
+  }
+}
+@container grid (70em < width < 92em) {
+  :root .l-grid1 {
+    --n: 1;
+  }
+  :root .l-grid2 {
+    --n: 2;
+  }
+  :root .l-grid3 {
+    --n: 3;
+  }
+  :root .l-grid4 {
+    --n: 4;
+  }
+}
+@container grid (92em < width) {
+  :root .xl-grid2 {
+    --n: 2;
+  }
+}
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+/* @todo
+   * @see https://github.com/w3c/csswg-drafts/issues/3559#issuecomment-557711824
+  @supports(gap: 1em)
+    & > * + *
+      float: left
+      margin-left: 1em
+  */
+}
+.flex.gap {
+  gap: 1em;
+}
+.flex.gap-bottom {
+  margin-bottom: 1em;
+}
+.flex .item-push {
+  margin-left: auto;
+}
+.order {
+  order: var(--o, -1);
+}
+@container grid (35em > width) {
+  .xs-order {
+    order: var(--o, -1);
+  }
+}
+@container grid (35em < width < 50em) {
+  .s-order {
+    order: var(--o, -1);
+  }
+}
+[class^=column] {
+  -moz-column-gap: 0;
+       column-gap: 0;
+  position: relative;
+}
+[class^=column] > * {
+  display: inline-block;
+  width: 100%;
+  word-wrap: break-word;
+}
+@media (max-width: 35.01em) {
+  .sizeXS-column2 {
+    -moz-column-count: 2;
+         column-count: 2;
+  }
+}
+@media (min-width: 35.01em) {
+  .column2,
+  .column3,
+  .column4 {
+    -moz-column-count: 2;
+         column-count: 2;
+  }
+  .column5,
+  .column6 {
+    -moz-column-count: 3;
+         column-count: 3;
+  }
+}
+@media (min-width: 50.01em) {
+  .column3,
+  .column4 {
+    -moz-column-count: 3;
+         column-count: 3;
+  }
+  .column5,
+  .column6 {
+    -moz-column-count: 4;
+         column-count: 4;
+  }
+}
+@media (min-width: 92.01em) {
+  .column4 {
+    -moz-column-count: 4;
+         column-count: 4;
+  }
+  .column5 {
+    -moz-column-count: 5;
+         column-count: 5;
+  }
+  .column6 {
+    -moz-column-count: 6;
+         column-count: 6;
+  }
+}
+[class^=column].gap {
+  -moz-column-gap: 1em;
+       column-gap: 1em;
+}
+[class^=column].vertical-gap {
+  gap: 0 1em;
+}
+[class^=column].gap > :not(hr) {
+  margin-bottom: 1em;
+}
 .nav {
   position: relative;
   z-index: 2000;
@@ -672,241 +907,6 @@ main {
 }
 .alert .message-warning {
   padding: 1em 0;
-}
-:has(> [class^=grid]),
-.parent-grid {
-  container: grid/inline-size;
-  width: 100%;
-}
-[class^=grid] {
-  display: grid;
-  grid-auto-flow: dense;
-  grid-template-columns: repeat(var(--n, 1), minmax(0, 1fr));
-}
-[class^=grid].row-defines {
-  grid-auto-rows: minmax(0, 1fr);
-}
-[class^=grid].gap {
-  gap: var(--gap, 1em);
-}
-[class^=grid].gap-bottom {
-  padding-bottom: var(--gap, 1em);
-}
-[class^=grid].vertical-gap {
-  gap: 0 var(--gap, 1em);
-}
-.grid-auto,
-.grid-auto-min {
-  grid-template-columns: repeat(auto-fit, minmax(var(--size-grid, 15em), 1fr));
-}
-.grid-auto-min {
-  --size-grid: 10em;
-}
-@media (max-width: 35.01em) {
-  .xs-grid-auto {
-    grid-template-columns: repeat(auto-fit, minmax(var(--xs-size-grid, 11em), 1fr));
-  }
-}
-@container grid (35em < width) {
-  .grid2,
-  .grid3,
-  .grid4 {
-    --n: 2;
-  }
-  .c2,
-  .c3,
-  .c4 {
-    grid-column: span 2;
-  }
-}
-@container grid (50em < width) {
-  .grid3,
-  .grid4 {
-    --n: 3;
-  }
-  .c3,
-  .c4 {
-    grid-column: span 3;
-  }
-}
-@container grid (70em < width) {
-  .grid4 {
-    --n: 4;
-  }
-  .c4 {
-    grid-column: span 4;
-  }
-}
-.r2 {
-  grid-row: span 2;
-}
-.r3 {
-  grid-row: span 3;
-}
-.r4 {
-  grid-row: span 4;
-}
-@container grid (35em < width) {
-  :root .xs-grid2 {
-    --n: 2;
-  }
-  .xs-c1 {
-    grid-column: span 1;
-  }
-  .xs-c2 {
-    grid-column: span 2;
-  }
-}
-@container grid (35em < width < 50em) {
-  :root .s-grid1 {
-    --n: 1;
-  }
-  :root .s-grid2 {
-    --n: 2;
-  }
-  .s-c1 {
-    grid-column: span 1;
-  }
-  .s-c2 {
-    grid-column: span 2;
-  }
-}
-@container grid (50em < width < 70em) {
-  :root .m-grid1 {
-    --n: 1;
-  }
-  :root .m-grid2 {
-    --n: 2;
-  }
-  :root .m-grid3 {
-    --n: 3;
-  }
-  :root .m-grid4 {
-    --n: 4;
-  }
-  .m-c1 {
-    grid-column: span 1;
-  }
-  .m-c2 {
-    grid-column: span 2;
-  }
-}
-@container grid (70em < width < 92em) {
-  :root .l-grid1 {
-    --n: 1;
-  }
-  :root .l-grid2 {
-    --n: 2;
-  }
-  :root .l-grid3 {
-    --n: 3;
-  }
-  :root .l-grid4 {
-    --n: 4;
-  }
-}
-@container grid (92em < width) {
-  :root .xl-grid2 {
-    --n: 2;
-  }
-}
-.flex {
-  display: flex;
-  flex-wrap: wrap;
-/* @todo
-   * @see https://github.com/w3c/csswg-drafts/issues/3559#issuecomment-557711824
-  @supports(gap: 1em)
-    & > * + *
-      float: left
-      margin-left: 1em
-  */
-}
-.flex.gap {
-  gap: 1em;
-}
-.flex.gap-bottom {
-  margin-bottom: 1em;
-}
-.flex .item-push {
-  margin-left: auto;
-}
-.order {
-  order: var(--o, -1);
-}
-@container grid (35em > width) {
-  .xs-order {
-    order: var(--o, -1);
-  }
-}
-@container grid (35em < width < 50em) {
-  .s-order {
-    order: var(--o, -1);
-  }
-}
-[class^=column] {
-  -moz-column-gap: 0;
-       column-gap: 0;
-  position: relative;
-}
-[class^=column] > * {
-  display: inline-block;
-  width: 100%;
-  word-wrap: break-word;
-}
-@media (max-width: 35.01em) {
-  .sizeXS-column2 {
-    -moz-column-count: 2;
-         column-count: 2;
-  }
-}
-@media (min-width: 35.01em) {
-  .column2,
-  .column3,
-  .column4 {
-    -moz-column-count: 2;
-         column-count: 2;
-  }
-  .column5,
-  .column6 {
-    -moz-column-count: 3;
-         column-count: 3;
-  }
-}
-@media (min-width: 50.01em) {
-  .column3,
-  .column4 {
-    -moz-column-count: 3;
-         column-count: 3;
-  }
-  .column5,
-  .column6 {
-    -moz-column-count: 4;
-         column-count: 4;
-  }
-}
-@media (min-width: 92.01em) {
-  .column4 {
-    -moz-column-count: 4;
-         column-count: 4;
-  }
-  .column5 {
-    -moz-column-count: 5;
-         column-count: 5;
-  }
-  .column6 {
-    -moz-column-count: 6;
-         column-count: 6;
-  }
-}
-[class^=column].gap {
-  -moz-column-gap: 1em;
-       column-gap: 1em;
-}
-[class^=column].vertical-gap {
-  gap: 0 1em;
-}
-[class^=column].gap > :not(hr) {
-  margin-bottom: 1em;
 }
 .card h2,
 .card p {
@@ -3251,124 +3251,6 @@ bar-chart {
 }
 .topic-solved > :nth-child(2) svg:first-child {
   color: #7eb857;
-}
-.topic {
-  display: grid;
-  grid-template-columns: minmax(0, 60em) minmax(0, 1fr);
-  gap: 1em 0;
-}
-.topic > header {
-  grid-column: span 2;
-}
-.topic h1 {
-  margin-bottom: 0.44em;
-}
-@media (max-width: 35.01em) {
-  .topic .wrapper {
-    margin-top: -1em;
-  }
-  .topic article {
-    padding-block: 1em;
-  }
-}
-.topic > :not(header) {
-  grid-column: 1;
-  max-width: 55em;
-}
-@media (min-width: 35.01em) {
-  .topic > :not(header) {
-    border-radius: 0.3em;
-    box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
-  }
-}
-@media (min-width: 35.01em) and (max-width: 50.01em) {
-  .topic > :not(header) {
-    padding: 2.5em 4em;
-  }
-}
-@media (min-width: 50.01em) {
-  .topic > :not(header) {
-    padding: 4em 6em;
-  }
-  .topic > :not(header):nth-child(odd) {
-    margin-left: auto;
-  }
-  .topic > :not(header):nth-child(even) {
-    margin-right: auto;
-  }
-}
-.topic .sub-header,
-.topic article header {
-  display: grid;
-  grid-template-columns: 3.5em minmax(0, 1fr);
-  grid-template-areas: 'aa tt' 'aa uu';
-}
-.topic article header {
-  position: relative;
-  margin-bottom: 1em;
-  padding-bottom: 1em;
-  border-bottom: 0.1em solid #424242;
-}
-.topic .sub-header {
-  margin-block: 2em 1em;
-}
-.topic article {
-  position: relative;
-}
-.topic form {
-  width: 100%;
-}
-.topic .avatar {
-  grid-area: aa;
-  --img: '';
-  width: 3em;
-  aspect-ratio: 1;
-  background: #222 var(--img);
-  background-size: cover;
-  border-radius: 50%;
-}
-.topic address {
-  grid-area: tt;
-  font-style: normal;
-  font-weight: bold;
-  font-variant: small-caps;
-}
-.topic time {
-  grid-area: uu;
-}
-.topic .keywords {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5em 0.5em;
-  font-size: 0.8em;
-  margin-block: 0.75em 0;
-  padding-left: 0;
-}
-.topic .keywords > :last-child {
-  margin-right: 0;
-}
-.topic .keywords li {
-  margin-bottom: 0.75em;
-}
-.topic .keywords a {
-  padding: 0.25em 0.5em 0.25em 1.25em;
-  white-space: nowrap;
-  background-color: #282828;
-  -webkit-clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
-          clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
-}
-.topic .anchor {
-  position: absolute;
-  right: 0;
-  bottom: 1em;
-  color: #6f6f6f;
-}
-.topic .anchor:focus,
-.topic .anchor:hover,
-.topic .anchor:active {
-  text-decoration: none;
-  color: #ffa600;
 }
 html,
 .logo-nav,
