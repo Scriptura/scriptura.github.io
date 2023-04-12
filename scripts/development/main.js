@@ -8,6 +8,10 @@
 // @documentation Performance pour les selecteurs @see https://jsbench.me/d7kbm759bb/1
 const jsDetect = (() => document.documentElement.classList.replace('no-js', 'js'))()
 
+const printDetect = (() => { // @see Firefox Android a perdu sa fonction d'impression...
+  if(!window.print) document.documentElement.classList.add('no-print')
+})()
+
 // @see https://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript
 // @deprecated Script remplacé par règle CSS @media (hover hover) and (pointer fine)
 /*

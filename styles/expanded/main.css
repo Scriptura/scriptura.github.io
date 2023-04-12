@@ -3679,6 +3679,9 @@ a[aria-disabled=true]:active {
 .no-margin-bottom-last-child > :last-child {
   margin-bottom: 0;
 }
+.no-print .cmd-print {
+  display: none;
+}
 @keyframes anim-blink {
   50% {
     filter: invert(1);
