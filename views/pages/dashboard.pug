@@ -23,75 +23,28 @@ block variables
         }
 
 block main
-  header(role='banner')
-    h1.main-heading!= data._name
-  .grid3.m-grid2.s-grid1.gap.masonry
-    article.boxx.c2
-      h2.sr-only Menu principal
-      .accordion(data-singletab='true')
-        details
-          summary
-            svg.icon-inline (role='img' focusable='false')
-              use(href='/sprites/util.svg#share')
-            | Activité récente
-          .grid2.vertical-gap
-            div
-              h2.h5 Derniers utilisateurs en activité&nbsp;:
-              ul
-                // sans l'utilisateur courant bien sûr...
-                li Pseudo 1
-                li Pseudo 2
-                li Pseudo 3
-                li Pseudo 4
-                li Pseudo 5
-            div
-              h2.h5 Derniers utilisateurs enregistrés&nbsp;:
-              ul
-                li Pseudo 1
-                li Pseudo 2
-                li Pseudo 3
-                li Pseudo 4
-                li Pseudo 5
-            div
-              h2.h5 Derniers articles publiés&nbsp;:
-              ul
-                li Titre de l'article 1
-                li Titre de l'article 2
-                li Titre de l'article 3
-                li Titre de l'article 4
-                li Titre de l'article 5
-            div
-              h2.h5 Derniers forums publiés&nbsp;:
-              ul
-                li Titre du forum 1
-                li Titre du forum 2
-                li Titre du forum 3
-                li Titre du forum 4
-                li Titre du forum 5
-            div
-              h2.h5 Derniers commentaires publiés&nbsp;:
-              ul
-                li Titre du commentaire 1
-                li Titre du commentaire 2
-                li Titre du commentaire 3
-                li Titre du commentaire 4
-                li Titre du commentaire 5
-        details
-          summary
-            svg.icon-inline (role='img' focusable='false')
-              use(href='/sprites/util.svg#users')
-            | Users
-          div
-            ul
-              li 36 utilisateurs
-              li 1 administrateur
-              li 2 auteurs
-              li 2 éditeurs
-              li 3 modérateurs
-              li 7 contributeurs
-              li 19 commentateurs
-              li 2 abonnés
+  article
+    header(role='banner')
+      h1.main-heading!= data._name
+    .grid3.m-grid2.s-grid1.gap.masonry
+      article.boxx.c2
+        h2.sr-only Menu principal
+        .accordion(data-singletab='true')
+          details
+            summary
+              svg.icon-inline (role='img' focusable='false')
+                use(href='/sprites/util.svg#share')
+              | Activité récente
             .grid2.vertical-gap
+              div
+                h2.h5 Derniers utilisateurs en activité&nbsp;:
+                ul
+                  // sans l'utilisateur courant bien sûr...
+                  li Pseudo 1
+                  li Pseudo 2
+                  li Pseudo 3
+                  li Pseudo 4
+                  li Pseudo 5
               div
                 h2.h5 Derniers utilisateurs enregistrés&nbsp;:
                 ul
@@ -101,288 +54,337 @@ block main
                   li Pseudo 4
                   li Pseudo 5
               div
-                h2.h5 Derniers utilisateurs en activité&nbsp;:
+                h2.h5 Derniers articles publiés&nbsp;:
                 ul
-                  //- sans l'utilisateur courant bien sûr...
-                  li Pseudo 1
-                  li Pseudo 2
-                  li Pseudo 3
-                  li Pseudo 4
-                  li Pseudo 5
-        details
-          summary
-            svg.icon-inline (role='img' focusable='false')
-              use(href='/sprites/util.svg#ampersand')
-            | Articles
-          div
-            h2.h5 Statistiques&nbsp;:
-            ul
-              li 237 articles
-              li 232 articles publiés
-              li 5 articles non publiés
-              li 25 articles sans mot clef
-            h2.h5 Derniers articles publiés&nbsp;:
-            ul
-              li Titre de l'article 1
-              li Titre de l'article 2
-              li Titre de l'article 3
-              li Titre de l'article 4
-              li Titre de l'article 5
-        details
-          summary
-            svg.icon-inline (role='img' focusable='false')
-              use(href='/sprites/util.svg#bubbles')
-            | Forums
-          div
-            h2.h5 Statistiques&nbsp;:
-            ul
-              li 142 sujets
-              li 25 sujets sans mot clef
-              li 11 sujets retirés
-            h2.h5 Derniers forums publiés&nbsp;:
-            ul
-              li Titre du forum 1
-              li Titre du forum 2
-              li Titre du forum 3
-              li Titre du forum 4
-              li Titre du forum 5
-        details
-          summary
-            svg.icon-inline (role='img' focusable='false')
-              use(href='/sprites/util.svg#bubbles')
-            | Comments
-          div
-            h2.h5 Statistiques&nbsp;:
-            ul
-              li 324 commentaires
-              li 12 commentaires en attente de modération
-              li 49 commentaires retirés
-            h2.h5 Derniers commentaires publiés&nbsp;:
-            ul
-              li Titre du commentaire 1
-              li Titre du commentaire 2
-              li Titre du commentaire 3
-              li Titre du commentaire 4
-              li Titre du commentaire 5
-        details
-          summary
-            svg.icon-inline (role='img' focusable='false')
-              use(href='/sprites/util.svg#picture')
-            | Medias
-          div
-            h2.h5 Statistiques&nbsp;:
-            ul
-              li 274 images
-              li 37 musiques
-              li 16 vidéos
-            .grid2.vertical-gap
+                  li Titre de l'article 1
+                  li Titre de l'article 2
+                  li Titre de l'article 3
+                  li Titre de l'article 4
+                  li Titre de l'article 5
               div
-                h2.h5 Dernières images publiées&nbsp;:
+                h2.h5 Derniers forums publiés&nbsp;:
                 ul
-                  li Titre de l'image 1
-                  li Titre de l'image 2
-                  li Titre de l'image 3
-                  li Titre de l'image 4
-                  li Titre de l'image 5
+                  li Titre du forum 1
+                  li Titre du forum 2
+                  li Titre du forum 3
+                  li Titre du forum 4
+                  li Titre du forum 5
               div
-                h2.h5 Dernières musiques publiées&nbsp;:
+                h2.h5 Derniers commentaires publiés&nbsp;:
                 ul
-                  li Titre de la musique 1
-                  li Titre de la musique 2
-                  li Titre de la musique 3
-                  li Titre de la musique 4
-                  li Titre de la musique 5
-              div
-                h2.h5 Dernières vidéos publiées&nbsp;:
-                ul
-                  li Titre de la vidéo 1
-                  li Titre de la vidéo 2
-                  li Titre de la vidéo 3
-                  li Titre de la vidéo 4
-                  li Titre de la vidéo 5
-        details
-          summary
-            svg.icon-inline (role='img' focusable='false')
-              use(href='/sprites/util.svg#old-key')
-            | Mots clefs
-          div
-            h2.h5 Statistiques&nbsp;:
-            ul
-              li 114 mots clefs
-            .grid2.vertical-gap
-              div
-                h2.h5 Derniers mots clefs sollicités&nbsp;:
-                ul
-                  li Keyword1
-                  li Keyword2
-                  li Keyword3
-                  li Keyword4
-                  li Keyword5
-              div
-                h2.h5 Derniers mots clefs créés&nbsp;:
-                ul
-                  li Keyword1
-                  li Keyword2
-                  li Keyword3
-                  li Keyword4
-                  li Keyword5
-    article.boxx.s-c2
-      h2.h4 Pages les plus visitées
-      .center
-        pie-chart(data='40;30;30;20;10' labels='Cherry;Banana;Apricot;Peach;Raspberry' colors='hsl(30, 100%, 65%);hsl(90, 100%, 65%);hsl(200, 100%, 65%);hsl(160, 100%, 65%);hsl(10, 100%, 65%)')
-    //-
-      div
-        ul.grid-auto.gap.list-stripe-links
-          - for (let i = 1; i < 25; i++)
-            li
-              a(href='#')
-                svg.icon-inline(role='img' focusable='false')
-                  use(href='/sprites/util.svg#link')
-                | List item #{i}
-    article.boxx.s-c2
-      h2.h4 Utilisateurs actifs
-      .grid-auto.gap
-        .user-def
-          .avatar(style='--img:url(/medias/images/uploads/henri-de-lubac-w300.webp)')
-          address
-            a(href='/page/person.html') Henri de Lubac
-          time(datetime='2017-04-23 20:33:21') Le 23 avril 2017 à 20h33
-        .user-def
-          .avatar(style='--img:url(/medias/images/uploads/dawid-zawila-w300.webp)')
-          address
-            a(href='/page/person.html') Jeanne d'Arc
-          time(datetime='2017-04-23 20:33:21') Le 23 avril 2017 à 18h51
-        .user-def
-          .avatar(style='--img:url(/medias/images/uploads/willian-justen-de-vasconcellos-w300.webp)')
-          address
-            a(href='/page/person.html') Thomas d'Aquin
-          time(datetime='2017-04-23 20:33:21') Le 23 avril 2017 à 02h28
-        .user-def
-          .avatar(style='--img:url(/medias/images/uploads/aleksandra-boguslawska-w300.webp)')
-          address
-            a(href='/page/person.html') Romanos le Mélode
-          time(datetime='2017-04-23 20:33:21') Le 22 avril 2017 à 14h47
-        .user-def
-          .avatar(style='--img:url(/medias/images/uploads/pisit-heng-w300.webp)')
-          address
-            a(href='/page/person.html') Eusèbe de Césarée
-          time(datetime='2017-04-23 20:33:21') Le 22 avril 2017 à 09h30
-    article.boxx.c2
-      h2.h4 Dernières images téléchargées
-      .grid-auto.gap.mosaic(style='--size-grid:5em')
-        -
-          img.name = 'matthew-smith'
-          img.width = '5000'
-          img.height = '3333'
-          img.alt = 'Prairie'
-          img.author = 'Matthew Smith'
-        include ../helpers/picture5
-        -
-          img.name = 'clay-banks'
-          img.width = '2002'
-          img.height = '3000'
-          img.alt = 'Yaquina Head, Newport, États-Unis'
-          img.author = 'Clay Banks'
-        include ../helpers/picture5
-        -
-          img.name = 'nicolas-hoizey'
-          img.width = '3715'
-          img.height = '3715'
-          img.alt = 'Intérieur d\'un phare'
-          img.author = 'Nicolas Hoizey'
-        include ../helpers/picture5
-        -
-          img.name = 'sapan-patel'
-          img.width = '2931'
-          img.height = '4396'
-          img.alt = 'Coucher de soleil sur un champ, Los Angeles, États-Unis'
-          img.author = 'Sapan Patel'
-        include ../helpers/picture5
-        -
-          img.name = 'marita-kavelashvili'
-          img.width = '3424'
-          img.height = '5136'
-          img.alt = 'Forêt dans la brume, hautes montagnes d\'Adjarie, Géorgie'
-          img.author = 'Marita Kavelashvili'
-        include ../helpers/picture5
-        -
-          img.name = 'robin-billy'
-          img.width = '2565'
-          img.height = '3634'
-          img.alt = 'Forêt par temps d\'orage, Suisse'
-          img.author = 'Robin Billy'
-        include ../helpers/picture5
-        -
-          img.name = 'petr-vysohlid'
-          img.width = '4429'
-          img.height = '2953'
-          img.alt = 'Phare de Talacre, Point of Ayr, Pays de Galles, Royaume-Uni'
-          img.author = 'Petr Vysohlid'
-        include ../helpers/picture5
-        -
-          img.name = 'tanner-mardis'
-          img.width = '6000'
-          img.height = '4000'
-          img.alt = 'Sefer Torah, Bibliothèque du Congrès, Washington, États-Unis'
-          img.author = 'Tanner Mardis'
-        include ../helpers/picture5
-        -
-          img.name = 'david-haughton'
-          img.width = '2000'
-          img.height = '1289'
-          img.alt = 'Dunes en bord de mer'
-          img.author = 'David Haughton'
-        include ../helpers/picture5
-        -
-          img.name = 'girl-with-red-hat'
-          img.width = '4024'
-          img.height = '6048'
-          img.alt = 'Détails de l\'intérieur de la Capilla Real, Cathédrale de Cordoue, Espagne'
-          img.author = 'Girl With Red Hat (Pseudo)'
-        include ../helpers/picture5
-        -
-          img.name = 'willian-justen-de-vasconcellos'
-          img.width = '6000'
-          img.height = '4000'
-          img.alt = 'Désert de Huacachina, Perou'
-          img.author = 'Willian Justen de Vasconcellos'
-        include ../helpers/picture5
-        -
-          img.name = 'hannah-falk'
-          img.width = '4608'
-          img.height = '3072'
-          img.alt = 'Longue vue, Tour Eiffel'
-          img.author = 'Hannah Falk'
-        include ../helpers/picture5
-        -
-          img.name = 'alice'
-          img.width = '4496'
-          img.height = '3000'
-          img.alt = 'Silp Pa Phra Nakhon Si Ayutthaya, Thaïlande'
-          img.author = 'Alice (Pseudo)'
-        include ../helpers/picture5
-        -
-          img.name = 'dawid-zawila'
-          img.width = '4496'
-          img.height = '3000'
-          img.alt = 'Tournesol'
-          img.author = 'Dawid Zawila'
-        include ../helpers/picture5
-        -
-          img.name = 'mr-bochelly'
-          img.width = '2121'
-          img.height = '3451'
-          img.alt = 'Abbaye du Mont-Saint-Michel'
-          img.author = 'Mr Bochelly'
-        include ../helpers/picture5
-        -
-          img.name = 'artem-sapegin'
-          img.width = '5301'
-          img.height = '3534'
-          img.alt = 'Lac de Bled, Slovénie'
-          img.author = 'Artem Sapegin'
-        include ../helpers/picture5
-  hr
-  button.button2(type='button' aria-label='Se déconnecter')
-    svg.icon(role='img' focusable='false')
-      use(href='/sprites/util.svg#logout')
+                  li Titre du commentaire 1
+                  li Titre du commentaire 2
+                  li Titre du commentaire 3
+                  li Titre du commentaire 4
+                  li Titre du commentaire 5
+          details
+            summary
+              svg.icon-inline (role='img' focusable='false')
+                use(href='/sprites/util.svg#users')
+              | Users
+            div
+              ul
+                li 36 utilisateurs
+                li 1 administrateur
+                li 2 auteurs
+                li 2 éditeurs
+                li 3 modérateurs
+                li 7 contributeurs
+                li 19 commentateurs
+                li 2 abonnés
+              .grid2.vertical-gap
+                div
+                  h2.h5 Derniers utilisateurs enregistrés&nbsp;:
+                  ul
+                    li Pseudo 1
+                    li Pseudo 2
+                    li Pseudo 3
+                    li Pseudo 4
+                    li Pseudo 5
+                div
+                  h2.h5 Derniers utilisateurs en activité&nbsp;:
+                  ul
+                    //- sans l'utilisateur courant bien sûr...
+                    li Pseudo 1
+                    li Pseudo 2
+                    li Pseudo 3
+                    li Pseudo 4
+                    li Pseudo 5
+          details
+            summary
+              svg.icon-inline (role='img' focusable='false')
+                use(href='/sprites/util.svg#ampersand')
+              | Articles
+            div
+              h2.h5 Statistiques&nbsp;:
+              ul
+                li 237 articles
+                li 232 articles publiés
+                li 5 articles non publiés
+                li 25 articles sans mot clef
+              h2.h5 Derniers articles publiés&nbsp;:
+              ul
+                li Titre de l'article 1
+                li Titre de l'article 2
+                li Titre de l'article 3
+                li Titre de l'article 4
+                li Titre de l'article 5
+          details
+            summary
+              svg.icon-inline (role='img' focusable='false')
+                use(href='/sprites/util.svg#bubbles')
+              | Forums
+            div
+              h2.h5 Statistiques&nbsp;:
+              ul
+                li 142 sujets
+                li 25 sujets sans mot clef
+                li 11 sujets retirés
+              h2.h5 Derniers forums publiés&nbsp;:
+              ul
+                li Titre du forum 1
+                li Titre du forum 2
+                li Titre du forum 3
+                li Titre du forum 4
+                li Titre du forum 5
+          details
+            summary
+              svg.icon-inline (role='img' focusable='false')
+                use(href='/sprites/util.svg#bubbles')
+              | Comments
+            div
+              h2.h5 Statistiques&nbsp;:
+              ul
+                li 324 commentaires
+                li 12 commentaires en attente de modération
+                li 49 commentaires retirés
+              h2.h5 Derniers commentaires publiés&nbsp;:
+              ul
+                li Titre du commentaire 1
+                li Titre du commentaire 2
+                li Titre du commentaire 3
+                li Titre du commentaire 4
+                li Titre du commentaire 5
+          details
+            summary
+              svg.icon-inline (role='img' focusable='false')
+                use(href='/sprites/util.svg#picture')
+              | Medias
+            div
+              h2.h5 Statistiques&nbsp;:
+              ul
+                li 274 images
+                li 37 musiques
+                li 16 vidéos
+              .grid2.vertical-gap
+                div
+                  h2.h5 Dernières images publiées&nbsp;:
+                  ul
+                    li Titre de l'image 1
+                    li Titre de l'image 2
+                    li Titre de l'image 3
+                    li Titre de l'image 4
+                    li Titre de l'image 5
+                div
+                  h2.h5 Dernières musiques publiées&nbsp;:
+                  ul
+                    li Titre de la musique 1
+                    li Titre de la musique 2
+                    li Titre de la musique 3
+                    li Titre de la musique 4
+                    li Titre de la musique 5
+                div
+                  h2.h5 Dernières vidéos publiées&nbsp;:
+                  ul
+                    li Titre de la vidéo 1
+                    li Titre de la vidéo 2
+                    li Titre de la vidéo 3
+                    li Titre de la vidéo 4
+                    li Titre de la vidéo 5
+          details
+            summary
+              svg.icon-inline (role='img' focusable='false')
+                use(href='/sprites/util.svg#old-key')
+              | Mots clefs
+            div
+              h2.h5 Statistiques&nbsp;:
+              ul
+                li 114 mots clefs
+              .grid2.vertical-gap
+                div
+                  h2.h5 Derniers mots clefs sollicités&nbsp;:
+                  ul
+                    li Keyword1
+                    li Keyword2
+                    li Keyword3
+                    li Keyword4
+                    li Keyword5
+                div
+                  h2.h5 Derniers mots clefs créés&nbsp;:
+                  ul
+                    li Keyword1
+                    li Keyword2
+                    li Keyword3
+                    li Keyword4
+                    li Keyword5
+      article.boxx.s-c2
+        h2.h4 Pages les plus visitées
+        .center
+          pie-chart(data='40;30;30;20;10' labels='Cherry;Banana;Apricot;Peach;Raspberry' colors='hsl(30, 100%, 65%);hsl(90, 100%, 65%);hsl(200, 100%, 65%);hsl(160, 100%, 65%);hsl(10, 100%, 65%)')
+      //-
+        div
+          ul.grid-auto.gap.list-stripe-links
+            - for (let i = 1; i < 25; i++)
+              li
+                a(href='#')
+                  svg.icon-inline(role='img' focusable='false')
+                    use(href='/sprites/util.svg#link')
+                  | List item #{i}
+      article.boxx.s-c2
+        h2.h4 Utilisateurs actifs
+        .grid-auto.gap
+          .user-def
+            .avatar(style='--img:url(/medias/images/uploads/henri-de-lubac-w300.webp)')
+            address
+              a(href='/page/person.html') Henri de Lubac
+            time(datetime='2017-04-23 20:33:21') Le 23 avril 2017 à 20h33
+          .user-def
+            .avatar(style='--img:url(/medias/images/uploads/dawid-zawila-w300.webp)')
+            address
+              a(href='/page/person.html') Jeanne d'Arc
+            time(datetime='2017-04-23 20:33:21') Le 23 avril 2017 à 18h51
+          .user-def
+            .avatar(style='--img:url(/medias/images/uploads/willian-justen-de-vasconcellos-w300.webp)')
+            address
+              a(href='/page/person.html') Thomas d'Aquin
+            time(datetime='2017-04-23 20:33:21') Le 23 avril 2017 à 02h28
+          .user-def
+            .avatar(style='--img:url(/medias/images/uploads/aleksandra-boguslawska-w300.webp)')
+            address
+              a(href='/page/person.html') Romanos le Mélode
+            time(datetime='2017-04-23 20:33:21') Le 22 avril 2017 à 14h47
+          .user-def
+            .avatar(style='--img:url(/medias/images/uploads/pisit-heng-w300.webp)')
+            address
+              a(href='/page/person.html') Eusèbe de Césarée
+            time(datetime='2017-04-23 20:33:21') Le 22 avril 2017 à 09h30
+      article.boxx.c2
+        h2.h4 Dernières images téléchargées
+        .grid-auto.gap.mosaic(style='--size-grid:5em')
+          -
+            img.name = 'matthew-smith'
+            img.width = '5000'
+            img.height = '3333'
+            img.alt = 'Prairie'
+            img.author = 'Matthew Smith'
+          include ../helpers/picture5
+          -
+            img.name = 'clay-banks'
+            img.width = '2002'
+            img.height = '3000'
+            img.alt = 'Yaquina Head, Newport, États-Unis'
+            img.author = 'Clay Banks'
+          include ../helpers/picture5
+          -
+            img.name = 'nicolas-hoizey'
+            img.width = '3715'
+            img.height = '3715'
+            img.alt = 'Intérieur d\'un phare'
+            img.author = 'Nicolas Hoizey'
+          include ../helpers/picture5
+          -
+            img.name = 'sapan-patel'
+            img.width = '2931'
+            img.height = '4396'
+            img.alt = 'Coucher de soleil sur un champ, Los Angeles, États-Unis'
+            img.author = 'Sapan Patel'
+          include ../helpers/picture5
+          -
+            img.name = 'marita-kavelashvili'
+            img.width = '3424'
+            img.height = '5136'
+            img.alt = 'Forêt dans la brume, hautes montagnes d\'Adjarie, Géorgie'
+            img.author = 'Marita Kavelashvili'
+          include ../helpers/picture5
+          -
+            img.name = 'robin-billy'
+            img.width = '2565'
+            img.height = '3634'
+            img.alt = 'Forêt par temps d\'orage, Suisse'
+            img.author = 'Robin Billy'
+          include ../helpers/picture5
+          -
+            img.name = 'petr-vysohlid'
+            img.width = '4429'
+            img.height = '2953'
+            img.alt = 'Phare de Talacre, Point of Ayr, Pays de Galles, Royaume-Uni'
+            img.author = 'Petr Vysohlid'
+          include ../helpers/picture5
+          -
+            img.name = 'tanner-mardis'
+            img.width = '6000'
+            img.height = '4000'
+            img.alt = 'Sefer Torah, Bibliothèque du Congrès, Washington, États-Unis'
+            img.author = 'Tanner Mardis'
+          include ../helpers/picture5
+          -
+            img.name = 'david-haughton'
+            img.width = '2000'
+            img.height = '1289'
+            img.alt = 'Dunes en bord de mer'
+            img.author = 'David Haughton'
+          include ../helpers/picture5
+          -
+            img.name = 'girl-with-red-hat'
+            img.width = '4024'
+            img.height = '6048'
+            img.alt = 'Détails de l\'intérieur de la Capilla Real, Cathédrale de Cordoue, Espagne'
+            img.author = 'Girl With Red Hat (Pseudo)'
+          include ../helpers/picture5
+          -
+            img.name = 'willian-justen-de-vasconcellos'
+            img.width = '6000'
+            img.height = '4000'
+            img.alt = 'Désert de Huacachina, Perou'
+            img.author = 'Willian Justen de Vasconcellos'
+          include ../helpers/picture5
+          -
+            img.name = 'hannah-falk'
+            img.width = '4608'
+            img.height = '3072'
+            img.alt = 'Longue vue, Tour Eiffel'
+            img.author = 'Hannah Falk'
+          include ../helpers/picture5
+          -
+            img.name = 'alice'
+            img.width = '4496'
+            img.height = '3000'
+            img.alt = 'Silp Pa Phra Nakhon Si Ayutthaya, Thaïlande'
+            img.author = 'Alice (Pseudo)'
+          include ../helpers/picture5
+          -
+            img.name = 'dawid-zawila'
+            img.width = '4496'
+            img.height = '3000'
+            img.alt = 'Tournesol'
+            img.author = 'Dawid Zawila'
+          include ../helpers/picture5
+          -
+            img.name = 'mr-bochelly'
+            img.width = '2121'
+            img.height = '3451'
+            img.alt = 'Abbaye du Mont-Saint-Michel'
+            img.author = 'Mr Bochelly'
+          include ../helpers/picture5
+          -
+            img.name = 'artem-sapegin'
+            img.width = '5301'
+            img.height = '3534'
+            img.alt = 'Lac de Bled, Slovénie'
+            img.author = 'Artem Sapegin'
+          include ../helpers/picture5
+    hr
+    footer
+      button.button2(type='button' aria-label='Se déconnecter')
+        svg.icon(role='img' focusable='false')
+          use(href='/sprites/util.svg#logout')

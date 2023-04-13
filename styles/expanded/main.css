@@ -949,13 +949,6 @@ main {
 .card:hover svg:hover {
   background-color: #ffa600;
 }
-@media (min-width: 35.01em) {
-  .boxx {
-    padding: 4em 6em;
-    border-radius: 0.3em;
-    box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
-  }
-}
 .user-def {
   display: grid;
   grid-template-columns: 3.5em minmax(0, 1fr);
@@ -2541,6 +2534,9 @@ form > [class*="grid"] > .input {
   font-weight: bold;
   font-size: 1.5em;
 }
+.accordion > * > :first-child .icon-inline {
+  margin-right: 1em;
+}
 .accordion .accordion-summary::after {
   transition: transform 0.5s ease-in-out;
 }
@@ -2855,6 +2851,19 @@ form > [class*="grid"] > .input {
   .article > footer {
     padding-inline: 6em;
   }
+}
+@media (min-width: 35.01em) {
+  .boxx {
+    padding: 4em 6em;
+    border-radius: 0.3em;
+    box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
+  }
+}
+main > article > footer {
+  grid-column: 1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1em;
 }
 .drop-cap,
 .no-js .add-drop-cap > :not(*) + p:first-child::first-letter {
