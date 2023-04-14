@@ -28,7 +28,7 @@ block main
       h1.main-heading!= data._name
     .grid3.m-grid2.s-grid1.gap.masonry
       article.boxx.c2
-        h2.sr-only Menu principal
+        h2.h4 Menu principal
         .accordion(data-singletab='true')
           details
             summary
@@ -186,13 +186,13 @@ block main
                     li Titre de l'image 4
                     li Titre de l'image 5
                 div
-                  h2.h5 Dernières musiques publiées&nbsp;:
+                  h2.h5 Derniers fichiers audios publiées&nbsp;:
                   ul
-                    li Titre de la musique 1
-                    li Titre de la musique 2
-                    li Titre de la musique 3
-                    li Titre de la musique 4
-                    li Titre de la musique 5
+                    li Titre du fichier audio 1
+                    li Titre du fichier audio 2
+                    li Titre du fichier audio 3
+                    li Titre du fichier audio 4
+                    li Titre du fichier audio 5
                 div
                   h2.h5 Dernières vidéos publiées&nbsp;:
                   ul
@@ -269,120 +269,182 @@ block main
               a(href='/page/person.html') Eusèbe de Césarée
             time(datetime='2017-04-23 20:33:21') Le 22 avril 2017 à 09h30
       article.boxx.c2
-        h2.h4 Dernières images téléchargées
-        .grid-auto.gap.mosaic(style='--size-grid:5em')
-          -
-            img.name = 'matthew-smith'
-            img.width = '5000'
-            img.height = '3333'
-            img.alt = 'Prairie'
-            img.author = 'Matthew Smith'
-          include ../helpers/picture5
-          -
-            img.name = 'clay-banks'
-            img.width = '2002'
-            img.height = '3000'
-            img.alt = 'Yaquina Head, Newport, États-Unis'
-            img.author = 'Clay Banks'
-          include ../helpers/picture5
-          -
-            img.name = 'nicolas-hoizey'
-            img.width = '3715'
-            img.height = '3715'
-            img.alt = 'Intérieur d\'un phare'
-            img.author = 'Nicolas Hoizey'
-          include ../helpers/picture5
-          -
-            img.name = 'sapan-patel'
-            img.width = '2931'
-            img.height = '4396'
-            img.alt = 'Coucher de soleil sur un champ, Los Angeles, États-Unis'
-            img.author = 'Sapan Patel'
-          include ../helpers/picture5
-          -
-            img.name = 'marita-kavelashvili'
-            img.width = '3424'
-            img.height = '5136'
-            img.alt = 'Forêt dans la brume, hautes montagnes d\'Adjarie, Géorgie'
-            img.author = 'Marita Kavelashvili'
-          include ../helpers/picture5
-          -
-            img.name = 'robin-billy'
-            img.width = '2565'
-            img.height = '3634'
-            img.alt = 'Forêt par temps d\'orage, Suisse'
-            img.author = 'Robin Billy'
-          include ../helpers/picture5
-          -
-            img.name = 'petr-vysohlid'
-            img.width = '4429'
-            img.height = '2953'
-            img.alt = 'Phare de Talacre, Point of Ayr, Pays de Galles, Royaume-Uni'
-            img.author = 'Petr Vysohlid'
-          include ../helpers/picture5
-          -
-            img.name = 'tanner-mardis'
-            img.width = '6000'
-            img.height = '4000'
-            img.alt = 'Sefer Torah, Bibliothèque du Congrès, Washington, États-Unis'
-            img.author = 'Tanner Mardis'
-          include ../helpers/picture5
-          -
-            img.name = 'david-haughton'
-            img.width = '2000'
-            img.height = '1289'
-            img.alt = 'Dunes en bord de mer'
-            img.author = 'David Haughton'
-          include ../helpers/picture5
-          -
-            img.name = 'girl-with-red-hat'
-            img.width = '4024'
-            img.height = '6048'
-            img.alt = 'Détails de l\'intérieur de la Capilla Real, Cathédrale de Cordoue, Espagne'
-            img.author = 'Girl With Red Hat (Pseudo)'
-          include ../helpers/picture5
-          -
-            img.name = 'willian-justen-de-vasconcellos'
-            img.width = '6000'
-            img.height = '4000'
-            img.alt = 'Désert de Huacachina, Perou'
-            img.author = 'Willian Justen de Vasconcellos'
-          include ../helpers/picture5
-          -
-            img.name = 'hannah-falk'
-            img.width = '4608'
-            img.height = '3072'
-            img.alt = 'Longue vue, Tour Eiffel'
-            img.author = 'Hannah Falk'
-          include ../helpers/picture5
-          -
-            img.name = 'alice'
-            img.width = '4496'
-            img.height = '3000'
-            img.alt = 'Silp Pa Phra Nakhon Si Ayutthaya, Thaïlande'
-            img.author = 'Alice (Pseudo)'
-          include ../helpers/picture5
-          -
-            img.name = 'dawid-zawila'
-            img.width = '4496'
-            img.height = '3000'
-            img.alt = 'Tournesol'
-            img.author = 'Dawid Zawila'
-          include ../helpers/picture5
-          -
-            img.name = 'mr-bochelly'
-            img.width = '2121'
-            img.height = '3451'
-            img.alt = 'Abbaye du Mont-Saint-Michel'
-            img.author = 'Mr Bochelly'
-          include ../helpers/picture5
-          -
-            img.name = 'artem-sapegin'
-            img.width = '5301'
-            img.height = '3534'
-            img.alt = 'Lac de Bled, Slovénie'
-            img.author = 'Artem Sapegin'
-          include ../helpers/picture5
+        h2.h4 Derniers médias téléchargés
+        .tabs
+          details
+            summary Images
+            div
+              .grid-auto.gap.gap-block.mosaic(style='--size-grid:5em')
+                -
+                  img.name = 'matthew-smith'
+                  img.width = '5000'
+                  img.height = '3333'
+                  img.alt = 'Prairie'
+                  img.author = 'Matthew Smith'
+                include ../helpers/picture5
+                -
+                  img.name = 'clay-banks'
+                  img.width = '2002'
+                  img.height = '3000'
+                  img.alt = 'Yaquina Head, Newport, États-Unis'
+                  img.author = 'Clay Banks'
+                include ../helpers/picture5
+                -
+                  img.name = 'nicolas-hoizey'
+                  img.width = '3715'
+                  img.height = '3715'
+                  img.alt = 'Intérieur d\'un phare'
+                  img.author = 'Nicolas Hoizey'
+                include ../helpers/picture5
+                -
+                  img.name = 'sapan-patel'
+                  img.width = '2931'
+                  img.height = '4396'
+                  img.alt = 'Coucher de soleil sur un champ, Los Angeles, États-Unis'
+                  img.author = 'Sapan Patel'
+                include ../helpers/picture5
+                -
+                  img.name = 'marita-kavelashvili'
+                  img.width = '3424'
+                  img.height = '5136'
+                  img.alt = 'Forêt dans la brume, hautes montagnes d\'Adjarie, Géorgie'
+                  img.author = 'Marita Kavelashvili'
+                include ../helpers/picture5
+                -
+                  img.name = 'robin-billy'
+                  img.width = '2565'
+                  img.height = '3634'
+                  img.alt = 'Forêt par temps d\'orage, Suisse'
+                  img.author = 'Robin Billy'
+                include ../helpers/picture5
+                -
+                  img.name = 'petr-vysohlid'
+                  img.width = '4429'
+                  img.height = '2953'
+                  img.alt = 'Phare de Talacre, Point of Ayr, Pays de Galles, Royaume-Uni'
+                  img.author = 'Petr Vysohlid'
+                include ../helpers/picture5
+                -
+                  img.name = 'tanner-mardis'
+                  img.width = '6000'
+                  img.height = '4000'
+                  img.alt = 'Sefer Torah, Bibliothèque du Congrès, Washington, États-Unis'
+                  img.author = 'Tanner Mardis'
+                include ../helpers/picture5
+                -
+                  img.name = 'david-haughton'
+                  img.width = '2000'
+                  img.height = '1289'
+                  img.alt = 'Dunes en bord de mer'
+                  img.author = 'David Haughton'
+                include ../helpers/picture5
+                -
+                  img.name = 'girl-with-red-hat'
+                  img.width = '4024'
+                  img.height = '6048'
+                  img.alt = 'Détails de l\'intérieur de la Capilla Real, Cathédrale de Cordoue, Espagne'
+                  img.author = 'Girl With Red Hat (Pseudo)'
+                include ../helpers/picture5
+                -
+                  img.name = 'willian-justen-de-vasconcellos'
+                  img.width = '6000'
+                  img.height = '4000'
+                  img.alt = 'Désert de Huacachina, Perou'
+                  img.author = 'Willian Justen de Vasconcellos'
+                include ../helpers/picture5
+                -
+                  img.name = 'hannah-falk'
+                  img.width = '4608'
+                  img.height = '3072'
+                  img.alt = 'Longue vue, Tour Eiffel'
+                  img.author = 'Hannah Falk'
+                include ../helpers/picture5
+                -
+                  img.name = 'alice'
+                  img.width = '4496'
+                  img.height = '3000'
+                  img.alt = 'Silp Pa Phra Nakhon Si Ayutthaya, Thaïlande'
+                  img.author = 'Alice (Pseudo)'
+                include ../helpers/picture5
+                -
+                  img.name = 'dawid-zawila'
+                  img.width = '4496'
+                  img.height = '3000'
+                  img.alt = 'Tournesol'
+                  img.author = 'Dawid Zawila'
+                include ../helpers/picture5
+                -
+                  img.name = 'mr-bochelly'
+                  img.width = '2121'
+                  img.height = '3451'
+                  img.alt = 'Abbaye du Mont-Saint-Michel'
+                  img.author = 'Mr Bochelly'
+                include ../helpers/picture5
+                -
+                  img.name = 'artem-sapegin'
+                  img.width = '5301'
+                  img.height = '3534'
+                  img.alt = 'Lac de Bled, Slovénie'
+                  img.author = 'Artem Sapegin'
+                include ../helpers/picture5
+                -
+                  img.name = 'pisit-heng'
+                  img.width = '3024'
+                  img.height = '4032'
+                  img.alt = '«&nbsp;Il n\'est pas ici, Il est ressuscité&nbsp;», Nazareth, Israël'
+                  img.author = 'Pisit Heng'
+                include ../helpers/picture5
+                -
+                  img.name = 'mike-smith'
+                  img.width = '5380'
+                  img.height = '3587'
+                  img.alt = 'Phare de Neist Point, Glendale, Royaume-Uni'
+                  img.author = 'Mike Smith'
+                include ../helpers/picture5
+                -
+                  img.name = 'sapan-patel2'
+                  img.width = '4000'
+                  img.height = '6000'
+                  img.alt = 'Fougères'
+                  img.author = 'Sapan Patel'
+                include ../helpers/picture5
+                -
+                  img.name = 'robin-billy2'
+                  img.width = '2500'
+                  img.height = '2500'
+                  img.alt = 'Épis de blé'
+                  img.author = 'Robin Billy'
+                include ../helpers/picture5
+                -
+                  img.name = 'karol-kaczorek'
+                  img.width = '3160'
+                  img.height = '4803'
+                  img.alt = 'Paysage de campagne, Italie'
+                  img.author = 'Karol Kaczorek'
+                include ../helpers/picture5
+          details
+            summary Audios
+            div
+              .grid.gap.gap-block(style='--n:1')
+                audio.audio
+                  source(src='/medias/audios/BagdadCafe.mp3')
+                audio.audio
+                  source(src='/medias/audios/BagdadCafe.mp3')
+                audio.audio
+                  source(src='/medias/audios/BagdadCafe.mp3')
+                audio.audio
+                  source(src='/medias/audios/BagdadCafe.mp3')
+                audio.audio
+                  source(src='/medias/audios/BagdadCafe.mp3')
+          details
+            summary Vidéos
+            div
+              .grid2.gap.gap-block
+                .video-youtube(data-id='3Bs4LOtIuxg')
+                .video-youtube(data-id='pZm94gQBzOQ')
+                .video-youtube(data-id='uWCGK4nneeU')
+                .video-youtube(data-id='rnS20usFqYs')
+                //-.video-youtube(data-id='jNQXAC9IVRw')
     hr
     footer
       button.button2(type='button' aria-label='Se déconnecter')

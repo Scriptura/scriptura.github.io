@@ -2,28 +2,19 @@ _messageColor1 = _colorG + 7%
 
 [class^=message]
   --color: currentColor
+  --color-link: _colorT2
   --bg-color: _messageColor1
-  --colorLink: _colorT2
-  padding: .25em 1em // @note Harmonisation avec p.message
+  padding: .15em 1em
   color: var(--color)
   background-color: var(--bg-color)
   box-shadow: _shadow5
   //overflow hidden // @note Evite un conflit avec les margins et padding des éléments enfants. Mais pose des problèmes avec les pseudo-éléments.
   & a
-    color: var(--colorLink)
+    color: var(--color-link)
 
 main [class^=message]
   margin-bottom: 1em
   border-radius: _r2
-
-p[class^=message]
-  padding: 1em
-
-.message-primary
-  --bg-color: _colorG + 20%
-
-.message-secondary
-  --bg-color: _colorG + 3%
 
 .message-info
   --bg-color: _color6
@@ -35,22 +26,20 @@ p[class^=message]
   --bg-color: _color3
 
 .message-warning
-  //--color: #000
-  //--bg-color: _color5
   --bg-color: _color5 - 30%
 
-  /*
-  &::after
-    content ''
-    display: block
-    clear: both
-  & > [class^=icon]
-    float: left
-    width: 2.5em
-    height: 2.5em
-    margin: .9em .5em 0 0
-    padding: .6em
-    color: var(--color)
-    background-color: var(--bg-color, _messageColor1)
-    clip-path: circle(50%) // @note Préférable à "border-radius: 50%" car évite un effet de rognage sur l'icône.
-  */
+[class^=message][class*=highlight]
+  --icon-size: 3em
+  display: grid
+  grid-template-columns: var(--icon-size) minmax(0, 1fr)
+  gap: _gap
+  padding-inline: 1em
+  & .icon
+    width: var(--icon-size)
+    height: var(--icon-size)
+    //place-self: center
+    margin: auto
+    padding: .75em
+    fill: var(--bg-color)
+    background-color: currentcolor
+    clip-path: circle(50%)
