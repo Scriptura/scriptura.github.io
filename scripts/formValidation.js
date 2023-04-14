@@ -14,7 +14,7 @@ const formValidation = (() => {
     el.classList.add(classMessageError)
     input.after(el)
     el.textContent = text
-    const svg = `<svg class="icon-inline blink" role="img" focusable="false"><use href="/sprites/util.svg#warning"></use></svg>`
+    const svg = `<svg class="icon-inline" role="img" focusable="false"><use href="/sprites/util.svg#warning"></use></svg>`
     el.insertAdjacentHTML('afterbegin', svg)
   }
 

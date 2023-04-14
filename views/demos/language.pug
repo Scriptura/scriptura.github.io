@@ -54,13 +54,14 @@ p
     |  Dieu appela la lumière "jour" et les ténèbres "nuit." Il y eut un soir et il y eut un matin : premier jour.
 .grid2.gap.s-grid1
   div
-    p.message
-      svg.icon-inline(role='img' focusable='false')
-        use(href='/sprites/util.svg#info')
-      | Afin d'harmoniser les caractères Unicode il est bon de parser les chaines avec une fonction de normalisation NFC. En JavaScript&nbsp;: 
-      code string.normalize('NFC')
-      | . Cf. 
-      a(href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/normalize') mdn web docs.
+    .message
+      p
+        svg.icon-inline(role='img' focusable='false')
+          use(href='/sprites/util.svg#info')
+        | Afin d'harmoniser les caractères Unicode il est bon de parser les chaines avec une fonction de normalisation NFC. En JavaScript&nbsp;: 
+        code string.normalize('NFC')
+        | . Cf. 
+        a(href='https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/normalize') mdn web docs.
   .center
     svg.size25.decorative-svg(role='img' focusable='false')
       use(href='/sprites/various/Jeanne-D-Arc.svg#1')

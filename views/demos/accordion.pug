@@ -52,21 +52,24 @@
           p Suspendisse fermentum luctus odio. Curabitur fringilla pulvinar interdum. Morbi porta orci neque, at commodo nulla tincidunt sed. Nulla finibus libero erat, eu auctor felis condimentum ac. Duis aliquet arcu sed luctus molestie. Pellentesque eros ipsum, ullamcorper ac turpis non, dictum hendrerit nulla. Integer mattis feugiat mauris a tincidunt. Duis fermentum faucibus nisl.
 .grid2.vertical-gap
   div
-    p.message
-      svg.icon-inline(role='img' focusable='false')
-        use(href='/sprites/util.svg#paperclip')
-      | L'accordéon est basé sur les éléments html 
-      code details/summary
-      | . Le javascript transforme cette base pour permettre les animations et un meilleur contrôle, il ajoute aussi des attributs aria pour l'accessibilité. L'accordéon reste accessible au clavier comme pour le html de base.
+    .message
+      p
+        svg.icon-inline(role='img' focusable='false')
+          use(href='/sprites/util.svg#paperclip')
+        | L'accordéon est basé sur les éléments html 
+        code details/summary
+        | . Le javascript transforme cette base pour permettre les animations et un meilleur contrôle, il ajoute aussi des attributs aria pour l'accessibilité. L'accordéon reste accessible au clavier comme pour le html de base.
   div
-    p.message
-      svg.icon-inline(role='img' focusable='false')
-        use(href='/sprites/util.svg#paperclip')
-      | Notez que l'apparence de l'accordéon ne changera pas si javascript est désactivé. Seul les animations et l'option 
-      code singletab
-      |  auront disparus.
+    .message
+      p
+        svg.icon-inline(role='img' focusable='false')
+          use(href='/sprites/util.svg#paperclip')
+        | Notez que l'apparence de l'accordéon ne changera pas si javascript est désactivé. Seul les animations et l'option 
+        code singletab
+        |  auront disparus.
   div
-    p.message(role='alert')
-      svg.icon-inline(role='img' focusable='false')
-        use(href='/sprites/util.svg#warning')
-      | Les accordéons ne doivent pas inclure d'éléments enfants provoquant un recalcul de la hauteur du panneau (animation de l'accordéon basée sur la propriété max-height).
+    .message(role='alert')
+      p
+        svg.icon-inline(role='img' focusable='false')
+          use(href='/sprites/util.svg#warning')
+        | Les accordéons ne doivent pas inclure d'éléments enfants provoquant un recalcul de la hauteur du panneau (animation de l'accordéon basée sur la propriété max-height).

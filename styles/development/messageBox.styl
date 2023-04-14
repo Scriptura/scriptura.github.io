@@ -1,8 +1,8 @@
-messageColor1 = _colorG + 7%
+_messageColor1 = _colorG + 7%
 
 [class^=message]
   --color: currentColor
-  --bg-color: messageColor1
+  --bg-color: _messageColor1
   --colorLink: _colorT2
   padding: .25em 1em // @note Harmonisation avec p.message
   color: var(--color)
@@ -35,7 +35,22 @@ p[class^=message]
   --bg-color: _color3
 
 .message-warning
-  --color: invert(_colorT)
-  --bg-color: _color5
-  & a
-    --colorLink: _colorW
+  //--color: #000
+  //--bg-color: _color5
+  --bg-color: _color5 - 30%
+
+  /*
+  &::after
+    content ''
+    display: block
+    clear: both
+  & > [class^=icon]
+    float: left
+    width: 2.5em
+    height: 2.5em
+    margin: .9em .5em 0 0
+    padding: .6em
+    color: var(--color)
+    background-color: var(--bg-color, _messageColor1)
+    clip-path: circle(50%) // @note Préférable à "border-radius: 50%" car évite un effet de rognage sur l'icône.
+  */
