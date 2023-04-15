@@ -1,6 +1,36 @@
 .grid3.m-grid2.gap.gap-bottom
   div
     p
+      code audio
+    audio(controls='controls')
+      source(src='/medias/audios/BagdadCafe.mp3')
+      p.message-error This media is not supported by your browser.
+  div
+    p
+      code audio.audio
+    audio.audio
+      source(src='/medias/audios/BagdadCafe.mp3')
+      p.message-error This media is not supported by your browser.
+    p
+      code audio.audio
+    audio.audio
+      source(src='/medias/audios/BagdadCafe.mp3')
+      p.message-error This media is not supported by your browser.
+    p
+      code audio.audio
+    audio.audio
+      source(src='/medias/audios/BagdadCafe.mp3')
+      p.message-error This media is not supported by your browser.
+  div
+    p
+      code video
+    video(controls='controls', poster='/medias/videos/posters/LeRetourDuRoi.jpg')
+      source(src='/medias/videos/LeRetourDuRoi.mp4', type='video/mp4')
+      p.message-warning HTML5 video codec proposed is not supported by your browser.
+hr(data-hr='✻ ✻ ✻')
+.grid3.m-grid2.gap.gap-bottom
+  div
+    p
       code .video-youtube
     .video-youtube(data-id='3Bs4LOtIuxg')
   div
@@ -37,33 +67,3 @@
         svg.icon-inline(role='img' focusable='false')
           use(href='/sprites/util.svg#info')
         | L'API youtube n'est pas utilisée afin d'éviter les limitations inhérentes à cette dernière en terme de requêtes. Ce qui nous permet aussi de garder notre indépendance face à la nécessité d'une clef d'API.
-//-hr(data-hr='✻ ✻ ✻')
-//-.grid3.m-grid2.gap.gap-bottom
-  div
-    p
-      code audio
-    audio(controls='controls')
-      source(src='/medias/audios/BagdadCafe.mp3')
-      p.message-error This media is not supported by your browser.
-  div
-    p
-      code audio.audio
-    audio.audio
-      source(src='/medias/audios/BagdadCafe.mp3')
-      p.message-error This media is not supported by your browser.
-    p
-      code audio.audio
-    audio.audio
-      source(src='/medias/audios/BagdadCafe.mp3')
-      p.message-error This media is not supported by your browser.
-    p
-      code audio.audio
-    audio.audio
-      source(src='/medias/audios/BagdadCafe.mp3')
-      p.message-error This media is not supported by your browser.
-  div
-    p
-      code video
-    video(controls='controls', poster='/medias/videos/posters/LeRetourDuRoi.jpg')
-      source(src='/medias/videos/LeRetourDuRoi.mp4', type='video/mp4')
-      p.message-warning HTML5 video codec proposed is not supported by your browser.

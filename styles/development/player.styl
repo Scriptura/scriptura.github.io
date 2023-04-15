@@ -1,6 +1,3 @@
-_audioPlayerColor1 = _colorG - 34%
-_audioPlayerColor2 = _colorT2
-
 // @description Audio, vidéo et Caneva
 
 // @note Classe `video` prévue pour les sources vidéos extérieures au site
@@ -88,15 +85,15 @@ audio:not([controls])
   display: flex
   justify-content: space-between
   align-items: center
-  min-width: 16em
-  height: 4em
-  color: _audioPlayerColor2
-  background-color: _audioPlayerColor1
-  box-shadow: _shadow15
+  width: 100%
+  height: 3em
+  color: _colorT
+  background-color: _colorG + 7%
   border-radius: 2em
+  box-shadow: _shadow15
 
 .audio-player *
-  color: _audioPlayerColor2
+  color: _colorT
 
 .audio-player button
   width: 3em
@@ -119,7 +116,7 @@ audio:not([controls])
 .audio-player svg
   width: 1.5em
   height: 1.5em
-  //fill: _audioPlayerColor2
+  //fill: _colorT
 
 .audio-player output
   margin: 0 .5em
@@ -128,6 +125,6 @@ audio:not([controls])
 .audio-player .progress
   flex-grow: 1
   height: .3em
-  background-color: _audioPlayerColor2
+  background-color: _colorG + 14%
 
 // END test
