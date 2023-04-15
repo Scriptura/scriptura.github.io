@@ -3,54 +3,55 @@
     p
       code button.button
     br
-    button.button(type='submit')
+    button.button.cmd-print(type='submit')
       svg.icon-inline(role='img' focusable='false')
-        use(href='/sprites/util.svg#share')
-      | Share
+        use(href='/sprites/util.svg#print')
+      | Imprimer
   div
     p
       code (style='--color:#fff;--bg-color:#4e667a')
     br
-    button.button(type='submit' style='--color:#fff;--bg-color:#4e667a')
+    button.button.cmd-print(type='submit' style='--color:#fff;--bg-color:#4e667a')
       svg.icon-inline(role='img' focusable='false')
-        use(href='/sprites/util.svg#share')
-      | Share
+        use(href='/sprites/util.svg#print')
+      | Imprimer
   div
     p
-      code .scale150
+      code .scale120
     br
-    button.button.scale150(type='submit')
+    button.button.cmd-print.scale120(type='submit')
       svg.icon-inline(role='img' focusable='false')
-        use(href='/sprites/util.svg#share')
-      | Share
+        use(href='/sprites/util.svg#print')
+      | Imprimer
 hr(data-hr='✻ ✻ ✻')
 .grid-auto.gap
   div
     p
       code button.round-button
     br
-    button.round-button(type='button' aria-label='Button test')
+    button.round-button.cmd-print(type='button' aria-label='Imprimer')
       svg.icon(role='img' focusable='false')
         use(href='/sprites/util.svg#print')
   div
     p
       code (style='--color:#fff;--bg-color:#4e667a')
     br
-    button.round-button(type='button' aria-label='Button test' style='--color:#fff;--bg-color:#4e667a')
+    button.round-button.cmd-print(type='button' aria-label='Imprimer' style='--color:#fff;--bg-color:#4e667a')
       svg.icon(role='img' focusable='false')
         use(href='/sprites/util.svg#print')
   div
     p
-      code .scale150
+      code .scale120
     br
-    button.round-button.scale150(type='button' aria-label='Button test')
+    button.round-button.cmd-print.scale120(type='button' aria-label='Imprimer')
       svg.icon(role='img' focusable='false')
         use(href='/sprites/util.svg#print')
+hr(data-hr='✻ ✻ ✻')
 .grid-auto.gap
   div
     p
       code button.button2
     br
-    button.button2(type='button' aria-label='Button test')
+    button.button2.cmd-print(type='button' aria-label='Button test')
       svg.icon(role='img' focusable='false')
         use(href='/sprites/util.svg#print')

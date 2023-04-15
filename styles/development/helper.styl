@@ -96,14 +96,16 @@ for _i in 90 180 // 45 135
 [class^=size]
   max-width: 100%
   max-height: 100vh
-  //background-color: #333
 
 for _i in 1..25
   .size{_i}
     width: _i * 1em
     height: _i * 1em
 
-for _i in 1000 900 800 700 600 500 450 400 350 300 250 200 175 160 150 140 130 120 115 110 105 95 90 85 80 75 70 60 50
+.scale
+  font-size: var(--scale, _i * 1%)
+
+for _i in 300 250 200 175 160 150 140 130 120 115 110 105 95 90 85 80 75 70 60 50
   .scale{_i}
     font-size: _i * 1%
 
@@ -116,6 +118,7 @@ for _i in 1000 900 800 700 600 500 450 400 350 300 250 200 175 160 150 140 130 1
 
 @keyframes anim-blink
   50%
+    display: none
     filter: invert(1)
 
 .no-overscroll

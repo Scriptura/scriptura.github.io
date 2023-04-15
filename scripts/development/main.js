@@ -396,7 +396,7 @@ const audioPlayer = (() => {
     let i = 0
     for (const audio of audios) {
       i++
-      const player = `<div class="audio-player"><button class="audio-play-pause"><svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024"><path d="M204.524 102.03L819.48 512 204.523 921.97z"/></svg></button><output class="audio-player-current-time">0:00</output><div class="progress"></div><output class="audio-player-duration">0:00</output><div><button onclick="document.document.getElementById('audio-player${i}')[0].volume += 0.1">+</button><button onclick="document.getElementById('audio-player${i}')[0].volume -= 0.1">-</button></div></div>`
+      const player = `<div class="audio-player"><button class="audio-play-pause"><svg class="icon" role="img" focusable="false"><use href="/sprites/util.svg#control-play"></use></svg></button><div><output class="audio-player-current-time">0:00</output>&nbsp;/&nbsp;<output class="audio-player-duration">0:00</output></div><div class="progress"></div><div class="audio-volume"><button onclick="document.document.getElementById('audio-player${i}')[0].volume += 0.1">+</button><button onclick="document.getElementById('audio-player${i}')[0].volume -= 0.1">-</button></div></div>`
       audio.id = 'audio-player' + i
       audio.insertAdjacentHTML('afterend', player)
       audio.addEventListener('loadedmetadata', audioDuration(audio, i))

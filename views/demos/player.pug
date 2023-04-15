@@ -1,5 +1,5 @@
-.grid3.m-grid2.gap.gap-bottom
-  div
+.grid2.s-grid1.gap
+  //-div
     p
       code audio
     audio(controls='controls')
@@ -8,25 +8,22 @@
   div
     p
       code audio.audio
-    audio.audio
-      source(src='/medias/audios/BagdadCafe.mp3')
-      p.message-error This media is not supported by your browser.
-    p
-      code audio.audio
-    audio.audio
-      source(src='/medias/audios/BagdadCafe.mp3')
-      p.message-error This media is not supported by your browser.
-    p
-      code audio.audio
-    audio.audio
-      source(src='/medias/audios/BagdadCafe.mp3')
-      p.message-error This media is not supported by your browser.
+    .grid-auto(style='--size-grid:25em').gap
+      audio.audio
+        source(src='/medias/audios/BagdadCafe.mp3')
+      audio.audio
+        source(src='/medias/audios/BagdadCafe.mp3')
+      audio.audio
+        source(src='/medias/audios/BagdadCafe.mp3')
+      audio.audio
+        source(src='/medias/audios/BagdadCafe.mp3')
+      audio.audio
+        source(src='/medias/audios/BagdadCafe.mp3')
   div
     p
       code video
     video(controls='controls', poster='/medias/videos/posters/LeRetourDuRoi.jpg')
       source(src='/medias/videos/LeRetourDuRoi.mp4', type='video/mp4')
-      p.message-warning HTML5 video codec proposed is not supported by your browser.
 hr(data-hr='✻ ✻ ✻')
 .grid3.m-grid2.gap.gap-bottom
   div
@@ -54,7 +51,7 @@ hr(data-hr='✻ ✻ ✻')
     p
       code (missing `maxresdefault.jpg`)
     .video-youtube(data-id='jNQXAC9IVRw')
-.grid2.gap.vertical-gap
+.grid2.gap
   div
     .message
       p

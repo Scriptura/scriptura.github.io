@@ -44,7 +44,7 @@ samp
       content: '$ '
     &:empty::after
       content: '_'
-      animation: anim-blink 1s steps(2, start) infinite
+      animation: anim-blinkempty 1s steps(2, start) infinite
   & div
     position: absolute
     top: 1em
@@ -74,3 +74,7 @@ samp
 
 .copy-offset + div // Si code sur une seule ligne, ajout d'une classe en JS permettant de décaler le contenu de l'un des deux éléments UI injectés en position absolute. @todo À reevoir à l'occasion.
   right: 2.5em
+
+@keyframes anim-blinkempty
+  50%
+    content: ''

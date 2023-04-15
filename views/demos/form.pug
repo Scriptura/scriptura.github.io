@@ -25,10 +25,11 @@ form(method='get' action='./').grid3.m-grid2.gap.masonry
     .input
       label(for='input-tel') Type tel
       input#input-tel(type='tel' name='input-tel' placeholder='0477446677').validation-phone-fr_FR
-      p.message
-        svg.icon-inline(role='img' focusable='false')
-          use(href='/sprites/util.svg#info')
-        | Ce champ accepte uniquement les numéros de téléphone français.
+      .message
+        p
+          svg.icon-inline(role='img' focusable='false')
+            use(href='/sprites/util.svg#info')
+          | Ce champ accepte uniquement les numéros de téléphone français.
     .grid-auto-min.gap
       .input
         label(for='input-number') Type number

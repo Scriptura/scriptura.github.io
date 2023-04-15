@@ -19,7 +19,7 @@ _accordionTime1 = .5s
     background-color: _accordionColor1
     border: none
     border-radius: _r2
-    box-shadow: 0 1rem 1rem rgba(0, 0, 0, .1)
+    box-shadow: _shadow17
     cursor: pointer
     outline: none
     &:focus-within
@@ -43,7 +43,7 @@ _accordionTime1 = .5s
     //border: 1px solid _accordionColor3
     //border-top: none
     border-radius: 'calc(%s + 1px)' % _r2 // Compense le décalage de la "bordure" en box-shadow inset.
-    box-shadow: 0 1rem 1rem rgba(0, 0, 0, .1), inset 0 -1px 0 1px _accordionColor3
+    box-shadow: _shadow17, inset 0 -1px 0 1px _accordionColor3
     transition: max-height _accordionTime1 ease-in-out
     &[aria-hidden=true] // @note Cette spécificité empêche le lancement d'une animation au chargement de la page via le JS.
       max-height: 0

@@ -10,12 +10,14 @@ const formValidation = (() => {
   function createMessageError(input, el, text) {
     input.classList.add('invalid')
     if (el) el.remove()
-    el = document.createElement('p')
+    el = document.createElement('div')
     el.classList.add(classMessageError)
     input.after(el)
-    el.textContent = text
+    const p = document.createElement('p')
+    p.textContent = text
     const svg = `<svg class="icon-inline" role="img" focusable="false"><use href="/sprites/util.svg#warning"></use></svg>`
-    el.insertAdjacentHTML('afterbegin', svg)
+    p.insertAdjacentHTML('afterbegin', svg)
+    el.appendChild(p)
   }
 
   function removeMessageError(input, el) {

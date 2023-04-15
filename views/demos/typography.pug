@@ -134,14 +134,15 @@
   hr(data-hr='★ ★ ★')
 hr(data-hr='✻ ✻ ✻')
 h2 Rendering test for a print
-.grid-auto.gap
+.grid2.gap
   div
     p
       code .cmd-print
     button.round-button.scale120.cmd-print(type='button' aria-label='Print Stylesheet')
       svg.icon(role='img' focusable='false')
         use(href='/sprites/util.svg#print')
-  div
-    p.message Pour une simulation plus concrète de l'impression nous vous conseillons de tester cette fonctionnalité 
-      a(href='/page/article.html') à partir de notre aticle de démonstration
-      | .
+    br
+    .message
+      p Pour un test plus concrèt nous vous invitons à tester l'impression 
+        a(href='/page/article.html') à partir de notre aticle de démonstration
+        | .
