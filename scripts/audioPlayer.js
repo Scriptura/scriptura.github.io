@@ -1,61 +1,48 @@
 'use strict'
 
-const secondsToTime = e => { // @see https://stackoverflow.com/questions/3733227/javascript-seconds-to-minutes-and-seconds
-  let hh = Math.floor(e / 3600).toString().padStart(2, '0'),
-      mm = Math.floor(e % 3600 / 60).toString().padStart(2, '0'),
-      ss = Math.floor(e % 60).toString().padStart(2, '0')
-  if (hh == '00') hh = null // Si pas d'heures, alors info sur les heures escamotée
-  return [hh, mm, ss].filter(Boolean).join(':')
-}
-
-const audioPlayer = (() => {
+const audioPlayer = () => {
 
   const audios = document.querySelectorAll('.audio')
 
-  const audioDuration = (audio, output) => {
-    output.value = secondsToTime(audio.duration)
-  }
-
   const addAudioPlayer = (() => {
+    const audioPlayer = `
+    <div class="audio-player">
+      <button class="audio-play-pause">
+        <svg focusable="false">
+          <use href="/sprites/util.svg#control-play"></use>
+        </svg>
+        <svg focusable="false">
+          <use href="/sprites/util.svg#control-pause"></use>
+        </svg>
+      </button>
+      <div>
+        <output class="audio-player-current-time">0:00</output>&nbsp;/&nbsp;<output class="audio-player-duration">0:00</output>
+      </div>
+      <div class="progress"></div>
+      <button class="audio-volume">
+        <svg focusable="false">
+          <use href="/sprites/util.svg#volume-high"></use>
+        </svg>
+        <svg focusable="false">
+          <use href="/sprites/util.svg#volume-xmark"></use>
+        </svg>
+      </button>
+      <button class="audio-menu">
+        <svg focusable="false">
+          <use href="/sprites/util.svg#ellipsis-vertical"></use>
+        </svg>
+      </button>
+    </div>
+    `
     let i = 0
     for (const audio of audios) {
       i++
-      const player = `
-<div class="audio-player">
-  <button class="audio-play-pause">
-    <svg focusable="false">
-      <use href="/sprites/util.svg#control-play"></use>
-    </svg>
-    <svg focusable="false">
-      <use href="/sprites/util.svg#control-pause"></use>
-    </svg>
-  </button>
-  <div>
-    <output class="audio-player-current-time">0:00</output>&nbsp;/&nbsp;<output class="audio-player-duration">0:00</output>
-  </div>
-  <div class="progress"></div>
-  <button class="audio-volume">
-    <svg focusable="false">
-      <use href="/sprites/util.svg#volume-high"></use>
-    </svg>
-    <svg focusable="false">
-      <use href="/sprites/util.svg#volume-xmark"></use>
-    </svg>
-  </button>
-  <button class="audio-menu">
-    <svg focusable="false">
-      <use href="/sprites/util.svg#ellipsis-vertical"></use>
-    </svg>
-  </button>
-</div>
-`
       audio.id = 'audio-player' + i
-      audio.insertAdjacentHTML('afterend', player)
+      audio.insertAdjacentHTML('afterend', audioPlayer)
       const output = audio.nextElementSibling.querySelector('.audio-player-duration')
-      audio.addEventListener('load', audioDuration(audio, output))
+      setTimeout(() => audioDuration(audio, output), 80) // Retarde la fonction pour qu'elle ait le temps d'appliquer la valeur à l'output généré en JavaScript.
     }
   })()
-
 
   /*
   const currentTime = (() => {
@@ -72,13 +59,19 @@ const audioPlayer = (() => {
   })()
   */
 
+}
 
-})()
+const secondsToTime = e => { // @see https://stackoverflow.com/questions/3733227/javascript-seconds-to-minutes-and-seconds
+  let hh = Math.floor(e / 3600).toString().padStart(2, '0'),
+      mm = Math.floor(e % 3600 / 60).toString().padStart(2, '0'),
+      ss = Math.floor(e % 60).toString().padStart(2, '0')
+  if (hh == '00') hh = null // Si pas d'heures, alors info sur les heures escamotée
+  return [hh, mm, ss].filter(Boolean).join(':')
+}
 
-
-
-
-
+const audioDuration = (audio, output) => {
+  output.value = secondsToTime(audio.duration)
+}
 
 const togglePlayPause = audio => audio.paused ? audio.play() : audio.pause()
 
@@ -99,6 +92,7 @@ function init(player) {
   buttonPlay.addEventListener('click', () => {
     togglePlayPause(audio)
     buttonState(buttonPlay)
+    audioSiblingStop(audio)
   })
   const buttonVolume = player.querySelector('.audio-volume')
   buttonVolume.addEventListener('click', () => {
@@ -108,6 +102,14 @@ function init(player) {
   player.previousElementSibling.addEventListener('ended', () => buttonState(buttonPlay)) // Si fin de la lecture.
 }
 
+function audioSiblingStop(audio) {
+  const audios = document.querySelectorAll('.audio')
+  for (const sibling of audios) {
+    if (sibling !== audio) sibling.paused
+  }
+}
 
-
-document.querySelectorAll('.audio-player').forEach(e => init(e))
+audioPlayer()
+window.addEventListener('load', () => {
+  document.querySelectorAll('.audio-player').forEach(e => init(e))
+})
