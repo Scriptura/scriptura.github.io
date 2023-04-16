@@ -32,13 +32,14 @@ main [class^=message]
   --icon-size: 3em
   display: grid
   grid-template-columns: var(--icon-size) minmax(0, 1fr)
+  grid-template-rows: minmax(5em, 1fr)
   gap: _gap
+  align-items: center
   padding-inline: 1em
   & .icon
     width: var(--icon-size)
     height: var(--icon-size)
     //place-self: center
-    margin: auto
     padding: .75em
     fill: var(--bg-color)
     background-color: currentcolor

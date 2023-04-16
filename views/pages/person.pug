@@ -36,13 +36,11 @@ block main
           img(src='/medias/images/uploads/henri-de-lubac-original.webp' loading='lazy' alt="Cardinal Henri de Lubac, s.j." width='600' height='600' style='border-radius:50%')
     .center
       .no-margin-bottom-last-child
-        .message
-          .grid.gap(style='grid-template-columns: 2.5em 1fr 2.5em')
-            svg.icon.scale200(role='img' focusable='false' style='color:tomato')
-              use(href='/sprites/util.svg#quotes-left')
+        .message-highlight(style='--bg-color:hsl(12, 63%, 49%)')
+          svg.icon(role='img' focusable='false')
+            use(href='/sprites/util.svg#quotes-left')
+          div
             p #{data._devise}
-            svg.icon.scale200(role='img' focusable='false' style='color:tomato')
-              use(href='/sprites/util.svg#quotes-right')
         .message
           p Henri Sonier de Lubac, né à Cambrai le 20 février 1896 et mort à Paris le 4 septembre 1991, est un jésuite, théologien catholique et cardinal français.
   hr

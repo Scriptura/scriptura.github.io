@@ -99,12 +99,14 @@ audio:not([controls])
       margin: auto
   & .audio-play-pause
     width: 3em
-    background-color: _color2
+    background-color: _colorG + 14%
     border-radius: 50%
     &:focus
     &:hover
     &:active
       background-color: _color5
+    &.active
+      background-color: _color2
   & .audio-play-pause
   & .audio-volume
     & > :last-child
