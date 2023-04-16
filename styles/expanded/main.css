@@ -1276,55 +1276,6 @@ audio:not([controls]) {
   display: none;
   height: 0;
 }
-.video-youtube {
-  position: relative;
-  aspect-ratio: 16/9;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
-  background-color: #000;
-}
-.video-youtube iframe,
-.video-youtube > div {
-  position: absolute;
-  inset: 0;
-}
-.video-youtube .video-youtube-error {
-  text-align: center;
-}
-.video-youtube .thumbnail-youtube {
-  display: grid;
-  place-items: center;
-  background-size: cover;
-  background-position: 50% 50%;
-}
-.video-youtube .thumbnail-youtube button {
-  position: relative;
-  width: 10em;
-  max-width: 25%;
-  background: none;
-  border: none;
-  outline: none;
-}
-.video-youtube .thumbnail-youtube button svg {
-  fill: rgba(255,255,255,0.7);
-}
-.video-youtube .thumbnail-youtube button:focus svg,
-.video-youtube .thumbnail-youtube button:hover svg {
-  fill: rgba(255,255,255,0.9);
-}
-.video-youtube .video-youtube-title {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding: 0.5em 1em;
-  overflow: hidden;
-  white-space: nowrap;
-  text-align: right;
-  text-overflow: ellipsis;
-  text-shadow: 0 0 0.2em rgba(0,0,0,0.8);
-}
 .audio {
   display: none;
 }
@@ -1400,6 +1351,53 @@ audio:not([controls]) {
   flex-grow: 1;
   height: 0.3em;
   background-color: #545454;
+}
+.video-youtube {
+  position: relative;
+  aspect-ratio: 16/9;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  background-color: #000;
+}
+.video-youtube iframe,
+.video-youtube > div {
+  position: absolute;
+  inset: 0;
+}
+.video-youtube .video-youtube-error {
+  text-align: center;
+}
+.video-youtube .thumbnail-youtube {
+  display: grid;
+  place-content: center;
+  background-size: cover;
+  background-position: 50% 50%;
+}
+.video-youtube .thumbnail-youtube button {
+  all: unset;
+  position: relative;
+  width: 5em;
+  outline: none;
+}
+.video-youtube .thumbnail-youtube button svg {
+  fill: rgba(255,255,255,0.7);
+}
+.video-youtube .thumbnail-youtube button:focus svg,
+.video-youtube .thumbnail-youtube button:hover svg {
+  fill: #ffa600;
+}
+.video-youtube .video-youtube-title {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 0.5em 1em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-align: right;
+  text-overflow: ellipsis;
+  text-shadow: 0 0 0.2em rgba(0,0,0,0.8);
 }
 .map {
   width: 100%;

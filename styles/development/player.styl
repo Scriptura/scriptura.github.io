@@ -28,49 +28,6 @@ audio:not([controls])
 //video
 //  object-fit cover // @affected Firefox @note Influence sur l'image des posters
 
-.video-youtube
-  position: relative // [1] Évite un léger resize entre le thumbnail et le chargement de la vidéo.
-  aspect-ratio: 16/9
-  user-select: none
-  background-color: #000
-  & iframe
-  & > div
-    position: absolute // [1]
-    inset: 0
-  & .video-youtube-error
-    text-align: center
-  & .thumbnail-youtube
-    display: grid
-    place-items: center
-    background-size: cover
-    background-position: 50% 50% // @note Pour positionner correctement les images plus petites que l'élément.
-    & button
-      position: relative
-      width: 10em
-      //aspect-ratio: 1/1
-      max-width: 25%
-      background: none
-      border: none
-      outline: none
-      & svg
-        fill: rgba(255, 255, 255, .7)
-      &:focus svg
-      &:hover svg
-        fill: rgba(255, 255, 255, .9)
-  & .video-youtube-title
-    position: absolute
-    top: 0
-    left: 0
-    right: 0
-    padding: .5em 1em
-    overflow: hidden
-    white-space: nowrap
-    text-align: right
-    text-overflow: ellipsis
-    text-shadow: 0 0 .2em rgba(0, 0, 0, .8)
-  //@media (hover: hover) and (pointer: fine)
-
-// BEGIN test
 .audio
   display: none
 
@@ -129,3 +86,44 @@ audio:not([controls])
     flex-grow: 1
     height: .3em
     background-color: _colorG + 14%
+
+.video-youtube
+  position: relative // [1] Évite un léger resize entre le thumbnail et le chargement de la vidéo.
+  aspect-ratio: 16/9
+  user-select: none
+  background-color: #000
+  & iframe
+  & > div
+    position: absolute // [1]
+    inset: 0
+  & .video-youtube-error
+    text-align: center
+  & .thumbnail-youtube
+    display: grid
+    place-content: center
+    background-size: cover
+    background-position: 50% 50% // @note Pour positionner correctement les images plus petites que l'élément.
+    & button
+      all: unset
+      position: relative
+      width: 5em
+      //aspect-ratio: 1/1
+      //max-width: 50%
+      outline: none
+      & svg
+        fill: rgba(255, 255, 255, .7)
+      &:focus svg
+      &:hover svg
+        fill: _color5
+  & .video-youtube-title
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    padding: .5em 1em
+    overflow: hidden
+    white-space: nowrap
+    text-align: right
+    text-overflow: ellipsis
+    text-shadow: 0 0 .2em rgba(0, 0, 0, .8)
+  //@media (hover: hover) and (pointer: fine)
