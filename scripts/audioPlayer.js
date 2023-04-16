@@ -52,16 +52,35 @@ const audioPlayer = (() => {
       audio.id = 'audio-player' + i
       audio.insertAdjacentHTML('afterend', player)
       const output = audio.nextElementSibling.querySelector('.audio-player-duration')
-      audio.addEventListener('loadedmetadata', audioDuration(audio, output))
+      audio.addEventListener('load', audioDuration(audio, output))
     }
   })()
 
+
+  /*
+  const currentTime = (() => {
+    const output = document.querySelectorAll('.audio-player-current-time')
+    let i = 0
+    for (const audio of audios) {
+      const currentTime = audio.currentTime
+      const currentTimeISO = secondsToTime(duration)
+      const outputValue = () => {
+        output[i].value = currentTime ? currentTimeISO : '0:00'
+      }
+      i++
+    }
+  })()
+  */
+
+
 })()
 
-function play(player) {
-  const audio = player.previousElementSibling
-  audio.paused ? audio.play() : audio.pause()
-}
+
+
+
+
+
+const togglePlayPause = audio => audio.paused ? audio.play() : audio.pause()
 
 function mute(player) {
   const audio = player.previousElementSibling
@@ -76,8 +95,9 @@ function buttonState(button) {
 
 function init(player) {
   const buttonPlay = player.querySelector('.audio-play-pause')
+  const audio = player.previousElementSibling
   buttonPlay.addEventListener('click', () => {
-    play(player)
+    togglePlayPause(audio)
     buttonState(buttonPlay)
   })
   const buttonVolume = player.querySelector('.audio-volume')
