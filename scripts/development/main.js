@@ -62,6 +62,7 @@ const getScripts = (() => {
   if (document.querySelector('.add-line-marks')) getScript('/scripts/lineMark.js')
   if (document.querySelector('pie-chart')) getScript('/scripts/pieChart.js')
   if (document.querySelector('bar-chart')) getScript('/scripts/barChart.js')
+  if (document.querySelector('.audio')) getScript('/scripts/audioPlayer.js')
   if (document.querySelector('.map')) getScript('/scripts/map.js')
   if (document.querySelector('.map')) getScript('/libraries/leaflet/leaflet.js')
   if (document.querySelector('[class*=language-]')) getScript('/libraries/prism/prism.js')
@@ -360,49 +361,6 @@ const addDropCap = (() => {
   document.querySelectorAll('.add-drop-cap > p:first-child').forEach(
     e => e.innerHTML = e.innerHTML.replace(/^(\w)/, '<span class="drop-cap">$1</span>')
   )
-})()
-
-
-// -----------------------------------------------------------------------------
-// @section     Seconds to time
-// @description Conversion d'un nombre de secondes au format hh:mm:ss
-// -----------------------------------------------------------------------------
-
-const secondsToTime = e => { // @see https://stackoverflow.com/questions/3733227/javascript-seconds-to-minutes-and-seconds
-  let hh = Math.floor(e / 3600).toString().padStart(2, '0'),
-      mm = Math.floor(e % 3600 / 60).toString().padStart(2, '0'),
-      ss = Math.floor(e % 60).toString().padStart(2, '0')
-  if (hh == '00') hh = null // Si pas d'heures, alors info sur les heures escamotée
-  return [hh, mm, ss].filter(Boolean).join(':')
-}
-
-
-// -----------------------------------------------------------------------------
-// @section     Audio players
-// @description Lecteur audio utilisant la spécification HTMLMediaElement
-// -----------------------------------------------------------------------------
-
-const audioPlayer = (() => {
-
-  const audios = document.querySelectorAll('.audio')
-
-  const audioDuration = (audio, i) => {
-    const output = document.querySelector('.audio-player-duration')
-    //console.log(secondsToTime(audio.duration))
-    output.value = secondsToTime(audio.duration)
-  }
-
-  const addAudioPlayer = (() => {
-    let i = 0
-    for (const audio of audios) {
-      i++
-      const player = `<div class="audio-player"><button class="audio-play-pause"><svg class="icon" role="img" focusable="false"><use href="/sprites/util.svg#control-play"></use></svg></button><div><output class="audio-player-current-time">0:00</output>&nbsp;/&nbsp;<output class="audio-player-duration">0:00</output></div><div class="progress"></div><div class="audio-volume"><button onclick="document.document.getElementById('audio-player${i}')[0].volume += 0.1">+</button><button onclick="document.getElementById('audio-player${i}')[0].volume -= 0.1">-</button></div></div>`
-      audio.id = 'audio-player' + i
-      audio.insertAdjacentHTML('afterend', player)
-      audio.addEventListener('loadedmetadata', audioDuration(audio, i))
-    }
-  })()
-
 })()
 
 

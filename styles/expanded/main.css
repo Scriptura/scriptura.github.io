@@ -1345,16 +1345,20 @@ audio:not([controls]) {
 }
 .audio-player button {
   all: unset;
-  border: none;
+  flex-shrink: 0;
+  display: grid;
+  height: 3em;
   outline: none;
   cursor: pointer;
 }
+.audio-player button svg {
+  width: 1.2em;
+  height: 1.2em;
+  margin: auto;
+}
 .audio-player .audio-play-pause {
-  flex-shrink: 0;
-  display: grid;
   width: 3em;
-  height: 3em;
-  background: #ff6347;
+  background-color: #ff6347;
   border-radius: 50%;
 }
 .audio-player .audio-play-pause:focus,
@@ -1362,28 +1366,32 @@ audio:not([controls]) {
 .audio-player .audio-play-pause:active {
   background-color: #ffa600;
 }
-.audio-player .audio-play-pause svg {
-  width: 1.2em;
-  height: 1.2em;
-  margin: auto;
+.audio-player .audio-play-pause > :last-child,
+.audio-player .audio-volume > :last-child {
+  display: none;
 }
-.audio-player .audio-volume {
-  display: grid;
-  grid-template-columns: 1.2em;
-  grid-template-rows: 1.2em 1.2em;
-  gap: 0.2em;
+.audio-player .audio-play-pause.active > :first-child,
+.audio-player .audio-volume.active > :first-child {
+  display: none;
+}
+.audio-player .audio-play-pause.active > :last-child,
+.audio-player .audio-volume.active > :last-child {
+  display: initial;
+}
+.audio-player .audio-volume,
+.audio-player .audio-menu {
+  width: 2em;
+}
+.audio-player .audio-volume:focus,
+.audio-player .audio-menu:focus,
+.audio-player .audio-volume:hover,
+.audio-player .audio-menu:hover,
+.audio-player .audio-volume:active,
+.audio-player .audio-menu:active {
+  color: #ffa600;
+}
+.audio-player .audio-menu {
   margin-right: 1em;
-  text-align: center;
-  line-height: 1;
-}
-.audio-player .audio-volume button {
-  background-color: #343434;
-  border-radius: 50%;
-}
-.audio-player .audio-volume button:focus,
-.audio-player .audio-volume button:hover,
-.audio-player .audio-volume button:active {
-  background-color: #ffa600;
 }
 .audio-player .progress {
   flex-grow: 1;
@@ -3362,6 +3370,7 @@ html,
 .tab-list > button,
 .tab-summary,
 .audio-player,
+.audio-player > :first-child,
 .progress-bar div,
 .article .keywords a,
 .topic-item,

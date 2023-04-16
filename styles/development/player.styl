@@ -88,39 +88,41 @@ audio:not([controls])
     align-self: center
   & button
     all: unset
-    border: none
-    outline: none
-    cursor: pointer
-  & .audio-play-pause
     flex-shrink: 0
     display: grid
-    width: 3em
     height: 3em
-    background: _color2
+    outline: none
+    cursor: pointer
+    & svg
+      width: 1.2em
+      height: 1.2em
+      margin: auto
+  & .audio-play-pause
+    width: 3em
+    background-color: _color2
     border-radius: 50%
     &:focus
     &:hover
     &:active
       background-color: _color5
-    & svg
-      width: 1.2em
-      height: 1.2em
-      margin: auto
+  & .audio-play-pause
   & .audio-volume
-    display: grid
-    grid-template-columns: 1.2em
-    grid-template-rows: 1.2em 1.2em
-    gap: .2em
+    & > :last-child
+      display: none
+    &.active
+      & > :first-child
+        display: none
+      & > :last-child
+        display: initial
+  & .audio-volume
+  & .audio-menu
+    width: 2em
+    &:focus
+    &:hover
+    &:active
+      color: _color5
+  & .audio-menu
     margin-right: 1em
-    text-align: center
-    line-height: 1
-    & button
-      background-color: _colorG - 7%
-      border-radius: 50%
-      &:focus
-      &:hover
-      &:active
-        background-color: _color5
   & .progress
     flex-grow: 1
     height: .3em

@@ -1,4 +1,4 @@
-.grid2.s-grid1.gap
+.grid2.gap
   //-div
     p
       code audio
@@ -8,17 +8,27 @@
   div
     p
       code audio.audio
-    .grid-auto(style='--size-grid:25em').gap
+    div(style='display:grid;gap:1em')
       audio.audio
         source(src='/medias/audios/BagdadCafe.mp3')
       audio.audio
-        source(src='/medias/audios/BagdadCafe.mp3')
+        source(src='/medias/audios/abeilles.mp3')
       audio.audio
-        source(src='/medias/audios/BagdadCafe.mp3')
+        source(src='/medias/audios/merle.mp3')
       audio.audio
-        source(src='/medias/audios/BagdadCafe.mp3')
+        source(src='/medias/audios/lion.mp3')
       audio.audio
-        source(src='/medias/audios/BagdadCafe.mp3')
+        source(src='/medias/audios/grillons.mp3')
+  .center
+    .message-highlight(style='--bg-color:#6fa939')
+      svg.icon(role='img' focusable='false')
+        use(href='/sprites/util.svg#quill')
+      div
+        p Salut aux alsanautes qui passeront par ici...
+        p Mon problème actuel concerne les éléments 
+          code audio.audio
+          |  en cours de développement : ces derniers n'affichent pas correctement la durée totale du fichier audio.
+//-
   div
     p
       code video
