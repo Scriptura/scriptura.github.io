@@ -40,7 +40,14 @@ const audioPlayer = () => {
       audio.id = 'audio-player' + i
       audio.insertAdjacentHTML('afterend', audioPlayer)
       const output = audio.nextElementSibling.querySelector('.audio-player-duration')
-      setTimeout(() => audioDuration(audio, output), 80) // Retarde la fonction pour qu'elle ait le temps d'appliquer la valeur à l'output généré en JavaScript.
+      // @bugfixed Retarde la fonction pour qu'elle ait le temps d'appliquer la valeur à l'output qui, lui aussi, est généré en JavaScript.
+      // @note Plusieurs applications pour appliquer au plus tôt dans le meilleur des cas avec des rattrapages plus éloignés au cas où.
+      // @todo Trouver une solution asynchrone ?
+      //audioDuration(audio, output)
+      setTimeout(() => audioDuration(audio, output), 50)
+      setTimeout(() => audioDuration(audio, output), 100)
+      setTimeout(() => audioDuration(audio, output), 500)
+      setTimeout(() => audioDuration(audio, output), 1000)
     }
   })()
 
