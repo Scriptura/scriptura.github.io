@@ -14,7 +14,7 @@ const audioPlayerHTML = `
   <div>
     <output class="audio-player-current-time">0:00</output>&nbsp;/&nbsp;<output class="audio-player-duration">0:00</output>
   </div>
-  <div class="progress"></div>
+  <div class="audio-progress"><div></div></div>
   <button class="audio-volume">
     <svg focusable="false">
       <use href="/sprites/util.svg#volume-high"></use>
@@ -64,10 +64,12 @@ const currentTime = () => {
   for (const media of medias) {
     const player = media.nextElementSibling
     const output = player.querySelector('.audio-player-current-time')
+    const progress = player.querySelector('.audio-progress > div')
     setInterval(frame, 200)
-    let t
     function frame() {
       output.value = secondsToTime(media.currentTime)
+      let widthBar = media.currentTime / media.duration * 100
+      progress.style.width = widthBar + '%'
     }
   }
 }

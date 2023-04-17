@@ -22,7 +22,6 @@ video
 
 audio:not([controls])
   display: none // @affected All browsers @note Affichage de l'audio sans contrôle
-  height: 0 // @bugfix @affected iOS 5
 
 // @bugfix Redimentionnement de l'élément video à la lecture @note La solution adoptée est de mettre un poster de même dimention que le flux vidéo
 //video
@@ -82,10 +81,15 @@ audio:not([controls])
       color: _color5
   & .audio-menu
     margin-right: 1em
-  & .progress
+  & .audio-progress
+    position: relative
     flex-grow: 1
     height: .3em
     background-color: _colorG + 14%
+    & div
+      position: absolute
+      height: .3em
+      background-color: _color2
 
 .video-youtube
   position: relative // [1] Évite un léger resize entre le thumbnail et le chargement de la vidéo.

@@ -1274,7 +1274,6 @@ video {
 }
 audio:not([controls]) {
   display: none;
-  height: 0;
 }
 .audio {
   display: none;
@@ -1347,10 +1346,16 @@ audio:not([controls]) {
 .audio-player .audio-menu {
   margin-right: 1em;
 }
-.audio-player .progress {
+.audio-player .audio-progress {
+  position: relative;
   flex-grow: 1;
   height: 0.3em;
   background-color: #545454;
+}
+.audio-player .audio-progress div {
+  position: absolute;
+  height: 0.3em;
+  background-color: #ff6347;
 }
 .video-youtube {
   position: relative;
