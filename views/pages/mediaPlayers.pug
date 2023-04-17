@@ -1,0 +1,15 @@
+extends ../patternLayout
+
+block variables
+  - const documentType = 'mediaPlayer'
+  - const pageType = 'component'
+  -
+    const data = {
+      _name: 'Media players <span>.&nbsp;Documentation</span>',
+      _title: 'Media players . Scriptura',
+      _description: 'Media players, documentation.'
+    }
+block main
+  header(role='banner')
+    h1.main-heading!= data._name
+  include ../demos/mediaPlayer

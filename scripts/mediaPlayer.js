@@ -43,6 +43,7 @@ const audioPlayer = () => {
       // @bugfixed Réapplication de la fonction pour qu'elle ait le temps d'appliquer la valeur à l'output qui, lui aussi, est généré en JavaScript.
       // @todo Trouver une solution asynchrone ?
       mediaDuration(media, output)
+      setTimeout(() => mediaDuration(media, output), 200)
       setTimeout(() => mediaDuration(media, output), 1000)
     }
   })()
@@ -70,8 +71,8 @@ const secondsToTime = e => { // @see https://stackoverflow.com/questions/3733227
       ss = Math.floor(e % 60).toString().padStart(2, '0')
   if (hh == '00') hh = null // Si pas d'heures, alors info sur les heures escamotée.
   if (isNaN(hh)) hh = null // Si valeur nulle, alors info sur les heures escamotée.
-  if (isNaN(mm)) mm = '00'
-  if (isNaN(ss)) ss = '00'
+  if (isNaN(mm)) mm = '00' // Si valeur nulle, alors affichage par défaut.
+  if (isNaN(ss)) ss = '00' // Idem.
   return [hh, mm, ss].filter(Boolean).join(':')
 }
 
