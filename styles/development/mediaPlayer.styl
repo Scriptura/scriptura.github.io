@@ -57,24 +57,25 @@ audio:not([controls])
     width: 3em
     background-color: _colorG + 14%
     border-radius: 50%
-    &:focus-visible
-    //&:hover
-    //&:active
-      background-color: _color5
     &.active
-      overflow: hidden
       position: relative
       z-index: 1
-      //background-color: _color2
-      background-color: transparent
+      background-color: _colorG + 14%
       &::before
         content ''
         position: absolute
         inset: 0
         z-index: -1
+        border: .35em solid _colorG + 14%
+        border-block-color: _color2
+        border-radius: 50%
         //background: repeating-conic-gradient((_colorG + 7%) 0 90deg, (_colorG + 14%) 0 180deg)
-        background: repeating-conic-gradient(#ff826c 0 90deg, _color2 0 180deg) // somme des deux angles doit être un multiple de 360°
-        animation anim-play var(--frame, 4s) linear infinite
+        //background: repeating-conic-gradient(#ff826c 0 90deg, _color2 0 180deg) // somme des deux angles doit être un multiple de 360°
+        animation anim-play var(--frame, 20s) linear infinite
+    &:focus-visible
+    //&:hover
+    //&:active
+      background-color: _color2
   & .audio-play-pause
   & .audio-volume
     & > :last-child
@@ -90,7 +91,7 @@ audio:not([controls])
     &:focus-visible
     //&:hover
     //&:active
-      color: _color5
+      color: _color2
   & .audio-menu
     margin-right: 1em
   & .audio-progress

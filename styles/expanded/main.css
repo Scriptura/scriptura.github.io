@@ -1311,17 +1311,23 @@ audio:not([controls]) {
   background-color: #545454;
   border-radius: 50%;
 }
-.audio-player .audio-play-pause:focus-visible {
-  background-color: #ffa600;
-}
 .audio-player .audio-play-pause.active {
   position: relative;
+  z-index: 1;
+  background-color: #545454;
 }
-.audio-player .audio-play-pause.active::after {
+.audio-player .audio-play-pause.active::before {
   content: '';
-  position: relative;
+  position: absolute;
   inset: 0;
-  background: repeating-conic-gradient(#ff7961 0 90deg, #ff6347 0 180deg);
+  z-index: -1;
+  border: 0.35em solid #545454;
+  border-block-color: #ff6347;
+  border-radius: 50%;
+  animation: anim-play var(--frame, 20s) linear infinite;
+}
+.audio-player .audio-play-pause:focus-visible {
+  background-color: #ff6347;
 }
 .audio-player .audio-play-pause > :last-child,
 .audio-player .audio-volume > :last-child {
@@ -1341,7 +1347,7 @@ audio:not([controls]) {
 }
 .audio-player .audio-volume:focus-visible,
 .audio-player .audio-menu:focus-visible {
-  color: #ffa600;
+  color: #ff6347;
 }
 .audio-player .audio-menu {
   margin-right: 1em;
@@ -1358,7 +1364,7 @@ audio:not([controls]) {
   background-color: #ff6347;
 }
 .audio-player .audio-play-pause.active ~ .audio-volume.active {
-  animation: anim-blink-mute 1s infinite;
+  animation: anim-mute 1s infinite;
 }
 .video-youtube {
   position: relative;
@@ -1407,7 +1413,15 @@ audio:not([controls]) {
   text-overflow: ellipsis;
   text-shadow: 0 0 0.2em rgba(0,0,0,0.8);
 }
-@keyframes anim-blink-mute {
+@keyframes anim-play {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+@keyframes anim-mute {
   50% {
     color: #545454;
   }
