@@ -1,7 +1,7 @@
 'use strict'
 
 const medias = document.querySelectorAll('.audio')
-const audioPlayer = `
+const audioPlayerHTML = `
 <div class="audio-player">
   <button class="audio-play-pause">
     <svg focusable="false">
@@ -38,7 +38,7 @@ const addAudioPlayer = () => {
   for (const media of medias) {
     i++
     media.id = 'audio-player' + i
-    media.insertAdjacentHTML('afterend', audioPlayer)
+    media.insertAdjacentHTML('afterend', audioPlayerHTML)
     mediaDuration(media)
   }
 }
@@ -49,7 +49,7 @@ const secondsToTime = e => { // @see https://stackoverflow.com/questions/3733227
       ss = Math.floor(e % 60).toString().padStart(2, '0')
   if (hh === '0') hh = null // Si pas d'heures, alors info sur les heures escamotée.
   if (isNaN(hh)) hh = null // Si valeur nulle, alors info sur les heures escamotée.
-  if (isNaN(mm)) mm = '00' // Si valeur nulle, alors affichage par défaut.
+  if (isNaN(mm)) mm = '0' // Si valeur nulle, alors affichage par défaut.
   if (isNaN(ss)) ss = '00' // Idem.
   return [hh, mm, ss].filter(Boolean).join(':')
 }
@@ -76,7 +76,7 @@ function mute(player) {
   //audio.loop = true
 }
 
-function buttonState(button) {
+function buttonToggle(button) {
   if (button.classList.contains('active')) button.classList.remove('active')
   else button.classList.add('active')
 }
@@ -88,22 +88,22 @@ function cmdInit(player) {
 
   buttonPlayPause.addEventListener('click', () => {
     togglePlayPause(media)
-    buttonState(buttonPlayPause)
+    buttonToggle(buttonPlayPause)
     currentTime()
   })
 
   buttonVolume.addEventListener('click', () => {
     mute(player)
-    buttonState(buttonVolume)
+    buttonToggle(buttonVolume)
   })
-  player.previousElementSibling.addEventListener('ended', () => buttonState(buttonPlay)) // Si fin de la lecture.
+  player.previousElementSibling.addEventListener('ended', () => buttonToggle(buttonPlayPause)) // Si fin de la lecture.
 }
 
 addAudioPlayer()
 document.querySelectorAll('.audio-player').forEach(player => cmdInit(player))
 
 
-document.addEventListener('play', e => { // Un seul lecteur actif sur la page
+document.addEventListener('play', e => { // Si un lecteur actif sur la page, alors les autres se mettent en pause.
   [...document.querySelectorAll('audio, video')].forEach((media) => {
     if (media !== e.target) {
       media.pause()
