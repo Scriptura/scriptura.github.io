@@ -57,12 +57,24 @@ audio:not([controls])
     width: 3em
     background-color: _colorG + 14%
     border-radius: 50%
-    &:focus
-    &:hover
-    &:active
+    &:focus-visible
+    //&:hover
+    //&:active
       background-color: _color5
     &.active
-      background-color: _color2
+      overflow: hidden
+      position: relative
+      z-index: 1
+      //background-color: _color2
+      background-color: transparent
+      &::before
+        content ''
+        position: absolute
+        inset: 0
+        z-index: -1
+        //background: repeating-conic-gradient((_colorG + 7%) 0 90deg, (_colorG + 14%) 0 180deg)
+        background: repeating-conic-gradient(#ff826c 0 90deg, _color2 0 180deg) // somme des deux angles doit être un multiple de 360°
+        animation anim-play var(--frame, 4s) linear infinite
   & .audio-play-pause
   & .audio-volume
     & > :last-child
@@ -75,9 +87,9 @@ audio:not([controls])
   & .audio-volume
   & .audio-menu
     width: 2em
-    &:focus
-    &:hover
-    &:active
+    &:focus-visible
+    //&:hover
+    //&:active
       color: _color5
   & .audio-menu
     margin-right: 1em
@@ -90,6 +102,18 @@ audio:not([controls])
       position: absolute
       height: .3em
       background-color: _color2
+  & .audio-play-pause.active ~ .audio-volume.active
+    animation: anim-mute 1s infinite // Si lecture et fonction mute activée, alors le bouton mute clignote ; pour rappeler lors de la reprise d'une lecture que la fonction mute est active.
+
+@keyframes anim-play
+  from
+    transform rotate(0deg)
+  to
+    transform rotate(359deg)
+
+@keyframes anim-mute
+  50%
+    color: _colorG + 14%
 
 .video-youtube
   position: relative // [1] Évite un léger resize entre le thumbnail et le chargement de la vidéo.
