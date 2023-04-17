@@ -1,8 +1,8 @@
 'use strict'
 
-const audioPlayer = () => {
+const medias = document.querySelectorAll('.audio')
 
-  const audios = document.querySelectorAll('.audio')
+const audioPlayer = () => {
 
   const addAudioPlayer = (() => {
     const audioPlayer = `
@@ -35,19 +35,15 @@ const audioPlayer = () => {
     </div>
     `
     let i = 0
-    for (const audio of audios) {
+    for (const media of medias) {
       i++
-      audio.id = 'audio-player' + i
-      audio.insertAdjacentHTML('afterend', audioPlayer)
-      const output = audio.nextElementSibling.querySelector('.audio-player-duration')
-      // @bugfixed Retarde la fonction pour qu'elle ait le temps d'appliquer la valeur à l'output qui, lui aussi, est généré en JavaScript.
-      // @note Plusieurs applications pour appliquer au plus tôt dans le meilleur des cas avec des rattrapages plus éloignés au cas où.
+      media.id = 'audio-player' + i
+      media.insertAdjacentHTML('afterend', audioPlayer)
+      const output = media.nextElementSibling.querySelector('.audio-player-duration')
+      // @bugfixed Réapplication de la fonction pour qu'elle ait le temps d'appliquer la valeur à l'output qui, lui aussi, est généré en JavaScript.
       // @todo Trouver une solution asynchrone ?
-      //audioDuration(audio, output)
-      setTimeout(() => audioDuration(audio, output), 50)
-      setTimeout(() => audioDuration(audio, output), 100)
-      setTimeout(() => audioDuration(audio, output), 500)
-      setTimeout(() => audioDuration(audio, output), 1000)
+      mediaDuration(media, output)
+      setTimeout(() => mediaDuration(media, output), 1000)
     }
   })()
 
@@ -72,19 +68,22 @@ const secondsToTime = e => { // @see https://stackoverflow.com/questions/3733227
   let hh = Math.floor(e / 3600).toString().padStart(2, '0'),
       mm = Math.floor(e % 3600 / 60).toString().padStart(2, '0'),
       ss = Math.floor(e % 60).toString().padStart(2, '0')
-  if (hh == '00') hh = null // Si pas d'heures, alors info sur les heures escamotée
+  if (hh == '00') hh = null // Si pas d'heures, alors info sur les heures escamotée.
+  if (isNaN(hh)) hh = null // Si valeur nulle, alors info sur les heures escamotée.
+  if (isNaN(mm)) mm = '00'
+  if (isNaN(ss)) ss = '00'
   return [hh, mm, ss].filter(Boolean).join(':')
 }
 
-const audioDuration = (audio, output) => {
-  output.value = secondsToTime(audio.duration)
+const mediaDuration = (media, output) => {
+  output.value = secondsToTime(media.duration)
 }
 
-const togglePlayPause = audio => audio.paused ? audio.play() : audio.pause()
+const togglePlayPause = media => media.paused ? media.play() : media.pause()
 
 function mute(player) {
-  const audio = player.previousElementSibling
-  audio.volume === 0 ? audio.volume = 1 : audio.volume = 0
+  const media = player.previousElementSibling
+  media.volume === 0 ? media.volume = 1 : media.volume = 0
   //audio.loop = true
 }
 
@@ -94,14 +93,14 @@ function buttonState(button) {
 }
 
 function init(player) {
+  const media = player.previousElementSibling
   const buttonPlay = player.querySelector('.audio-play-pause')
-  const audio = player.previousElementSibling
-  buttonPlay.addEventListener('click', () => {
-    togglePlayPause(audio)
-    buttonState(buttonPlay)
-    audioSiblingStop(audio)
-  })
   const buttonVolume = player.querySelector('.audio-volume')
+  buttonPlay.addEventListener('click', () => {
+    togglePlayPause(media)
+    buttonState(buttonPlay)
+    audioSiblingStop(media)
+  })
   buttonVolume.addEventListener('click', () => {
     mute(player)
     buttonState(buttonVolume)
@@ -109,14 +108,14 @@ function init(player) {
   player.previousElementSibling.addEventListener('ended', () => buttonState(buttonPlay)) // Si fin de la lecture.
 }
 
-function audioSiblingStop(audio) {
-  const audios = document.querySelectorAll('.audio')
-  for (const sibling of audios) {
-    if (sibling !== audio) sibling.paused
+function audioSiblingStop(media) {
+  for (const sibling of medias) {
+    if (sibling !== media) sibling.paused
   }
 }
 
 audioPlayer()
+
 window.addEventListener('load', () => {
-  document.querySelectorAll('.audio-player').forEach(e => init(e))
+  document.querySelectorAll('.audio-player').forEach(player => init(player))
 })
