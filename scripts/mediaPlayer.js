@@ -64,7 +64,11 @@ const currentTime = () => {
   for (const media of medias) {
     const player = media.nextElementSibling
     const output = player.querySelector('.audio-player-current-time')
-    output.value = secondsToTime(media.currentTime)
+    setInterval(frame, 200)
+    let t
+    function frame() {
+      output.value = secondsToTime(media.currentTime)
+    }
   }
 }
 
