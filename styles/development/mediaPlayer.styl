@@ -30,8 +30,18 @@ audio:not([controls])
 .audio
   display: none
 
+_rangeBlockThumb2 =
+  pointer-events: auto
+  width: .3em
+  aspect-ratio: 1
+  background-color: transparent //_color2
+  //border: .2em solid _rangeColor5
+  border-radius: 50%
+  //box-shadow: _shadow6
+
 .audio-player
   display: flex
+  //flex-direction: row
   justify-content: space-between
   align-items: center
   gap: .5em
@@ -53,6 +63,44 @@ audio:not([controls])
       width: 1.2em
       height: 1.2em
       margin: auto
+  & .audio-progress-bar
+    --stop: 0%
+  & .audio-volume-bar
+    --stop: 50%
+  & .audio-progress-bar
+  & .audio-volume-bar
+    --colorSlide: _color2
+    all: unset
+    height: .3em
+    color: _color2
+    background-color: _colorG + 14%
+    background-image: linear-gradient(90deg, var(--colorSlide) 0, var(--colorSlide) var(--stop), transparent var(--stop))
+  & .audio-progress-bar:focus
+  & .audio-progress-bar:hover
+  & .audio-progress-bar:active
+  & .audio-volume-bar:focus
+  & .audio-volume-bar:hover
+  & .audio-volume-bar:active
+    --colorSlide: _color5
+    /*
+    &:focus::-webkit-slider-thumb
+    &:hover::-webkit-slider-thumb
+    &:active::-webkit-slider-thumb
+      background-color: _color5
+    &:focus::-moz-range-thumb
+    &:hover::-moz-range-thumb
+    &:active::-moz-range-thumb
+      background-color: _color5
+    */
+  & ::-webkit-slider-thumb
+    //all: unset
+    -webkit-appearance: none
+    {_rangeBlockThumb2}
+  & ::-moz-range-thumb
+    box-sizing: border-box // @affected Firefox @note Définition obligatoire de cette règle malgré sa déclaration en globale.
+    border: none
+    {_rangeBlockThumb2}
+
   & .audio-play-pause
     width: 3em
     background-color: _colorG + 14%
@@ -94,17 +142,34 @@ audio:not([controls])
       color: _color2
   & .audio-menu
     margin-right: 1em
-  & .audio-progress
-    position: relative
+  & .audio-progress-bar
     flex-grow: 1
-    height: .3em
-    background-color: _colorG + 14%
-    & div
-      position: absolute
-      height: .3em
-      background-color: _color2
   & .audio-play-pause.active ~ .audio-volume.active
     animation: anim-mute 1s infinite // Si lecture et fonction mute activée, alors le bouton mute clignote ; pour rappeler lors de la reprise d'une lecture que la fonction mute est active.
+  & .audio-volume-bar
+    width: 0
+    transition: width .5s
+  & .audio-volume-bar:focus
+  & .audio-volume-bar:hover
+  & .audio-volume-bar:active
+  & .audio-volume:focus + .audio-volume-bar
+  & .audio-volume:hover + .audio-volume-bar
+  & .audio-volume:active + .audio-volume-bar
+    width: 20%
+  & .audio-play-pause
+    order: 1
+  & .audio-time
+    order: 2
+  & .audio-progress-bar
+    order: 3
+  & .audio-volume
+    order: 5
+  & .audio-volume-bar
+    order: 4
+  & .audio-menu
+    order: 6
+    
+
 
 @keyframes anim-play
   from

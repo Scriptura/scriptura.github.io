@@ -11,10 +11,10 @@ const audioPlayerHTML = `
       <use href="/sprites/util.svg#control-pause"></use>
     </svg>
   </button>
-  <div>
-    <output class="audio-player-current-time">0:00</output>&nbsp;/&nbsp;<output class="audio-player-duration">0:00</output>
+  <div class="audio-time">
+    <output class="audio-current-time">0:00</output>&nbsp;/&nbsp;<output class="audio-duration">0:00</output>
   </div>
-  <div class="audio-progress"><div></div></div>
+  <input type="range" class="audio-progress-bar" min="0" max="1000" step="1" value="0">
   <button class="audio-volume">
     <svg focusable="false">
       <use href="/sprites/util.svg#volume-high"></use>
@@ -23,6 +23,7 @@ const audioPlayerHTML = `
       <use href="/sprites/util.svg#volume-xmark"></use>
     </svg>
   </button>
+  <input type="range" class="audio-volume-bar" min="0" max="10" step="1" value="5">
   <button class="audio-menu">
     <svg focusable="false">
       <use href="/sprites/util.svg#ellipsis-vertical"></use>
@@ -55,7 +56,7 @@ const secondsToTime = e => { // @see https://stackoverflow.com/questions/3733227
 }
 
 const mediaDuration = (media) => {
-  const output = media.nextElementSibling.querySelector('.audio-player-duration')
+  const output = media.nextElementSibling.querySelector('.audio-duration')
   media.addEventListener('loadedmetadata',() => output.value = secondsToTime(media.duration))
   output.value = secondsToTime(media.duration)
 }
@@ -63,8 +64,23 @@ const mediaDuration = (media) => {
 const currentTime = () => {
   for (const media of medias) {
     const player = media.nextElementSibling
-    const output = player.querySelector('.audio-player-current-time')
-    const progress = player.querySelector('.audio-progress > div')
+    const output = player.querySelector('.audio-current-time')
+    const progress = player.querySelector('.audio-progress-bar')
+    setInterval(frame, 100) // @todo A voir pour faire varier la valeur fixe selon la longeur du morceau : une grosse valeur est préjudiciable pour les petits fichiers MP3, la barre de progression saccade.
+    function frame() {
+      output.value = secondsToTime(media.currentTime)
+      progress.value = media.currentTime / media.duration * 1000
+      progress.style.setProperty('--stop', `${media.currentTime / media.duration * 100}%`)
+    }
+  }
+}
+
+/*
+const currentTime = () => {
+  for (const media of medias) {
+    const player = media.nextElementSibling
+    const output = player.querySelector('.audio-current-time')
+    const progress = player.querySelector('.audio-progress-bar > div')
     setInterval(frame, 200)
     function frame() {
       output.value = secondsToTime(media.currentTime)
@@ -73,6 +89,7 @@ const currentTime = () => {
     }
   }
 }
+*/
 
 const togglePlayPause = media => media.paused ? media.play() : media.pause()
 
@@ -110,7 +127,7 @@ document.querySelectorAll('.audio-player').forEach(player => cmdInit(player))
 
 
 document.addEventListener('play', e => { // Si un lecteur actif sur la page, alors les autres se mettent en pause.
-  [...document.querySelectorAll('audio, video')].forEach((media) => {
+  [...document.querySelectorAll('.audio, video')].forEach((media) => {
     if (media !== e.target) {
       media.pause()
       media.nextElementSibling.querySelector('.audio-play-pause').classList.remove('active')
