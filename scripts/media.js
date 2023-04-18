@@ -24,6 +24,40 @@ const audioPlayerHTML = `
     </svg>
   </button>
   <input type="range" class="media-volume-bar" min="0" max="10" step="1" value="5">
+  <div class="media-extend-menu">
+    <button class="media-leap-rewind">
+      <svg focusable="false">
+        <use href="/sprites/ui.svg#rewind-10"></use>
+      </svg>
+    </button>
+    <button class="media-leap-forward">
+      <svg focusable="false">
+        <use href="/sprites/ui.svg#forward-10"></use>
+      </svg>
+    </button>
+    <!--
+    <button class="media-fast-rewind">
+      <svg focusable="false">
+        <use href="/sprites/ui.svg#fast-rewind"></use>
+      </svg>
+    </button>
+    <button class="media-fast-forward">
+      <svg focusable="false">
+        <use href="/sprites/ui.svg#fast-forward"></use>
+      </svg>
+    </button>
+    -->
+    <button class="media-stop">
+      <svg focusable="false">
+        <use href="/sprites/ui.svg#stop"></use>
+      </svg>
+    </button>
+    <button class="media-replay">
+      <svg focusable="false">
+        <use href="/sprites/ui.svg#replay"></use>
+      </svg>
+    </button>
+  </div>
   <button class="media-menu">
     <svg focusable="false">
       <use href="/sprites/ui.svg#menu"></use>
@@ -57,73 +91,141 @@ const secondsToTime = e => { // @see https://stackoverflow.com/questions/3733227
 
 const mediaDuration = (media) => {
   const output = media.nextElementSibling.querySelector('.media-duration')
-  media.addEventListener('loadedmetadata',() => output.value = secondsToTime(media.duration))
-  output.value = secondsToTime(media.duration)
+  media.readyState >= 1 ? output.value = secondsToTime(media.duration) : media.addEventListener('loadedmetadata', () => output.value = secondsToTime(media.duration))
 }
 
 const currentTime = () => {
   for (const media of medias) {
-    const player = media.nextElementSibling
-    const output = player.querySelector('.media-current-time')
-    const progress = player.querySelector('.media-progress-bar')
-    setInterval(frame, 100) // @todo A voir pour faire varier la valeur fixe selon la longeur du morceau : une grosse valeur est préjudiciable pour les petits fichiers MP3, la barre de progression saccade.
-    function frame() {
-      output.value = secondsToTime(media.currentTime)
-      progress.value = media.currentTime / media.duration * 1000
-      progress.style.setProperty('--stop', `${media.currentTime / media.duration * 100}%`)
-    }
-  }
-}
-
-/*
-const currentTime = () => {
-  for (const media of medias) {
-    const player = media.nextElementSibling
-    const output = player.querySelector('.media-current-time')
-    const progress = player.querySelector('.media-progress-bar > div')
+    const player = media.nextElementSibling,
+          output = player.querySelector('.media-current-time'),
+          progress = player.querySelector('.media-progress-bar')
     setInterval(frame, 200)
     function frame() {
+      const ratio = media.currentTime / media.duration
       output.value = secondsToTime(media.currentTime)
-      let widthBar = media.currentTime / media.duration * 100
-      progress.style.width = widthBar + '%'
+      progress.value = ratio * 1000
+      progress.style.setProperty('--stop', `${ratio * 100}%`)
     }
   }
 }
-*/
 
 const togglePlayPause = media => media.paused ? media.play() : media.pause()
+
+function toggleActiveClass(el) {
+  el.classList.contains('active') ? el.classList.remove('active') : el.classList.add('active')
+}
 
 function mute(player) {
   const media = player.previousElementSibling
   media.volume === 0 ? media.volume = 1 : media.volume = 0
 }
 
-function buttonToggle(button) {
-  if (button.classList.contains('active')) button.classList.remove('active')
-  else button.classList.add('active')
+function menu(player) {
+  const extendMenu = player.querySelector('.media-extend-menu')
+  toggleActiveClass(extendMenu)
 }
 
-function cmdInit(player) {
+function stop(player) {
   const media = player.previousElementSibling
-  const buttonPlayPause = player.querySelector('.media-play-pause')
-  const buttonVolume = player.querySelector('.media-volume')
+  media.pause()
+  media.currentTime = 0
+}
+
+function replay(player) {
+  const media = player.previousElementSibling
+  const test = player.querySelector('.media-replay').classList.contains('active')
+  test ? media.loop = true : media.loop = false
+}
+/*
+function fastRewind(player) {
+}
+
+function fastForward(player) {
+}
+*/
+function leapRewind(player) {
+  const media = player.previousElementSibling
+  media.currentTime -= 10
+}
+
+function leapForward(player) {
+  const media = player.previousElementSibling
+  media.currentTime += 10
+}
+
+function control(player) {
+
+  const media = player.previousElementSibling,
+        buttonPlayPause = player.querySelector('.media-play-pause'),
+        buttonVolume = player.querySelector('.media-volume'),
+        buttonMenu = player.querySelector('.media-menu'),
+        buttonStop = player.querySelector('.media-stop'),
+        buttonReplay = player.querySelector('.media-replay'),
+        //buttonFastRewind = player.querySelector('.media-fast-rewind'),
+        //buttonFastForward = player.querySelector('.media-fast-forward'),
+        buttonLeapRewind = player.querySelector('.media-leap-rewind'),
+        buttonLeapForward = player.querySelector('.media-leap-forward')
 
   buttonPlayPause.addEventListener('click', () => {
     togglePlayPause(media)
-    buttonToggle(buttonPlayPause)
+    toggleActiveClass(buttonPlayPause)
     currentTime()
   })
 
   buttonVolume.addEventListener('click', () => {
+    toggleActiveClass(buttonVolume)
     mute(player)
-    buttonToggle(buttonVolume)
   })
-  player.previousElementSibling.addEventListener('ended', () => buttonToggle(buttonPlayPause)) // Si fin de la lecture.
+
+  buttonMenu.addEventListener('click', () => {
+    toggleActiveClass(buttonMenu)
+    menu(player)
+  })
+
+  buttonStop.addEventListener('click', () => {
+    //toggleActiveClass(buttonStop)
+    stop(player)
+  })
+
+  buttonReplay.addEventListener('click', () => {
+    toggleActiveClass(buttonReplay)
+    replay(player)
+  })
+  /*
+  buttonFastRewind.addEventListener('click', () => {
+    toggleActiveClass(buttonFastRewind)
+    fastRewind(player)
+  })
+
+  buttonFastForward.addEventListener('click', () => {
+    toggleActiveClass(buttonFastForward)
+    fastForward(player)
+  })
+  */
+  buttonLeapRewind.addEventListener('click', () => {
+    //toggleActiveClass(buttonLeapRewind)
+    leapRewind(player)
+  })
+
+  buttonLeapForward.addEventListener('click', () => {
+    //toggleActiveClass(buttonLeapForward)
+    leapForward(player)
+  })
+
+  media.addEventListener('ended', () => {
+    buttonPlayPause.classList.remove('active')
+    media.currentTime = 0
+  })
+
+  media.addEventListener('pause', () => {
+    buttonPlayPause.classList.remove('active')
+  })
+
 }
 
 addAudioPlayer()
-document.querySelectorAll('.media-player').forEach(player => cmdInit(player))
 
+document.querySelectorAll('.media-player').forEach(player => control(player))
 
 document.addEventListener('play', e => { // Si un lecteur actif sur la page, alors les autres se mettent en pause.
   [...document.querySelectorAll('.media')].forEach((media) => { // audio, video
@@ -133,6 +235,3 @@ document.addEventListener('play', e => { // Si un lecteur actif sur la page, alo
     }
   })
 }, true)
-
-// Fonction à développer :
-//audio.loop = true

@@ -39,6 +39,7 @@ _rangeBlockThumb2 =
   //box-shadow: _shadow6
 
 .media-player
+  position: relative
   display: flex
   //flex-direction: row
   justify-content: space-between
@@ -136,15 +137,17 @@ _rangeBlockThumb2 =
       & > :last-child
         display: initial
   & .media-volume
-  & .media-menu
     width: 2em
-    &:focus-visible
-      color: _color5
   & .media-menu
-    margin-right: 1em
+    width: 3em
+    border-radius: 1.5em
+    &:focus-visible
+      background-color: _color2
+    &:hover
+    &:active
+      background-color: _colorG + 7%
   & .media-progress-bar
     flex-grow: 1
-    margin-left: 1em
   & .media-play-pause.active ~ .media-volume.active
     animation: anim-mute 1s infinite // Si lecture et fonction mute activée, alors le bouton mute clignote ; pour rappeler lors de la reprise d'une lecture que la fonction mute est active.
   & .media-volume-bar
@@ -157,6 +160,25 @@ _rangeBlockThumb2 =
   & .media-volume:hover + .media-volume-bar
   & .media-volume:active + .media-volume-bar
     width: 50%
+  & .media-extend-menu
+    display: none
+  & .media-extend-menu.active
+    position: absolute
+    display: flex
+    gap: .5em
+    right: 3.5em
+    height: 3em
+    background-color: _colorG + 7%
+    border-radius: 1.5em
+    & button
+      width: 3em
+      aspect-ratio: 1
+      background-color: _colorG + 14%
+      border-radius: 50%
+      &:focus-visible
+      &.active
+      &:active
+        background-color: _color2
   & .media-play-pause
     order: 1
   & .media-time
