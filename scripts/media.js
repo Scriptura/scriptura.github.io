@@ -96,7 +96,6 @@ const togglePlayPause = media => media.paused ? media.play() : media.pause()
 function mute(player) {
   const media = player.previousElementSibling
   media.volume === 0 ? media.volume = 1 : media.volume = 0
-  //audio.loop = true
 }
 
 function buttonToggle(button) {
@@ -127,10 +126,13 @@ document.querySelectorAll('.media-player').forEach(player => cmdInit(player))
 
 
 document.addEventListener('play', e => { // Si un lecteur actif sur la page, alors les autres se mettent en pause.
-  [...document.querySelectorAll('audio, video')].forEach((media) => {
+  [...document.querySelectorAll('.media')].forEach((media) => { // audio, video
     if (media !== e.target) {
       media.pause()
       media.nextElementSibling.querySelector('.media-play-pause').classList.remove('active')
     }
   })
 }, true)
+
+// Fonction à développer :
+//audio.loop = true

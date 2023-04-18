@@ -73,9 +73,12 @@ _rangeBlockThumb2 =
     --colorSlide: _color2
     all: unset
     height: .3em
+    padding-block: 1em // @note Avec la propriété height, ne doit pas dépasser la hauteur du player
     color: _color2
     background-color: _colorG + 14%
     background-image: linear-gradient(90deg, var(--colorSlide) 0, var(--colorSlide) var(--stop), transparent var(--stop))
+    background-clip: content-box
+    cursor: pointer
   & .media-progress-bar:focus
   & .media-progress-bar:hover
   & .media-progress-bar:active
@@ -102,28 +105,27 @@ _rangeBlockThumb2 =
     border: none
     {_rangeBlockThumb2}
   & .media-play-pause
+    position: relative
+    z-index: 1
     width: 3em
     background-color: _colorG + 14%
     border-radius: 50%
-    &.active
-      position: relative
-      z-index: 1
-      background-color: _colorG + 14%
-      &::before
-        content ''
-        position: absolute
-        inset: 0
-        z-index: -1
-        border: .35em solid _colorG + 14%
-        border-block-color: _color2
-        border-radius: 50%
-        //background: repeating-conic-gradient((_colorG + 7%) 0 90deg, (_colorG + 14%) 0 180deg)
-        //background: repeating-conic-gradient(#ff826c 0 90deg, _color2 0 180deg) // somme des deux angles doit être un multiple de 360°
-        animation anim-play var(--frame, 20s) linear infinite
-    &:focus-visible
-    //&:hover
-    //&:active
-      background-color: _color2
+    //&.active
+    //  background-color: _colorG + 14%
+    &.active::before
+    &:focus-visible::before
+      content ''
+      position: absolute
+      inset: 0
+      z-index: -1
+      border: .35em solid _colorG + 14%
+      border-radius: 50%
+      //background: repeating-conic-gradient((_colorG + 7%) 0 90deg, (_colorG + 14%) 0 180deg)
+    &.active::before
+      border-block-color: _color2
+      animation anim-play var(--frame, 20s) linear infinite
+    &:focus-visible::before
+      border-block-color: _color5
   & .media-play-pause
   & .media-volume
     & > :last-child
@@ -137,7 +139,7 @@ _rangeBlockThumb2 =
   & .media-menu
     width: 2em
     &:focus-visible
-      color: _color2
+      color: _color5
   & .media-menu
     margin-right: 1em
   & .media-progress-bar
