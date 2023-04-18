@@ -1,6 +1,6 @@
 'use strict'
 
-const medias = document.querySelectorAll('.audio, .video') // audio, video
+const medias = document.querySelectorAll('.media') // audio, video
 const audioPlayerHTML = `
 <div class="media-player">
   <button class="media-play-pause">
@@ -127,7 +127,7 @@ document.querySelectorAll('.media-player').forEach(player => cmdInit(player))
 
 
 document.addEventListener('play', e => { // Si un lecteur actif sur la page, alors les autres se mettent en pause.
-  [...document.querySelectorAll('.audio, video')].forEach((media) => {
+  [...document.querySelectorAll('audio, video')].forEach((media) => {
     if (media !== e.target) {
       media.pause()
       media.nextElementSibling.querySelector('.media-play-pause').classList.remove('active')

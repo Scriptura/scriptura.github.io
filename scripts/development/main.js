@@ -62,7 +62,7 @@ const getScripts = (() => {
   if (document.querySelector('.add-line-marks')) getScript('/scripts/lineMark.js')
   if (document.querySelector('pie-chart')) getScript('/scripts/pieChart.js')
   if (document.querySelector('bar-chart')) getScript('/scripts/barChart.js')
-  if (document.querySelector('.audio, .video')) getScript('/scripts/mediaPlayer.js')
+  if (document.querySelector('.media')) getScript('/scripts/mediaPlayer.js')
   if (document.querySelector('.map')) getScript('/scripts/map.js')
   if (document.querySelector('.map')) getScript('/libraries/leaflet/leaflet.js')
   if (document.querySelector('[class*=language-]')) getScript('/libraries/prism/prism.js')

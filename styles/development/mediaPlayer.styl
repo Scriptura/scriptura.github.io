@@ -22,8 +22,12 @@ audio:not([controls])
 //video
 //  object-fit cover // @affected Firefox @note Influence sur l'image des posters
 
-.audio
+audio.media
   display: none
+
+video.media
+  background-color: #000 // @bugfix @affected Google Maps @note Pas de background prédéfinit sur élément `canvas` afin d'éviter les conflits.
+  box-shadow: _shadow15
 
 _rangeBlockThumb2 =
   pointer-events: auto
@@ -173,10 +177,6 @@ _rangeBlockThumb2 =
 @keyframes anim-mute
   50%
     color: _colorG + 14%
-
-.video
-  background-color: #000 // @bugfix @affected Google Maps @note Pas de background prédéfinit sur élément `canvas` afin d'éviter les conflits.
-  box-shadow: _shadow15
 
 .video-youtube
   position: relative // [1] Évite un léger resize entre le thumbnail et le chargement de la vidéo.
