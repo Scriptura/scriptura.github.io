@@ -63,6 +63,8 @@ _rangeBlockThumb2 =
       width: 1.2em
       height: 1.2em
       margin: auto
+  & .audio-time
+    flex-shrink: 0
   & .audio-progress-bar
     --stop: 0%
   & .audio-volume-bar
@@ -100,7 +102,6 @@ _rangeBlockThumb2 =
     box-sizing: border-box // @affected Firefox @note Définition obligatoire de cette règle malgré sa déclaration en globale.
     border: none
     {_rangeBlockThumb2}
-
   & .audio-play-pause
     width: 3em
     background-color: _colorG + 14%
@@ -155,7 +156,7 @@ _rangeBlockThumb2 =
   & .audio-volume:focus + .audio-volume-bar
   & .audio-volume:hover + .audio-volume-bar
   & .audio-volume:active + .audio-volume-bar
-    width: 20%
+    width: 70%
   & .audio-play-pause
     order: 1
   & .audio-time
