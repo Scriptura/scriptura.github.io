@@ -8,11 +8,6 @@ video
 canvas
   width: 100%
 
-video
-.video
-  background-color: #000 // @bugfix @affected Google Maps @note Pas de background prédéfinit sur élément `canvas` afin d'éviter les conflits.
-  box-shadow: _shadow15
-
 audio
 video
   outline: none
@@ -39,7 +34,7 @@ _rangeBlockThumb2 =
   border-radius: 50%
   //box-shadow: _shadow6
 
-.audio-player
+.media-player
   display: flex
   //flex-direction: row
   justify-content: space-between
@@ -63,26 +58,26 @@ _rangeBlockThumb2 =
       width: 1.2em
       height: 1.2em
       margin: auto
-  & .audio-time
+  & .media-time
     flex-shrink: 0
-  & .audio-progress-bar
+  & .media-progress-bar
     --stop: 0%
-  & .audio-volume-bar
+  & .media-volume-bar
     --stop: 50%
-  & .audio-progress-bar
-  & .audio-volume-bar
+  & .media-progress-bar
+  & .media-volume-bar
     --colorSlide: _color2
     all: unset
     height: .3em
     color: _color2
     background-color: _colorG + 14%
     background-image: linear-gradient(90deg, var(--colorSlide) 0, var(--colorSlide) var(--stop), transparent var(--stop))
-  & .audio-progress-bar:focus
-  & .audio-progress-bar:hover
-  & .audio-progress-bar:active
-  & .audio-volume-bar:focus
-  & .audio-volume-bar:hover
-  & .audio-volume-bar:active
+  & .media-progress-bar:focus
+  & .media-progress-bar:hover
+  & .media-progress-bar:active
+  & .media-volume-bar:focus
+  & .media-volume-bar:hover
+  & .media-volume-bar:active
     --colorSlide: _color5
     /*
     &:focus::-webkit-slider-thumb
@@ -102,7 +97,7 @@ _rangeBlockThumb2 =
     box-sizing: border-box // @affected Firefox @note Définition obligatoire de cette règle malgré sa déclaration en globale.
     border: none
     {_rangeBlockThumb2}
-  & .audio-play-pause
+  & .media-play-pause
     width: 3em
     background-color: _colorG + 14%
     border-radius: 50%
@@ -125,8 +120,8 @@ _rangeBlockThumb2 =
     //&:hover
     //&:active
       background-color: _color2
-  & .audio-play-pause
-  & .audio-volume
+  & .media-play-pause
+  & .media-volume
     & > :last-child
       display: none
     &.active
@@ -134,43 +129,40 @@ _rangeBlockThumb2 =
         display: none
       & > :last-child
         display: initial
-  & .audio-volume
-  & .audio-menu
+  & .media-volume
+  & .media-menu
     width: 2em
     &:focus-visible
-    //&:hover
-    //&:active
       color: _color2
-  & .audio-menu
+  & .media-menu
     margin-right: 1em
-  & .audio-progress-bar
+  & .media-progress-bar
     flex-grow: 1
-  & .audio-play-pause.active ~ .audio-volume.active
+    margin-left: 1em
+  & .media-play-pause.active ~ .media-volume.active
     animation: anim-mute 1s infinite // Si lecture et fonction mute activée, alors le bouton mute clignote ; pour rappeler lors de la reprise d'une lecture que la fonction mute est active.
-  & .audio-volume-bar
+  & .media-volume-bar
     width: 0
     transition: width .5s
-  & .audio-volume-bar:focus
-  & .audio-volume-bar:hover
-  & .audio-volume-bar:active
-  & .audio-volume:focus + .audio-volume-bar
-  & .audio-volume:hover + .audio-volume-bar
-  & .audio-volume:active + .audio-volume-bar
-    width: 70%
-  & .audio-play-pause
+  & .media-volume-bar:focus
+  & .media-volume-bar:hover
+  & .media-volume-bar:active
+  & .media-volume:focus + .media-volume-bar
+  & .media-volume:hover + .media-volume-bar
+  & .media-volume:active + .media-volume-bar
+    width: 50%
+  & .media-play-pause
     order: 1
-  & .audio-time
+  & .media-time
     order: 2
-  & .audio-progress-bar
+  & .media-progress-bar
     order: 3
-  & .audio-volume
+  & .media-volume
     order: 5
-  & .audio-volume-bar
+  & .media-volume-bar
     order: 4
-  & .audio-menu
+  & .media-menu
     order: 6
-    
-
 
 @keyframes anim-play
   from
@@ -181,6 +173,10 @@ _rangeBlockThumb2 =
 @keyframes anim-mute
   50%
     color: _colorG + 14%
+
+.video
+  background-color: #000 // @bugfix @affected Google Maps @note Pas de background prédéfinit sur élément `canvas` afin d'éviter les conflits.
+  box-shadow: _shadow15
 
 .video-youtube
   position: relative // [1] Évite un léger resize entre le thumbnail et le chargement de la vidéo.

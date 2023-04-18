@@ -1263,11 +1263,6 @@ video,
 canvas {
   width: 100%;
 }
-video,
-.video {
-  background-color: #000;
-  box-shadow: 0.5rem 0.5rem 2rem rgba(0,0,0,0.25);
-}
 audio,
 video {
   outline: none;
@@ -1278,7 +1273,7 @@ audio:not([controls]) {
 .audio {
   display: none;
 }
-.audio-player {
+.media-player {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1289,11 +1284,11 @@ audio:not([controls]) {
   border-radius: 2em;
   box-shadow: box-shadow;
 }
-.audio-player : _shadow17,
-.audio-player > * {
+.media-player : _shadow17,
+.media-player > * {
   align-self: center;
 }
-.audio-player button {
+.media-player button {
   all: unset;
   flex-shrink: 0;
   display: grid;
@@ -1301,22 +1296,22 @@ audio:not([controls]) {
   outline: none;
   cursor: pointer;
 }
-.audio-player button svg {
+.media-player button svg {
   width: 1.2em;
   height: 1.2em;
   margin: auto;
 }
-.audio-player .audio-time {
+.media-player .media-time {
   flex-shrink: 0;
 }
-.audio-player .audio-progress-bar {
+.media-player .media-progress-bar {
   --stop: 0%;
 }
-.audio-player .audio-volume-bar {
+.media-player .media-volume-bar {
   --stop: 50%;
 }
-.audio-player .audio-progress-bar,
-.audio-player .audio-volume-bar {
+.media-player .media-progress-bar,
+.media-player .media-volume-bar {
   --colorSlide: #ff6347;
   all: unset;
   height: 0.3em;
@@ -1324,12 +1319,12 @@ audio:not([controls]) {
   background-color: #545454;
   background-image: linear-gradient(90deg, var(--colorSlide) 0, var(--colorSlide) var(--stop), transparent var(--stop));
 }
-.audio-player .audio-progress-bar:focus,
-.audio-player .audio-progress-bar:hover,
-.audio-player .audio-progress-bar:active,
-.audio-player .audio-volume-bar:focus,
-.audio-player .audio-volume-bar:hover,
-.audio-player .audio-volume-bar:active {
+.media-player .media-progress-bar:focus,
+.media-player .media-progress-bar:hover,
+.media-player .media-progress-bar:active,
+.media-player .media-volume-bar:focus,
+.media-player .media-volume-bar:hover,
+.media-player .media-volume-bar:active {
   --colorSlide: #ffa600;
 /*
     &:focus::-webkit-slider-thumb
@@ -1342,7 +1337,7 @@ audio:not([controls]) {
       background-color: _color5
     */
 }
-.audio-player ::-webkit-slider-thumb {
+.media-player ::-webkit-slider-thumb {
   -webkit-appearance: none;
   pointer-events: auto;
   width: 0.3em;
@@ -1350,7 +1345,7 @@ audio:not([controls]) {
   background-color: transparent;
   border-radius: 50%;
 }
-.audio-player ::-moz-range-thumb {
+.media-player ::-moz-range-thumb {
   box-sizing: border-box;
   border: none;
   pointer-events: auto;
@@ -1359,17 +1354,17 @@ audio:not([controls]) {
   background-color: transparent;
   border-radius: 50%;
 }
-.audio-player .audio-play-pause {
+.media-player .media-play-pause {
   width: 3em;
   background-color: #545454;
   border-radius: 50%;
 }
-.audio-player .audio-play-pause.active {
+.media-player .media-play-pause.active {
   position: relative;
   z-index: 1;
   background-color: #545454;
 }
-.audio-player .audio-play-pause.active::before {
+.media-player .media-play-pause.active::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -1379,67 +1374,72 @@ audio:not([controls]) {
   border-radius: 50%;
   animation: anim-play var(--frame, 20s) linear infinite;
 }
-.audio-player .audio-play-pause:focus-visible {
+.media-player .media-play-pause:focus-visible {
   background-color: #ff6347;
 }
-.audio-player .audio-play-pause > :last-child,
-.audio-player .audio-volume > :last-child {
+.media-player .media-play-pause > :last-child,
+.media-player .media-volume > :last-child {
   display: none;
 }
-.audio-player .audio-play-pause.active > :first-child,
-.audio-player .audio-volume.active > :first-child {
+.media-player .media-play-pause.active > :first-child,
+.media-player .media-volume.active > :first-child {
   display: none;
 }
-.audio-player .audio-play-pause.active > :last-child,
-.audio-player .audio-volume.active > :last-child {
+.media-player .media-play-pause.active > :last-child,
+.media-player .media-volume.active > :last-child {
   display: initial;
 }
-.audio-player .audio-volume,
-.audio-player .audio-menu {
+.media-player .media-volume,
+.media-player .media-menu {
   width: 2em;
 }
-.audio-player .audio-volume:focus-visible,
-.audio-player .audio-menu:focus-visible {
+.media-player .media-volume:focus-visible,
+.media-player .media-menu:focus-visible {
   color: #ff6347;
 }
-.audio-player .audio-menu {
+.media-player .media-menu {
   margin-right: 1em;
 }
-.audio-player .audio-progress-bar {
+.media-player .media-progress-bar {
   flex-grow: 1;
+  margin-left: 1em;
 }
-.audio-player .audio-play-pause.active ~ .audio-volume.active {
+.media-player .media-play-pause.active ~ .media-volume.active {
   animation: anim-mute 1s infinite;
 }
-.audio-player .audio-volume-bar {
+.media-player .media-volume-bar {
   width: 0;
   transition: width 0.5s;
 }
-.audio-player .audio-volume-bar:focus,
-.audio-player .audio-volume-bar:hover,
-.audio-player .audio-volume-bar:active,
-.audio-player .audio-volume:focus + .audio-volume-bar,
-.audio-player .audio-volume:hover + .audio-volume-bar,
-.audio-player .audio-volume:active + .audio-volume-bar {
-  width: 70%;
+.media-player .media-volume-bar:focus,
+.media-player .media-volume-bar:hover,
+.media-player .media-volume-bar:active,
+.media-player .media-volume:focus + .media-volume-bar,
+.media-player .media-volume:hover + .media-volume-bar,
+.media-player .media-volume:active + .media-volume-bar {
+  width: 50%;
 }
-.audio-player .audio-play-pause {
+.media-player .media-play-pause {
   order: 1;
 }
-.audio-player .audio-time {
+.media-player .media-time {
   order: 2;
 }
-.audio-player .audio-progress-bar {
+.media-player .media-progress-bar {
   order: 3;
 }
-.audio-player .audio-volume {
+.media-player .media-volume {
   order: 5;
 }
-.audio-player .audio-volume-bar {
+.media-player .media-volume-bar {
   order: 4;
 }
-.audio-player .audio-menu {
+.media-player .media-menu {
   order: 6;
+}
+.video {
+  background-color: #000;
+  box-shadow: 0.5rem 0.5rem 2rem rgba(0,0,0,0.25);
 }
 .video-youtube {
   position: relative;
@@ -3473,8 +3473,8 @@ html,
 .accordion > * > :last-child,
 .tab-list > button,
 .tab-summary,
-.audio-player,
-.audio-player > :first-child,
+.media-player,
+.media-player > :first-child,
 .progress-bar div,
 .article .keywords a,
 .topic-item,
