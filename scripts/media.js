@@ -1,7 +1,7 @@
 'use strict'
 
 const medias = document.querySelectorAll('.media') // audio, video
-const audioPlayerHTML = `
+const mediaPlayerHTML = `
 <div class="media-player">
   <button class="media-play-pause">
     <svg focusable="false">
@@ -68,12 +68,12 @@ const audioPlayerHTML = `
 
 medias.forEach(media => media.removeAttribute('controls')) // @note Pas nécessaire, mais c'est plus propre !
 
-const addAudioPlayer = () => {
+const addMediaPlayer = () => {
   let i = 0
   for (const media of medias) {
     i++
     media.id = 'media-player' + i
-    media.insertAdjacentHTML('afterend', audioPlayerHTML)
+    media.insertAdjacentHTML('afterend', mediaPlayerHTML)
     mediaDuration(media)
   }
 }
@@ -118,7 +118,7 @@ const mute = media => media.volume === 0 ? media.volume = 1 : media.volume = 0
 const menu = player => {
   const extendMenu = player.querySelector('.media-extend-menu')
   toggleActiveClass(extendMenu)
-  ;[...document.querySelectorAll('.media-player')].forEach((mp) => {
+  ;[...document.querySelectorAll('.media-player')].forEach((mp) => { // @note Si un menu ouvert, alors les menus des autres players sont fermés.
     if (mp !== player) {
       mp.querySelector('.media-menu').classList.remove('active')
       mp.querySelector('.media-extend-menu').classList.remove('active')
@@ -135,13 +135,10 @@ const replay = (media, player) => {
   const test = player.querySelector('.media-replay').classList.contains('active')
   test ? media.loop = true : media.loop = false
 }
-/*
-function fastRewind(player) {
-}
 
-function fastForward(player) {
-}
-*/
+//const fastRewind = media => {}
+//const fastForward = media => {}
+
 const leapRewind = media => media.currentTime -= 10
 
 const leapForward = media => media.currentTime += 10
@@ -211,7 +208,7 @@ function controls(player) {
 
 }
 
-addAudioPlayer()
+addMediaPlayer()
 
 document.querySelectorAll('.media-player').forEach(player => controls(player))
 

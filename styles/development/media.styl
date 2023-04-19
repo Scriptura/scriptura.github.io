@@ -38,6 +38,8 @@ _rangeBlockThumb2 =
   border-radius: 50%
   //box-shadow: _shadow6
 
+_mediaPlayerSize = 3em
+
 .media-player
   position: relative
   display: flex
@@ -46,17 +48,17 @@ _rangeBlockThumb2 =
   align-items: center
   gap: .5em
   width: 100%
-  height: 3em
+  height: _mediaPlayerSize
   background-color: _colorG + 7%
   border-radius: 2em
-  box-shadow: box-shadow: _shadow17
+  box-shadow: _shadow17
   & > *
     align-self: center
   & button
     all: unset
     flex-shrink: 0
     display: grid
-    height: 3em
+    height: _mediaPlayerSize
     outline: none
     cursor: pointer
     & svg
@@ -108,7 +110,7 @@ _rangeBlockThumb2 =
   & .media-play-pause
     position: relative
     z-index: 1
-    width: 3em
+    width: _mediaPlayerSize
     background-color: _colorG + 14%
     border-radius: 50%
     //&.active
@@ -139,8 +141,8 @@ _rangeBlockThumb2 =
   & .media-volume
     width: 2em
   & .media-menu
-    width: 3em
-    border-radius: 1.5em
+    width: _mediaPlayerSize
+    border-radius: (_mediaPlayerSize / 2)
     &:focus-visible
       background-color: _color2
     &:hover
@@ -167,16 +169,19 @@ _rangeBlockThumb2 =
     //z-index: 20 // @todo Si besoin
     top: -3em
     right: 0
-    height: 3em
+    height: _mediaPlayerSize
     display: flex
     gap: .5em
     background-color: _colorG + 7%
-    border-radius: 1.5em
+    border-radius: (_mediaPlayerSize / 2)
+    box-shadow: _shadow17
     & button
-      width: 3em
+      width: _mediaPlayerSize
       aspect-ratio: 1
       background-color: _colorG + 14%
       border-radius: 50%
+      &:hover
+        background-color: _colorG + 21%
       &:focus-visible
       &.active
       &:active

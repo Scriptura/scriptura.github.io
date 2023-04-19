@@ -1287,9 +1287,8 @@ video.media {
   height: 3em;
   background-color: #464646;
   border-radius: 2em;
-  box-shadow: box-shadow;
+  box-shadow: 0 1rem 1rem rgba(0,0,0,0.1);
 }
-.media-player : _shadow17,
 .media-player > * {
   align-self: center;
 }
@@ -1441,12 +1440,16 @@ video.media {
   gap: 0.5em;
   background-color: #464646;
   border-radius: 1.5em;
+  box-shadow: 0 1rem 1rem rgba(0,0,0,0.1);
 }
 .media-player .media-extend-menu.active button {
   width: 3em;
   aspect-ratio: 1;
   background-color: #545454;
   border-radius: 50%;
+}
+.media-player .media-extend-menu.active button:hover {
+  background-color: #626262;
 }
 .media-player .media-extend-menu.active button:focus-visible,
 .media-player .media-extend-menu.active button.active,
