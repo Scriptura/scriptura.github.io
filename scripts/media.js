@@ -111,28 +111,27 @@ const currentTime = () => {
 
 const togglePlayPause = media => media.paused ? media.play() : media.pause()
 
-function toggleActiveClass(el) {
-  el.classList.contains('active') ? el.classList.remove('active') : el.classList.add('active')
-}
+const toggleActiveClass = el => el.classList.contains('active') ? el.classList.remove('active') : el.classList.add('active')
 
-function mute(player) {
-  const media = player.previousElementSibling
-  media.volume === 0 ? media.volume = 1 : media.volume = 0
-}
+const mute = media => media.volume === 0 ? media.volume = 1 : media.volume = 0
 
-function menu(player) {
+const menu = player => {
   const extendMenu = player.querySelector('.media-extend-menu')
   toggleActiveClass(extendMenu)
+  ;[...document.querySelectorAll('.media-player')].forEach((mp) => {
+    if (mp !== player) {
+      mp.querySelector('.media-menu').classList.remove('active')
+      mp.querySelector('.media-extend-menu').classList.remove('active')
+    }
+  })
 }
 
-function stop(player) {
-  const media = player.previousElementSibling
+const stop = media => {
   media.pause()
   media.currentTime = 0
 }
 
-function replay(player) {
-  const media = player.previousElementSibling
+const replay = (media, player) => {
   const test = player.querySelector('.media-replay').classList.contains('active')
   test ? media.loop = true : media.loop = false
 }
@@ -143,17 +142,11 @@ function fastRewind(player) {
 function fastForward(player) {
 }
 */
-function leapRewind(player) {
-  const media = player.previousElementSibling
-  media.currentTime -= 10
-}
+const leapRewind = media => media.currentTime -= 10
 
-function leapForward(player) {
-  const media = player.previousElementSibling
-  media.currentTime += 10
-}
+const leapForward = media => media.currentTime += 10
 
-function control(player) {
+function controls(player) {
 
   const media = player.previousElementSibling,
         buttonPlayPause = player.querySelector('.media-play-pause'),
@@ -166,50 +159,45 @@ function control(player) {
         buttonLeapRewind = player.querySelector('.media-leap-rewind'),
         buttonLeapForward = player.querySelector('.media-leap-forward')
 
-  buttonPlayPause.addEventListener('click', () => {
+  buttonPlayPause.addEventListener('click', function() {
     togglePlayPause(media)
-    toggleActiveClass(buttonPlayPause)
+    toggleActiveClass(this)
     currentTime()
   })
 
-  buttonVolume.addEventListener('click', () => {
-    toggleActiveClass(buttonVolume)
-    mute(player)
+  buttonVolume.addEventListener('click', function() {
+    toggleActiveClass(this)
+    mute(media)
   })
 
-  buttonMenu.addEventListener('click', () => {
-    toggleActiveClass(buttonMenu)
+  buttonMenu.addEventListener('click', function() {
+    toggleActiveClass(this)
     menu(player)
   })
 
-  buttonStop.addEventListener('click', () => {
-    //toggleActiveClass(buttonStop)
-    stop(player)
+  buttonStop.addEventListener('click', function() {
+    stop(media)
   })
 
-  buttonReplay.addEventListener('click', () => {
-    toggleActiveClass(buttonReplay)
-    replay(player)
+  buttonReplay.addEventListener('click', function() {
+    toggleActiveClass(this)
+    replay(media, player)
   })
   /*
   buttonFastRewind.addEventListener('click', () => {
-    toggleActiveClass(buttonFastRewind)
-    fastRewind(player)
+    fastRewind(media)
   })
 
   buttonFastForward.addEventListener('click', () => {
-    toggleActiveClass(buttonFastForward)
-    fastForward(player)
+    fastForward(media)
   })
   */
   buttonLeapRewind.addEventListener('click', () => {
-    //toggleActiveClass(buttonLeapRewind)
-    leapRewind(player)
+    leapRewind(media)
   })
 
   buttonLeapForward.addEventListener('click', () => {
-    //toggleActiveClass(buttonLeapForward)
-    leapForward(player)
+    leapForward(media)
   })
 
   media.addEventListener('ended', () => {
@@ -225,7 +213,7 @@ function control(player) {
 
 addAudioPlayer()
 
-document.querySelectorAll('.media-player').forEach(player => control(player))
+document.querySelectorAll('.media-player').forEach(player => controls(player))
 
 document.addEventListener('play', e => { // Si un lecteur actif sur la page, alors les autres se mettent en pause.
   [...document.querySelectorAll('.media')].forEach((media) => { // audio, video

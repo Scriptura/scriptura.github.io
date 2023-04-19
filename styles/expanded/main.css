@@ -1434,10 +1434,11 @@ video.media {
 }
 .media-player .media-extend-menu.active {
   position: absolute;
+  top: -3em;
+  right: 0;
+  height: 3em;
   display: flex;
   gap: 0.5em;
-  right: 3.5em;
-  height: 3em;
   background-color: #464646;
   border-radius: 1.5em;
 }
@@ -3503,7 +3504,7 @@ html,
 .tab-list > button,
 .tab-summary,
 .media-player,
-.media-play-pause,
+.media-player .media-play-pause,
 .media-extend-menu,
 .media-extend-menu button,
 .progress-bar div,
