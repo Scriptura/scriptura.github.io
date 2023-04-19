@@ -1318,6 +1318,7 @@ video.media {
 .media-player .media-volume-bar {
   --colorSlide: #ff6347;
   all: unset;
+  min-width: 0;
   height: 0.3em;
   padding-block: 1em;
   color: #ff6347;
