@@ -1,7 +1,7 @@
 'use strict'
 
 const medias = document.querySelectorAll('.media') // audio, video
-const mediaPlayerHTML = `
+const playerHTML = `
 <div class="media-player">
   <button class="media-play-pause">
     <svg focusable="false">
@@ -73,7 +73,7 @@ const addMediaPlayer = () => {
   for (const media of medias) {
     i++
     media.id = 'media-player' + i
-    media.insertAdjacentHTML('afterend', mediaPlayerHTML)
+    media.insertAdjacentHTML('afterend', playerHTML)
     mediaDuration(media)
   }
 }
@@ -109,15 +109,29 @@ const currentTime = () => {
   }
 }
 
+const buttonAccordingToMedia = (mediaStatus, button) => mediaStatus ? button.classList.add('active') : button.classList.remove('active')
+
 const togglePlayPause = media => media.paused ? media.play() : media.pause()
 
-const toggleActiveClass = el => el.classList.contains('active') ? el.classList.remove('active') : el.classList.add('active')
+const mute = media => media.muted = !media.muted
 
-const mute = media => media.volume === 0 ? media.volume = 1 : media.volume = 0
+const stop = media => {
+  media.pause()
+  media.currentTime = 0
+}
+
+const replay = (media) => media.loop = !media.loop
+
+//const fastRewind = media => {}
+
+//const fastForward = media => {}
+
+const leapRewind = media => media.currentTime -= 10
+
+const leapForward = media => media.currentTime += 10
 
 const menu = player => {
-  const extendMenu = player.querySelector('.media-extend-menu')
-  toggleActiveClass(extendMenu)
+  player.querySelector('.media-extend-menu').classList.toggle('active')
   ;[...document.querySelectorAll('.media-player')].forEach((mp) => { // @note Si un menu ouvert, alors les menus des autres players sont fermés.
     if (mp !== player) {
       mp.querySelector('.media-menu').classList.remove('active')
@@ -126,97 +140,62 @@ const menu = player => {
   })
 }
 
-const stop = media => {
-  media.pause()
-  media.currentTime = 0
-}
-
-const replay = (media, player) => {
-  const test = player.querySelector('.media-replay').classList.contains('active')
-  test ? media.loop = true : media.loop = false
-}
-
-//const fastRewind = media => {}
-//const fastForward = media => {}
-
-const leapRewind = media => media.currentTime -= 10
-
-const leapForward = media => media.currentTime += 10
-
 function controls(player) {
 
   const media = player.previousElementSibling,
         buttonPlayPause = player.querySelector('.media-play-pause'),
         buttonVolume = player.querySelector('.media-volume'),
-        buttonMenu = player.querySelector('.media-menu'),
         buttonStop = player.querySelector('.media-stop'),
         buttonReplay = player.querySelector('.media-replay'),
         //buttonFastRewind = player.querySelector('.media-fast-rewind'),
         //buttonFastForward = player.querySelector('.media-fast-forward'),
         buttonLeapRewind = player.querySelector('.media-leap-rewind'),
-        buttonLeapForward = player.querySelector('.media-leap-forward')
+        buttonLeapForward = player.querySelector('.media-leap-forward'),
+        buttonMenu = player.querySelector('.media-menu')
 
-  buttonPlayPause.addEventListener('click', function() {
-    togglePlayPause(media)
-    toggleActiveClass(this)
-    currentTime()
-  })
-
-  buttonVolume.addEventListener('click', function() {
-    toggleActiveClass(this)
-    mute(media)
-  })
-
-  buttonMenu.addEventListener('click', function() {
-    toggleActiveClass(this)
-    menu(player)
-  })
-
-  buttonStop.addEventListener('click', function() {
-    stop(media)
-  })
-
-  buttonReplay.addEventListener('click', function() {
-    toggleActiveClass(this)
-    replay(media, player)
-  })
-  /*
-  buttonFastRewind.addEventListener('click', () => {
-    fastRewind(media)
-  })
-
-  buttonFastForward.addEventListener('click', () => {
-    fastForward(media)
-  })
-  */
-  buttonLeapRewind.addEventListener('click', () => {
-    leapRewind(media)
-  })
-
-  buttonLeapForward.addEventListener('click', () => {
-    leapForward(media)
+  // Contrôle via les événements:
+  document.documentElement.addEventListener('click', () => {
+    buttonAccordingToMedia(!media.paused, buttonPlayPause)
+    buttonAccordingToMedia(media.muted, buttonVolume)
+    buttonAccordingToMedia(media.paused && media.currentTime === 0, buttonStop)
+    buttonAccordingToMedia(media.loop, buttonReplay)
   })
 
   media.addEventListener('ended', () => {
     buttonPlayPause.classList.remove('active')
     media.currentTime = 0
+    buttonStop.classList.add('active')
   })
 
   media.addEventListener('pause', () => {
     buttonPlayPause.classList.remove('active')
   })
 
+  // Contrôle via les boutons :
+  buttonPlayPause.addEventListener('click', function() {
+    togglePlayPause(media)
+    currentTime()
+  })
+  buttonVolume.addEventListener('click', () => mute(media))
+  buttonStop.addEventListener('click', () => stop(media))
+  buttonReplay.addEventListener('click', () => replay(media))
+  //buttonFastRewind.addEventListener('click', () => fastRewind(media))
+  //buttonFastForward.addEventListener('click', () => fastForward(media))
+  buttonLeapRewind.addEventListener('click', () => leapRewind(media))
+  buttonLeapForward.addEventListener('click', () => leapForward(media))
+  buttonMenu.addEventListener('click', () => { // @note Fonction de notre player, non liée à la source media.
+    buttonMenu.classList.toggle('active')
+    menu(player)
+  })
+
 }
+
+document.addEventListener('play', e => { // Si un lecteur actif sur la page, alors les autres se mettent en pause.
+  medias.forEach((media) => { // audio, video
+    if (media !== e.target) media.pause()
+  })
+}, true)
 
 addMediaPlayer()
 
-document.querySelectorAll('.media-player').forEach(player => controls(player))
-
-document.addEventListener('play', e => { // Si un lecteur actif sur la page, alors les autres se mettent en pause.
-  [...document.querySelectorAll('.media')].forEach((media) => { // audio, video
-    if (media !== e.target) {
-      media.pause()
-      media.nextElementSibling.querySelector('.media-play-pause').classList.remove('active')
-    }
-  })
-}, true)
+medias.forEach((media) => controls(media.nextElementSibling))
