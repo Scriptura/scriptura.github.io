@@ -40,7 +40,6 @@ _mediaPlayerSize = 3em
 .media-player
   position: relative
   display: flex
-  //flex-direction: row
   justify-content: space-between
   align-items: center
   gap: .5em
@@ -49,8 +48,6 @@ _mediaPlayerSize = 3em
   background-color: _colorG + 7%
   border-radius: 2em
   box-shadow: _shadow17
-  //& > *
-  //  align-self: center
   & button
     all: unset
     flex-shrink: 0
@@ -85,9 +82,7 @@ _mediaPlayerSize = 3em
   & .media-volume-bar:hover
   & .media-volume-bar:active
     --colorSlide: _color5
-    //& .media-volume-bar
-      //background-color: _colorG + 14% !important
-    
+
     &:focus-visible::-webkit-slider-thumb
     //&:hover::-webkit-slider-thumb
     &:active::-webkit-slider-thumb
@@ -105,14 +100,15 @@ _mediaPlayerSize = 3em
     box-sizing: border-box // @affected Firefox @note Définition obligatoire de cette règle malgré sa déclaration en globale.
     border: none
     {_rangeBlockThumb2}
+
+  & .media-volume-bar
+    background-color: _colorG
   & .media-play-pause
     position: relative
     z-index: 1
     width: _mediaPlayerSize
     background-color: _colorG + 14%
     border-radius: 50%
-    //&.active
-    //  background-color: _colorG + 14%
     &.active::before
     &:focus-visible::before
       content ''
@@ -139,7 +135,6 @@ _mediaPlayerSize = 3em
   & .media-extended-volume
     position: relative
     display: flex
-    //flex-direction: row
     justify-content: space-between
     align-items: center
     gap: .5em
@@ -152,16 +147,16 @@ _mediaPlayerSize = 3em
   & .media-extended-volume:hover
   & .media-extended-volume:active
   & .media-extended-volume.active
-    min-width: 40%
+    //min-width: 40%
     & > .media-volume-bar
       display: inherit
   & .media-play-pause.active ~ .media-volume.active
     animation: anim-mute 1s infinite // Si lecture et fonction mute activée, alors le bouton mute clignote ; pour rappeler lors de la reprise d'une lecture que la fonction mute est active.
   & .media-volume-bar
     --progress: 50%
-    display: none
-    width: 0
-    transition: width .5s
+    //display: none
+    //width: 0
+    //transition: width .5s
   & .media-mute
     width: 2em
   & .media-menu

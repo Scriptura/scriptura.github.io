@@ -81,10 +81,10 @@ const addMediaPlayer = media => {
   mediaDuration(media)
 }
 
-const secondsToTime = e => { // @see https://stackoverflow.com/questions/3733227/javascript-seconds-to-minutes-and-seconds
-  let hh = Math.floor(e / 3600).toString(),
-      mm = Math.floor(e % 3600 / 60).toString(),
-      ss = Math.floor(e % 60).toString().padStart(2, '0')
+const secondsToTime = seconds => { // @see https://stackoverflow.com/questions/3733227/javascript-seconds-to-minutes-and-seconds
+  let hh = Math.floor(seconds / 3600).toString(),
+      mm = Math.floor(seconds % 3600 / 60).toString(),
+      ss = Math.floor(seconds % 60).toString().padStart(2, '0')
   if (hh === '0') hh = null // Si pas d'heures, alors info sur les heures escamotée.
   if (isNaN(hh)) hh = null // Si valeur nulle, alors info sur les heures escamotée.
   if (isNaN(mm)) mm = '0' // Si valeur nulle, alors affichage par défaut.
@@ -92,23 +92,22 @@ const secondsToTime = e => { // @see https://stackoverflow.com/questions/3733227
   return [hh, mm, ss].filter(Boolean).join(':')
 }
 
-const mediaDuration = (media) => {
+const mediaDuration = media => {
   const output = media.nextElementSibling.querySelector('.media-duration')
   media.readyState >= 1 ? output.value = secondsToTime(media.duration) : media.addEventListener('loadedmetadata', () => output.value = secondsToTime(media.duration))
 }
 
-const currentTime = () => {
-  for (const media of medias) {
-    const player = media.nextElementSibling,
-          output = player.querySelector('.media-current-time'),
-          progress = player.querySelector('.media-progress-bar')
-    setInterval(frame, 50)
-    function frame() {
-      const ratio = media.currentTime / media.duration
-      output.value = secondsToTime(media.currentTime)
-      progress.value = ratio * 100
-      progress.style.setProperty('--progress', `${Math.floor(ratio * 10000) / 100}%`) // @note Deux chiffres après la virgule.
-    }
+const progressBarStyles = (media, progressBar) => progressBar.style.setProperty('--progress', `${Math.floor(media.currentTime / media.duration * 10000) / 100}%`) // @note Deux chiffres après la virgule.
+
+const currentTime = media => {
+  const player = media.nextElementSibling,
+        output = player.querySelector('.media-current-time'),
+        progressBar = player.querySelector('.media-progress-bar')
+  setInterval(frame, 50)
+  function frame() {
+    output.value = secondsToTime(media.currentTime)
+    progressBar.value = media.currentTime / media.duration * 100
+    progressBarStyles(media, progressBar)
   }
 }
 
@@ -158,15 +157,15 @@ const controls = media => {
         leapRewindButton = player.querySelector('.media-leap-rewind'),
         leapForwardButton = player.querySelector('.media-leap-forward'),
         menuButton = player.querySelector('.media-menu'),
-        mediaTime = player.querySelector('.media-time'),
-        mediaProgressBar = player.querySelector('.media-progress-bar')
+        time = player.querySelector('.media-time'),
+        progressBar = player.querySelector('.media-progress-bar')
 
   // Contrôle via les événements:
 
-  media.addEventListener('error', () => { // @todo En test...
+  media.addEventListener('error', () => { // @todo À revoir, fonctionne une fois sur 3, sans doute problème de détection au chargement de la page...
     player.setAttribute('inert', '')
     player.classList.add('error')
-    mediaTime.innerHTML = 'Error !'
+    time.innerHTML = 'Error !'
   }, true)
 
   document.documentElement.addEventListener('click', () => {
@@ -182,15 +181,13 @@ const controls = media => {
     stopButton.classList.add('active')
   })
 
-  media.addEventListener('pause', () => {
-    playPauseButton.classList.remove('active')
-  })
+  media.addEventListener('pause', () => playPauseButton.classList.remove('active'))
 
   // Contrôle via les boutons :
 
   playPauseButton.addEventListener('click', () => {
     togglePlayPause(media)
-    currentTime()
+    currentTime(media)
   })
 
   if (media.tagName === 'VIDEO') fullscreenButton.addEventListener('click', () => fullscreen(media))
@@ -199,11 +196,12 @@ const controls = media => {
 
   stopButton.addEventListener('click', () => stop(media))
 
-  ;['click', 'rangeinput'].forEach((event) => { // @todo 'touchmove' ?
-    mediaProgressBar.addEventListener(event, (e) => {
-      const rect = mediaProgressBar.getBoundingClientRect()
-      const pos = (e.pageX - rect.left) / mediaProgressBar.offsetWidth
-      media.currentTime = pos * media.duration
+  ;['click', 'rangeinput', 'touchmove'].forEach((event) => { // @todo 'touchmove' ?
+    progressBar.addEventListener(event, e => {
+      const DOMRect = progressBar.getBoundingClientRect()
+      const position = (e.pageX - DOMRect.left) / progressBar.offsetWidth
+      media.currentTime = position * media.duration
+      progressBarStyles(media, progressBar) // Dissociation des styles et de l'attribut 'value' de l'imput range. Graĉe à ce procédé l'input range peut suivre une lecture éventuellement en cours tout en permettant à l'utilisateur de voir son intrerraction avec la barre de progression.
     })
   })
 
@@ -229,7 +227,6 @@ document.addEventListener('play', e => { // Si un lecteur actif sur la page, alo
     if (media !== e.target) media.pause()
   })
 }, true)
-
 
 let i = 0
 

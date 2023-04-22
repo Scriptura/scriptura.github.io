@@ -1368,6 +1368,9 @@ video.media {
   background-color: transparent;
   border-radius: 50%;
 }
+.media-player .media-volume-bar {
+  background-color: #383838;
+}
 .media-player .media-play-pause {
   position: relative;
   z-index: 1;
@@ -1415,12 +1418,6 @@ video.media {
   border-radius: 2em;
   transition: min-width 0.3s;
 }
-.media-player .media-extended-volume:focus,
-.media-player .media-extended-volume:hover,
-.media-player .media-extended-volume:active,
-.media-player .media-extended-volume.active {
-  min-width: 40%;
-}
 .media-player .media-extended-volume:focus > .media-volume-bar,
 .media-player .media-extended-volume:hover > .media-volume-bar,
 .media-player .media-extended-volume:active > .media-volume-bar,
@@ -1432,9 +1429,6 @@ video.media {
 }
 .media-player .media-volume-bar {
   --progress: 50%;
-  display: none;
-  width: 0;
-  transition: width 0.5s;
 }
 .media-player .media-mute {
   width: 2em;
