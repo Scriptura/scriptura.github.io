@@ -18,7 +18,7 @@ const playerHTML = `
     <output class="media-current-time">0:00</output>&nbsp;/&nbsp;<output class="media-duration">0:00</output>
   </div>
   <input type="range" class="media-progress-bar" min="0" max="100" step="1" value="0">
-  <div class="media-extended-volume">
+  <div class="media-extended-volume" tabindex="0">
     <input type="range" class="media-volume-bar" min="0" max="10" step="1" value="5">
     <button class="media-mute" aria-label="play/pause">
       <svg focusable="false">
@@ -97,7 +97,11 @@ const mediaDuration = media => {
   media.readyState >= 1 ? output.value = secondsToTime(media.duration) : media.addEventListener('loadedmetadata', () => output.value = secondsToTime(media.duration))
 }
 
-const progressBarStyles = (media, progressBar) => progressBar.style.setProperty('--progress', `${Math.floor(media.currentTime / media.duration * 10000) / 100}%`) // @note Deux chiffres après la virgule.
+/**
+ * Dissociation des styles et de l'attribut 'value' de l'imput range.
+ * Grâce à ce procédé l'input range peut suivre une lecture éventuellement en cours tout en permettant à l'utilisateur de voir son intrerraction avec la barre de progression.
+ */
+const progressBarStyles = (media, progressBar) => progressBar.style.setProperty('--position', `${Math.floor(media.currentTime / media.duration * 10000) / 100}%`) // @note Deux chiffres après la virgule.
 
 const currentTime = media => {
   const player = media.nextElementSibling,
@@ -190,18 +194,22 @@ const controls = media => {
     currentTime(media)
   })
 
-  if (media.tagName === 'VIDEO') fullscreenButton.addEventListener('click', () => fullscreen(media))
+  // Si balise html 'video' et API plein écran activée dans le navigateur :
+  if (media.tagName === 'VIDEO' && !document?.fullscreenEnabled) fullscreenButton.addEventListener('click', () => fullscreen(media))
 
   muteButton.addEventListener('click', () => mute(media))
 
-  stopButton.addEventListener('click', () => stop(media))
+  stopButton.addEventListener('click', () => {
+    stop(media)
+    progressBarStyles(media, progressBar)
+  })
 
   ;['click', 'rangeinput', 'touchmove'].forEach((event) => { // @todo 'touchmove' ?
     progressBar.addEventListener(event, e => {
       const DOMRect = progressBar.getBoundingClientRect()
       const position = (e.pageX - DOMRect.left) / progressBar.offsetWidth
       media.currentTime = position * media.duration
-      progressBarStyles(media, progressBar) // Dissociation des styles et de l'attribut 'value' de l'imput range. Graĉe à ce procédé l'input range peut suivre une lecture éventuellement en cours tout en permettant à l'utilisateur de voir son intrerraction avec la barre de progression.
+      progressBarStyles(media, progressBar)
     })
   })
 
@@ -211,10 +219,16 @@ const controls = media => {
 
   //fastForwardButton.addEventListener('click', () => fastForward(media))
 
-  leapRewindButton.addEventListener('click', () => leapRewind(media))
+  leapRewindButton.addEventListener('click', () => {
+    leapRewind(media)
+    progressBarStyles(media, progressBar)
+  })
 
-  leapForwardButton.addEventListener('click', () => leapForward(media))
-  
+  leapForwardButton.addEventListener('click', () => {
+    leapForward(media)
+    progressBarStyles(media, progressBar)
+  })
+
   menuButton.addEventListener('click', () => { // @note Fonction de notre player, non liée à la source media.
     menuButton.classList.toggle('active')
     menu(player)

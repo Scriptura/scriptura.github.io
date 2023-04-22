@@ -45,6 +45,7 @@ _mediaPlayerSize = 3em
   gap: .5em
   width: 100%
   height: _mediaPlayerSize
+  padding-right: .5em
   background-color: _colorG + 7%
   border-radius: 2em
   box-shadow: _shadow17
@@ -62,7 +63,7 @@ _mediaPlayerSize = 3em
   & .media-time
     flex-shrink: 0
   & .media-progress-bar
-    --progress: 0%
+    --position: 0%
   & .media-progress-bar
   & .media-volume-bar
     --colorSlide: _color2
@@ -72,7 +73,7 @@ _mediaPlayerSize = 3em
     padding-block: 1em // @note Avec la propriété height, ne doit pas dépasser la hauteur du player
     color: _color2
     background-color: _colorG + 14%
-    background-image: linear-gradient(90deg, var(--colorSlide) 0, var(--colorSlide) var(--progress), transparent var(--progress))
+    background-image: linear-gradient(90deg, var(--colorSlide) 0, var(--colorSlide) var(--position), transparent var(--position))
     background-clip: content-box
     cursor: pointer
   & .media-progress-bar:focus
@@ -82,27 +83,21 @@ _mediaPlayerSize = 3em
   & .media-volume-bar:hover
   & .media-volume-bar:active
     --colorSlide: _color5
-
     &:focus-visible::-webkit-slider-thumb
-    //&:hover::-webkit-slider-thumb
     &:active::-webkit-slider-thumb
       background-color: _color5
     &:focus-visible::-moz-range-thumb
-    //&:hover::-moz-range-thumb
     &:active::-moz-range-thumb
       background-color: _color5
-    
   & ::-webkit-slider-thumb
-    //all: unset
     -webkit-appearance: none
     {_rangeBlockThumb2}
   & ::-moz-range-thumb
     box-sizing: border-box // @affected Firefox @note Définition obligatoire de cette règle malgré sa déclaration en globale.
     border: none
     {_rangeBlockThumb2}
-
   & .media-volume-bar
-    background-color: _colorG
+    background-color: _colorG + 21%
   & .media-play-pause
     position: relative
     z-index: 1
@@ -133,44 +128,51 @@ _mediaPlayerSize = 3em
       & > :last-child
         display: initial
   & .media-extended-volume
-    position: relative
     display: flex
     justify-content: space-between
     align-items: center
     gap: .5em
     height: 2em
-    min-width: 0
+    max-width: 2em
     background-color: _colorG + 7%
     border-radius: 2em
-    transition: min-width .3s
-  & .media-extended-volume:focus
+    transition: max-width .6s
+    outline: none
+  & .media-extended-volume:focus-within
   & .media-extended-volume:hover
-  & .media-extended-volume:active
-  & .media-extended-volume.active
-    //min-width: 40%
+    width: initial
+    max-width: 100%
+    padding-inline: .5em 0
     & > .media-volume-bar
       display: inherit
-  & .media-play-pause.active ~ .media-volume.active
+  & .media-play-pause.active ~ .media-extended-volume .media-mute.active
     animation: anim-mute 1s infinite // Si lecture et fonction mute activée, alors le bouton mute clignote ; pour rappeler lors de la reprise d'une lecture que la fonction mute est active.
   & .media-volume-bar
-    --progress: 50%
-    //display: none
-    //width: 0
-    //transition: width .5s
+    --position: 50%
+    display: none
   & .media-mute
     width: 2em
-  & .media-menu
-    width: _mediaPlayerSize
-    border-radius: (_mediaPlayerSize / 2)
+    height: 2em
+    border-radius: 50%
     &:focus-visible
-      background-color: _color2
+      background-color: _color5
+  & .media-menu
+    width: 2em //_mediaPlayerSize
+    height: 2em
+    background-color: _colorG + 7%
+    border-radius: 50% //(_mediaPlayerSize / 2)
+    &:focus-visible
+      background-color: _color5
     &:hover
     &:active
-      background-color: _colorG + 7%
+      background-color: _colorG + 14%
   & .media-progress-bar
     flex-grow: 1
   & .media-fullscreen
     width: 2em
+    height: 2em
+    background-color: _colorG + 7%
+    border-radius: 50%
   & .media-extend-menu
     display: none
   & .media-extend-menu.active
@@ -192,13 +194,14 @@ _mediaPlayerSize = 3em
       &:hover
         background-color: _colorG + 21%
       &:focus-visible
-      &.active
+        background-color: _color5
       &:active
+      &.active
         background-color: _color2
   &.error
-    background-color: _colorG + 30%
-    & > :not('.media-time')
-      background-color: _colorG + 30% !important
+    background-color: _colorG - 14%
+    & > *:not(input)
+      filter: brightness(.5)
 
 audio + .media-player .media-fullscreen
     display: none
