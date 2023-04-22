@@ -24,10 +24,10 @@ writeFileSync('views/includes/iconList.pug', createIcons(names))
 writeFileSync('index.html', renderFile('views/index.pug'))
 writeFileSync('404.html', renderFile('views/404.pug'))
 
-rmSync('page', {recursive: true}) // Suppression du dossier.
+rmSync('page', {recursive: true}) // Suppression du dossier ; évite la persistance d'un rendu en .html d'un fichier .pug supprimé ou renommé.
 mkdirSync('page') // Recréation du dossier.
 
 for (let file of files) {
-  file = file.toString().slice(0, -4)
+  file = file.toString().slice(0, -4) // @note Récupération du nom de la page sans l'extension.
   writeFileSync(`page/${file}.html`, renderFile(`views/pages/${file}.pug`))
 }

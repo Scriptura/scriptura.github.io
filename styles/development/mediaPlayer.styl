@@ -1,0 +1,260 @@
+_mediaPlayerSize = 3em
+
+audio
+video
+canvas
+  width: 100%
+
+audio
+video
+  outline: none
+
+//audio
+//  height: _mediaPlayerSize // @note Harmonisation avec notre propre player personnalisé.
+
+//audio:not([controls])
+//  display: none // @affected All browsers @note Affichage de l'audio sans contrôle
+
+// @bugfix Redimentionnement de l'élément video à la lecture @note La solution adoptée est de mettre un poster de même dimention que le flux vidéo
+//video
+//  object-fit cover // @affected Firefox @note Influence sur l'image des posters
+
+//audio.media
+//  display: none // @note C'est Javascript qui se charge de la suppression, ce qui permet l'affichage d'un lecteur par défaut si JS désactivé.
+
+video.media
+  background-color: #000 // @bugfix @affected Google Maps @note Pas de background prédéfinit sur élément `canvas` afin d'éviter les conflits.
+  box-shadow: _shadow15
+
+_rangeBlockThumb2 =
+  pointer-events: auto
+  width: 1em
+  aspect-ratio: 1
+  background-color: transparent //_color2
+  //border: .2em solid _rangeColor5
+  border-radius: 50%
+  //box-shadow: _shadow6
+
+_mediaPlayerSize = 3em
+
+.media-player
+  position: relative
+  display: flex
+  //flex-direction: row
+  justify-content: space-between
+  align-items: center
+  gap: .5em
+  width: 100%
+  height: _mediaPlayerSize
+  background-color: _colorG + 7%
+  border-radius: 2em
+  box-shadow: _shadow17
+  //& > *
+  //  align-self: center
+  & button
+    all: unset
+    flex-shrink: 0
+    display: grid
+    height: _mediaPlayerSize
+    outline: none
+    cursor: pointer
+    & svg
+      width: 1.2em
+      height: 1.2em
+      margin: auto
+  & .media-time
+    flex-shrink: 0
+  & .media-progress-bar
+    --progress: 0%
+  & .media-progress-bar
+  & .media-volume-bar
+    --colorSlide: _color2
+    all: unset
+    min-width: 0 // @adffected Firefox
+    height: .3em
+    padding-block: 1em // @note Avec la propriété height, ne doit pas dépasser la hauteur du player
+    color: _color2
+    background-color: _colorG + 14%
+    background-image: linear-gradient(90deg, var(--colorSlide) 0, var(--colorSlide) var(--progress), transparent var(--progress))
+    background-clip: content-box
+    cursor: pointer
+  & .media-progress-bar:focus
+  & .media-progress-bar:hover
+  & .media-progress-bar:active
+  & .media-volume-bar:focus
+  & .media-volume-bar:hover
+  & .media-volume-bar:active
+    --colorSlide: _color5
+    //& .media-volume-bar
+      //background-color: _colorG + 14% !important
+    
+    &:focus-visible::-webkit-slider-thumb
+    //&:hover::-webkit-slider-thumb
+    &:active::-webkit-slider-thumb
+      background-color: _color5
+    &:focus-visible::-moz-range-thumb
+    //&:hover::-moz-range-thumb
+    &:active::-moz-range-thumb
+      background-color: _color5
+    
+  & ::-webkit-slider-thumb
+    //all: unset
+    -webkit-appearance: none
+    {_rangeBlockThumb2}
+  & ::-moz-range-thumb
+    box-sizing: border-box // @affected Firefox @note Définition obligatoire de cette règle malgré sa déclaration en globale.
+    border: none
+    {_rangeBlockThumb2}
+  & .media-play-pause
+    position: relative
+    z-index: 1
+    width: _mediaPlayerSize
+    background-color: _colorG + 14%
+    border-radius: 50%
+    //&.active
+    //  background-color: _colorG + 14%
+    &.active::before
+    &:focus-visible::before
+      content ''
+      position: absolute
+      inset: 0
+      z-index: -1
+      border: .35em solid _colorG + 14%
+      border-radius: 50%
+      //background: repeating-conic-gradient((_colorG + 7%) 0 90deg, (_colorG + 14%) 0 180deg)
+    &.active::before
+      border-block-color: _color2
+      animation anim-play var(--frame, 20s) linear infinite
+    &:focus-visible::before
+      border-block-color: _color5
+  & .media-play-pause
+  & .media-mute
+    & > :last-child
+      display: none
+    &.active
+      & > :first-child
+        display: none
+      & > :last-child
+        display: initial
+  & .media-extended-volume
+    position: relative
+    display: flex
+    //flex-direction: row
+    justify-content: space-between
+    align-items: center
+    gap: .5em
+    height: 2em
+    min-width: 0
+    background-color: _colorG + 7%
+    border-radius: 2em
+    transition: min-width .3s
+  & .media-extended-volume:focus
+  & .media-extended-volume:hover
+  & .media-extended-volume:active
+  & .media-extended-volume.active
+    min-width: 40%
+    & > .media-volume-bar
+      display: inherit
+  & .media-play-pause.active ~ .media-volume.active
+    animation: anim-mute 1s infinite // Si lecture et fonction mute activée, alors le bouton mute clignote ; pour rappeler lors de la reprise d'une lecture que la fonction mute est active.
+  & .media-volume-bar
+    --progress: 50%
+    display: none
+    width: 0
+    transition: width .5s
+  & .media-mute
+    width: 2em
+  & .media-menu
+    width: _mediaPlayerSize
+    border-radius: (_mediaPlayerSize / 2)
+    &:focus-visible
+      background-color: _color2
+    &:hover
+    &:active
+      background-color: _colorG + 7%
+  & .media-progress-bar
+    flex-grow: 1
+  & .media-fullscreen
+    width: 2em
+  & .media-extend-menu
+    display: none
+  & .media-extend-menu.active
+    position: absolute
+    //z-index: 20 // @todo Si besoin
+    top: - _mediaPlayerSize
+    right: 0
+    height: _mediaPlayerSize
+    display: flex
+    gap: .5em
+    background-color: _colorG + 7%
+    border-radius: (_mediaPlayerSize / 2)
+    box-shadow: _shadow17
+    & button
+      width: _mediaPlayerSize
+      aspect-ratio: 1
+      background-color: _colorG + 14%
+      border-radius: 50%
+      &:hover
+        background-color: _colorG + 21%
+      &:focus-visible
+      &.active
+      &:active
+        background-color: _color2
+  &.error
+    background-color: _colorG + 30%
+    & > :not('.media-time')
+      background-color: _colorG + 30% !important
+
+audio + .media-player .media-fullscreen
+    display: none
+
+@keyframes anim-play
+  from
+    transform rotate(0deg)
+  to
+    transform rotate(359deg)
+
+@keyframes anim-mute
+  50%
+    color: _colorG + 14%
+
+.video-youtube
+  position: relative // [1] Évite un léger resize entre le thumbnail et le chargement de la vidéo.
+  aspect-ratio: 16/9
+  user-select: none
+  background-color: #000
+  & iframe
+  & > div
+    position: absolute // [1]
+    inset: 0
+  & .video-youtube-error
+    text-align: center
+  & .thumbnail-youtube
+    display: grid
+    place-content: center
+    background-size: cover
+    background-position: 50% 50% // @note Pour positionner correctement les images plus petites que l'élément.
+    & button
+      all: unset
+      position: relative
+      width: 5em
+      //aspect-ratio: 1/1
+      //max-width: 50%
+      outline: none
+      & svg
+        fill: rgba(255, 255, 255, .7)
+      &:focus svg
+      &:hover svg
+        fill: _color5
+  & .video-youtube-title
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    padding: .5em 1em
+    overflow: hidden
+    white-space: nowrap
+    text-align: right
+    text-overflow: ellipsis
+    text-shadow: 0 0 .2em rgba(0, 0, 0, .8)
+  //@media (hover: hover) and (pointer: fine)

@@ -62,7 +62,7 @@ const getScripts = (() => {
   if (document.querySelector('.add-line-marks')) getScript('/scripts/lineMark.js')
   if (document.querySelector('pie-chart')) getScript('/scripts/pieChart.js')
   if (document.querySelector('bar-chart')) getScript('/scripts/barChart.js')
-  if (document.querySelector('.media')) getScript('/scripts/media.js')
+  if (document.querySelector('.media')) getScript('/scripts/mediaPlayer.js')
   if (document.querySelector('.map')) getScript('/scripts/map.js')
   if (document.querySelector('.map')) getScript('/libraries/leaflet/leaflet.js')
   if (document.querySelector('[class*=language-]')) getScript('/libraries/prism/prism.js')
@@ -381,7 +381,7 @@ const progressBarTest = (() => {
         target = document.querySelector('#progress-test-target')
     cmd && cmd.addEventListener('click', () => {
     let value = target.dataset.value
-    setInterval(frame, 200)
+    setInterval(frame, 20)
     function frame() {
       if (value < 100) {
         value++

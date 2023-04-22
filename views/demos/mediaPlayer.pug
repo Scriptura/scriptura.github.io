@@ -2,29 +2,34 @@
   //-div
     p
       code audio
-    audio(controls='controls')
+    audio(controls)
       source(src='/medias/audios/BagdadCafe.mp3')
       p.message-error This media is not supported by your browser.
   div
     p
       code audio.media
     div(style='display:grid;gap:1em')
-      audio.media
+      audio.media(controls)
         source(src='/medias/audios/BagdadCafe.mp3')
-      audio.media
+      audio.media(controls)
         source(src='/medias/audios/YvesDuteil.mp3')
-      audio.media
-        source(src='/medias/audios/GerardBerliner.mp3')
-      audio.media
+      //-audio.media(controls)
+      //-  source(src='/medias/audios/GerardBerliner.mp3')
+      audio.media(controls)
         source(src='/medias/audios/merle.mp3')
-      audio.media
+      audio.media(controls)
         source(src='/medias/audios/abeilles.mp3')
-      audio.media
+      audio.media(controls)
         source(src='/medias/audios/grillons.mp3')
+    div
+      p
+        code .error
+      audio.media(controls)
+        source(src='/UrlError.mp3')
   div
     p
       code video.media
-    video.media(controls='controls', poster='/medias/videos/posters/LeRetourDuRoi.jpg')
+    video.media(controls, poster='/medias/videos/posters/LeRetourDuRoi.jpg')
       source(src='/medias/videos/LeRetourDuRoi.mp4', type='video/mp4')
 hr(data-hr='✻ ✻ ✻')
 .grid3.m-grid2.gap.gap-bottom
@@ -42,16 +47,16 @@ hr(data-hr='✻ ✻ ✻')
     .video-youtube(data-id='uWCGK4nneeU')
   div
     p
+      code (data-id='YvNy8Nvy4VE')
+    .video-youtube(data-id='YvNy8Nvy4VE')
+  div
+    p
+      code (data-id='XCJdPfjECq4')
+    .video-youtube(data-id='XCJdPfjECq4')
+  div
+    p
       code (data-id='errorId')
     .video-youtube(data-id='errorId')
-  div
-    p
-      code (missing `maxresdefault.jpg`)
-    .video-youtube(data-id='rnS20usFqYs')
-  div
-    p
-      code (missing `maxresdefault.jpg`)
-    .video-youtube(data-id='jNQXAC9IVRw')
 .grid2.gap
   div
     .message

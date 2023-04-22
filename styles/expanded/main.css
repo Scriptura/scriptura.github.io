@@ -1267,12 +1267,6 @@ audio,
 video {
   outline: none;
 }
-audio:not([controls]) {
-  display: none;
-}
-audio.media {
-  display: none;
-}
 video.media {
   background-color: #000;
   box-shadow: 0.5rem 0.5rem 2rem rgba(0,0,0,0.25);
@@ -1288,9 +1282,6 @@ video.media {
   background-color: #464646;
   border-radius: 2em;
   box-shadow: 0 1rem 1rem rgba(0,0,0,0.1);
-}
-.media-player > * {
-  align-self: center;
 }
 .media-player button {
   all: unset;
@@ -1309,10 +1300,7 @@ video.media {
   flex-shrink: 0;
 }
 .media-player .media-progress-bar {
-  --stop: 0%;
-}
-.media-player .media-volume-bar {
-  --stop: 50%;
+  --progress: 0%;
 }
 .media-player .media-progress-bar,
 .media-player .media-volume-bar {
@@ -1323,7 +1311,7 @@ video.media {
   padding-block: 1em;
   color: #ff6347;
   background-color: #545454;
-  background-image: linear-gradient(90deg, var(--colorSlide) 0, var(--colorSlide) var(--stop), transparent var(--stop));
+  background-image: linear-gradient(90deg, var(--colorSlide) 0, var(--colorSlide) var(--progress), transparent var(--progress));
   background-clip: content-box;
   cursor: pointer;
 }
@@ -1334,21 +1322,39 @@ video.media {
 .media-player .media-volume-bar:hover,
 .media-player .media-volume-bar:active {
   --colorSlide: #ffa600;
-/*
-    &:focus::-webkit-slider-thumb
-    &:hover::-webkit-slider-thumb
-    &:active::-webkit-slider-thumb
-      background-color: _color5
-    &:focus::-moz-range-thumb
-    &:hover::-moz-range-thumb
-    &:active::-moz-range-thumb
-      background-color: _color5
-    */
+}
+.media-player .media-progress-bar:focus:focus-visible::-webkit-slider-thumb,
+.media-player .media-progress-bar:hover:focus-visible::-webkit-slider-thumb,
+.media-player .media-progress-bar:active:focus-visible::-webkit-slider-thumb,
+.media-player .media-volume-bar:focus:focus-visible::-webkit-slider-thumb,
+.media-player .media-volume-bar:hover:focus-visible::-webkit-slider-thumb,
+.media-player .media-volume-bar:active:focus-visible::-webkit-slider-thumb,
+.media-player .media-progress-bar:focus:active::-webkit-slider-thumb,
+.media-player .media-progress-bar:hover:active::-webkit-slider-thumb,
+.media-player .media-progress-bar:active:active::-webkit-slider-thumb,
+.media-player .media-volume-bar:focus:active::-webkit-slider-thumb,
+.media-player .media-volume-bar:hover:active::-webkit-slider-thumb,
+.media-player .media-volume-bar:active:active::-webkit-slider-thumb {
+  background-color: #ffa600;
+}
+.media-player .media-progress-bar:focus:focus-visible::-moz-range-thumb,
+.media-player .media-progress-bar:hover:focus-visible::-moz-range-thumb,
+.media-player .media-progress-bar:active:focus-visible::-moz-range-thumb,
+.media-player .media-volume-bar:focus:focus-visible::-moz-range-thumb,
+.media-player .media-volume-bar:hover:focus-visible::-moz-range-thumb,
+.media-player .media-volume-bar:active:focus-visible::-moz-range-thumb,
+.media-player .media-progress-bar:focus:active::-moz-range-thumb,
+.media-player .media-progress-bar:hover:active::-moz-range-thumb,
+.media-player .media-progress-bar:active:active::-moz-range-thumb,
+.media-player .media-volume-bar:focus:active::-moz-range-thumb,
+.media-player .media-volume-bar:hover:active::-moz-range-thumb,
+.media-player .media-volume-bar:active:active::-moz-range-thumb {
+  background-color: #ffa600;
 }
 .media-player ::-webkit-slider-thumb {
   -webkit-appearance: none;
   pointer-events: auto;
-  width: 0.3em;
+  width: 1em;
   aspect-ratio: 1;
   background-color: transparent;
   border-radius: 50%;
@@ -1357,7 +1363,7 @@ video.media {
   box-sizing: border-box;
   border: none;
   pointer-events: auto;
-  width: 0.3em;
+  width: 1em;
   aspect-ratio: 1;
   background-color: transparent;
   border-radius: 50%;
@@ -1386,18 +1392,51 @@ video.media {
   border-block-color: #ffa600;
 }
 .media-player .media-play-pause > :last-child,
-.media-player .media-volume > :last-child {
+.media-player .media-mute > :last-child {
   display: none;
 }
 .media-player .media-play-pause.active > :first-child,
-.media-player .media-volume.active > :first-child {
+.media-player .media-mute.active > :first-child {
   display: none;
 }
 .media-player .media-play-pause.active > :last-child,
-.media-player .media-volume.active > :last-child {
+.media-player .media-mute.active > :last-child {
   display: initial;
 }
-.media-player .media-volume {
+.media-player .media-extended-volume {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5em;
+  height: 2em;
+  min-width: 0;
+  background-color: #464646;
+  border-radius: 2em;
+  transition: min-width 0.3s;
+}
+.media-player .media-extended-volume:focus,
+.media-player .media-extended-volume:hover,
+.media-player .media-extended-volume:active,
+.media-player .media-extended-volume.active {
+  min-width: 40%;
+}
+.media-player .media-extended-volume:focus > .media-volume-bar,
+.media-player .media-extended-volume:hover > .media-volume-bar,
+.media-player .media-extended-volume:active > .media-volume-bar,
+.media-player .media-extended-volume.active > .media-volume-bar {
+  display: inherit;
+}
+.media-player .media-play-pause.active ~ .media-volume.active {
+  animation: anim-mute 1s infinite;
+}
+.media-player .media-volume-bar {
+  --progress: 50%;
+  display: none;
+  width: 0;
+  transition: width 0.5s;
+}
+.media-player .media-mute {
   width: 2em;
 }
 .media-player .media-menu {
@@ -1414,20 +1453,8 @@ video.media {
 .media-player .media-progress-bar {
   flex-grow: 1;
 }
-.media-player .media-play-pause.active ~ .media-volume.active {
-  animation: anim-mute 1s infinite;
-}
-.media-player .media-volume-bar {
-  width: 0;
-  transition: width 0.5s;
-}
-.media-player .media-volume-bar:focus,
-.media-player .media-volume-bar:hover,
-.media-player .media-volume-bar:active,
-.media-player .media-volume:focus + .media-volume-bar,
-.media-player .media-volume:hover + .media-volume-bar,
-.media-player .media-volume:active + .media-volume-bar {
-  width: 50%;
+.media-player .media-fullscreen {
+  width: 2em;
 }
 .media-player .media-extend-menu {
   display: none;
@@ -1457,23 +1484,14 @@ video.media {
 .media-player .media-extend-menu.active button:active {
   background-color: #ff6347;
 }
-.media-player .media-play-pause {
-  order: 1;
+.media-player.error {
+  background-color: #747474;
 }
-.media-player .media-time {
-  order: 2;
+.media-player.error > :not('.media-time') {
+  background-color: #747474 !important;
 }
-.media-player .media-progress-bar {
-  order: 3;
-}
-.media-player .media-volume {
-  order: 5;
-}
-.media-player .media-volume-bar {
-  order: 4;
-}
-.media-player .media-menu {
-  order: 6;
+audio + .media-player .media-fullscreen {
+  display: none;
 }
 .video-youtube {
   position: relative;
