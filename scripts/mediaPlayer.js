@@ -19,7 +19,7 @@ const playerHTML = `
   </div>
   <input type="range" class="media-progress-bar" min="0" max="100" step="1" value="0">
   <div class="media-extended-volume" tabindex="0">
-    <input type="range" class="media-volume-bar" min="0" max="10" step="1" value="5">
+    <input type="range" class="media-volume-bar" min="0" max="1" step=".1" value=".5">
     <button class="media-mute" aria-label="play/pause">
       <svg focusable="false">
         <use href="/sprites/player.svg#volume-up"></use>
@@ -75,6 +75,8 @@ const playerHTML = `
   </div>
 </div>
 `
+
+const minmax = (number, min, max) => Math.min(Math.max(Number(number), min), max)
 
 const addPlayer = media => {
   media.insertAdjacentHTML('afterend', playerHTML)
@@ -154,13 +156,14 @@ const controls = media => {
         menuButton = player.querySelector('.media-menu'),
         time = player.querySelector('.media-time'),
         output = player.querySelector('.media-current-time'),
-        progressBar = player.querySelector('.media-progress-bar')
+        progressBar = player.querySelector('.media-progress-bar'),
+        volumeBar = player.querySelector('.media-volume-bar')
 
   // Contrôle via les événements:
 
   document.documentElement.addEventListener('click', () => {
     buttonState(!media.paused, playPauseButton)
-    buttonState(media.muted, muteButton)
+    buttonState(media.muted || media.volume === 0, muteButton)
     buttonState(media.paused && media.currentTime === 0, stopButton)
     media.paused && media.currentTime === 0 ? stopButton.disabled = true : stopButton.disabled = false
     buttonState(media.loop, replayButton)
@@ -192,12 +195,23 @@ const controls = media => {
     currentTime(media, output, progressBar)
   })
 
-  ;['click', 'rangeinput', 'touchmove'].forEach((event) => { // @todo 'touchmove' ?
+  ;['click', 'rangeinput', 'touchmove'].forEach((event) => { // 'touchmove', 'change' @todo Tous les types d'événements sont à évaluer.
     progressBar.addEventListener(event, e => {
       const DOMRect = progressBar.getBoundingClientRect()
       const position = (e.pageX - DOMRect.left) / progressBar.offsetWidth
       media.currentTime = position * media.duration
       currentTime(media, output, progressBar)
+    })
+  })
+
+  ;['click', 'rangeinput', 'touchmove'].forEach((event) => {
+    volumeBar.addEventListener(event, e => {
+      const DOMRect = volumeBar.getBoundingClientRect()
+      const position = minmax(Math.floor((e.pageX - DOMRect.left) / volumeBar.offsetWidth * 10) / 10, 0, 1)
+      volumeBar.value = position
+      media.volume = position
+      console.log(  )
+      volumeBar.style.setProperty('--position', `${position * 100}%`) // @note Deux chiffres après la virgule.
     })
   })
 
