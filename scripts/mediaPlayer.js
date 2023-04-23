@@ -34,6 +34,11 @@ const playerHTML = `
       <use href="/sprites/player.svg#fullscreen"></use>
     </svg>
   </button>
+  <button class="media-menu" aria-label="menu">
+    <svg focusable="false">
+      <use href="/sprites/player.svg#menu"></use>
+    </svg>
+  </button>
   <div class="media-extend-menu">
     <button class="media-leap-rewind" aria-label="leap rewind">
       <svg focusable="false">
@@ -68,15 +73,10 @@ const playerHTML = `
       </svg>
     </button>
   </div>
-  <button class="media-menu" aria-label="menu">
-    <svg focusable="false">
-      <use href="/sprites/player.svg#menu"></use>
-    </svg>
-  </button>
 </div>
 `
 
-const addMediaPlayer = media => {
+const addPlayer = media => {
   media.insertAdjacentHTML('afterend', playerHTML)
   mediaDuration(media)
 }
@@ -194,8 +194,8 @@ const controls = media => {
     currentTime(media)
   })
 
-  // Si balise html 'video' et API plein écran activée dans le navigateur :
-  if (media.tagName === 'VIDEO' && !document?.fullscreenEnabled) fullscreenButton.addEventListener('click', () => fullscreen(media))
+  // Si balise 'video' et mode plein écran activé :
+  if (media.tagName === 'VIDEO' && document.fullscreenEnabled) fullscreenButton.addEventListener('click', () => fullscreen(media))
 
   muteButton.addEventListener('click', () => mute(media))
 
@@ -247,7 +247,7 @@ let i = 0
 for (const media of medias) {
   i++
   media.id = 'media-player' + i
-  addMediaPlayer(media)
   media.removeAttribute('controls') // @note C'est bien Javascript qui doit se charger de cette opération, CSS ne doit pas le faire, ce qui permet un lecteur par défaut avec l'attribut "controls" si JS désactivé.
+  addPlayer(media)
   controls(media)
 }
