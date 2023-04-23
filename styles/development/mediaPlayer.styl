@@ -129,22 +129,25 @@ _mediaPlayerSize = 3em
         display: initial
   & .media-extended-volume
     display: flex
-    justify-content: space-between
+    justify-content: flex-end
     align-items: center
     gap: .5em
     height: 2em
     max-width: 2em
     background-color: _colorG + 7%
     border-radius: 2em
-    transition: max-width .6s
+    transition: max-width .6s ease-in-out
     outline: none
-  & .media-extended-volume:focus-within
-  & .media-extended-volume:hover
-    width: initial
-    max-width: 100%
-    padding-inline: .5em 0
-    & > .media-volume-bar
-      display: inherit
+    &:focus-within
+    &:hover
+    &:active
+      //width: initial
+      max-width: 10em
+      padding-inline: .5em 0
+      //background-color: _colorG + 7%
+      & .media-volume-bar
+        display: inherit
+        width: 100%
   & .media-play-pause.active ~ .media-extended-volume .media-mute.active
     animation: anim-mute 1s infinite // Si lecture et fonction mute activée, alors le bouton mute clignote ; pour rappeler lors de la reprise d'une lecture que la fonction mute est active.
   & .media-volume-bar
@@ -159,7 +162,7 @@ _mediaPlayerSize = 3em
   & .media-menu
     width: 2em //_mediaPlayerSize
     height: 2em
-    background-color: _colorG + 7%
+    //background-color: _colorG + 7%
     border-radius: 50% //(_mediaPlayerSize / 2)
     &:focus-visible
       background-color: _color5
@@ -173,6 +176,8 @@ _mediaPlayerSize = 3em
     height: 2em
     background-color: _colorG + 7%
     border-radius: 50%
+    &:focus-visible
+      background-color: _color5
   & .media-extend-menu
     display: none
   & .media-extend-menu.active

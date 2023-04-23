@@ -97,21 +97,12 @@ const mediaDuration = media => {
   media.readyState >= 1 ? output.value = secondsToTime(media.duration) : media.addEventListener('loadedmetadata', () => output.value = secondsToTime(media.duration))
 }
 
-/**
- * Dissociation des styles et de l'attribut 'value' de l'imput range.
- * Grâce à ce procédé l'input range peut suivre une lecture éventuellement en cours tout en permettant à l'utilisateur de voir son intrerraction avec la barre de progression.
- */
-const progressBarStyles = (media, progressBar) => progressBar.style.setProperty('--position', `${Math.floor(media.currentTime / media.duration * 10000) / 100}%`) // @note Deux chiffres après la virgule.
-
-const currentTime = media => {
-  const player = media.nextElementSibling,
-        output = player.querySelector('.media-current-time'),
-        progressBar = player.querySelector('.media-progress-bar')
+const currentTime = (media, output, progressBar) => {
   setInterval(frame, 50)
   function frame() {
     output.value = secondsToTime(media.currentTime)
     progressBar.value = media.currentTime / media.duration * 100
-    progressBarStyles(media, progressBar)
+    progressBar.style.setProperty('--position', `${Math.floor(media.currentTime / media.duration * 10000) / 100}%`) // @note Deux chiffres après la virgule.
   }
 }
 
@@ -162,20 +153,16 @@ const controls = media => {
         leapForwardButton = player.querySelector('.media-leap-forward'),
         menuButton = player.querySelector('.media-menu'),
         time = player.querySelector('.media-time'),
+        output = player.querySelector('.media-current-time'),
         progressBar = player.querySelector('.media-progress-bar')
 
   // Contrôle via les événements:
-
-  media.addEventListener('error', () => { // @todo À revoir, fonctionne une fois sur 3, sans doute problème de détection au chargement de la page...
-    player.setAttribute('inert', '')
-    player.classList.add('error')
-    time.innerHTML = 'Error !'
-  }, true)
 
   document.documentElement.addEventListener('click', () => {
     buttonState(!media.paused, playPauseButton)
     buttonState(media.muted, muteButton)
     buttonState(media.paused && media.currentTime === 0, stopButton)
+    media.paused && media.currentTime === 0 ? stopButton.disabled = true : stopButton.disabled = false
     buttonState(media.loop, replayButton)
   })
 
@@ -183,6 +170,7 @@ const controls = media => {
     playPauseButton.classList.remove('active')
     media.currentTime = 0
     stopButton.classList.add('active')
+    stopButton.disabled = true
   })
 
   media.addEventListener('pause', () => playPauseButton.classList.remove('active'))
@@ -191,7 +179,7 @@ const controls = media => {
 
   playPauseButton.addEventListener('click', () => {
     togglePlayPause(media)
-    currentTime(media)
+    currentTime(media, output, progressBar)
   })
 
   // Si balise 'video' et mode plein écran activé :
@@ -201,7 +189,7 @@ const controls = media => {
 
   stopButton.addEventListener('click', () => {
     stop(media)
-    progressBarStyles(media, progressBar)
+    currentTime(media, output, progressBar)
   })
 
   ;['click', 'rangeinput', 'touchmove'].forEach((event) => { // @todo 'touchmove' ?
@@ -209,11 +197,13 @@ const controls = media => {
       const DOMRect = progressBar.getBoundingClientRect()
       const position = (e.pageX - DOMRect.left) / progressBar.offsetWidth
       media.currentTime = position * media.duration
-      progressBarStyles(media, progressBar)
+      currentTime(media, output, progressBar)
     })
   })
 
-  replayButton.addEventListener('click', () => replay(media))
+  replayButton.addEventListener('click', () => {
+    replay(media)
+  })
 
   //fastRewindButton.addEventListener('click', () => fastRewind(media))
 
@@ -221,18 +211,32 @@ const controls = media => {
 
   leapRewindButton.addEventListener('click', () => {
     leapRewind(media)
-    progressBarStyles(media, progressBar)
+    currentTime(media, output, progressBar)
   })
 
   leapForwardButton.addEventListener('click', () => {
     leapForward(media)
-    progressBarStyles(media, progressBar)
+    currentTime(media, output, progressBar)
   })
 
   menuButton.addEventListener('click', () => { // @note Fonction de notre player, non liée à la source media.
     menuButton.classList.toggle('active')
     menu(player)
   })
+
+  // Si erreur :
+// @todo À revoir, fonctionne une fois sur 3, sans doute problème de détection au chargement de la page...
+
+  media.addEventListener('error', () => {
+    player.setAttribute('inert', '')
+    player.classList.add('error')
+    console.log(media.error.code)
+    if (media.error.code === 1) time.innerHTML = 'Error: ressource loading aborted'
+    else if (media.error.code === 2) time.innerHTML = 'no network'
+    else if (media.error.code === 3) time.innerHTML = 'resource decoding failed'
+    else if (media.error.code === 4) time.innerHTML = 'Error: unsupported resource'
+    else time.innerHTML = 'Error'
+  }, true)
 
 }
 
