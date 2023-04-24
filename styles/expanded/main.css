@@ -1283,6 +1283,9 @@ video.media {
   background-color: #464646;
   border-radius: 2em;
   box-shadow: 0 1rem 1rem rgba(0,0,0,0.1);
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
 }
 .media-player button {
   all: unset;

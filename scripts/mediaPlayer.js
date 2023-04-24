@@ -4,7 +4,7 @@
 // @see https://developer.mozilla.org/fr/docs/Learn/HTML/Multimedia_and_embedding/Video_and_audio_content
 
 const medias = document.querySelectorAll('.media') // audio, video
-const playerHTML = `
+const templateString = `
 <div class="media-player">
   <button class="media-play-pause">
     <svg focusable="false">
@@ -79,7 +79,7 @@ const playerHTML = `
 const minmax = (number, min, max) => Math.min(Math.max(Number(number), min), max)
 
 const addPlayer = media => {
-  media.insertAdjacentHTML('afterend', playerHTML)
+  media.insertAdjacentHTML('afterend', templateString)
   mediaDuration(media)
 }
 
@@ -131,12 +131,22 @@ const leapRewind = media => media.currentTime -= 10
 
 const leapForward = media => media.currentTime += 10
 
-const menu = player => {
-  player.querySelector('.media-extend-menu').classList.toggle('active')
-  ;[...document.querySelectorAll('.media-player')].forEach((mp) => { // @note Si un menu ouvert, alors les menus des autres players sont fermés.
-    if (mp !== player) {
-      mp.querySelector('.media-menu').classList.remove('active')
-      mp.querySelector('.media-extend-menu').classList.remove('active')
+/**
+ * Description :
+ * 1. le menu s'ouvre et se ferme via le bouton ".media-menu",
+ * 2. on peut ouvrir aussi les menus des autres players pendant la lecture en cours d'un autre player,
+ * 3. le menu d'un player se referme si clic sur ".media-play-pause" d'un nouveau player.
+ * @param {html} player
+ * @param {boolean} menuButton
+ */
+const menu = (player, menuButton) => {
+  menuButton || false
+  const extendMenu = player.querySelector('.media-extend-menu')
+  if (menuButton) extendMenu.classList.toggle('active')
+  ;[...document.querySelectorAll('.media-player')].forEach((players) => {
+    if (players !== player) { // @note Si un menu ouvert, alors les menus des autres players sont fermés.
+      players.querySelector('.media-menu').classList.remove('active')
+      players.querySelector('.media-extend-menu').classList.remove('active')
     }
   })
 }
@@ -183,6 +193,7 @@ const controls = media => {
   playPauseButton.addEventListener('click', () => {
     togglePlayPause(media)
     currentTime(media, output, progressBar)
+    menu(player, false)
   })
 
   // Si balise 'video' et mode plein écran activé :
@@ -195,7 +206,7 @@ const controls = media => {
     currentTime(media, output, progressBar)
   })
 
-  ;['click', 'rangeinput', 'touchmove'].forEach((event) => { // 'touchmove', 'change' @todo Tous les types d'événements sont à évaluer.
+  ;['click', 'touchmove'].forEach((event) => { // 'touchmove', 'input' @todo Tous les types d'événements sont à évaluer.
     progressBar.addEventListener(event, e => {
       const DOMRect = progressBar.getBoundingClientRect()
       const position = (e.pageX - DOMRect.left) / progressBar.offsetWidth
@@ -204,7 +215,7 @@ const controls = media => {
     })
   })
 
-  ;['click', 'rangeinput', 'touchmove'].forEach((event) => {
+  ;['click', 'touchmove'].forEach((event) => {
     volumeBar.addEventListener(event, e => {
       const DOMRect = volumeBar.getBoundingClientRect()
       const position = minmax(Math.floor((e.pageX - DOMRect.left) / volumeBar.offsetWidth * 10) / 10, 0, 1)
@@ -235,22 +246,8 @@ const controls = media => {
 
   menuButton.addEventListener('click', () => { // @note Fonction de notre player, non liée à la source media.
     menuButton.classList.toggle('active')
-    menu(player)
+    menu(player, true)
   })
-
-  // Si erreur :
-// @todo À revoir, fonctionne une fois sur 3, sans doute problème de détection au chargement de la page...
-
-  media.addEventListener('error', () => {
-    player.setAttribute('inert', '')
-    player.classList.add('error')
-    console.log(media.error.code)
-    if (media.error.code === 1) time.innerHTML = 'Error: ressource loading aborted'
-    else if (media.error.code === 2) time.innerHTML = 'no network'
-    else if (media.error.code === 3) time.innerHTML = 'resource decoding failed'
-    else if (media.error.code === 4) time.innerHTML = 'Error: unsupported resource'
-    else time.innerHTML = 'Error'
-  }, true)
 
 }
 
@@ -260,6 +257,27 @@ document.addEventListener('play', e => { // Si un lecteur actif sur la page, alo
   })
 }, true)
 
+const error = media => {
+  // @note Afin de rendre possible la lecture des erreurs via un gestionnaire dévénement, on lit la source présente dans le HTML puis on la réaffecte via JS.
+  // @see https://forum.alsacreations.com/topic-5-90423-1-Resolu-Lecteur-audiovideo-HTMLMediaElement--gestion-des-erreurs.html#lastofpage
+  const srcHTML = media.currentSrc,
+        player = media.nextElementSibling,
+        time = player.querySelector('.media-time')
+
+  media.src = srcHTML
+
+  media.addEventListener('error', () => {
+    player.setAttribute('inert', '')
+    player.classList.add('error')
+    //if (media.error.code === 1) time.innerHTML = 'Error: ressource loading aborted'
+    //else if (media.error.code === 2) time.innerHTML = 'Error: no network'
+    //else if (media.error.code === 3) time.innerHTML = 'Error: resource decoding failed'
+    //else if (media.error.code === 4) time.innerHTML = 'Error: unsupported resource'
+    //else time.innerHTML = 'Error'
+    time.innerHTML = 'Reading error'
+  }, true)
+}
+
 let i = 0
 
 for (const media of medias) {
@@ -268,4 +286,5 @@ for (const media of medias) {
   media.removeAttribute('controls') // @note C'est bien Javascript qui doit se charger de cette opération, CSS ne doit pas le faire, ce qui permet un lecteur par défaut avec l'attribut "controls" si JS désactivé.
   addPlayer(media)
   controls(media)
+  error(media)
 }
