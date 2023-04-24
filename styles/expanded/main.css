@@ -1423,33 +1423,30 @@ video.media {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 0.5em;
   height: 2em;
-  max-width: 2em;
   background-color: #464646;
   border-radius: 2em;
-  transition: max-width 0.6s ease-in-out;
   outline: none;
 }
 .media-player .media-extended-volume:focus-within,
 .media-player .media-extended-volume:hover,
 .media-player .media-extended-volume:active {
-  max-width: 10em;
-  padding-inline: 0.5em 0;
+  padding-left: 0.5em;
 }
 .media-player .media-extended-volume:focus-within .media-volume-bar,
 .media-player .media-extended-volume:hover .media-volume-bar,
 .media-player .media-extended-volume:active .media-volume-bar {
   display: inherit;
-  max-width: 100%;
+  max-width: 10em;
 }
 .media-player .media-play-pause.active ~ .media-extended-volume .media-mute.active {
   animation: anim-mute 1s infinite;
 }
 .media-player .media-volume-bar {
   width: 100%;
-  max-width: 0%;
-  transition: max-width 0.6s ease-in-out;
+  max-width: 0;
+  padding: 0;
+  transition: all 0.6s ease-in-out;
 }
 .media-player .media-mute {
   width: 2em;
@@ -1488,6 +1485,7 @@ video.media {
 }
 .media-player .media-extend-menu.active {
   position: absolute;
+  z-index: 200;
   top: -3em;
   right: 0;
   height: 3em;

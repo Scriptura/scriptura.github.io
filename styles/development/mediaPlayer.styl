@@ -35,7 +35,6 @@ _mediaPlayerBlockThumb =
   border-radius: 50%
   //box-shadow: _shadow6
 _mediaPlayerSize = 3em
-_mediaTransition = max-width .6s ease-in-out
 
 .media-player
   position: relative
@@ -132,27 +131,24 @@ _mediaTransition = max-width .6s ease-in-out
     display: flex
     justify-content: flex-end
     align-items: center
-    gap: .5em
     height: 2em
-    max-width: 2em
     background-color: _colorG + 7%
     border-radius: 2em
-    transition: _mediaTransition
     outline: none
     &:focus-within
     &:hover
     &:active
-      max-width: 10em
-      padding-inline: .5em 0
+      padding-left: .5em
       & .media-volume-bar
         display: inherit
-        max-width: 100%
+        max-width: 10em
   & .media-play-pause.active ~ .media-extended-volume .media-mute.active
     animation: anim-mute 1s infinite // Si lecture et fonction mute activée, alors le bouton mute clignote ; pour rappeler lors de la reprise d'une lecture que la fonction mute est active.
   & .media-volume-bar
     width: 100%
-    max-width: 0%
-    transition: _mediaTransition
+    max-width: 0
+    padding: 0
+    transition: all .6s ease-in-out
   & .media-mute
     width: 2em
     height: 2em
@@ -181,7 +177,7 @@ _mediaTransition = max-width .6s ease-in-out
     display: none
   & .media-extend-menu.active
     position: absolute
-    //z-index: 20 // @todo Si besoin
+    z-index: 200 // @todo Si besoin
     top: - _mediaPlayerSize
     right: 0
     height: _mediaPlayerSize

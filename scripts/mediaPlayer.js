@@ -267,13 +267,12 @@ document.addEventListener('play', e => { // Si un lecteur actif sur la page, alo
 }, true)
 
 const error = media => {
-  // @note Afin de rendre possible la lecture des erreurs via un gestionnaire dévénement, on lit la source présente dans le HTML puis on la réaffecte via JS.
-  // @see https://forum.alsacreations.com/topic-5-90423-1-Resolu-Lecteur-audiovideo-HTMLMediaElement--gestion-des-erreurs.html#lastofpage
+
   const srcHTML = media.currentSrc,
         player = media.nextElementSibling,
         time = player.querySelector('.media-time')
 
-  media.src = srcHTML
+  media.src = srcHTML // @note Afin de rendre possible la lecture des erreurs via un gestionnaire d'événement, on lit la source présente dans le HTML puis on la réaffecte via JS. @see https://forum.alsacreations.com/topic-5-90423-1-Resolu-Lecteur-audiovideo-HTMLMediaElement--gestion-des-erreurs.html#lastofpage
 
   media.addEventListener('error', () => {
     player.setAttribute('inert', '')
