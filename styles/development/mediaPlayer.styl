@@ -83,9 +83,11 @@ _mediaTransition = max-width .6s ease-in-out
   & .media-volume-bar:active
     --colorSlide: _color5
     &:focus-visible::-webkit-slider-thumb
+    &:hover::-webkit-slider-thumb
     &:active::-webkit-slider-thumb
       background-color: _color5
     &:focus-visible::-moz-range-thumb
+    &:hover::-moz-range-thumb
     &:active::-moz-range-thumb
       background-color: _color5
   & ::-webkit-slider-thumb

@@ -172,7 +172,7 @@ const controls = media => {
   // Inialisation de valeurs :
   
   const init = (() => {
-    //volumeBar.value = '.5'
+    //volumeBar.value = '.5' // Valeur définie via le template string.
     volumeBar.style.setProperty('--position', '50%')
     //progressBar.value = '.5'
     progressBar.style.setProperty('--position', '0%')
@@ -227,7 +227,7 @@ const controls = media => {
   ;['pointerdown', 'touchmove'].forEach((event) => {
     volumeBar.addEventListener(event, e => {
       const DOMRect = volumeBar.getBoundingClientRect()
-      const position = minmax(Math.floor((e.pageX - DOMRect.left) / volumeBar.offsetWidth * 10) / 10, 0, 1)
+      const position = minmax(Math.ceil((e.pageX - DOMRect.left) / volumeBar.offsetWidth * 10) / 10, 0, 1)
       volumeBar.value = position
       media.volume = position
       console.log(  )
