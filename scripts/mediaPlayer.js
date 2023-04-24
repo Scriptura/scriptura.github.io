@@ -215,19 +215,15 @@ const controls = media => {
     currentTime(media, output, progressBar)
   })
 
-  ;['input', 'change'].forEach((event) => {
-    progressBar.addEventListener(event, e => {
-      media.currentTime = (progressBar.value / progressBar.max) * media.duration
-      currentTime(media, output, progressBar)
-    })
+  progressBar.addEventListener('input', e => {
+    media.currentTime = (progressBar.value / progressBar.max) * media.duration
+    currentTime(media, output, progressBar)
   })
 
-  ;['input', 'change'].forEach((event) => {
-    volumeBar.addEventListener(event, e => {
-      const position = volumeBar.value / volumeBar.max
-      media.volume = position
-      volumeBar.style.setProperty('--position', `${position * 100}%`) // @note Deux chiffres après la virgule.
-    })
+  volumeBar.addEventListener('input', e => {
+    const position = volumeBar.value / volumeBar.max
+    media.volume = position
+    volumeBar.style.setProperty('--position', `${position * 100}%`) // @note Deux chiffres après la virgule.
   })
 
   replayButton.addEventListener('click', () => {
