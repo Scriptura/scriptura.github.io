@@ -215,22 +215,17 @@ const controls = media => {
     currentTime(media, output, progressBar)
   })
 
-  ;['pointerdown', 'touchmove'].forEach((event) => { // 'click', 'pointerdown', 'pointerup', 'touchmove', 'input'... @todo Tous les types d'événements sont à évaluer.
+  ;['input', 'change'].forEach((event) => {
     progressBar.addEventListener(event, e => {
-      const DOMRect = progressBar.getBoundingClientRect()
-      const position = (e.pageX - DOMRect.left) / progressBar.offsetWidth
-      media.currentTime = position * media.duration
+      media.currentTime = (progressBar.value / progressBar.max) * media.duration
       currentTime(media, output, progressBar)
     })
   })
 
-  ;['pointerdown', 'touchmove'].forEach((event) => {
+  ;['input', 'change'].forEach((event) => {
     volumeBar.addEventListener(event, e => {
-      const DOMRect = volumeBar.getBoundingClientRect()
-      const position = minmax(Math.ceil((e.pageX - DOMRect.left) / volumeBar.offsetWidth * 10) / 10, 0, 1)
-      volumeBar.value = position
+      const position = volumeBar.value / volumeBar.max
       media.volume = position
-      console.log(  )
       volumeBar.style.setProperty('--position', `${position * 100}%`) // @note Deux chiffres après la virgule.
     })
   })

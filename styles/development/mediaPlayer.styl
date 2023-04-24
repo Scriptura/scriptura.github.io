@@ -81,12 +81,14 @@ _mediaPlayerSize = 3em
   & .media-volume-bar:hover
   & .media-volume-bar:active
     --colorSlide: _color5
-    &:focus-visible::-webkit-slider-thumb
     &:hover::-webkit-slider-thumb
+      background-color: _colorG + 14%
+    &:focus-visible::-webkit-slider-thumb
     &:active::-webkit-slider-thumb
       background-color: _color5
-    &:focus-visible::-moz-range-thumb
     &:hover::-moz-range-thumb
+      background-color: _colorG + 14%
+    &:focus-visible::-moz-range-thumb
     &:active::-moz-range-thumb
       background-color: _color5
   & ::-webkit-slider-thumb
@@ -147,8 +149,7 @@ _mediaPlayerSize = 3em
   & .media-volume-bar
     width: 100%
     max-width: 0
-    padding: 0
-    transition: all .6s ease-in-out
+    transition: max-width .6s ease-in-out // L'ajout de la propriété "padding" ne change rien au petit bug de l'animation (dépassement du parent à la fermeture).
   & .media-mute
     width: 2em
     height: 2em

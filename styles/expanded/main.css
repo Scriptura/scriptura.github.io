@@ -1324,18 +1324,20 @@ video.media {
 .media-player .media-volume-bar:active {
   --colorSlide: #ffa600;
 }
+.media-player .media-progress-bar:focus:hover::-webkit-slider-thumb,
+.media-player .media-progress-bar:hover:hover::-webkit-slider-thumb,
+.media-player .media-progress-bar:active:hover::-webkit-slider-thumb,
+.media-player .media-volume-bar:focus:hover::-webkit-slider-thumb,
+.media-player .media-volume-bar:hover:hover::-webkit-slider-thumb,
+.media-player .media-volume-bar:active:hover::-webkit-slider-thumb {
+  background-color: #545454;
+}
 .media-player .media-progress-bar:focus:focus-visible::-webkit-slider-thumb,
 .media-player .media-progress-bar:hover:focus-visible::-webkit-slider-thumb,
 .media-player .media-progress-bar:active:focus-visible::-webkit-slider-thumb,
 .media-player .media-volume-bar:focus:focus-visible::-webkit-slider-thumb,
 .media-player .media-volume-bar:hover:focus-visible::-webkit-slider-thumb,
 .media-player .media-volume-bar:active:focus-visible::-webkit-slider-thumb,
-.media-player .media-progress-bar:focus:hover::-webkit-slider-thumb,
-.media-player .media-progress-bar:hover:hover::-webkit-slider-thumb,
-.media-player .media-progress-bar:active:hover::-webkit-slider-thumb,
-.media-player .media-volume-bar:focus:hover::-webkit-slider-thumb,
-.media-player .media-volume-bar:hover:hover::-webkit-slider-thumb,
-.media-player .media-volume-bar:active:hover::-webkit-slider-thumb,
 .media-player .media-progress-bar:focus:active::-webkit-slider-thumb,
 .media-player .media-progress-bar:hover:active::-webkit-slider-thumb,
 .media-player .media-progress-bar:active:active::-webkit-slider-thumb,
@@ -1344,18 +1346,20 @@ video.media {
 .media-player .media-volume-bar:active:active::-webkit-slider-thumb {
   background-color: #ffa600;
 }
+.media-player .media-progress-bar:focus:hover::-moz-range-thumb,
+.media-player .media-progress-bar:hover:hover::-moz-range-thumb,
+.media-player .media-progress-bar:active:hover::-moz-range-thumb,
+.media-player .media-volume-bar:focus:hover::-moz-range-thumb,
+.media-player .media-volume-bar:hover:hover::-moz-range-thumb,
+.media-player .media-volume-bar:active:hover::-moz-range-thumb {
+  background-color: #545454;
+}
 .media-player .media-progress-bar:focus:focus-visible::-moz-range-thumb,
 .media-player .media-progress-bar:hover:focus-visible::-moz-range-thumb,
 .media-player .media-progress-bar:active:focus-visible::-moz-range-thumb,
 .media-player .media-volume-bar:focus:focus-visible::-moz-range-thumb,
 .media-player .media-volume-bar:hover:focus-visible::-moz-range-thumb,
 .media-player .media-volume-bar:active:focus-visible::-moz-range-thumb,
-.media-player .media-progress-bar:focus:hover::-moz-range-thumb,
-.media-player .media-progress-bar:hover:hover::-moz-range-thumb,
-.media-player .media-progress-bar:active:hover::-moz-range-thumb,
-.media-player .media-volume-bar:focus:hover::-moz-range-thumb,
-.media-player .media-volume-bar:hover:hover::-moz-range-thumb,
-.media-player .media-volume-bar:active:hover::-moz-range-thumb,
 .media-player .media-progress-bar:focus:active::-moz-range-thumb,
 .media-player .media-progress-bar:hover:active::-moz-range-thumb,
 .media-player .media-progress-bar:active:active::-moz-range-thumb,
@@ -1445,8 +1449,7 @@ video.media {
 .media-player .media-volume-bar {
   width: 100%;
   max-width: 0;
-  padding: 0;
-  transition: all 0.6s ease-in-out;
+  transition: max-width 0.6s ease-in-out;
 }
 .media-player .media-mute {
   width: 2em;
