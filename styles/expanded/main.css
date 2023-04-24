@@ -1316,56 +1316,28 @@ video.media {
   background-clip: content-box;
   cursor: pointer;
 }
-.media-player .media-progress-bar:focus,
-.media-player .media-progress-bar:hover,
-.media-player .media-progress-bar:active,
-.media-player .media-volume-bar:focus,
-.media-player .media-volume-bar:hover,
-.media-player .media-volume-bar:active {
+.media-player .media-progress-bar:focus-visible,
+.media-player .media-volume-bar:focus-visible {
   --colorSlide: #ffa600;
 }
-.media-player .media-progress-bar:focus:hover::-webkit-slider-thumb,
-.media-player .media-progress-bar:hover:hover::-webkit-slider-thumb,
-.media-player .media-progress-bar:active:hover::-webkit-slider-thumb,
-.media-player .media-volume-bar:focus:hover::-webkit-slider-thumb,
-.media-player .media-volume-bar:hover:hover::-webkit-slider-thumb,
-.media-player .media-volume-bar:active:hover::-webkit-slider-thumb {
-  background-color: #545454;
+.media-player .media-progress-bar:hover::-webkit-slider-thumb,
+.media-player .media-volume-bar:hover::-webkit-slider-thumb,
+.media-player .media-progress-bar:active::-webkit-slider-thumb,
+.media-player .media-volume-bar:active::-webkit-slider-thumb {
+  background-color: #ff6347;
 }
-.media-player .media-progress-bar:focus:focus-visible::-webkit-slider-thumb,
-.media-player .media-progress-bar:hover:focus-visible::-webkit-slider-thumb,
-.media-player .media-progress-bar:active:focus-visible::-webkit-slider-thumb,
-.media-player .media-volume-bar:focus:focus-visible::-webkit-slider-thumb,
-.media-player .media-volume-bar:hover:focus-visible::-webkit-slider-thumb,
-.media-player .media-volume-bar:active:focus-visible::-webkit-slider-thumb,
-.media-player .media-progress-bar:focus:active::-webkit-slider-thumb,
-.media-player .media-progress-bar:hover:active::-webkit-slider-thumb,
-.media-player .media-progress-bar:active:active::-webkit-slider-thumb,
-.media-player .media-volume-bar:focus:active::-webkit-slider-thumb,
-.media-player .media-volume-bar:hover:active::-webkit-slider-thumb,
-.media-player .media-volume-bar:active:active::-webkit-slider-thumb {
+.media-player .media-progress-bar:focus-visible::-webkit-slider-thumb,
+.media-player .media-volume-bar:focus-visible::-webkit-slider-thumb {
   background-color: #ffa600;
 }
-.media-player .media-progress-bar:focus:hover::-moz-range-thumb,
-.media-player .media-progress-bar:hover:hover::-moz-range-thumb,
-.media-player .media-progress-bar:active:hover::-moz-range-thumb,
-.media-player .media-volume-bar:focus:hover::-moz-range-thumb,
-.media-player .media-volume-bar:hover:hover::-moz-range-thumb,
-.media-player .media-volume-bar:active:hover::-moz-range-thumb {
-  background-color: #545454;
+.media-player .media-progress-bar:hover::-moz-range-thumb,
+.media-player .media-volume-bar:hover::-moz-range-thumb,
+.media-player .media-progress-bar:active::-moz-range-thumb,
+.media-player .media-volume-bar:active::-moz-range-thumb {
+  background-color: #ff6347;
 }
-.media-player .media-progress-bar:focus:focus-visible::-moz-range-thumb,
-.media-player .media-progress-bar:hover:focus-visible::-moz-range-thumb,
-.media-player .media-progress-bar:active:focus-visible::-moz-range-thumb,
-.media-player .media-volume-bar:focus:focus-visible::-moz-range-thumb,
-.media-player .media-volume-bar:hover:focus-visible::-moz-range-thumb,
-.media-player .media-volume-bar:active:focus-visible::-moz-range-thumb,
-.media-player .media-progress-bar:focus:active::-moz-range-thumb,
-.media-player .media-progress-bar:hover:active::-moz-range-thumb,
-.media-player .media-progress-bar:active:active::-moz-range-thumb,
-.media-player .media-volume-bar:focus:active::-moz-range-thumb,
-.media-player .media-volume-bar:hover:active::-moz-range-thumb,
-.media-player .media-volume-bar:active:active::-moz-range-thumb {
+.media-player .media-progress-bar:focus-visible::-moz-range-thumb,
+.media-player .media-volume-bar:focus-visible::-moz-range-thumb {
   background-color: #ffa600;
 }
 .media-player ::-webkit-slider-thumb {

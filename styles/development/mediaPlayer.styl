@@ -30,10 +30,8 @@ _mediaPlayerBlockThumb =
   pointer-events: auto
   width: 1em
   aspect-ratio: 1
-  background-color: transparent //_color2
-  //border: .2em solid _rangeColor5
+  background-color: transparent
   border-radius: 50%
-  //box-shadow: _shadow6
 _mediaPlayerSize = 3em
 
 .media-player
@@ -66,7 +64,7 @@ _mediaPlayerSize = 3em
   & .media-volume-bar
     --colorSlide: _color2
     all: unset
-    min-width: 0 // @adffected Firefox
+    min-width: 0 // @affected Firefox
     height: .3em
     padding-block: 1em // @note S'ajoute à la propriété height, ne doit pas dépasser la hauteur du player
     color: _color2
@@ -74,22 +72,19 @@ _mediaPlayerSize = 3em
     background-image: linear-gradient(90deg, var(--colorSlide) 0, var(--colorSlide) var(--position), transparent var(--position))
     background-clip: content-box
     cursor: pointer
-  & .media-progress-bar:focus
-  & .media-progress-bar:hover
-  & .media-progress-bar:active
-  & .media-volume-bar:focus
-  & .media-volume-bar:hover
-  & .media-volume-bar:active
-    --colorSlide: _color5
+    &:focus-visible
+      --colorSlide: _color5
+  & .media-progress-bar
+  & .media-volume-bar
     &:hover::-webkit-slider-thumb
-      background-color: _colorG + 14%
-    &:focus-visible::-webkit-slider-thumb
     &:active::-webkit-slider-thumb
+      background-color: _color2
+    &:focus-visible::-webkit-slider-thumb
       background-color: _color5
     &:hover::-moz-range-thumb
-      background-color: _colorG + 14%
-    &:focus-visible::-moz-range-thumb
     &:active::-moz-range-thumb
+      background-color: _color2
+    &:focus-visible::-moz-range-thumb
       background-color: _color5
   & ::-webkit-slider-thumb
     -webkit-appearance: none
