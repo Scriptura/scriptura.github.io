@@ -1303,9 +1303,6 @@ video.media {
 .media-player .media-time {
   flex-shrink: 0;
 }
-.media-player .media-progress-bar {
-  --position: 0%;
-}
 .media-player .media-progress-bar,
 .media-player .media-volume-bar {
   --colorSlide: #ff6347;
@@ -1432,14 +1429,15 @@ video.media {
 .media-player .media-extended-volume:hover .media-volume-bar,
 .media-player .media-extended-volume:active .media-volume-bar {
   display: inherit;
-  width: 100%;
+  max-width: 100%;
 }
 .media-player .media-play-pause.active ~ .media-extended-volume .media-mute.active {
   animation: anim-mute 1s infinite;
 }
 .media-player .media-volume-bar {
-  --position: 50%;
-  display: none;
+  width: 100%;
+  max-width: 0%;
+  transition: max-width 0.6s ease-in-out;
 }
 .media-player .media-mute {
   width: 2em;

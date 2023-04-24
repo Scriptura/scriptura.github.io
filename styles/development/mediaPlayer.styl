@@ -26,7 +26,7 @@ video.media
   background-color: #000 // @bugfix @affected Google Maps @note Pas de background prédéfinit sur élément `canvas` afin d'éviter les conflits.
   box-shadow: _shadow15
 
-_rangeBlockThumb2 =
+_mediaPlayerBlockThumb =
   pointer-events: auto
   width: 1em
   aspect-ratio: 1
@@ -34,8 +34,8 @@ _rangeBlockThumb2 =
   //border: .2em solid _rangeColor5
   border-radius: 50%
   //box-shadow: _shadow6
-
 _mediaPlayerSize = 3em
+_mediaTransition = max-width .6s ease-in-out
 
 .media-player
   position: relative
@@ -64,14 +64,12 @@ _mediaPlayerSize = 3em
   & .media-time
     flex-shrink: 0
   & .media-progress-bar
-    --position: 0%
-  & .media-progress-bar
   & .media-volume-bar
     --colorSlide: _color2
     all: unset
     min-width: 0 // @adffected Firefox
     height: .3em
-    padding-block: 1em // @note Avec la propriété height, ne doit pas dépasser la hauteur du player
+    padding-block: 1em // @note S'ajoute à la propriété height, ne doit pas dépasser la hauteur du player
     color: _color2
     background-color: _colorG + 14%
     background-image: linear-gradient(90deg, var(--colorSlide) 0, var(--colorSlide) var(--position), transparent var(--position))
@@ -92,11 +90,11 @@ _mediaPlayerSize = 3em
       background-color: _color5
   & ::-webkit-slider-thumb
     -webkit-appearance: none
-    {_rangeBlockThumb2}
+    {_mediaPlayerBlockThumb}
   & ::-moz-range-thumb
     box-sizing: border-box // @affected Firefox @note Définition obligatoire de cette règle malgré sa déclaration en globale.
     border: none
-    {_rangeBlockThumb2}
+    {_mediaPlayerBlockThumb}
   & .media-volume-bar
     background-color: _colorG + 21%
   & .media-play-pause
@@ -137,23 +135,22 @@ _mediaPlayerSize = 3em
     max-width: 2em
     background-color: _colorG + 7%
     border-radius: 2em
-    transition: max-width .6s ease-in-out
+    transition: _mediaTransition
     outline: none
     &:focus-within
     &:hover
     &:active
-      //width: initial
       max-width: 10em
       padding-inline: .5em 0
-      //background-color: _colorG + 7%
       & .media-volume-bar
         display: inherit
-        width: 100%
+        max-width: 100%
   & .media-play-pause.active ~ .media-extended-volume .media-mute.active
     animation: anim-mute 1s infinite // Si lecture et fonction mute activée, alors le bouton mute clignote ; pour rappeler lors de la reprise d'une lecture que la fonction mute est active.
   & .media-volume-bar
-    --position: 50%
-    display: none
+    width: 100%
+    max-width: 0%
+    transition: _mediaTransition
   & .media-mute
     width: 2em
     height: 2em
@@ -161,10 +158,9 @@ _mediaPlayerSize = 3em
     &:focus-visible
       background-color: _color5
   & .media-menu
-    width: 2em //_mediaPlayerSize
+    width: 2em
     height: 2em
-    //background-color: _colorG + 7%
-    border-radius: 50% //(_mediaPlayerSize / 2)
+    border-radius: 50%
     &:focus-visible
       background-color: _color5
     &:hover

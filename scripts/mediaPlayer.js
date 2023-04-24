@@ -169,7 +169,16 @@ const controls = media => {
         progressBar = player.querySelector('.media-progress-bar'),
         volumeBar = player.querySelector('.media-volume-bar')
 
-  // Contrôle via les événements:
+  // Inialisation de valeurs :
+  
+  const init = (() => {
+    //volumeBar.value = '.5'
+    volumeBar.style.setProperty('--position', '50%')
+    //progressBar.value = '.5'
+    progressBar.style.setProperty('--position', '0%')
+  })()
+
+  // Contrôle via les événements :
 
   document.documentElement.addEventListener('click', () => {
     buttonState(!media.paused, playPauseButton)
@@ -206,7 +215,7 @@ const controls = media => {
     currentTime(media, output, progressBar)
   })
 
-  ;['click', 'touchmove'].forEach((event) => { // 'touchmove', 'input' @todo Tous les types d'événements sont à évaluer.
+  ;["pointerdown", "pointerup"].forEach((event) => { // 'touchmove', 'input' @todo Tous les types d'événements sont à évaluer.
     progressBar.addEventListener(event, e => {
       const DOMRect = progressBar.getBoundingClientRect()
       const position = (e.pageX - DOMRect.left) / progressBar.offsetWidth
@@ -274,7 +283,7 @@ const error = media => {
     //else if (media.error.code === 3) time.innerHTML = 'Error: resource decoding failed'
     //else if (media.error.code === 4) time.innerHTML = 'Error: unsupported resource'
     //else time.innerHTML = 'Error'
-    time.innerHTML = 'Reading error'
+    time.innerHTML = 'Erreur de lecture' //'Reading error'
   }, true)
 }
 
