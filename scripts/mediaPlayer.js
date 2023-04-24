@@ -215,7 +215,7 @@ const controls = media => {
     currentTime(media, output, progressBar)
   })
 
-  ;["pointerdown", "pointerup"].forEach((event) => { // 'touchmove', 'input' @todo Tous les types d'événements sont à évaluer.
+  ;['pointerdown', 'pointerup', 'touchmove'].forEach((event) => { // 'click', 'touchmove', 'input'... @todo Tous les types d'événements sont à évaluer.
     progressBar.addEventListener(event, e => {
       const DOMRect = progressBar.getBoundingClientRect()
       const position = (e.pageX - DOMRect.left) / progressBar.offsetWidth
@@ -224,7 +224,7 @@ const controls = media => {
     })
   })
 
-  ;['click', 'touchmove'].forEach((event) => {
+  ;['pointerdown', 'pointerup', 'touchmove'].forEach((event) => {
     volumeBar.addEventListener(event, e => {
       const DOMRect = volumeBar.getBoundingClientRect()
       const position = minmax(Math.floor((e.pageX - DOMRect.left) / volumeBar.offsetWidth * 10) / 10, 0, 1)
