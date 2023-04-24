@@ -6,7 +6,7 @@
 const medias = document.querySelectorAll('.media') // audio, video
 const templateString = `
 <div class="media-player">
-  <button class="media-play-pause">
+  <button class="media-play-pause" aria-label="play/pause">
     <svg focusable="false">
       <use href="/sprites/player.svg#play"></use>
     </svg>
@@ -15,12 +15,12 @@ const templateString = `
     </svg>
   </button>
   <div class="media-time">
-    <output class="media-current-time">0:00</output>&nbsp;/&nbsp;<output class="media-duration">0:00</output>
+    <output class="media-current-time"aria-label="current time">0:00</output>&nbsp;/&nbsp;<output class="media-duration"aria-label="duration">0:00</output>
   </div>
-  <input type="range" class="media-progress-bar" min="0" max="100" step="1" value="0">
+  <input type="range" class="media-progress-bar" aria-label="progress bar" min="0" max="100" step="1" value="0">
   <div class="media-extended-volume" tabindex="0">
-    <input type="range" class="media-volume-bar" min="0" max="1" step=".1" value=".5">
-    <button class="media-mute" aria-label="play/pause">
+    <input type="range" class="media-volume-bar" aria-label="volume bar" min="0" max="1" step=".1" value=".5">
+    <button class="media-mute" aria-label="mute">
       <svg focusable="false">
         <use href="/sprites/player.svg#volume-up"></use>
       </svg>
