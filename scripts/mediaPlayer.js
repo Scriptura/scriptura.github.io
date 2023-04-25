@@ -184,9 +184,9 @@ const controls = media => {
         stopButton = player.querySelector('.media-stop'),
         replayButton = player.querySelector('.media-replay')
 
-  // Inialisation de valeurs :
+  // Initialisation de valeurs :
   
-  const init = (() => {
+  const initValues = (() => {
     //volumeBar.value = '.5' // Valeur définie via le template string.
     volumeBar.style.setProperty('--position', '50%')
     //progressBar.value = '.5'
