@@ -33,11 +33,6 @@
         figcaption.sr-only Stridulation d'un grillon
         audio.media(controls)
           source(src='/medias/audios/grillons.mp3')
-      figure.figure-media
-        figcaption
-          code (src='urlError')
-        audio.media(controls)
-          source(src='/urlError.mp3')
   div
     p
       code .media-playlist .media (@todo En dev'...)
@@ -66,6 +61,13 @@
         figcaption.sr-only Stridulation d'un grillon
         audio.media(controls)
           source(src='/medias/audios/grillons.mp3')
+  div
+    p
+      code (src='urlError')
+    figure.figure-media
+      figcaption.sr-only Erreur d'URL
+      audio.media(controls)
+        source(src='/urlError.mp3')
 hr(data-hr='✻ ✻ ✻')
 p
   code video.media
