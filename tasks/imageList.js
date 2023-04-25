@@ -27,7 +27,7 @@ for (const file of files) {
     const dimensions = await sizeOf(fileSrc + file)
     const fileExt = await file.split('.').pop()
     const fileName = await file.replace(fileExt, '').replace('\.', '')
-    const item = await `figure.figure-focus
+    const item = await `figure.figure-image-focus
   -
     img = {
       name: '${fileName}',

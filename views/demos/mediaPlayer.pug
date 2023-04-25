@@ -9,29 +9,83 @@
     p
       code audio.media
     .grid.gap(style='--n:1')
-      audio.media(controls)
-        source(src='/medias/audios/BagdadCafe.mp3')
-      audio.media(controls)
-        source(src='/medias/audios/YvesDuteil.mp3')
-      audio.media(controls)
-        source(src='/medias/audios/PourquoiPas.mp3')
-      audio.media(controls)
-        source(src='/medias/audios/merle.mp3')
-      audio.media(controls)
-        source(src='/medias/audios/abeilles.mp3')
-      audio.media(controls)
-        source(src='/medias/audios/grillons.mp3')
-    div
-      p
-        code (src='urlError')
-      audio.media(controls)
-        source(src='/urlError.mp3')
+      figure.figure-media
+        figcaption.sr-only Natalie Cole - I'm Calling You (Bagdad Café)
+        audio.media(controls)
+          source(src='/medias/audios/BagdadCafe.mp3')
+      figure.figure-media
+        figcaption.sr-only Yves Duteil - Pour que tu ne meures pas
+        audio.media(controls)
+          source(src='/medias/audios/YvesDuteil.mp3')
+      figure.figure-media
+        figcaption.sr-only Gus - pourquoi pas ft. Les Frangines
+        audio.media(controls)
+          source(src='/medias/audios/PourquoiPas.mp3')
+      figure.figure-media
+        figcaption.sr-only Chant d'un merle
+        audio.media(controls)
+          source(src='/medias/audios/merle.mp3')
+      figure.figure-media
+        figcaption.sr-only Petites n'abeilles...
+        audio.media(controls)
+          source(src='/medias/audios/abeilles.mp3')
+      figure.figure-media
+        figcaption.sr-only Stridulation d'un grillon
+        audio.media(controls)
+          source(src='/medias/audios/grillons.mp3')
+      figure.figure-media
+        figcaption
+          code (src='urlError')
+        audio.media(controls)
+          source(src='/urlError.mp3')
   div
     p
-      code video.media
-    div
-      video.media(controls poster='/medias/videos/posters/LeRetourDuRoi.jpg')
-        source(src='/medias/videos/LeRetourDuRoi.mp4', type='video/mp4')
+      code .media-playlist .media (@todo En dev'...)
+    .grid.gap(style='--n:1').media-playlist
+      figure.figure-media
+        figcaption.sr-only Natalie Cole - I'm Calling You (Bagdad Café)
+        audio.media(controls)
+          source(src='/medias/audios/BagdadCafe.mp3')
+      figure.figure-media
+        figcaption.sr-only Yves Duteil - Pour que tu ne meures pas
+        audio.media(controls)
+          source(src='/medias/audios/YvesDuteil.mp3')
+      figure.figure-media
+        figcaption.sr-only Gus - pourquoi pas ft. Les Frangines
+        audio.media(controls)
+          source(src='/medias/audios/PourquoiPas.mp3')
+      figure.figure-media
+        figcaption.sr-only Chant d'un merle
+        audio.media(controls)
+          source(src='/medias/audios/merle.mp3')
+      figure.figure-media
+        figcaption.sr-only Petites n'abeilles...
+        audio.media(controls)
+          source(src='/medias/audios/abeilles.mp3')
+      figure.figure-media
+        figcaption.sr-only Stridulation d'un grillon
+        audio.media(controls)
+          source(src='/medias/audios/grillons.mp3')
+hr(data-hr='✻ ✻ ✻')
+p
+  code video.media
+.grid2.s-grid1.gap
+  figure.figure-media
+    figcaption.sr-only Grand Pic Épeiche
+    video.media(controls)
+      source(src='/medias/videos/GrandPicEpeiche.mp4', type='video/mp4')
+  figure.figure-media
+    figcaption.sr-only Bouvreuil
+    video.media(controls)
+      source(src='/medias/videos/Bouvreuil.mp4', type='video/mp4')
+  //-figure.figure-media Le retour du Roi
+    video.media(controls poster='/medias/videos/posters/LeRetourDuRoi.jpg')
+      source(src='/medias/videos/LeRetourDuRoi.mp4', type='video/mp4')
+  //-figure.figure-media
+    figcaption
+      code (src='urlError')
+    video.media(controls)
+      source(src='/medias/videos/urlError.mp4', type='video/mp4')
 hr(data-hr='✻ ✻ ✻')
 .grid3.m-grid2.gap.gap-bottom
   div

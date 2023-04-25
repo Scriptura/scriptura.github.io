@@ -151,15 +151,6 @@ _mediaPlayerSize = 3em
     border-radius: 50%
     &:focus-visible
       background-color: _color5
-  & .media-menu
-    width: 2em
-    height: 2em
-    border-radius: 50%
-    &:focus-visible
-      background-color: _color5
-    &:hover
-    &:active
-      background-color: _colorG + 14%
   & .media-progress-bar
     flex-grow: 1
   & .media-fullscreen
@@ -169,6 +160,23 @@ _mediaPlayerSize = 3em
     border-radius: 50%
     &:focus-visible
       background-color: _color5
+  & .media-picture-in-picture
+    & > :last-child
+      display: none
+    &.active
+      & > :first-child
+        display: none
+      & > :last-child
+        display: initial
+  & .media-menu
+    width: 2em
+    height: 2em
+    border-radius: 50%
+    &:focus-visible
+      background-color: _color5
+    &:hover
+    &:active
+      background-color: _colorG + 14%
   & .media-extend-menu
     display: none
   & .media-extend-menu.active
@@ -199,8 +207,12 @@ _mediaPlayerSize = 3em
     & > *:not(input)
       filter: brightness(.5)
 
+audio + .media-player .media-picture-in-picture
 audio + .media-player .media-fullscreen
     display: none
+
+.figure-media figcaption
+  color: _colorT2 //_colorG + 40%
 
 @keyframes anim-play
   from

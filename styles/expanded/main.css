@@ -1141,7 +1141,7 @@ img {
 figure {
   margin: 0;
 }
-[class*=figure] {
+[class*=figure-image] {
   width: 100%;
   padding: 0.5em;
   color: #e9d9c4;
@@ -1151,7 +1151,7 @@ figure {
      -moz-user-select: none;
           user-select: none;
 }
-[class*=figure] figcaption {
+[class*=figure-image] figcaption {
   padding-top: 0.5em;
   text-align: center;
 }
@@ -1431,18 +1431,6 @@ video.media {
 .media-player .media-mute:focus-visible {
   background-color: #ffa600;
 }
-.media-player .media-menu {
-  width: 2em;
-  height: 2em;
-  border-radius: 50%;
-}
-.media-player .media-menu:focus-visible {
-  background-color: #ffa600;
-}
-.media-player .media-menu:hover,
-.media-player .media-menu:active {
-  background-color: #545454;
-}
 .media-player .media-progress-bar {
   flex-grow: 1;
 }
@@ -1454,6 +1442,27 @@ video.media {
 }
 .media-player .media-fullscreen:focus-visible {
   background-color: #ffa600;
+}
+.media-player .media-picture-in-picture > :last-child {
+  display: none;
+}
+.media-player .media-picture-in-picture.active > :first-child {
+  display: none;
+}
+.media-player .media-picture-in-picture.active > :last-child {
+  display: initial;
+}
+.media-player .media-menu {
+  width: 2em;
+  height: 2em;
+  border-radius: 50%;
+}
+.media-player .media-menu:focus-visible {
+  background-color: #ffa600;
+}
+.media-player .media-menu:hover,
+.media-player .media-menu:active {
+  background-color: #545454;
 }
 .media-player .media-extend-menu {
   display: none;
@@ -1492,8 +1501,12 @@ video.media {
 .media-player.error > *:not(input) {
   filter: brightness(0.5);
 }
+audio + .media-player .media-picture-in-picture,
 audio + .media-player .media-fullscreen {
   display: none;
+}
+.figure-media figcaption {
+  color: #d3b58d;
 }
 .video-youtube {
   position: relative;
@@ -3517,7 +3530,7 @@ html,
 .list-straight li::before,
 .list-rounded li *,
 .list-rounded li::before,
-[class*=figure],
+[class*=figure-image],
 .search button,
 [class*=table] thead th,
 [class*=table] tfoot td,

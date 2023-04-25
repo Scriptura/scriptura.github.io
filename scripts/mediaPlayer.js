@@ -40,6 +40,14 @@ const templateString = `
     </svg>
   </button>
   <div class="media-extend-menu">
+    <button class="media-picture-in-picture" aria-label="picture in picture">
+      <svg focusable="false">
+        <use href="/sprites/player.svg#picture-in-picture"></use>
+      </svg>
+      <svg focusable="false">
+        <use href="/sprites/player.svg#picture-in-picture-alt"></use>
+      </svg>
+    </button>
     <button class="media-leap-rewind" aria-label="leap rewind">
       <svg focusable="false">
         <use href="/sprites/player.svg#rewind-10"></use>
@@ -76,7 +84,7 @@ const templateString = `
 </div>
 `
 
-const minmax = (number, min, max) => Math.min(Math.max(Number(number), min), max)
+//const minmax = (number, min, max) => Math.min(Math.max(Number(number), min), max)
 
 const addPlayer = media => {
   media.insertAdjacentHTML('afterend', templateString)
@@ -131,6 +139,12 @@ const leapRewind = media => media.currentTime -= 10
 
 const leapForward = media => media.currentTime += 10
 
+const togglePictureInPicture = media => {
+  // @see https://developer.mozilla.org/en-US/docs/Web/API/Picture-in-Picture_API
+  if (document.pictureInPictureElement) document.exitPictureInPicture()
+  else if (document.pictureInPictureEnabled) media.requestPictureInPicture()
+}
+
 /**
  * Description :
  * 1. le menu s'ouvre et se ferme via le bouton ".media-menu",
@@ -155,19 +169,20 @@ const controls = media => {
 
   const player = media.nextElementSibling,
         playPauseButton = player.querySelector('.media-play-pause'),
-        fullscreenButton = player.querySelector('.media-fullscreen'),
-        muteButton = player.querySelector('.media-mute'),
-        stopButton = player.querySelector('.media-stop'),
-        replayButton = player.querySelector('.media-replay'),
-        //fastRewindButton = player.querySelector('.media-fast-rewind'),
-        //fastForwardButton = player.querySelector('.media-fast-forward'),
-        leapRewindButton = player.querySelector('.media-leap-rewind'),
-        leapForwardButton = player.querySelector('.media-leap-forward'),
-        menuButton = player.querySelector('.media-menu'),
-        time = player.querySelector('.media-time'),
+        //time = player.querySelector('.media-time'),
         output = player.querySelector('.media-current-time'),
         progressBar = player.querySelector('.media-progress-bar'),
-        volumeBar = player.querySelector('.media-volume-bar')
+        volumeBar = player.querySelector('.media-volume-bar'),
+        muteButton = player.querySelector('.media-mute'),
+        menuButton = player.querySelector('.media-menu'),
+        pictureInPictureButton = player.querySelector('.media-picture-in-picture'),
+        fullscreenButton = player.querySelector('.media-fullscreen'),
+        leapRewindButton = player.querySelector('.media-leap-rewind'),
+        leapForwardButton = player.querySelector('.media-leap-forward'),
+        //fastRewindButton = player.querySelector('.media-fast-rewind'),
+        //fastForwardButton = player.querySelector('.media-fast-forward'),
+        stopButton = player.querySelector('.media-stop'),
+        replayButton = player.querySelector('.media-replay')
 
   // Inialisation de valeurs :
   
@@ -181,11 +196,12 @@ const controls = media => {
   // Contrôle via les événements :
 
   document.documentElement.addEventListener('click', () => {
+    // @note Toutes les fonctions buttonState() ne sont pas à placer ici, par exemple "pictureInPictureButton" ne se prête pas à ce modèle.
     buttonState(!media.paused, playPauseButton)
     buttonState(media.muted || media.volume === 0, muteButton)
     buttonState(media.paused && media.currentTime === 0, stopButton)
-    media.paused && media.currentTime === 0 ? stopButton.disabled = true : stopButton.disabled = false
     buttonState(media.loop, replayButton)
+    media.paused && media.currentTime === 0 ? stopButton.disabled = true : stopButton.disabled = false
   })
 
   media.addEventListener('ended', () => {
@@ -244,6 +260,11 @@ const controls = media => {
     currentTime(media, output, progressBar)
   })
 
+  pictureInPictureButton.addEventListener('click', () => {
+    buttonState(!document.pictureInPictureElement, pictureInPictureButton) // @note Ne pas mettre avec les clics généraux
+    togglePictureInPicture(media)
+  })
+
   menuButton.addEventListener('click', () => { // @note Fonction de notre player, non liée à la source media.
     menuButton.classList.toggle('active')
     menu(player, true)
@@ -251,7 +272,7 @@ const controls = media => {
 
 }
 
-document.addEventListener('play', e => { // Si un lecteur actif sur la page, alors les autres se mettent en pause.
+document.addEventListener('play', e => { // @note Si un lecteur actif sur la page, alors les autres se mettent en pause.
   medias.forEach((media) => { // audio, video
     if (media !== e.target) media.pause()
   })
