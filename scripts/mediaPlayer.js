@@ -29,12 +29,25 @@ const playerTemplate = `
       </svg>
     </button>
   </div>
+  <button class="media-fullscreen" aria-label="fullscreen">
+    <svg focusable="false">
+      <use href="/sprites/player.svg#fullscreen"></use>
+    </svg>
+  </button>
   <button class="media-menu" aria-label="menu">
     <svg focusable="false">
       <use href="/sprites/player.svg#menu"></use>
     </svg>
   </button>
   <div class="media-extend-menu">
+    <button class="media-picture-in-picture" aria-label="picture in picture">
+      <svg focusable="false">
+        <use href="/sprites/player.svg#picture-in-picture"></use>
+      </svg>
+      <svg focusable="false">
+        <use href="/sprites/player.svg#picture-in-picture-alt"></use>
+      </svg>
+    </button>
     <button class="media-leap-rewind" aria-label="leap rewind">
       <svg focusable="false">
         <use href="/sprites/player.svg#rewind-10"></use>
@@ -69,26 +82,6 @@ const playerTemplate = `
     </button>
   </div>
 </div>
-`
-
-const fullscreenTemplate = `
-<button class="media-fullscreen" aria-label="fullscreen">
-  <svg focusable="false">
-    <use href="/sprites/player.svg#fullscreen"></use>
-  </svg>
-</button>
-`
-
-const pictureInPictureTemplate = `
-<button class="media-picture-in-picture" aria-label="picture in picture">
-  <svg focusable="false">
-    <use href="/sprites/player.svg#picture-in-picture"></use>
-  </svg>
-  <svg focusable="false">
-    <use href="/sprites/player.svg#picture-in-picture-alt"></use>
-  </svg>
-</button>
-
 `
 
 //const minmax = (number, min, max) => Math.min(Math.max(Number(number), min), max)
@@ -172,25 +165,13 @@ const menu = (player, menuButton) => {
   })
 }
 
-const addExtendedControls = media => {
-
-  // @note Les sélecteurs n'étants pas encore disponibles à ce stade, nous utilisons des propriétés en lecture seule pour cibler les éléments.
-
-  if (media.tagName === 'VIDEO' && document.fullscreenEnabled) {
-    const beforeLastChildPlayer = media.nextElementSibling.lastElementChild.previousElementSibling
-    beforeLastChildPlayer.insertAdjacentHTML('beforebegin', fullscreenTemplate)
-  }
-
-  if (media.tagName === 'VIDEO' && document.pictureInPictureEnabled) {
-    const firstChildExtendMenu = media.nextElementSibling.lastElementChild.firstElementChild
-    firstChildExtendMenu.insertAdjacentHTML('beforebegin', pictureInPictureTemplate)
-  }
-
+const removeControls = (media, fullscreenButton, pictureInPictureButton) => {
+  // @note Le code est plus simple et robuste si l'on se contente de supprimer des boutons déjà présents dans le player plutôt que de les ajouter (cibler leur place dans le DOM, rattacher les fonctionnalités...)
+  if (media.tagName === 'AUDIO' || !document.fullscreenEnabled) fullscreenButton.remove()
+  if (media.tagName === 'AUDIO' || !document.pictureInPictureEnabled) pictureInPictureButton.remove()
 }
 
 const controls = media => {
-
-  addExtendedControls(media)
 
   const player = media.nextElementSibling,
         playPauseButton = player.querySelector('.media-play-pause'),
@@ -208,6 +189,8 @@ const controls = media => {
         //fastForwardButton = player.querySelector('.media-fast-forward'),
         stopButton = player.querySelector('.media-stop'),
         replayButton = player.querySelector('.media-replay')
+
+  removeControls(media, fullscreenButton, pictureInPictureButton)
 
   // Initialisation de valeurs :
   
@@ -268,7 +251,7 @@ const controls = media => {
     menu(player, true)
   })
 
-  media.tagName === 'VIDEO' && document.pictureInPictureEnabled && pictureInPictureButton.addEventListener('click', () => {
+  pictureInPictureButton.addEventListener('click', () => {
     buttonState(!document.pictureInPictureElement, pictureInPictureButton) // @note Ne pas mettre avec les clics généraux
     togglePictureInPicture(media)
   })
