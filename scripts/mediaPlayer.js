@@ -4,7 +4,7 @@
 // @see https://developer.mozilla.org/fr/docs/Learn/HTML/Multimedia_and_embedding/Video_and_audio_content
 
 const medias = document.querySelectorAll('.media') // audio, video
-const templateString = `
+const playerTemplate = `
 <div class="media-player">
   <button class="media-play-pause" aria-label="play/pause">
     <svg focusable="false">
@@ -29,25 +29,12 @@ const templateString = `
       </svg>
     </button>
   </div>
-  <button class="media-fullscreen" aria-label="fullscreen">
-    <svg focusable="false">
-      <use href="/sprites/player.svg#fullscreen"></use>
-    </svg>
-  </button>
   <button class="media-menu" aria-label="menu">
     <svg focusable="false">
       <use href="/sprites/player.svg#menu"></use>
     </svg>
   </button>
   <div class="media-extend-menu">
-    <button class="media-picture-in-picture" aria-label="picture in picture">
-      <svg focusable="false">
-        <use href="/sprites/player.svg#picture-in-picture"></use>
-      </svg>
-      <svg focusable="false">
-        <use href="/sprites/player.svg#picture-in-picture-alt"></use>
-      </svg>
-    </button>
     <button class="media-leap-rewind" aria-label="leap rewind">
       <svg focusable="false">
         <use href="/sprites/player.svg#rewind-10"></use>
@@ -84,10 +71,30 @@ const templateString = `
 </div>
 `
 
+const fullscreenTemplate = `
+<button class="media-fullscreen" aria-label="fullscreen">
+  <svg focusable="false">
+    <use href="/sprites/player.svg#fullscreen"></use>
+  </svg>
+</button>
+`
+
+const pictureInPictureTemplate = `
+<button class="media-picture-in-picture" aria-label="picture in picture">
+  <svg focusable="false">
+    <use href="/sprites/player.svg#picture-in-picture"></use>
+  </svg>
+  <svg focusable="false">
+    <use href="/sprites/player.svg#picture-in-picture-alt"></use>
+  </svg>
+</button>
+
+`
+
 //const minmax = (number, min, max) => Math.min(Math.max(Number(number), min), max)
 
 const addPlayer = media => {
-  media.insertAdjacentHTML('afterend', templateString)
+  media.insertAdjacentHTML('afterend', playerTemplate)
   mediaDuration(media)
 }
 
@@ -165,7 +172,25 @@ const menu = (player, menuButton) => {
   })
 }
 
+const addExtendedControls = media => {
+
+  // @note Les sélecteurs n'étants pas encore disponibles à ce stade, nous utilisons des propriétés en lecture seule pour cibler les éléments.
+
+  if (media.tagName === 'VIDEO' && document.fullscreenEnabled) {
+    const beforeLastChildPlayer = media.nextElementSibling.lastElementChild.previousElementSibling
+    beforeLastChildPlayer.insertAdjacentHTML('beforebegin', fullscreenTemplate)
+  }
+
+  if (media.tagName === 'VIDEO' && document.pictureInPictureEnabled) {
+    const firstChildExtendMenu = media.nextElementSibling.lastElementChild.firstElementChild
+    firstChildExtendMenu.insertAdjacentHTML('beforebegin', pictureInPictureTemplate)
+  }
+
+}
+
 const controls = media => {
+
+  addExtendedControls(media)
 
   const player = media.nextElementSibling,
         playPauseButton = player.querySelector('.media-play-pause'),
@@ -174,9 +199,9 @@ const controls = media => {
         progressBar = player.querySelector('.media-progress-bar'),
         volumeBar = player.querySelector('.media-volume-bar'),
         muteButton = player.querySelector('.media-mute'),
+        fullscreenButton = player.querySelector('.media-fullscreen'),
         menuButton = player.querySelector('.media-menu'),
         pictureInPictureButton = player.querySelector('.media-picture-in-picture'),
-        fullscreenButton = player.querySelector('.media-fullscreen'),
         leapRewindButton = player.querySelector('.media-leap-rewind'),
         leapForwardButton = player.querySelector('.media-leap-forward'),
         //fastRewindButton = player.querySelector('.media-fast-rewind'),
@@ -221,15 +246,11 @@ const controls = media => {
     menu(player, false)
   })
 
-  // Si balise 'video' et mode plein écran activé :
-  if (media.tagName === 'VIDEO' && document.fullscreenEnabled) fullscreenButton.addEventListener('click', () => fullscreen(media))
+  if (media.tagName === 'VIDEO' && document.fullscreenEnabled) {
+    fullscreenButton.addEventListener('click', () => fullscreen(media))
+  }
 
   muteButton.addEventListener('click', () => mute(media))
-
-  stopButton.addEventListener('click', () => {
-    stop(media)
-    currentTime(media, output, progressBar)
-  })
 
   progressBar.addEventListener('input', e => {
     media.currentTime = (progressBar.value / progressBar.max) * media.duration
@@ -242,8 +263,14 @@ const controls = media => {
     volumeBar.style.setProperty('--position', `${position * 100}%`) // @note Deux chiffres après la virgule.
   })
 
-  replayButton.addEventListener('click', () => {
-    replay(media)
+  menuButton.addEventListener('click', () => { // @note Fonction de notre player, non liée à la source media.
+    menuButton.classList.toggle('active')
+    menu(player, true)
+  })
+
+  media.tagName === 'VIDEO' && document.pictureInPictureEnabled && pictureInPictureButton.addEventListener('click', () => {
+    buttonState(!document.pictureInPictureElement, pictureInPictureButton) // @note Ne pas mettre avec les clics généraux
+    togglePictureInPicture(media)
   })
 
   //fastRewindButton.addEventListener('click', () => fastRewind(media))
@@ -260,14 +287,13 @@ const controls = media => {
     currentTime(media, output, progressBar)
   })
 
-  pictureInPictureButton.addEventListener('click', () => {
-    buttonState(!document.pictureInPictureElement, pictureInPictureButton) // @note Ne pas mettre avec les clics généraux
-    togglePictureInPicture(media)
+  stopButton.addEventListener('click', () => {
+    stop(media)
+    currentTime(media, output, progressBar)
   })
 
-  menuButton.addEventListener('click', () => { // @note Fonction de notre player, non liée à la source media.
-    menuButton.classList.toggle('active')
-    menu(player, true)
+  replayButton.addEventListener('click', () => {
+    replay(media)
   })
 
 }

@@ -1501,10 +1501,6 @@ video.media {
 .media-player.error > *:not(input) {
   filter: brightness(0.5);
 }
-audio + .media-player .media-picture-in-picture,
-audio + .media-player .media-fullscreen {
-  display: none;
-}
 .figure-media figcaption {
   color: #d3b58d;
 }
