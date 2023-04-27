@@ -1268,6 +1268,8 @@ video {
   outline: none;
 }
 video.media {
+  display: block;
+  margin-bottom: 0.5em;
   background-color: #000;
   box-shadow: 0.5rem 0.5rem 2rem rgba(0,0,0,0.25);
 }
@@ -1472,16 +1474,17 @@ video.media {
   z-index: 200;
   top: -3em;
   right: 0;
-  height: 3em;
   display: flex;
+  align-items: center;
   gap: 0.5em;
+  height: 3em;
   background-color: #464646;
   border-radius: 1.5em;
   box-shadow: 0 1rem 1rem rgba(0,0,0,0.1);
 }
 .media-player .media-extend-menu.active button {
-  width: 3em;
-  aspect-ratio: 1;
+  width: 2em;
+  height: 2em;
   background-color: #545454;
   border-radius: 50%;
 }

@@ -40,6 +40,11 @@ const playerTemplate = `
     </svg>
   </button>
   <div class="media-extend-menu">
+    <button class="media-next-reading" aria-label="next reading mode">
+      <svg focusable="false">
+        <use href="/sprites/player.svg#move-down"></use>
+      </svg>
+    </button>
     <button class="media-picture-in-picture" aria-label="picture in picture">
       <svg focusable="false">
         <use href="/sprites/player.svg#picture-in-picture"></use>
@@ -165,12 +170,6 @@ const menu = (player, menuButton) => {
   })
 }
 
-const removeControls = (media, fullscreenButton, pictureInPictureButton) => {
-  // @note Le code est plus simple et robuste si l'on se contente de supprimer des boutons déjà présents dans le player plutôt que de les ajouter (cibler leur place dans le DOM, rattacher les fonctionnalités...)
-  if (media.tagName === 'AUDIO' || !document.fullscreenEnabled) fullscreenButton.remove()
-  if (media.tagName === 'AUDIO' || !document.pictureInPictureEnabled) pictureInPictureButton.remove()
-}
-
 const controls = media => {
 
   const player = media.nextElementSibling,
@@ -182,6 +181,7 @@ const controls = media => {
         muteButton = player.querySelector('.media-mute'),
         fullscreenButton = player.querySelector('.media-fullscreen'),
         menuButton = player.querySelector('.media-menu'),
+        nextReadingButton = player.querySelector('.media-next-reading'),
         pictureInPictureButton = player.querySelector('.media-picture-in-picture'),
         leapRewindButton = player.querySelector('.media-leap-rewind'),
         leapForwardButton = player.querySelector('.media-leap-forward'),
@@ -190,7 +190,15 @@ const controls = media => {
         stopButton = player.querySelector('.media-stop'),
         replayButton = player.querySelector('.media-replay')
 
-  removeControls(media, fullscreenButton, pictureInPictureButton)
+const mediaRelationship = media.closest('.media-relationship')
+let playlistEnabled = false
+
+  // Remove Controls :
+  // @note Le code est plus simple et robuste si l'on se contente de supprimer des boutons déjà présents dans le player plutôt que de les ajouter (cibler leur place dans le DOM, rattacher les fonctionnalités...)
+
+  if (media.tagName === 'AUDIO' || !document.fullscreenEnabled) fullscreenButton.remove()
+  if (media.tagName === 'AUDIO' || !document.pictureInPictureEnabled) pictureInPictureButton.remove()
+  if(!mediaRelationship) nextReadingButton.remove()
 
   // Initialisation de valeurs :
   
@@ -213,6 +221,7 @@ const controls = media => {
   })
 
   media.addEventListener('ended', () => {
+    //if (playlistEnabled) media.querySelector('~ .media').play
     playPauseButton.classList.remove('active')
     media.currentTime = 0
     stopButton.classList.add('active')
@@ -229,10 +238,6 @@ const controls = media => {
     menu(player, false)
   })
 
-  if (media.tagName === 'VIDEO' && document.fullscreenEnabled) {
-    fullscreenButton.addEventListener('click', () => fullscreen(media))
-  }
-
   muteButton.addEventListener('click', () => mute(media))
 
   progressBar.addEventListener('input', e => {
@@ -243,13 +248,25 @@ const controls = media => {
   volumeBar.addEventListener('input', e => {
     const position = volumeBar.value / volumeBar.max
     media.volume = position
-    volumeBar.style.setProperty('--position', `${position * 100}%`) // @note Deux chiffres après la virgule.
+    volumeBar.style.setProperty('--position', `${position * 100}%`)
   })
 
   menuButton.addEventListener('click', () => { // @note Fonction de notre player, non liée à la source media.
     menuButton.classList.toggle('active')
     menu(player, true)
   })
+
+  nextReadingButton.addEventListener('click', () => {
+    mediaRelationship.querySelectorAll('.media').forEach((media) => {
+      playlistEnabled = !playlistEnabled
+      buttonState(playlistEnabled, media.nextElementSibling.querySelector('.media-next-reading'))
+    }, false)
+    console.log(playlistEnabled)
+  })
+
+  if (media.tagName === 'VIDEO' && document.fullscreenEnabled) {
+    fullscreenButton.addEventListener('click', () => fullscreen(media))
+  }
 
   pictureInPictureButton.addEventListener('click', () => {
     buttonState(!document.pictureInPictureElement, pictureInPictureButton) // @note Ne pas mettre avec les clics généraux
@@ -289,11 +306,10 @@ document.addEventListener('play', e => { // @note Si un lecteur actif sur la pag
 
 const error = media => {
 
-  const srcHTML = media.currentSrc,
-        player = media.nextElementSibling,
+  const player = media.nextElementSibling,
         time = player.querySelector('.media-time')
 
-  media.src = srcHTML // @note Afin de rendre possible la lecture des erreurs via un gestionnaire d'événement, on lit la source présente dans le HTML puis on la réaffecte via JS. @see https://forum.alsacreations.com/topic-5-90423-1-Resolu-Lecteur-audiovideo-HTMLMediaElement--gestion-des-erreurs.html#lastofpage
+  media.src = media.currentSrc // @note Afin de rendre possible la lecture des erreurs via un gestionnaire d'événement, on lit la source présente dans le HTML puis on la réaffecte via JS. @see https://forum.alsacreations.com/topic-5-90423-1-Resolu-Lecteur-audiovideo-HTMLMediaElement--gestion-des-erreurs.html#lastofpage
 
   media.addEventListener('error', () => {
     player.setAttribute('inert', '')

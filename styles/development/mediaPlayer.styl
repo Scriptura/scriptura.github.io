@@ -23,6 +23,7 @@ video
 //  display: none // @note C'est Javascript qui se charge de la suppression, ce qui permet l'affichage d'un lecteur par défaut si JS désactivé.
 
 video.media
+  display: block
   background-color: #000 // @bugfix @affected Google Maps @note Pas de background prédéfinit sur élément `canvas` afin d'éviter les conflits.
   box-shadow: _shadow15
 
@@ -42,6 +43,7 @@ _mediaPlayerSize = 3em
   gap: .5em
   width: 100%
   height: _mediaPlayerSize
+  margin-top: .5em
   padding-right: .5em
   background-color: _colorG + 7%
   border-radius: 2em
@@ -184,15 +186,17 @@ _mediaPlayerSize = 3em
     z-index: 200 // @todo Si besoin
     top: - _mediaPlayerSize
     right: 0
-    height: _mediaPlayerSize
     display: flex
+    align-items: center
     gap: .5em
+    height: _mediaPlayerSize
+    padding-inline: .5em
     background-color: _colorG + 7%
     border-radius: (_mediaPlayerSize / 2)
     box-shadow: _shadow17
     & button
-      width: _mediaPlayerSize
-      aspect-ratio: 1
+      width: 2em
+      height: 2em
       background-color: _colorG + 14%
       border-radius: 50%
       &:hover
