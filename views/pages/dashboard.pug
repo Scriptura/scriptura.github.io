@@ -428,18 +428,30 @@ block main
             summary Audios
             div
               .grid.gap.gap-block(style='--n:1')
-                audio.media(controls)
-                  source(src='/medias/audios/BagdadCafe.mp3')
-                audio.media(controls)
-                  source(src='/medias/audios/YvesDuteil.mp3')
-                audio.media(controls)
-                  source(src='/medias/audios/PourquoiPas.mp3')
-                audio.media(controls)
-                  source(src='/medias/audios/merle.mp3')
-                audio.media(controls)
-                  source(src='/medias/audios/abeilles.mp3')
-                audio.media(controls)
-                  source(src='/medias/audios/grillons.mp3')
+                figure.figure-media
+                  figcaption.sr-only The beat of nature
+                  audio.media(controls)
+                    source(src='/medias/audios/the-beat-of-nature.mp3')
+                figure.figure-media
+                  figcaption.sr-only This is epic
+                  audio.media(controls)
+                    source(src='/medias/audios/this-is-epic.mp3')
+                figure.figure-media
+                  figcaption.sr-only Voice of nature
+                  audio.media(controls)
+                    source(src='/medias/audios/voice-of-nature.mp3')
+                figure.figure-media
+                  figcaption.sr-only Forest lullaby
+                  audio.media(controls)
+                    source(src='/medias/audios/forest-lullaby.mp3')
+                figure.figure-media
+                  figcaption.sr-only Petites n'abeilles...
+                  audio.media(controls)
+                    source(src='/medias/audios/abeilles.mp3')
+                figure.figure-media
+                  figcaption.sr-only Stridulation d'un grillon
+                  audio.media(controls)
+                    source(src='/medias/audios/grillons.mp3')
           details
             summary Vidéos
             div
