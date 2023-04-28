@@ -121,7 +121,7 @@ const currentTime = (media, output, progressBar) => {
   }
 }
 
-const buttonState = (mediaStatus, button) => mediaStatus ? button.classList.add('active') : button.classList.remove('active')
+const buttonState = (status, button) => status ? button.classList.add('active') : button.classList.remove('active')
 
 const togglePlayPause = media => media.paused ? media.play() : media.pause()
 
@@ -256,11 +256,12 @@ let playlistEnabled = false
     menu(player, true)
   })
 
-  nextReadingButton.addEventListener('click', () => {
+  nextReadingButton.addEventListener('click', e => { // @note Si un lecteur actif sur la page, alors les autres se mettent en pause.
+    playlistEnabled = !playlistEnabled
     mediaRelationship.querySelectorAll('.media').forEach((media) => {
-      playlistEnabled = !playlistEnabled
-      buttonState(playlistEnabled, media.nextElementSibling.querySelector('.media-next-reading'))
-    }, false)
+      media.nextElementSibling.querySelector('.media-next-reading').classList.toggle('active')
+      if (playlistEnabled) media.loop = false
+    })
     console.log(playlistEnabled)
   })
 
