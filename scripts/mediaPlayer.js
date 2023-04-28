@@ -315,12 +315,12 @@ const error = media => {
   media.addEventListener('error', () => {
     player.setAttribute('inert', '')
     player.classList.add('error')
-    //if (media.error.code === 1) time.innerHTML = 'Error: ressource loading aborted'
-    //else if (media.error.code === 2) time.innerHTML = 'Error: no network'
-    //else if (media.error.code === 3) time.innerHTML = 'Error: resource decoding failed'
-    //else if (media.error.code === 4) time.innerHTML = 'Error: unsupported resource'
-    //else time.innerHTML = 'Error'
-    time.innerHTML = 'Erreur de lecture' //'Reading error'
+    if (media.error.code === 1) time.innerHTML = 'Error: ressource loading aborted'
+    else if (media.error.code === 2) time.innerHTML = 'Error: no network'
+    else if (media.error.code === 3) time.innerHTML = 'Error: resource decoding failed'
+    else if (media.error.code === 4) time.innerHTML = 'Error: unsupported resource'
+    else time.innerHTML = 'Reading error'
+    //time.innerHTML = 'Erreur de lecture' //'Reading error'
   }, true)
 }
 
