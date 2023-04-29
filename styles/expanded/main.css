@@ -1573,7 +1573,7 @@ video.media {
 }
 @keyframes anim-waiting {
   50% {
-    background-color: #ffa500;
+    background-color: #ff6347;
   }
 }
 .map {

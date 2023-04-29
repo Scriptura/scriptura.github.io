@@ -219,7 +219,7 @@ let playlistEnabled = false
     player.classList.add('waiting')
   })
   
-  media.addEventListener('loadeddata', () => { // @todo En test...
+  media.addEventListener('canplay', () => { // @todo En test...
     player.classList.remove('waiting')
   })
 
