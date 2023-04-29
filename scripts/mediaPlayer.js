@@ -215,11 +215,11 @@ let playlistEnabled = false
     medias.forEach((media) => (media !== e.target) && media.pause())
   }, true)
 
-  media.addEventListener('waiting', () => { // @todo En test...
+  media.addEventListener('waiting', () => { // Si chargement de la ressource.
     player.classList.add('waiting')
   })
   
-  media.addEventListener('canplay', () => { // @todo En test...
+  media.addEventListener('canplay', () => { // @todo Si ressource disponible à la lecture.
     player.classList.remove('waiting')
   })
 
