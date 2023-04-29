@@ -1573,7 +1573,8 @@ video.media {
 }
 @keyframes anim-waiting {
   50% {
-    border-color: transparent;
+    background-color: #ff6347;
+    border-block-color: transparent;
   }
 }
 .map {
