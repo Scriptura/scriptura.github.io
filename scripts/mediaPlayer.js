@@ -203,7 +203,7 @@ let playlistEnabled = false
   // Initialisation de valeurs :
   
   const initValues = (() => {
-    //volumeBar.value = '.5' // Valeur définie via le template string.
+    //volumeBar.value = '.5' // Valeur définie dans le template string.
     volumeBar.style.setProperty('--position', '50%')
     //progressBar.value = '.5'
     progressBar.style.setProperty('--position', '0%')
@@ -211,21 +211,42 @@ let playlistEnabled = false
 
   // Contrôle via les événements :
 
-  document.documentElement.addEventListener('click', () => {
-    // @note Toutes les fonctions buttonState() ne sont pas à placer ici, par exemple "pictureInPictureButton" ne se prête pas à ce modèle.
-    buttonState(!media.paused, playPauseButton)
-    buttonState(media.muted || media.volume === 0, muteButton)
-    buttonState(media.paused && media.currentTime === 0, stopButton)
-    buttonState(media.loop, replayButton)
-    media.paused && media.currentTime === 0 ? stopButton.disabled = true : stopButton.disabled = false
+  document.addEventListener('play', e => { // @note Si un lecteur actif sur la page, alors les autres se mettent en pause.
+    medias.forEach((media) => (media !== e.target) && media.pause())
+  }, true)
+
+  media.addEventListener('waiting', () => { // @todo En test...
+    player.classList.add('waiting')
+  })
+  
+  media.addEventListener('loadeddata', () => { // @todo En test...
+    player.classList.remove('waiting')
+  })
+
+  ;['click', 'play', 'pause', 'ended', 'input'].forEach((event) => {
+    document.addEventListener(event, () => { // document.documentElement
+      // @note Ne mettre ici que les boutons liés au player en cours.
+      buttonState(!media.paused, playPauseButton)
+      buttonState(media.muted || media.volume === 0, muteButton)
+      buttonState(media.onplayed || media.paused && media.currentTime === 0, stopButton)
+      buttonState(media.loop, replayButton)
+      media.paused && media.currentTime === 0 ? stopButton.disabled = true : stopButton.disabled = false
+    })
   })
 
   media.addEventListener('ended', () => {
-    //if (playlistEnabled) media.querySelector('~ .media').play
     playPauseButton.classList.remove('active')
     media.currentTime = 0
     stopButton.classList.add('active')
     stopButton.disabled = true
+    /*
+    if (playlistEnabled) {
+      const nextMedia = document.querySelector('#media-player8') // @todo Valeur en dur pour test.
+      media = nextMedia
+      media.currentTime = 0
+      togglePlayPause(nextMedia)
+    }
+    */
   })
 
   media.addEventListener('pause', () => playPauseButton.classList.remove('active'))
@@ -256,7 +277,7 @@ let playlistEnabled = false
     menu(player, true)
   })
 
-  nextReadingButton.addEventListener('click', e => { // @note Si un lecteur actif sur la page, alors les autres se mettent en pause.
+  nextReadingButton.addEventListener('click', e => {
     playlistEnabled = !playlistEnabled
     mediaRelationship.querySelectorAll('.media').forEach((media) => {
       media.nextElementSibling.querySelector('.media-next-reading').classList.toggle('active')
@@ -270,7 +291,7 @@ let playlistEnabled = false
   }
 
   pictureInPictureButton.addEventListener('click', () => {
-    buttonState(!document.pictureInPictureElement, pictureInPictureButton) // @note Ne pas mettre avec les clics généraux
+    buttonState(!document.pictureInPictureElement, pictureInPictureButton) // @note Ne pas mettre avec les clics généraux car cette fonction est en lien avec tous les players, pas seulement le player actuel.
     togglePictureInPicture(media)
   })
 
@@ -298,12 +319,6 @@ let playlistEnabled = false
   })
 
 }
-
-document.addEventListener('play', e => { // @note Si un lecteur actif sur la page, alors les autres se mettent en pause.
-  medias.forEach((media) => { // audio, video
-    if (media !== e.target) media.pause()
-  })
-}, true)
 
 const error = media => {
 

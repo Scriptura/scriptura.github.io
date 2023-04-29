@@ -1505,6 +1505,9 @@ video.media {
 .media-player.error > *:not(input) {
   filter: brightness(0.5);
 }
+.waiting .media-play-pause.active {
+  animation: anim-waiting 1s infinite;
+}
 .figure-media figcaption {
   color: #d3b58d;
 }
@@ -1566,6 +1569,11 @@ video.media {
 @keyframes anim-mute {
   50% {
     color: #545454;
+  }
+}
+@keyframes anim-waiting {
+  50% {
+    background-color: #ffa500;
   }
 }
 .map {

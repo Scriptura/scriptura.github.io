@@ -211,6 +211,9 @@ _mediaPlayerSize = 3em
     & > *:not(input)
       filter: brightness(.5)
 
+.waiting .media-play-pause.active
+  animation: anim-waiting  1s infinite // @todo En test...
+
 .figure-media figcaption
   color: _colorT2 //_colorG + 40%
 
@@ -223,6 +226,10 @@ _mediaPlayerSize = 3em
 @keyframes anim-mute
   50%
     color: _colorG + 14%
+
+@keyframes anim-waiting
+  50%
+    background-color: orange // @todo En test...
 
 .video-youtube
   position: relative // [1] Évite un léger resize entre le thumbnail et le chargement de la vidéo.
