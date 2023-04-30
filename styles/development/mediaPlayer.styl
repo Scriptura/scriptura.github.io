@@ -207,14 +207,12 @@ _mediaPlayerSize = 3em
       &.active
         background-color: _color2
   &.error
-    & svg
-      filter: brightness(.5)
+    color: _colorG + 50%
     & .media-time
       overflow: hidden
       white-space: nowrap
       text-overflow: ellipsis
       max-width: calc(100% - 10em)
-      color: _colorT2
 
 .waiting .media-play-pause.active
   animation: anim-waiting  1s infinite

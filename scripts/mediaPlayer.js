@@ -161,7 +161,7 @@ const togglePictureInPicture = media => {
 const menu = (player, menuButton = false) => {
   const extendMenu = player.querySelector('.media-extend-menu')
   if (menuButton) extendMenu.classList.toggle('active')
-  document.querySelectorAll('.media-player').forEach((players) => {
+  document.querySelectorAll('.media-player').forEach(players => {
     if (players !== player) { // @note Si un menu ouvert, alors les menus des autres players sont fermés.
       players.querySelector('.media-menu').classList.remove('active')
       players.querySelector('.media-extend-menu').classList.remove('active')
@@ -191,9 +191,7 @@ const controls = media => {
         replayButton = player.querySelector('.media-replay')
 
 const mediaRelationship = media.closest('.media-relationship'),
-      nextMedia = '' //mediaRelationship.querySelectorAll('.media').forEach((m) => m.target.nextElementSibling)
-
-  console.log(nextMedia)
+      nextMedia = '' //mediaRelationship.querySelectorAll('.media').forEach(m => (m !== e.target) && m.pause())
 
 let playlistEnabled = false
 
@@ -216,7 +214,9 @@ let playlistEnabled = false
   // Contrôle via les événements :
 
   document.addEventListener('play', e => { // @note Si un lecteur actif sur la page, alors les autres se mettent en pause.
-    medias.forEach((media) => (media !== e.target) && media.pause())
+    medias.forEach(media => (media !== e.target) && media.pause())
+    // Avec option '.media-single-player' dans un élément parent :
+    //medias.forEach(media => (media.closest('.media-single-player') && media !== e.target) && media.pause())
   }, true)
 
   media.addEventListener('waiting', () => { // Si chargement de la ressource.
@@ -227,7 +227,7 @@ let playlistEnabled = false
     player.classList.remove('waiting')
   })
 
-  ;['click', 'play', 'pause', 'ended', 'input'].forEach((event) => {
+  ;['click', 'play', 'pause', 'ended', 'input'].forEach(event => {
     document.addEventListener(event, () => { // document.documentElement
       // @note Ne mettre ici que les boutons liés au player en cours.
       buttonState(!media.paused, playPauseButton)
@@ -282,7 +282,7 @@ let playlistEnabled = false
 
   nextReadingButton.addEventListener('click', e => {
     playlistEnabled = !playlistEnabled
-    mediaRelationship.querySelectorAll('.media').forEach((media) => { // @note Il peut s'agir de n'importe quel media de la playlist.
+    mediaRelationship.querySelectorAll('.media').forEach(media => { // @note Il peut s'agir de n'importe quel media de la playlist.
       media.nextElementSibling.querySelector('.media-next-reading').classList.toggle('active')
       if (playlistEnabled) media.loop = false
     })
