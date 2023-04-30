@@ -18,7 +18,7 @@ const playerTemplate = `
     <output class="media-current-time"aria-label="current time">0:00</output>&nbsp;/&nbsp;<output class="media-duration"aria-label="duration">0:00</output>
   </div>
   <input type="range" class="media-progress-bar" aria-label="progress bar" min="0" max="100" step="1" value="0">
-  <div class="media-extended-volume" tabindex="0">
+  <div class="media-extend-volume" tabindex="0">
     <input type="range" class="media-volume-bar" aria-label="volume bar" min="0" max="1" step=".1" value=".5">
     <button class="media-mute" aria-label="mute">
       <svg focusable="false">
@@ -158,11 +158,10 @@ const togglePictureInPicture = media => {
  * @param {html} player
  * @param {boolean} menuButton
  */
-const menu = (player, menuButton) => {
-  menuButton || false
+const menu = (player, menuButton = false) => {
   const extendMenu = player.querySelector('.media-extend-menu')
   if (menuButton) extendMenu.classList.toggle('active')
-  ;[...document.querySelectorAll('.media-player')].forEach((players) => {
+  document.querySelectorAll('.media-player').forEach((players) => {
     if (players !== player) { // @note Si un menu ouvert, alors les menus des autres players sont fermés.
       players.querySelector('.media-menu').classList.remove('active')
       players.querySelector('.media-extend-menu').classList.remove('active')
@@ -177,6 +176,7 @@ const controls = media => {
         //time = player.querySelector('.media-time'),
         output = player.querySelector('.media-current-time'),
         progressBar = player.querySelector('.media-progress-bar'),
+        extendVolume = player.querySelector('.media-extend-volume'),
         volumeBar = player.querySelector('.media-volume-bar'),
         muteButton = player.querySelector('.media-mute'),
         fullscreenButton = player.querySelector('.media-fullscreen'),
@@ -190,7 +190,11 @@ const controls = media => {
         stopButton = player.querySelector('.media-stop'),
         replayButton = player.querySelector('.media-replay')
 
-const mediaRelationship = media.closest('.media-relationship')
+const mediaRelationship = media.closest('.media-relationship'),
+      nextMedia = '' //mediaRelationship.querySelectorAll('.media').forEach((m) => m.target.nextElementSibling)
+
+  console.log(nextMedia)
+
 let playlistEnabled = false
 
   // Remove Controls :
@@ -198,15 +202,15 @@ let playlistEnabled = false
 
   if (media.tagName === 'AUDIO' || !document.fullscreenEnabled) fullscreenButton.remove()
   if (media.tagName === 'AUDIO' || !document.pictureInPictureEnabled) pictureInPictureButton.remove()
-  if(!mediaRelationship) nextReadingButton.remove()
+  if (!mediaRelationship) nextReadingButton.remove()
 
   // Initialisation de valeurs :
   
   const initValues = (() => {
-    //volumeBar.value = '.5' // Valeur définie dans le template string.
-    volumeBar.style.setProperty('--position', '50%')
-    //progressBar.value = '.5'
+    progressBar.value = '0' // Valeur définie aussi dans le template string.
+    volumeBar.value = '.5'
     progressBar.style.setProperty('--position', '0%')
+    volumeBar.style.setProperty('--position', '50%')
   })()
 
   // Contrôle via les événements :
@@ -240,11 +244,10 @@ let playlistEnabled = false
     stopButton.classList.add('active')
     stopButton.disabled = true
     /*
-    if (playlistEnabled) {
-      const nextMedia = document.querySelector('#media-player8') // @todo Valeur en dur pour test.
+    if (playlistEnabled) { // @todo En dev'...
       media = nextMedia
       media.currentTime = 0
-      togglePlayPause(nextMedia)
+      togglePlayPause(media)
     }
     */
   })
@@ -279,11 +282,10 @@ let playlistEnabled = false
 
   nextReadingButton.addEventListener('click', e => {
     playlistEnabled = !playlistEnabled
-    mediaRelationship.querySelectorAll('.media').forEach((media) => {
+    mediaRelationship.querySelectorAll('.media').forEach((media) => { // @note Il peut s'agir de n'importe quel media de la playlist.
       media.nextElementSibling.querySelector('.media-next-reading').classList.toggle('active')
       if (playlistEnabled) media.loop = false
     })
-    console.log(playlistEnabled)
   })
 
   if (media.tagName === 'VIDEO' && document.fullscreenEnabled) {
@@ -330,12 +332,19 @@ const error = media => {
   media.addEventListener('error', () => {
     player.setAttribute('inert', '')
     player.classList.add('error')
-    if (media.error.code === 1) time.innerHTML = 'Error: ressource loading aborted'
-    else if (media.error.code === 2) time.innerHTML = 'Error: no network'
-    else if (media.error.code === 3) time.innerHTML = 'Error: resource decoding failed'
-    else if (media.error.code === 4) time.innerHTML = 'Error: unsupported resource'
-    else time.innerHTML = 'Reading error'
-    //time.innerHTML = 'Erreur de lecture' //'Reading error'
+    let message = ''
+    switch (media.error.code) {
+      case (1): message = 'Error: ressource loading aborted'
+      break
+      case (2): message = 'Error: no network'
+      break
+      case (3): message = 'Error: resource decoding failed'
+      break
+      case (4): message = 'Error: unsupported resource TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST'
+      break
+      default: message = 'Reading error' // 'Erreur de lecture'
+    }
+    time.innerHTML = message //`<span>${message}</span>`
   }, true)
 }
 

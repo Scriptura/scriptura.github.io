@@ -1397,7 +1397,7 @@ video.media {
 .media-player .media-mute.active > :last-child {
   display: initial;
 }
-.media-player .media-extended-volume {
+.media-player .media-extend-volume {
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -1406,18 +1406,18 @@ video.media {
   border-radius: 2em;
   outline: none;
 }
-.media-player .media-extended-volume:focus-within,
-.media-player .media-extended-volume:hover,
-.media-player .media-extended-volume:active {
+.media-player .media-extend-volume:focus-within,
+.media-player .media-extend-volume:hover,
+.media-player .media-extend-volume:active {
   padding-left: 0.5em;
 }
-.media-player .media-extended-volume:focus-within .media-volume-bar,
-.media-player .media-extended-volume:hover .media-volume-bar,
-.media-player .media-extended-volume:active .media-volume-bar {
+.media-player .media-extend-volume:focus-within .media-volume-bar,
+.media-player .media-extend-volume:hover .media-volume-bar,
+.media-player .media-extend-volume:active .media-volume-bar {
   display: inherit;
   max-width: 10em;
 }
-.media-player .media-play-pause.active ~ .media-extended-volume .media-mute.active {
+.media-player .media-play-pause.active ~ .media-extend-volume .media-mute.active {
   animation: anim-mute 1s infinite;
 }
 .media-player .media-volume-bar {
@@ -1499,11 +1499,15 @@ video.media {
 .media-player .media-extend-menu.active button.active {
   background-color: #ff6347;
 }
-.media-player.error {
-  background-color: #303030;
-}
-.media-player.error > *:not(input) {
+.media-player.error svg {
   filter: brightness(0.5);
+}
+.media-player.error .media-time {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 10em);
+  color: #d3b58d;
 }
 .waiting .media-play-pause.active {
   animation: anim-waiting 1s infinite;
@@ -1574,7 +1578,6 @@ video.media {
 @keyframes anim-waiting {
   50% {
     background-color: #ff6347;
-    border-block-color: transparent;
   }
 }
 .map {

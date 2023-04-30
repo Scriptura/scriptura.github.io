@@ -42,12 +42,11 @@ const youtubeVideo = (() => {
         })
       })
       .catch(error => {
-        error = true
         const div = document.createElement('div')
         div.classList.add('thumbnail-youtube')
         div.innerHTML = `<div class="video-youtube-error">Erreur : cette vidéo n'existe pas !<br>(ou a été supprimée...)<br><svg class="icon scale250" role="img" focusable="false"><use href="/sprites/util.svg#space-invader"></use></svg></div>`
         e.appendChild(div)
-        console.error('Une requête pour une vidéo YouTube a échoué.', error)
+        console.error('Une requête pour une vidéo YouTube a échoué.')
       })
 
   })

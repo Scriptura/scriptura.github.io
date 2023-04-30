@@ -126,7 +126,7 @@ _mediaPlayerSize = 3em
         display: none
       & > :last-child
         display: initial
-  & .media-extended-volume
+  & .media-extend-volume
     display: flex
     justify-content: flex-end
     align-items: center
@@ -141,7 +141,7 @@ _mediaPlayerSize = 3em
       & .media-volume-bar
         display: inherit
         max-width: 10em
-  & .media-play-pause.active ~ .media-extended-volume .media-mute.active
+  & .media-play-pause.active ~ .media-extend-volume .media-mute.active
     animation: anim-mute 1s infinite // Si lecture et fonction mute activée, alors le bouton mute clignote ; pour rappeler lors de la reprise d'une lecture que la fonction mute est active.
   & .media-volume-bar
     width: 100%
@@ -207,9 +207,14 @@ _mediaPlayerSize = 3em
       &.active
         background-color: _color2
   &.error
-    background-color: _colorG - 14%
-    & > *:not(input)
+    & svg
       filter: brightness(.5)
+    & .media-time
+      overflow: hidden
+      white-space: nowrap
+      text-overflow: ellipsis
+      max-width: calc(100% - 10em)
+      color: _colorT2
 
 .waiting .media-play-pause.active
   animation: anim-waiting  1s infinite
@@ -230,7 +235,6 @@ _mediaPlayerSize = 3em
 @keyframes anim-waiting
   50%
     background-color: _color2
-    border-block-color: transparent
 
 .video-youtube
   position: relative // [1] Évite un léger resize entre le thumbnail et le chargement de la vidéo.
