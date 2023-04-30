@@ -340,7 +340,7 @@ const error = media => {
       break
       case (3): message = 'Error: resource decoding failed'
       break
-      case (4): message = 'Error: unsupported resource TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST'
+      case (4): message = 'Error: unsupported resource'
       break
       default: message = 'Reading error' // 'Erreur de lecture'
     }
