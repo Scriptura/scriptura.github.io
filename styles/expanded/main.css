@@ -1376,7 +1376,6 @@ video.media {
   z-index: -1;
   border: 0.35em solid transparent;
   border-radius: 50%;
-  animation: anim-play 20s linear infinite var(--play-state, running);
 }
 .media-player .media-play-pause:focus-visible::before,
 .media-player .media-play-pause.active::before {
@@ -1387,6 +1386,7 @@ video.media {
 }
 .media-player .media-play-pause.active::before {
   border-block-color: #ff6347;
+  animation: anim-play 20s linear infinite var(--play-state, running);
 }
 .media-player .media-play-pause > :last-child,
 .media-player .media-mute > :last-child {

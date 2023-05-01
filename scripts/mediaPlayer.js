@@ -236,7 +236,7 @@ let playlistEnabled = false
       buttonState(media.loop, replayButton)
       media.paused && media.currentTime === 0 ? stopButton.disabled = true : stopButton.disabled = false
       // @note Variable CSS pilotée par JS ; permet de reprendre l'animation là où elle s'est arrêtée :
-      media.paused && playPauseButton.style.setProperty('--play-state', running === 'running' ? 'paused' : 'running')
+      //media.paused && playPauseButton.style.setProperty('--play-state', running === 'running' ? 'paused' : 'running')
     })
   })
 

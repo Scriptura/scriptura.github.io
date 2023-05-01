@@ -110,7 +110,7 @@ _mediaPlayerSize = 3em
       z-index: -1
       border: .35em solid transparent
       border-radius: 50%
-      animation: anim-play 20s linear infinite var(--play-state, running) // @note Variable pilotée par JS ; permet de reprendre l'animation là où elle s'est arrêtée.
+      //animation: anim-play 20s linear infinite var(--play-state, running) // @note Variable pilotée par JS ; permet de reprendre l'animation là où elle s'est arrêtée.
     &:focus-visible::before
     &.active::before
       border-color: _colorG + 14%
@@ -119,7 +119,7 @@ _mediaPlayerSize = 3em
       border-block-color: _color5
     &.active::before
       border-block-color: _color2
-      //animation: anim-play 20s linear infinite var(--play-state, running)
+      animation: anim-play 20s linear infinite var(--play-state, running)
   & .media-play-pause
   & .media-mute
     & > :last-child
