@@ -103,20 +103,23 @@ _mediaPlayerSize = 3em
     width: _mediaPlayerSize
     background-color: _colorG + 14%
     border-radius: 50%
-    &.active::before
-    &:focus-visible::before
+    &::before
       content ''
       position: absolute
       inset: 0
       z-index: -1
-      border: .35em solid _colorG + 14%
+      border: .35em solid transparent
       border-radius: 50%
-      //background: repeating-conic-gradient((_colorG + 7%) 0 90deg, (_colorG + 14%) 0 180deg)
+      animation: anim-play 20s linear infinite var(--play-state, running) // @note Variable pilotée par JS ; permet de reprendre l'animation là où elle s'est arrêtée.
+    &:focus-visible::before
     &.active::before
-      border-block-color: _color2
-      animation anim-play var(--frame, 20s) linear infinite
+      border-color: _colorG + 14%
+      //background: repeating-conic-gradient((_colorG + 7%) 0 90deg, (_colorG + 14%) 0 180deg)
     &:focus-visible::before
       border-block-color: _color5
+    &.active::before
+      border-block-color: _color2
+      //animation: anim-play 20s linear infinite var(--play-state, running)
   & .media-play-pause
   & .media-mute
     & > :last-child
@@ -222,9 +225,9 @@ _mediaPlayerSize = 3em
 
 @keyframes anim-play
   from
-    transform rotate(0deg)
+    transform: rotate(0deg)
   to
-    transform rotate(359deg)
+    transform: rotate(359deg)
 
 @keyframes anim-mute
   50%

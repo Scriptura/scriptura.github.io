@@ -1369,21 +1369,24 @@ video.media {
   background-color: #545454;
   border-radius: 50%;
 }
-.media-player .media-play-pause.active::before,
-.media-player .media-play-pause:focus-visible::before {
+.media-player .media-play-pause::before {
   content: '';
   position: absolute;
   inset: 0;
   z-index: -1;
-  border: 0.35em solid #545454;
+  border: 0.35em solid transparent;
   border-radius: 50%;
+  animation: anim-play 20s linear infinite var(--play-state, running);
 }
+.media-player .media-play-pause:focus-visible::before,
 .media-player .media-play-pause.active::before {
-  border-block-color: #ff6347;
-  animation: anim-play var(--frame, 20s) linear infinite;
+  border-color: #545454;
 }
 .media-player .media-play-pause:focus-visible::before {
   border-block-color: #ffa600;
+}
+.media-player .media-play-pause.active::before {
+  border-block-color: #ff6347;
 }
 .media-player .media-play-pause > :last-child,
 .media-player .media-mute > :last-child {

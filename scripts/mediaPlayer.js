@@ -18,7 +18,7 @@ const playerTemplate = `
     <output class="media-current-time"aria-label="current time">0:00</output>&nbsp;/&nbsp;<output class="media-duration"aria-label="duration">0:00</output>
   </div>
   <input type="range" class="media-progress-bar" aria-label="progress bar" min="0" max="100" step="1" value="0">
-  <div class="media-extend-volume" tabindex="0">
+  <div class="media-extend-volume">
     <input type="range" class="media-volume-bar" aria-label="volume bar" min="0" max="1" step=".1" value=".5">
     <button class="media-mute" aria-label="mute">
       <svg focusable="false">
@@ -213,7 +213,7 @@ let playlistEnabled = false
 
   // Contrôle via les événements :
 
-  document.addEventListener('play', e => { // @note Si un lecteur actif sur la page, alors les autres se mettent en pause.
+  document.addEventListener('play', e => { // @note Si un lecteur actif, alors les autres se mettent en pause.
     medias.forEach(media => (media !== e.target) && media.pause())
     // Avec option '.media-single-player' dans un élément parent :
     //medias.forEach(media => (media.closest('.media-single-player') && media !== e.target) && media.pause())
@@ -235,6 +235,8 @@ let playlistEnabled = false
       buttonState(media.onplayed || media.paused && media.currentTime === 0, stopButton)
       buttonState(media.loop, replayButton)
       media.paused && media.currentTime === 0 ? stopButton.disabled = true : stopButton.disabled = false
+      // @note Variable CSS pilotée par JS ; permet de reprendre l'animation là où elle s'est arrêtée :
+      media.paused && playPauseButton.style.setProperty('--play-state', running === 'running' ? 'paused' : 'running')
     })
   })
 
@@ -332,6 +334,7 @@ const error = media => {
   media.addEventListener('error', () => {
     player.setAttribute('inert', '')
     player.classList.add('error')
+    /*
     let message = ''
     switch (media.error.code) {
       case (1): message = 'Error: ressource loading aborted'
@@ -342,9 +345,11 @@ const error = media => {
       break
       case (4): message = 'Error: unsupported resource'
       break
-      default: message = 'Reading error' // 'Erreur de lecture'
+      default: message = 'Reading error'
     }
     time.innerHTML = message //`<span>${message}</span>`
+    */
+    time.innerHTML = 'Erreur de lecture'
   }, true)
 }
 
