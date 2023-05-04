@@ -169,6 +169,19 @@ const menu = (player, menuButton = false) => {
   })
 }
 
+const playlist = (media, mediaRelationship) => {
+  const relatedMedias = mediaRelationship.querySelectorAll('.media')
+  //NodeList.prototype.indexOf = Array.prototype.indexOf
+  const nextMedia = relatedMedias[[...relatedMedias].indexOf(media) + 1]
+  console.log(mediaRelationship)
+  console.log(relatedMedias)
+  console.log(nextMedia)
+
+  //media = nextMedia
+  //media.currentTime = 0
+  //togglePlayPause(media)
+}
+
 const controls = media => {
 
   const player = media.nextElementSibling,
@@ -190,10 +203,8 @@ const controls = media => {
         stopButton = player.querySelector('.media-stop'),
         replayButton = player.querySelector('.media-replay')
 
-const mediaRelationship = media.closest('.media-relationship'),
-      nextMedia = '' //mediaRelationship.querySelectorAll('.media').forEach(m => (m !== e.target) && m.pause())
-
-let playlistEnabled = false
+  const mediaRelationship = media.closest('.media-relationship')
+  let playlistEnabled = false
 
   // Remove Controls :
   // @note Le code est plus simple et robuste si l'on se contente de supprimer des boutons déjà présents dans le player plutôt que de les ajouter (cibler leur place dans le DOM, rattacher les fonctionnalités...)
@@ -245,13 +256,8 @@ let playlistEnabled = false
     media.currentTime = 0
     stopButton.classList.add('active')
     stopButton.disabled = true
-    /*
-    if (playlistEnabled) { // @todo En dev'...
-      media = nextMedia
-      media.currentTime = 0
-      togglePlayPause(media)
-    }
-    */
+
+    if (playlistEnabled) playlist(media, mediaRelationship)
   })
 
   media.addEventListener('pause', () => playPauseButton.classList.remove('active'))

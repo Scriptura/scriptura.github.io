@@ -1,4 +1,15 @@
-_mediaPlayerSize = 3em
+_mediaPlayerSize = 3.5em
+_mediaPlayerGap = .5em //(_mediaPlayerSize / 7)
+_mediaPlayerSize2 = _mediaPlayerSize - (_mediaPlayerGap * 2)
+_mediaPlayerBorder = .41em
+_mediaPlayerRangeHeight = .31em
+
+_mediaPlayerBlockThumb =
+  pointer-events: auto
+  width: 1em
+  aspect-ratio: 1
+  background-color: transparent
+  border-radius: 50%
 
 audio
 video
@@ -27,26 +38,17 @@ video.media
   background-color: #000 // @bugfix @affected Google Maps @note Pas de background prédéfinit sur élément `canvas` afin d'éviter les conflits.
   box-shadow: _shadow15
 
-_mediaPlayerBlockThumb =
-  pointer-events: auto
-  width: 1em
-  aspect-ratio: 1
-  background-color: transparent
-  border-radius: 50%
-_mediaPlayerSize = 3em
-
 .media-player
   position: relative
   display: flex
   justify-content: space-between
   align-items: center
-  gap: .5em
+  gap: _mediaPlayerGap
   width: 100%
   height: _mediaPlayerSize
-  margin-top: .5em
-  padding-right: .5em
+  padding-right: _mediaPlayerGap
   background-color: _colorG + 7%
-  border-radius: 2em
+  border-radius: (_mediaPlayerSize / 2)
   box-shadow: _shadow17
   user-select: none
   & button
@@ -67,7 +69,7 @@ _mediaPlayerSize = 3em
     --colorSlide: _color2
     all: unset
     min-width: 0 // @affected Firefox
-    height: .3em
+    height: _mediaPlayerRangeHeight
     padding-block: 1em // @note S'ajoute à la propriété height, ne doit pas dépasser la hauteur du player
     color: _color2
     background-color: _colorG + 14%
@@ -108,7 +110,7 @@ _mediaPlayerSize = 3em
       position: absolute
       inset: 0
       z-index: -1
-      border: .35em solid transparent
+      border: _mediaPlayerBorder solid transparent
       border-radius: 50%
       //animation: anim-play 20s linear infinite var(--play-state, running) // @note Variable pilotée par JS ; permet de reprendre l'animation là où elle s'est arrêtée.
     &:focus-visible::before
@@ -129,18 +131,24 @@ _mediaPlayerSize = 3em
         display: none
       & > :last-child
         display: initial
+  & .media-mute
+  & .media-fullscreen
+  & .media-menu
+  & .media-extend-menu button
+    border-radius: 50%
+    width: _mediaPlayerSize2
+    height: _mediaPlayerSize2
   & .media-extend-volume
     display: flex
     justify-content: flex-end
     align-items: center
-    height: 2em
     background-color: _colorG + 7%
-    border-radius: 2em
+    border-radius: (_mediaPlayerSize2 / 2)
     outline: none
     &:focus-within
     &:hover
     &:active
-      padding-left: .5em
+      padding-left: _mediaPlayerGap
       & .media-volume-bar
         display: inherit
         max-width: 10em
@@ -151,18 +159,12 @@ _mediaPlayerSize = 3em
     max-width: 0
     transition: max-width .6s ease-in-out // L'ajout de la propriété "padding" ne change rien au petit bug de l'animation (dépassement du parent à la fermeture).
   & .media-mute
-    width: 2em
-    height: 2em
-    border-radius: 50%
     &:focus-visible
       background-color: _color5
   & .media-progress-bar
     flex-grow: 1
   & .media-fullscreen
-    width: 2em
-    height: 2em
     background-color: _colorG + 7%
-    border-radius: 50%
     &:focus-visible
       background-color: _color5
   & .media-picture-in-picture
@@ -174,9 +176,6 @@ _mediaPlayerSize = 3em
       & > :last-child
         display: initial
   & .media-menu
-    width: 2em
-    height: 2em
-    border-radius: 50%
     &:focus-visible
       background-color: _color5
     &:hover
@@ -184,24 +183,8 @@ _mediaPlayerSize = 3em
       background-color: _colorG + 14%
   & .media-extend-menu
     display: none
-  & .media-extend-menu.active
-    position: absolute
-    z-index: 200 // @todo Si besoin
-    top: - _mediaPlayerSize
-    right: 0
-    display: flex
-    align-items: center
-    gap: .5em
-    height: _mediaPlayerSize
-    padding-inline: .5em
-    background-color: _colorG + 7%
-    border-radius: (_mediaPlayerSize / 2)
-    box-shadow: _shadow17
     & button
-      width: 2em
-      height: 2em
       background-color: _colorG + 14%
-      border-radius: 50%
       &:hover
         background-color: _colorG + 21%
       &:focus-visible
@@ -209,16 +192,32 @@ _mediaPlayerSize = 3em
       &:active
       &.active
         background-color: _color2
+  & .media-extend-menu.active
+    position: absolute
+    z-index: 200 // @todo Si besoin
+    top: - _mediaPlayerSize
+    right: 0
+    display: flex
+    align-items: center
+    gap: _mediaPlayerGap
+    height: _mediaPlayerSize
+    padding-inline: _mediaPlayerGap
+    background-color: _colorG + 7%
+    border-radius: (_mediaPlayerSize / 2)
+    box-shadow: _shadow17
   &.error
     color: _colorG + 50%
     & .media-time
       overflow: hidden
       white-space: nowrap
       text-overflow: ellipsis
-      max-width: calc(100% - 10em)
+      max-width: 'calc(100% - %s)' % (_mediaPlayerSize + _mediaPlayerSize2 * 2 + _mediaPlayerGap * 5)
 
 .waiting .media-play-pause.active
   animation: anim-waiting  1s infinite
+
+video + .media-player
+  margin-top: .5em
 
 .figure-media figcaption
   color: _colorT2 //_colorG + 40%
