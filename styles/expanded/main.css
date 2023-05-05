@@ -1308,15 +1308,18 @@ video.media {
   margin: auto;
 }
 .media-player .media-play-pause > :last-child,
-.media-player .media-mute > :last-child {
+.media-player .media-mute > :last-child,
+.media-player .media-picture-in-picture > :last-child {
   display: none;
 }
 .media-player .media-play-pause.active > :first-child,
-.media-player .media-mute.active > :first-child {
+.media-player .media-mute.active > :first-child,
+.media-player .media-picture-in-picture.active > :first-child {
   display: none;
 }
 .media-player .media-play-pause.active > :last-child,
-.media-player .media-mute.active > :last-child {
+.media-player .media-mute.active > :last-child,
+.media-player .media-picture-in-picture.active > :last-child {
   display: initial;
 }
 .media-player .media-mute,
@@ -1336,20 +1339,19 @@ video.media {
   background-color: #626262;
 }
 .media-player .media-mute:focus-visible,
-.media-player .media-fullscreen:focus-visible {
+.media-player .media-fullscreen:focus-visible,
+.media-player .media-menu:focus-visible {
   background-color: #ffa600;
 }
-.media-player .media-menu:hover {
-  background-color: #626262;
+.media-player .media-menu:hover,
+.media-player .media-menu:active {
+  background-color: #626262 !important;
 }
-.media-player .media-menu:focus-visible {
+.media-player .media-extend-menu button:focus-visible {
   background-color: #ffa600;
 }
 .media-player .media-extend-menu button:hover {
   background-color: #626262;
-}
-.media-player .media-extend-menu button:focus-visible {
-  background-color: #ffa600;
 }
 .media-player .media-extend-menu button:active,
 .media-player .media-extend-menu button.active {
@@ -1473,15 +1475,6 @@ video.media {
 }
 .media-player .media-progress-bar {
   flex-grow: 1;
-}
-.media-player .media-picture-in-picture > :last-child {
-  display: none;
-}
-.media-player .media-picture-in-picture.active > :first-child {
-  display: none;
-}
-.media-player .media-picture-in-picture.active > :last-child {
-  display: initial;
 }
 .media-player .media-extend-menu {
   display: none;
@@ -3561,9 +3554,8 @@ html,
 .media-player .media-fullscreen,
 .media-extend-menu,
 .media-extend-menu button,
-.media-menu:focus,
+.media-menu:focus-visible,
 .media-menu:hover,
-.media-menu:active,
 .progress-bar div,
 .article .keywords a,
 .topic-item,

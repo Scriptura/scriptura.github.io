@@ -64,6 +64,7 @@ video.media
       margin: auto
   & .media-play-pause
   & .media-mute
+  & .media-picture-in-picture
     & > :last-child
       display: none
     &.active
@@ -82,23 +83,22 @@ video.media
   & .media-fullscreen
   & .media-extend-menu button
     background-color: _colorG + 14%
-  & .media-fullscreen
-    &:hover
+  & .media-fullscreen:hover
       background-color: _colorG + 21%
   & .media-mute
   & .media-fullscreen
+  & .media-menu
     &:focus-visible
       background-color: _color5
   & .media-menu
     &:hover
-      background-color: _colorG + 21%
+    &:active
+      background-color: _colorG + 21% !important
+  & .media-extend-menu button
     &:focus-visible
       background-color: _color5
-  & .media-extend-menu button
     &:hover
       background-color: _colorG + 21%
-    &:focus-visible
-      background-color: _color5
     &:active
     &.active
       background-color: _color2
@@ -190,14 +190,6 @@ video.media
     transition: max-width .6s ease-in-out
   & .media-progress-bar
     flex-grow: 1
-  & .media-picture-in-picture
-    & > :last-child
-      display: none
-    &.active
-      & > :first-child
-        display: none
-      & > :last-child
-        display: initial
   & .media-extend-menu
     display: none
   & .media-extend-menu.active
