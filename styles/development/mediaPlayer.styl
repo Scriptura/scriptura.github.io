@@ -82,11 +82,11 @@ video.media
   & .media-fullscreen
   & .media-extend-menu button
     background-color: _colorG + 14%
-
-  & .media-mute
   & .media-fullscreen
     &:hover
       background-color: _colorG + 21%
+  & .media-mute
+  & .media-fullscreen
     &:focus-visible
       background-color: _color5
   & .media-menu
@@ -144,7 +144,6 @@ video.media
     border: none
     {_mediaPlayerBlockThumb}
   & .media-mute
-  //& .media-mute:hover
     background: none
   & .media-volume-bar
     background-color: _colorG + 21%
@@ -175,6 +174,7 @@ video.media
     background-color: _colorG + 14%
     border-radius: (_mediaPlayerSize2 / 2)
     outline: none
+    transition: padding-left .6s ease-in
     &:focus-within
     &:hover
     &:active
@@ -187,7 +187,7 @@ video.media
   & .media-volume-bar
     width: 100%
     max-width: 0
-    transition: max-width .6s ease-in-out // L'ajout de la propriété "padding" ne change rien au petit bug de l'animation (dépassement du parent à la fermeture).
+    transition: max-width .6s ease-in-out
   & .media-progress-bar
     flex-grow: 1
   & .media-picture-in-picture
