@@ -1345,7 +1345,7 @@ video.media {
 }
 .media-player .media-menu:hover,
 .media-player .media-menu:active {
-  background-color: #626262 !important;
+  background-color: #545454;
 }
 .media-player .media-extend-menu button:focus-visible {
   background-color: #ffa600;
