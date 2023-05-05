@@ -169,20 +169,24 @@ const menu = (player, menuButton = false) => {
   })
 }
 
-const playlist = (media, mediaRelationship) => {
+const nextMediaActive = (media, mediaRelationship) => {
   const relatedMedias = mediaRelationship.querySelectorAll('.media')
-  //NodeList.prototype.indexOf = Array.prototype.indexOf
-  const nextMedia = relatedMedias[[...relatedMedias].indexOf(media) + 1]
-  console.log(mediaRelationship)
-  console.log(relatedMedias)
-  console.log(nextMedia)
+  const nextMedia = relatedMedias[[...relatedMedias].indexOf(media) + 1] || relatedMedias[0]
 
-  //media = nextMedia
-  //media.currentTime = 0
-  //togglePlayPause(media)
+  media = nextMedia
+  media.currentTime = 0
+
+  const player = media.nextElementSibling,
+        playPauseButton = player.querySelector('.media-play-pause'),
+        output = player.querySelector('.media-current-time'),
+        progressBar = player.querySelector('.media-progress-bar')
+        
+  togglePlayPause(media)
+  buttonState(!media.paused, playPauseButton)
+  currentTime(media, output, progressBar)
 }
 
-const controls = media => {
+const controls = (media) => {
 
   const player = media.nextElementSibling,
         playPauseButton = player.querySelector('.media-play-pause'),
@@ -204,10 +208,10 @@ const controls = media => {
         replayButton = player.querySelector('.media-replay')
 
   const mediaRelationship = media.closest('.media-relationship')
-  let playlistEnabled = false
+  let nextMediaEnabled = false
 
   // Remove Controls :
-  // @note Le code est plus simple et robuste si l'on se contente de supprimer des boutons déjà présents dans le player plutôt que de les ajouter (cibler leur place dans le DOM, rattacher les fonctionnalités...)
+  // @note Le code est plus simple et robuste si l'on se contente de supprimer des boutons déjà présents dans le player plutôt que de les ajouter (cibler leur place dans le DOM qui peut changer au cours du développement, rattacher les fonctionnalités au DOM...)
 
   if (media.tagName === 'AUDIO' || !document.fullscreenEnabled) fullscreenButton.remove()
   if (media.tagName === 'AUDIO' || !document.pictureInPictureEnabled) pictureInPictureButton.remove()
@@ -256,8 +260,8 @@ const controls = media => {
     media.currentTime = 0
     stopButton.classList.add('active')
     stopButton.disabled = true
-
-    if (playlistEnabled) playlist(media, mediaRelationship)
+    //if (nextMediaEnabled)
+    nextMediaActive(media, mediaRelationship)
   })
 
   media.addEventListener('pause', () => playPauseButton.classList.remove('active'))
@@ -289,10 +293,10 @@ const controls = media => {
   })
 
   nextReadingButton.addEventListener('click', e => {
-    playlistEnabled = !playlistEnabled
-    mediaRelationship.querySelectorAll('.media').forEach(media => { // @note Il peut s'agir de n'importe quel media de la playlist.
+    nextMediaEnabled = !nextMediaEnabled
+    mediaRelationship.querySelectorAll('.media').forEach(media => { // @note Il peut s'agir de n'importe lequel des medias du groupe en relation.
       media.nextElementSibling.querySelector('.media-next-reading').classList.toggle('active')
-      if (playlistEnabled) media.loop = false
+      if (nextMediaEnabled) media.loop = false
     })
   })
 
