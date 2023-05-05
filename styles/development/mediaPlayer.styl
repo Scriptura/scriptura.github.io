@@ -62,6 +62,30 @@ video.media
       width: 1.2em
       height: 1.2em
       margin: auto
+  & .media-play-pause
+  & .media-mute
+    & > :last-child
+      display: none
+    &.active
+      & > :first-child
+        display: none
+      & > :last-child
+        display: initial
+  & .media-mute
+  & .media-fullscreen
+  & .media-menu
+  & .media-extend-menu button
+    width: _mediaPlayerSize2
+    height: _mediaPlayerSize2
+    background-color: _colorG + 14%
+    border-radius: 50%
+    &:hover
+      background-color: _colorG + 21%
+    &:focus-visible
+      background-color: _color5
+    &:active
+    &.active
+      background-color: _color2
   & .media-time
     flex-shrink: 0
   & .media-progress-bar
@@ -97,6 +121,9 @@ video.media
     box-sizing: border-box // @affected Firefox @note Définition obligatoire de cette règle malgré sa déclaration en globale.
     border: none
     {_mediaPlayerBlockThumb}
+  & .media-mute
+  //& .media-mute:hover
+    background: none
   & .media-volume-bar
     background-color: _colorG + 21%
   & .media-play-pause
@@ -112,37 +139,18 @@ video.media
       z-index: -1
       border: _mediaPlayerBorder solid transparent
       border-radius: 50%
-      //animation: anim-play 20s linear infinite var(--play-state, running) // @note Variable pilotée par JS ; permet de reprendre l'animation là où elle s'est arrêtée.
-    &:focus-visible::before
-    &.active::before
-      border-color: _colorG + 14%
-      //background: repeating-conic-gradient((_colorG + 7%) 0 90deg, (_colorG + 14%) 0 180deg)
+    &:hover::before
+      border-color: _colorG + 21%
     &:focus-visible::before
       border-block-color: _color5
     &.active::before
       border-block-color: _color2
       animation: anim-play 20s linear infinite var(--play-state, running)
-  & .media-play-pause
-  & .media-mute
-    & > :last-child
-      display: none
-    &.active
-      & > :first-child
-        display: none
-      & > :last-child
-        display: initial
-  & .media-mute
-  & .media-fullscreen
-  & .media-menu
-  & .media-extend-menu button
-    border-radius: 50%
-    width: _mediaPlayerSize2
-    height: _mediaPlayerSize2
   & .media-extend-volume
     display: flex
     justify-content: flex-end
     align-items: center
-    background-color: _colorG + 7%
+    background-color: _colorG + 14%
     border-radius: (_mediaPlayerSize2 / 2)
     outline: none
     &:focus-within
@@ -158,15 +166,8 @@ video.media
     width: 100%
     max-width: 0
     transition: max-width .6s ease-in-out // L'ajout de la propriété "padding" ne change rien au petit bug de l'animation (dépassement du parent à la fermeture).
-  & .media-mute
-    &:focus-visible
-      background-color: _color5
   & .media-progress-bar
     flex-grow: 1
-  & .media-fullscreen
-    background-color: _colorG + 7%
-    &:focus-visible
-      background-color: _color5
   & .media-picture-in-picture
     & > :last-child
       display: none
@@ -175,23 +176,8 @@ video.media
         display: none
       & > :last-child
         display: initial
-  & .media-menu
-    &:focus-visible
-      background-color: _color5
-    &:hover
-    &:active
-      background-color: _colorG + 14%
   & .media-extend-menu
     display: none
-    & button
-      background-color: _colorG + 14%
-      &:hover
-        background-color: _colorG + 21%
-      &:focus-visible
-        background-color: _color5
-      &:active
-      &.active
-        background-color: _color2
   & .media-extend-menu.active
     position: absolute
     z-index: 200 // @todo Si besoin

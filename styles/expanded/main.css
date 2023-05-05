@@ -1301,6 +1301,49 @@ video.media {
   height: 1.2em;
   margin: auto;
 }
+.media-player .media-play-pause > :last-child,
+.media-player .media-mute > :last-child {
+  display: none;
+}
+.media-player .media-play-pause.active > :first-child,
+.media-player .media-mute.active > :first-child {
+  display: none;
+}
+.media-player .media-play-pause.active > :last-child,
+.media-player .media-mute.active > :last-child {
+  display: initial;
+}
+.media-player .media-mute,
+.media-player .media-fullscreen,
+.media-player .media-menu,
+.media-player .media-extend-menu button {
+  width: 2.5em;
+  height: 2.5em;
+  background-color: #545454;
+  border-radius: 50%;
+}
+.media-player .media-mute:hover,
+.media-player .media-fullscreen:hover,
+.media-player .media-menu:hover,
+.media-player .media-extend-menu button:hover {
+  background-color: #626262;
+}
+.media-player .media-mute:focus-visible,
+.media-player .media-fullscreen:focus-visible,
+.media-player .media-menu:focus-visible,
+.media-player .media-extend-menu button:focus-visible {
+  background-color: #ffa600;
+}
+.media-player .media-mute:active,
+.media-player .media-fullscreen:active,
+.media-player .media-menu:active,
+.media-player .media-extend-menu button:active,
+.media-player .media-mute.active,
+.media-player .media-fullscreen.active,
+.media-player .media-menu.active,
+.media-player .media-extend-menu button.active {
+  background-color: #ff6347;
+}
 .media-player .media-time {
   flex-shrink: 0;
 }
@@ -1358,6 +1401,9 @@ video.media {
   background-color: transparent;
   border-radius: 50%;
 }
+.media-player .media-mute {
+  background: none;
+}
 .media-player .media-volume-bar {
   background-color: #626262;
 }
@@ -1376,9 +1422,8 @@ video.media {
   border: 0.41em solid transparent;
   border-radius: 50%;
 }
-.media-player .media-play-pause:focus-visible::before,
-.media-player .media-play-pause.active::before {
-  border-color: #545454;
+.media-player .media-play-pause:hover::before {
+  border-color: #626262;
 }
 .media-player .media-play-pause:focus-visible::before {
   border-block-color: #ffa600;
@@ -1387,31 +1432,11 @@ video.media {
   border-block-color: #ff6347;
   animation: anim-play 20s linear infinite var(--play-state, running);
 }
-.media-player .media-play-pause > :last-child,
-.media-player .media-mute > :last-child {
-  display: none;
-}
-.media-player .media-play-pause.active > :first-child,
-.media-player .media-mute.active > :first-child {
-  display: none;
-}
-.media-player .media-play-pause.active > :last-child,
-.media-player .media-mute.active > :last-child {
-  display: initial;
-}
-.media-player .media-mute,
-.media-player .media-fullscreen,
-.media-player .media-menu,
-.media-player .media-extend-menu button {
-  border-radius: 50%;
-  width: 2.5em;
-  height: 2.5em;
-}
 .media-player .media-extend-volume {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  background-color: #464646;
+  background-color: #545454;
   border-radius: 1.25em;
   outline: none;
 }
@@ -1434,17 +1459,8 @@ video.media {
   max-width: 0;
   transition: max-width 0.6s ease-in-out;
 }
-.media-player .media-mute:focus-visible {
-  background-color: #ffa600;
-}
 .media-player .media-progress-bar {
   flex-grow: 1;
-}
-.media-player .media-fullscreen {
-  background-color: #464646;
-}
-.media-player .media-fullscreen:focus-visible {
-  background-color: #ffa600;
 }
 .media-player .media-picture-in-picture > :last-child {
   display: none;
@@ -1455,28 +1471,8 @@ video.media {
 .media-player .media-picture-in-picture.active > :last-child {
   display: initial;
 }
-.media-player .media-menu:focus-visible {
-  background-color: #ffa600;
-}
-.media-player .media-menu:hover,
-.media-player .media-menu:active {
-  background-color: #545454;
-}
 .media-player .media-extend-menu {
   display: none;
-}
-.media-player .media-extend-menu button {
-  background-color: #545454;
-}
-.media-player .media-extend-menu button:hover {
-  background-color: #626262;
-}
-.media-player .media-extend-menu button:focus-visible {
-  background-color: #ffa600;
-}
-.media-player .media-extend-menu button:active,
-.media-player .media-extend-menu button.active {
-  background-color: #ff6347;
 }
 .media-player .media-extend-menu.active {
   position: absolute;
@@ -3548,9 +3544,9 @@ html,
 .tab-list > button,
 .tab-summary,
 .media-player,
-.media-player .media-play-pause,
+.media-player button,
+.media-extend-volume,
 .media-extend-menu,
-.media-extend-menu button,
 .progress-bar div,
 .article .keywords a,
 .topic-item,
