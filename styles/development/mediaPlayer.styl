@@ -77,8 +77,24 @@ video.media
   & .media-extend-menu button
     width: _mediaPlayerSize2
     height: _mediaPlayerSize2
-    background-color: _colorG + 14%
     border-radius: 50%
+  & .media-mute
+  & .media-fullscreen
+  & .media-extend-menu button
+    background-color: _colorG + 14%
+
+  & .media-mute
+  & .media-fullscreen
+    &:hover
+      background-color: _colorG + 21%
+    &:focus-visible
+      background-color: _color5
+  & .media-menu
+    &:hover
+      background-color: _colorG + 21%
+    &:focus-visible
+      background-color: _color5
+  & .media-extend-menu button
     &:hover
       background-color: _colorG + 21%
     &:focus-visible
@@ -114,6 +130,12 @@ video.media
       background-color: _color2
     &:focus-visible::-moz-range-thumb
       background-color: _color5
+  /* @note Affichage du thumb si player en lecture @todo Expérience UI valable ; à voir.
+  & .media-play-pause.active ~ .media-progress-bar::-webkit-slider-thumb
+    background-color: _color2
+  & .media-play-pause.active ~ .media-progress-bar::-moz-range-thumb
+    background-color: _color2
+  */
   & ::-webkit-slider-thumb
     -webkit-appearance: none
     {_mediaPlayerBlockThumb}
@@ -140,7 +162,7 @@ video.media
       border: _mediaPlayerBorder solid transparent
       border-radius: 50%
     &:hover::before
-      border-color: _colorG + 21%
+      background-color: _colorG + 21%
     &:focus-visible::before
       border-block-color: _color5
     &.active::before

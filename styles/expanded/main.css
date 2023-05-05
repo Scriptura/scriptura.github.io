@@ -1287,6 +1287,12 @@ video.media {
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
+/* @note Affichage du thumb si player en lecture @todo Expérience UI valable ; à voir.
+  & .media-play-pause.active ~ .media-progress-bar::-webkit-slider-thumb
+    background-color: _color2
+  & .media-play-pause.active ~ .media-progress-bar::-moz-range-thumb
+    background-color: _color2
+  */
 }
 .media-player button {
   all: unset;
@@ -1319,28 +1325,34 @@ video.media {
 .media-player .media-extend-menu button {
   width: 2.5em;
   height: 2.5em;
-  background-color: #545454;
   border-radius: 50%;
 }
+.media-player .media-mute,
+.media-player .media-fullscreen,
+.media-player .media-extend-menu button {
+  background-color: #545454;
+}
 .media-player .media-mute:hover,
-.media-player .media-fullscreen:hover,
-.media-player .media-menu:hover,
-.media-player .media-extend-menu button:hover {
+.media-player .media-fullscreen:hover {
   background-color: #626262;
 }
 .media-player .media-mute:focus-visible,
-.media-player .media-fullscreen:focus-visible,
-.media-player .media-menu:focus-visible,
+.media-player .media-fullscreen:focus-visible {
+  background-color: #ffa600;
+}
+.media-player .media-menu:hover {
+  background-color: #626262;
+}
+.media-player .media-menu:focus-visible {
+  background-color: #ffa600;
+}
+.media-player .media-extend-menu button:hover {
+  background-color: #626262;
+}
 .media-player .media-extend-menu button:focus-visible {
   background-color: #ffa600;
 }
-.media-player .media-mute:active,
-.media-player .media-fullscreen:active,
-.media-player .media-menu:active,
 .media-player .media-extend-menu button:active,
-.media-player .media-mute.active,
-.media-player .media-fullscreen.active,
-.media-player .media-menu.active,
 .media-player .media-extend-menu button.active {
   background-color: #ff6347;
 }
@@ -1423,7 +1435,7 @@ video.media {
   border-radius: 50%;
 }
 .media-player .media-play-pause:hover::before {
-  border-color: #626262;
+  background-color: #626262;
 }
 .media-player .media-play-pause:focus-visible::before {
   border-block-color: #ffa600;
@@ -3544,9 +3556,13 @@ html,
 .tab-list > button,
 .tab-summary,
 .media-player,
-.media-player button,
+.media-play-pause::before,
 .media-extend-volume,
 .media-extend-menu,
+.media-extend-menu button,
+.media-menu:focus,
+.media-menu:hover,
+.media-menu:active,
 .progress-bar div,
 .article .keywords a,
 .topic-item,
