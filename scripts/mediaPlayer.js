@@ -170,17 +170,17 @@ const menu = (player, menuButton = false) => {
 }
 
 const nextMediaActive = (media, mediaRelationship) => {
-  const relatedMedias = mediaRelationship.querySelectorAll('.media')
-  const nextMedia = relatedMedias[[...relatedMedias].indexOf(media) + 1] || relatedMedias[0]
+  const relatedMedias = mediaRelationship.querySelectorAll('.media'),
+        nextMedia = relatedMedias[[...relatedMedias].indexOf(media) + 1] || relatedMedias[0]
 
   media = nextMedia
-  media.currentTime = 0
+  //media.currentTime = 0
 
   const player = media.nextElementSibling,
         playPauseButton = player.querySelector('.media-play-pause'),
         output = player.querySelector('.media-current-time'),
         progressBar = player.querySelector('.media-progress-bar')
-        
+  // @todo Status du player en cours à coder...
   togglePlayPause(media)
   buttonState(!media.paused, playPauseButton)
   currentTime(media, output, progressBar)
@@ -238,7 +238,7 @@ const controls = (media) => {
     player.classList.add('waiting')
   })
   
-  media.addEventListener('canplay', () => { // @todo Si ressource disponible à la lecture.
+  media.addEventListener('canplay', () => {
     player.classList.remove('waiting')
   })
 

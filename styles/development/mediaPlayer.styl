@@ -78,22 +78,16 @@ video.media
   & .media-extend-menu button
     width: _mediaPlayerSize2
     height: _mediaPlayerSize2
-    border-radius: 50%
-  & .media-mute
-  & .media-fullscreen
-  & .media-extend-menu button
     background-color: _colorG + 14%
+    border-radius: 50%
   & .media-fullscreen:hover
-      background-color: _colorG + 21%
+  & .media-menu:hover
+    background-color: _colorG + 21%
   & .media-mute
   & .media-fullscreen
   & .media-menu
     &:focus-visible
       background-color: _color5
-  & .media-menu
-    &:hover
-    &:active
-      background-color: _colorG + 14%
   & .media-extend-menu button
     &:focus-visible
       background-color: _color5
@@ -103,11 +97,15 @@ video.media
     &.active
       background-color: _color2
   & .media-time
-    flex-shrink: 0
+    flex-shrink: 1
+    overflow: hidden
+    white-space: nowrap
+    text-overflow: ellipsis
   & .media-progress-bar
   & .media-volume-bar
     --colorSlide: _color2
     all: unset
+    width: 100%
     min-width: 0 // @affected Firefox
     height: _mediaPlayerRangeHeight
     padding-block: 1em // @note S'ajoute à la propriété height, ne doit pas dépasser la hauteur du player
@@ -161,7 +159,7 @@ video.media
       border: _mediaPlayerBorder solid transparent
       border-radius: 50%
     &:hover::before
-      background-color: _colorG + 21%
+      border-block-color: _colorG + 21%
     &:focus-visible::before
       border-block-color: _color5
     &.active::before
@@ -179,17 +177,19 @@ video.media
     &:hover
     &:active
       padding-left: _mediaPlayerGap
+      animation: anim-button .6s ease-in-out
       & .media-volume-bar
         display: inherit
         max-width: 10em
   & .media-play-pause.active ~ .media-extend-volume .media-mute.active
-    animation: anim-mute 1s infinite // Si lecture et fonction mute activée, alors le bouton mute clignote ; pour rappeler lors de la reprise d'une lecture que la fonction mute est active.
+    animation: anim-mute 1s infinite
   & .media-volume-bar
     width: 100%
     max-width: 0
     transition: max-width .6s ease-in-out
   & .media-progress-bar
     flex-grow: 1
+    width: 10% // @note Ce n'est pas la barre de volume qui s'étend, c'est la barre de progression qui rapetisse.
   & .media-extend-menu
     display: none
   & .media-extend-menu.active
@@ -207,11 +207,6 @@ video.media
     box-shadow: _shadow17
   &.error
     color: _colorG + 50%
-    & .media-time
-      overflow: hidden
-      white-space: nowrap
-      text-overflow: ellipsis
-      flex-shrink: 1
 
 .waiting .media-play-pause.active
   animation: anim-waiting  1s infinite
@@ -227,6 +222,10 @@ video + .media-player
     transform: rotate(0deg)
   to
     transform: rotate(359deg)
+
+@keyframes anim-button
+  50%
+    background-color: _colorG + 21%
 
 @keyframes anim-mute
   50%

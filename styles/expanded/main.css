@@ -1328,24 +1328,17 @@ video.media {
 .media-player .media-extend-menu button {
   width: 2.5em;
   height: 2.5em;
+  background-color: #545454;
   border-radius: 50%;
 }
-.media-player .media-mute,
-.media-player .media-fullscreen,
-.media-player .media-extend-menu button {
-  background-color: #545454;
-}
-.media-player .media-fullscreen:hover {
+.media-player .media-fullscreen:hover,
+.media-player .media-menu:hover {
   background-color: #626262;
 }
 .media-player .media-mute:focus-visible,
 .media-player .media-fullscreen:focus-visible,
 .media-player .media-menu:focus-visible {
   background-color: #ffa600;
-}
-.media-player .media-menu:hover,
-.media-player .media-menu:active {
-  background-color: #545454;
 }
 .media-player .media-extend-menu button:focus-visible {
   background-color: #ffa600;
@@ -1358,12 +1351,16 @@ video.media {
   background-color: #ff6347;
 }
 .media-player .media-time {
-  flex-shrink: 0;
+  flex-shrink: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .media-player .media-progress-bar,
 .media-player .media-volume-bar {
   --colorSlide: #ff6347;
   all: unset;
+  width: 100%;
   min-width: 0;
   height: 0.31em;
   padding-block: 1em;
@@ -1436,7 +1433,7 @@ video.media {
   border-radius: 50%;
 }
 .media-player .media-play-pause:hover::before {
-  background-color: #626262;
+  border-block-color: #626262;
 }
 .media-player .media-play-pause:focus-visible::before {
   border-block-color: #ffa600;
@@ -1458,6 +1455,7 @@ video.media {
 .media-player .media-extend-volume:hover,
 .media-player .media-extend-volume:active {
   padding-left: 0.5em;
+  animation: anim-button 0.6s ease-in-out;
 }
 .media-player .media-extend-volume:focus-within .media-volume-bar,
 .media-player .media-extend-volume:hover .media-volume-bar,
@@ -1475,6 +1473,7 @@ video.media {
 }
 .media-player .media-progress-bar {
   flex-grow: 1;
+  width: 10%;
 }
 .media-player .media-extend-menu {
   display: none;
@@ -1495,12 +1494,6 @@ video.media {
 }
 .media-player.error {
   color: #9b9b9b;
-}
-.media-player.error .media-time {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  flex-shrink: 1;
 }
 .waiting .media-play-pause.active {
   animation: anim-waiting 1s infinite;
@@ -1564,6 +1557,11 @@ video + .media-player {
   }
   to {
     transform: rotate(359deg);
+  }
+}
+@keyframes anim-button {
+  50% {
+    background-color: #626262;
   }
 }
 @keyframes anim-mute {
@@ -3552,10 +3550,9 @@ html,
 .media-play-pause::before,
 .media-extend-volume,
 .media-player .media-fullscreen,
+.media-player .media-menu,
 .media-extend-menu,
 .media-extend-menu button,
-.media-menu:focus-visible,
-.media-menu:hover,
 .progress-bar div,
 .article .keywords a,
 .topic-item,
