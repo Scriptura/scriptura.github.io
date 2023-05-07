@@ -172,7 +172,7 @@ const menu = (player, menuButton = false) => {
 }
 
 const nextMediaActive = (media, mediaRelationship) => {
-  const relatedMedias = mediaRelationship.querySelectorAll('.media'),
+  const relatedMedias = mediaRelationship.querySelectorAll('.media:not(.error)'),
         nextMedia = relatedMedias[[...relatedMedias].indexOf(media) + 1] || relatedMedias[0]
 
   media = nextMedia
@@ -207,9 +207,8 @@ const controls = (media) => {
         //fastRewindButton = player.querySelector('.media-fast-rewind'),
         //fastForwardButton = player.querySelector('.media-fast-forward'),
         stopButton = player.querySelector('.media-stop'),
-        replayButton = player.querySelector('.media-replay')
-
-  const mediaRelationship = media.closest('.media-relationship')
+        replayButton = player.querySelector('.media-replay'),
+        mediaRelationship = media.closest('.media-relationship')
 
   // Remove Controls :
   // @note Le code est plus simple et robuste si l'on se contente de supprimer des boutons déjà présents dans le player plutôt que de les ajouter (cibler leur place dans le DOM qui peut changer au cours du développement, rattacher les fonctionnalités au DOM...)
@@ -345,6 +344,8 @@ const error = media => {
 
   media.addEventListener('error', () => {
     player.setAttribute('inert', '')
+    player.querySelectorAll('button, input').forEach(e => e.setAttribute('disabled', '')) // @note Pour les anciens navigateurs.
+    media.classList.add('error')
     player.classList.add('error')
     /*
     let message = ''
