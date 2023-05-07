@@ -55,6 +55,11 @@ const playerTemplate = `
         <use href="/sprites/player.svg#picture-in-picture-alt"></use>
       </svg>
     </button>
+    <button class="media-slow-motion" aria-label="slow motion">
+      <svg focusable="false">
+        <use href="/sprites/player.svg#slow-motion-video"></use>
+      </svg>
+    </button>
     <button class="media-leap-rewind" aria-label="leap rewind">
       <svg focusable="false">
         <use href="/sprites/player.svg#rewind-10"></use>
@@ -117,9 +122,10 @@ const mediaDuration = media => {
 const currentTime = (media, output, progressBar) => {
   setInterval(frame, 50)
   function frame() {
+    const ratio = Math.floor(media.currentTime / media.duration * 100) // @note Deux chiffres après la virgule.
     output.value = secondsToTime(media.currentTime)
-    progressBar.value = media.currentTime / media.duration * 100
-    progressBar.style.setProperty('--position', `${Math.floor(media.currentTime / media.duration * 10000) / 100}%`) // @note Deux chiffres après la virgule.
+    progressBar.value = ratio
+    progressBar.style.setProperty('--position', `${ratio}%`)
   }
 }
 
@@ -150,6 +156,12 @@ const togglePictureInPicture = media => {
   // @see https://developer.mozilla.org/en-US/docs/Web/API/Picture-in-Picture_API
   if (document.pictureInPictureElement) document.exitPictureInPicture()
   else if (document.pictureInPictureEnabled) media.requestPictureInPicture()
+}
+
+const playbackRate = media => {
+  // @note Plage navigateur recommandée entre 0.25 et 4.0.
+  (media.playbackRate > .25) ? media.playbackRate -= .1 : media.playbackRate = 1.0
+  console.log(Math.floor(media.playbackRate * 10) / 10) // @todo En test...
 }
 
 /**
@@ -202,6 +214,7 @@ const controls = (media) => {
         menuButton = player.querySelector('.media-menu'),
         nextReadingButton = player.querySelector('.media-next-reading'),
         pictureInPictureButton = player.querySelector('.media-picture-in-picture'),
+        slowMotionButton = player.querySelector('.media-slow-motion'),
         leapRewindButton = player.querySelector('.media-leap-rewind'),
         leapForwardButton = player.querySelector('.media-leap-forward'),
         //fastRewindButton = player.querySelector('.media-fast-rewind'),
@@ -215,6 +228,7 @@ const controls = (media) => {
 
   if (media.tagName === 'AUDIO' || !document.fullscreenEnabled) fullscreenButton.remove()
   if (media.tagName === 'AUDIO' || !document.pictureInPictureEnabled) pictureInPictureButton.remove()
+  //if (media.tagName === 'AUDIO') slowMotionButton.remove()
   if (!mediaRelationship) nextReadingButton.remove()
 
   // Initialisation de valeurs :
@@ -287,17 +301,16 @@ const controls = (media) => {
   })
 
   menuButton.addEventListener('click', () => { // @note Fonction de notre player, non liée à la source media.
-    menuButton.classList.toggle('active')
     menu(player, true)
+    menuButton.classList.toggle('active')
   })
 
   nextReadingButton.addEventListener('click', e => {
     nextMediaEnabled = !nextMediaEnabled
     console.log(nextMediaEnabled)
     mediaRelationship.querySelectorAll('.media').forEach(media => { // @note Il peut s'agir de n'importe lequel des medias du groupe en relation.
-      //media.nextElementSibling.querySelector('.media-next-reading').classList.toggle('active')
-      buttonState(nextMediaEnabled, media.nextElementSibling.querySelector('.media-next-reading'))
       if (nextMediaEnabled) media.loop = false
+      buttonState(nextMediaEnabled, media.nextElementSibling.querySelector('.media-next-reading'))
     })
   })
 
@@ -306,8 +319,13 @@ const controls = (media) => {
   }
 
   pictureInPictureButton.addEventListener('click', () => {
-    buttonState(!document.pictureInPictureElement, pictureInPictureButton) // @note Ne pas mettre avec les clics généraux car cette fonction est en lien avec tous les players, pas seulement le player actuel.
     togglePictureInPicture(media)
+    buttonState(!document.pictureInPictureElement, pictureInPictureButton) // @note Ne pas mettre avec les clics généraux car cette fonction est en lien avec tous les players, pas seulement le player actuel.
+  })
+
+  slowMotionButton.addEventListener('click', () => {
+    playbackRate(media)
+    buttonState(media.playbackRate !== 1, slowMotionButton) // @note Toujours placé après la fonction playbackRate()
   })
 
   //fastRewindButton.addEventListener('click', () => fastRewind(media))
