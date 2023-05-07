@@ -3,6 +3,8 @@
 // @see https://developer.mozilla.org/en-US/docs/Web/Guide/Audio_and_video_delivery/cross_browser_video_player
 // @see https://developer.mozilla.org/fr/docs/Learn/HTML/Multimedia_and_embedding/Video_and_audio_content
 
+let nextMediaEnabled = false
+
 const medias = document.querySelectorAll('.media') // audio, video
 const playerTemplate = `
 <div class="media-player">
@@ -208,7 +210,6 @@ const controls = (media) => {
         replayButton = player.querySelector('.media-replay')
 
   const mediaRelationship = media.closest('.media-relationship')
-  let nextMediaEnabled = false
 
   // Remove Controls :
   // @note Le code est plus simple et robuste si l'on se contente de supprimer des boutons déjà présents dans le player plutôt que de les ajouter (cibler leur place dans le DOM qui peut changer au cours du développement, rattacher les fonctionnalités au DOM...)
@@ -295,7 +296,8 @@ const controls = (media) => {
     nextMediaEnabled = !nextMediaEnabled
     console.log(nextMediaEnabled)
     mediaRelationship.querySelectorAll('.media').forEach(media => { // @note Il peut s'agir de n'importe lequel des medias du groupe en relation.
-      media.nextElementSibling.querySelector('.media-next-reading').classList.toggle('active')
+      //media.nextElementSibling.querySelector('.media-next-reading').classList.toggle('active')
+      buttonState(nextMediaEnabled, media.nextElementSibling.querySelector('.media-next-reading'))
       if (nextMediaEnabled) media.loop = false
     })
   })
