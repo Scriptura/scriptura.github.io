@@ -182,7 +182,7 @@ const nextMediaActive = (media, mediaRelationship) => {
         playPauseButton = player.querySelector('.media-play-pause'),
         output = player.querySelector('.media-current-time'),
         progressBar = player.querySelector('.media-progress-bar')
-  // @todo Status du player en cours à coder...
+
   togglePlayPause(media)
   buttonState(!media.paused, playPauseButton)
   currentTime(media, output, progressBar)

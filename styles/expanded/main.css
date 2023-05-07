@@ -1296,6 +1296,7 @@ video.media {
 }
 .media-player button {
   all: unset;
+  box-sizing: border-box;
   flex-shrink: 0;
   display: grid;
   height: 3.5em;
@@ -1338,10 +1339,10 @@ video.media {
 .media-player .media-mute:focus-visible,
 .media-player .media-fullscreen:focus-visible,
 .media-player .media-menu:focus-visible {
-  background-color: #ffa600;
+  border: 0.2em solid #ffa600;
 }
 .media-player .media-extend-menu button:focus-visible {
-  background-color: #ffa600;
+  border: 0.2em solid #ffa600;
 }
 .media-player .media-extend-menu button:hover {
   background-color: #626262;

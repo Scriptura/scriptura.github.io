@@ -53,6 +53,7 @@ video.media
   user-select: none
   & button
     all: unset
+    box-sizing: border-box
     flex-shrink: 0
     display: grid
     height: _mediaPlayerSize
@@ -87,10 +88,12 @@ video.media
   & .media-fullscreen
   & .media-menu
     &:focus-visible
-      background-color: _color5
+      //background-color: _color5
+      border: .2em solid _color5
   & .media-extend-menu button
     &:focus-visible
-      background-color: _color5
+      //background-color: _color5
+      border: .2em solid _color5
     &:hover
       background-color: _colorG + 21%
     &:active
