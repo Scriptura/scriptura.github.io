@@ -260,8 +260,7 @@ const controls = (media) => {
     media.currentTime = 0
     stopButton.classList.add('active')
     stopButton.disabled = true
-    //if (nextMediaEnabled)
-    nextMediaActive(media, mediaRelationship)
+    if (nextMediaEnabled) nextMediaActive(media, mediaRelationship)
   })
 
   media.addEventListener('pause', () => playPauseButton.classList.remove('active'))
@@ -294,6 +293,7 @@ const controls = (media) => {
 
   nextReadingButton.addEventListener('click', e => {
     nextMediaEnabled = !nextMediaEnabled
+    console.log(nextMediaEnabled)
     mediaRelationship.querySelectorAll('.media').forEach(media => { // @note Il peut s'agir de n'importe lequel des medias du groupe en relation.
       media.nextElementSibling.querySelector('.media-next-reading').classList.toggle('active')
       if (nextMediaEnabled) media.loop = false

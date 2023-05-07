@@ -1351,10 +1351,7 @@ video.media {
   background-color: #ff6347;
 }
 .media-player .media-time {
-  flex-shrink: 1;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  flex-shrink: 0;
 }
 .media-player .media-progress-bar,
 .media-player .media-volume-bar {
@@ -1493,6 +1490,10 @@ video.media {
   box-shadow: 0 1rem 1rem rgba(0,0,0,0.1);
 }
 .media-player.error {
+  flex-shrink: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   color: #9b9b9b;
 }
 .waiting .media-play-pause.active {
