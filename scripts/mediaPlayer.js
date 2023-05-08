@@ -165,23 +165,25 @@ const playbackRateChange = (media, playbackRateOutput) => {
   //(media.playbackRate > .25) ? media.playbackRate -= .2 : media.playbackRate = 4 // @note Les valeurs ont besoin d'être déterminée précisément.
   switch (media.playbackRate) { // @note Plage navigateur recommandée entre 0.25 et 4.0.
     case (1): media.playbackRate = .8
-    break
+      break
     case (.8): media.playbackRate = .6
-    break
+      break
     case (.6): media.playbackRate = .5
-    break
+      break
     case (.5): media.playbackRate = .4
-    break
+      break
     case (.4): media.playbackRate = .3
-    break
+      break
     case (.3): media.playbackRate = .2
-    break
+      break
     case (.2): media.playbackRate = 4
-    break
+      break
     case (4): media.playbackRate = 3
-    break
+      break
     case (3): media.playbackRate = 2
-    break
+      break
+    case (2): media.playbackRate = 1.5
+      break
     default: media.playbackRate = 1
   }
   playbackRateOutput.innerHTML = `x${Math.floor(media.playbackRate * 10) / 10}`
@@ -352,7 +354,7 @@ const controls = (media) => {
   slowMotionButton.addEventListener('click', () => {
     playbackRateChange(media, playbackRateOutput)
     buttonState(media.playbackRate !== 1, slowMotionButton) // @note Toujours placé après la fonction playbackRateChange()
-    buttonState(media.playbackRate !== 1, playbackRate) // Idem
+    if (media.playbackRate !== 1) playbackRate.classList.add('active') // @note Une fois activé on laisse l'affichage, même si retour à la valeur d'origine.
   })
 
   //fastRewindButton.addEventListener('click', () => fastRewind(media))
@@ -396,13 +398,13 @@ const error = media => {
     let message = ''
     switch (media.error.code) {
       case (1): message = 'Error: ressource loading aborted'
-      break
+        break
       case (2): message = 'Error: no network'
-      break
+        break
       case (3): message = 'Error: resource decoding failed'
-      break
+        break
       case (4): message = 'Error: unsupported resource'
-      break
+        break
       default: message = 'Reading error'
     }
     time.innerHTML = message //`<span>${message}</span>`
