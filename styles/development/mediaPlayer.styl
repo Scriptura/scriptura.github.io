@@ -165,6 +165,24 @@ video.media
     &.active::before
       border-block-color: _color2
       animation: anim-play 20s linear infinite var(--play-state, running)
+  & .media-playback-rate
+    position: absolute
+    z-index: 1
+    top: 0
+    left: 4em
+    display: none
+    min-width: 2.5em
+    height: 1em
+    padding-inline: .3em
+    text-align: center
+    line-height: 1
+    background-color: _color2
+    //border-radius: .5em
+    //pointer-events: none
+    &.active
+      display: block
+    & *
+      font-size: .8em
   & .media-extend-volume
     display: flex
     justify-content: flex-end

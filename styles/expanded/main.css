@@ -1440,6 +1440,25 @@ video.media {
   border-block-color: #ff6347;
   animation: anim-play 20s linear infinite var(--play-state, running);
 }
+.media-player .media-playback-rate {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 4em;
+  display: none;
+  min-width: 2.5em;
+  height: 1em;
+  padding-inline: 0.3em;
+  text-align: center;
+  line-height: 1;
+  background-color: #ff6347;
+}
+.media-player .media-playback-rate.active {
+  display: block;
+}
+.media-player .media-playback-rate * {
+  font-size: 0.8em;
+}
 .media-player .media-extend-volume {
   display: flex;
   justify-content: flex-end;

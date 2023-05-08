@@ -16,6 +16,9 @@ const playerTemplate = `
       <use href="/sprites/player.svg#pause"></use>
     </svg>
   </button>
+  <div class="media-playback-rate">
+    <output></output>
+  </div>
   <div class="media-time">
     <output class="media-current-time"aria-label="current time">0:00</output>&nbsp;/&nbsp;<output class="media-duration"aria-label="duration">0:00</output>
   </div>
@@ -158,10 +161,31 @@ const togglePictureInPicture = media => {
   else if (document.pictureInPictureEnabled) media.requestPictureInPicture()
 }
 
-const playbackRate = media => {
-  // @note Plage navigateur recommandée entre 0.25 et 4.0.
-  (media.playbackRate > .25) ? media.playbackRate -= .1 : media.playbackRate = 1.0
-  console.log(Math.floor(media.playbackRate * 10) / 10) // @todo En test...
+const playbackRateChange = (media, playbackRateOutput) => {
+  //(media.playbackRate > .25) ? media.playbackRate -= .2 : media.playbackRate = 4 // @note Les valeurs ont besoin d'être déterminée précisément.
+  switch (media.playbackRate) { // @note Plage navigateur recommandée entre 0.25 et 4.0.
+    case (1): media.playbackRate = .8
+    break
+    case (.8): media.playbackRate = .6
+    break
+    case (.6): media.playbackRate = .5
+    break
+    case (.5): media.playbackRate = .4
+    break
+    case (.4): media.playbackRate = .3
+    break
+    case (.3): media.playbackRate = .2
+    break
+    case (.2): media.playbackRate = 4
+    break
+    case (4): media.playbackRate = 3
+    break
+    case (3): media.playbackRate = 2
+    break
+    default: media.playbackRate = 1
+  }
+  playbackRateOutput.innerHTML = `x${Math.floor(media.playbackRate * 10) / 10}`
+  console.log(media.playbackRate)
 }
 
 /**
@@ -192,20 +216,22 @@ const nextMediaActive = (media, mediaRelationship) => {
 
   const player = media.nextElementSibling,
         playPauseButton = player.querySelector('.media-play-pause'),
-        output = player.querySelector('.media-current-time'),
+        currentTimeOutput = player.querySelector('.media-current-time'),
         progressBar = player.querySelector('.media-progress-bar')
 
   togglePlayPause(media)
   buttonState(!media.paused, playPauseButton)
-  currentTime(media, output, progressBar)
+  currentTime(media, currentTimeOutput, progressBar)
 }
 
 const controls = (media) => {
 
   const player = media.nextElementSibling,
         playPauseButton = player.querySelector('.media-play-pause'),
+        playbackRate = player.querySelector('.media-playback-rate'),
+        playbackRateOutput = player.querySelector('.media-playback-rate *'),
         //time = player.querySelector('.media-time'),
-        output = player.querySelector('.media-current-time'),
+        currentTimeOutput = player.querySelector('.media-current-time'),
         progressBar = player.querySelector('.media-progress-bar'),
         extendVolume = player.querySelector('.media-extend-volume'),
         volumeBar = player.querySelector('.media-volume-bar'),
@@ -283,7 +309,7 @@ const controls = (media) => {
 
   playPauseButton.addEventListener('click', () => {
     togglePlayPause(media)
-    currentTime(media, output, progressBar)
+    currentTime(media, currentTimeOutput, progressBar)
     menu(player, false)
   })
 
@@ -291,7 +317,7 @@ const controls = (media) => {
 
   progressBar.addEventListener('input', e => {
     media.currentTime = (progressBar.value / progressBar.max) * media.duration
-    currentTime(media, output, progressBar)
+    currentTime(media, currentTimeOutput, progressBar)
   })
 
   volumeBar.addEventListener('input', e => {
@@ -324,8 +350,9 @@ const controls = (media) => {
   })
 
   slowMotionButton.addEventListener('click', () => {
-    playbackRate(media)
-    buttonState(media.playbackRate !== 1, slowMotionButton) // @note Toujours placé après la fonction playbackRate()
+    playbackRateChange(media, playbackRateOutput)
+    buttonState(media.playbackRate !== 1, slowMotionButton) // @note Toujours placé après la fonction playbackRateChange()
+    buttonState(media.playbackRate !== 1, playbackRate) // Idem
   })
 
   //fastRewindButton.addEventListener('click', () => fastRewind(media))
@@ -334,17 +361,17 @@ const controls = (media) => {
 
   leapRewindButton.addEventListener('click', () => {
     leapRewind(media)
-    currentTime(media, output, progressBar)
+    currentTime(media, currentTimeOutput, progressBar)
   })
 
   leapForwardButton.addEventListener('click', () => {
     leapForward(media)
-    currentTime(media, output, progressBar)
+    currentTime(media, currentTimeOutput, progressBar)
   })
 
   stopButton.addEventListener('click', () => {
     stop(media)
-    currentTime(media, output, progressBar)
+    currentTime(media, currentTimeOutput, progressBar)
   })
 
   replayButton.addEventListener('click', () => {
