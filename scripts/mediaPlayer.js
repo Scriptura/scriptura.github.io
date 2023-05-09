@@ -3,8 +3,6 @@
 // @see https://developer.mozilla.org/en-US/docs/Web/Guide/Audio_and_video_delivery/cross_browser_video_player
 // @see https://developer.mozilla.org/fr/docs/Learn/HTML/Multimedia_and_embedding/Video_and_audio_content
 
-let nextMediaEnabled = false
-
 const medias = document.querySelectorAll('.media') // audio, video
 const playerTemplate = `
 <div class="media-player">
@@ -120,6 +118,7 @@ const secondsToTime = seconds => { // @see https://stackoverflow.com/questions/3
 const mediaDuration = media => {
   const output = media.nextElementSibling.querySelector('.media-duration')
   media.readyState >= 1 ? output.value = secondsToTime(media.duration) : media.addEventListener('loadedmetadata', () => output.value = secondsToTime(media.duration))
+  //if (media.duration === Infinity) output.value = 'streaming' // @todo A voir...
 }
 
 const currentTime = (media, output, progressBar) => {
@@ -170,13 +169,13 @@ const playbackRateChange = (media, playbackRateOutput) => {
       break
     case (.6): media.playbackRate = .5
       break
-    case (.5): media.playbackRate = .4
-      break
-    case (.4): media.playbackRate = .3
+    case (.5): media.playbackRate = .3
       break
     case (.3): media.playbackRate = .2
       break
-    case (.2): media.playbackRate = 4
+      case (.2): media.playbackRate = .1
+        break
+    case (.1): media.playbackRate = 4
       break
     case (4): media.playbackRate = 3
       break
@@ -214,7 +213,7 @@ const nextMediaActive = (media, mediaRelationship) => {
         nextMedia = relatedMedias[[...relatedMedias].indexOf(media) + 1] || relatedMedias[0]
 
   media = nextMedia
-  //media.currentTime = 0
+  //media.currentTime = 0 // @note Désactivée : un utilisateur peut ainsi caler la plage suivante selon sa préférence personnelle.
 
   const player = media.nextElementSibling,
         playPauseButton = player.querySelector('.media-play-pause'),
@@ -249,7 +248,8 @@ const controls = (media) => {
         //fastForwardButton = player.querySelector('.media-fast-forward'),
         stopButton = player.querySelector('.media-stop'),
         replayButton = player.querySelector('.media-replay'),
-        mediaRelationship = media.closest('.media-relationship')
+        mediaRelationship = media.closest('.media-relationship'),
+        dataNextMedia = media.closest('[data-next-media]')
 
   // Remove Controls :
   // @note Le code est plus simple et robuste si l'on se contente de supprimer des boutons déjà présents dans le player plutôt que de les ajouter (cibler leur place dans le DOM qui peut changer au cours du développement, rattacher les fonctionnalités au DOM...)
@@ -298,11 +298,12 @@ const controls = (media) => {
   })
 
   media.addEventListener('ended', () => {
+    //media.currentTime = 0 // @note Permet de réénitialiser la lecture, mais le fait de s'abstenir de réinitialiser permet de mieux repérer les fichiers déjà lus.
+    if (dataNextMedia.getAttribute('data-next-media') === 'true') nextMediaActive(media, mediaRelationship)
     playPauseButton.classList.remove('active')
-    media.currentTime = 0
     stopButton.classList.add('active')
     stopButton.disabled = true
-    if (nextMediaEnabled) nextMediaActive(media, mediaRelationship)
+    console.log(dataNextMedia.getAttribute('data-next-media'))
   })
 
   media.addEventListener('pause', () => playPauseButton.classList.remove('active'))
@@ -334,11 +335,13 @@ const controls = (media) => {
   })
 
   nextReadingButton.addEventListener('click', e => {
-    nextMediaEnabled = !nextMediaEnabled
-    console.log(nextMediaEnabled)
+    //nextMediaEnabled = !nextMediaEnabled
+    //console.log(nextMediaEnabled)
+    if (dataNextMedia.getAttribute('data-next-media') === 'false') dataNextMedia.setAttribute('data-next-media', 'true')
+    else dataNextMedia.setAttribute('data-next-media', 'false')
     mediaRelationship.querySelectorAll('.media').forEach(media => { // @note Il peut s'agir de n'importe lequel des medias du groupe en relation.
-      if (nextMediaEnabled) media.loop = false
-      buttonState(nextMediaEnabled, media.nextElementSibling.querySelector('.media-next-reading'))
+      if (dataNextMedia.getAttribute('data-next-media') == true) media.loop = false
+      buttonState(dataNextMedia.getAttribute('data-next-media') === 'true', media.nextElementSibling.querySelector('.media-next-reading'))
     })
   })
 
