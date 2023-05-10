@@ -249,7 +249,7 @@ const controls = (media) => {
         stopButton = player.querySelector('.media-stop'),
         replayButton = player.querySelector('.media-replay'),
         mediaRelationship = media.closest('.media-relationship'),
-        dataNextMedia = media.closest('[data-next-media]')
+        dataNextReading = media.closest('[data-next-reading]')
 
   // Remove Controls :
   // @note Le code est plus simple et robuste si l'on se contente de supprimer des boutons déjà présents dans le player plutôt que de les ajouter (cibler leur place dans le DOM qui peut changer au cours du développement, rattacher les fonctionnalités au DOM...)
@@ -257,7 +257,7 @@ const controls = (media) => {
   if (media.tagName === 'AUDIO' || !document.fullscreenEnabled) fullscreenButton.remove()
   if (media.tagName === 'AUDIO' || !document.pictureInPictureEnabled) pictureInPictureButton.remove()
   //if (media.tagName === 'AUDIO') slowMotionButton.remove()
-  if (!mediaRelationship) nextReadingButton.remove()
+  if (!dataNextReading) nextReadingButton.remove()
 
   // Initialisation de valeurs :
   
@@ -291,7 +291,7 @@ const controls = (media) => {
       buttonState(media.muted || media.volume === 0, muteButton)
       buttonState(media.onplayed || media.paused && media.currentTime === 0, stopButton)
       buttonState(media.loop, replayButton)
-      buttonState(dataNextMedia.getAttribute('data-next-media') === 'true', media.nextElementSibling.querySelector('.media-next-reading'))
+      buttonState(dataNextReading.getAttribute('data-next-reading') === 'true', media.nextElementSibling.querySelector('.media-next-reading'))
       media.paused && media.currentTime === 0 ? stopButton.disabled = true : stopButton.disabled = false
       // @note Variable CSS pilotée par JS ; permet de reprendre l'animation là où elle s'est arrêtée :
       //media.paused && playPauseButton.style.setProperty('--play-state', running === 'running' ? 'paused' : 'running')
@@ -300,11 +300,11 @@ const controls = (media) => {
 
   media.addEventListener('ended', () => {
     //media.currentTime = 0 // @note Permet de réénitialiser la lecture, mais le fait de s'abstenir de réinitialiser permet de mieux repérer les fichiers déjà lus.
-    if (dataNextMedia.getAttribute('data-next-media') === 'true') nextMediaActive(media, mediaRelationship)
+    if (dataNextReading.getAttribute('data-next-reading') === 'true') nextMediaActive(media, mediaRelationship)
     playPauseButton.classList.remove('active')
     stopButton.classList.add('active')
     stopButton.disabled = true
-    console.log(dataNextMedia.getAttribute('data-next-media'))
+    console.log(dataNextReading.getAttribute('data-next-reading'))
   })
 
   media.addEventListener('pause', () => playPauseButton.classList.remove('active'))
@@ -338,11 +338,11 @@ const controls = (media) => {
   nextReadingButton.addEventListener('click', e => {
     //nextMediaEnabled = !nextMediaEnabled
     //console.log(nextMediaEnabled)
-    if (dataNextMedia.getAttribute('data-next-media') === 'false') dataNextMedia.setAttribute('data-next-media', 'true')
-    else dataNextMedia.setAttribute('data-next-media', 'false')
+    if (dataNextReading.getAttribute('data-next-reading') === 'false') dataNextReading.setAttribute('data-next-reading', 'true')
+    else dataNextReading.setAttribute('data-next-reading', 'false')
     mediaRelationship.querySelectorAll('.media').forEach(media => { // @note Il peut s'agir de n'importe lequel des medias du groupe en relation.
-      if (dataNextMedia.getAttribute('data-next-media') == true) media.loop = false
-      buttonState(dataNextMedia.getAttribute('data-next-media') === 'true', media.nextElementSibling.querySelector('.media-next-reading'))
+      if (dataNextReading.getAttribute('data-next-reading') == true) media.loop = false
+      buttonState(dataNextReading.getAttribute('data-next-reading') === 'true', media.nextElementSibling.querySelector('.media-next-reading'))
     })
   })
 
