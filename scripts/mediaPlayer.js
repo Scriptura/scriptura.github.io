@@ -116,11 +116,24 @@ const secondsToTime = seconds => { // @see https://stackoverflow.com/questions/3
 }
 
 const mediaDuration = media => {
-  const time = media.nextElementSibling.querySelector('.media-time'),
-        output = media.nextElementSibling.querySelector('.media-duration')
+  const player = media.nextElementSibling,
+        time = player.querySelector('.media-time'),
+        output = player.querySelector('.media-duration'),
+        progressbar = player.querySelector('.media-progress-bar'),
+        menu = player.querySelector('.media-menu'),
+        extendMenu = player.querySelector('.media-extend-menu')
   media.readyState >= 1 ? output.value = secondsToTime(media.duration) : media.addEventListener('loadedmetadata', () => output.value = secondsToTime(media.duration))
-  media.addEventListener('loadedmetadata', () => {
-    if (media.duration === Infinity) time.innerHTML = 'Lecture en continu' // @todo À évaluer
+  
+  ;['loadeddata', 'loadedmetadata', 'click', 'play'].forEach(event => {
+    media.addEventListener(event, () => {
+      if (media.duration === Infinity) {
+        time.innerHTML = 'Lecture en continu' // @todo À évaluer
+        time.style.marginRight = 'auto'
+        progressbar.remove()
+        menu.remove()
+        extendMenu.remove()
+      }
+    })
   })
 }
 
@@ -286,7 +299,7 @@ const controls = (media) => {
       // @note Ne mettre ici que les boutons liés au player en cours.
       buttonState(!media.paused, playPauseButton)
       buttonState(media.muted || media.volume === 0, muteButton)
-      if (media.volume !== 0) muteButton.classList.remove('active')
+      //if (media.volume !== 0) muteButton.classList.remove('active')
       buttonState(media.onplayed || media.paused && media.currentTime === 0, stopButton)
       buttonState(media.loop, replayButton)
       media.paused && media.currentTime === 0 ? stopButton.disabled = true : stopButton.disabled = false
@@ -388,7 +401,7 @@ const error = media => {
 
   media.addEventListener('error', () => {
     player.setAttribute('inert', '')
-    player.querySelectorAll('button, input').forEach(e => e.setAttribute('disabled', '')) // @note Pour les anciens navigateurs.
+    player.querySelectorAll('button, input').forEach(e => e.disabled = true) // @note Pour les anciens navigateurs.
     media.classList.add('error')
     player.classList.add('error')
     /*
