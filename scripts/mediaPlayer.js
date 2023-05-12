@@ -135,6 +135,20 @@ const mediaDuration = media => {
       }
     })
   })
+  /*
+  // @see https://stackoverflow.com/questions/65009249/mp3-files-duration-infinity-in-desktop-ios-safari
+  const blob = await fetch(media.src
+    )
+    .then( (resp) => resp.blob() )
+  if (media.duration === Infinity) {
+    media.duration = 0
+    time.innerHTML = 'Lecture en continu' // @todo À évaluer
+    time.style.marginRight = 'auto'
+    progressbar.remove()
+    menu.remove()
+    extendMenu.remove()
+  }
+  */
 }
 
 const currentTime = (media, output, progressBar) => {
