@@ -66,6 +66,8 @@ video.media
   & .media-play-pause
   & .media-mute
   & .media-picture-in-picture
+    & > :nth-child(2)
+      display: none
     & > :last-child
       display: none
     &.active
@@ -73,6 +75,12 @@ video.media
         display: none
       & > :last-child
         display: initial
+  & .media-play-pause:disabled
+      & > :nth-child(2)
+        display: initial
+      & > :first-child
+      & > :last-child
+        display: none
   & .media-mute
   & .media-fullscreen
   & .media-menu
@@ -90,6 +98,8 @@ video.media
     &:focus-visible
       //background-color: _color5
       border: .2em solid _color5
+  & .media-fullscreen.active
+    background-color: _color2
   & .media-extend-menu button
     &:focus-visible
       //background-color: _color5
@@ -103,7 +113,9 @@ video.media
     flex-shrink: 0
   & .media-progress-bar
   & .media-volume-bar
-    --colorSlide: _color2
+    --position: 0%
+    --color-slide: _color2
+    --color-buffer: _colorG + 14%
     all: unset
     //align-self: stretch
     width: 100%
@@ -111,12 +123,18 @@ video.media
     height: _mediaPlayerRangeHeight
     padding-block: 1em // @note S'ajoute à la propriété height, ne doit pas dépasser la hauteur du player
     color: _color2
-    background-color: _colorG + 14%
-    background-image: linear-gradient(90deg, var(--colorSlide) 0, var(--colorSlide) var(--position), transparent var(--position))
     background-clip: content-box
     cursor: pointer
     &:focus-visible
-      --colorSlide: _color5
+      --color-slide: _color5
+  & .media-progress-bar
+    --position-buffer: 0%
+    background-image:
+      linear-gradient(90deg, var(--color-slide) 0, var(--color-slide) var(--position), transparent var(--position)),
+      linear-gradient(90deg, var(--color-buffer) var(--position-buffer), transparent var(--position-buffer)),
+      repeating-linear-gradient(90deg, transparent, transparent 2px, _colorG + 14% 2px, _colorG + 14% 4px) // @note En pixels car ne doit pas être scalable.
+  & .media-volume-bar
+    background-image: linear-gradient(90deg, var(--color-slide) var(--position), transparent var(--position))
   & .media-progress-bar
   & .media-volume-bar
     &:hover::-webkit-slider-thumb
@@ -129,12 +147,6 @@ video.media
       background-color: _color2
     &:focus-visible::-moz-range-thumb
       background-color: _color5
-  /* @note Affichage du thumb si player en lecture @todo Expérience UI valable ; à voir.
-  & .media-play-pause.active ~ .media-progress-bar::-webkit-slider-thumb
-    background-color: _color2
-  & .media-play-pause.active ~ .media-progress-bar::-moz-range-thumb
-    background-color: _color2
-  */
   & ::-webkit-slider-thumb
     -webkit-appearance: none
     {_mediaPlayerBlockThumb}

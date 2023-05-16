@@ -29,10 +29,9 @@ for (const masonry of document.querySelectorAll('.masonry')) {
 
   const grid = new VGrid(masonry)
 
-  //window.onload = grid.resizeAllGridItems() // Lancement du calcul de la grille au chargement de la page.
-  window.addEventListener('load', () => { // Lancement du calcul de la grille si resize
+  window.addEventListener('load', () => { // Préférable dans cette configuration à "DOMContentLoaded"
     grid.resizeAllGridItems()
-    setTimeout(() => {grid.resizeAllGridItems()}, 200)
+    //setTimeout(() => {grid.resizeAllGridItems()}, 200) // @note Deuxième application après un premier calcul @todo Désactivée pour test.
   })
 
   window.addEventListener('resize', () => { // Lancement du calcul de la grille si resize

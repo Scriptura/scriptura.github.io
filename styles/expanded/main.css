@@ -1287,12 +1287,6 @@ video.media {
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
-/* @note Affichage du thumb si player en lecture @todo Expérience UI valable ; à voir.
-  & .media-play-pause.active ~ .media-progress-bar::-webkit-slider-thumb
-    background-color: _color2
-  & .media-play-pause.active ~ .media-progress-bar::-moz-range-thumb
-    background-color: _color2
-  */
 }
 .media-player button {
   all: unset;
@@ -1308,6 +1302,11 @@ video.media {
   height: 1.2em;
   margin: auto;
 }
+.media-player .media-play-pause > :nth-child(2),
+.media-player .media-mute > :nth-child(2),
+.media-player .media-picture-in-picture > :nth-child(2) {
+  display: none;
+}
 .media-player .media-play-pause > :last-child,
 .media-player .media-mute > :last-child,
 .media-player .media-picture-in-picture > :last-child {
@@ -1322,6 +1321,13 @@ video.media {
 .media-player .media-mute.active > :last-child,
 .media-player .media-picture-in-picture.active > :last-child {
   display: initial;
+}
+.media-player .media-play-pause:disabled > :nth-child(2) {
+  display: initial;
+}
+.media-player .media-play-pause:disabled > :first-child,
+.media-player .media-play-pause:disabled > :last-child {
+  display: none;
 }
 .media-player .media-mute,
 .media-player .media-fullscreen,
@@ -1341,6 +1347,9 @@ video.media {
 .media-player .media-menu:focus-visible {
   border: 0.2em solid #ffa600;
 }
+.media-player .media-fullscreen.active {
+  background-color: #ff6347;
+}
 .media-player .media-extend-menu button:focus-visible {
   border: 0.2em solid #ffa600;
 }
@@ -1356,21 +1365,28 @@ video.media {
 }
 .media-player .media-progress-bar,
 .media-player .media-volume-bar {
-  --colorSlide: #ff6347;
+  --position: 0%;
+  --color-slide: #ff6347;
+  --color-buffer: #545454;
   all: unset;
   width: 100%;
   min-width: 0;
   height: 0.31em;
   padding-block: 1em;
   color: #ff6347;
-  background-color: #545454;
-  background-image: linear-gradient(90deg, var(--colorSlide) 0, var(--colorSlide) var(--position), transparent var(--position));
   background-clip: content-box;
   cursor: pointer;
 }
 .media-player .media-progress-bar:focus-visible,
 .media-player .media-volume-bar:focus-visible {
-  --colorSlide: #ffa600;
+  --color-slide: #ffa600;
+}
+.media-player .media-progress-bar {
+  --position-buffer: 0%;
+  background-image: linear-gradient(90deg, var(--color-slide) 0, var(--color-slide) var(--position), transparent var(--position)), linear-gradient(90deg, var(--color-buffer) var(--position-buffer), transparent var(--position-buffer)), repeating-linear-gradient(90deg, transparent, transparent 2px, #545454 2px, #545454 4px);
+}
+.media-player .media-volume-bar {
+  background-image: linear-gradient(90deg, var(--color-slide) var(--position), transparent var(--position));
 }
 .media-player .media-progress-bar:hover::-webkit-slider-thumb,
 .media-player .media-volume-bar:hover::-webkit-slider-thumb,

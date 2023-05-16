@@ -38,7 +38,7 @@ const getScript = (url, hook = 'footer') => new Promise((resolve, reject) => { /
   script.src = url
   script.async = 1
   script.onerror = reject
-  script.onload = script.onreadystatechange = function() {
+  script.onload = script.onreadystatechange = () => {
     const loadState = this.readyState
     if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
     script.onload = script.onreadystatechange = null

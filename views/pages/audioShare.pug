@@ -13,7 +13,7 @@ block variables
 block main
   header(role='banner')
     h1.main-heading!= data._name
-  .grid-auto.xs-grid-auto.gap.gap-block.media-relationship(style='--size-grid:22em;--xs-size-grid:16em' data-next-reading='true')
+  .grid-auto.xs-grid-auto.gap.gap-bottom.media-relationship(style='--size-grid:22em;--xs-size-grid:16em' data-next-reading='true')
     figure.figure-media
       figcaption.sr-only Donjon de Naheulbeuk
       audio.media(controls)
@@ -150,10 +150,9 @@ block main
       figcaption.sr-only Donjon de Naheulbeuk
       audio.media(controls)
         source(src='/medias/audios/DonjonDeNaheulbeuk/S01E30-2.mp3')
-  .grid2
+  .grid2.vertical-gap
     .message-highlight
       svg.icon(role='img' focusable='false')
         use(href='/sprites/util.svg#pencil')
       div
-        p Le Donjon de Naheulbeuk (DDN ou NBK) est une saga MP3 créée en 2001 par John Lang et diffusée gratuitement sur Internet.
-        p La saga narre les péripéties d'une compagnie d'aventuriers débutants, constituée d'un ranger, d'un nain, d'une elfe, d'un voleur, d'une magicienne, d'un ogre et d'un barbare, initialement partis dans un donjon, le donjon de Naheulbeuk, afin d'y voler une relique, une des douze statuettes de Gladeulfeurha.
+        p Le Donjon de Naheulbeuk est une saga MP3 créée en 2001 par John Lang et diffusée gratuitement sur Internet. La saga narre les péripéties d'une compagnie d'aventuriers débutants, constituée d'un ranger, d'un nain, d'une elfe, d'un voleur, d'une magicienne, d'un ogre et d'un barbare, initialement partis dans un donjon, le donjon de Naheulbeuk, afin d'y voler une relique, une des douze statuettes de Gladeulfeurha.
