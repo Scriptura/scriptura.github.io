@@ -36,7 +36,7 @@
           source(src='/medias/audios/grillons.mp3')
   div
     p
-      code .media-relationship .media
+      code .media-relationship(data-next-reading='true') .media
     .grid.gap.media-relationship(style='--n:1' data-next-reading='true')
       figure.figure-media
         figcaption.sr-only The beat of nature
@@ -79,7 +79,7 @@
 hr(data-hr='✻ ✻ ✻')
 p
   code video.media
-.grid2.s-grid1.gap.gap-bottom.media-relationship(data-next-reading='true')
+.grid2.s-grid1.gap.gap-bottom.media-relationship(data-next-reading='false')
   figure.figure-media
     figcaption.sr-only Escargots
     video.media(controls)
