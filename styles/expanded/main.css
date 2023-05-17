@@ -551,6 +551,10 @@ main {
     -moz-column-count: 4;
          column-count: 4;
   }
+  .m-column2 {
+    -moz-column-count: 2;
+         column-count: 2;
+  }
 }
 @media (min-width: 92.01em) {
   .column4 {
@@ -564,6 +568,10 @@ main {
   .column6 {
     -moz-column-count: 6;
          column-count: 6;
+  }
+  .l-column3 {
+    -moz-column-count: 3;
+         column-count: 3;
   }
 }
 [class^=column].gap {
@@ -1538,9 +1546,6 @@ video.media {
 }
 video + .media-player {
   margin-top: 0.5em;
-}
-.figure-media figcaption {
-  color: #d3b58d;
 }
 .video-youtube {
   position: relative;
