@@ -1375,7 +1375,6 @@ video.media {
 .media-player .media-volume-bar {
   --position: 0%;
   --color-slide: #ff6347;
-  --color-buffer: #545454;
   all: unset;
   width: 100%;
   min-width: 0;
@@ -1391,7 +1390,8 @@ video.media {
 }
 .media-player .media-progress-bar {
   --position-buffer: 0%;
-  background-image: linear-gradient(90deg, var(--color-slide) 0, var(--color-slide) var(--position), transparent var(--position)), linear-gradient(90deg, var(--color-buffer) var(--position-buffer), transparent var(--position-buffer)), repeating-linear-gradient(90deg, transparent, transparent 2px, #545454 2px, #545454 4px);
+  --color-buffer: #545454;
+  background-image: linear-gradient(90deg, var(--color-slide) 0, var(--color-slide) var(--position), transparent var(--position)), linear-gradient(90deg, var(--color-buffer) var(--position-buffer), transparent var(--position-buffer)), repeating-linear-gradient(90deg, transparent 0, transparent 4px, #545454 4px, #545454 7px);
 }
 .media-player .media-volume-bar {
   background-image: linear-gradient(90deg, var(--color-slide) var(--position), transparent var(--position));
@@ -1546,6 +1546,9 @@ video.media {
 }
 video + .media-player {
   margin-top: 0.5em;
+}
+.figure-media figcaption {
+  color: #7e7e7e;
 }
 .video-youtube {
   position: relative;

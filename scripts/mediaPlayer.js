@@ -113,14 +113,15 @@ const mediaPlayer = () => {
     let hh = Math.floor(seconds / 3600).toString(),
         mm = Math.floor(seconds % 3600 / 60).toString(),
         ss = Math.floor(seconds % 60).toString().padStart(2, '0')
-    if (hh === '0') hh = null // Si pas d'heures, alors info sur les heures escamotée.
-    if (isNaN(hh)) hh = null // Si valeur nulle, alors info sur les heures escamotée.
+    if (hh === '0') hh = null // Si pas d'heures, alors info sur les heures escamotées.
+    if (isNaN(hh)) hh = null // Si valeur nulle, alors info sur les heures escamotées.
     if (isNaN(mm)) mm = '0' // Si valeur nulle, alors affichage par défaut.
     if (isNaN(ss)) ss = '00' // Idem.
     return [hh, mm, ss].filter(Boolean).join(':')
   }
 
   const mediaDuration = media => {
+
     const player = media.nextElementSibling,
           time = player.querySelector('.media-time'),
           output = player.querySelector('.media-duration'),
@@ -140,26 +141,13 @@ const mediaPlayer = () => {
         }
       })
     })
-    /*
-    // @see https://stackoverflow.com/questions/65009249/mp3-files-duration-infinity-in-desktop-ios-safari
-    const blob = await fetch(media.src
-      )
-      .then( (resp) => resp.blob() )
-    if (media.duration === Infinity) {
-      media.duration = 0
-      time.innerHTML = 'Lecture en continu' // @todo À évaluer
-      time.style.marginRight = 'auto'
-      progressbar.remove()
-      menu.remove()
-      extendMenu.remove()
-    }
-    */
+
   }
 
   const currentTime = (media, output, progressBar) => {
     setInterval(frame, 50)
     function frame() {
-      const ratio = Math.floor(media.currentTime / media.duration * 100) // @note Deux chiffres après la virgule.
+      const ratio = Math.floor(media.currentTime / media.duration * 1000) / 10 // @note Un chiffre après la virgule.
       output.value = secondsToTime(media.currentTime)
       progressBar.value = ratio
       progressBar.style.setProperty('--position', `${ratio}%`)
@@ -296,9 +284,9 @@ const mediaPlayer = () => {
 
     const initValues = (() => {
       progressBar.value = '0' // Valeur définie aussi dans le template string.
-      volumeBar.value = '.5'
       progressBar.style.setProperty('--position', '0%')
-      progressBar.style.setProperty('--position-buffered', '0%')
+      progressBar.style.setProperty('--position-buffer', '0%')
+      volumeBar.value = '.5'
       volumeBar.style.setProperty('--position', '50%')
     })()
 
@@ -306,10 +294,13 @@ const mediaPlayer = () => {
 
     // Contrôle via les événements :
 
-    // @note Donne une indication de la quantité de médias réellement téléchargés, sans tenir compte de la localisation des plages.
+    // @note Le code récupère l'intégralité des plages téléchargées dans l'objet range et donne une indication de la quantité de médias réellement téléchargés, sans tenir compte de la localisation des plages.
     // @see https://developer.mozilla.org/fr/docs/Web/Guide/Audio_and_video_delivery/buffering_seeking_time_ranges
-    // @note Le code récupère l'intégralité des plages téléchargées dans l'objet range 
-    media.addEventListener('progress', () => progressBar.style.setProperty('--position-buffer', `${media.buffered.end(media.buffered.length - 1) / media.duration * 100}%`))
+    ;['loadeddata', 'progress'].forEach(event => {
+      media.addEventListener(event, () => {
+        progressBar.style.setProperty('--position-buffer', `${Math.floor(media.buffered.end(media.buffered.length - 1) / media.duration * 100)}%`) // @note Un nombre entier suffit.
+      })
+    })
 
     media.addEventListener('waiting', () => player.classList.add('waiting')) // Si ressource en cours de chargement.
     
@@ -322,12 +313,10 @@ const mediaPlayer = () => {
     }, true)
 
     ;['click', 'play', 'pause', 'ended', 'input'].forEach(event => { // "timeupdate"
-      document.addEventListener(event, () => {
-        // @note Ne mettre ici que les boutons liés au player en cours.
+      document.addEventListener(event, () => { // @note Ne mettre ici que les boutons liés au player en cours.
         buttonState(!media.paused, playPauseButton)
         buttonState(media.muted || media.volume === 0, muteButton)
-        //if (media.volume !== 0) muteButton.classList.remove('active')
-        buttonState(media.onplayed || media.paused && media.currentTime === 0, stopButton)
+        buttonState(media.paused && media.currentTime === 0, stopButton) // buttonState(media.onplayed || media.paused && media.currentTime === 0, stopButton)
         buttonState(media.loop, replayButton)
         media.paused && media.currentTime === 0 ? stopButton.disabled = true : stopButton.disabled = false
         // @note Variable CSS pilotée par JS ; permet de reprendre l'animation là où elle s'est arrêtée :
