@@ -1391,7 +1391,7 @@ video.media {
 .media-player .media-progress-bar {
   --position-buffer: 0%;
   --color-buffer: #545454;
-  background-image: linear-gradient(90deg, var(--color-slide) 0, var(--color-slide) var(--position), transparent var(--position)), linear-gradient(90deg, var(--color-buffer) var(--position-buffer), transparent var(--position-buffer)), repeating-linear-gradient(90deg, transparent 0, transparent 4px, #545454 4px, #545454 7px);
+  background-image: linear-gradient(90deg, var(--color-slide) 0, var(--color-slide) var(--position), transparent var(--position)), linear-gradient(90deg, var(--color-buffer) var(--position-buffer), transparent var(--position-buffer)), repeating-linear-gradient(90deg, transparent 0, transparent 4px, #545454 4px, #545454 5px);
 }
 .media-player .media-volume-bar {
   background-image: linear-gradient(90deg, var(--color-slide) var(--position), transparent var(--position));
