@@ -132,7 +132,7 @@ video.media
     background-image:
       linear-gradient(90deg, var(--color-slide) 0, var(--color-slide) var(--position), transparent var(--position)),
       linear-gradient(90deg, var(--color-buffer) var(--position-buffer), transparent var(--position-buffer)),
-      repeating-linear-gradient(90deg, transparent 0, transparent 4px, _colorG + 14% 4px, _colorG + 14% 5px) // @note En pixels car ne doit pas être scalable.
+      repeating-linear-gradient(90deg, transparent 0, transparent 2px, _colorG + 14% 2px, _colorG + 14% 4px) // @note En pixels car ne doit pas être scalable.
   & .media-volume-bar
     background-image: linear-gradient(90deg, var(--color-slide) var(--position), transparent var(--position))
   & .media-progress-bar
@@ -171,6 +171,8 @@ video.media
       z-index: -1
       border: _mediaPlayerBorder solid transparent
       border-radius: 50%
+    &:focus-visible.active::before
+      border-block-color: _color5
     &:hover::before
       border-block-color: _colorG + 21%
     &:focus-visible::before
