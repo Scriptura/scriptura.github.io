@@ -171,12 +171,11 @@ video.media
       z-index: -1
       border: _mediaPlayerBorder solid transparent
       border-radius: 50%
+    &:focus-visible::before
     &:focus-visible.active::before
       border-block-color: _color5
     &:hover::before
       border-block-color: _colorG + 21%
-    &:focus-visible::before
-      border-block-color: _color5
     &.active::before
       border-block-color: _color2
       animation: anim-play 20s linear infinite var(--play-state, running)

@@ -421,7 +421,7 @@ const mediaPlayer = () => {
       player.querySelectorAll('button, input').forEach(e => e.disabled = true) // @note Pour les anciens navigateurs.
       media.classList.add('error')
       player.classList.add('error')
-      /*
+      
       let message = ''
       switch (media.error.code) {
         case (1): message = 'Error: ressource loading aborted'
@@ -435,8 +435,8 @@ const mediaPlayer = () => {
         default: message = 'Reading error'
       }
       time.innerHTML = message //`<span>${message}</span>`
-      */
-      time.innerHTML = 'Erreur de lecture'
+      
+      //time.innerHTML = 'Erreur de lecture'
     }, true)
   }
 

@@ -1,0 +1,80 @@
+extends ../patternLayout
+
+block variables
+  - const documentType = 'audioShare2'
+  - const pageType = 'template'
+  -
+    const data = {
+      _name: 'Les Mystérieuses <span>Cités d\'Or</span>',
+      _title: 'Audio share . Scriptura',
+      _description: 'Exemple de démonstration pour un partage de fichiers MP3'
+    }
+
+block main
+  header(role='banner')
+    h1.main-heading!= data._name
+  .column.l-column3.m-column2.gap.media-relationship(data-next-reading='true')
+    figure.figure-media
+      figcaption Adieu mon père
+      audio.media(controls)
+        source(src='/medias/audios/LesMysterieusesCitesDOr/Adieu-mon-père.mp3')
+    figure.figure-media
+      figcaption Aux portes de la Cité - 1
+      audio.media(controls)
+        source(src='/medias/audios/LesMysterieusesCitesDOr/Aux-portes-de-la-Cité-1.mp3')
+    figure.figure-media
+      figcaption Aux portes de la Cité - 2
+      audio.media(controls)
+        source(src='/medias/audios/LesMysterieusesCitesDOr/Aux-portes-de-la-Cité-2.mp3')
+    figure.figure-media
+      figcaption Folklore andin
+      audio.media(controls)
+        source(src='/medias/audios/LesMysterieusesCitesDOr/Folklore-andin.mp3')
+    figure.figure-media
+      figcaption Interlude, la tour d'Apucchi
+      audio.media(controls)
+        source(src='/medias/audios/LesMysterieusesCitesDOr/Interlude-la-tour-d-Apucchi.mp3')
+    figure.figure-media
+      figcaption Interlude, lever de soleil - 1
+      audio.media(controls)
+        source(src='/medias/audios/LesMysterieusesCitesDOr/Interlude-lever-de-soleil-1.mp3')
+    figure.figure-media
+      figcaption Interlude, lever de soleil - 2
+      audio.media(controls)
+        source(src='/medias/audios/LesMysterieusesCitesDOr/Interlude-lever-de-soleil-2.mp3')
+    figure.figure-media
+      figcaption La tempête
+      audio.media(controls)
+        source(src='/medias/audios/LesMysterieusesCitesDOr/La-tempête.mp3')
+    figure.figure-media
+      figcaption Le Feu de Saint Elme
+      audio.media(controls)
+        source(src='/medias/audios/LesMysterieusesCitesDOr/Le-Feu-de-Saint-Elme.mp3')
+    figure.figure-media
+      figcaption Le Grand Héritage (electro war) - 1
+      audio.media(controls)
+        source(src='/medias/audios/LesMysterieusesCitesDOr/Le-Grand-Héritage-(electro war)-1.mp3')
+    figure.figure-media
+      figcaption Le rêve d'Esteban
+      audio.media(controls)
+        source(src='/medias/audios/LesMysterieusesCitesDOr/Le-rêve-d-Esteban.mp3')
+    figure.figure-media
+      figcaption Les enfants du Soleil (Lever de soleil à l'Est)
+      audio.media(controls)
+        source(src='/medias/audios/LesMysterieusesCitesDOr/Les-enfants-du-Soleil-(Lever-de-soleil-à-l-Est).mp3')
+    figure.figure-media
+      figcaption Le Serpent à plumes
+      audio.media(controls)
+        source(src='/medias/audios/LesMysterieusesCitesDOr/Le-Serpent-à-plumes.mp3')
+    figure.figure-media
+      figcaption Les souterrains (Electro City Gold) - 1
+      audio.media(controls)
+        source(src='/medias/audios/LesMysterieusesCitesDOr/Les-souterrains-(Electro-City-Gold)-1.mp3')
+    figure.figure-media
+      figcaption Le vol du Condor
+      audio.media(controls)
+        source(src='/medias/audios/LesMysterieusesCitesDOr/Le-vol-du-Condor.mp3')
+    figure.figure-media
+      figcaption Réminiscences
+      audio.media(controls)
+        source(src='/medias/audios/LesMysterieusesCitesDOr/Réminiscences.mp3')

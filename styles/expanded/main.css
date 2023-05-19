@@ -1454,14 +1454,12 @@ video.media {
   border: 0.41em solid transparent;
   border-radius: 50%;
 }
+.media-player .media-play-pause:focus-visible::before,
 .media-player .media-play-pause:focus-visible.active::before {
   border-block-color: #ffa600;
 }
 .media-player .media-play-pause:hover::before {
   border-block-color: #626262;
-}
-.media-player .media-play-pause:focus-visible::before {
-  border-block-color: #ffa600;
 }
 .media-player .media-play-pause.active::before {
   border-block-color: #ff6347;
