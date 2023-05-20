@@ -23,12 +23,10 @@ video
 //audio
 //  height: _mediaPlayerSize // @note Harmonisation avec notre propre player personnalisé.
 
-//audio:not([controls])
-//  display: none // @affected All browsers @note Affichage de l'audio sans contrôle
-
-// @bugfix Redimentionnement de l'élément video à la lecture @note La solution adoptée est de mettre un poster de même dimention que le flux vidéo
-//video
-//  object-fit cover // @affected Firefox @note Influence sur l'image des posters
+video
+  height: auto // @note Important si les dimentions de la vidéo sont définies.
+  aspect-ratio: 16/9 // @bugfix Permet de garder une cohérence entre la vidéo et son poster, mais aussi entre les vidéos d'une même grille.
+  object-fit cover // @affected Firefox @note Influence sur l'image des posters.
 
 //audio.media
 //  display: none // @note C'est Javascript qui se charge de la suppression, ce qui permet l'affichage d'un lecteur par défaut si JS désactivé.
@@ -251,7 +249,7 @@ video + .media-player
   margin-top: .5em
 
 .figure-media figcaption
-  color: _colorG + 35%
+  color: _colorT2 //_colorG + 35%
 
 @keyframes anim-play
   from

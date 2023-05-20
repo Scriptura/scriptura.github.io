@@ -296,9 +296,11 @@ const mediaPlayer = () => {
 
     // @note Le code récupère l'intégralité des plages téléchargées dans l'objet range et donne une indication de la quantité de médias réellement téléchargés, sans tenir compte de la localisation des plages.
     // @see https://developer.mozilla.org/fr/docs/Web/Guide/Audio_and_video_delivery/buffering_seeking_time_ranges
+    // @see https://stackoverflow.com/questions/25651719
     ;['loadeddata', 'progress'].forEach(event => {
       media.addEventListener(event, () => {
-        progressBar.style.setProperty('--position-buffer', `${Math.floor(media.buffered.end(media.buffered.length - 1) / media.duration * 100)}%`) // @note Un nombre entier suffit.
+        // @note 'media.onprogress' évite une erreur de lecture si avant l'événement 'loadeddata'.
+        media.onprogress = () => progressBar.style.setProperty('--position-buffer', `${Math.floor(media.buffered.end(media.buffered.length - 1) / media.duration * 100)}%`) // @note Un nombre entier suffit.
       })
     })
 
@@ -316,7 +318,7 @@ const mediaPlayer = () => {
       document.addEventListener(event, () => { // @note Ne mettre ici que les boutons liés au player en cours.
         buttonState(!media.paused, playPauseButton)
         buttonState(media.muted || media.volume === 0, muteButton)
-        buttonState(media.paused && media.currentTime === 0, stopButton) // buttonState(media.onplayed || media.paused && media.currentTime === 0, stopButton)
+        buttonState(media.paused && media.currentTime === 0, stopButton)
         buttonState(media.loop, replayButton)
         media.paused && media.currentTime === 0 ? stopButton.disabled = true : stopButton.disabled = false
         // @note Variable CSS pilotée par JS ; permet de reprendre l'animation là où elle s'est arrêtée :
@@ -343,7 +345,10 @@ const mediaPlayer = () => {
       menu(player, false)
     })
 
-    muteButton.addEventListener('click', () => mute(media))
+    muteButton.addEventListener('click', () => {
+      mute(media)
+      //if (!media.muted && media.volume === 0) media.volume = .5
+    })
 
     progressBar.addEventListener('input', () => {
       media.currentTime = (progressBar.value / progressBar.max) * media.duration
@@ -445,6 +450,7 @@ const mediaPlayer = () => {
     i++
     media.id = 'media-' + i
     media.removeAttribute('controls') // @note C'est bien Javascript qui doit se charger de cette opération, CSS ne doit pas le faire, ce qui permet un lecteur par défaut avec l'attribut "controls" si JS désactivé.
+    //media.preload = 'auto'
     addPlayer(media)
     controls(media)
     error(media)

@@ -1275,6 +1275,12 @@ audio,
 video {
   outline: none;
 }
+video {
+  height: auto;
+  aspect-ratio: 16/9;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
 video.media {
   display: block;
   background-color: #000;
@@ -1549,7 +1555,7 @@ video + .media-player {
   margin-top: 0.5em;
 }
 .figure-media figcaption {
-  color: #7e7e7e;
+  color: #d3b58d;
 }
 .video-youtube {
   position: relative;

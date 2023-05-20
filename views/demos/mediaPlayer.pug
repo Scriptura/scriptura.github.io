@@ -11,26 +11,30 @@
       code audio.media
     .grid.gap(style='--n:1')
       figure.figure-media
-        figcaption.sr-only The beat of nature
+        figcaption Adieu mon père
         audio.media(controls)
-          source(src='/medias/audios/the-beat-of-nature.mp3')
+          source(src='/medias/audios/LesMysterieusesCitesDOr/Adieu-mon-père.mp3')
       figure.figure-media
-        figcaption.sr-only This is epic
+        figcaption La tempête
         audio.media(controls)
-          source(src='/medias/audios/this-is-epic.mp3')
+          source(src='/medias/audios/LesMysterieusesCitesDOr/La-tempête.mp3')
       figure.figure-media
-        figcaption.sr-only Cinematic fairy tale story main
+        figcaption Le Feu de Saint Elme
         audio.media(controls)
-          source(src='/medias/audios/cinematic-fairy-tale-story-main.mp3')
+          source(src='/medias/audios/LesMysterieusesCitesDOr/Le-Feu-de-Saint-Elme.mp3')
       figure.figure-media
-        figcaption.sr-only Ambient classical guitar
+        figcaption Le Grand Héritage (electro war) - 1
         audio.media(controls)
-          source(src='/medias/audios/ambient-classical-guitar.mp3')
+          source(src='/medias/audios/LesMysterieusesCitesDOr/Le-Grand-Héritage-(electro war)-1.mp3')
       figure.figure-media
+        figcaption Interlude, lever de soleil - 1
+        audio.media(controls)
+          source(src='/medias/audios/LesMysterieusesCitesDOr/Interlude-lever-de-soleil-1.mp3')
+      //-figure.figure-media
         figcaption.sr-only Petites n'abeilles...
         audio.media(controls)
           source(src='/medias/audios/abeilles.mp3')
-      figure.figure-media
+      //-figure.figure-media
         figcaption.sr-only Stridulation d'un grillon
         audio.media(controls)
           source(src='/medias/audios/grillons.mp3')
@@ -39,29 +43,25 @@
       code .media-relationship(data-next-reading='true') .media
     .grid.gap.media-relationship(style='--n:1' data-next-reading='true')
       figure.figure-media
-        figcaption.sr-only The beat of nature
+        figcaption Le rêve d'Esteban
         audio.media(controls)
-          source(src='/medias/audios/the-beat-of-nature.mp3')
+          source(src='/medias/audios/LesMysterieusesCitesDOr/Le-rêve-d-Esteban.mp3')
       figure.figure-media
-        figcaption.sr-only This is epic
+        figcaption Le Serpent à plumes
         audio.media(controls)
-          source(src='/medias/audios/this-is-epic.mp3')
+          source(src='/medias/audios/LesMysterieusesCitesDOr/Le-Serpent-à-plumes.mp3')
       figure.figure-media
-        figcaption.sr-only Cinematic fairy tale story main
+        figcaption Les souterrains (Electro City Gold) - 1
         audio.media(controls)
-          source(src='/medias/audios/cinematic-fairy-tale-story-main.mp3')
+          source(src='/medias/audios/LesMysterieusesCitesDOr/Les-souterrains-(Electro-City-Gold)-1.mp3')
       figure.figure-media
-        figcaption.sr-only Ambient classical guitar
+        figcaption Le vol du Condor
         audio.media(controls)
-          source(src='/medias/audios/ambient-classical-guitar.mp3')
+          source(src='/medias/audios/LesMysterieusesCitesDOr/Le-vol-du-Condor.mp3')
       figure.figure-media
-        figcaption.sr-only Petites n'abeilles...
+        figcaption Réminiscences
         audio.media(controls)
-          source(src='/medias/audios/abeilles.mp3')
-      figure.figure-media
-        figcaption.sr-only Stridulation d'un grillon
-        audio.media(controls)
-          source(src='/medias/audios/grillons.mp3')
+          source(src='/medias/audios/LesMysterieusesCitesDOr/Réminiscences.mp3')
   div
     p
       code (src='urlError')
@@ -76,34 +76,38 @@
       figcaption.sr-only Web radio
       audio.media(controls)
         source(src='https://stream.vestaradio.com/VertigeRadio')
+.grid2.gap
+  .message
+    p
+      svg.icon-inline(role='img' focusable='false')
+        use(href='/sprites/util.svg#info')
+      | Crédit pour les musiques : 
+      em Les Mystérieuses Cités d'Or
+      | , interprétées par "Bob".
 hr(data-hr='✻ ✻ ✻')
 p
   code video.media
 .grid2.s-grid1.gap.gap-bottom.media-relationship(data-next-reading='false')
   figure.figure-media
-    figcaption.sr-only Escargots
-    video.media(controls)
-      source(src='/medias/videos/escargots.mp4' type='video/mp4')
+    figcaption.sr-only Sintel
+    video.media(controls width='1024' height='436' poster='/medias/videos/Sintel/Sintel1.2.jpg' style='aspect-ratio: 16/7')
+      source(src='/medias/videos/Sintel/Sintel.m4v')
   figure.figure-media
-    figcaption.sr-only Papillon
-    video.media(controls)
-      source(src='/medias/videos/papillon.mp4' type='video/mp4')
+    figcaption.sr-only Spring
+    video.media(controls width='1280' height='536' poster='/medias/videos/Spring/Spring.jpg' style='aspect-ratio: 16/7')
+      source(src='/medias/videos/Spring/Spring.mp4' type='video/mp4')
   //-figure.figure-media
-    figcaption.sr-only Grand Pic Épeiche
-    video.media(controls)
-      source(src='/medias/videos/grandPicEpeiche.mp4' type='video/mp4')
-  //-figure.figure-media
-    figcaption.sr-only Bouvreuil
-    video.media(controls)
-      source(src='/medias/videos/ruisseau.mp4' type='video/mp4')
-  //-figure.figure-media Le retour du Roi
-    video.media(controls poster='/medias/videos/posters/leRetourDuRoi.jpg')
-      source(src='/medias/videos/leRetourDuRoi.mp4' type='video/mp4')
-  //-figure.figure-media
-    figcaption
-      code (src='urlError')
-    video.media(controls)
-      source(src='/medias/videos/urlError.mp4' type='video/mp4')
+    figcaption.sr-only Le retour du Roi
+    video.media(controls poster='/medias/videos/LeRetourDuRoi/LeRetourDuRoi.jpg')
+      source(src='/medias/videos/LeRetourDuRoi/LeRetourDuRoi.mp4' type='video/mp4')
+  div
+    .message
+      p
+        svg.icon-inline(role='img' focusable='false')
+          use(href='/sprites/util.svg#info')
+        | Crédit pour les vidéos : 
+        a(href='https://www.blender.org/about/studio/') Blender Studio
+        | .
 hr(data-hr='✻ ✻ ✻')
 .grid3.m-grid2.gap.gap-bottom
   div
