@@ -62,7 +62,7 @@
         figcaption Réminiscences
         audio.media(controls)
           source(src='/medias/audios/LesMysterieusesCitesDOr/Réminiscences.mp3')
-  div
+//-  div
     p
       code (src='urlError')
     figure.figure-media
@@ -92,8 +92,13 @@ p
 .grid2.s-grid1.gap.gap-bottom.media-relationship(data-next-reading='false')
   figure.figure-media
     figcaption.sr-only Sintel
-    video.media(controls width='1024' height='436' poster='/medias/videos/Sintel/Sintel1.jpg' style='aspect-ratio: 16/7')
+    video.media(controls width='1024' height='436' poster='/medias/videos/Sintel/poster.jpg' style='aspect-ratio: 16/7')
       source(src='/medias/videos/Sintel/Sintel.m4v')
+      track(src='/medias/videos/Sintel/fr.vtt' kind='subtitles' srclang='fr' label='Français' default)
+      track(src='/medias/videos/Sintel/en.vtt' kind='subtitles' srclang='en' label='English')
+      track(src='/medias/videos/Sintel/es.vtt' kind='subtitles' srclang='es' label='Español')
+      track(src='/medias/videos/Sintel/de.vtt' kind='subtitles' srclang='de' label='Deutsch')
+      track(src='/medias/videos/Sintel/it.vtt' kind='subtitles' srclang='it' label='Italiano')
   figure.figure-media
     figcaption.sr-only Spring
     video.media(controls width='1280' height='536' poster='/medias/videos/Spring/Spring.jpg' style='aspect-ratio: 16/7')
@@ -111,7 +116,7 @@ p
         a(href='https://www.blender.org/about/studio/') Blender Studio
         | .
 hr(data-hr='✻ ✻ ✻')
-.grid3.m-grid2.gap.gap-bottom
+.grid2.gap.gap-bottom
   div
     p
       code .video-youtube
@@ -124,15 +129,7 @@ hr(data-hr='✻ ✻ ✻')
     p
       code (data-id='uWCGK4nneeU')
     .video-youtube(data-id='uWCGK4nneeU')
-  div
-    p
-      code (data-id='YvNy8Nvy4VE')
-    .video-youtube(data-id='YvNy8Nvy4VE')
-  div
-    p
-      code (data-id='XCJdPfjECq4')
-    .video-youtube(data-id='XCJdPfjECq4')
-  div
+  //-div
     p
       code (data-id='errorId')
     .video-youtube(data-id='errorId')

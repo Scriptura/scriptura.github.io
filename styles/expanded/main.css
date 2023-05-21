@@ -1281,6 +1281,10 @@ video {
   -o-object-fit: cover;
      object-fit: cover;
 }
+::cue {
+  line-height: 1.3em;
+  background-color: rgba(0,0,0,0.4);
+}
 video.media {
   display: block;
   background-color: #000;
@@ -1471,25 +1475,27 @@ video.media {
   border-block-color: #ff6347;
   animation: anim-play 20s linear infinite var(--play-state, running);
 }
-.media-player .media-playback-rate {
+.media-player .media-tags {
   position: absolute;
+  display: flex;
+  gap: 0.3em;
   z-index: 1;
   bottom: 0.2em;
   left: 4em;
+}
+.media-player .media-tags > * {
+  position: relative;
   display: none;
   min-width: 2.5em;
-  height: 1em;
-  padding-inline: 0.3em;
+  padding: 0.1em 0.3em;
+  font-size: 0.8em;
   text-align: center;
   line-height: 1;
   background-color: #626262;
   border-radius: 0.3em;
 }
-.media-player .media-playback-rate.active {
+.media-player .media-tags > *.active {
   display: block;
-}
-.media-player .media-playback-rate * {
-  font-size: 0.8em;
 }
 .media-player .media-extend-volume {
   display: flex;
@@ -3601,7 +3607,7 @@ html,
 .tab-summary,
 .media-player,
 .media-play-pause::before,
-.media-playback-rate,
+.media-tags > *,
 .media-extend-volume,
 .media-player .media-fullscreen,
 .media-player .media-menu,

@@ -19,8 +19,9 @@ const mediaPlayer = () => {
         <use href="/sprites/player.svg#pause"></use>
       </svg>
     </button>
-    <div class="media-playback-rate">
-      <output></output>
+    <div class="media-tags">
+      <output class="media-playback-rate"></output>
+      <output class="media-subtitle-langage"></output>
     </div>
     <div class="media-time">
       <output class="media-current-time"aria-label="current time">0:00</output>&nbsp;/&nbsp;<output class="media-duration"aria-label="duration">0:00</output>
@@ -53,17 +54,27 @@ const mediaPlayer = () => {
           <use href="/sprites/player.svg#move-down"></use>
         </svg>
       </button>
+      <button class="media-subtitles" aria-label="subtitles">
+        <svg focusable="false">
+          <use href="/sprites/player.svg#subtitles"></use>
+        </svg>
+        <!--
+        <svg focusable="false">
+          <use href="/sprites/player.svg#subtitles-off"></use>
+        </svg>
+        -->
+      </button>
+      <button class="media-slow-motion" aria-label="slow motion">
+        <svg focusable="false">
+          <use href="/sprites/player.svg#slow-motion"></use>
+        </svg>
+      </button>
       <button class="media-picture-in-picture" aria-label="picture in picture">
         <svg focusable="false">
           <use href="/sprites/player.svg#picture-in-picture"></use>
         </svg>
         <svg focusable="false">
           <use href="/sprites/player.svg#picture-in-picture-alt"></use>
-        </svg>
-      </button>
-      <button class="media-slow-motion" aria-label="slow motion">
-        <svg focusable="false">
-          <use href="/sprites/player.svg#slow-motion-video"></use>
         </svg>
       </button>
       <button class="media-leap-rewind" aria-label="leap rewind">
@@ -182,6 +193,12 @@ const mediaPlayer = () => {
     else if (document.pictureInPictureEnabled) media.requestPictureInPicture()
   }
 
+  const subtitles = (tracks, index, output) => { // @see https://developer.mozilla.org/en-US/docs/Web/API/TextTrack
+    if (tracks[index -1]) tracks[index -1].mode = 'disabled'
+    tracks[index].mode = 'showing'
+    output.value = tracks[index].language
+  }
+
   const playbackRateChange = (media, playbackRateOutput) => {
     //(media.playbackRate > .25) ? media.playbackRate -= .2 : media.playbackRate = 4 // @note Les valeurs ont besoin d'être déterminées précisément car les résultats des soustractions sont approximatifs.
     switch (media.playbackRate) { // @note Plage navigateur recommandée entre 0.25 et 4.0.
@@ -251,13 +268,14 @@ const mediaPlayer = () => {
   const controls = media => {
 
     const player = media.nextElementSibling,
+          tracks = media.textTracks,
           playPauseButton = player.querySelector('.media-play-pause'),
-          playbackRate = player.querySelector('.media-playback-rate'),
-          playbackRateOutput = player.querySelector('.media-playback-rate *'),
+          playbackRateOutput = player.querySelector('.media-playback-rate'),
+          subtitleLangageOutput = player.querySelector('.media-subtitle-langage'),
           //time = player.querySelector('.media-time'),
           currentTimeOutput = player.querySelector('.media-current-time'),
           progressBar = player.querySelector('.media-progress-bar'),
-          extendVolume = player.querySelector('.media-extend-volume'),
+          //extendVolume = player.querySelector('.media-extend-volume'),
           volumeBar = player.querySelector('.media-volume-bar'),
           muteButton = player.querySelector('.media-mute'),
           fullscreenButton = player.querySelector('.media-fullscreen'),
@@ -271,6 +289,7 @@ const mediaPlayer = () => {
           //fastForwardButton = player.querySelector('.media-fast-forward'),
           stopButton = player.querySelector('.media-stop'),
           replayButton = player.querySelector('.media-replay'),
+          subtitlesButton = player.querySelector('.media-subtitles'),
           mediaRelationship = media.closest('.media-relationship')
 
     // Remove Controls :
@@ -278,6 +297,7 @@ const mediaPlayer = () => {
 
     if (media.tagName === 'AUDIO' || !document.fullscreenEnabled) fullscreenButton.remove()
     if (media.tagName === 'AUDIO' || !document.pictureInPictureEnabled) pictureInPictureButton.remove()
+    if (!media.textTracks[0]) subtitlesButton.remove()
     if (!mediaRelationship) nextReadingButton.remove()
 
     // Initialisation de valeurs :
@@ -338,7 +358,6 @@ const mediaPlayer = () => {
 
     // Contrôle via les boutons :
 
-    
     playPauseButton.addEventListener('click', () => {
       togglePlayPause(media)
       currentTime(media, currentTimeOutput, progressBar)
@@ -374,6 +393,21 @@ const mediaPlayer = () => {
       })
     })
 
+    let indexTrack = -1
+    subtitlesButton.addEventListener('click', () => {
+      indexTrack += 1
+      if (indexTrack > 1) tracks[indexTrack -1].mode = 'disabled'
+      if (indexTrack < tracks.length) {
+        subtitles(tracks, indexTrack, subtitleLangageOutput)
+        subtitlesButton.classList.add('active')
+        subtitleLangageOutput.classList.add('active')
+      } else {
+        indexTrack = -1
+        subtitlesButton.classList.remove('active')
+        subtitleLangageOutput.classList.remove('active')
+      }
+    })
+
     if (media.tagName === 'VIDEO' && document.fullscreenEnabled) fullscreenButton.addEventListener('click', () => fullscreen(media))
 
     document.addEventListener('fullscreenchange', () => fullscreenButton.classList.toggle('active')) // @note Pour le fun, car l'état du bouton ne se voit pas... sauf peut-être sur des configurations multi écran.
@@ -386,7 +420,7 @@ const mediaPlayer = () => {
     slowMotionButton.addEventListener('click', () => {
       playbackRateChange(media, playbackRateOutput)
       buttonState(media.playbackRate !== 1, slowMotionButton) // @note Toujours placé après la fonction playbackRateChange()
-      if (media.playbackRate !== 1) playbackRate.classList.add('active') // @note Une fois activé on laisse l'affichage, même si retour à la valeur d'origine.
+      if (media.playbackRate !== 1) playbackRateOutput.classList.add('active') // @note Une fois activé on laisse l'affichage, même si retour à la valeur d'origine.
     })
 
     //fastRewindButton.addEventListener('click', () => fastRewind(media))

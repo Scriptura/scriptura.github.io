@@ -31,6 +31,11 @@ video
 //audio.media
 //  display: none // @note C'est Javascript qui se charge de la suppression, ce qui permet l'affichage d'un lecteur par défaut si JS désactivé.
 
+::cue // @note Toutes les propriétés CSS ne sont pas applicables à ce sélecteur @see https://developer.mozilla.org/en-US/docs/Web/CSS/::cue
+  line-height: 1.3em // @note Empêche le chevauchement des sous-titres si plus d'une ligne.
+  //color: #fff // @note '#fff' par défaut.
+  background-color: rgba(0, 0, 0, .4)
+
 video.media
   display: block
   background-color: #000 // @bugfix @affected Google Maps @note Pas de background prédéfinit sur élément `canvas` afin d'éviter les conflits.
@@ -64,6 +69,7 @@ video.media
   & .media-play-pause
   & .media-mute
   & .media-picture-in-picture
+  //& .media-subtitles
     & > :nth-child(2)
       display: none
     & > :last-child
@@ -177,24 +183,26 @@ video.media
     &.active::before
       border-block-color: _color2
       animation: anim-play 20s linear infinite var(--play-state, running)
-  & .media-playback-rate
+  & .media-tags
     position: absolute
+    display: flex
+    gap: .3em
     z-index: 1
     //top: 0
     bottom: .2em
     left: 4em
-    display: none
-    min-width: 2.5em
-    height: 1em
-    padding-inline: .3em
-    text-align: center
-    line-height: 1
-    background-color: _colorG + 21%
-    border-radius: .3em
-    &.active
-      display: block
-    & *
+    & > *
+      position: relative
+      display: none
+      min-width: 2.5em
+      padding: .1em .3em
       font-size: .8em
+      text-align: center
+      line-height: 1
+      background-color: _colorG + 21%
+      border-radius: .3em
+      &.active
+        display: block
   & .media-extend-volume
     display: flex
     justify-content: flex-end
