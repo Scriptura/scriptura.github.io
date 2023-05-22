@@ -193,10 +193,10 @@ const mediaPlayer = () => {
     else if (document.pictureInPictureEnabled) media.requestPictureInPicture()
   }
 
-  const subtitles = (tracks, index, output) => { // @see https://developer.mozilla.org/en-US/docs/Web/API/TextTrack
-    if (tracks[index -1]) tracks[index -1].mode = 'disabled'
-    tracks[index].mode = 'showing'
-    output.value = tracks[index].language
+  const subtitles = (tracks, i, output) => { // @see https://developer.mozilla.org/en-US/docs/Web/API/TextTrack
+    if (tracks[i -1]) tracks[i -1].mode = 'disabled'
+    tracks[i].mode = 'showing'
+    output.value = tracks[i].language
   }
 
   const playbackRateChange = (media, playbackRateOutput) => {
@@ -393,20 +393,31 @@ const mediaPlayer = () => {
       })
     })
 
-    let indexTrack = -1
+    let iTrack = -1
+
     subtitlesButton.addEventListener('click', () => {
-      indexTrack += 1
-      if (indexTrack > 1) tracks[indexTrack -1].mode = 'disabled'
-      if (indexTrack < tracks.length) {
-        subtitles(tracks, indexTrack, subtitleLangageOutput)
-        subtitlesButton.classList.add('active')
-        subtitleLangageOutput.classList.add('active')
+      iTrack += 1
+      if (iTrack > 1) tracks[iTrack -1].mode = 'disabled'
+      if (iTrack < tracks.length) {
+        subtitles(tracks, iTrack, subtitleLangageOutput)
+        buttonState(tracks[iTrack].mode === 'showing', subtitlesButton)
+        buttonState(tracks[iTrack].mode === 'showing', subtitleLangageOutput)
       } else {
-        indexTrack = -1
+        iTrack = -1
+        subtitleLangageOutput.value = ''
         subtitlesButton.classList.remove('active')
         subtitleLangageOutput.classList.remove('active')
       }
     })
+
+    for(let track of tracks) { // @note Si balise <track> dotée d'un attribut "default"
+      if (track.mode === 'showing') {
+        subtitlesButton.classList.add('active')
+        subtitleLangageOutput.classList.add('active')
+        subtitleLangageOutput.value = track.language
+        break // @note Solution possible car une seule occurence à tester @todo À évaluer.
+      }
+    }
 
     if (media.tagName === 'VIDEO' && document.fullscreenEnabled) fullscreenButton.addEventListener('click', () => fullscreen(media))
 
