@@ -233,13 +233,14 @@ video.media
   & .media-extend-menu.active
     position: absolute
     z-index: 200 // @todo Si besoin
-    top: - _mediaPlayerSize
+    bottom: _mediaPlayerSize
     right: 0
     display: flex
-    align-items: center
+    flex-wrap: wrap
+    justify-content: flex-end
     gap: _mediaPlayerGap
-    height: _mediaPlayerSize
-    padding-inline: _mediaPlayerGap
+    max-width: 100%
+    padding: _mediaPlayerGap
     background-color: _colorG + 7%
     border-radius: (_mediaPlayerSize / 2)
     box-shadow: _shadow17
@@ -249,12 +250,24 @@ video.media
     white-space: nowrap
     text-overflow: ellipsis
     color: _colorG + 50%
+/*
+.media.error
+  position: relative
+  & .video-error::after
+    content: ''
+    position: absolute
+    z-index: 10000
+    inset: 0
+    width: 1000px
+    height: 1000px
+    text-align: center
+    background-color: #000
+*/
+video + .media-player
+  margin-top: .5em
 
 .waiting .media-play-pause.active
   animation: anim-waiting  1s infinite
-
-video + .media-player
-  margin-top: .5em
 
 .figure-media figcaption
   color: _colorT2 //_colorG + 35%

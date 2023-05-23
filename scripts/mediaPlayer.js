@@ -20,8 +20,8 @@ const mediaPlayer = () => {
       </svg>
     </button>
     <div class="media-tags">
-      <output class="media-playback-rate"></output>
       <output class="media-subtitle-langage"></output>
+      <output class="media-playback-rate"></output>
     </div>
     <div class="media-time">
       <output class="media-current-time"aria-label="current time">0:00</output>&nbsp;/&nbsp;<output class="media-duration"aria-label="duration">0:00</output>
@@ -64,17 +64,17 @@ const mediaPlayer = () => {
         </svg>
         -->
       </button>
-      <button class="media-slow-motion" aria-label="slow motion">
-        <svg focusable="false">
-          <use href="/sprites/player.svg#slow-motion"></use>
-        </svg>
-      </button>
       <button class="media-picture-in-picture" aria-label="picture in picture">
         <svg focusable="false">
           <use href="/sprites/player.svg#picture-in-picture"></use>
         </svg>
         <svg focusable="false">
           <use href="/sprites/player.svg#picture-in-picture-alt"></use>
+        </svg>
+      </button>
+      <button class="media-slow-motion" aria-label="slow motion">
+        <svg focusable="false">
+          <use href="/sprites/player.svg#slow-motion"></use>
         </svg>
       </button>
       <button class="media-leap-rewind" aria-label="leap rewind">
@@ -196,7 +196,8 @@ const mediaPlayer = () => {
   const subtitles = (tracks, i, output) => { // @see https://developer.mozilla.org/en-US/docs/Web/API/TextTrack
     if (tracks[i -1]) tracks[i -1].mode = 'disabled'
     tracks[i].mode = 'showing'
-    output.value = tracks[i].language
+    const cc = `cc: ${tracks[i].language}`
+    output.value = cc
   }
 
   const playbackRateChange = (media, playbackRateOutput) => {
@@ -385,17 +386,17 @@ const mediaPlayer = () => {
       })
     })
 
-    let iTrack = -1
+    let count = -1
 
     subtitlesButton.addEventListener('click', () => {
-      iTrack += 1
-      if (iTrack > 1) tracks[iTrack -1].mode = 'disabled'
-      if (iTrack < tracks.length) {
-        subtitles(tracks, iTrack, subtitleLangageOutput)
-        buttonState(tracks[iTrack].mode === 'showing', subtitlesButton)
-        buttonState(tracks[iTrack].mode === 'showing', subtitleLangageOutput)
+      count += 1
+      if (count > 1) tracks[count -1].mode = 'disabled'
+      if (count < tracks.length) {
+        subtitles(tracks, count, subtitleLangageOutput)
+        buttonState(tracks[count].mode === 'showing', subtitlesButton)
+        buttonState(tracks[count].mode === 'showing', subtitleLangageOutput)
       } else {
-        iTrack = -1
+        count = -1
         subtitleLangageOutput.value = ''
         subtitlesButton.classList.remove('active')
         subtitleLangageOutput.classList.remove('active')
@@ -406,7 +407,7 @@ const mediaPlayer = () => {
       if (track.mode === 'showing') {
         subtitlesButton.classList.add('active')
         subtitleLangageOutput.classList.add('active')
-        subtitleLangageOutput.value = track.language
+        subtitleLangageOutput.value = `cc: ${track.language}`
         break // @note Solution possible car une seule occurence à tester @todo À évaluer.
       }
     }
@@ -477,8 +478,14 @@ const mediaPlayer = () => {
         default: message = 'Reading error'
       }
       time.innerHTML = message //`<span>${message}</span>`
-      
-      //time.innerHTML = 'Erreur de lecture'
+
+      /*
+      const div = document.createElement('div')
+      div.classList.add('video-error')
+      div.innerHTML = `<svg class="icon scale250" role="img" focusable="false"><use href="/sprites/util.svg#space-invader"></use></svg>`
+      if (media.tagName === 'VIDEO') media.insertAdjacentElement('beforeend', div)
+      */
+    
     }, true)
   }
 
