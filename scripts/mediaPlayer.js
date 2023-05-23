@@ -202,29 +202,21 @@ const mediaPlayer = () => {
   const playbackRateChange = (media, playbackRateOutput) => {
     //(media.playbackRate > .25) ? media.playbackRate -= .2 : media.playbackRate = 4 // @note Les valeurs ont besoin d'être déterminées précisément car les résultats des soustractions sont approximatifs.
     switch (media.playbackRate) { // @note Plage navigateur recommandée entre 0.25 et 4.0.
-      case (1): media.playbackRate = .8
+      case (1): media.playbackRate = .5
         break
-      case (.8): media.playbackRate = .6
+      case (.5): media.playbackRate = .25
         break
-      case (.6): media.playbackRate = .5
-        break
-      case (.5): media.playbackRate = .3
-        break
-      case (.3): media.playbackRate = .2
-        break
-      case (.2): media.playbackRate = .1
+      case (.25): media.playbackRate = .1
         break
       case (.1): media.playbackRate = 4
         break
-      case (4): media.playbackRate = 3
-        break
-      case (3): media.playbackRate = 2
+      case (4): media.playbackRate = 2
         break
       case (2): media.playbackRate = 1.5
         break
       default: media.playbackRate = 1
     }
-    playbackRateOutput.innerHTML = `x${Math.floor(media.playbackRate * 10) / 10}`
+    playbackRateOutput.innerHTML = `x${media.playbackRate}`
   }
 
   /**
