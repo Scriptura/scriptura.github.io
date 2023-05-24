@@ -479,12 +479,13 @@ const mediaPlayer = () => {
       }
       time.innerHTML = message //`<span>${message}</span>`
 
-      /*
+      media.poster = ''
+      
       const div = document.createElement('div')
       div.classList.add('video-error')
       div.innerHTML = `<svg class="icon scale250" role="img" focusable="false"><use href="/sprites/util.svg#space-invader"></use></svg>`
       if (media.tagName === 'VIDEO') media.insertAdjacentElement('beforeend', div)
-      */
+      
     
     }, true)
   }
