@@ -390,6 +390,7 @@ const mediaPlayer = () => {
 
     subtitlesButton.addEventListener('click', () => {
       count += 1
+      //if (tracks[count] === tracks[0]) tracks[count +1]
       if (count > 1) tracks[count -1].mode = 'disabled'
       if (count < tracks.length) {
         subtitles(tracks, count, subtitleLangageOutput)
@@ -481,11 +482,12 @@ const mediaPlayer = () => {
 
       media.poster = ''
       
+      /*
       const div = document.createElement('div')
       div.classList.add('video-error')
       div.innerHTML = `<svg class="icon scale250" role="img" focusable="false"><use href="/sprites/util.svg#space-invader"></use></svg>`
       if (media.tagName === 'VIDEO') media.insertAdjacentElement('beforeend', div)
-      
+      */
     
     }, true)
   }
