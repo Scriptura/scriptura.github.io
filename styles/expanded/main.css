@@ -1282,13 +1282,13 @@ video {
      object-fit: cover;
 }
 ::cue {
-  line-height: 1.5em;
+  line-height: 1.5;
   font-size: 2em;
   background-color: rgba(0,0,0,0.4);
 }
 @media (min-width: 35.01em) {
   ::cue {
-    font-size: 1.2em;
+    font-size: 1.5em;
   }
 }
 video.media {
