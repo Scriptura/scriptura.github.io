@@ -241,9 +241,7 @@ const mediaPlayer = () => {
     })
   }
 
-  const nextMediaActive = (media, mediaRelationship) => {
-    const relatedMedias = mediaRelationship.querySelectorAll('.media:not(.error)'),
-          nextMedia = relatedMedias[[...relatedMedias].indexOf(media) + 1] || relatedMedias[0]
+  const nextMediaActive = (media, nextMedia) => {
 
     media = nextMedia
     //media.currentTime = 0 // @note Désactivée : un utilisateur peut ainsi caler la plage suivante selon sa préférence personnelle.
@@ -284,6 +282,20 @@ const mediaPlayer = () => {
           replayButton = player.querySelector('.media-replay'),
           subtitlesButton = player.querySelector('.media-subtitles'),
           mediaRelationship = media.closest('.media-relationship')
+
+    const nextMedia = (() => {
+      if (mediaRelationship) {
+        const relatedMedias = mediaRelationship.querySelectorAll('.media:not(.error)') || ''
+        return relatedMedias[[...relatedMedias].indexOf(media) + 1] || relatedMedias[0] || ''
+      }
+    })()
+
+    const nextNextMedia = (() => {
+      if (mediaRelationship) {
+        const relatedMedias = mediaRelationship.querySelectorAll('.media:not(.error)') || ''
+        return relatedMedias[[...relatedMedias].indexOf(media) + 2] || relatedMedias[0] || ''
+      }
+    })()
 
     // Remove Controls :
     // @note Le code est plus simple et robuste si l'on se contente de supprimer des boutons déjà présents dans le player plutôt que de les ajouter (cibler leur place dans le DOM qui peut changer au cours du développement, rattacher les fonctionnalités au DOM...)
@@ -344,7 +356,8 @@ const mediaPlayer = () => {
       playPauseButton.classList.remove('active')
       stopButton.classList.add('active')
       stopButton.disabled = true
-      if (mediaRelationship.dataset.nextReading === 'true' && media.play) nextMediaActive(media, mediaRelationship)
+      if (mediaRelationship.dataset.nextReading === 'true' && media.play) nextMediaActive(media, nextMedia) // @note Si le media d'un groupe, lecture du media suivant (n+1).
+      if (mediaRelationship.dataset.nextReading === 'true' && nextMedia) nextNextMedia.preload = 'auto' // @note Si le media d'un groupe, indiquation au navigateur de la possibilité de charger le media n+2 @todo En test.
     })
 
     media.addEventListener('pause', () => playPauseButton.classList.remove('active'))
@@ -355,11 +368,7 @@ const mediaPlayer = () => {
       togglePlayPause(media)
       currentTime(media, currentTimeOutput, progressBar)
       menu(player, false)
-      if (mediaRelationship.dataset.nextReading === 'true') { // Si le media d'un groupe est lu, on indique au navigateur la possibilité de charger le media suivant @todo En test.
-        const relatedMedias = mediaRelationship.querySelectorAll('.media:not(.error)'),
-              nextMedia = relatedMedias[[...relatedMedias].indexOf(media) + 1] || relatedMedias[0]
-        nextMedia.setAttribute('preload', 'auto')
-      }
+      if (mediaRelationship.dataset.nextReading === 'true' && nextMedia) nextMedia.preload = 'auto' // @note Si media d'un groupe, on indique au navigateur la possibilité de charger le media suivant @todo En test.
     })
 
     muteButton.addEventListener('click', () => {
