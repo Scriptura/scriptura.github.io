@@ -193,10 +193,12 @@ const mediaPlayer = () => {
     else if (document.pictureInPictureEnabled) media.requestPictureInPicture()
   }
 
+  const ccDisplay = language => `cc: ${language}`
+
   const subtitles = (tracks, i, output) => { // @see https://developer.mozilla.org/en-US/docs/Web/API/TextTrack
     if (tracks[i -1]) tracks[i -1].mode = 'disabled'
     tracks[i].mode = 'showing'
-    const cc = `cc: ${tracks[i].language}`
+    const cc = ccDisplay(tracks[i].language)
     output.value = cc
   }
 
@@ -371,10 +373,7 @@ const mediaPlayer = () => {
       if (mediaRelationship.dataset.nextReading && nextMedia) nextMedia.preload = 'auto' // @note Si media d'un groupe, on indique au navigateur la possibilité de charger le media suivant @todo En test.
     })
 
-    muteButton.addEventListener('click', () => {
-      mute(media)
-      //if (!media.muted && media.volume === 0) media.volume = .5
-    })
+    muteButton.addEventListener('click', () => mute(media)) //if (!media.muted && media.volume === 0) media.volume = .5
 
     progressBar.addEventListener('input', () => {
       media.currentTime = (progressBar.value / progressBar.max) * media.duration
@@ -425,7 +424,7 @@ const mediaPlayer = () => {
       if (track.mode === 'showing') { // @note Si balise <track> dotée d'un attribut "default"
         subtitlesButton.classList.add('active')
         subtitleLangageOutput.classList.add('active')
-        subtitleLangageOutput.value = `cc: ${track.language}`
+        subtitleLangageOutput.value = ccDisplay(track.language)
         break // @note Solution possible car une seule occurence à tester @todo À évaluer.
       }
     }
@@ -464,9 +463,7 @@ const mediaPlayer = () => {
       currentTime(media, currentTimeOutput, progressBar)
     })
 
-    replayButton.addEventListener('click', () => {
-      replay(media)
-    })
+    replayButton.addEventListener('click', () => replay(media))
 
   }
 
@@ -514,10 +511,9 @@ const mediaPlayer = () => {
     i++
     media.id = 'media-' + i
     media.removeAttribute('controls') // @note C'est bien Javascript qui doit se charger de cette opération, CSS ne doit pas le faire, ce qui permet un lecteur par défaut avec l'attribut "controls" si JS désactivé.
-    //media.preload = 'auto'
     addPlayer(media)
-    controls(media)
     error(media)
+    controls(media)
   }
 
 }
