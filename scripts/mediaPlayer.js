@@ -303,7 +303,7 @@ const mediaPlayer = () => {
       volumeBar.style.setProperty('--position', '50%')
     })()
 
-    if (mediaRelationship) media.addEventListener('canplay', () => buttonState(mediaRelationship.getAttribute('data-next-reading') === 'true', media.nextElementSibling.querySelector('.media-next-reading')))
+    if (mediaRelationship) media.addEventListener('canplay', () => buttonState(mediaRelationship.dataset.nextReading === 'true', media.nextElementSibling.querySelector('.media-next-reading')))
 
     // Contrôle via les événements :
 
@@ -340,11 +340,11 @@ const mediaPlayer = () => {
     })
 
     media.addEventListener('ended', () => {
-      //media.currentTime = 0 // @note Permet de réénitialiser la lecture, mais le fait de s'abstenir de réinitialiser permet de mieux repérer les fichiers déjà lus.
-      if (mediaRelationship.getAttribute('data-next-reading') === 'true' && media.play) nextMediaActive(media, mediaRelationship)
+      //media.currentTime = 0 // @note Permet de réinitialiser la lecture, mais le fait de s'abstenir de réinitialiser permet de mieux repérer les fichiers déjà lus.
       playPauseButton.classList.remove('active')
       stopButton.classList.add('active')
       stopButton.disabled = true
+      if (mediaRelationship.dataset.nextReading === 'true' && media.play) nextMediaActive(media, mediaRelationship)
     })
 
     media.addEventListener('pause', () => playPauseButton.classList.remove('active'))
@@ -355,6 +355,11 @@ const mediaPlayer = () => {
       togglePlayPause(media)
       currentTime(media, currentTimeOutput, progressBar)
       menu(player, false)
+      if (mediaRelationship.dataset.nextReading === 'true') { // Si le media d'un groupe est lu, on indique au navigateur la possibilité de charger le media suivant @todo En test.
+        const relatedMedias = mediaRelationship.querySelectorAll('.media:not(.error)'),
+              nextMedia = relatedMedias[[...relatedMedias].indexOf(media) + 1] || relatedMedias[0]
+        nextMedia.setAttribute('preload', 'auto')
+      }
     })
 
     muteButton.addEventListener('click', () => {
@@ -379,20 +384,23 @@ const mediaPlayer = () => {
     })
 
     nextReadingButton.addEventListener('click', () => {
-      mediaRelationship.getAttribute('data-next-reading') === 'false' ? mediaRelationship.setAttribute('data-next-reading', 'true') : mediaRelationship.setAttribute('data-next-reading', 'false')
+      mediaRelationship.dataset.nextReading === 'false' ? mediaRelationship.dataset.nextReading = 'true' : mediaRelationship.dataset.nextReading = 'false'
       mediaRelationship.querySelectorAll('.media').forEach(media => { // @note Il peut s'agir de n'importe lequel des medias du groupe en relation.
-        if (mediaRelationship.getAttribute('data-next-reading') === 'true') media.loop = false
-        buttonState(mediaRelationship.getAttribute('data-next-reading') === 'true', media.nextElementSibling.querySelector('.media-next-reading'))
+        if (mediaRelationship.dataset.nextReading === 'true') media.loop = false
+        buttonState(mediaRelationship.dataset.nextReading === 'true', media.nextElementSibling.querySelector('.media-next-reading'))
       })
     })
 
+    // @see https://developer.mozilla.org/en-US/docs/Web/Guide/Audio_and_video_delivery/Adding_captions_and_subtitles_to_HTML5_video
     let count = -1
 
     subtitlesButton.addEventListener('click', () => {
       count += 1
       //if (tracks[count] === tracks[0]) tracks[count +1]
+      
       if (count > 1) tracks[count -1].mode = 'disabled'
       if (count < tracks.length) {
+        if (tracks[count].mode === 'showing') count += 1 // Si un track est définit par défaut dans le HTML, on le saute pour la première série de clique.
         subtitles(tracks, count, subtitleLangageOutput)
         buttonState(tracks[count].mode === 'showing', subtitlesButton)
         buttonState(tracks[count].mode === 'showing', subtitleLangageOutput)
@@ -404,8 +412,8 @@ const mediaPlayer = () => {
       }
     })
 
-    for(let track of tracks) { // @note Si balise <track> dotée d'un attribut "default"
-      if (track.mode === 'showing') {
+    for(let track of tracks) {
+      if (track.mode === 'showing') { // @note Si balise <track> dotée d'un attribut "default"
         subtitlesButton.classList.add('active')
         subtitleLangageOutput.classList.add('active')
         subtitleLangageOutput.value = `cc: ${track.language}`

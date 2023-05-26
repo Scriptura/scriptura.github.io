@@ -19,9 +19,9 @@
         audio.media(controls)
           source(src='/medias/audios/LesMysterieusesCitesDOr/La-tempête.mp3')
       figure.figure-media
-        figcaption Le Feu de Saint-Elme
+        figcaption Les souterrains (Electro City Gold) - 1
         audio.media(controls)
-          source(src='/medias/audios/LesMysterieusesCitesDOr/Le-Feu-de-Saint-Elme.mp3')
+          source(src='/medias/audios/LesMysterieusesCitesDOr/Les-souterrains-(Electro-City-Gold)-1.mp3')
       figure.figure-media
         figcaption Le Grand Héritage (electro war) - 1
         audio.media(controls)
@@ -40,8 +40,12 @@
           source(src='/medias/audios/grillons.mp3')
   div
     p
-      code .media-relationship(data-next-reading='true') .media
+      code .media-relationship(data-next-reading='true')
     .grid.gap.media-relationship(style='--n:1' data-next-reading='true')
+      figure.figure-media
+        figcaption Le Feu de Saint-Elme
+        audio.media(controls)
+          source(src='/medias/audios/LesMysterieusesCitesDOr/Le-Feu-de-Saint-Elme.mp3')
       figure.figure-media
         figcaption Le rêve d'Esteban
         audio.media(controls)
@@ -50,10 +54,6 @@
         figcaption Le Serpent à plumes
         audio.media(controls)
           source(src='/medias/audios/LesMysterieusesCitesDOr/Le-Serpent-à-plumes.mp3')
-      figure.figure-media
-        figcaption Les souterrains (Electro City Gold) - 1
-        audio.media(controls)
-          source(src='/medias/audios/LesMysterieusesCitesDOr/Les-souterrains-(Electro-City-Gold)-1.mp3')
       figure.figure-media
         figcaption Le vol du Condor
         audio.media(controls)
@@ -77,15 +77,24 @@
       audio.media(controls)
         source(src='https://stream.vestaradio.com/VertigeRadio')
 .grid2.s-grid1.gap
-  .message
-    p
-      svg.icon-inline(role='img' focusable='false')
-        use(href='/sprites/util.svg#info')
-      | Crédit pour les musiques : 
-      em Les Mystérieuses Cités d'Or
-      | , interprétées par Yannick Rault (
-      a(href='https://citesdor.com/musiques/musiques_boub.php3') lien
-      | ).
+  div
+    .message
+      p
+        svg.icon-inline(role='img' focusable='false')
+          use(href='/sprites/util.svg#info')
+        | Crédit pour les musiques : 
+        em Les Mystérieuses Cités d'Or
+        | , interprétées par Yannick Rault (
+        a(href='https://citesdor.com/musiques/musiques_boub.php3') lien
+        | ).
+  div
+    .message
+      p
+        svg.icon-inline(role='img' focusable='false')
+          use(href='/sprites/util.svg#info')
+        | Par défaut un seul lecteur peut être actif sur la page. En cas de nouveau player, le précédent passera sur pause, à part ce principe de base, les lecteurs sont indépendants entre eux.
+      p Un élément parent bénéficiant de la classe ".media-relationship" rend ses médias enfants solidaires entre eux, sans pour autant qu'ils soient obligés d'être des élements frères.
+      p "data-next-reading=false" ajoutera une option de lecture à la suite, "data-next-reading=true" l'activera par défaut.
 hr(data-hr='✻ ✻ ✻')
 p
   code video.media
@@ -127,6 +136,12 @@ p
         | Crédit pour les vidéos : 
         a(href='https://www.blender.org/about/studio/') Blender Studio
         | .
+  div
+    .message
+      p
+        svg.icon-inline(role='img' focusable='false')
+          use(href='/sprites/util.svg#info')
+        | Certains des lecteurs présents bénéficient de sous-titres, activés ou non par défaut selon les spécifications natives du code HTML5.
 hr(data-hr='✻ ✻ ✻')
 .grid2.gap.gap-bottom
   div
