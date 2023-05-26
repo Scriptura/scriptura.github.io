@@ -357,7 +357,7 @@ const mediaPlayer = () => {
       stopButton.classList.add('active')
       stopButton.disabled = true
       if (mediaRelationship.dataset.nextReading === 'true' && media.play) nextMediaActive(media, nextMedia) // @note Si le media d'un groupe, lecture du media suivant (n+1).
-      if (mediaRelationship.dataset.nextReading === 'true' && nextMedia) nextNextMedia.preload = 'auto' // @note Si le media d'un groupe, indiquation au navigateur de la possibilité de charger le media n+2 @todo En test.
+      if (mediaRelationship.dataset.nextReading && nextMedia) nextNextMedia.preload = 'auto' // @note Si le media d'un groupe, indiquation au navigateur de la possibilité de charger le media n+2 @todo En test.
     })
 
     media.addEventListener('pause', () => playPauseButton.classList.remove('active'))
@@ -368,7 +368,7 @@ const mediaPlayer = () => {
       togglePlayPause(media)
       currentTime(media, currentTimeOutput, progressBar)
       menu(player, false)
-      if (mediaRelationship.dataset.nextReading === 'true' && nextMedia) nextMedia.preload = 'auto' // @note Si media d'un groupe, on indique au navigateur la possibilité de charger le media suivant @todo En test.
+      if (mediaRelationship.dataset.nextReading && nextMedia) nextMedia.preload = 'auto' // @note Si media d'un groupe, on indique au navigateur la possibilité de charger le media suivant @todo En test.
     })
 
     muteButton.addEventListener('click', () => {
