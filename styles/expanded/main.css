@@ -360,7 +360,7 @@ main {
 [class^=grid].gap-bottom {
   padding-bottom: var(--gap, 1em);
 }
-[class^=grid].vertical-gap {
+[class^=grid].gap-vertical {
   gap: 0 var(--gap, 1em);
 }
 .grid-auto,
@@ -578,7 +578,7 @@ main {
   -moz-column-gap: 1em;
        column-gap: 1em;
 }
-[class^=column].vertical-gap {
+[class^=column].gap-vertical {
   gap: 0 1em;
 }
 [class^=column].gap > :not(hr) {

@@ -243,9 +243,34 @@ const mediaPlayer = () => {
     })
   }
 
-  const nextMediaActive = (media, nextMedia) => {
+  const getNextMedia = (media, mediaRelationship) => {
+    if (mediaRelationship) {
+      const relatedMedias = mediaRelationship.querySelectorAll('.media') || '' // :not(.error)
+      return relatedMedias[[...relatedMedias].indexOf(media) + 1] || relatedMedias[0] || ''
+    }
+  }
+
+  const getNextNextMedia = (media, mediaRelationship) => {
+    if (mediaRelationship) {
+      const relatedMedias = mediaRelationship.querySelectorAll('.media') || ''
+      return relatedMedias[[...relatedMedias].indexOf(media) + 2] || relatedMedias[0] || ''
+    }
+  }
+
+  const nextMediaActive = (media, nextMedia, nextNextMedia) => {
 
     media = nextMedia
+
+    if(media.error) {
+      console.error(media.error.message)
+      media = nextNextMedia
+    }
+
+    if(media.error) { // @note Si nouvelle erreur on arrête le script.
+      console.error(media.error.message)
+      return false
+    }
+
     //media.currentTime = 0 // @note Désactivée : un utilisateur peut ainsi caler la plage suivante selon sa préférence personnelle.
 
     const player = media.nextElementSibling,
@@ -283,21 +308,10 @@ const mediaPlayer = () => {
           stopButton = player.querySelector('.media-stop'),
           replayButton = player.querySelector('.media-replay'),
           subtitlesButton = player.querySelector('.media-subtitles'),
-          mediaRelationship = media.closest('.media-relationship')
+          mediaRelationship = media.closest('.media-relationship'),
+          nextMedia = getNextMedia(media, mediaRelationship),
+          nextNextMedia = getNextNextMedia(media, mediaRelationship)
 
-    const nextMedia = (() => {
-      if (mediaRelationship) {
-        const relatedMedias = mediaRelationship.querySelectorAll('.media:not(.error)') || ''
-        return relatedMedias[[...relatedMedias].indexOf(media) + 1] || relatedMedias[0] || ''
-      }
-    })()
-
-    const nextNextMedia = (() => {
-      if (mediaRelationship) {
-        const relatedMedias = mediaRelationship.querySelectorAll('.media:not(.error)') || ''
-        return relatedMedias[[...relatedMedias].indexOf(media) + 2] || relatedMedias[0] || ''
-      }
-    })()
 
     // Remove Controls :
     // @note Le code est plus simple et robuste si l'on se contente de supprimer des boutons déjà présents dans le player plutôt que de les ajouter (cibler leur place dans le DOM qui peut changer au cours du développement, rattacher les fonctionnalités au DOM...)
@@ -358,7 +372,7 @@ const mediaPlayer = () => {
       playPauseButton.classList.remove('active')
       stopButton.classList.add('active')
       stopButton.disabled = true
-      if (mediaRelationship.dataset.nextReading === 'true' && media.play) nextMediaActive(media, nextMedia) // @note Si le media d'un groupe, lecture du media suivant (n+1).
+      if (mediaRelationship.dataset.nextReading === 'true' && media.play) nextMediaActive(media, nextMedia, nextNextMedia) // @note Si le media d'un groupe, lecture du media suivant (n+1).
       if (mediaRelationship.dataset.nextReading && nextMedia) nextNextMedia.preload = 'auto' // @note Si le media d'un groupe, indiquation au navigateur de la possibilité de charger le media n+2 @todo En test.
     })
 
@@ -468,6 +482,7 @@ const mediaPlayer = () => {
   }
 
   const error = media => {
+    // @see https://html.spec.whatwg.org/multipage/media.html#error-codes
 
     const player = media.nextElementSibling,
           time = player.querySelector('.media-time')
@@ -512,8 +527,8 @@ const mediaPlayer = () => {
     media.id = 'media-' + i
     media.removeAttribute('controls') // @note C'est bien Javascript qui doit se charger de cette opération, CSS ne doit pas le faire, ce qui permet un lecteur par défaut avec l'attribut "controls" si JS désactivé.
     addPlayer(media)
-    error(media)
     controls(media)
+    error(media)
   }
 
 }

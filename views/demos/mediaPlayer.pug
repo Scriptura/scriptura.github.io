@@ -62,6 +62,10 @@
         figcaption Réminiscences
         audio.media(controls)
           source(src='/medias/audios/LesMysterieusesCitesDOr/Réminiscences.mp3')
+      figure.figure-media
+        figcaption Erreur d'URL pour tester la playlist
+        audio.media(controls)
+          source(src='/urlError.mp3')
   div
     p
       code (src='urlError')
@@ -76,7 +80,15 @@
       figcaption.sr-only Web radio
       audio.media(controls)
         source(src='https://stream.vestaradio.com/VertigeRadio')
-.grid2.s-grid1.gap
+.grid2.s-grid1.gap-vertical
+  div
+    .message
+      p
+        svg.icon-inline(role='img' focusable='false')
+          use(href='/sprites/util.svg#info')
+        | Par défaut un seul lecteur peut être actif sur la page. En cas de nouveau player, le précédent passera sur pause, à part ce principe de base, les lecteurs sont indépendants entre eux.
+      p Un élément parent bénéficiant de la classe ".media-relationship" rend ses médias enfants solidaires entre eux, sans pour autant qu'ils soient obligés d'être des élements frères.
+      p "data-next-reading=false" ajoutera une option de lecture à la suite, "data-next-reading=true" l'activera par défaut.
   div
     .message
       p
@@ -87,14 +99,6 @@
         | , interprétées par Yannick Rault (
         a(href='https://citesdor.com/musiques/musiques_boub.php3') lien
         | ).
-  div
-    .message
-      p
-        svg.icon-inline(role='img' focusable='false')
-          use(href='/sprites/util.svg#info')
-        | Par défaut un seul lecteur peut être actif sur la page. En cas de nouveau player, le précédent passera sur pause, à part ce principe de base, les lecteurs sont indépendants entre eux.
-      p Un élément parent bénéficiant de la classe ".media-relationship" rend ses médias enfants solidaires entre eux, sans pour autant qu'ils soient obligés d'être des élements frères.
-      p "data-next-reading=false" ajoutera une option de lecture à la suite, "data-next-reading=true" l'activera par défaut.
 hr(data-hr='✻ ✻ ✻')
 p
   code video.media
