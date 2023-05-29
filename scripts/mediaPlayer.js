@@ -5,7 +5,9 @@
 
 const mediaPlayer = () => {
 
-  const medias = document.querySelectorAll('.media') // audio, video
+  const HTMLMediaElement = '.media', // audio, video
+        medias = document.querySelectorAll(HTMLMediaElement)
+
   const playerTemplate = `
   <div class="media-player">
     <button class="media-play-pause" aria-label="play/pause">
@@ -245,30 +247,24 @@ const mediaPlayer = () => {
 
   const getNextMedia = (media, mediaRelationship) => {
     if (mediaRelationship) {
-      const relatedMedias = mediaRelationship.querySelectorAll('.media') || '' // :not(.error)
+      const relatedMedias = mediaRelationship.querySelectorAll(HTMLMediaElement) || ''
       return relatedMedias[[...relatedMedias].indexOf(media) + 1] || relatedMedias[0] || ''
     }
   }
 
   const getNextNextMedia = (media, mediaRelationship) => {
     if (mediaRelationship) {
-      const relatedMedias = mediaRelationship.querySelectorAll('.media') || ''
+      const relatedMedias = mediaRelationship.querySelectorAll(HTMLMediaElement) || ''
       return relatedMedias[[...relatedMedias].indexOf(media) + 2] || relatedMedias[0] || ''
     }
   }
 
-  const nextMediaActive = (media, nextMedia, nextNextMedia) => {
+  const nextMediaActive = (media, nextMedia, nextNextMedia, mediaRelationship) => {
 
     media = nextMedia
 
-    if(media.error) {
-      console.error(media.error.message)
-      media = nextNextMedia
-    }
-
-    if(media.error) { // @note Si nouvelle erreur on arrête le script.
-      console.error(media.error.message)
-      return false
+    if(media.error) { // Si erreur, passage au media suivant
+      return nextMediaActive(media, getNextMedia(media, mediaRelationship), getNextNextMedia(media, mediaRelationship), mediaRelationship)
     }
 
     //media.currentTime = 0 // @note Désactivée : un utilisateur peut ainsi caler la plage suivante selon sa préférence personnelle.
@@ -314,7 +310,7 @@ const mediaPlayer = () => {
 
 
     // Remove Controls :
-    // @note Le code est plus simple et robuste si l'on se contente de supprimer des boutons déjà présents dans le player plutôt que de les ajouter (cibler leur place dans le DOM qui peut changer au cours du développement, rattacher les fonctionnalités au DOM...)
+    // @note Le code est plus simple et robuste si l'on se contente de supprimer des boutons déjà présents dans le template du player plutôt que de les ajouter (cibler leur place dans le DOM qui peut changer au cours du développement, rattacher les fonctionnalités au DOM...)
 
     if (media.tagName === 'AUDIO' || !document.fullscreenEnabled) fullscreenButton.remove()
     if (media.tagName === 'AUDIO' || !document.pictureInPictureEnabled) pictureInPictureButton.remove()
@@ -372,8 +368,8 @@ const mediaPlayer = () => {
       playPauseButton.classList.remove('active')
       stopButton.classList.add('active')
       stopButton.disabled = true
-      if (mediaRelationship.dataset.nextReading === 'true' && media.play) nextMediaActive(media, nextMedia, nextNextMedia) // @note Si le media d'un groupe, lecture du media suivant (n+1).
-      if (mediaRelationship.dataset.nextReading && nextMedia) nextNextMedia.preload = 'auto' // @note Si le media d'un groupe, indiquation au navigateur de la possibilité de charger le media n+2 @todo En test.
+      if (mediaRelationship && mediaRelationship.dataset.nextReading === 'true' && media.play) nextMediaActive(media, nextMedia, nextNextMedia, mediaRelationship) // @note Si media appartenant à un groupe, lecture du media suivant (n+1).
+      if (mediaRelationship && mediaRelationship.dataset.nextReading && nextMedia) nextNextMedia.preload = 'auto' // @note Si media appartenant à un groupe, indiquation au navigateur de la possibilité de charger le media n+2 @todo En test.
     })
 
     media.addEventListener('pause', () => playPauseButton.classList.remove('active'))
@@ -384,7 +380,7 @@ const mediaPlayer = () => {
       togglePlayPause(media)
       currentTime(media, currentTimeOutput, progressBar)
       menu(player, false)
-      if (mediaRelationship.dataset.nextReading && nextMedia) nextMedia.preload = 'auto' // @note Si media d'un groupe, on indique au navigateur la possibilité de charger le media suivant @todo En test.
+      if (mediaRelationship && mediaRelationship.dataset.nextReading && nextMedia) nextMedia.preload = 'auto' // @note Si media d'un groupe, on indique au navigateur la possibilité de charger le media suivant @todo En test.
     })
 
     muteButton.addEventListener('click', () => mute(media)) //if (!media.muted && media.volume === 0) media.volume = .5
@@ -407,7 +403,7 @@ const mediaPlayer = () => {
 
     nextReadingButton.addEventListener('click', () => {
       mediaRelationship.dataset.nextReading === 'false' ? mediaRelationship.dataset.nextReading = 'true' : mediaRelationship.dataset.nextReading = 'false'
-      mediaRelationship.querySelectorAll('.media').forEach(media => { // @note Il peut s'agir de n'importe lequel des medias du groupe en relation.
+      mediaRelationship.querySelectorAll(HTMLMediaElement).forEach(media => { // @note Il peut s'agir de n'importe lequel des medias du groupe en relation.
         if (mediaRelationship.dataset.nextReading === 'true') media.loop = false
         buttonState(mediaRelationship.dataset.nextReading === 'true', media.nextElementSibling.querySelector('.media-next-reading'))
       })
