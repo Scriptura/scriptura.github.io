@@ -1537,6 +1537,7 @@ video.media {
   width: 10%;
 }
 .media-player .media-extend-menu {
+  --mem: 6;
   display: none;
 }
 .media-player .media-extend-menu.active {
@@ -1544,11 +1545,14 @@ video.media {
   z-index: 200;
   bottom: 3.5em;
   right: 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+/*
+    display: flex
+    flex-wrap: wrap
+    justify-content: flex-end
+    */
+  display: grid;
+  grid-template-columns: repeat(var(--mem), 2.5em);
   gap: 0.5em;
-  max-width: 100%;
   padding: 0.5em;
   background-color: #464646;
   border-radius: 1.75em;
@@ -2721,7 +2725,6 @@ form > [class*="grid"] > .input {
   overflow: hidden;
   position: relative;
   color: var(--color, #e9d9c4);
-  background-image: linear-gradient(to top, rgba(0,0,0,0.2), rgba(255,255,255,0.1));
   box-shadow: inset 0 0 0.1em rgba(0,0,0,0.3), 0 0.5rem 2rem rgba(0,0,0,0.3);
   transition: all 0.2s linear;
   transition-property: translate, box-shadow;
@@ -2749,7 +2752,7 @@ form > [class*="grid"] > .input {
 .button:hover::after,
 .round-button:hover::after {
   transform: scaleX(1);
-  transform-origin: right center;
+  transform-origin: left center;
 }
 .button:focus-visible,
 .round-button:focus-visible {
@@ -3603,6 +3606,8 @@ html,
 .list-rounded li *,
 .list-rounded li::before,
 [class*=figure-image],
+.button,
+.round-button,
 .search button,
 [class*=table] thead th,
 [class*=table] tfoot td,

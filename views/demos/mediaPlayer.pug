@@ -89,14 +89,14 @@
         | ).
   div
     p
-      code Test pour la lecture suivante si erreurs
+      code Tester la fonction lecture suivante si erreurs
     .grid.gap.media-relationship(style='--n:1' data-next-reading='true')
       figure.figure-media
         figcaption Petites n'abeilles...
         audio.media(controls)
           source(src='/medias/audios/abeilles.mp3')
       figure.figure-media
-        figcaption Erreur d'URL n°1 pour tester la playlist
+        figcaption Erreur d'URL n°1
         audio.media(controls)
           source(src='/urlError.mp3')
       figure.figure-media
@@ -104,11 +104,11 @@
         audio.media(controls)
           source(src='/medias/audios/grillons.mp3')
       figure.figure-media
-        figcaption Erreur d'URL n°2 pour tester la playlist
+        figcaption Erreur d'URL n°2
         audio.media(controls)
           source(src='/urlError.mp3')
       figure.figure-media
-        figcaption Erreur d'URL n°3 pour tester la playlist
+        figcaption Erreur d'URL n°3
         audio.media(controls)
           source(src='/urlError.mp3')
 hr(data-hr='✻ ✻ ✻')
@@ -172,7 +172,7 @@ hr(data-hr='✻ ✻ ✻')
     p
       code (data-id='uWCGK4nneeU')
     .video-youtube(data-id='uWCGK4nneeU')
-  //-div
+  div
     p
       code (data-id='errorId')
     .video-youtube(data-id='errorId')

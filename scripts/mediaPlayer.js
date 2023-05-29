@@ -264,6 +264,7 @@ const mediaPlayer = () => {
     media = nextMedia
 
     if(media.error) { // Si erreur, passage au media suivant
+      console.log(media.error.message)
       return nextMediaActive(media, getNextMedia(media, mediaRelationship), getNextNextMedia(media, mediaRelationship), mediaRelationship)
     }
 
@@ -396,9 +397,17 @@ const mediaPlayer = () => {
       volumeBar.style.setProperty('--position', `${position * 100}%`)
     })
 
-    menuButton.addEventListener('click', () => { // @note Fonction de notre player, non liée à la source media.
+    menuButton.addEventListener('click', () => { // @note Fonction propre au player, non liée à la source mediaElement.
       menu(player, true)
       menuButton.classList.toggle('active')
+      // @todo BEGIN test
+      // @note Méthode en test car un peu lourde pour déterminer du style.
+      const extendMenu = player.querySelector('.media-extend-menu')
+      const numberButtons = extendMenu.querySelectorAll('button').length
+      let rows = numberButtons
+      if (numberButtons > 6) rows = Math.ceil(numberButtons / 2) // Distribution des bouttons sur 2 lignes de manière équitable.
+      extendMenu.style.setProperty('--mem', rows)
+      // @todo END test
     })
 
     nextReadingButton.addEventListener('click', () => {

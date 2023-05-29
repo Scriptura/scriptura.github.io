@@ -232,17 +232,22 @@ video.media
     flex-grow: 1
     width: 10% // @note Ce n'est pas la barre de volume qui s'étend, c'est la barre de progression qui rapetisse.
   & .media-extend-menu
+    --mem: 6
     display: none
   & .media-extend-menu.active
     position: absolute
     z-index: 200 // @todo Si besoin
     bottom: _mediaPlayerSize
     right: 0
+    /*
     display: flex
     flex-wrap: wrap
     justify-content: flex-end
+    */
+    display: grid
+    grid-template-columns: repeat(var(--mem), _mediaPlayerSize2)
     gap: _mediaPlayerGap
-    max-width: 100%
+    //max-width: 100%
     padding: _mediaPlayerGap
     background-color: _colorG + 7%
     border-radius: (_mediaPlayerSize / 2)
