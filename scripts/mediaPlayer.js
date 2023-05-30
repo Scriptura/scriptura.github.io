@@ -402,11 +402,13 @@ const mediaPlayer = () => {
       menuButton.classList.toggle('active')
       // @todo BEGIN test
       // @note Méthode en test car un peu lourde pour déterminer du style.
+      /*
       const extendMenu = player.querySelector('.media-extend-menu')
       const numberButtons = extendMenu.querySelectorAll('button').length
       let rows = numberButtons
-      if (numberButtons > 6) rows = Math.ceil(numberButtons / 2) // Distribution des bouttons sur 2 lignes de manière équitable.
+      if (numberButtons > 6) rows = Math.ceil(numberButtons / 2) // @note Au delà d'un certain nombre, distribution des boutons sur 2 lignes de manière équitable.
       extendMenu.style.setProperty('--mem', rows)
+      */
       // @todo END test
     })
 

@@ -1540,6 +1540,14 @@ video.media {
   --mem: 6;
   display: none;
 }
+.media-player .media-extend-menu:has(button:nth-child(7):last-child),
+.media-player .media-extend-menu:has(button:nth-child(8):last-child) {
+  --mem: 4;
+}
+.media-player .media-extend-menu:has(button:nth-child(9):last-child),
+.media-player .media-extend-menu:has(button:nth-child(10):last-child) {
+  --mem: 5;
+}
 .media-player .media-extend-menu.active {
   position: absolute;
   z-index: 200;
