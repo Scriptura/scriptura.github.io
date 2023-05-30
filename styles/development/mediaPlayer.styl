@@ -240,6 +240,8 @@ video.media
     &:has(button:nth-child(9):last-child) // @note Idem @todo À réévaluer.
     &:has(button:nth-child(10):last-child)
       --mem: 5
+    &:has(button:nth-child(5):last-child) // @affected Firefox. @note Si moins de 6 boutons, sachant qu'il n'y en a jamais moins de 5. @todo À réévaluer dans le temps.
+      --mem: 5
   & .media-extend-menu.active
     position: absolute
     z-index: 200 // @todo Si besoin

@@ -1548,6 +1548,9 @@ video.media {
 .media-player .media-extend-menu:has(button:nth-child(10):last-child) {
   --mem: 5;
 }
+.media-player .media-extend-menu:has(button:nth-child(5):last-child) {
+  --mem: 5;
+}
 .media-player .media-extend-menu.active {
   position: absolute;
   z-index: 200;
