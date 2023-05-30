@@ -500,19 +500,8 @@ const mediaPlayer = () => {
       media.classList.add('error')
       player.classList.add('error')
       
-      let message = ''
-      switch (media.error.code) {
-        case (1): message = 'Error: ressource loading aborted'
-          break
-        case (2): message = 'Error: no network'
-          break
-        case (3): message = 'Error: resource decoding failed'
-          break
-        case (4): message = 'Error: unsupported resource'
-          break
-        default: message = 'Reading error'
-      }
-      time.innerHTML = message //`<span>${message}</span>`
+      console.error(media.error.message)
+      time.innerHTML = 'Erreur de lecture'
 
       media.poster = ''
       
