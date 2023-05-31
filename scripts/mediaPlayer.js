@@ -404,15 +404,15 @@ const mediaPlayer = () => {
       // @note Méthode en test car un peu lourde pour déterminer du style.
       try { // Solution de repli pour ".media-extend-menu" si règle CSS :has() non supportée
         document.querySelector('body:has(*)')
-        //console.log('test OK')
       } catch {
         console.log('Solution de repli JS pour ".media-extend-menu"')
-        const extendMenu = document.querySelector('.media-extend-menu'),
+        const extendMenu = player.querySelector('.media-extend-menu'),
               numberButtons = extendMenu.querySelectorAll('button').length
         let rows = numberButtons
         if (numberButtons > 12) rows = 6
         else if (numberButtons > 6) rows = Math.ceil(numberButtons / 2) // Distribution des bouttons sur 2 lignes de manière équitable.
         extendMenu.style.setProperty('--mem', rows)
+        console.log(rows)
       }
       // @todo END test
     })
