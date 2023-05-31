@@ -23,7 +23,9 @@
   "scripts": {
     "dev": "yarn html | yarn js",
     "html": "node tasks/htmlRendering",
-    "js": "uglifyjs scripts/development/main.js -o scripts/main.js -c -m",
+    "js": "yarn jsmain | yarn jsmediaplayer",
+    "jsmain": "uglifyjs scripts/development/main.js -o scripts/main.js -c -m",
+    "jsmediaplayer": "uglifyjs scripts/development/mediaPlayer.js -o scripts/mediaPlayer.js -c -m",
     "css": "yarn cssexp | yarn cssprint | yarn cssprism | yarn cssmain",
     "cssmain": "stylus -u autoprefixer-stylus -w styles/development/main.styl -o styles/main.css -c -m",
     "cssexp": "stylus -u autoprefixer-stylus -w styles/development/main.styl -o styles/expanded/main.css",
