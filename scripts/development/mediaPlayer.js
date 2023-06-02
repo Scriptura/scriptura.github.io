@@ -270,6 +270,7 @@ const mediaPlayer = () => {
 
     //media.currentTime = 0 // @note Désactivée : un utilisateur peut ainsi caler la plage suivante selon sa préférence personnelle.
 
+    
     const player = media.nextElementSibling,
           playPauseButton = player.querySelector('.media-play-pause'),
           currentTimeOutput = player.querySelector('.media-current-time'),
@@ -278,6 +279,7 @@ const mediaPlayer = () => {
     togglePlayPause(media)
     buttonState(!media.paused, playPauseButton)
     currentTime(media, currentTimeOutput, progressBar)
+    
   }
 
   const controls = media => {
@@ -367,8 +369,6 @@ const mediaPlayer = () => {
     media.addEventListener('ended', () => {
       //media.currentTime = 0 // @note Permet de réinitialiser la lecture, mais le fait de s'abstenir de réinitialiser permet de mieux repérer les fichiers déjà lus.
       playPauseButton.classList.remove('active')
-      stopButton.classList.add('active')
-      stopButton.disabled = true
       if (mediaRelationship && mediaRelationship.dataset.nextReading === 'true' && media.play) nextMediaActive(media, nextMedia, nextNextMedia, mediaRelationship) // @note Si media appartenant à un groupe, lecture du media suivant (n+1).
       if (mediaRelationship && mediaRelationship.dataset.nextReading && nextMedia) nextNextMedia.preload = 'auto' // @note Si media appartenant à un groupe, indiquation au navigateur de la possibilité de charger le media n+2 @todo En test.
     })
