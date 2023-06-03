@@ -272,13 +272,16 @@ const mediaPlayer = () => {
 
     
     const player = media.nextElementSibling,
-          playPauseButton = player.querySelector('.media-play-pause'),
           currentTimeOutput = player.querySelector('.media-current-time'),
+          playPauseButton = player.querySelector('.media-play-pause'),
+          stopButton = player.querySelector('.media-stop'),
           progressBar = player.querySelector('.media-progress-bar')
 
     togglePlayPause(media)
-    buttonState(!media.paused, playPauseButton)
     currentTime(media, currentTimeOutput, progressBar)
+    buttonState(!media.paused, playPauseButton)
+    buttonState(media.paused && media.currentTime === 0, stopButton)
+    media.paused && media.currentTime === 0 ? stopButton.disabled = true : stopButton.disabled = false
     
   }
 
