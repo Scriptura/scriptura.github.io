@@ -1,8 +1,12 @@
+h2 Util sprites
 .grid-auto.gap.gap-bottom.demo-icons(style='--size-grid:6em')
-  include ../includes/iconList
-.grid2.gap
+  include ../includes/iconListUtil
+h2 Player sprites
+.grid-auto.gap.gap-bottom.demo-icons(style='--size-grid:6em')
+  include ../includes/iconListPlayer
+.grid2.gap.gap-block
   .message
     p
-      | Icones disponibles à partir d'un fichier composé de sprites SVG. Celui-ci est compilé (et peut être recompilé si besoin de personnalisation) à partir de SVGs situés dans un même dossier. Optimisation avec SVGO. Voir la configuation du 
+      | Icones disponibles à partir de fichiers composés de sprites SVG. Ceux-ci sont compilés (et peuvent être recompilés si besoin de personnalisation) à partir de SVGs situés dans un même dossier. Optimisation avec SVGO. Voir la configuation du 
       code package.json
       | .

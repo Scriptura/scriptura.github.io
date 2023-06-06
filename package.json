@@ -18,14 +18,15 @@
     "stylus": "^0.59.0",
     "svg-symbol-sprite": "^1.4.0",
     "svgo": "^3.0.0",
-    "uglify-es": "^3.3.9"
+    "terser": "^5.17.7"
   },
   "scripts": {
     "dev": "yarn html | yarn js",
     "html": "node tasks/htmlRendering",
-    "js": "yarn jsmain | yarn jsmediaplayer",
-    "jsmain": "uglifyjs scripts/development/main.js -o scripts/main.js -c -m",
-    "jsmediaplayer": "uglifyjs scripts/development/mediaPlayer.js -o scripts/mediaPlayer.js -c -m",
+    "js": "yarn jsmain | yarn jsclienttest",
+    "js2": "node tasks/jsBuild",
+    "jsmain": "terser scripts/development/main.js scripts/development/masonry.js scripts/development/formValidation.js scripts/development/imageFocus.js scripts/development/accordion.js scripts/development/tab.js scripts/development/codeBlock.js scripts/development/readablePassword.js scripts/development/range.js scripts/development/lineMark.js scripts/development/pieChart.js scripts/development/barChart.js scripts/development/mediaPlayer.js scripts/development/map.js scripts/development/youtube.js -o scripts/main.js -c -m",
+    "jsclienttest": "terser scripts/development/clientTest.js -o scripts/clientTest.js -c -m",
     "css": "yarn cssexp | yarn cssprint | yarn cssprism | yarn cssmain",
     "cssmain": "stylus -u autoprefixer-stylus -w styles/development/main.styl -o styles/main.css -c -m",
     "cssexp": "stylus -u autoprefixer-stylus -w styles/development/main.styl -o styles/expanded/main.css",

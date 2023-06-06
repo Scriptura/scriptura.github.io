@@ -24,15 +24,3 @@ const lineMarks = el => {
 }
 
 lineMarks()
-
-/*
-const sizeM = '800px'
-
-if (window.matchMedia(`(width > ${sizeM})`).matches) lineMarks()
-
-onresize = (event) => {
-  setTimeout(() => {
-    if (window.matchMedia(`(width > ${sizeM})`).matches) lineMarks()
-  }, 200)
-}
-*/

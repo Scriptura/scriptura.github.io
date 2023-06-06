@@ -4,22 +4,24 @@ import { renderFile } from 'pug'
 const files = readdirSync('views/pages/')
 
 // Génération des icônes de démonstration (doit précéder la génération des pages)
-const str = readFileSync('sprites/util.svg', 'utf8')
-const names = [...str.matchAll(/id="(.*?)"/gi)].map(m => m[1]) // @note Capture l'ID de chaque symbole. Par rapport à match(), matchAll() permet de capturer les groupes. map() sort un seul résultat pour chaque itération.
+const spriteUtil = readFileSync('sprites/util.svg', 'utf8')
+const spritePlayer = readFileSync('sprites/player.svg', 'utf8')
 
-function createIcons(names) {
-  let icon = '//- fichier autogénéré par la commande `yarn html`'
+function createIcons(sprites, path) {
+  const names = [...sprites.matchAll(/id="(.*?)"/gi)].map(m => m[1]) // @note Capture l'ID de chaque symbole. Par rapport à match(), matchAll() permet de capturer les groupes. map() sort un seul résultat pour chaque itération.
+  let icon = '//- fichier autogénéré par la commande `yarn icon`'
   for (const name of names) {
     icon += `
 ruby
   svg.icon(role='img' focusable='false')
-    use(href='/sprites/util.svg#${name}')
+    use(href='/sprites/${path}.svg#${name}')
   rt ${name}`
   }
   return icon
 }
 
-writeFileSync('views/includes/iconList.pug', createIcons(names))
+writeFileSync('views/includes/iconListUtil.pug', createIcons(spriteUtil, 'util'))
+writeFileSync('views/includes/iconListPlayer.pug', createIcons(spritePlayer, 'player'))
 
 writeFileSync('index.html', renderFile('views/index.pug'))
 writeFileSync('404.html', renderFile('views/404.pug'))
