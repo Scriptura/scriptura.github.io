@@ -377,7 +377,7 @@ const mediaPlayer = () => {
       if (mediaRelationship && mediaRelationship.dataset.nextReading && nextMedia) nextNextMedia.preload = 'auto' // @note Si media appartenant à un groupe, indiquation au navigateur de la possibilité de charger le media n+2 @todo En test.
     })
 
-    //media.addEventListener('pause', () => buttonState(!media.paused, playPauseButton))
+    media.addEventListener('pause', () => buttonState(!media.paused, playPauseButton))
 
     // Contrôle via les boutons :
 
