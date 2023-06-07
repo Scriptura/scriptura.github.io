@@ -370,13 +370,14 @@ const mediaPlayer = () => {
     })
 
     media.addEventListener('ended', () => {
-      //media.currentTime = 0 // @note Permet de réinitialiser la lecture, mais le fait de s'abstenir de réinitialiser permet de mieux repérer les fichiers déjà lus.
-      playPauseButton.classList.remove('active')
+      media.currentTime = 0 // @note Permet de réinitialiser la lecture, mais le fait de s'abstenir de réinitialiser permet de mieux repérer les fichiers déjà lus.
+      buttonState(!media.paused, playPauseButton)
+      buttonState(media.paused && media.currentTime === 0, stopButton)
       if (mediaRelationship && mediaRelationship.dataset.nextReading === 'true' && media.play) nextMediaActive(media, nextMedia, nextNextMedia, mediaRelationship) // @note Si media appartenant à un groupe, lecture du media suivant (n+1).
       if (mediaRelationship && mediaRelationship.dataset.nextReading && nextMedia) nextNextMedia.preload = 'auto' // @note Si media appartenant à un groupe, indiquation au navigateur de la possibilité de charger le media n+2 @todo En test.
     })
 
-    media.addEventListener('pause', () => playPauseButton.classList.remove('active'))
+    //media.addEventListener('pause', () => buttonState(!media.paused, playPauseButton))
 
     // Contrôle via les boutons :
 

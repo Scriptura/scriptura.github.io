@@ -88,29 +88,24 @@
         a(href='https://citesdor.com/musiques/musiques_boub.php3') lien
         | ).
   div
-    p
-      code Tester la fonction lecture suivante si erreurs
+    p Tester la fonction "lecture suivante" si erreurs de lecture&nbsp;:
     .grid.gap.media-relationship(style='--n:1' data-next-reading='true')
-      figure.figure-media
-        figcaption Petites n'abeilles...
-        audio.media(controls)
-          source(src='/medias/audios/abeilles.mp3')
-      figure.figure-media
-        figcaption Erreur d'URL n°1
-        audio.media(controls)
-          source(src='/urlError.mp3')
       figure.figure-media
         figcaption Stridulation d'un grillon
         audio.media(controls)
           source(src='/medias/audios/grillons.mp3')
       figure.figure-media
+        figcaption Erreur d'URL n°1
+        audio.media(controls)
+          source(src='/urlError.mp3')
+      figure.figure-media
         figcaption Erreur d'URL n°2
         audio.media(controls)
           source(src='/urlError.mp3')
       figure.figure-media
-        figcaption Erreur d'URL n°3
+        figcaption Petites n'abeilles...
         audio.media(controls)
-          source(src='/urlError.mp3')
+          source(src='/medias/audios/abeilles.mp3')
 hr(data-hr='✻ ✻ ✻')
 p
   code video.media
