@@ -1,3 +1,5 @@
+'use strict'
+
 const rangeInput = (() => {
   document.querySelectorAll('.range').forEach(range => {
 

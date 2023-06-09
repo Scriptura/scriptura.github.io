@@ -24,3 +24,5 @@ const lineMarks = el => {
 }
 
 lineMarks()
+
+if (window.location.hash) window.addEventListener('load', () => document.querySelector(window.location.hash).scrollIntoView()) // @note Si chargement de la page avec un hash, alors défilement jusqu'à l'élément contenant l'ancre.

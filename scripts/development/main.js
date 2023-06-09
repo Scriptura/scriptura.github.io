@@ -29,6 +29,7 @@ const touchDetect = (() => {
 // -----------------------------------------------------------------------------
 
 /**
+ * @warning Les scripts chargés par ce biais doivent éviter des modifications trop importantes du DOM ou de repeindre la page (reflow and repaint).
  * @param {string} url : une url de script
  * @param {string} hook : le placement du script, 'head' ou 'footer', footer par défaut.
  */
@@ -53,21 +54,21 @@ const getScript = (url, hook = 'footer') => new Promise((resolve, reject) => { /
 const getScripts = (() => {
   //if (document.querySelector('.masonry')) getScript('/scripts/masonry.js')
   if (document.querySelector('[class*=validation]')) getScript('/scripts/formValidation.js')
-  //if (document.querySelector('[class*=-focus]')) getScript('/scripts/imageFocus.js')
-  //if (document.querySelector('[class*=accordion]')) getScript('/scripts/accordion.js')
+  if (document.querySelector('[class*=-focus]')) getScript('/scripts/imageFocus.js')
+  if (document.querySelector('[class*=accordion]')) getScript('/scripts/accordion.js')
   //if (document.querySelector('[class*=tabs]')) getScript('/scripts/tab.js')
-  //if (document.querySelector('.pre')) getScript('/scripts/codeBlock.js')
+  if (document.querySelector('.pre')) getScript('/scripts/codeBlock.js')
   //if (document.querySelector('.input [type=password]')) getScript('/scripts/readablePassword.js')
-  //if (document.querySelector('[class^=range]')) getScript('/scripts/range.js')
-  //if (document.querySelector('.add-line-marks')) getScript('/scripts/lineMark.js')
+  if (document.querySelector('[class^=range]')) getScript('/scripts/range.js')
+  if (document.querySelector('.add-line-marks')) getScript('/scripts/lineMark.js')
   //if (document.querySelector('pie-chart')) getScript('/scripts/pieChart.js')
   //if (document.querySelector('bar-chart')) getScript('/scripts/barChart.js')
   //if (document.querySelector('.media')) getScript('/scripts/development/mediaPlayer.js')
-  //if (document.querySelector('.map')) getScript('/scripts/map.js')
-  if (document.querySelector('.map')) getScript('/libraries/leaflet/leaflet.js')
-  //if (document.querySelector('.video-youtube')) getScript('/scripts/youtube.js')
-  if (document.querySelector('[class*=language-]')) getScript('/libraries/prism/prism.js')
+  if (document.querySelector('.video-youtube')) getScript('/scripts/youtube.js')
   if (document.querySelector('.client-test')) getScript('/scripts/clientTest.js')
+  if (document.querySelector('.map')) getScript('/scripts/map.js')
+  if (document.querySelector('.map')) getScript('/libraries/leaflet/leaflet.js')
+  if (document.querySelector('[class*=language-]')) getScript('/libraries/prism/prism.js')
 })()
 
 

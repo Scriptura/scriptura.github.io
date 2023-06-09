@@ -101,6 +101,7 @@ _rangeBlockThumbDisabled =
   & .phylactery
     min-width: var(--size, 4em)
     padding: 1em
+    min-height: 3.5em // @note Hauteur préservée si output vide car pas de JavaScript.
     background-color: var(--color)
     border-radius: .3em
     box-shadow: _rangeShadow1
@@ -116,6 +117,8 @@ _rangeBlockThumbDisabled =
       filter: drop-shadow(0 .5rem 2rem rgba(0, 0, 0, .3)) // _rangeShadow1
 
 .range-multithumb input
+  --start: 0
+  --stop: 0
   --colorSlide: _rangeColor5
   background: linear-gradient(90deg, transparent var(--start), var(--colorSlide) var(--start), var(--colorSlide) var(--stop), transparent var(--stop)), linear-gradient(to top, hsla(0, 0, 100%, .05) 0, hsla(0, 0, 100%, .05) 33.3%, #222 33.3%, #222 66.6%, hsla(0, 0, 100%, .05) 66.6%, hsla(0, 0, 100%, .05)) // @see https://stackoverflow.com/questions/22229270
   &:disabled
