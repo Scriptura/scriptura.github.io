@@ -2,9 +2,8 @@
 
 // @note Marqueurs pour les pages article
 
-const lineMarks = el => {
-  // @note Pour un meilleur contrôle il est préférable de définir explicitement les items plutôt que d'utiliser le sélecteur universel '*' et de procéder par exclusion.
-  const els = document.querySelectorAll('.add-line-marks > :is(p, h2, h3, h4, h5, h6, blockquote, ul, ol, [class*=grid])')
+const lineMarks = elements => {
+  const els = document.querySelectorAll(elements)
   const lineMarksAdd = el => {
     const a = document.createElement('a')
     a.id = 'mark' + i
@@ -23,8 +22,7 @@ const lineMarks = el => {
   }
 }
 
-lineMarks()
-
+lineMarks('.add-line-marks > :is(p, h2, h3, h4, h5, h6, blockquote, ul, ol, [class*=grid])') // @note Pour un meilleur contrôle il est préférable de définir explicitement les items plutôt que d'utiliser le sélecteur universel '*' et de procéder par exclusion.
 
 if (window.location.hash) window.addEventListener('load', () => { // @note Si chargement de la page avec un hash, alors défilement jusqu'à l'élément contenant l'ancre.
   const scroll = () => document.querySelector(window.location.hash).scrollIntoView()
