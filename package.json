@@ -23,9 +23,10 @@
   "scripts": {
     "dev": "yarn html | yarn js",
     "html": "node tasks/htmlRendering",
-    "js": "yarn jsmain | yarn jsclienttest",
+    "js": "yarn jsmain | yarn jsformvalidation | yarn jsclienttest",
     "js2": "node tasks/jsBuild",
-    "jsmain": "terser scripts/development/main.js scripts/development/masonry.js scripts/development/formValidation.js scripts/development/imageFocus.js scripts/development/accordion.js scripts/development/tab.js scripts/development/codeBlock.js scripts/development/readablePassword.js scripts/development/range.js scripts/development/lineMark.js scripts/development/pieChart.js scripts/development/barChart.js scripts/development/mediaPlayer.js scripts/development/map.js scripts/development/youtube.js -o scripts/main.js -c -m",
+    "jsmain": "terser scripts/development/main.js scripts/development/masonry.js scripts/development/imageFocus.js scripts/development/accordion.js scripts/development/tab.js scripts/development/codeBlock.js scripts/development/readablePassword.js scripts/development/range.js scripts/development/lineMark.js scripts/development/pieChart.js scripts/development/barChart.js scripts/development/mediaPlayer.js scripts/development/map.js scripts/development/youtube.js -o scripts/main.js -c -m",
+    "jsformvalidation": "terser  scripts/development/formValidation.js -o scripts/formValidation.js -c -m",
     "jsclienttest": "terser scripts/development/clientTest.js -o scripts/clientTest.js -c -m",
     "css": "yarn cssexp | yarn cssprint | yarn cssprism | yarn cssmain",
     "cssmain": "stylus -u autoprefixer-stylus -w styles/development/main.styl -o styles/main.css -c -m",

@@ -27,11 +27,13 @@ const formValidation = (() => {
 
   const validationName = (() => {
     document.querySelectorAll('.validation-name').forEach(input => {
-      input.addEventListener('keyup', e => validationInit(input), false)
-      input.addEventListener('change', e => input.value = input.value.replace(/  +/g, ' '), false) // @note Réduire les espaces internes dupliqués à un seul.
-      input.addEventListener('change', e => input.value = input.value.trim(), false)
-      input.addEventListener('change', e => input.value = input.value.replace(/^\p{CWU}/u, char => char.toLocaleUpperCase()), false)
-      input.addEventListener('change', e => validationInit(input), false)
+      input.addEventListener('input', () => validationInit(input), false)
+      input.addEventListener('change', () => {
+        input.value = input.value.replace(/  +/g, ' ') // @note Réduire les espaces internes dupliqués à un seul.
+        input.value = input.value.trim()
+        input.value = input.value.replace(/^\p{CWU}/u, char => char.toLocaleUpperCase())
+        validationInit(input)
+      }, false)
     })
     function validationInit(input) {
       const el = input.parentNode.querySelector('.' + classMessageError)
@@ -52,10 +54,12 @@ const formValidation = (() => {
 
   const validationEmail = (() => {
     document.querySelectorAll('.validation-email').forEach(input => {
-      input.addEventListener('keyup', e => validationInit(input), false)
-      input.addEventListener('change', e => input.value = input.value.replace(/ +/g, ''), false) // @note Suppression les espaces internes
-      input.addEventListener('change', e => input.value = input.value.trim(), false)
-      input.addEventListener('change', e => validationExit(input), false)
+      input.addEventListener('input', () => validationInit(input), false)
+      input.addEventListener('change', () => {
+        input.value = input.value.replace(/ +/g, '') // @note Suppression les espaces internes
+        input.value = input.value.trim()
+        validationExit(input)
+      }, false)
     })
     function validationInit(input) {
       const el = input.parentNode.querySelector('.' + classMessageError)
@@ -84,11 +88,13 @@ const formValidation = (() => {
 
   const validationUrl = (() => {
     document.querySelectorAll('.validation-url').forEach(input => {
-      input.addEventListener('keyup', e => validationInit(input), false)
-      input.addEventListener('change', e => input.value = input.value.replace(/ +/g, ''), false) // @note Suppression les espaces internes.
-      input.addEventListener('change', e => input.value = input.value.trim(), false)
-      input.addEventListener('change', e => input.value = input.value.replace(/^\p{CWL}/u, char => char.toLocaleLowerCase()), false) // @note Les noms de domaines et protocoles sont toujours insensibles à la case.
-      input.addEventListener('change', e => validationExit(input), false)
+      input.addEventListener('input', () => validationInit(input), false)
+      input.addEventListener('change', () => {
+        input.value = input.value.replace(/ +/g, '') // @note Suppression les espaces internes.
+        input.value = input.value.trim()
+        input.value = input.value.replace(/^\p{CWL}/u, char => char.toLocaleLowerCase()) // @note Les noms de domaines et protocoles sont toujours insensibles à la case.
+        validationExit(input)
+      }, false)
     })
     function validationInit(input) {
       const el = input.parentNode.querySelector('.' + classMessageError)
@@ -125,10 +131,12 @@ const formValidation = (() => {
 
   const validationPhoneFrFR = (() => {
     document.querySelectorAll('.validation-phone-fr_FR').forEach(input => {
-      input.addEventListener('keyup', e => validationInit(input), false)
-      input.addEventListener('change', e => input.value = input.value.replace(/ +/g, ''), false) // @note Suppression les espaces internes.
-      input.addEventListener('change', e => input.value = input.value.trim(), false)
-      input.addEventListener('change', e => validationExit(input), false)
+      input.addEventListener('input', () => validationInit(input), false)
+      input.addEventListener('change', () => {
+        input.value = input.value.replace(/ +/g, '') // @note Suppression les espaces internes.
+        input.value = input.value.trim()
+        validationExit(input)
+      }, false)
     })
     function validationInit(input) {
       const el = input.parentNode.querySelector('.' + classMessageError)

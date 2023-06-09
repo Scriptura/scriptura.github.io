@@ -234,25 +234,21 @@ video.media
   & .media-extend-menu
     --mem: 6
     display: none
-    &:has(button:nth-child(7):last-child) // @note Les éléments sont normalement listable dans :has(el1, el2, ...) mais pas avec Stylus. @todo À réévaluer.
+    &:has(> :nth-child(7):last-child) // @note Les éléments sont normalement listable dans :has(el1, el2, ...) mais pas avec Stylus. @todo À réévaluer.
     &:has(button:nth-child(8):last-child)
       --mem: 4
-    &:has(button:nth-child(9):last-child) // @note Idem @todo À réévaluer.
-    &:has(button:nth-child(10):last-child)
+    &:has(> :nth-child(9):last-child) // @note Idem @todo À réévaluer.
+    &:has(> :nth-child(10):last-child)
       --mem: 5
-    &:has(button:nth-child(5):last-child) // @affected Firefox. @note Si moins de 6 boutons, sachant qu'il n'y en a jamais moins de 5. @todo À réévaluer dans le temps.
+    &:has(> :nth-child(5):last-child) // @affected Firefox. @note Si moins de 6 boutons, sachant qu'il n'y en a jamais moins de 5. @todo À réévaluer dans le temps.
       --mem: 5
   & .media-extend-menu.active
     position: absolute
     z-index: 200 // @todo Si besoin
     bottom: _mediaPlayerSize
     right: 0
-    /*
-    display: flex
-    flex-wrap: wrap
-    justify-content: flex-end
-    */
     display: grid
+    //grid-auto-flow: dense
     grid-template-columns: repeat(var(--mem), _mediaPlayerSize2)
     gap: _mediaPlayerGap
     //max-width: 100%

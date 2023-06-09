@@ -1540,15 +1540,15 @@ video.media {
   --mem: 6;
   display: none;
 }
-.media-player .media-extend-menu:has(button:nth-child(7):last-child),
+.media-player .media-extend-menu:has(> :nth-child(7):last-child),
 .media-player .media-extend-menu:has(button:nth-child(8):last-child) {
   --mem: 4;
 }
-.media-player .media-extend-menu:has(button:nth-child(9):last-child),
-.media-player .media-extend-menu:has(button:nth-child(10):last-child) {
+.media-player .media-extend-menu:has(> :nth-child(9):last-child),
+.media-player .media-extend-menu:has(> :nth-child(10):last-child) {
   --mem: 5;
 }
-.media-player .media-extend-menu:has(button:nth-child(5):last-child) {
+.media-player .media-extend-menu:has(> :nth-child(5):last-child) {
   --mem: 5;
 }
 .media-player .media-extend-menu.active {
@@ -1556,11 +1556,6 @@ video.media {
   z-index: 200;
   bottom: 3.5em;
   right: 0;
-/*
-    display: flex
-    flex-wrap: wrap
-    justify-content: flex-end
-    */
   display: grid;
   grid-template-columns: repeat(var(--mem), 2.5em);
   gap: 0.5em;
