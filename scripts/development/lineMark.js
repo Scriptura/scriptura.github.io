@@ -25,4 +25,8 @@ const lineMarks = el => {
 
 lineMarks()
 
-if (window.location.hash) window.addEventListener('load', () => document.querySelector(window.location.hash).scrollIntoView()) // @note Si chargement de la page avec un hash, alors défilement jusqu'à l'élément contenant l'ancre.
+
+if (window.location.hash) window.addEventListener('load', () => { // @note Si chargement de la page avec un hash, alors défilement jusqu'à l'élément contenant l'ancre.
+  const scroll = () => document.querySelector(window.location.hash).scrollIntoView()
+  setTimeout(scroll, 2000) // @note On laisse le temps au visiteur de voir l'entête de la page avant le scroll vers l'ancre.
+})
