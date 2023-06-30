@@ -342,9 +342,7 @@ const mainMenu = (() => {
     document.body.classList.toggle('active')
     button.classList.toggle('active')
     subNav.classList.toggle('active')
-    content.forEach(
-      e => e.hasAttribute('inert') ? e.removeAttribute('inert') : e.setAttribute('inert', '')
-    )
+    content.forEach(e => e.hasAttribute('inert') ? e.removeAttribute('inert') : e.setAttribute('inert', ''))
   })
 })()
 

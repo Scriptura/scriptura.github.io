@@ -3223,11 +3223,10 @@ main > article > footer {
   }
   .line-mark {
     position: absolute;
-    top: -1em;
+    top: 0;
     right: -6em;
     width: 4em;
     height: 2em;
-    padding-top: 1em;
     vertical-align: sub;
     font-size: 1rem;
     font-weight: normal;
@@ -3238,6 +3237,7 @@ main > article > footer {
     -webkit-user-select: none;
        -moz-user-select: none;
             user-select: none;
+    scroll-margin-top: 1em;
   }
   .line-mark:focus,
   .line-mark:hover,
@@ -3250,11 +3250,9 @@ main > article > footer {
   .line-mark::after {
     content: ' -';
   }
-  h2 .line-mark {
-    top: -0.5em;
-  }
+  h2 .line-mark,
   h3 .line-mark {
-    top: -0.8em;
+    top: 0.5em;
   }
 }
 .calendar-color {
@@ -3725,6 +3723,9 @@ html,
 }
 .demo-counter > * :first-child {
   display: inline;
+}
+.type-components main > section {
+  scroll-margin-top: 1em;
 }
 @media (max-width: 50.01em) {
   .type-components main > section {

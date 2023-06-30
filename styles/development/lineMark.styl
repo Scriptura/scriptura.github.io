@@ -1,5 +1,5 @@
-_lineMarkUnit1 = 1em
-_lineMarkColor1 = _colorG + 27.5%
+_lineMarkUnit = 1em
+_lineMarkColor = _colorG + 27.5%
 
 @media (max-width: _sizeS)
 
@@ -13,21 +13,21 @@ _lineMarkColor1 = _colorG + 27.5%
 
   .line-mark
     position: absolute
-    top: - _lineMarkUnit1
+    top: 0
     right: -6em
     width: 4em
     height: 2em
-    padding-top: _lineMarkUnit1
     vertical-align: sub
     //font-family: _fontList2
     font-size: 1rem // Unité rem obligatoire car ne doit pas dépendre de l'élément parent.
     font-weight: normal
     //text-align: right
     text-decoration: none
-    color: _lineMarkColor1
+    color: _lineMarkColor
     outline: none
     transition: color .2s ease-in-out
     user-select: none // @note On évite de sélectionner les marqueurs, ceux-ci sont un élément de navigation et non de contenu.
+    scroll-margin-top: _lineMarkUnit
     &:focus
     &:hover
     &active
@@ -39,7 +39,5 @@ _lineMarkColor1 = _colorG + 27.5%
       content: ' -'
 
   h2 .line-mark
-    top: -.5em
-
   h3 .line-mark
-    top: -.8em
+    top: .5em
