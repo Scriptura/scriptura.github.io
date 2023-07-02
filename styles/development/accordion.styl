@@ -34,6 +34,8 @@ _accordionTime1 = .5s
       font-size: 1.5em
     & svg
       margin-right: 1em
+  & summary::before
+    all: unset
   & .accordion-summary::after
     transition: transform _accordionTime1 ease-in-out // @note Sprécifique aux éléments remplacés.
   & > * > :last-child

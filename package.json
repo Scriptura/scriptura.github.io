@@ -2,7 +2,7 @@
   "name": "scriptura",
   "version": "draft",
   "type": "module",
-  "description": "Un framework HTML/CSS/JS généré par Pug, Stylus et en javascript natif.",
+  "description": "Un framework HTML/CSS/JS généré via Pug, Stylus et JavaScript.",
   "main": "index.js",
   "repository": "https://github.com/Scriptura/scriptura.github.io",
   "author": "Olivier Chavarin",

@@ -167,17 +167,17 @@ details {
 details details {
   margin-left: 2em;
 }
-:not(.accordion) > * > summary {
+summary {
   display: list-item;
   list-style: none;
   cursor: pointer;
 }
-:not(.accordion) > * > summary:focus-visible,
-:not(.accordion) > * > summary:hover {
+summary:focus-visible,
+summary:hover {
   color: #ffa600;
   outline: none;
 }
-:not(.accordion) > * > summary::before {
+summary::before {
   content: '➤';
   display: inline-block;
   margin-right: 0.5em;
@@ -2870,6 +2870,9 @@ form > [class*="grid"] > .input {
 }
 .accordion > * > :first-child svg {
   margin-right: 1em;
+}
+.accordion summary::before {
+  all: unset;
 }
 .accordion .accordion-summary::after {
   transition: transform 0.5s ease-in-out;
