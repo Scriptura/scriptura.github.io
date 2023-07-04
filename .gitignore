@@ -1,14 +1,21 @@
-# private
+# For Scriptura project
 .env
 variables.js
 private/
 
-# npm
-.npm
+# node.js
 node_modules/
+
+# npm
+.npm/
 npm-debug.log
 
+# pnpm
+.pnpm-debug.log*
+
 # Yarn
+.yarn/
+yarn.lock
 yarn-debug.log
 yarn-error.log
 # yarn.lock # versioning des packages
@@ -31,6 +38,7 @@ Desktop.ini
 .history/
 
 # Other
+logs
 tmp/
 *.log
 *.tmp
