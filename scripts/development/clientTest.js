@@ -40,7 +40,7 @@ window.addEventListener('resize', () => windowSizeHeight())
 
 function reportWindowSize() {
   windowWidth = window.innerWidth
-  windowHeight.textContent = window.innerHeight
+  windowHeight = window.innerHeight
 }
 
 window.onresize = reportWindowSize

@@ -446,3 +446,13 @@ function buttonEffect(e) {
   if ('vibrate' in navigator) navigator.vibrate(frame ? frame : 200)
 }
 document.querySelectorAll('button[class*=button]').forEach(e => e && e.addEventListener('click', () => buttonEffect(e), false))
+
+
+/*
+Mode "appliquation" ou "navigateur" :
+let displayMode = 'browser'
+window.matchMedia('(display-mode: standalone)').addEventListener('change', e => {
+  if (e.matches) displayMode = 'standalone'
+})
+console.log('DISPLAY_MODE_CHANGED', displayMode)
+*/
