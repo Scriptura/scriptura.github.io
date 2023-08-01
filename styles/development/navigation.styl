@@ -51,7 +51,7 @@ _navigationColor5 = _color2
     background-repeat: no-repeat
     background-position: 50% 50%
     background-size: auto 70%
-    box-shadow: _shadow3
+    //box-shadow: _shadow3
 
 .sub-nav
   grid-area: subnav
@@ -145,9 +145,9 @@ _navigationColor5 = _color2
 
   _x = 12
   for _i in 1.._x
-    _abstr = _i / _x
+    _tt = _i / _x
     .sub-nav li:nth-child({_i})
-      transition-delay: '%ss' % round(_abstr, 2)
+      transition-delay: '%ss' % round(_tt, 2)
 
 @media (min-width: _sizeNav)
   @keyframes anim-jump
@@ -166,53 +166,30 @@ _navigationColor5 = _color2
     & svg
       width: 100%
       height: 100%
-      background-color: _color2 //rgba(255, 255, 255, .2)
-      border-radius: 50%
       transition: .2s background-color
     & rect
       transform-origin: center
-      //transition: transform .3s ease
-      fill: #fff //_colorT2 //_navigationColor3
-      x: 450px
-      width: 100px
-      height: 100px
-      transition-duration: .2s
-      transition-property: x, y, width, height, background-color, transform
+      fill: _colorT
+      transition: .2s all ease-in-out
+      //transition-property: x, y, width, height, transform
+    &:not(:focus):not(:hover):not(:active):not(.active) svg
+      border-radius: 50%
+      background-color: _color2
+    &:not(:focus):not(:hover):not(.active) rect
+        x: 450px
+        width: 100px
+        height: 100px
     &:focus
     &:hover
-    &:active
-      background-color: transparent
-      border-radius: inherit
-      & rect
-        x: inherit
-        y: 225px
-        width: inherit
-        height: 50px
-    &:focus svg
-    &:hover svg
-    &:active svg
-      background-color: transparent
-      border-radius: 0
-    &:focus rect:nth-child(2)
-    &:hover rect:nth-child(2)
-    &:active rect:nth-child(2)
-      y: 475px
-    &:focus rect:nth-child(3)
-    &:hover rect:nth-child(3)
-    &:active rect:nth-child(3)
-      y: 725px
-    &:focus
-    &:hover
-      background-color: _navigationColor3
-    &:focus svg *
-    &:hover svg *
-      fill: #fff
-    &.active svg :nth-child(1)
-      transform: translate(- _navigationFix, _navigationFix) rotate(45deg)
-    &.active svg :nth-child(2)
-      transform: rotate(-45deg)
-    &.active svg :nth-child(3)
-      transform: translate(- _navigationFix, - _navigationFix) rotate(-45deg)
+    &.active
+      background-color: _color2
+    &.active svg
+      & :nth-child(1)
+        transform: translate(- _navigationFix, _navigationFix) rotate(45deg)
+      & :nth-child(2)
+        transform: rotate(-45deg)
+      & :nth-child(3)
+        transform: translate(- _navigationFix, - _navigationFix) rotate(-45deg)
   @media (min-width _sizeNav)
     display: none
 
