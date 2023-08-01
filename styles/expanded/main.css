@@ -755,40 +755,40 @@ a.logo-nav:active {
     filter: blur(2px) grayscale(1);
   }
   .sub-nav li:nth-child(1) {
-    transition-delay: 0.08s;
+    transition-delay: 0.03s;
   }
   .sub-nav li:nth-child(2) {
-    transition-delay: 0.17s;
+    transition-delay: 0.06s;
   }
   .sub-nav li:nth-child(3) {
-    transition-delay: 0.25s;
+    transition-delay: 0.08s;
   }
   .sub-nav li:nth-child(4) {
-    transition-delay: 0.33s;
+    transition-delay: 0.11s;
   }
   .sub-nav li:nth-child(5) {
-    transition-delay: 0.42s;
+    transition-delay: 0.14s;
   }
   .sub-nav li:nth-child(6) {
-    transition-delay: 0.5s;
+    transition-delay: 0.17s;
   }
   .sub-nav li:nth-child(7) {
-    transition-delay: 0.58s;
+    transition-delay: 0.19s;
   }
   .sub-nav li:nth-child(8) {
-    transition-delay: 0.67s;
+    transition-delay: 0.22s;
   }
   .sub-nav li:nth-child(9) {
-    transition-delay: 0.75s;
+    transition-delay: 0.25s;
   }
   .sub-nav li:nth-child(10) {
-    transition-delay: 0.83s;
+    transition-delay: 0.28s;
   }
   .sub-nav li:nth-child(11) {
-    transition-delay: 0.92s;
+    transition-delay: 0.31s;
   }
   .sub-nav li:nth-child(12) {
-    transition-delay: 1s;
+    transition-delay: 0.33s;
   }
 }
 @media (min-width: 90.01em) {

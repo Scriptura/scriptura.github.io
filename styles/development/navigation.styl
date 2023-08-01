@@ -147,7 +147,7 @@ a.logo-nav
 
   _x = 12
   for _i in 1.._x
-    _tt = _i / _x
+    _tt = (_i / 3) / _x
     .sub-nav li:nth-child({_i})
       transition-delay: '%ss' % round(_tt, 2)
 
