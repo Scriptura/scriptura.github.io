@@ -29,8 +29,12 @@ html.no-js.no-overscroll(lang='fr')
     a(href='#main').sr-only Aller au contenu
     block nav
       nav.nav(role='navigation')
-        a(href='/').logo-nav
-          span.sr-only Scriptura
+        if documentType === 'index'
+          .logo-nav
+            span.sr-only Scriptura
+        else
+          a(href='/').logo-nav
+            span.sr-only Scriptura
         include includes/subNav
         include includes/breadcrumb
     main#main(role='main')

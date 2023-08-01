@@ -621,13 +621,8 @@ main {
 .logo-nav {
   grid-area: logo;
   display: block;
-  background-color: #ff6347;
   box-shadow: 0.5rem 0.5rem 0.5rem rgba(0,0,0,0.2);
-}
-.logo-nav:focus,
-.logo-nav:hover,
-.logo-nav:active {
-  background-color: #ffa600;
+  background-color: #ff6347;
 }
 .logo-nav::after {
   content: '';
@@ -638,7 +633,11 @@ main {
   background-repeat: no-repeat;
   background-position: 50% 50%;
   background-size: auto 70%;
-  box-shadow: inset 0.5rem 0.5rem 0.5rem rgba(0,0,0,0.2);
+}
+a.logo-nav:focus,
+a.logo-nav:hover,
+a.logo-nav:active {
+  background-color: #ffa600;
 }
 .sub-nav {
   grid-area: subnav;
@@ -812,46 +811,25 @@ main {
   .cmd-nav svg {
     width: 100%;
     height: 100%;
-    background-color: #00f;
-    border-radius: 50%;
     transition: 0.2s background-color;
   }
   .cmd-nav rect {
     transform-origin: center;
-    fill: #fff;
+    fill: #e9d9c4;
+    transition: 0.2s all ease-in-out;
+  }
+  .cmd-nav:not(:focus):not(:hover):not(.active) svg {
+    border-radius: 50%;
+    background-color: #ff6347;
+  }
+  .cmd-nav:not(:focus):not(:hover):not(.active) rect {
     x: 450px;
     width: 100px;
     height: 100px;
-    transition-duration: 0.2s;
-    transition-property: x, y, width, height, background-color, transform;
   }
   .cmd-nav:focus,
-  .cmd-nav:hover {
-    background-color: transparent;
-    border-radius: inherit;
-  }
-  .cmd-nav:focus rect,
-  .cmd-nav:hover rect {
-    x: inherit;
-    y: 225px;
-    width: inherit;
-    height: 50px;
-  }
-  .cmd-nav:focus svg,
-  .cmd-nav:hover svg {
-    background-color: transparent;
-    border-radius: 0;
-  }
-  .cmd-nav:focus rect:nth-child(2),
-  .cmd-nav:hover rect:nth-child(2) {
-    y: 475px;
-  }
-  .cmd-nav:focus rect:nth-child(3),
-  .cmd-nav:hover rect:nth-child(3) {
-    y: 725px;
-  }
-  .cmd-nav:focus,
-  .cmd-nav:hover {
+  .cmd-nav:hover,
+  .cmd-nav.active {
     background-color: #ff6347;
   }
   .cmd-nav.active svg :nth-child(1) {
@@ -3624,7 +3602,6 @@ bar-chart {
   color: #7eb857;
 }
 html,
-.logo-nav,
 .nav,
 .cmd-nav,
 .cmd-nav:not(:focus):not(:hover):not(.active) svg,

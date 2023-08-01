@@ -36,12 +36,8 @@ _navigationColor5 = _color2
 .logo-nav
   grid-area: logo
   display: block
-  background-color: _navigationColor5
   box-shadow: _shadow2
-  &:focus
-  &:hover
-  &:active
-    background-color: _color5
+  background-color: _color2
   &::after
     content: ''
     display: block
@@ -52,6 +48,12 @@ _navigationColor5 = _color2
     background-position: 50% 50%
     background-size: auto 70%
     //box-shadow: _shadow3
+
+a.logo-nav
+  &:focus
+  &:hover
+  &:active
+    background-color: _color5
 
 .sub-nav
   grid-area: subnav
@@ -157,8 +159,6 @@ _navigationColor5 = _color2
 .cmd-nav
   all: unset
   grid-area: cmd
-  //display: grid
-  //place-items: center
   @media (max-width: _sizeNav)
     padding: .5em
     cursor: pointer
@@ -172,10 +172,11 @@ _navigationColor5 = _color2
       fill: _colorT
       transition: .2s all ease-in-out
       //transition-property: x, y, width, height, transform
-    &:not(:focus):not(:hover):not(:active):not(.active) svg
-      border-radius: 50%
-      background-color: _color2
-    &:not(:focus):not(:hover):not(.active) rect
+    &:not(:focus):not(:hover):not(.active)
+      & svg
+        border-radius: 50%
+        background-color: _color2
+      & rect
         x: 450px
         width: 100px
         height: 100px
