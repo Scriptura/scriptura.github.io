@@ -1,10 +1,12 @@
 {
   "name": "Scriptura",
   "short_name": "Scriptura",
+  "description": "Boîte à outils pour applications web",
+  "start_url": "/",
+  "id": "/",
+  "display": "standalone",
   "theme_color": "#ff6347",
   "background_color": "#ff6347",
-  "display": "standalone",
-  "start_url": "/",
   "icons": [
     {
       "src": "/favicons/logoAny512.png",

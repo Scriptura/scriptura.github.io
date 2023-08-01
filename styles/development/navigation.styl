@@ -155,20 +155,52 @@ _navigationColor5 = _color2
       transform: translateY(-.3em)
 
 .cmd-nav
+  all: unset
   grid-area: cmd
+  //display: grid
+  //place-items: center
   @media (max-width: _sizeNav)
     padding: .5em
     cursor: pointer
     background-color: _navigationColor1
-    border: none
-    outline: none
     & svg
       width: 100%
       height: 100%
-    & *
+      background-color: _color2 //rgba(255, 255, 255, .2)
+      border-radius: 50%
+      transition: .2s background-color
+    & rect
       transform-origin: center
-      transition: transform .3s ease
-      fill: _navigationColor3
+      //transition: transform .3s ease
+      fill: #fff //_colorT2 //_navigationColor3
+      x: 450px
+      width: 100px
+      height: 100px
+      transition-duration: .2s
+      transition-property: x, y, width, height, background-color, transform
+    &:focus
+    &:hover
+    &:active
+      background-color: transparent
+      border-radius: inherit
+      & rect
+        x: inherit
+        y: 225px
+        width: inherit
+        height: 50px
+    &:focus svg
+    &:hover svg
+    &:active svg
+      background-color: transparent
+      border-radius: 0
+    &:focus rect:nth-child(2)
+    &:hover rect:nth-child(2)
+    &:active rect:nth-child(2)
+      y: 475px
+    &:focus rect:nth-child(3)
+    &:hover rect:nth-child(3)
+    &:active rect:nth-child(3)
+      y: 725px
     &:focus
     &:hover
       background-color: _navigationColor3

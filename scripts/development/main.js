@@ -24,6 +24,13 @@ const touchDetect = (() => {
 
 
 // -----------------------------------------------------------------------------
+// @section     Service Worker
+// @description Expérience hors ligne pour application web progressive (PWA)
+// -----------------------------------------------------------------------------
+
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/scripts/serviceWorker.js')
+
+// -----------------------------------------------------------------------------
 // @section     Get Scripts
 // @description Appel de scripts
 // -----------------------------------------------------------------------------

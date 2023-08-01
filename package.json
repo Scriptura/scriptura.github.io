@@ -23,8 +23,9 @@
   "scripts": {
     "dev": "pnpm html | pnpm js",
     "html": "node tasks/htmlRendering",
-    "js": "pnpm jsmain | pnpm jsformvalidation | pnpm jsimagefocus | pnpm jsaccordion | pnpm jscodeblock | pnpm jsrange | pnpm jslinemark | pnpm jsmap | pnpm jsyoutube | pnpm jsclienttest",
+    "js": "pnpm jsmain | pnpm jsserviceworker | pnpm jsformvalidation | pnpm jsimagefocus | pnpm jsaccordion | pnpm jscodeblock | pnpm jsrange | pnpm jslinemark | pnpm jsmap | pnpm jsyoutube | pnpm jsclienttest",
     "jsmain": "terser scripts/development/main.js scripts/development/masonry.js scripts/development/tab.js scripts/development/readablePassword.js scripts/development/pieChart.js scripts/development/barChart.js scripts/development/mediaPlayer.js -o scripts/main.js -c -m",
+    "jsserviceworker": "terser scripts/development/serviceWorker.js -o scripts/serviceWorker.js -c -m",
     "jsformvalidation": "terser scripts/development/formValidation.js -o scripts/formValidation.js -c -m",
     "jsimagefocus": "terser scripts/development/imageFocus.js -o scripts/imageFocus.js -c -m",
     "jsaccordion": "terser scripts/development/accordion.js -o scripts/accordion.js -c -m",

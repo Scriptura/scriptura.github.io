@@ -800,6 +800,7 @@ main {
 }
 }
 .cmd-nav {
+  all: unset;
   grid-area: cmd;
 }
 @media (max-width: 90.01em) {
@@ -807,17 +808,52 @@ main {
     padding: 0.5em;
     cursor: pointer;
     background-color: #252525;
-    border: none;
-    outline: none;
   }
   .cmd-nav svg {
     width: 100%;
     height: 100%;
+    background-color: #ff6347;
+    border-radius: 50%;
+    transition: 0.2s background-color;
   }
-  .cmd-nav * {
+  .cmd-nav rect {
     transform-origin: center;
-    transition: transform 0.3s ease;
-    fill: #ff6347;
+    fill: #fff;
+    x: 450px;
+    width: 100px;
+    height: 100px;
+    transition-duration: 0.2s;
+    transition-property: x, y, width, height, background-color, transform;
+  }
+  .cmd-nav:focus,
+  .cmd-nav:hover,
+  .cmd-nav:active {
+    background-color: transparent;
+    border-radius: inherit;
+  }
+  .cmd-nav:focus rect,
+  .cmd-nav:hover rect,
+  .cmd-nav:active rect {
+    x: inherit;
+    y: 225px;
+    width: inherit;
+    height: 50px;
+  }
+  .cmd-nav:focus svg,
+  .cmd-nav:hover svg,
+  .cmd-nav:active svg {
+    background-color: transparent;
+    border-radius: 0;
+  }
+  .cmd-nav:focus rect:nth-child(2),
+  .cmd-nav:hover rect:nth-child(2),
+  .cmd-nav:active rect:nth-child(2) {
+    y: 475px;
+  }
+  .cmd-nav:focus rect:nth-child(3),
+  .cmd-nav:hover rect:nth-child(3),
+  .cmd-nav:active rect:nth-child(3) {
+    y: 725px;
   }
   .cmd-nav:focus,
   .cmd-nav:hover {
