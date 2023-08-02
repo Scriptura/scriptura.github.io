@@ -8,10 +8,10 @@ const imageFocus = (() => {
   const addButtonEnlarge = (() => {
     images.forEach(e => {
       const button = document.createElement('button')
-      injectSvgSprite(button, 'enlarge')
+      injectSvgSprite(button, 'expand')
       e.appendChild(button)
       button.ariaLabel = 'enlarge'
-      button.classList.add('icon-enlarge')
+      //button.classList.add('icon-enlarge')
     })
   })()
 
@@ -55,8 +55,8 @@ const imageFocus = (() => {
     const el = document.querySelector('.' + targetClass),
           button = document.createElement('button')
     el.appendChild(button)
-    injectSvgSprite(button, 'shrink')
-    button.classList.add('icon-shrink')
+    injectSvgSprite(button, 'compress')
+    //button.classList.add('icon-shrink')
     button.ariaLabel = 'shrink'
     button.focus()
   }

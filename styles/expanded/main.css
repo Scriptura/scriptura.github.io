@@ -1216,12 +1216,9 @@ figure {
 }
 [class*=-focus] button,
 .focus-off button {
+  all: unset;
   position: absolute;
   z-index: 1;
-  padding: 0;
-  color: #aaa;
-  background-color: transparent;
-  border: none;
   outline: none !important;
   cursor: zoom-in;
 }
@@ -1235,6 +1232,7 @@ figure {
   right: 1em;
   width: 1.2em;
   height: 1.2em;
+  color: #d7d7d7;
 }
 .focus-off {
   position: fixed;
@@ -1255,6 +1253,7 @@ figure {
   right: 1em;
   width: 2em;
   height: 2em;
+  color: #9b9b9b;
   cursor: zoom-out;
 }
 .mosaic figure {
@@ -2991,12 +2990,12 @@ form > [class*="grid"] > .input {
   fill: #000;
   opacity: 0.5;
 }
-.scroll-top:focus svg {
+.scroll-top:focus-within svg {
   fill: #ffa600;
 }
 .scroll-top:hover svg,
 .scroll-top:active svg {
-  fill: #aaa;
+  fill: #9b9b9b;
 }
 .footer {
   padding: 0 1em;

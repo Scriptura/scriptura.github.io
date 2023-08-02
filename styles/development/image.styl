@@ -88,28 +88,26 @@ figure
     & button
       color: _color5
 
-[class*=-focus] button
-.focus-off button
-  position: absolute
-  z-index: 1
-  padding: 0
-  color: #aaa
-  background-color: transparent
-  border: none
-  outline: none !important // @affected Firefox La propriété !important est obligatoire pour que ce navigateur prenne en compte la règle.
-  cursor: zoom-in
-
-[class*=-focus] button svg
-.focus-off button svg
-  width: 100%
-  height: 100%
-  //filter: drop-shadow(0 0 .8rem rgba(0, 0, 1px, 1)) // @bug Avec la propriété css columns @affected Chrome
+[class*=-focus]
+.focus-off
+  &  button
+    all: unset
+    position: absolute
+    z-index: 1
+    outline: none !important // @affected Firefox La propriété !important est obligatoire pour que ce navigateur prenne en compte la règle.
+    cursor: zoom-in
+    & svg
+      width: 100%
+      height: 100%
 
 [class*=-focus] button
   top: _gap
   right: _gap
   width: 1.2em
   height: 1.2em
+  color: _colorG + 80%
+  //mix-blend-mode: difference
+  //filter: invert(1)
 
 .focus-off
   position: fixed
@@ -122,12 +120,13 @@ figure
   cursor: zoom-out
   & img
     max-height: 100vh
-    background-color: #000 // @note Pour les .png transparents.
+    background-color: #000 // @note Pour les images dotées d'un canal alpha.
   & button
     bottom: _gap
     right: _gap
     width: 2em
     height: 2em
+    color: _colorG + 50%
     cursor: zoom-out
 
 .mosaic
