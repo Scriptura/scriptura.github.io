@@ -1215,7 +1215,7 @@ figure {
   }
 }
 [class*=-focus] button,
-.focus-off button {
+.picture-area button {
   all: unset;
   position: absolute;
   z-index: 1;
@@ -1223,7 +1223,7 @@ figure {
   cursor: zoom-in;
 }
 [class*=-focus] button svg,
-.focus-off button svg {
+.picture-area button svg {
   width: 100%;
   height: 100%;
 }
@@ -1234,7 +1234,7 @@ figure {
   height: 1.2em;
   color: #d7d7d7;
 }
-.focus-off {
+.picture-area {
   position: fixed;
   z-index: 4001;
   inset: 0;
@@ -1244,17 +1244,28 @@ figure {
   background-color: #222;
   cursor: zoom-out;
 }
-.focus-off img {
+.picture-area img {
+  all: unset;
+  max-width: 100%;
   max-height: 100vh;
   background-color: #000;
 }
-.focus-off button {
+.picture-area button {
   bottom: 1em;
   right: 1em;
   width: 2em;
   height: 2em;
   color: #9b9b9b;
   cursor: zoom-out;
+}
+.picture-area button:focus-within,
+.picture-area button:hover,
+.picture-area button:active {
+  color: #ffa500 !important;
+}
+:where(html,
+body).freeze {
+  overflow: clip;
 }
 .mosaic figure {
   padding: 0.2em;

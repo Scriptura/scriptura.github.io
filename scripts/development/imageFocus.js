@@ -2,36 +2,41 @@
 
 const imageFocus = (() => {
 
-  const images = document.querySelectorAll('[class*=-focus]'),
-        targetClass = 'focus-off'
+  const focusItems = document.querySelectorAll('[class*=-focus]'),
+        targetClass = 'picture-area',
+        content = document.querySelectorAll('body > :not(.picture-area')
+
+  const freezePage = () => {
+    document.documentElement.classList.toggle('freeze')
+    document.body.classList.toggle('freeze')
+    content.forEach(e => e.hasAttribute('inert') ? e.removeAttribute('inert') : e.setAttribute('inert', ''))
+  }
 
   const addButtonEnlarge = (() => {
-    images.forEach(e => {
+    focusItems.forEach(focusElement => {
       const button = document.createElement('button')
       injectSvgSprite(button, 'expand')
-      e.appendChild(button)
+      focusElement.appendChild(button)
       button.ariaLabel = 'enlarge'
-      //button.classList.add('icon-enlarge')
     })
   })()
 
-  const clickImage = (() => {
-    images.forEach(e => {
-      e.addEventListener('click', () => {
-        cloneImage(e)
-        document.documentElement.style.overflow = 'hidden' // 'clip' inefficace sous Firefox.
+  const clickFocusItem = (() => {
+    focusItems.forEach(focusElement => {
+      focusElement.addEventListener('click', () => {
+        cloneImage(focusElement)
+        freezePage()
       })
     })
   })()
 
-  const cloneImage = image => {
-    const imgTag = image.querySelector('img')
-    let clone = imgTag.cloneNode(true)
-    clone.removeAttribute('width') // Les valeurs d'atributs peuvent déformer les images, notamment celles en portrait.
-    clone.removeAttribute('height') // Idem.
+  const cloneImage = focus => {
+    const image = focus.querySelector('img')
+    let clone = image.cloneNode(true)
     document.body.appendChild(clone)
     clone = wrapClone(clone)
     clone = clickFocusRemove(image)
+    //if (document.fullscreenEnabled) image.requestFullscreen() // @todo Fonctionnalité à développer éventuellement si elle présente un intérêt.
   }
 
   const wrapClone = el => {
@@ -43,20 +48,20 @@ const imageFocus = (() => {
   }
 
   const clickFocusRemove = image => {
-    const el = document.querySelector('.' + targetClass)
+    const el = document.getElementsByClassName(targetClass)[0]
+    //const button = document.querySelector('.focus-off button')
     el.addEventListener('click', () => {
-      el.parentElement.removeChild(el)
-      document.documentElement.removeAttribute('style')
+      el.remove()
+      freezePage()
       image.querySelector('button').focus() // Retour du focus sur l'image cliquée au départ.
     })
   }
 
   const addButtonShrink = () => {
-    const el = document.querySelector('.' + targetClass),
+    const el = document.getElementsByClassName(targetClass)[0],
           button = document.createElement('button')
     el.appendChild(button)
     injectSvgSprite(button, 'compress')
-    //button.classList.add('icon-shrink')
     button.ariaLabel = 'shrink'
     button.focus()
   }

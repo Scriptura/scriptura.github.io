@@ -89,7 +89,7 @@ figure
       color: _color5
 
 [class*=-focus]
-.focus-off
+.picture-area
   &  button
     all: unset
     position: absolute
@@ -109,7 +109,7 @@ figure
   //mix-blend-mode: difference
   //filter: invert(1)
 
-.focus-off
+.picture-area
   position: fixed
   z-index: 4001 // @note Doit passer au dessus de tout autre élément, notamment le scroll top.
   inset: 0
@@ -119,6 +119,8 @@ figure
   background-color: _imageColor2
   cursor: zoom-out
   & img
+    all: unset
+    max-width: 100%
     max-height: 100vh
     background-color: #000 // @note Pour les images dotées d'un canal alpha.
   & button
@@ -128,6 +130,13 @@ figure
     height: 2em
     color: _colorG + 50%
     cursor: zoom-out
+    &:focus-within
+    &:hover
+    &:active
+      color: orange !important
+
+:where(html, body).freeze
+  overflow: clip
 
 .mosaic
   & figure
