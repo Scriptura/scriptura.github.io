@@ -876,7 +876,10 @@ a.logo-nav:active {
   flex-shrink: 0;
 }
 .breadcrumb li:last-child div {
-  color: #e9d9c4;
+  color: #fff;
+}
+.breadcrumb li:last-child div span {
+  color: #d3b58d;
 }
 .breadcrumb li > * {
   overflow: hidden;
