@@ -48,12 +48,13 @@ const imageFocus = (() => {
   }
 
   const clickFocusRemove = image => {
-    const el = document.getElementsByClassName(targetClass)[0]
+    const el = document.getElementsByClassName(targetClass)[0],
+          button = image.parentElement.parentElement.querySelector('button')
     //const button = document.querySelector('.focus-off button')
     el.addEventListener('click', () => {
       el.remove()
       freezePage()
-      image.querySelector('button').focus() // Retour du focus sur l'image cliquée au départ.
+      button.focus() // Retour du focus sur l'image cliquée au départ.
     })
   }
 
