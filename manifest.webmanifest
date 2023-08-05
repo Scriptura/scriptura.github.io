@@ -3,6 +3,7 @@
   "short_name": "Scriptura",
   "description": "Boîte à outils pour applications web",
   "start_url": "/",
+  "scope": "/",
   "id": "/",
   "display": "standalone",
   "theme_color": "#ff6347",

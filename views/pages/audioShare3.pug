@@ -1,0 +1,28 @@
+extends ../patternLayout
+
+block variables
+  - const documentType = 'audioShare2'
+  - const pageType = 'template'
+  -
+    const data = {
+      _name: 'Chants chrétiens',
+      _title: 'Chants chrétiens . Scriptura',
+      _description: 'Sélection de chants et musiques sacrées'
+    }
+
+block main
+  header(role='banner')
+    h1.main-heading!= data._name
+  .grid2.gap.media-relationship(data-next-reading='true')
+    figure.figure-media
+      figcaption J'espère en silence - Dei Amoris Cantores
+      audio.media(controls)
+        source(src='/medias/audios/ChantsChretiens/J-espère-en-silence.mp3')
+    figure.figure-media
+      figcaption Regardez l'humilité de Dieu - Emmanuel Music
+      audio.media(controls)
+        source(src='/medias/audios/ChantsChretiens/Regardez-l-humilité-de-Dieu.mp3')
+    figure.figure-media
+      figcaption J'espère en silence - Dei Amoris Cantores
+      audio.media(controls)
+        source(src='/medias/audios/ChantsChretiens/J-espère-en-silence.mp3')
