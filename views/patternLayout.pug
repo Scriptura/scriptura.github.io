@@ -49,5 +49,7 @@ html.no-js.no-overscroll(lang='fr')
       .alert
         include includes/alert
     block script
+      //- Forcage en HTTPS, spécifique pour les Github Pages. @see https://gist.github.com/konklone/9968713.
+      script if (!window.location.host === 'scriptura.github.io.localhost' && window.location.protocol === "http:") window.location.protocol = 'https'
       script(src='/scripts/main.js' async)
     block structuredData
