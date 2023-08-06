@@ -1273,6 +1273,23 @@ figure {
 .freeze {
   overflow: clip;
 }
+:-webkit-full-screen {
+  aspect-ratio: 1/1;
+  object-fit: contain;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+:fullscreen {
+  aspect-ratio: 1/1;
+  -o-object-fit: contain;
+     object-fit: contain;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
 .mosaic figure {
   padding: 0.2em;
 }

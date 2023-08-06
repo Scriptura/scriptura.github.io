@@ -17,7 +17,7 @@ const imageFocus = (() => {
     document.body.appendChild(clone)
     wrapClone(clone)
     focusRemove(image)
-    //if (document.fullscreenEnabled) fullscreen(clone)
+    if (document.fullscreenEnabled) fullscreen(clone)
   }
 
   const wrapClone = clone => {
@@ -38,20 +38,18 @@ const imageFocus = (() => {
   const addControlButtons = () => {
     const el = document.getElementsByClassName(targetClass)[0],
           shrinkButton = document.createElement('button')
-    //const fullscreenButton = document.createElement('button')
+    const fullscreenButton = document.createElement('button')
     injectSvgSprite(shrinkButton, 'minimize')
     shrinkButton.classList.add('shrink-button')
     shrinkButton.ariaLabel = 'shrink'
     el.appendChild(shrinkButton)
     shrinkButton.focus()
-    /*
     if (document.fullscreenEnabled) {
       injectSvgSprite(fullscreenButton, 'expand')
       fullscreenButton.classList.add('fullscreen-button')
       fullscreenButton.ariaLabel = 'fullscreen'
       el.appendChild(fullscreenButton)
     }
-    */
   }
 
   const focusEvent = (item) => {
@@ -63,8 +61,9 @@ const imageFocus = (() => {
   
   const focusRemove = image => {
     const el = document.getElementsByClassName(targetClass)[0],
+          shrinkButton = el.querySelector('.shrink-button'),
           button = image.parentElement.parentElement.querySelector('button')
-    el.addEventListener('click', () => {
+      shrinkButton.addEventListener('click', () => {
       el.remove()
       freezePage()
       button.focus() // @note Retour du focus sur le bouton de l'image cliquée au départ.
@@ -73,9 +72,7 @@ const imageFocus = (() => {
   
   const fullscreen = item => {
     const fullscreenButton = document.querySelector('.fullscreen-button')
-    document.fullscreenEnabled && fullscreenButton.addEventListener('click', () => {
-      item.requestFullscreen()
-    })
+    document.fullscreenEnabled && fullscreenButton.addEventListener('click', () => item.requestFullscreen())
   }
 
   focusItems.forEach(item => {
