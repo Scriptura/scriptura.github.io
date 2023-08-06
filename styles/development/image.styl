@@ -1,6 +1,3 @@
-_imageColor1 = _colorG + 7%
-_imageColor2 = _colorG - 40%
-
 svg
   max-width: 100%
   fill: currentColor
@@ -38,7 +35,7 @@ figure
   width: 100%
   padding: .5em
   color: _colorT
-  background-color: _imageColor1
+  background-color: _colorG + 7%
   box-shadow: _shadow11
   user-select: none
   & figcaption
@@ -105,7 +102,7 @@ figure
   right: _gap
   width: 1.2em
   height: 1.2em
-  color: _colorG + 80%
+  color: _colorG + 50%
   //mix-blend-mode: difference
   //filter: invert(1)
 
@@ -116,7 +113,7 @@ figure
   display: grid
   align-items: center
   justify-content: center
-  background-color: _imageColor2
+  background-color: _colorG - 40%
   cursor: zoom-out
   & img
     all: unset
@@ -133,9 +130,11 @@ figure
     &:focus-within
     &:hover
     &:active
-      color: orange !important
+      color: orange
+    &:nth-child(2)
+      transform: translateX(-3em)
 
-:where(html, body).freeze
+.freeze
   overflow: clip
 
 .mosaic

@@ -8,63 +8,72 @@ const imageFocus = (() => {
 
   const freezePage = () => {
     document.documentElement.classList.toggle('freeze')
-    document.body.classList.toggle('freeze')
+    //document.body.classList.toggle('freeze') // @note Ne pas proposer la classe sur le body sinon effet de scrool lors du dézoom @affected Chrome et Firefox.
     content.forEach(e => e.hasAttribute('inert') ? e.removeAttribute('inert') : e.setAttribute('inert', ''))
   }
 
-  const addButtonEnlarge = (() => {
-    focusItems.forEach(focusElement => {
-      const button = document.createElement('button')
-      injectSvgSprite(button, 'expand')
-      focusElement.appendChild(button)
-      button.ariaLabel = 'enlarge'
-    })
-  })()
+  focusItems.forEach(item => { // Ajout d'un boutton pour le focus.
+    const button = document.createElement('button')
+    injectSvgSprite(button, 'maximize')
+    item.appendChild(button)
+    button.ariaLabel = 'enlarge'
+  })
 
-  const clickFocusItem = (() => {
-    focusItems.forEach(focusElement => {
-      focusElement.addEventListener('click', () => {
-        cloneImage(focusElement)
-        freezePage()
-      })
-    })
-  })()
+  focusItems.forEach(item => { // Gestion des clicks sur les items
+    item.addEventListener('click', () => {
+      cloneImage(item)
+      freezePage()
+    }, false)
+  })
 
   const cloneImage = focus => {
     const image = focus.querySelector('img')
     let clone = image.cloneNode(true)
     document.body.appendChild(clone)
     clone = wrapClone(clone)
-    clone = clickFocusRemove(image)
-    //if (document.fullscreenEnabled) image.requestFullscreen() // @todo Fonctionnalité à développer éventuellement si elle présente un intérêt.
+    clone = focusRemove(image)
+    clone = fullscreen()
   }
 
-  const wrapClone = el => {
+  const wrapClone = clone => {
     const wrapper = document.createElement('div')
     wrapper.classList.add(targetClass)
-    el.after(wrapper, el)
-    wrapper.appendChild(el)
-    addButtonShrink()
+    clone.after(wrapper, clone)
+    wrapper.appendChild(clone)
+    addButtons()
   }
-
-  const clickFocusRemove = image => {
+  
+  const fullscreen = () => {
+    const fullscreenButton = document.querySelector('.picture-area button')
+    const image = document.querySelector('.picture-area img')
+    document.fullscreenEnabled && fullscreenButton.addEventListener('click', () => {
+      image.requestFullscreen()
+    }, false)
+  }
+  
+  const focusRemove = image => {
     const el = document.getElementsByClassName(targetClass)[0],
           button = image.parentElement.parentElement.querySelector('button')
-    //const button = document.querySelector('.focus-off button')
     el.addEventListener('click', () => {
       el.remove()
       freezePage()
-      button.focus() // Retour du focus sur l'image cliquée au départ.
-    })
+      button.focus() // @note Retour du focus sur le bouton de l'image cliquée au départ.
+    }, false)
   }
 
-  const addButtonShrink = () => {
+  const addButtons = () => {
     const el = document.getElementsByClassName(targetClass)[0],
-          button = document.createElement('button')
-    el.appendChild(button)
-    injectSvgSprite(button, 'compress')
-    button.ariaLabel = 'shrink'
-    button.focus()
+          fullscreenButton = document.createElement('button'),
+          shrinkButton = document.createElement('button')
+
+    el.appendChild(fullscreenButton)
+    injectSvgSprite(fullscreenButton, 'expand')
+    fullscreenButton.ariaLabel = 'fullscreen'
+
+    el.appendChild(shrinkButton)
+    injectSvgSprite(shrinkButton, 'minimize')
+    shrinkButton.ariaLabel = 'shrink'
+    shrinkButton.focus()
   }
 
 })()

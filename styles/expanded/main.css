@@ -1235,7 +1235,7 @@ figure {
   right: 1em;
   width: 1.2em;
   height: 1.2em;
-  color: #d7d7d7;
+  color: #9b9b9b;
 }
 .picture-area {
   position: fixed;
@@ -1264,10 +1264,12 @@ figure {
 .picture-area button:focus-within,
 .picture-area button:hover,
 .picture-area button:active {
-  color: #ffa500 !important;
+  color: #ffa500;
 }
-:where(html,
-body).freeze {
+.picture-area button:nth-child(2) {
+  transform: translateX(-3em);
+}
+.freeze {
   overflow: clip;
 }
 .mosaic figure {
