@@ -1266,7 +1266,7 @@ figure {
 .picture-area button:active {
   color: #ffa500;
 }
-.picture-area button.screen-button {
+.picture-area button.fullscreen-button {
   transform: translateX(-3em);
   cursor: zoom-in;
 }
