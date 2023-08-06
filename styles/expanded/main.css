@@ -1266,8 +1266,9 @@ figure {
 .picture-area button:active {
   color: #ffa500;
 }
-.picture-area button:nth-child(2) {
+.picture-area button.screen-button {
   transform: translateX(-3em);
+  cursor: zoom-in;
 }
 .freeze {
   overflow: clip;

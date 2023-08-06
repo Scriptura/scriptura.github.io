@@ -32,7 +32,7 @@ const imageFocus = (() => {
     document.body.appendChild(clone)
     clone = wrapClone(clone)
     clone = focusRemove(image)
-    clone = fullscreen()
+    if (!document.fullscreenEnabled) clone = fullscreen(clone)
   }
 
   const wrapClone = clone => {
@@ -43,11 +43,10 @@ const imageFocus = (() => {
     addButtons()
   }
   
-  const fullscreen = () => {
+  const fullscreen = item => {
     const fullscreenButton = document.querySelector('.picture-area button')
-    const image = document.querySelector('.picture-area img')
     document.fullscreenEnabled && fullscreenButton.addEventListener('click', () => {
-      image.requestFullscreen()
+      item.requestFullscreen()
     }, false)
   }
   
@@ -63,17 +62,19 @@ const imageFocus = (() => {
 
   const addButtons = () => {
     const el = document.getElementsByClassName(targetClass)[0],
-          fullscreenButton = document.createElement('button'),
-          shrinkButton = document.createElement('button')
-
-    el.appendChild(fullscreenButton)
-    injectSvgSprite(fullscreenButton, 'expand')
-    fullscreenButton.ariaLabel = 'fullscreen'
-
+          shrinkButton = document.createElement('button'),
+          fullscreenButton = document.createElement('button')
     el.appendChild(shrinkButton)
     injectSvgSprite(shrinkButton, 'minimize')
+    shrinkButton.classList.add('shrink-button')
     shrinkButton.ariaLabel = 'shrink'
     shrinkButton.focus()
+    if (document.fullscreenEnabled) {
+      el.appendChild(fullscreenButton)
+      injectSvgSprite(fullscreenButton, 'expand')
+      fullscreenButton.classList.add('screen-button')
+      fullscreenButton.ariaLabel = 'fullscreen'
+    }
   }
 
 })()
