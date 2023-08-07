@@ -60,7 +60,8 @@ figure
     margin-left: _gap
 
   :where([class*=-alignleft], [class*=-alignright]) ~ :where(h2, h3, hr, aside)
-    clear: both // @note Ééments faisants suite à une image flotante @todo Le margin-top de ces éléments n'est pas pris en compte sous l'image...
+  //:where([class*=-alignleft], [class*=-alignright]) ~ :not(p)
+    clear: both // @note Éléments faisants suite à une image flotante @todo Le margin-top de ces éléments n'est pas pris en compte sous l'image...
 
 @media (max-width: _sizeS)
 

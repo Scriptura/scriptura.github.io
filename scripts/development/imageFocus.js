@@ -58,7 +58,7 @@ const imageFocus = (() => {
       freezePage()
     })
   }
-  
+
   const focusRemove = image => {
     const el = document.getElementsByClassName(targetClass)[0],
           shrinkButton = el.querySelector('.shrink-button'),

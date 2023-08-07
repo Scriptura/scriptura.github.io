@@ -45,7 +45,7 @@
 @require 'helper'
 
 
-body > :not(main,footer)
+body > :not(main, footer)
 form
 fieldset
 //input
@@ -73,6 +73,11 @@ pre div
 body
 .article
   display: block // @affected Firefox
+
+.footer // @note Harmonisation entre navigateurs.
+  width: 100vw
+  & > *
+    flex-direction: column
 
 pre
 blockquote
