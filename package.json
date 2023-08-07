@@ -35,7 +35,7 @@
     "jsmap": "terser scripts/development/map.js -o scripts/map.js -c -m",
     "jsyoutube": "terser scripts/development/youtube.js -o scripts/youtube.js -c -m",
     "jsclienttest": "terser scripts/development/clientTest.js -o scripts/clientTest.js -c -m",
-    "css": "pnpm cssexp | pnpm cssprint | pnpm cssprism | pnpm cssmain",
+    "css": "pnpm cssexp | pnpm cssprint | pnpm cssgf | pnpm cssprism | pnpm cssmain",
     "cssmain": "stylus -u autoprefixer-stylus -w styles/development/main.styl -o styles/main.css -c -m",
     "cssexp": "stylus -u autoprefixer-stylus -w styles/development/main.styl -o styles/expanded/main.css",
     "cssprint": "stylus -u autoprefixer-stylus -w styles/development/print.styl -o styles/print.css -c -m",
