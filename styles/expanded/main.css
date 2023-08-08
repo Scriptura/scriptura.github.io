@@ -919,16 +919,19 @@ a.logo-nav:active {
     padding-left: 1em;
   }
 }
+.alert {
+  --alert-color: #222;
+  --alert-bg-color: #e9d9c4;
+  --alert-color-link: #fff;
+  --alert-icon-size: 3em;
+  --alert-icon-color: #222;
+}
 .alert .wrap {
-  --color: #222;
-  --color-link: #d3b58d;
-  --bg-color: #ffc14d;
-  --icon-size: 3em;
   display: grid;
   grid-template-columns: minmax(1em, 1fr) minmax(0, 92em) minmax(1em, 1fr);
   padding-block: 1em;
-  color: var(--color);
-  background-color: var(--bg-color);
+  color: var(--alert-color);
+  background-color: var(--alert-bg-color);
   box-shadow: 0.5rem 0.5rem 2rem rgba(0,0,0,0.15);
 }
 .alert .wrap > * {
@@ -936,21 +939,24 @@ a.logo-nav:active {
 }
 .alert .mm {
   display: grid;
-  grid-template-columns: var(--icon-size) minmax(0, 1fr);
+  grid-template-columns: var(--alert-icon-size) minmax(0, 1fr);
   gap: 1em;
 }
 .alert .mm .icon {
-  width: var(--icon-size);
-  height: var(--icon-size);
+  width: var(--alert-icon-size);
+  height: var(--alert-icon-size);
   margin: auto;
   padding: 0.75em;
-  fill: var(--bg-color);
-  background-color: currentcolor;
+  fill: var(--alert-bg-color);
+  background-color: var(--alert-icon-color);
   -webkit-clip-path: circle(50%);
           clip-path: circle(50%);
 }
 .alert #gdpr-see .mm {
   margin-bottom: 1em;
+}
+.alert .button {
+  background-color: #ff6347;
 }
 ul {
   list-style-type: square;
@@ -2761,7 +2767,7 @@ form > [class*="grid"] > .input {
   all: unset;
   overflow: hidden;
   position: relative;
-  color: var(--color, #e9d9c4);
+  color: var(--button-color, #e9d9c4);
   box-shadow: inset 0 0 0.1em rgba(0,0,0,0.3), 0 0.5rem 2rem rgba(0,0,0,0.3);
   transition: all 0.2s linear;
   transition-property: translate, box-shadow;
@@ -2769,13 +2775,6 @@ form > [class*="grid"] > .input {
      -moz-user-select: none;
           user-select: none;
   cursor: pointer;
-/*
-  &::before
-    content: ''
-    position: absolute
-    inset: .2em
-    border: 1px dashed rgba(255, 255, 255, .3) //rgba(0, 0, 0, .3)
-  */
 }
 .button:focus-visible,
 .round-button:focus-visible,
@@ -2811,12 +2810,12 @@ form > [class*="grid"] > .input {
 .button::before,
 .round-button::before {
   z-index: -2;
-  background-color: var(--bg-color, #ff6347);
+  background-color: var(--button-bg-color2, #ff6347);
 }
 .button::after,
 .round-button::after {
   z-index: -1;
-  background-color: var(--bg-color2, rgba(0,0,0,0.1));
+  background-color: var(--button-bg-color3, rgba(0,0,0,0.1));
   transform: scaleX(0);
   transform-origin: left center;
   transition: transform 0.4s;
@@ -2847,14 +2846,14 @@ form > [class*="grid"] > .input {
   margin-left: 0.5em;
 }
 .button2 {
-  --button-color: #606060;
+  --button2-color: #606060;
   all: unset;
   width: 3em;
   aspect-ratio: 1;
   display: grid;
   place-items: center;
-  color: var(--button-color);
-  border: 0.15em dotted var(--button-color);
+  color: var(--button2-color);
+  border: 0.15em dotted var(--button2-color);
   border-radius: 50%;
   box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
   cursor: pointer;
@@ -2863,7 +2862,7 @@ form > [class*="grid"] > .input {
 .button2:focus,
 .button2:hover,
 .button2:active {
-  --button-color: #ffa600;
+  --button2-color: #ffa600;
   transform: rotate(360deg);
 }
 .accordion {

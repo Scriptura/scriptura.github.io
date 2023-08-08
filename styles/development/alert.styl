@@ -1,28 +1,31 @@
 .alert
+  --alert-color: #222 //currentColor
+  --alert-bg-color: _colorT
+  --alert-color-link: _colorW
+  --alert-icon-size: 3em
+  --alert-icon-color: #222
   & .wrap
-    --color: #222 //currentColor
-    --color-link: _colorT2
-    --bg-color: _color5 + 30%
-    --icon-size: 3em
     display: grid
     grid-template-columns: minmax(_gap, 1fr) minmax(0, _wrap) minmax(_gap, 1fr)
     padding-block: 1em
-    color: var(--color)
-    background-color: var(--bg-color)
+    color: var(--alert-color)
+    background-color: var(--alert-bg-color)
     box-shadow: _shadow5
     & > *
-      grid-column: 2 / 3
+      grid-column: 2/3
   & .mm
     display: grid
-    grid-template-columns: var(--icon-size) minmax(0, 1fr)
+    grid-template-columns: var(--alert-icon-size) minmax(0, 1fr)
     gap: _gap
     & .icon
-      width: var(--icon-size)
-      height: var(--icon-size)
+      width: var(--alert-icon-size)
+      height: var(--alert-icon-size)
       margin: auto
       padding: .75em
-      fill: var(--bg-color)
-      background-color: currentcolor
+      fill: var(--alert-bg-color)
+      background-color: var(--alert-icon-color)
       clip-path: circle(50%)
   & #gdpr-see .mm
     margin-bottom: 1em
+  & .button
+    background-color: _color2

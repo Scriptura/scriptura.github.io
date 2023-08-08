@@ -1,12 +1,12 @@
 
 //- @see https://www.cnil.fr/fr/reglement-europeen-protection-donnees
 template#gdpr
-  #gdpr-see.wrap(style='--bg-color:tomato')
+  #gdpr-see.wrap
     .mm(role='alert')
       svg.icon(role='img' focusable='false')
         use(href='/sprites/util.svg#cookie-bite')
         div
-          p Ce site utilise des cookies et vous donne le contrôle sur ceux que vous souhaitez activer&nbsp;:
+          p Ce site utilise des cookies et vous donne le contrôle sur ceux que vous souhaitez activer.
     .flex.gap
       button.button#gdpr-true-consent
         svg.icon-inline(role='img' focusable='false')
