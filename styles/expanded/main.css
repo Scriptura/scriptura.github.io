@@ -1974,7 +1974,7 @@ main [class^=message] {
   align-items: center;
   padding-inline: 1em;
 }
-[class^=message][class*=highlight] .icon {
+[class^=message][class*=highlight] > .icon {
   width: var(--icon-size);
   height: var(--icon-size);
   padding: 0.75em;

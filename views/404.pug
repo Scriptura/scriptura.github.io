@@ -9,10 +9,21 @@ block variables
       _description: 'La page demandée n\'a pas été trouvée.'
     }
 
+mixin list(icon, name, slug)
+  li
+    svg.icon(role='img' focusable='false')
+      use(href='/sprites/util.svg#' + icon)
+    a(href='/page/' + slug + '.html') #{name}
+
 block main
   header(role='banner')
     h1.main-heading!= data._name
   svg.size25.decorative-svg(role='img' focusable='false')
     use(href='/sprites/silos/131v-d1.svg#1')
   hr
-  include includes/componentLinks
+  //-include includes/componentLinks
+  h2.sr-only Voici quelques suggestions alternatives&nbsp;:
+  ul.grid3.m-grid2.s-grid1.list-straight
+    +list('video-play', 'Le Donjon de Naheulbeuk', 'audioShare')
+    +list('video-play', 'Les Mystérieuses Cités d\'Or', 'audioShare2')
+    +list('video-play', 'Chants chrétiens', 'audioShare3')
