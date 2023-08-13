@@ -6,11 +6,11 @@
 // -----------------------------------------------------------------------------
 
 // @documentation Performance pour les selecteurs @see https://jsbench.me/d7kbm759bb/1
-const jsDetect = (() => document.documentElement.classList.replace('no-js', 'js'))()
+// jsDetect :
+document.documentElement.classList.replace('no-js', 'js')
 
-const printDetect = (() => { // @see Firefox Android a perdu sa fonction d'impression...
-  if(!window.print) document.documentElement.classList.add('no-print')
-})()
+// printDetect :
+if(!window.print) document.documentElement.classList.add('no-print') // @see Firefox Android a perdu sa fonction d'impression...
 
 // @see https://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript
 // @deprecated Script remplacé par règle CSS @media (hover hover) and (pointer fine)
@@ -21,6 +21,14 @@ const touchDetect = (() => {
   touch ? html.classList.add('touch') : html.classList.add('no-touch')
 })()
 */
+
+
+// -----------------------------------------------------------------------------
+// @section     Test
+// @description Test sur un élément
+// -----------------------------------------------------------------------------
+
+document.querySelectorAll('.cmd-test').forEach(e => e.addEventListener('click', () => alert("Test OK")))
 
 
 // -----------------------------------------------------------------------------
@@ -55,7 +63,7 @@ const getScript = (url, hook = 'footer') => new Promise((resolve, reject) => { /
   if (hook == 'head') document.head.appendChild(script)
   //else document.body.appendChild(script)
   else if (hook == 'footer') document.body.appendChild(script)
-  else console.log('Error: the choice of the html tag for the hook is not correct.')
+  else console.error('Error: le choix de l\'élement html pour getScript() n\'est pas correct.')
 })
 
 const getScripts = (() => {
@@ -195,11 +203,7 @@ const externalLinks = (() => {
 // @description Commande pour l'impression
 // -----------------------------------------------------------------------------
 
-const cmdPrint = (() => {
-  const prints = document.querySelectorAll('.cmd-print'),
-        startPrint = () => window.print()
-  for (const print of prints) print.onclick = startPrint
-})()
+for (const print of document.querySelectorAll('.cmd-print')) print.onclick = () => window.print()
 
 // -----------------------------------------------------------------------------
 // @section     GDPR / gdpr
