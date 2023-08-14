@@ -93,15 +93,20 @@ for _i in 90 180 // 45 135
 .reverse
   transform: scaleX(-1)
 
-[class^=size]
+.size
+  --size: 25em
+  --size-width: var(--size)
+  --size-height: var(--size)
+  width: var(--size-width)
+  height: var(--size-height)
   max-width: 100%
   max-height: 100vh
-
+/*
 for _i in 1..25
   .size{_i}
     width: _i * 1em
     height: _i * 1em
-
+*/
 .scale
   font-size: var(--scale, _i * 1%)
 

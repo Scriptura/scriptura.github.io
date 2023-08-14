@@ -3860,112 +3860,17 @@ a[aria-disabled=true]:active {
 .reverse {
   transform: scaleX(-1);
 }
-[class^=size] {
+.size {
+  --size: 25em;
+  --size-width: var(--size);
+  --size-height: var(--size);
+  width: var(--size-width);
+  height: var(--size-height);
   max-width: 100%;
   max-height: 100vh;
 }
-.size1 {
-  width: 1em;
-  height: 1em;
-}
-.size2 {
-  width: 2em;
-  height: 2em;
-}
-.size3 {
-  width: 3em;
-  height: 3em;
-}
-.size4 {
-  width: 4em;
-  height: 4em;
-}
-.size5 {
-  width: 5em;
-  height: 5em;
-}
-.size6 {
-  width: 6em;
-  height: 6em;
-}
-.size7 {
-  width: 7em;
-  height: 7em;
-}
-.size8 {
-  width: 8em;
-  height: 8em;
-}
-.size9 {
-  width: 9em;
-  height: 9em;
-}
-.size10 {
-  width: 10em;
-  height: 10em;
-}
-.size11 {
-  width: 11em;
-  height: 11em;
-}
-.size12 {
-  width: 12em;
-  height: 12em;
-}
-.size13 {
-  width: 13em;
-  height: 13em;
-}
-.size14 {
-  width: 14em;
-  height: 14em;
-}
-.size15 {
-  width: 15em;
-  height: 15em;
-}
-.size16 {
-  width: 16em;
-  height: 16em;
-}
-.size17 {
-  width: 17em;
-  height: 17em;
-}
-.size18 {
-  width: 18em;
-  height: 18em;
-}
-.size19 {
-  width: 19em;
-  height: 19em;
-}
-.size20 {
-  width: 20em;
-  height: 20em;
-}
-.size21 {
-  width: 21em;
-  height: 21em;
-}
-.size22 {
-  width: 22em;
-  height: 22em;
-}
-.size23 {
-  width: 23em;
-  height: 23em;
-}
-.size24 {
-  width: 24em;
-  height: 24em;
-}
-.size25 {
-  width: 25em;
-  height: 25em;
-}
 .scale {
-  font-size: var(--scale, 25%);
+  font-size: var(--scale, 180%);
 }
 .scale300 {
   font-size: 300%;
