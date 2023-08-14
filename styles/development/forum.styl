@@ -1,5 +1,4 @@
-_forumSize = 35.01em
-_forumColor1 = _colorG + 3% // 7%
+//_forumSize = 35.01em
 
 .forum
   all: unset
@@ -8,20 +7,17 @@ _forumColor1 = _colorG + 3% // 7%
   gap: _gap
 
 .topic-item
-  --img: url(/medias/images/uploads/dawid-zawila-w300.webp)
   position: relative
   display: grid
   grid-template-rows: repeat(2, auto)
   padding-inline: 1em
-  background-color: _forumColor1
+  background-color: _colorG + 3% // 7%
   border-radius: _r2
   box-shadow: _shadow5
-  @media (max-width: _forumSize)
-    grid-template-columns: minmax(0, 1fr) 4em
-    grid-template-areas: 'ttt ttt' 'uuu aaa'
-  @media (min-width: _forumSize)
-    grid-template-columns: 4em minmax(0, 1fr)
-    grid-template-areas: 'aaa ttt' 'aaa uuu'
+  //@media (max-width: _forumSize)
+  //  grid-template-columns: 3em minmax(0, 1fr)
+  grid-template-columns: 4em minmax(0, 1fr)
+  grid-template-areas: 'aaa ttt' 'aaa uuu'
   gap: 0 _gap
   & .topic-link // @note Permet à tout l'élément d'être cliquable (simulation d'imbrication des liens)
     position: absolute
@@ -36,17 +32,6 @@ _forumColor1 = _colorG + 3% // 7%
   & > * a // @note Rétablit le clique des liens de base.
     position: relative
     z-index: 3
-  //& .avatars
-  //  grid-area: aaa
-  //  @media (max-width: _forumSize)
-  //    display: none
-  //  @media (min-width: _forumSize)
-  //    width: 3.5em
-  //    aspect-ratio: 1
-  //    margin: auto
-  //    border-radius: 50%
-  //    background: #222 var(--img)
-  //    background-size: cover
   & > :nth-child(2)
   & > :nth-child(3)
     display: flex
@@ -93,21 +78,17 @@ _forumAvatarsY = round(_forumAvatarsSize / 3 - .2em, 1)
 
 .avatars
 .avatars > *
-  --img: ''
   width: _forumAvatarsSize
   height: _forumAvatarsSize
-  background-image: var(--img)
+  background-image: var(--img, '')
   background-color: #222
   background-size: cover
   border-radius: 50%
 
 .avatars
   grid-area: aaa
-  @media (max-width: _forumSize)
-    margin: auto 0 1em auto
-  @media (min-width: _forumSize)
-    margin: auto
   position: relative
+  margin: auto
   & > *
     position: absolute
     border: .2em solid _colorG + 10%
@@ -117,6 +98,8 @@ _forumAvatarsY = round(_forumAvatarsSize / 3 - .2em, 1)
     transform: 'translate(%s, %s) scale(.5)' % (_forumAvatarsX (_forumAvatarsY - .8))
   & > :nth-child(3)
     transform: 'translate(%s, %s) scale(.5)' % (_forumAvatarsX (_forumAvatarsY - 1.6))
+  //@media (max-width: _forumSize)
+  //  font-size: .75em
 
 .topic-solved > :nth-child(2) svg:first-child
   color: _color4 + 34%

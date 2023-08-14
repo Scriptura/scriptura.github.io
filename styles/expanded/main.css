@@ -3497,7 +3497,6 @@ bar-chart {
   gap: 1em;
 }
 .topic-item {
-  --img: url("/medias/images/uploads/dawid-zawila-w300.webp");
   position: relative;
   display: grid;
   grid-template-rows: repeat(2, auto);
@@ -3505,19 +3504,9 @@ bar-chart {
   background-color: #3e3e3e;
   border-radius: 0.3em;
   box-shadow: 0.5rem 0.5rem 2rem rgba(0,0,0,0.15);
+  grid-template-columns: 4em minmax(0, 1fr);
+  grid-template-areas: 'aaa ttt' 'aaa uuu';
   gap: 0 1em;
-}
-@media (max-width: 35.01em) {
-  .topic-item {
-    grid-template-columns: minmax(0, 1fr) 4em;
-    grid-template-areas: 'ttt ttt' 'uuu aaa';
-  }
-}
-@media (min-width: 35.01em) {
-  .topic-item {
-    grid-template-columns: 4em minmax(0, 1fr);
-    grid-template-areas: 'aaa ttt' 'aaa uuu';
-  }
 }
 .topic-item .topic-link {
   position: absolute;
@@ -3585,10 +3574,9 @@ bar-chart {
 }
 .avatars,
 .avatars > * {
-  --img: '';
   width: 3.5em;
   height: 3.5em;
-  background-image: var(--img);
+  background-image: var(--img, '');
   background-color: #222;
   background-size: cover;
   border-radius: 50%;
@@ -3596,16 +3584,7 @@ bar-chart {
 .avatars {
   grid-area: aaa;
   position: relative;
-}
-@media (max-width: 35.01em) {
-  .avatars {
-    margin: auto 0 1em auto;
-  }
-}
-@media (min-width: 35.01em) {
-  .avatars {
-    margin: auto;
-  }
+  margin: auto;
 }
 .avatars > * {
   position: absolute;
