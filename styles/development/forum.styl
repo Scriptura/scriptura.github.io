@@ -16,8 +16,8 @@ _forumSize = 35.01em
   box-shadow: _shadow5
   gap: 0 _gap
   @media (max-width: _forumSize)
-    grid-template-columns: minmax(0, 1fr)
-    grid-template-areas: 'ttt' 'uuu'
+    grid-template-columns: minmax(0, 1fr) 2em
+    grid-template-areas: 'ttt ttt' 'uuu aaa'
   @media (min-width: _forumSize)
     grid-template-columns: 4em minmax(0, 1fr)
     grid-template-areas: 'aaa ttt' 'aaa uuu'
@@ -90,19 +90,19 @@ _forumAvatarsY = round(_forumAvatarsSize / 3 - .2em, 1)
 .avatars
   grid-area: aaa
   @media (max-width: _forumSize)
-    display: none
-  @media (min-width: _forumSize)
-    position: relative
-    margin: auto
-    & > *
-      position: absolute
-      border: .2em solid _colorG + 10%
-    & > :nth-child(1)
-      transform: 'translate(%s, %s) scale(.5)' % (_forumAvatarsX _forumAvatarsY)
-    & > :nth-child(2)
-      transform: 'translate(%s, %s) scale(.5)' % (_forumAvatarsX (_forumAvatarsY - .8))
-    & > :nth-child(3)
-      transform: 'translate(%s, %s) scale(.5)' % (_forumAvatarsX (_forumAvatarsY - 1.6))
+    margin-bottom: 2em // @note Valeur obtenue de manière un peu empirique, liée à la propriété font-size définie ci après.
+    font-size: .5em
+  position: relative
+  margin: auto
+  & > *
+    position: absolute
+    border: .2em solid _colorG + 10%
+  & > :nth-child(1)
+    transform: 'translate(%s, %s) scale(.5)' % (_forumAvatarsX _forumAvatarsY)
+  & > :nth-child(2)
+    transform: 'translate(%s, %s) scale(.5)' % (_forumAvatarsX (_forumAvatarsY - .8))
+  & > :nth-child(3)
+    transform: 'translate(%s, %s) scale(.5)' % (_forumAvatarsX (_forumAvatarsY - 1.6))
 
 .topic-solved > :nth-child(2) svg:first-child
   color: _color4 + 34%

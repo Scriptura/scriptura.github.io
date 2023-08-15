@@ -3508,8 +3508,8 @@ bar-chart {
 }
 @media (max-width: 35.01em) {
   .topic-item {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: 'ttt' 'uuu';
+    grid-template-columns: minmax(0, 1fr) 2em;
+    grid-template-areas: 'ttt ttt' 'uuu aaa';
   }
 }
 @media (min-width: 35.01em) {
@@ -3593,30 +3593,27 @@ bar-chart {
 }
 .avatars {
   grid-area: aaa;
+  position: relative;
+  margin: auto;
 }
 @media (max-width: 35.01em) {
   .avatars {
-    display: none;
+    margin-bottom: 2em;
+    font-size: 0.5em;
   }
 }
-@media (min-width: 35.01em) {
-  .avatars {
-    position: relative;
-    margin: auto;
-  }
-  .avatars > * {
-    position: absolute;
-    border: 0.2em solid #4c4c4c;
-  }
-  .avatars > :nth-child(1) {
-    transform: translate(1.2em, 1em) scale(.5);
-  }
-  .avatars > :nth-child(2) {
-    transform: translate(1.2em, 0.2em) scale(.5);
-  }
-  .avatars > :nth-child(3) {
-    transform: translate(1.2em, -0.6em) scale(.5);
-  }
+.avatars > * {
+  position: absolute;
+  border: 0.2em solid #4c4c4c;
+}
+.avatars > :nth-child(1) {
+  transform: translate(1.2em, 1em) scale(.5);
+}
+.avatars > :nth-child(2) {
+  transform: translate(1.2em, 0.2em) scale(.5);
+}
+.avatars > :nth-child(3) {
+  transform: translate(1.2em, -0.6em) scale(.5);
 }
 .topic-solved > :nth-child(2) svg:first-child {
   color: #7eb857;
