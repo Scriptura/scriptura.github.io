@@ -73,6 +73,11 @@ a[aria-disabled=true] // @tod En expérimentation.
   //& > *
   //  place-self: center // @support @see https://caniuse.com/?search=place-self
 
+@container grid (35em > width)
+  .xs-center
+    display: grid
+    place-items: center
+
 //.center-x // @todo
 //.center-y // @todo
 
@@ -101,14 +106,14 @@ for _i in 90 180 // 45 135
   height: var(--size-height)
   max-width: 100%
   max-height: 100vh
-/*
-for _i in 1..25
-  .size{_i}
-    width: _i * 1em
-    height: _i * 1em
-*/
-.scale
-  font-size: var(--scale, _i * 1%)
+
+.vw80
+  --size: 25em
+  --size-width: var(--size)
+  width: calc(var(--size) * .8)
+
+//.scale
+//  font-size: var(--scale, 100%)
 
 for _i in 300 250 200 175 160 150 140 130 120 115 110 105 95 90 85 80 75 70 60 50
   .scale{_i}
@@ -116,6 +121,10 @@ for _i in 300 250 200 175 160 150 140 130 120 115 110 105 95 90 85 80 75 70 60 5
 
 .rescale
   font-size: 1rem // @note Réinitialisation d'un élément enfant si élément parent zoomé, valeur égale à la taille d'origine
+
+@container grid (35em > width)
+  .xs-scale
+    font-size: var(--xs-scale, 80%)
 
 .blink
   animation: anim-blink 1.2s infinite

@@ -18,8 +18,11 @@ mixin list(icon, name, slug)
 block main
   header(role='banner')
     h1.main-heading!= data._name
-  svg.size.decorative-svg(role='img' focusable='false')
-    use(href='/sprites/silos/131v-d1.svg#1')
+  .xs-center
+    figure
+      img.size.xs-scale.decorative-svg(src='../../medias/images/site/ChristPantocratorLivreDeKells.png' loading='lazy' alt='Christ Pantocrator - Livre de Kells' width='357' height='1031' style='--size-width: 14.28em;--size-height: 41.24em;--xs-scale:70%')
+    //-svg.size.xs-scale.decorative-svg(role='img' focusable='false' style='--size-width: 15em;--size-height: 43.3em;--xs-scale:70%')
+      use(href='/sprites/various/ChristPantocratorLivreDeKells.svg#1')
   hr
   //-include includes/componentLinks
   h2.sr-only Voici quelques suggestions alternatives&nbsp;:

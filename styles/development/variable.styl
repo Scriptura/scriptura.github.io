@@ -9,7 +9,7 @@ _wrap = 90em + _gap * 2   // Largeur maximale du contenu (+ prise en compte du p
 
 // @subsection Breakpoints
 
-// @bugfix Nécessité de préciser deux chiffres après la virgule pour éviter un décalage entre 'max-width' et 'min-width' (avec une unité pour éviter les arrondissements par les navigateurs)
+// @bugfix Nécessité de préciser deux chiffres après la virgule pour éviter un arrondissement de la valeur par les navigateurs, créant ainsi la possibilité d'un décalage entre 'max-width' et 'min-width' sur les media queries.
 
 _sizeXS =   35.01em //36.01em
 _sizeS =    50.01em
@@ -23,7 +23,7 @@ _sizeNav =  90.01em // À caler sur la taille du contenu de '.nav-main ul'. @not
 // @subsection  Web fonts
 // @description Choix des polices de caractères.
 // @params false, 'font name'
-// @note Le chargement des polices via @font-face est fortement recommandé pour ne pas dépendre de l'environnement de l'utilisateur. Ce qui permet d'avoir la maitrise du design du site.
+// @note Le chargement des polices via @font-face est fortement recommandé pour ne pas dépendre de l'environnement de l'utilisateur. Ce qui permet d'avoir la maitrise du design du site. Les CDNs sont un mal à proscrire également.
 
 _fontName = 'Noto Sans'
 _fontList = _fontName, sans-serif

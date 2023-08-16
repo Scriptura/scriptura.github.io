@@ -10,7 +10,7 @@
   "devDependencies": {
     "autoprefixer-stylus": "^1.0.0",
     "browser-sync": "^2.29.3",
-    "eslint": "^8.45.0",
+    "eslint": "^8.47.0",
     "image-size": "^1.0.2",
     "ora": "^6.3.1",
     "pug": "^3.0.2",

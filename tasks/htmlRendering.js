@@ -9,7 +9,7 @@ const spritePlayer = readFileSync('sprites/player.svg', 'utf8')
 
 function createIcons(sprites, path) {
   const names = [...sprites.matchAll(/id="(.*?)"/gi)].map(m => m[1]) // @note Capture l'ID de chaque symbole. Par rapport à match(), matchAll() permet de capturer les groupes. map() sort un seul résultat pour chaque itération.
-  let icon = '//- fichier autogénéré par la commande `yarn icon`'
+  let icon = '//- Fichier autogénéré par la commande `pnpm icon`'
   for (const name of names) {
     icon += `
 ruby

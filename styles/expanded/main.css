@@ -3846,6 +3846,12 @@ a[aria-disabled=true]:active {
   display: grid;
   place-items: center;
 }
+@container grid (35em > width) {
+  .xs-center {
+    display: grid;
+    place-items: center;
+  }
+}
 .rotate90 {
   transform: rotate(90deg);
 }
@@ -3864,8 +3870,10 @@ a[aria-disabled=true]:active {
   max-width: 100%;
   max-height: 100vh;
 }
-.scale {
-  font-size: var(--scale, 180%);
+.vw80 {
+  --size: 25em;
+  --size-width: var(--size);
+  width: calc(var(--size) * 0.8);
 }
 .scale300 {
   font-size: 300%;
@@ -3929,6 +3937,11 @@ a[aria-disabled=true]:active {
 }
 .rescale {
   font-size: 1rem;
+}
+@container grid (35em > width) {
+  .xs-scale {
+    font-size: var(--xs-scale, 80%);
+  }
 }
 .blink {
   animation: anim-blink 1.2s infinite;
