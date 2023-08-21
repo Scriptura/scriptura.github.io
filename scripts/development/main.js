@@ -375,31 +375,22 @@ const addDropCap = (() => {
 
 
 // -----------------------------------------------------------------------------
-// @section     Progress Bar
-// @description Barre de progression
+// @section     Progress Bar Test
+// @description Barre de progression test
 // -----------------------------------------------------------------------------
-
-const progressBar = (() => {
-  document.querySelectorAll('.progress-bar').forEach(e => {
-    e.insertAdjacentHTML('afterbegin', '<div></div>')
-    e.querySelector('div').style.width = e.dataset.value + '%'
-  })
-})()
 
 const progressBarTest = (() => {
   const cmd = document.querySelector('#progress-test-cmd'),
-        target = document.querySelector('#progress-test-target')
+        progress = document.querySelector('#progress-test-target')
     cmd && cmd.addEventListener('click', () => {
-    let value = target.dataset.value
+    let value = 0 //progress.value
     setInterval(frame, 20)
     function frame() {
-      if (value < 100) {
-        value++
-        target.querySelector('div').style.width = value + '%'
-      }
+      if (value <= progress.max) progress.value = value++
     }
-  }, false)
+  })
 })()
+
 
 // -----------------------------------------------------------------------------
 // @section     Postponed footnotes

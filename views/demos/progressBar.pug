@@ -1,24 +1,20 @@
 .grid2.gap
-  div
+  .column.gap
     p
-      code .progress-bar(data-value='0')
-    .progress-bar(data-value='0')
-    br
+      code progress(max='100' value='0')
+    progress.progress(max='100' value='0')
     p
-      code .scale150(data-value='50')
-    .progress-bar.scale150(data-value='50')
-    br
+      code (max='100' value='50')
+    progress.progress(max='100' value='50')
     p
-      code style='--color:#4e667a'
-    .progress-bar.scale150(data-value='100' style='--color:#4e667a')
+      code (style='--color:#4e667a')
+    progress.progress(max='100' value='50' style='--color:#4e667a')
+    p
+      code .scale150
+    progress.progress.scale150(max='100' value='50')
     h2 Test
-    .progress-bar.scale150#progress-test-target(data-value='0')
-    br
+    progress.progress#progress-test-target(max='100' value='0')
     button#progress-test-cmd.button(type='button') Test de 0 à 100%
   figure.center
     svg.size.reverse.decorative-svg(role='img' focusable='false')
       use(href='/sprites/silos/126r-d1.svg#1')
-  //-div
-    p
-        code progress
-      progress(max='100', value='50')
