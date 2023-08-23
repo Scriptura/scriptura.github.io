@@ -8,15 +8,15 @@ template#gdpr
         div
           p Ce site utilise des cookies et vous donne le contrôle sur ceux que vous souhaitez activer.
     .flex.gap
-      button.button#gdpr-true-consent
+      button.button#gdpr-true-consent(style='background-color:tomato')
         svg.icon-inline(role='img' focusable='false')
           use(href='/sprites/util.svg#checkmark')
         | Tout accepter
-      button.button#gdpr-false-consent
+      button.button#gdpr-false-consent(style='background-color:tomato')
         svg.icon-inline(role='img' focusable='false')
           use(href='/sprites/util.svg#mark')
         | Tout refuser
-      button.button
+      button.button(style='background-color:tomato')
         svg.icon-inline(role='img' focusable='false')
           use(href='/sprites/util.svg#quill')
         | Personnaliser

@@ -6,17 +6,38 @@
       svg.icon-inline(role='img' focusable='false')
         use(href='/sprites/util.svg#print')
       | Imprimer
-  div
+    br
     p
-      code (style='--button-color:#fff;--button-bg-color:#4e667a')
-    button.button.cmd-test(type='submit' style='--button-color:#fff;--button-bg-color:#4e667a')
+      code (style='--color;--bg-color')
+    button.button.cmd-test(type='submit' style='--color:#fff;--bg-color:#4e667a')
+      svg.icon-inline(role='img' focusable='false')
+        use(href='/sprites/util.svg#print')
+      | Imprimer
+    br
+    p
+      code .button:disabled
+    button.button.cmd-test(type='submit' disabled)
       svg.icon-inline(role='img' focusable='false')
         use(href='/sprites/util.svg#print')
       | Imprimer
   div
     p
+      code .scale80
+    button.button.cmd-test.scale80(type='submit')
+      svg.icon-inline(role='img' focusable='false')
+        use(href='/sprites/util.svg#print')
+      | Imprimer
+    br
+    p
       code .scale120
     button.button.cmd-test.scale120(type='submit')
+      svg.icon-inline(role='img' focusable='false')
+        use(href='/sprites/util.svg#print')
+      | Imprimer
+    br
+    p
+      code .scale150
+    button.button.cmd-test.scale150(type='submit')
       svg.icon-inline(role='img' focusable='false')
         use(href='/sprites/util.svg#print')
       | Imprimer
@@ -26,16 +47,10 @@
     button.round-button.cmd-test(type='button' aria-label='Imprimer')
       svg.icon(role='img' focusable='false')
         use(href='/sprites/util.svg#print')
-  div
+    br
     p
-      code (style='--color:#fff;--bg-color:#4e667a')
-    button.round-button.cmd-test(type='button' aria-label='Imprimer' style='--button-color:#fff;--button-bg-color:#4e667a')
-      svg.icon(role='img' focusable='false')
-        use(href='/sprites/util.svg#print')
-  div
-    p
-      code .scale120
-    button.round-button.cmd-test.scale120(type='button' aria-label='Imprimer')
+      code (style='--color;--bg-color')
+    button.round-button.cmd-test(type='button' aria-label='Imprimer' style='--color:#fff;--bg-color:#4e667a')
       svg.icon(role='img' focusable='false')
         use(href='/sprites/util.svg#print')
   div

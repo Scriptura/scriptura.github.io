@@ -380,13 +380,23 @@ const addDropCap = (() => {
 // -----------------------------------------------------------------------------
 
 const progressBarTest = (() => {
-  const cmd = document.querySelector('#progress-test-cmd'),
+  const button = document.querySelector('#progress-test-cmd'),
         progress = document.querySelector('#progress-test-target')
-    cmd && cmd.addEventListener('click', () => {
+
+  button && button.addEventListener('click', () => {
+    setTimeout(() => out(), 5000)
+    button.disabled = true
     let value = 0 //progress.value
-    setInterval(frame, 20)
+    setInterval(() => frame(), 20)
     function frame() {
       if (value <= progress.max) progress.value = value++
+      if (value >= progress.max) return
+      console.log(progress.value)
+    }
+    function out() {
+      progress.value = 0
+      button.disabled = false
+
     }
   })
 })()

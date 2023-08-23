@@ -9,9 +9,12 @@ _buttonColor4 = _color5
 .button
 .round-button
   all: unset
+  --color: _colorT
+  --bg-color: _buttonColor2
+  --bg-color2: rgba(0, 0, 0, .1)
   overflow: hidden
   position: relative
-  color: var(--button-color, _colorT)
+  color: var(--color)
   box-shadow: _shadow6
   transition: all .2s linear
   transition-property: translate, box-shadow
@@ -25,7 +28,7 @@ _buttonColor4 = _color5
     &::after
       transform: scaleX(1)
       transform-origin: left center
-  &:focus-visible
+  &:focus-visible::before
     background-color: _buttonColor4
   &:active
     box-shadow: _shadow7
@@ -37,13 +40,21 @@ _buttonColor4 = _color5
     inset: 0
   &::before
     z-index: -2
-    background-color: var(--button-bg-color2, _buttonColor2)
+    background-color: var(--bg-color)
   &::after
     z-index: -1
-    background-color: var(--button-bg-color3, rgba(0, 0, 0, .1))
+    background-color: var(--bg-color2)
     transform: scaleX(0)
     transform-origin: left center
     transition: transform 0.4s
+  &:disabled
+  &[disabled]
+    box-shadow: _shadow6
+    transform: none
+    &::before
+      background-color: _colorG
+    &::after
+      content: none
 
 .button
   padding: .5em 1em
@@ -69,14 +80,14 @@ _buttonColor4 = _color5
     margin-left: .5em // @note Espace entre deux bouttons déclarés en inline-block.
 
 .button2
-  --button2-color: _colorG + 20%
+  --color: _colorG + 20%
   all: unset
   width: 3em
   aspect-ratio: 1
   display: grid
   place-items center
-  color: var(--button2-color)
-  border: .15em dotted var(--button2-color)
+  color: var(--color)
+  border: .15em dotted var(--color)
   border-radius: 50%
   box-shadow: _shadow8
   cursor: pointer
@@ -84,5 +95,5 @@ _buttonColor4 = _color5
   &:focus
   &:hover
   &:active
-    --button2-color: _color5
+    --color: _color5
     transform: rotate(360deg)
