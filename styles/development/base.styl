@@ -23,6 +23,7 @@ html
   font-family: _fontList // Georgia, Serif
   //text-shadow: 0 0 0.125rem _color1
   line-height: 1.5 // @bugfix Correct the line height @affected All browsers. @note Le site étant entièrement scalable dans son ensemble, il n'y a pas d'utilisation de vérrou CSS (voir [1]).
+  font-size: clamp(1em, .1vw + .6em, 1.125em) // @note Outil en ligne @see https://modern-fluid-typography.vercel.app
   scroll-behavior: smooth // Défilement fluide. @todo En conflit avec script retour vers le haut...
   // [1] @note La solution d'un verrou CSS semble séduisante a priori. @see https://hugogiraudel.com/2020/05/18/using-calc-to-figure-out-optimal-line-height/ 
   // @todo Mais en raison du comportement totalement scalable de notre style cette solution ne sera peut-être jamais une bonne idée. @bugfix Constat d'effets de bord sur certains éléments (typographie, pre > code, ribbons...).

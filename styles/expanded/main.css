@@ -27,6 +27,7 @@ html {
   background-color: #383838;
   font-family: 'Noto Sans', sans-serif;
   line-height: 1.5;
+  font-size: clamp(1em, 0.7vw, 1.125em);
   scroll-behavior: smooth;
 }
 @media (prefers-reduced-motion: reduce) {
