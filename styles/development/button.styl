@@ -48,9 +48,11 @@ _buttonColor4 = _color5
     transform-origin: left center
     transition: transform 0.4s
   &:disabled
-  &[disabled]
+  //&[disabled]
     box-shadow: _shadow6
     transform: none
+    cursor: not-allowed
+    //pointer-events: none
     &::before
       background-color: _colorG
     &::after
