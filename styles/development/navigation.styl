@@ -55,13 +55,11 @@ a.logo-nav
   &:hover
     background-color: _color5
     &::after
-      animation: anim-logo .4s ease-in-out
+      animation: anim-logo .5s ease-in-out
 
 @keyframes anim-logo
-  40%
-    background-size: auto 90%
-  80%
-    background-size: auto 50%
+  30%
+    transform: rotate(-30deg)
 
 .sub-nav
   grid-area: subnav

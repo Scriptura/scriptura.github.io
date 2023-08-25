@@ -641,7 +641,7 @@ a.logo-nav:hover {
 }
 a.logo-nav:focus-within::after,
 a.logo-nav:hover::after {
-  animation: anim-logo 0.4s ease-in-out;
+  animation: anim-logo 0.5s ease-in-out;
 }
 .sub-nav {
   grid-area: subnav;
@@ -855,11 +855,8 @@ a.logo-nav:hover::after {
   display: none;
 }
 @keyframes anim-logo {
-  40% {
-    background-size: auto 90%;
-  }
-  80% {
-    background-size: auto 50%;
+  30% {
+    transform: rotate(-30deg);
   }
 }
 .breadcrumb {
