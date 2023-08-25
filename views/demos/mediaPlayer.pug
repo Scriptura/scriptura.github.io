@@ -9,7 +9,7 @@
     p
       //-code .media-single-player audio.media
       code audio.media
-    .grid.gap(style='--n:1')
+    .column.gap
       figure.figure-media
         figcaption Adieu mon père
         audio.media(controls)
@@ -33,7 +33,7 @@
   div
     p
       code .media-relationship(data-next-reading='true')
-    .grid.gap.media-relationship(style='--n:1' data-next-reading='true')
+    .column.gap.media-relationship(data-next-reading='true')
       figure.figure-media
         figcaption Le Feu de Saint-Elme
         audio.media(controls)
@@ -68,7 +68,7 @@
       figcaption.sr-only Web radio
       audio.media(controls)
         source(src='https://stream.vestaradio.com/VertigeRadio')
-.grid2.s-grid1.gap-vertical
+.grid2.s-grid1.gap
   div
     .message
       p
@@ -89,7 +89,7 @@
         | ).
   div
     p Tester la fonction "lecture suivante" si erreurs de lecture&nbsp;:
-    .grid.gap.media-relationship(style='--n:1' data-next-reading='true')
+    .column.gap.media-relationship(data-next-reading='true')
       figure.figure-media
         figcaption Stridulation d'un grillon
         audio.media(controls)
@@ -108,7 +108,7 @@
           source(src='/medias/audios/abeilles.mp3')
   figure.center
     svg.size.xs-scale.decorative-svg(role='img' focusable='false' style='--xs-scale:70%')
-      use(href='/sprites/various/ClefDeLAbime.svg#1')
+      use(href='/sprites/various/ClefDeLAbimeMonochrome.svg#1')
 hr(data-hr='✻ ✻ ✻')
 p
   code video.media

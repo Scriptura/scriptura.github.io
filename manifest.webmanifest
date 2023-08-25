@@ -10,9 +10,9 @@
   "background_color": "#ff6347",
   "icons": [
     {
-      "src": "/favicons/logoAny512.png",
-      "sizes": "512x512",
-      "type": "image/png",
+      "src": "/favicons/logoAny.svg",
+      "sizes": "150x150",
+      "type": "image/svg+xml",
       "purpose": "any"
     },
     {

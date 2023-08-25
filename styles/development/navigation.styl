@@ -43,17 +43,25 @@ _navigationColor5 = _color2
     display: block
     width: 100%
     height: 100%
-    background-image: url(../medias/images/logo/logo.png) //url(../medias/images/logo/195v.svg)
+    background-image: url(../medias/images/logo/logo.svg) //url(../medias/images/logo/195v.svg)
     background-repeat: no-repeat
     background-position: 50% 50%
     background-size: auto 70%
+    filter: brightness(1.25) contrast(1.25)
     //box-shadow: _shadow3
 
 a.logo-nav
-  &:focus
+  &:focus-within
   &:hover
-  &:active
     background-color: _color5
+    &::after
+      animation: anim-logo .4s ease-in-out
+
+@keyframes anim-logo
+  40%
+    background-size: auto 90%
+  80%
+    background-size: auto 50%
 
 .sub-nav
   grid-area: subnav

@@ -629,15 +629,19 @@ main {
   display: block;
   width: 100%;
   height: 100%;
-  background-image: url("../medias/images/logo/logo.png");
+  background-image: url("../medias/images/logo/logo.svg");
   background-repeat: no-repeat;
   background-position: 50% 50%;
   background-size: auto 70%;
+  filter: brightness(1.25) contrast(1.25);
 }
-a.logo-nav:focus,
-a.logo-nav:hover,
-a.logo-nav:active {
+a.logo-nav:focus-within,
+a.logo-nav:hover {
   background-color: #ffa600;
+}
+a.logo-nav:focus-within::after,
+a.logo-nav:hover::after {
+  animation: anim-logo 0.4s ease-in-out;
 }
 .sub-nav {
   grid-area: subnav;
@@ -849,6 +853,14 @@ a.logo-nav:active {
 }
 .no-js .cmd-nav {
   display: none;
+}
+@keyframes anim-logo {
+  40% {
+    background-size: auto 90%;
+  }
+  80% {
+    background-size: auto 50%;
+  }
 }
 .breadcrumb {
   grid-area: breadcrumb;
@@ -1126,7 +1138,7 @@ ol.list-rounded li::before {
   gap: 0.5em 1em;
 }
 @keyframes anim-list {
-  to {
+  50% {
     transform: scale(1.03) translateZ(0);
   }
 }
