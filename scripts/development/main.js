@@ -375,34 +375,6 @@ const addDropCap = (() => {
 
 
 // -----------------------------------------------------------------------------
-// @section     Progress Bar Test
-// @description Barre de progression test
-// -----------------------------------------------------------------------------
-
-const progressBarTest = (() => {
-  const button = document.querySelector('#progress-test-cmd'),
-        progress = document.querySelector('#progress-test-target')
-
-  button && button.addEventListener('click', () => {
-    setTimeout(() => out(), 5000)
-    button.disabled = true
-    let value = 0 //progress.value
-    setInterval(() => frame(), 20)
-    function frame() {
-      if (value <= progress.max) progress.value = value++
-      if (value >= progress.max) return
-      console.log(progress.value)
-    }
-    function out() {
-      progress.value = 0
-      button.disabled = false
-
-    }
-  })
-})()
-
-
-// -----------------------------------------------------------------------------
 // @section     Postponed footnotes
 // @description Report des notes de bas de page au côté du texte
 // -----------------------------------------------------------------------------

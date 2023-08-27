@@ -24,3 +24,25 @@
       use(href='/sprites/util.svg#info')
     div
       p La barre de progression HTML native est utilisée désormais, notre solution précédente était constituée d'une div pilotée par JavaScript pour simuler la progression.
+script.
+  const progressBarTest = (() => {
+    const button = document.querySelector('#progress-test-cmd'),
+          progress = document.querySelector('#progress-test-target')
+
+    button && button.addEventListener('click', () => {
+      setTimeout(() => out(), 5000)
+      button.disabled = true
+      let value = 0 //progress.value
+      setInterval(() => frame(), 20)
+      function frame() {
+        if (value <= progress.max) progress.value = value++
+        if (value >= progress.max) return
+        console.log(progress.value)
+      }
+      function out() {
+        progress.value = 0
+        button.disabled = false
+
+      }
+    })
+  })()
