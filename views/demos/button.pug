@@ -59,3 +59,5 @@
     button.button2.cmd-test(type='button' aria-label='Button test')
       svg.icon(role='img' focusable='false')
         use(href='/sprites/util.svg#print')
+script.
+  document.querySelectorAll('.cmd-test').forEach(e => e.addEventListener('click', () => alert("Test OK")))

@@ -22,15 +22,6 @@ const touchDetect = (() => {
 })()
 */
 
-
-// -----------------------------------------------------------------------------
-// @section     Test
-// @description Test sur un élément
-// -----------------------------------------------------------------------------
-
-document.querySelectorAll('.cmd-test').forEach(e => e.addEventListener('click', () => alert("Test OK")))
-
-
 // -----------------------------------------------------------------------------
 // @section     Service Worker
 // @description Expérience hors ligne pour application web progressive (PWA)
@@ -433,7 +424,7 @@ document.querySelectorAll('button[class*=button]').forEach(e => e && e.addEventL
 
 
 /*
-Mode "appliquation" ou "navigateur" :
+Mode "application" ou "navigateur" :
 let displayMode = 'browser'
 window.matchMedia('(display-mode: standalone)').addEventListener('change', e => {
   if (e.matches) displayMode = 'standalone'
