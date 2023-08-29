@@ -1,0 +1,23 @@
+extends ../patternLayout
+
+block variables
+  - const documentType = 'localMediaPlayer'
+  - const pageType = 'template'
+  -
+    const data = {
+      _name: 'Local Media Player',
+      _title: 'Local Media Player . Scriptura',
+      _description: 'Lecteur vidéo local.'
+    }
+
+block main
+  article
+    header(role='banner')
+      h1.main-heading!= data._name
+    video.media(controls poster='' style='aspect-ratio: 21/8')
+      source(src='/medias/videos/private/Dune/Dune.mp4' type='video/mp4')
+    //-br
+    //-.input
+      label(for='input-url').sr-only Media URL
+      input#input-url(type='url' name='input-url' placeholder='file:///home/user/videos/file.mp4')
+  //-script.script-test

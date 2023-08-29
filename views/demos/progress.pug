@@ -1,7 +1,7 @@
 .grid2.gap
   .column.gap
     p
-      code progress(max='100' value='0')
+      code progress.progress
     progress.progress(max='100' value='0')
     p
       code (max='100' value='50')
@@ -23,7 +23,7 @@
     svg.icon(role='img' focusable='false')
       use(href='/sprites/util.svg#info')
     div
-      p La barre de progression HTML native est utilisée désormais, notre solution précédente était constituée d'une div pilotée par JavaScript pour simuler la progression.
+      p L'élément HTML natif est désormais utilisé, notre solution précédente était constituée d'une div pilotée par JavaScript pour simuler la progression.
 script.
   const progressBarTest = (() => {
     const button = document.querySelector('#progress-test-cmd'),

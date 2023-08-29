@@ -1,0 +1,16 @@
+extends ../patternLayout
+
+block variables
+  - const documentType = 'progress'
+  - const pageType = 'component'
+  -
+    const data = {
+      _name: 'Progress <span>.&nbsp;Documentation</span>',
+      _title: 'Progress . Scriptura',
+      _description: 'Progress, documentation.'
+    }
+
+block main
+  header(role='banner')
+    h1.main-heading!= data._name
+  include ../demos/progress

@@ -75,6 +75,7 @@ const getScripts = (() => {
   if (document.querySelector('.map')) getScript('/scripts/map.js')
   if (document.querySelector('.map')) getScript('/libraries/leaflet/leaflet.js')
   if (document.querySelector('[class*=language-]')) getScript('/libraries/prism/prism.js')
+  if (document.querySelector('.script-test')) getScript('/scripts/development/testDev.js')
 })()
 
 
@@ -197,7 +198,7 @@ const externalLinks = (() => {
 for (const print of document.querySelectorAll('.cmd-print')) print.onclick = () => window.print()
 
 // -----------------------------------------------------------------------------
-// @section     GDPR / gdpr
+// @section     GDPR / gprd
 // @description Règlement Général sur la Protection des Données
 // -----------------------------------------------------------------------------
 
@@ -431,3 +432,4 @@ window.matchMedia('(display-mode: standalone)').addEventListener('change', e => 
 })
 console.log('DISPLAY_MODE_CHANGED', displayMode)
 */
+

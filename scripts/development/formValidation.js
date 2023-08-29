@@ -118,7 +118,7 @@ const formValidation = (() => {
       if (!input.value) { // Nettoyage du message d'erreur si au final l'utilisateur laisse le champ vide après avoir tenté de le compléter.
         removeMessageError(input, el)
       } else if (!input.value.match(/http/)) { // @see https://stackoverflow.com/questions/3809401#3809435
-        let text = "Entrée invalide\u00a0: il manque un protocole à votre url (https://, http://, ftp://, ...)."
+        let text = "Entrée invalide\u00a0: il manque un protocole à votre url (https://, http://, ...)."
         createMessageError(input, el, text)
       } else if (!url) {
         let text = "Entrée invalide\u00a0: l'url n'est pas conforme."
