@@ -483,11 +483,6 @@ block main
                     source(src='/medias/videos/Spring/Spring.mp4' type='video/mp4')
     hr
     footer
-      form( method='post' action='/page/login.html')
-        button.button2(type='submit' aria-label='Se déconnecter')
-          svg.icon(role='img' focusable='false')
-            use(href='/sprites/util.svg#logout')
-      //- @note Alternative à l'élément button :
-        a.button2(href='/page/login.html')
-          svg.icon(role='img' focusable='false')
-            use(href='/sprites/util.svg#logout')
+      a.button2(href='/page/login.html')
+        svg.icon(role='img' focusable='false')
+          use(href='/sprites/util.svg#logout')
