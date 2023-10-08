@@ -27,7 +27,7 @@ const touchDetect = (() => {
 // @description Expérience hors ligne pour application web progressive (PWA)
 // -----------------------------------------------------------------------------
 
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('/scripts/serviceWorker.js')
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('serviceWorker.js') //.then(() => console.log("Service worker registered"))
 
 // -----------------------------------------------------------------------------
 // @section     Get Scripts
@@ -51,10 +51,9 @@ const getScript = (url, hook = 'footer') => new Promise((resolve, reject) => { /
     script.onload = script.onreadystatechange = null
     resolve()
   }
-  if (hook == 'head') document.head.appendChild(script)
-  //else document.body.appendChild(script)
-  else if (hook == 'footer') document.body.appendChild(script)
-  else console.error('Error: le choix de l\'élement html pour getScript() n\'est pas correct.')
+  if (hook === 'footer') document.body.appendChild(script)
+  else if (hook === 'head') document.head.appendChild(script)
+  else console.error("Error: le choix de l'élement html pour getScript() n'est pas correct.")
 })
 
 const getScripts = (() => {
