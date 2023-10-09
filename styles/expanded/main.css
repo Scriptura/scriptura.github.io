@@ -2759,10 +2759,12 @@ form > [class*="grid"] > .input {
           clip-path: polygon(50% 100%, 0 0, 100% 0);
   filter: drop-shadow(0 0.5rem 2rem rgba(0,0,0,0.3));
 }
-.range-multithumb input {
+.range-multithumb {
   --start: 0;
   --stop: 0;
   --colorSlide: #ff6347;
+}
+.range-multithumb input {
   background: linear-gradient(90deg, transparent var(--start), var(--colorSlide) var(--start), var(--colorSlide) var(--stop), transparent var(--stop)), linear-gradient(to top, rgba(255,255,255,0.05) 0, rgba(255,255,255,0.05) 33.3%, #222 33.3%, #222 66.6%, rgba(255,255,255,0.05) 66.6%, rgba(255,255,255,0.05));
 }
 .range-multithumb input:disabled {

@@ -41,7 +41,6 @@ _rangeBlockThumbDisabled =
     height: .3em
     max-width: 100%
     cursor: pointer
-    //background-color: _rangeColor1
     background: linear-gradient(to top, hsla(0, 0, 100%, .05) 0, hsla(0, 0, 100%, .05) 33.3%, #222 33.3%, #222 66.6%, hsla(0, 0, 100%, .05) 66.6%, hsla(0, 0, 100%, .05)) // @see https://stackoverflow.com/questions/22229270 @note background écrase la valeur background-color par défaut du navigateur.
     //background-size: 100% 100%
     & ~ input // non équivalent à :last-child
@@ -116,10 +115,11 @@ _rangeBlockThumbDisabled =
       clip-path: polygon(50% 100%, 0 0, 100% 0)
       filter: drop-shadow(0 .5rem 2rem rgba(0, 0, 0, .3)) // _rangeShadow1
 
-.range-multithumb input
+.range-multithumb
   --start: 0
-  --stop: 0
+  --stop: 0 // @note Évite une apparition flash de la barre au chargement de la page, il vaut mieux que la couleur apparaisse après le calcul par le script.
   --colorSlide: _rangeColor5
-  background: linear-gradient(90deg, transparent var(--start), var(--colorSlide) var(--start), var(--colorSlide) var(--stop), transparent var(--stop)), linear-gradient(to top, hsla(0, 0, 100%, .05) 0, hsla(0, 0, 100%, .05) 33.3%, #222 33.3%, #222 66.6%, hsla(0, 0, 100%, .05) 66.6%, hsla(0, 0, 100%, .05)) // @see https://stackoverflow.com/questions/22229270
-  &:disabled
-    --colorSlide: #444
+  & input
+    background: linear-gradient(90deg, transparent var(--start), var(--colorSlide) var(--start), var(--colorSlide) var(--stop), transparent var(--stop)), linear-gradient(to top, hsla(0, 0, 100%, .05) 0, hsla(0, 0, 100%, .05) 33.3%, #222 33.3%, #222 66.6%, hsla(0, 0, 100%, .05) 66.6%, hsla(0, 0, 100%, .05)) // @note Espace entre les deux curseurs @see https://stackoverflow.com/questions/22229270
+    &:disabled
+      --colorSlide: #444

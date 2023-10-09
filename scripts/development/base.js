@@ -27,7 +27,20 @@ const touchDetect = (() => {
 // @description Expérience hors ligne pour application web progressive (PWA)
 // -----------------------------------------------------------------------------
 
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('/serviceWorker.js') //.then(() => console.log("Service worker registered"))
+const registerServiceWorker = async () => { // @see https://developer.mozilla.org/fr/docs/Web/API/Service_Worker_API/Using_Service_Workers
+  if ('serviceWorker' in navigator) {
+    try {
+      const registration = await navigator.serviceWorker.register('/sw.js')
+      if (registration.installing) console.log("Installation du service worker en cours")
+      else if (registration.waiting) console.log("Service worker installé")
+      else if (registration.active) console.log("Service worker actif")
+    } catch (error) {
+      console.error(`L'enregistrement du service worker a échoué : ${error}`)
+    }
+  }
+}
+
+registerServiceWorker()
 
 // -----------------------------------------------------------------------------
 // @section     Get Scripts

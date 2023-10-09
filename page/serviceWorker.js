@@ -1,1 +1,0 @@
-const addResourcesToCache=async s=>{const a=await caches.open("v1");await a.addAll(s)};self.addEventListener("install",(s=>{s.waitUntil(addResourcesToCache(["/","/styles/main.css","/scripts/main.js","/fonts/notoSans-Regular.woff2","/fonts/notoSerif-Regular.woff2"]))}));
