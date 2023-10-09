@@ -1,22 +1,21 @@
 // Ce code s'exécute dans son propre worker ou thread :
 
 const addResourcesToCache = async (resources) => {
-  const cache = await caches.open("v1");
-  await cache.addAll(resources);
-};
+  const cache = await caches.open('v1')
+  await cache.addAll(resources)
+}
 
-self.addEventListener("install", (event) => {
+self.addEventListener('install', (event) => {
   event.waitUntil(
     addResourcesToCache([
       '/',
-      '/index.html',
       '/styles/main.css',
       '/scripts/main.js',
       '/fonts/notoSans-Regular.woff2',
       '/fonts/notoSerif-Regular.woff2'
-    ]),
-  );
-});
+    ])
+  )
+})
 
 /*
 self.addEventListener('install', e => {
