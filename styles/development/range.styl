@@ -29,6 +29,7 @@ _rangeBlockThumbDisabled =
 
 [class^=range]
   --color: _rangeColor6
+  --percent: 0
   display: grid
   gap: .5em
   margin-bottom: 1em
@@ -41,8 +42,9 @@ _rangeBlockThumbDisabled =
     height: .3em
     max-width: 100%
     cursor: pointer
-    background: linear-gradient(to top, hsla(0, 0, 100%, .05) 0, hsla(0, 0, 100%, .05) 33.3%, #222 33.3%, #222 66.6%, hsla(0, 0, 100%, .05) 66.6%, hsla(0, 0, 100%, .05)) // @see https://stackoverflow.com/questions/22229270 @note background écrase la valeur background-color par défaut du navigateur.
-    //background-size: 100% 100%
+    //background: linear-gradient(to top, hsla(0, 0, 100%, .05) 0, hsla(0, 0, 100%, .05) 33.3%, #222 33.3%, #222 66.6%, hsla(0, 0, 100%, .05) 66.6%, hsla(0, 0, 100%, .05)) // @see https://stackoverflow.com/questions/22229270 @note background écrase la valeur background-color par défaut du navigateur.
+    background: linear-gradient(90deg, var(--color) 0, var(--color) var(--percent), transparent var(--percent)), linear-gradient(to top, hsla(0, 0, 100%, .05) 0, hsla(0, 0, 100%, .05) 33.3%, #222 33.3%, #222 66.6%, hsla(0, 0, 100%, .05) 66.6%, hsla(0, 0, 100%, .05)) // @note Espace entre les deux curseurs @see https://stackoverflow.com/questions/22229270
+
     & ~ input // non équivalent à :last-child
       background: initial // @bugfixed @affected Firefox @note La ligne de fond passe au-dessus des curseurs si transparence non définie.
     &:disabled
@@ -118,8 +120,8 @@ _rangeBlockThumbDisabled =
 .range-multithumb
   --start: 0
   --stop: 0 // @note Évite une apparition flash de la barre au chargement de la page, il vaut mieux que la couleur apparaisse après le calcul par le script.
-  --colorSlide: _rangeColor5
+  --color: _rangeColor5
   & input
-    background: linear-gradient(90deg, transparent var(--start), var(--colorSlide) var(--start), var(--colorSlide) var(--stop), transparent var(--stop)), linear-gradient(to top, hsla(0, 0, 100%, .05) 0, hsla(0, 0, 100%, .05) 33.3%, #222 33.3%, #222 66.6%, hsla(0, 0, 100%, .05) 66.6%, hsla(0, 0, 100%, .05)) // @note Espace entre les deux curseurs @see https://stackoverflow.com/questions/22229270
+    background: linear-gradient(90deg, transparent var(--start), var(--color) var(--start), var(--color) var(--stop), transparent var(--stop)), linear-gradient(to top, hsla(0, 0, 100%, .05) 0, hsla(0, 0, 100%, .05) 33.3%, #222 33.3%, #222 66.6%, hsla(0, 0, 100%, .05) 66.6%, hsla(0, 0, 100%, .05)) // @note Espace entre les deux curseurs @see https://stackoverflow.com/questions/22229270
     &:disabled
-      --colorSlide: #444
+      --color: #444

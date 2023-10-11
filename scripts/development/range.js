@@ -2,21 +2,25 @@
 
 const rangeInput = (() => {
   document.querySelectorAll('.range').forEach(range => {
-
     const input = range.querySelector('input')
     const output = range.querySelector('output')
+    const δ = Math.abs(Number(input.min)) + Number(input.max) // Pour le calcul de la plage, le premier chiffre doit passer en possitif s'il est négatif, pas le deuxième.
 
-    function display(val){
-      if (range.dataset.currency) val = new Intl.NumberFormat(range.dataset.intl, {style: 'currency', currency: range.dataset.currency}).format(val)
-      else if (range.dataset.intl) stop = new Intl.NumberFormat(range.dataset.intl).format(val)
-      output.textContent = val
-    }
-
+    range.style.setProperty('--percent', `${100 / δ * (input.value - input.min)}%`)
     display(input.value)
 
-    input.oninput = function() {
-      display(this.value)
+    function display(value) {
+      if (range.dataset.currency) value = new Intl.NumberFormat(range.dataset.intl, {style: 'currency', currency: range.dataset.currency}).format(value)
+      else if (range.dataset.intl) stop = new Intl.NumberFormat(range.dataset.intl).format(value)
+      output.textContent = value
     }
+
+    function thumb() {
+      display(input.value)
+      range.style.setProperty('--percent', `${100 / δ * (input.value - input.min)}%`)
+    }
+
+    input.oninput = thumb
 
   })
 })()
@@ -29,36 +33,21 @@ const rangeMultithumb = (() => {
     const step = Number(start.getAttribute('step'))
     let valStart = Number(start.value)
     let valStop = Number(stop.value)
-    let scope = Number(stop.max) - Number(stop.min)
-    let percentStart = (100 / Number(stop.max)) * valStart
-    let percentStop = (100 / Number(stop.max)) * valStop
     
-    range.style.setProperty('--start', `${percentStart}%`)
-    range.style.setProperty('--stop', `${percentStop}%`)
+    range.style.setProperty('--start', `${(100 / Number(stop.max)) * valStart}%`)
+    range.style.setProperty('--stop', `${(100 / Number(stop.max)) * valStop}%`)
     output.textContent = `${valStart}-${valStop}`
     display(valStart, valStop)
 
-    /*
-    function intl(valStart, valStop){
-      [valStart, valStop].forEach(ss => {
-        if (range.dataset.currency) ss = new Intl.NumberFormat(range.dataset.intl, {style: 'currency', currency: range.dataset.currency}).format(ss)
-        else if (range.dataset.intl) ss = new Intl.NumberFormat(range.dataset.intl).format(ss)
-      })
-    }
-    */
-
-    function display(valStart, valStop){
-      //intl(valStart, valStop)
-      /**/
+    function display(valStart, valStop) {
       if (range.dataset.currency) valStart = new Intl.NumberFormat(range.dataset.intl, {style: 'currency', currency: range.dataset.currency}).format(valStart)
       else if (range.dataset.intl) valStop = new Intl.NumberFormat(range.dataset.intl).format(valStop)
       if (range.dataset.currency) valStop = new Intl.NumberFormat(range.dataset.intl, {style: 'currency', currency: range.dataset.currency}).format(valStop)
       else if (range.dataset.intl) valStart = new Intl.NumberFormat(range.dataset.intl).format(valStart)
-      /**/
       output.textContent = `${valStart} - ${valStop}`
     }
 
-    function startThumb(){
+    function startThumb() {
       valStop = Number(stop.value)
       display(this.value, valStop)
       stop.value = (valStop > Number(this.value)) ? valStop : (Number(this.value) + step)
@@ -66,7 +55,7 @@ const rangeMultithumb = (() => {
       range.style.setProperty('--stop', `${(100 / Number(stop.max)) * stop.value}%`)
     }
 
-    function stopThumb(){
+    function stopThumb() {
       valStart = Number(start.value)
       display(valStart, this.value)
       start.value = (valStart < Number(this.value)) ? valStart : (Number(this.value) - step)
@@ -75,10 +64,7 @@ const rangeMultithumb = (() => {
     }
 
     start.oninput = startThumb
-    start.onchange = startThumb
-
     stop.oninput = stopThumb
-    stop.onchange = stopThumb
 
   })
 })()

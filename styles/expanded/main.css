@@ -2643,6 +2643,7 @@ form > [class*="grid"] > .input {
 }
 [class^=range] {
   --color: #ff6347;
+  --percent: 0;
   display: grid;
   gap: 0.5em;
   margin-bottom: 1em;
@@ -2661,7 +2662,7 @@ form > [class*="grid"] > .input {
   height: 0.3em;
   max-width: 100%;
   cursor: pointer;
-  background: linear-gradient(to top, rgba(255,255,255,0.05) 0, rgba(255,255,255,0.05) 33.3%, #222 33.3%, #222 66.6%, rgba(255,255,255,0.05) 66.6%, rgba(255,255,255,0.05));
+  background: linear-gradient(90deg, var(--color) 0, var(--color) var(--percent), transparent var(--percent)), linear-gradient(to top, rgba(255,255,255,0.05) 0, rgba(255,255,255,0.05) 33.3%, #222 33.3%, #222 66.6%, rgba(255,255,255,0.05) 66.6%, rgba(255,255,255,0.05));
 }
 [class^=range] input ~ input {
   background: initial;
@@ -2762,13 +2763,13 @@ form > [class*="grid"] > .input {
 .range-multithumb {
   --start: 0;
   --stop: 0;
-  --colorSlide: #ff6347;
+  --color: #ff6347;
 }
 .range-multithumb input {
-  background: linear-gradient(90deg, transparent var(--start), var(--colorSlide) var(--start), var(--colorSlide) var(--stop), transparent var(--stop)), linear-gradient(to top, rgba(255,255,255,0.05) 0, rgba(255,255,255,0.05) 33.3%, #222 33.3%, #222 66.6%, rgba(255,255,255,0.05) 66.6%, rgba(255,255,255,0.05));
+  background: linear-gradient(90deg, transparent var(--start), var(--color) var(--start), var(--color) var(--stop), transparent var(--stop)), linear-gradient(to top, rgba(255,255,255,0.05) 0, rgba(255,255,255,0.05) 33.3%, #222 33.3%, #222 66.6%, rgba(255,255,255,0.05) 66.6%, rgba(255,255,255,0.05));
 }
 .range-multithumb input:disabled {
-  --colorSlide: #444;
+  --color: #444;
 }
 .button,
 .round-button {
