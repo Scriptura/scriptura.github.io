@@ -21,6 +21,7 @@ const rangeInput = (() => {
     }
 
     input.oninput = thumb
+    input.onchange = thumb // @note Permet un dernier calcul évitant de faire passer la valeur min au-delà de la valeur max.
 
   })
 })()
@@ -33,7 +34,7 @@ const rangeMultithumb = (() => {
     const step = Number(start.getAttribute('step'))
     let valStart = Number(start.value)
     let valStop = Number(stop.value)
-    const δ = Math.abs(Number(start.min)) + Number(start.max) // Calcul de la plage uniquement basé sur le premier range, les deux ranges ayant obligatoirement la même amplitude.
+    const δ = Math.abs(Number(start.min)) + Number(start.max) // @note Calcul de la plage uniquement basé sur le premier range, les deux ranges ayant obligatoirement la même amplitude.
     //100 / δ * (input.value - input.min)
     range.style.setProperty('--start', `${100 / δ * (valStart - start.min)}%`)
     range.style.setProperty('--stop', `${100 / δ * (valStop - start.min)}%`)
@@ -65,6 +66,9 @@ const rangeMultithumb = (() => {
 
     start.oninput = startThumb
     stop.oninput = stopThumb
+
+    start.onchange = startThumb // @note Permet un dernier calcul évitant de faire passer la valeur min au-delà de la valeur max.
+    stop.onchange = stopThumb // @note Idem.
 
   })
 })()
