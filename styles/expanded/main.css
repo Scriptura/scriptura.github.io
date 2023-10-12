@@ -2647,11 +2647,6 @@ form > [class*="grid"] > .input {
   display: grid;
   gap: 0.5em;
   margin-bottom: 1em;
-/*
-  & ::-webkit-slider-runnable-track // @note Barre
-    background-color: _rangeColor1
-    box-shadow: inset 0px 0px 4px rgba(0, 0, 0, .2)
-  */
 }
 [class^=range] input {
   grid-column: 1;
@@ -2668,6 +2663,7 @@ form > [class*="grid"] > .input {
   background: initial;
 }
 [class^=range] input:disabled {
+  --color: #444;
   cursor: not-allowed;
 }
 [class^=range] input:disabled + output {

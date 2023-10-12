@@ -1,5 +1,5 @@
 _rangeColor1 = rgba(255, 255, 255, .1)
-_rangeColor2 = #333
+_rangeColor2 = #444
 _rangeColor3 = rgba(255, 255, 255, .1)
 _rangeColor5 = _color2
 _rangeColor6 = _color2
@@ -44,11 +44,10 @@ _rangeBlockThumbDisabled =
     cursor: pointer
     //background: linear-gradient(to top, hsla(0, 0, 100%, .05) 0, hsla(0, 0, 100%, .05) 33.3%, #222 33.3%, #222 66.6%, hsla(0, 0, 100%, .05) 66.6%, hsla(0, 0, 100%, .05)) // @see https://stackoverflow.com/questions/22229270 @note background écrase la valeur background-color par défaut du navigateur.
     background: linear-gradient(90deg, var(--color) 0, var(--color) var(--percent), transparent var(--percent)), linear-gradient(to top, hsla(0, 0, 100%, .05) 0, hsla(0, 0, 100%, .05) 33.3%, #222 33.3%, #222 66.6%, hsla(0, 0, 100%, .05) 66.6%, hsla(0, 0, 100%, .05)) // @note Espace entre les deux curseurs @see https://stackoverflow.com/questions/22229270
-
     & ~ input // non équivalent à :last-child
       background: initial // @bugfixed @affected Firefox @note La ligne de fond passe au-dessus des curseurs si transparence non définie.
     &:disabled
-      //background-color: _rangeColor2
+      --color: _rangeColor2
       cursor: not-allowed
       & + output
         color: _colorG + 30%
@@ -56,12 +55,10 @@ _rangeBlockThumbDisabled =
           background: _rangeColor9 repeating-linear-gradient(-90deg, _rangeColor3 0 _rangeSize3, _rangeColor3 0, transparent 0, transparent _rangeSize3 * 2)
     &:focus
       outline: none
-  /*
-  & ::-webkit-slider-runnable-track // @note Barre
-    background-color: _rangeColor1
-    box-shadow: inset 0px 0px 4px rgba(0, 0, 0, .2)
-  */
-  //1. Les deux solutions ne peuvent pas être factorisées.
+  //& ::-webkit-slider-runnable-track // @note Barre
+  //  background-color: _rangeColor1
+  //  box-shadow: inset 0px 0px 4px rgba(0, 0, 0, .2)
+  //1. Les deux solutions ne peuvent pas être factorisées :
   & ::-webkit-slider-thumb // @affected Chrome @note Curseur [1]
     -webkit-appearance: none
     {_rangeBlockThumb}
@@ -124,4 +121,4 @@ _rangeBlockThumbDisabled =
   & input
     background: linear-gradient(90deg, transparent var(--start), var(--color) var(--start), var(--color) var(--stop), transparent var(--stop)), linear-gradient(to top, hsla(0, 0, 100%, .05) 0, hsla(0, 0, 100%, .05) 33.3%, #222 33.3%, #222 66.6%, hsla(0, 0, 100%, .05) 66.6%, hsla(0, 0, 100%, .05)) // @note Espace entre les deux curseurs @see https://stackoverflow.com/questions/22229270
     &:disabled
-      --color: #444
+      --color: _rangeColor2
