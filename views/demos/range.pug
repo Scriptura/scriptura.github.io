@@ -38,6 +38,15 @@
       output
   div
     p
+      code .range-multithumb
+    .range-multithumb
+      label(for='range-start-1').sr-only start
+      input#range-start-1(type='range' name='range-start' min='-500' max='-100' step='1' value='-400')
+      label(for='range-stop-1').sr-only stop
+      input#range-stop-1(type='range' name='range-stop' min='-500' max='-100' step='1' value='-200')
+      output(style='--size:6em')
+  div
+    p
       code .output.phylactery
     .range-multithumb(data-intl='fr-FR' data-currency='EUR')
       label(for='range-start-2').sr-only start
@@ -63,3 +72,9 @@
       label(for='range-stop-4').sr-only stop
       input#range-stop-4(type='range' name='range-stop3' min='0' max='100' step='1' value='75' disabled)
       output
+  div
+    .message-highlight
+      svg.icon(role='img' focusable='false')
+        use(href='/sprites/util.svg#pencil')
+      div
+        p Les sliders acceptent aussi les valeurs négatives pour leur plages.
