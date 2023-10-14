@@ -29,7 +29,6 @@ const maps = (() => {
             el = document.getElementById(item.id),
             P = JSON.parse(el.dataset.places),
             markers = []
-            //console.table(P)
       L.tileLayer(
         el.dataset.tileserver || titleServerDefault, {
           minZoom: el.dataset.minzoom || 2,
