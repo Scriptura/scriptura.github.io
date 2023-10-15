@@ -15,7 +15,7 @@ _rangeBlockThumb =
   width: _rangeSize1
   height: _rangeSize1
   background-color: saturation(_rangeColor5 - 10%, 80%)
-  border: .2em solid _rangeColor5
+  border: .2em solid var(--color)
   border-radius: 50%
   box-shadow: _shadow6
 
@@ -82,16 +82,16 @@ _rangeBlockThumbDisabled =
   & output:not(.phylactery)
     --size: 5em // @note Ne pas descendre en dessous de cette valeur, les navigateurs interprêtent différement @todo Comportement à suivre...
     width: var(--size)
-    height: var(--size)
+    //height: var(--size)
     line-height: var(--size)
     vertical-align: middle
-    border-radius: 50%
+    //border-radius: 50%
     &::after
-      box-sizing: border-box // @affected Firefox @note Définition obligatoire de cette règle malgré sa déclaration en globale.
-      content: ''
       position: absolute
       z-index: -1
       inset: 0
+      box-sizing: border-box // @affected Firefox @note Définition obligatoire de cette règle malgré sa déclaration en globale.
+      content: ''
       background-color: var(--color)
       border-radius: 50% 50% 0 50%
       box-shadow: _rangeShadow1

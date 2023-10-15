@@ -18,11 +18,11 @@ block main
       .boxx
         form(action='/page/dashboard.html' method='post')
           .input
-            label Utilisateur :
-            input(type='text' name='username' placeholder='user' autocorrect='off' autocapitalize='off' spellcheck='false' required='required')
+            label(for='input-username') Utilisateur&nbsp;:
+            input#input-username(type='text' name='username' placeholder='user' autocorrect='off' autocapitalize='off' spellcheck='false' required='required')
           .input
-            label Mot de passe :
-            input(type='password' name='password' placeholder='• • • • • • • •' required='required')
+            label(for='input-password')  Mot de passe&nbsp;:
+            input#input-password(type='password' name='password' placeholder='• • • • • • • •' required='required')
           .flex
             button.button.item-push
               svg.icon-inline(role='img' focusable='false')
