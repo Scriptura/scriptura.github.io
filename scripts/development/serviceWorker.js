@@ -14,6 +14,8 @@ self.addEventListener('install', event => {
       '/scripts/main.js',
       '/fonts/notoSans-Regular.woff2',
       '/fonts/notoSerif-Regular.woff2',
+      '/sprites/util.svg',
+      '/sprites/player.svg',
       '/medias/images/logo/logo.svg',
     ])
   )
