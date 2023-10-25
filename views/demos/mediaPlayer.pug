@@ -75,8 +75,15 @@
         svg.icon-inline(role='img' focusable='false')
           use(href='/sprites/util.svg#info')
         | Par défaut un seul lecteur peut être actif sur la page. En cas de nouveau player, le précédent passera sur pause, à part ce principe de base, les lecteurs sont indépendants entre eux.
-      p Un élément parent bénéficiant de la classe ".media-relationship" rend ses médias enfants solidaires entre eux, sans pour autant qu'ils soient obligés d'être des élements frères.
-      p "data-next-reading=false" ajoutera une option de lecture à la suite, "data-next-reading=true" l'activera par défaut.
+      p
+        | Un élément parent bénéficiant de la classe 
+        code .media-relationship
+        |  rend ses médias enfants solidaires entre eux, sans pour autant qu'ils soient obligés d'être des élements frères.
+      p
+        code data-next-reading=false
+        |  ajoutera une option "lecture à la suite" dans le menu du player, 
+        code data-next-reading=true
+        |  activera cette même option par défaut.
   div
     .message
       p
@@ -107,7 +114,7 @@
         audio.media(controls)
           source(src='/medias/audios/abeilles.mp3')
   figure.center
-    svg.size.xs-scale.decorative-svg(role='img' focusable='false' style='--size:18em;--xs-scale:80%')
+    svg.size.xs-scale.decorative-svg(role='img' focusable='false' style='--size:18em;--xs-scale:70%')
       use(href='/sprites/various/ClefDeLAbimeMonochrome.svg#1')
 hr(data-hr='✻ ✻ ✻')
 p

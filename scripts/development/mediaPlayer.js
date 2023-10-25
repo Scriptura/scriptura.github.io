@@ -204,24 +204,11 @@ const mediaPlayer = () => {
     output.value = cc
   }
 
-  const playbackRateChange = (media, playbackRateOutput) => {
-    //(media.playbackRate > .25) ? media.playbackRate -= .2 : media.playbackRate = 4 // @note Les valeurs ont besoin d'être déterminées précisément car les résultats des soustractions sont approximatifs.
-    switch (media.playbackRate) { // @note Plage navigateur recommandée entre 0.25 et 4.0.
-      case (1): media.playbackRate = .5
-        break
-      case (.5): media.playbackRate = .25
-        break
-      case (.25): media.playbackRate = .1
-        break
-      case (.1): media.playbackRate = 4
-        break
-      case (4): media.playbackRate = 2
-        break
-      case (2): media.playbackRate = 1.5
-        break
-      default: media.playbackRate = 1
-    }
+  const playbackRateChange = (media, playbackRateOutput, i) => { // @note Plage navigateur recommandée entre 0.25 et 4.0.
+    const rate = [.75, .5, .25, .5, .75, 1, 1.5, 2, 3, 4, 3, 2, 1.5, 1]
+    media.playbackRate = rate[i]
     playbackRateOutput.innerHTML = `x${media.playbackRate}`
+    return rate.length
   }
 
   /**
@@ -270,7 +257,6 @@ const mediaPlayer = () => {
 
     //media.currentTime = 0 // @note Désactivée : un utilisateur peut ainsi caler la plage suivante selon sa préférence personnelle.
 
-    
     const player = media.nextElementSibling,
           currentTimeOutput = player.querySelector('.media-current-time'),
           playPauseButton = player.querySelector('.media-play-pause'),
@@ -287,10 +273,14 @@ const mediaPlayer = () => {
 
   const controls = media => {
 
+    let count0 = 0,
+        count1 = -1
+
     const player = media.nextElementSibling,
           tracks = media.textTracks,
           playPauseButton = player.querySelector('.media-play-pause'),
           playbackRateOutput = player.querySelector('.media-playback-rate'),
+          playbackRateChangeLenght = playbackRateChange(media, playbackRateOutput, count0),
           subtitleLangageOutput = player.querySelector('.media-subtitle-langage'),
           //time = player.querySelector('.media-time'),
           currentTimeOutput = player.querySelector('.media-current-time'),
@@ -429,21 +419,16 @@ const mediaPlayer = () => {
       })
     })
 
-    // @see https://developer.mozilla.org/en-US/docs/Web/Guide/Audio_and_video_delivery/Adding_captions_and_subtitles_to_HTML5_video
-    let count = -1
-
-    subtitlesButton.addEventListener('click', () => {
-      count += 1
-      //if (tracks[count] === tracks[0]) tracks[count +1]
-      
-      if (count > 1) tracks[count -1].mode = 'disabled'
-      if (count < tracks.length) {
-        if (tracks[count].mode === 'showing') count += 1 // Si un track est définit par défaut dans le HTML, on le saute pour la première série de clique.
-        subtitles(tracks, count, subtitleLangageOutput)
-        buttonState(tracks[count].mode === 'showing', subtitlesButton)
-        buttonState(tracks[count].mode === 'showing', subtitleLangageOutput)
+    subtitlesButton.addEventListener('click', () => { // @see https://developer.mozilla.org/en-US/docs/Web/Guide/Audio_and_video_delivery/Adding_captions_and_subtitles_to_HTML5_video
+      count1++
+      if (count1 > 1) tracks[count1 -1].mode = 'disabled'
+      if (count1 < tracks.length) {
+        if (tracks[count1].mode === 'showing') count++ // Si un track est définit par défaut dans le HTML, on le saute pour la première série de clique.
+        subtitles(tracks, count1, subtitleLangageOutput)
+        buttonState(tracks[count1].mode === 'showing', subtitlesButton)
+        buttonState(tracks[count1].mode === 'showing', subtitleLangageOutput)
       } else {
-        count = -1
+        count1 = -1
         subtitleLangageOutput.value = ''
         subtitlesButton.classList.remove('active')
         subtitleLangageOutput.classList.remove('active')
@@ -467,13 +452,14 @@ const mediaPlayer = () => {
       togglePictureInPicture(media)
       buttonState(!document.pictureInPictureElement, pictureInPictureButton) // @note Ne pas mettre avec les clics généraux car cette fonction est en lien avec tous les players, pas seulement le player actuel.
     })
-
+    
     slowMotionButton.addEventListener('click', () => {
-      playbackRateChange(media, playbackRateOutput)
+      playbackRateChange(media, playbackRateOutput, count0)
+      count0++
+      if (count0 === playbackRateChangeLenght) count0 = 0
       buttonState(media.playbackRate !== 1, slowMotionButton) // @note Toujours placé après la fonction playbackRateChange()
       if (media.playbackRate !== 1) playbackRateOutput.classList.add('active') // @note Une fois activé on laisse l'affichage, même si retour à la valeur d'origine.
     })
-
     //fastRewindButton.addEventListener('click', () => fastRewind(media))
 
     //fastForwardButton.addEventListener('click', () => fastForward(media))
