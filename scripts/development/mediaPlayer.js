@@ -205,7 +205,7 @@ const mediaPlayer = () => {
   }
 
   const playbackRateChange = (media, playbackRateOutput, i) => { // @note Plage navigateur recommandée entre 0.25 et 4.0.
-    const rate = [.75, .5, .25, .5, .75, 1, 1.5, 2, 3, 4, 3, 2, 1.5, 1]
+    const rate = [.5, .25, .5, 1, 2, 4, 8, 16, 8, 4, 2, 1] // @note Hormis la valeur la plus petite, chaque changement de vitesse de lecture multiplie ou divise par un facteur 2.
     media.playbackRate = rate[i]
     playbackRateOutput.innerHTML = `x${media.playbackRate}`
     return rate.length
