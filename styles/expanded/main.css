@@ -1445,7 +1445,8 @@ video.media {
   --color-slide: #ffa600;
 }
 .media-player .media-progress-bar {
-  --position-buffer: 0%;
+  --position: 0%;
+  --position-buffer: 100%;
   --color-buffer: #545454;
   background-image: linear-gradient(90deg, var(--color-slide) 0, var(--color-slide) var(--position), transparent var(--position)), linear-gradient(90deg, var(--color-buffer) var(--position-buffer), transparent var(--position-buffer)), repeating-linear-gradient(90deg, transparent 0, transparent 2px, #545454 2px, #545454 4px);
 }

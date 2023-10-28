@@ -81,12 +81,12 @@ const mediaPlayer = () => {
       </button>
       <button class="media-leap-rewind" aria-label="leap rewind">
         <svg focusable="false">
-          <use href="/sprites/player.svg#rewind-10"></use>
+          <use href="/sprites/player.svg#rewind-5"></use>
         </svg>
       </button>
       <button class="media-leap-forward" aria-label="leap forward">
         <svg focusable="false">
-          <use href="/sprites/player.svg#forward-10"></use>
+          <use href="/sprites/player.svg#forward-5"></use>
         </svg>
       </button>
       <!--
@@ -186,9 +186,9 @@ const mediaPlayer = () => {
 
   //const fastForward = media => {}
 
-  const leapRewind = media => media.currentTime -= 10
+  const leapRewind = media => media.currentTime -= 5
 
-  const leapForward = media => media.currentTime += 10
+  const leapForward = media => media.currentTime += 5
 
   const togglePictureInPicture = media => { // @see https://developer.mozilla.org/en-US/docs/Web/API/Picture-in-Picture_API
     if (document.pictureInPictureElement) document.exitPictureInPicture()
@@ -316,7 +316,7 @@ const mediaPlayer = () => {
     // Initialisation de valeurs :
 
     const initValues = (() => {
-      progressBar.value = '0' // Valeur définie aussi dans le template string.
+      progressBar.value = '0' // @note Valeur définie aussi dans le template string.
       progressBar.style.setProperty('--position', '0%')
       progressBar.style.setProperty('--position-buffer', '0%')
       volumeBar.value = '.5'
@@ -332,7 +332,7 @@ const mediaPlayer = () => {
     // @see https://stackoverflow.com/questions/25651719
     ;['loadeddata', 'progress'].forEach(event => {
       media.addEventListener(event, () => {
-        // @note 'media.onprogress' évite une erreur de lecture si avant l'événement 'loadeddata'.
+        // @note 'media.onprogress' évite une erreur de lecture si execution avant l'événement 'loadeddata'.
         media.onprogress = () => progressBar.style.setProperty('--position-buffer', `${Math.floor(media.buffered.end(media.buffered.length - 1) / media.duration * 100)}%`) // @note Un nombre entier suffit.
       })
     })

@@ -125,16 +125,17 @@ video.media
     all: unset
     //align-self: stretch
     width: 100%
-    min-width: 0 // @affected Firefox
+    min-width: 0 // @affected Firefox.
     height: _mediaPlayerRangeHeight
-    padding-block: 1em // @note S'ajoute à la propriété height, ne doit pas dépasser la hauteur du player
+    padding-block: 1em // @note S'ajoute à la propriété height, ne doit pas dépasser la hauteur du player.
     color: _color2
     background-clip: content-box
     cursor: pointer
     &:focus-visible
       --color-slide: _color5
   & .media-progress-bar
-    --position-buffer: 0%
+    --position: 0%
+    --position-buffer: 100%
     --color-buffer: _colorG + 14%
     background-image:
       linear-gradient(90deg, var(--color-slide) 0, var(--color-slide) var(--position), transparent var(--position)),
