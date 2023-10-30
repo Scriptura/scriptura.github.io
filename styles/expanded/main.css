@@ -578,11 +578,14 @@ main {
   -moz-column-gap: 1em;
        column-gap: 1em;
 }
-[class^=column].gap-vertical {
-  gap: 0 1em;
-}
 [class^=column].gap > :not(:last-child):not(hr) {
   margin-bottom: 1em;
+}
+[class^=column].gap-bottom {
+  margin-bottom: 1em;
+}
+[class^=column].gap-vertical {
+  gap: 0 1em;
 }
 .nav {
   position: relative;
@@ -2155,6 +2158,7 @@ select[multiple] option:checked {
   background: #ff6347 linear-gradient(0deg, #ff6347 0%, #ff6347 100%);
 }
 textarea {
+  display: block;
   overflow: auto;
 }
 input[type=radio],

@@ -16,7 +16,7 @@ block main
   .grid2.s-grid1.m-grid1.gap
     .grid.gap(style='--n: 1')
       .boxx
-        form(action='/page/dashboard.html' method='post')
+        form(action='/page/dashboard.html' method='post').grid.gap
           .input
             label(for='input-username') Créez un nom d'utilisateur
             input#input-username(type='text' name='username' placeholder='user' autocorrect='off' autocapitalize='off' spellcheck='false' required='required')

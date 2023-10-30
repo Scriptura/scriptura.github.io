@@ -10,7 +10,7 @@
   display: grid
   grid-auto-flow: dense
   grid-template-columns: repeat(var(--n, 1), minmax(0, 1fr))
-  &.row-defines // @note Permet aux spans de la propriété grid-row de se caler sur les lignes. Intéressant mais pas souhaitable d'emblée en production.
+  &.row-defines // @note Permet aux spans de la propriété grid-row de se caler sur les lignes. Intéressant mais pas souhaitable d'emblée en production, d'où cette classe.
     grid-auto-rows: minmax(0, 1fr)
   &.gap
     gap: var(--gap, _gap)
