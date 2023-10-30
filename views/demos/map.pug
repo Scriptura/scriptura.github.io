@@ -90,21 +90,22 @@
     data-attribution='<a href="//www.openstreetmap.org/">OSM France</a>'
   )
   div
-    .message
-      p
-        svg.icon-inline(role='img' focusable='false')
-          use(href='/sprites/util.svg#info')
-        | Les cartes sont produites avec la librairie 
-        a(href='//leafletjs.com/') Leaflet.js
-        | . Serveurs de tuiles disponibles 
-        a(href='//wiki.openstreetmap.org/wiki/Tile_servers') référencés ici
-        | . Tuiles alternatives 
-        a(href='//leaflet-extras.github.io/leaflet-providers/preview/') référencées ici
-        | .
-    .message
-      p
-        svg.icon-inline(role='img' focusable='false')
-          use(href='/sprites/util.svg#link')
-        | Pour les exemples de définition des cartes ici-présentes voir sur cette page&nbsp;: 
-        a(href='//github.com/Scriptura/scriptura.github.io/blob/master/views/demos/map.pug') map.pug
-        | .
+    .column.gap
+      .message
+        p
+          svg.icon-inline(role='img' focusable='false')
+            use(href='/sprites/util.svg#info')
+          | Les cartes sont produites avec la librairie 
+          a(href='//leafletjs.com/') Leaflet.js
+          | . Serveurs de tuiles disponibles 
+          a(href='//wiki.openstreetmap.org/wiki/Tile_servers') référencés ici
+          | . Tuiles alternatives 
+          a(href='//leaflet-extras.github.io/leaflet-providers/preview/') référencées ici
+          | .
+      .message
+        p
+          svg.icon-inline(role='img' focusable='false')
+            use(href='/sprites/util.svg#link')
+          | Pour les exemples de définition des cartes ici-présentes voir sur cette page&nbsp;: 
+          a(href='//github.com/Scriptura/scriptura.github.io/blob/master/views/demos/map.pug') map.pug
+          | .

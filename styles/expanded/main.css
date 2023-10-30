@@ -354,9 +354,6 @@ main {
 [class^=grid].gap-block {
   padding-block: var(--gap, 1em);
 }
-[class^=grid].gap-top {
-  padding-top: var(--gap, 1em);
-}
 [class^=grid].gap-bottom {
   padding-bottom: var(--gap, 1em);
 }
@@ -578,7 +575,7 @@ main {
   -moz-column-gap: 1em;
        column-gap: 1em;
 }
-[class^=column].gap > :not(:last-child):not(hr) {
+[class^=column].gap > :not(hr) {
   margin-bottom: 1em;
 }
 [class^=column].gap-bottom {
