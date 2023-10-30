@@ -61,7 +61,7 @@
   &.gap-vertical
     gap: 0 _gap
 
-[class^=column].gap > :not(hr) // @todo En test... // [class^=column].gap > *
+[class^=column].gap > :not(:last-child):not(hr) // @todo En test... // [class^=column].gap > *
   margin-bottom: _gap
 
 //[class^=column].gap-vertical

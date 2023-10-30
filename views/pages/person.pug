@@ -35,7 +35,7 @@ block main
           source(srcset='/medias/images/uploads/henri-de-lubac-w600.webp, /medias/images/uploads/henri-de-lubac-w1000.webp 2x' type='image/webp')
           img(src='/medias/images/uploads/henri-de-lubac-original.webp' loading='lazy' alt="Cardinal Henri de Lubac, s.j." width='600' height='600' style='border-radius:50%')
     .center
-      .no-margin-bottom-last-child
+      .grid.gap(style='--n: 1')
         .message-highlight(style='--bg-color:hsl(12, 63%, 49%)')
           svg.icon(role='img' focusable='false')
             use(href='/sprites/util.svg#quotes-left')

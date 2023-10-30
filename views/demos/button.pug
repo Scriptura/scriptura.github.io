@@ -1,63 +1,67 @@
 .grid3.gap
+  .grid.gap(style='--n:1')
+    div
+      p
+        code button.button
+      button.button.cmd-test(type='submit')
+        svg.icon-inline(role='img' focusable='false')
+          use(href='/sprites/util.svg#print')
+        | Imprimer
+    div
+      p
+        code (style='--color;--bg-color')
+      button.button.cmd-test(type='submit' style='--color:#fff;--bg-color:#4e667a')
+        svg.icon-inline(role='img' focusable='false')
+          use(href='/sprites/util.svg#print')
+        | Imprimer
+    div
+      p
+        code .button:disabled
+      button.button.cmd-test(type='submit' disabled)
+        svg.icon-inline(role='img' focusable='false')
+          use(href='/sprites/util.svg#print')
+        | Imprimer
+  .grid.gap(style='--n:1')
+    div
+      p
+        code .scale80
+      button.button.cmd-test.scale80(type='submit')
+        svg.icon-inline(role='img' focusable='false')
+          use(href='/sprites/util.svg#print')
+        | Imprimer
+    div
+      p
+        code .scale120
+      button.button.cmd-test.scale120(type='submit')
+        svg.icon-inline(role='img' focusable='false')
+          use(href='/sprites/util.svg#print')
+        | Imprimer
+    div
+      p
+        code .scale150
+      button.button.cmd-test.scale150(type='submit')
+        svg.icon-inline(role='img' focusable='false')
+          use(href='/sprites/util.svg#print')
+        | Imprimer
+  .grid.gap(style='--n:1')
+    div
+      p
+        code button.round-button
+      button.round-button.cmd-test(type='button' aria-label='Imprimer')
+        svg.icon(role='img' focusable='false')
+          use(href='/sprites/util.svg#print')
+    div
+      p
+        code (style='--color;--bg-color')
+      button.round-button.cmd-test(type='button' aria-label='Imprimer' style='--color:#fff;--bg-color:#4e667a')
+        svg.icon(role='img' focusable='false')
+          use(href='/sprites/util.svg#print')
   div
-    p
-      code button.button
-    button.button.cmd-test(type='submit')
-      svg.icon-inline(role='img' focusable='false')
-        use(href='/sprites/util.svg#print')
-      | Imprimer
-    br
-    p
-      code (style='--color;--bg-color')
-    button.button.cmd-test(type='submit' style='--color:#fff;--bg-color:#4e667a')
-      svg.icon-inline(role='img' focusable='false')
-        use(href='/sprites/util.svg#print')
-      | Imprimer
-    br
-    p
-      code .button:disabled
-    button.button.cmd-test(type='submit' disabled)
-      svg.icon-inline(role='img' focusable='false')
-        use(href='/sprites/util.svg#print')
-      | Imprimer
-  div
-    p
-      code .scale80
-    button.button.cmd-test.scale80(type='submit')
-      svg.icon-inline(role='img' focusable='false')
-        use(href='/sprites/util.svg#print')
-      | Imprimer
-    br
-    p
-      code .scale120
-    button.button.cmd-test.scale120(type='submit')
-      svg.icon-inline(role='img' focusable='false')
-        use(href='/sprites/util.svg#print')
-      | Imprimer
-    br
-    p
-      code .scale150
-    button.button.cmd-test.scale150(type='submit')
-      svg.icon-inline(role='img' focusable='false')
-        use(href='/sprites/util.svg#print')
-      | Imprimer
-  div
-    p
-      code button.round-button
-    button.round-button.cmd-test(type='button' aria-label='Imprimer')
-      svg.icon(role='img' focusable='false')
-        use(href='/sprites/util.svg#print')
-    br
-    p
-      code (style='--color;--bg-color')
-    button.round-button.cmd-test(type='button' aria-label='Imprimer' style='--color:#fff;--bg-color:#4e667a')
-      svg.icon(role='img' focusable='false')
-        use(href='/sprites/util.svg#print')
-  div
-    p
-      code button.button2
-    button.button2.cmd-test(type='button' aria-label='Button test')
-      svg.icon(role='img' focusable='false')
-        use(href='/sprites/util.svg#print')
+    div
+      p
+        code button.button2
+      button.button2.cmd-test(type='button' aria-label='Button test')
+        svg.icon(role='img' focusable='false')
+          use(href='/sprites/util.svg#print')
 script.
   document.querySelectorAll('.cmd-test').forEach(e => e.addEventListener('click', () => alert("Test OK")))

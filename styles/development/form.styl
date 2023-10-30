@@ -16,12 +16,13 @@ legend
   color: inherit // @bugfix Correct the color inheritance from `fieldset` elements @affected IE.
   display: table // @bugfix Correct the text wrapping @affected Edge and IE.
   max-width: 100% // @bugfix Correct the text wrapping @affected Edge and IE.
+  margin-block: .83em .415em // @note personnalisation de l'élément, optimisé pour un `.h2` @todo À vérifier dans le temps...
   padding: 0 // @bugfix Remove the padding so developers are not caught out when they zero out `fieldset` elements @affected All browsers.
   white-space: normal // @bugfix Correct the text wrapping @affected Edge and IE.
   font-weight: bold
 
-form [class*=grid]
-  margin-block: _gap //_gap // @note Alignement sur les champs sans grille.
+//form [class*=grid]
+//  margin-block: _gap //_gap // @note Alignement sur les champs sans grille.
 
 label:focus
 label:hover

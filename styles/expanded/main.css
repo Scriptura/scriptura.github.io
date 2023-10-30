@@ -581,7 +581,7 @@ main {
 [class^=column].gap-vertical {
   gap: 0 1em;
 }
-[class^=column].gap > :not(hr) {
+[class^=column].gap > :not(:last-child):not(hr) {
   margin-bottom: 1em;
 }
 .nav {
@@ -1879,7 +1879,6 @@ samp {
 .pre {
   overflow: auto;
   position: relative;
-  margin: 1em 0;
   min-height: 3em;
   padding: 1em;
   background-color: #1f1f1f;
@@ -1957,7 +1956,6 @@ samp {
   color: var(--color-link);
 }
 main [class^=message] {
-  margin-bottom: 1em;
   border-radius: 0.3em;
 }
 .message-info {
@@ -2087,12 +2085,10 @@ legend {
   color: inherit;
   display: table;
   max-width: 100%;
+  margin-block: 0.83em 0.415em;
   padding: 0;
   white-space: normal;
   font-weight: bold;
-}
-form [class*=grid] {
-  margin-block: 1em;
 }
 label:focus,
 label:hover,
@@ -2282,7 +2278,6 @@ form > .input,
 form fieldset > .input,
 form > [class*="grid"] > .input {
   width: 100%;
-  margin: 1em 0;
 }
 .input label {
   display: inline-block;
@@ -3976,9 +3971,6 @@ a[aria-disabled=true]:active {
 }
 .no-overscroll {
   overscroll-behavior-x: none;
-}
-.no-margin-bottom-last-child > :last-child {
-  margin-bottom: 0;
 }
 .no-print .cmd-print {
   display: none;
