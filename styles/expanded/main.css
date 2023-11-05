@@ -2882,7 +2882,7 @@ form > [class*="grid"] > .input {
 .accordion {
   display: flex;
   flex-direction: column;
-  gap: 0.5em 0;
+  gap: 0.5em;
 }
 .accordion > * > :first-child {
   box-sizing: border-box;
@@ -2946,7 +2946,7 @@ form > [class*="grid"] > .input {
     animation: anim-accordion 0.1s ease-in-out;
   }
 }
-.tab-panel details:first-child {
+.accordion-panel details:first-child {
   margin-top: 0.75em;
 }
 @keyframes anim-accordion {

@@ -515,7 +515,7 @@ const mediaPlayer = () => {
     let i = 0
     for (const media of medias) {
       i++
-      media.id = 'media-' + i
+      media.id = `media-${i}`
       media.removeAttribute('controls') // @note C'est bien Javascript qui doit se charger de cette opération, CSS ne doit pas le faire, ce qui permet un lecteur par défaut avec l'attribut "controls" si JS désactivé.
       addPlayer(media)
       controls(media)

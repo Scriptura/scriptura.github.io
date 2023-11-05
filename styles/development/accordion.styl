@@ -1,12 +1,12 @@
-_accordionColor1 = _colorG + 7% //_color2
-_accordionColor2 = _color2 //_color5
+_accordionColor1 = _colorG + 7%
+_accordionColor2 = _color2
 _accordionColor3 = rgba(255, 255, 255, .1)
 _accordionTime1 = .5s
 
 .accordion
   display: flex
   flex-direction: column
-  gap: .5em 0
+  gap: .5em // .5em 0
   & > * > :first-child
     box-sizing: border-box
     display: flex
@@ -66,8 +66,7 @@ _accordionTime1 = .5s
         box-shadow: _shadow15
         animation: anim-accordion .1s ease-in-out
 
-.tab-panel
-  //& > :first-child
+.accordion-panel
   & details:first-child // @note Correctif @todo À revoir...
     margin-top: .75em
 
