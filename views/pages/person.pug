@@ -26,48 +26,49 @@ block variables
     }
 
 block main
-  header(role='banner')
-    h1.main-heading!= data._name
-  .grid2.s-grid1.gap
-    .center
-      figure.figure-image-focus-thumbnail(style='border-radius:50%;overflow:hidden')
-        picture
-          source(srcset='/medias/images/uploads/henri-de-lubac-w600.webp, /medias/images/uploads/henri-de-lubac-w1000.webp 2x' type='image/webp')
-          img(src='/medias/images/uploads/henri-de-lubac-original.webp' loading='lazy' alt="Cardinal Henri de Lubac, s.j." width='600' height='600' style='border-radius:50%')
-    .center
-      .grid.gap(style='--n: 1')
-        .message-highlight(style='--bg-color:hsl(12, 63%, 49%)')
-          svg.icon(role='img' focusable='false')
-            use(href='/sprites/util.svg#quotes-left')
-          div
-            p #{data._devise}
-        .message
-          p Henri Sonier de Lubac, né à Cambrai le 20 février 1896 et mort à Paris le 4 septembre 1991, est un jésuite, théologien catholique et cardinal français.
-  hr
-  ul.grid3.gap.list-stripe
-    li Id : #{data._id}
-    li User id : #{data._user_id}
-    li Sexe : 
-      if !data._sexe
-        | non renseigné
-      if data._sexe == 0
-        | inconnu
-      if data._sexe == 1
-        | homme
-      else if data._sexe == 2
-        | femme
-      else if data._sexe == 9
-        | non applicable
-    li Prénom&nbsp;: #{data._given_name}
-    li Deuxième prénom&nbsp;: #{data._additional_name}
-    li Nom de famille&nbsp;: #{data._family_name}
-    //-li Nom usuel&nbsp;: #{data._usual_name}
-    //-li Surnom&nbsp;: #{data._nickname}
-    li Préfixe&nbsp;: #{data._prefix}
-    li Suffixe&nbsp;: #{data._suffix}
-    li Nationnalité&nbsp;: #{data._nationality}
-    li Né le #{data._birth_date} à 
-      a(href='/page/place.html')= data._birth_place_id
-    li Décédé le #{data._death_date} à 
-      a(href='/page/place.html')= data._death_place_id
-    li Téléphone&nbsp;: #{data._phone}
+  article
+    header(role='banner')
+      h1.main-heading!= data._name
+    .grid2.s-grid1.gap
+      .center
+        figure.figure-image-focus-thumbnail(style='border-radius:50%;overflow:hidden')
+          picture
+            source(srcset='/medias/images/uploads/henri-de-lubac-w600.webp, /medias/images/uploads/henri-de-lubac-w1000.webp 2x' type='image/webp')
+            img(src='/medias/images/uploads/henri-de-lubac-original.webp' loading='lazy' alt="Cardinal Henri de Lubac, s.j." width='600' height='600' style='border-radius:50%')
+      .center
+        .grid.gap(style='--n: 1')
+          .message-highlight(style='--bg-color:hsl(12, 63%, 49%)')
+            svg.icon(role='img' focusable='false')
+              use(href='/sprites/util.svg#quotes-left')
+            div
+              p #{data._devise}
+          .message
+            p Henri Sonier de Lubac, né à Cambrai le 20 février 1896 et mort à Paris le 4 septembre 1991, est un jésuite, théologien catholique et cardinal français.
+    hr
+    ul.grid3.gap.list-stripe
+      li Id : #{data._id}
+      li User id : #{data._user_id}
+      li Sexe : 
+        if !data._sexe
+          | non renseigné
+        if data._sexe == 0
+          | inconnu
+        if data._sexe == 1
+          | homme
+        else if data._sexe == 2
+          | femme
+        else if data._sexe == 9
+          | non applicable
+      li Prénom&nbsp;: #{data._given_name}
+      li Deuxième prénom&nbsp;: #{data._additional_name}
+      li Nom de famille&nbsp;: #{data._family_name}
+      //-li Nom usuel&nbsp;: #{data._usual_name}
+      //-li Surnom&nbsp;: #{data._nickname}
+      li Préfixe&nbsp;: #{data._prefix}
+      li Suffixe&nbsp;: #{data._suffix}
+      li Nationnalité&nbsp;: #{data._nationality}
+      li Né le #{data._birth_date} à 
+        a(href='/page/place.html')= data._birth_place_id
+      li Décédé le #{data._death_date} à 
+        a(href='/page/place.html')= data._death_place_id
+      li Téléphone&nbsp;: #{data._phone}

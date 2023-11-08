@@ -1126,13 +1126,8 @@ ol.list-straight li::before,
 ol.list-rounded li::before {
   content: counter(li);
 }
-[class^=grid].list-stripe,
-[class^=grid].list-stripe-links {
+[class^=grid][class*=list-] {
   gap: 1em;
-}
-[class^=grid].list-straight,
-[class^=grid].list-rounded {
-  gap: 0.5em 1em;
 }
 @keyframes anim-list {
   50% {
@@ -1617,9 +1612,6 @@ video + .media-player {
 }
 .waiting .media-play-pause.active {
   animation: anim-waiting 1s infinite;
-}
-.figure-media figcaption {
-  color: #d3b58d;
 }
 .video-youtube {
   position: relative;
@@ -3773,23 +3765,23 @@ html,
 .demo-counter > * :first-child {
   display: inline;
 }
-.type-components main > section {
+.type-components .box2 {
   scroll-margin-top: 1em;
 }
 @media (max-width: 50.01em) {
-  .type-components main > section {
+  .type-components .box2 {
     position: relative;
     padding: 0;
   }
 }
 @media (min-width: 50.01em) {
-  .type-components main > section {
+  .type-components .box2 {
     padding: 4em 6em;
     box-shadow: 0 0 1.5rem rgba(0,0,0,0.2);
   }
 }
 @media (max-width: 50.01em) {
-  .type-components main > section.ribbon-content::before {
+  .type-components .box2.ribbon-content::before {
     content: '';
     position: absolute;
     top: -0.5em;
@@ -3804,7 +3796,7 @@ html,
   }
 }
 @media (max-width: 50.01em) {
-  .type-components main > section > .ribbon-top-right {
+  .type-components .box2 > .ribbon-top-right {
     transform: translate(2.85em, 0.9em) rotate(45deg) !important;
   }
 }

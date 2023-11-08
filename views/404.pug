@@ -16,17 +16,18 @@ mixin list(icon, name, slug)
     a(href='/page/' + slug + '.html') #{name}
 
 block main
-  header(role='banner')
-    h1.main-heading!= data._name
-  figure.xs-center
-    svg.size.xs-scale.decorative-svg(role='img' focusable='false' style='--size-width:30em;--size-height:30em;--xs-scale:75%')
-      use(href='/sprites/various/MonogrammeTULivreDeKellsTEST.svg#1')
-  hr
-  //-include includes/componentLinks
-  h2.sr-only Voici quelques suggestions alternatives&nbsp;:
-  ul.grid3.m-grid2.s-grid1.list-straight
-    +list('video-play', 'Le Donjon de Naheulbeuk', 'audioShare')
-    +list('video-play', 'Les Mystérieuses Cités d\'Or', 'audioShare2')
-    +list('video-play', 'Chants chrétiens', 'audioShare3')
-    +list('paint-roller', 'Sprites', 'sprite')
-    +list('video-play', 'Local Media Player', 'localMediaPlayer')
+  article
+    header(role='banner')
+      h1.main-heading!= data._name
+    figure.xs-center
+      svg.size.xs-scale.decorative-svg(role='img' focusable='false' style='--size-width:30em;--size-height:30em;--xs-scale:75%')
+        use(href='/sprites/various/MonogrammeTULivreDeKellsTEST.svg#1')
+    hr
+    //-include includes/componentLinks
+    h2.sr-only Voici quelques suggestions alternatives&nbsp;:
+    ul.grid3.m-grid2.s-grid1.list-straight
+      +list('video-play', 'Le Donjon de Naheulbeuk', 'audioShare')
+      +list('video-play', 'Les Mystérieuses Cités d\'Or', 'audioShare2')
+      +list('video-play', 'Chants chrétiens', 'audioShare3')
+      +list('paint-roller', 'Sprites', 'sprite')
+      +list('video-play', 'Local Media Player', 'localMediaPlayer')

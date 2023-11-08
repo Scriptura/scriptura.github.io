@@ -16,7 +16,7 @@ mixin list(icon, name, slug)
     a(href='#section-' + slug) #{name}
 
 mixin section(name, slug)
-  section(id='section-' + slug).ribbon-content
+  article(id='section-' + slug).box2.ribbon-content
     h1= name
       a.anchor(href='#section-' + slug)
     a(href='./' + slug + '.html').ribbon-top-right See page

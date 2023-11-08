@@ -10,38 +10,39 @@ block variables
     }
 
 block main
-  header(role='banner')
-    h1.main-heading!= data._name
-  .grid2.s-grid1.gap
-    .tabs
-      details
-        summary Présentation
-        div
-          p Scriptura est un framework front-end ayant pour but de simplifier la mise en page. Ici, pas d'ajout supperflu de balises html dans les pages web dans le but de soutenir un script ou un effet visuel, la priorité est donnée au contenu, le code html reste propre et respecte la logique du flux des données. L'idée est de partir d'éléments html correctement structurés et de leur ajouter une classe, ou de les entourer d'un élément parent comportant une classe. La partie du document ainsi ciblée sera transformée en menu onglets ou accordéon, ou encore autre chose selon les besoins.
-          p Les choix techniques impliquent une limitation de la rétrocompatibilité aux navigateurs récents, un parti pris permettant l'utilisation des dernières technologies du web sans compromis.
-          p Ce site regroupe des modèles de démonstration pour le framework, il est destiné à servir avant tout... à son auteur&nbsp;!
-      details
-        summary Version
-        div
-          - const date = new Date().toISOString().split('T')
-          - const version = date[0].replace(/-/g, '.') + '.' + Math.round(date[1].split('.')[0].replace(/:/g, '') / 500)
-          h2.h5 Version du framework&nbsp:
-          ul.links
-            li Draft version&nbsp;: #{version} (
-              a(href='//github.com/Scriptura/scriptura.github.io') Github
-              | )
-      details
-        summary Client test
-        div
-          h2.h5 Configuration cliente&nbsp;:
-          ul.client-test
-            li test..
-    figure.center.xs-order.s-order
-      svg.size.decorative-svg(role='img' focusable='false')
-        use(href='/sprites/silos/195v.svg#1')
-  h2 Components
-  include includes/componentLinks
-  br
-  h2 Templates
-  ul.grid4.list-straight
-    include includes/templateLinks
+  article
+    header(role='banner')
+      h1.main-heading!= data._name
+    .grid2.s-grid1.gap
+      .tabs
+        details
+          summary Présentation
+          div
+            p Scriptura est un framework front-end ayant pour but de simplifier la mise en page. Ici, pas d'ajout supperflu de balises html dans les pages web dans le but de soutenir un script ou un effet visuel, la priorité est donnée au contenu, le code html reste propre et respecte la logique du flux des données. L'idée est de partir d'éléments html correctement structurés et de leur ajouter une classe, ou de les entourer d'un élément parent comportant une classe. La partie du document ainsi ciblée sera transformée en menu onglets ou accordéon, ou encore autre chose selon les besoins.
+            p Les choix techniques impliquent une limitation de la rétrocompatibilité aux navigateurs récents, un parti pris permettant l'utilisation des dernières technologies du web sans compromis.
+            p Ce site regroupe des modèles de démonstration pour le framework, il est destiné à servir avant tout... à son auteur&nbsp;!
+        details
+          summary Version
+          div
+            - const date = new Date().toISOString().split('T')
+            - const version = date[0].replace(/-/g, '.') + '.' + Math.round(date[1].split('.')[0].replace(/:/g, '') / 500)
+            h2.h5 Version du framework&nbsp:
+            ul.links
+              li Draft version&nbsp;: #{version} (
+                a(href='//github.com/Scriptura/scriptura.github.io') Github
+                | )
+        details
+          summary Client test
+          div
+            h2.h5 Configuration cliente&nbsp;:
+            ul.client-test
+              li test..
+      figure.center.xs-order.s-order
+        svg.size.decorative-svg(role='img' focusable='false')
+          use(href='/sprites/silos/195v.svg#1')
+    h2 Components
+    include includes/componentLinks
+    br
+    h2 Templates
+    ul.grid4.list-straight
+      include includes/templateLinks

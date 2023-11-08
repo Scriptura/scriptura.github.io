@@ -10,6 +10,7 @@ block variables
       _description: 'Media players, documentation.'
     }
 block main
-  header(role='banner')
-    h1.main-heading!= data._name
-  include ../demos/mediaPlayer
+  article
+    header(role='banner')
+      h1.main-heading!= data._name
+    include ../demos/mediaPlayer

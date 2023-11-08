@@ -42,32 +42,31 @@ _demoColorDeviation = 10
   & > * :first-child
     display: inline
 
-.type-components
-  & main > section
-    scroll-margin-top: 1em
+.type-components .box2
+  scroll-margin-top: 1em
+  @media (max-width: _sizeS)
+    position: relative
+    padding: 0
+  @media (min-width: _sizeS)
+    padding: 4em 6em
+    box-shadow: _shadow8
+  &.ribbon-content::before
     @media (max-width: _sizeS)
-      position: relative
-      padding: 0
-    @media (min-width: _sizeS)
-      padding: 4em 6em
-      box-shadow: _shadow8
-    &.ribbon-content::before
-      @media (max-width: _sizeS)
-        content: ''
-        position: absolute
-        top: -.5em
-        right: -.5em
-        width: 100%
-        max-width: 20em
-        aspect-ratio: 1/1
-        background-image: linear-gradient(-135deg, rgba(255, 255, 255, .05), transparent 50%)
-        //background-size: 100% 100%
-        background-repeat: no-repeat
-        background-position: 100% 0%
-        pointer-events: none
-    & > .ribbon-top-right
-      @media (max-width: _sizeS)
-        transform: translate(2.85em, .9em) rotate(45deg) !important
+      content: ''
+      position: absolute
+      top: -.5em
+      right: -.5em
+      width: 100%
+      max-width: 20em
+      aspect-ratio: 1/1
+      background-image: linear-gradient(-135deg, rgba(255, 255, 255, .05), transparent 50%)
+      //background-size: 100% 100%
+      background-repeat: no-repeat
+      background-position: 100% 0%
+      pointer-events: none
+  & > .ribbon-top-right
+    @media (max-width: _sizeS)
+      transform: translate(2.85em, .9em) rotate(45deg) !important
 
 .demo-icons
   & ruby:hover *

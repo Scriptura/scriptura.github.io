@@ -135,13 +135,15 @@ ol.list-rounded
     &::before
       content: counter(li)
 
+[class^=grid][class*=list-]
+  gap: _gap
+
+/*
 [class^=grid]
-  &.list-stripe
-  &.list-stripe-links
-    gap: _gap
   &.list-straight
   &.list-rounded
     gap: (_gap / 2) _gap
+*/
 
 @keyframes anim-list
   50%

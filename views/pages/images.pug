@@ -11,6 +11,7 @@ block variables
     }
 
 block main
-  header(role='banner')
-    h1.main-heading!= data._name
-  include ../demos/image
+  article
+    header(role='banner')
+      h1.main-heading!= data._name
+    include ../demos/image

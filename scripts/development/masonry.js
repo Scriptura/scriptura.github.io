@@ -34,10 +34,12 @@ for (const masonry of document.querySelectorAll('.masonry')) {
     //setTimeout(() => {grid.resizeAllGridItems()}, 200) // @note Deuxième application après un premier calcul @todo Désactivée pour test.
   })
 
-  window.addEventListener('resize', () => { // Lancement du calcul de la grille si resize
+  window.addEventListener('resize', () => {
     let resizeTimeout
     clearTimeout(resizeTimeout)
     resizeTimeout = setTimeout(() => {grid.resizeAllGridItems()}, 200) // Limitation du nombre de calculs @see https://stackoverflow.com/questions/5836779/
   })
+
+  document.querySelectorAll('.accordion').forEach(e => e.addEventListener('transitionend', () => grid.resizeAllGridItems())) // Composants dont l'action nécessite un recalcul de la grille.
 
 }

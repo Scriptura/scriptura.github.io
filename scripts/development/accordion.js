@@ -30,7 +30,7 @@
  * Discution sur Alsacréations @see https://forum.alsacreations.com/topic-5-87178-1-Resolu-Revue-de-code-pour-un-menu-accordeon.html
  */
 
-const accordion = (() => {
+const accordion = () => {
 
   document.querySelectorAll('.accordion').forEach(e => e.setAttribute('role', 'tablist'))
 
@@ -96,13 +96,15 @@ const accordion = (() => {
         if (singleTab) siblingStateManagement(summary.parentElement)
         const panel = summary.nextElementSibling
         if (panel.ariaHidden === 'false') {
-          panel.removeAttribute('style') //panel.style.maxHeight = null
+          //panel.style.maxHeight = null
+          panel.removeAttribute('style')
           panel.ariaHidden = 'true'
         }
         else {
           panel.style.maxHeight = panel.scrollHeight + 'px'
           panel.ariaHidden = 'false'
         }
+        //panel.addEventListener('transitionend', () => panel.removeAttribute('style'))
       })
     })
 
@@ -119,4 +121,6 @@ const accordion = (() => {
     }
   }
 
-})()
+}
+
+window.addEventListener('DOMContentLoaded', accordion()) // @note S'assurer que le script est bien chargé après le DOM et ce quelque soit la manière dont il est appelé.
