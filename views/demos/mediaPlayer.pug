@@ -99,7 +99,7 @@
           a(href='https://citesdor.com/musiques/musiques_boub.php3') lien
           | ).
   div
-    h2.h6 Tester la fonction "lecture suivante" dans les conditions d'une erreurs de lecture
+    h2 Test
     .column.gap.media-relationship(data-next-reading='true')
       figure.figure-media
         figcaption Stridulation d'un grillon
@@ -117,6 +117,11 @@
         figcaption Petites n'abeilles...
         audio.media(controls)
           source(src='/medias/audios/abeilles.mp3')
+    .message-highlight
+      svg.icon(role='img' focusable='false')
+        use(href='/sprites/util.svg#info')
+      div
+        p Il s'agit ici de tester la fonction "lecture suivante" dans le cas où une erreurs de lecture s'est produite sur deux players. Nous devrons ici passer du lecteur n°1 au lecteur n°4.
   figure.center
     svg.size.xs-scale.decorative-svg(role='img' focusable='false' style='--size:15em')
       use(href='/sprites/various/ClefDeLAbimeMonochrome.svg#1')
