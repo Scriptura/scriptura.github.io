@@ -142,7 +142,11 @@ h2 Rendering test for a print
       svg.icon(role='img' focusable='false')
         use(href='/sprites/util.svg#print')
     br
-    .message
-      p Pour un test plus concrèt nous vous invitons à tester l'impression 
-        a(href='/page/article.html') à partir de notre aticle de démonstration
-        | .
+    .message-highlight
+      svg.icon(role='img' focusable='false')
+        use(href='/sprites/util.svg#link')
+      div
+        p
+          | Pour un test plus proche d'un site en production nous vous invitons à tester l'impression 
+          a(href='/page/article.html') à partir de notre aticle de démonstration
+          | .

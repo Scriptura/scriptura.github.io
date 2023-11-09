@@ -28,7 +28,7 @@ block main
       h1.main-heading!= data._name
     .grid3.m-grid2.s-grid1.gap.masonry
       article.boxx.c2
-        h2.h4 Menu principal
+        h1.h4 Menu principal
         .accordion(data-singletab='true')
           details
             summary
@@ -229,7 +229,7 @@ block main
                     li Keyword4
                     li Keyword5
       article.boxx.s-c2
-        h2.h4 Pages les plus visitées
+        h1.h4 Pages les plus visitées
         .center
           pie-chart(data='40;30;30;20;10' labels='Cherry;Banana;Apricot;Peach;Raspberry' colors='hsl(30, 100%, 65%);hsl(90, 100%, 65%);hsl(200, 100%, 65%);hsl(160, 100%, 65%);hsl(10, 100%, 65%)')
       //-
@@ -242,7 +242,7 @@ block main
                     use(href='/sprites/util.svg#link')
                   | List item #{i}
       article.boxx.s-c2
-        h2.h4 Utilisateurs actifs
+        h1.h4 Utilisateurs actifs
         .grid-auto.gap
           .user-def
             .avatar(style='--img:url(/medias/images/uploads/henri-de-lubac-w300.webp)')
@@ -270,7 +270,7 @@ block main
               a(href='/page/person.html') Eusèbe de Césarée
             time(datetime='2017-04-23 20:33:21') Le 22 avril 2017 à 09h30
       article.boxx.c2
-        h2.h4 Derniers médias partagés
+        h1.h4 Derniers médias partagés
           //- "partagés" ou "téléchargés"...
         .tabs
           details

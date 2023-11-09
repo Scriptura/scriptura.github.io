@@ -123,3 +123,10 @@
                   svg
                     use(href='/sprites/util.svg#test')
                 p!= e._description
+  .message-highlight
+    svg.icon(role='img' focusable='false')
+      use(href='/sprites/util.svg#quill')
+    div
+      p La coloration syntaxique du code s'appuie sur la bilbiothèque 
+        a(href='https://prismjs.com/') Prism.js
+        | .

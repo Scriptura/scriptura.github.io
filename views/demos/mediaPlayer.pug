@@ -69,33 +69,37 @@
       audio.media(controls)
         source(src='https://stream.vestaradio.com/VertigeRadio')
 .grid2.s-grid1.gap
+  .grid.gap(style='--n:1')
+    .message-highlight
+      svg.icon(role='img' focusable='false')
+        use(href='/sprites/util.svg#info')
+      div
+        p Par défaut un seul lecteur peut être actif sur la page. En cas de nouveau player, le précédent passera sur pause, à part ce principe de base, les lecteurs sont indépendants entre eux.
+    .message-highlight
+      svg.icon(role='img' focusable='false')
+        use(href='/sprites/util.svg#cogwheel')
+      div
+        p
+          | Un élément parent bénéficiant de la classe 
+          code .media-relationship
+          |  rend ses médias enfants solidaires entre eux, sans pour autant qu'ils soient obligés d'être des élements frères.
+        p
+          code data-next-reading=false
+          |  ajoutera une option "lecture à la suite" dans le menu du player, 
+          code data-next-reading=true
+          |  activera cette même option par défaut.
   div
-    .message
-      p
-        svg.icon-inline(role='img' focusable='false')
-          use(href='/sprites/util.svg#info')
-        | Par défaut un seul lecteur peut être actif sur la page. En cas de nouveau player, le précédent passera sur pause, à part ce principe de base, les lecteurs sont indépendants entre eux.
-      p
-        | Un élément parent bénéficiant de la classe 
-        code .media-relationship
-        |  rend ses médias enfants solidaires entre eux, sans pour autant qu'ils soient obligés d'être des élements frères.
-      p
-        code data-next-reading=false
-        |  ajoutera une option "lecture à la suite" dans le menu du player, 
-        code data-next-reading=true
-        |  activera cette même option par défaut.
+    .message-highlight
+      svg.icon(role='img' focusable='false')
+        use(href='/sprites/util.svg#quill')
+      div
+        p Crédit pour les musiques&nbsp;: 
+          em Les Mystérieuses Cités d'Or
+          | , interprétées par Yannick Rault (
+          a(href='https://citesdor.com/musiques/musiques_boub.php3') lien
+          | ).
   div
-    .message
-      p
-        svg.icon-inline(role='img' focusable='false')
-          use(href='/sprites/util.svg#info')
-        | Crédit pour les musiques : 
-        em Les Mystérieuses Cités d'Or
-        | , interprétées par Yannick Rault (
-        a(href='https://citesdor.com/musiques/musiques_boub.php3') lien
-        | ).
-  div
-    p Tester la fonction "lecture suivante" si erreurs de lecture&nbsp;:
+    h2.h6 Tester la fonction "lecture suivante" dans les conditions d'une erreurs de lecture
     .column.gap.media-relationship(data-next-reading='true')
       figure.figure-media
         figcaption Stridulation d'un grillon
@@ -150,19 +154,18 @@ p
     video.media(controls poster='/medias/videos/Agent327/poster.jpg' style='aspect-ratio: 21/9')
       source(src='/urlError.mp4' type='video/mp4')
   div
-    .message
-      p
-        svg.icon-inline(role='img' focusable='false')
-          use(href='/sprites/util.svg#info')
-        | Crédit pour les vidéos : 
-        a(href='https://www.blender.org/about/studio/') Blender Studio
-        | .
-  div
-    .message
-      p
-        svg.icon-inline(role='img' focusable='false')
-          use(href='/sprites/util.svg#info')
-        | Certains des lecteurs présents bénéficient de sous-titres, activés ou non par défaut selon les spécifications natives du code HTML5.
+    .message-highlight
+      svg.icon(role='img' focusable='false')
+        use(href='/sprites/util.svg#quill')
+      div
+        p Crédit pour les vidéos : 
+          a(href='https://www.blender.org/about/studio/') Blender Studio
+          | .
+  .message-highlight
+    svg.icon(role='img' focusable='false')
+      use(href='/sprites/util.svg#info')
+    div
+      p Certains des lecteurs présents bénéficient de sous-titres, activés ou non par défaut selon les spécifications natives du code HTML5.
 hr(data-hr='✻ ✻ ✻')
 .grid2.gap.gap-bottom
   div
@@ -182,9 +185,13 @@ hr(data-hr='✻ ✻ ✻')
       code (data-id='errorId')
     .video-youtube(data-id='errorId')
 .grid2.gap
-  .message
-    p
-      svg.icon-inline(role='img' focusable='false')
-        use(href='/sprites/util.svg#info')
-      | Afin de garder des pages légères les vidéos Youtubes ne sont chargées qu'à la demande de l'utilisateur, lorsque celui-ci clique sur le bouton de lecture.
-    P L'API youtube n'est pas utilisée afin d'éviter les limitations inhérentes à cette dernière en terme de requêtes. Ce qui nous permet aussi de garder notre indépendance face à la nécessité d'une clef d'API.
+  .message-highlight
+    svg.icon(role='img' focusable='false')
+      use(href='/sprites/util.svg#paperclip')
+    div
+      p Afin de garder des pages légères les vidéos Youtubes ne sont chargées qu'à la demande de l'utilisateur, lorsque celui-ci clique sur le bouton de lecture.
+  .message-highlight
+    svg.icon(role='img' focusable='false')
+      use(href='/sprites/util.svg#info')
+    div
+      P L'API youtube n'est pas utilisée afin d'éviter les limitations inhérentes à cette dernière en terme de requêtes. Ce qui nous permet aussi de garder notre indépendance face à la nécessité d'une clef d'API.
