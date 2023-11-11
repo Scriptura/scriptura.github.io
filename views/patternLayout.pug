@@ -6,8 +6,8 @@ html.no-js.no-overscroll(lang='fr')
     meta(charset='utf-8')
     title=data._title
     meta(name='description' content=data._description)
-    //- @todo Évaluation pour le viewport de la valeur content "shrink-to-fit=no" @affected Safari >=9
-    meta(name='viewport' content='width=device-width, initial-scale=1')
+    //- @documentation viewport-fit=cover pour le support des variables CSS env()
+    meta(name='viewport' content='width=device-width, initial-scale=1, viewport-fit=cover')
     meta(name='theme-color' content='#333')
     link(rel='manifest' href='/manifest.webmanifest' crossorigin='use-credentials')
     link(rel='shortcut icon' href='/favicons/favicon.ico')

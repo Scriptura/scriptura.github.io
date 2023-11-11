@@ -1,135 +1,138 @@
-form(method='get' action='./').grid3.m-grid2.gap.masonry
-  fieldset
-    legend.h2 Text inputs
-    .grid.gap(style='--n:1')
-      .input
-        label(for='input-text') Type text
-        input#input-text(type='text' name='input-text' placeholder='John Smith' required='required' autocomplete='off')
-      .grid-auto-min.gap
+form(action='./')
+  .grid3.m-grid2.gap.gap-bottom.masonry
+    fieldset
+      legend.h2 Text inputs
+      .grid.gap(style='--n:1')
         .input
-          label(for='input-text1') Type text & regex name
-          input#input-text1(type='text' name='input-text1' placeholder='John' required='required' autocomplete='given-name').validation-name
+          label(for='input-text') Type text
+          input#input-text(type='text' name='input-text' placeholder='John Smith' required='required' autocomplete='off')
+        .grid-auto-min.gap
+          .input
+            label(for='input-text1') Type text & regex name
+            input#input-text1(type='text' name='input-text1' placeholder='John' required='required' autocomplete='given-name').validation-name
+          .input
+            label(for='input-text2') Type text & regex name
+            input#input-text2(type='text' name='input-text2' placeholder='Smith' required='required' autocomplete='family-name').validation-name
         .input
-          label(for='input-text2') Type text & regex name
-          input#input-text2(type='text' name='input-text2' placeholder='Smith' required='required' autocomplete='family-name').validation-name
-      .input
-        label(for='input-text3') Type text & regex name
-        input#input-text3(type='text' name='input-text3' placeholder='Country' required='required' autocomplete='country').validation-name
-      .input.disabled
-        label(for='input-text0') Disabled Attribute
-        input#input-text0(type='text' name='input-text0' placeholder=':disabled' required='' disabled='')
-  fieldset
-    legend.h2 Various inputs
-    .grid.gap(style='--n:1')
-      .input
-        label(for='input-email') Type email
-        input#input-email(type='email' name='input-email' placeholder='pseudo@email.com' required='required' pattern='^[a-z0-9._-]{3,50}@[a-z0-9._-]{2,}\.[a-z]{2,4}').validation-email
-      .input
-        label(for='input-tel') Type tel
-        input#input-tel(type='tel' name='input-tel' placeholder='0477446677').validation-phone-fr_FR
-        .message
-          p
-            svg.icon-inline(role='img' focusable='false')
-              use(href='/sprites/util.svg#info')
-            | Ce champ accepte uniquement les numéros de téléphone français.
-      .grid-auto-min.gap
+          label(for='input-text3') Type text & regex name
+          input#input-text3(type='text' name='input-text3' placeholder='Country' required='required' autocomplete='country').validation-name
+        .input.disabled
+          label(for='input-text0') Disabled Attribute
+          input#input-text0(type='text' name='input-text0' placeholder=':disabled' required='' disabled='')
+    fieldset
+      legend.h2 Various inputs
+      .grid.gap(style='--n:1')
         .input
-          label(for='input-number') Type number
-          input#input-number(type='number' name='input-number' step='1' min='-5' max='100' value='50')
+          label(for='input-email') Type email
+          input#input-email(type='email' name='input-email' placeholder='pseudo@email.com' required='required' pattern='^[a-z0-9._-]{3,50}@[a-z0-9._-]{2,}\.[a-z]{2,4}').validation-email
         .input
-          label(for='input-password') Type password
-          input#input-password(type='password' name='input-password' placeholder='••••••••')
-      .grid-auto-min.gap
+          label(for='input-tel') Type tel
+          input#input-tel(type='tel' name='input-tel' placeholder='0477446677').validation-phone-fr_FR
+          .message
+            p
+              svg.icon-inline(role='img' focusable='false')
+                use(href='/sprites/util.svg#info')
+              | Ce champ accepte uniquement les numéros de téléphone français.
+        .grid-auto-min.gap
+          .input
+            label(for='input-number') Type number
+            input#input-number(type='number' name='input-number' step='1' min='-5' max='100' value='50')
+          .input
+            label(for='input-password') Type password
+            input#input-password(type='password' name='input-password' placeholder='••••••••')
+        .grid-auto-min.gap
+          .input
+            label(for='input-color') Type color
+            input#input-color(type='color' name='input-color' value='#ffa500')
+          .input.color-output
+            label(for='input-color2')
+              code .color-output
+            input#input-color2(type='color' name='input-color2' value='#ff6347')
         .input
-          label(for='input-color') Type color
-          input#input-color(type='color' name='input-color' value='#ffa500')
-        .input.color-output
-          label(for='input-color2')
-            code .color-output
-          input#input-color2(type='color' name='input-color2' value='#ff6347')
-      .input
-        label(for='input-file') Type file
-        input#input-file(type='file' name='input-file')
-      .input
-        label(for='input-url') Type url
-        input#input-url(type='url' name='input-url' placeholder='https://example.com/').validation-url
-      .input.hidden
-        label(for='input-test') Type hidden
-        input#input-test(type='text' name='input-test' placeholder='requis')
-  fieldset
-    legend.h2 Dates & times inputs
-    .grid.gap(style='--n:1')
-      .input
-        label(for='input-date') Type date
-        input#input-date(type='date' name='input-date')
-      .input
-        label(for='input-date2') Type date, with 
-          code value='2021-07-17'
-        input#input-date2(type='date' name='input-date2' value='2021-07-17')
-      .input
-        label(for='input-date3') Type date, with 
-          code .today-date
-        input#input-date3(type='date' name='input-date3').today-date
-      .grid-auto-min.gap
+          label(for='input-file') Type file
+          input#input-file(type='file' name='input-file')
         .input
-          label(for='input-time') Type time
-          input#input-time(type='time' name='input-time' value='13:30')
+          label(for='input-url') Type url
+          input#input-url(type='url' name='input-url' placeholder='https://example.com/').validation-url
+        .input.hidden
+          label(for='input-test') Type hidden
+          input#input-test(type='text' name='input-test' placeholder='requis')
+    fieldset
+      legend.h2 Dates & times inputs
+      .grid.gap(style='--n:1')
         .input
-          label(for='input-datetime-local') Type datetime-local
-          input#input-datetime-local(type='datetime-local' name='input-datetime-local' value='2021-07-17T04:49' min='2017-07-17T00:00' max='2022-07-17T00:00')
-      .grid-auto-min.gap
+          label(for='input-date') Type date
+          input#input-date(type='date' name='input-date')
         .input
-          label(for='input-week') Type week
-          input#input-week(type='week' name='input-week')
+          label(for='input-date2') Type date, with 
+            code value='2021-07-17'
+          input#input-date2(type='date' name='input-date2' value='2021-07-17')
         .input
-          label(for='input-month') Type month
-          input#input-month(type='month' name='input-month' value='2021-08')
-  fieldset
-    legend.h2 Selects
-    .grid.gap(style='--n:1')
+          label(for='input-date3') Type date, with 
+            code .today-date
+          input#input-date3(type='date' name='input-date3').today-date
+        .grid-auto-min.gap
+          .input
+            label(for='input-time') Type time
+            input#input-time(type='time' name='input-time' value='13:30')
+          .input
+            label(for='input-datetime-local') Type datetime-local
+            input#input-datetime-local(type='datetime-local' name='input-datetime-local' value='2021-07-17T04:49' min='2017-07-17T00:00' max='2022-07-17T00:00')
+        .grid-auto-min.gap
+          .input
+            label(for='input-week') Type week
+            input#input-week(type='week' name='input-week')
+          .input
+            label(for='input-month') Type month
+            input#input-month(type='month' name='input-month' value='2021-08')
+    fieldset
+      legend.h2 Selects
+      .grid.gap(style='--n:1')
+        .input
+          label(for='select-pays') Type select 
+            code .input label + select
+          select#select-pays(name='select-pays')
+            option(value='00' selected='') Pays
+            option(value='FR') France
+            option(value='ZA') Afrique du Sud
+            option(value='AL') Albanie
+            option(value='DZ') Algérie
+            option(value='DE') Allemagne
+            option(value='AD') Andorre
+            option(value='AO') Angola
+            option(value='AI') Anguilla
+            option(value='AQ') Antarctique
+            option(value='AG') Antigua-et-Barbuda
+            option(value='AN') Antilles néerlandaises
+        .input
+          label(for='select-pays2') Type select multiple
+          select#select-pays2(multiple name='select-pays2')
+            option(value='00' selected='') Pays
+            option(value='FR') France
+            option(value='ZA') Afrique du Sud
+            option(value='AL') Albanie
+            option(value='DZ') Algérie
+            option(value='DE') Allemagne
+            option(value='AD') Andorre
+            option(value='AO') Angola
+            option(value='AI') Anguilla
+            option(value='AQ') Antarctique
+            option(value='AG') Antigua-et-Barbuda
+            option(value='AN') Antilles néerlandaises
+    fieldset
+      legend.h2 Textareas
       .input
-        label(for='select-pays') Type select 
-          code .input label + select
-        select#select-pays(name='select-pays')
-          option(value='00' selected='') Pays
-          option(value='FR') France
-          option(value='ZA') Afrique du Sud
-          option(value='AL') Albanie
-          option(value='DZ') Algérie
-          option(value='DE') Allemagne
-          option(value='AD') Andorre
-          option(value='AO') Angola
-          option(value='AI') Anguilla
-          option(value='AQ') Antarctique
-          option(value='AG') Antigua-et-Barbuda
-          option(value='AN') Antilles néerlandaises
-      .input
-        label(for='select-pays2') Type select multiple
-        select#select-pays2(multiple name='select-pays2')
-          option(value='00' selected='') Pays
-          option(value='FR') France
-          option(value='ZA') Afrique du Sud
-          option(value='AL') Albanie
-          option(value='DZ') Algérie
-          option(value='DE') Allemagne
-          option(value='AD') Andorre
-          option(value='AO') Angola
-          option(value='AI') Anguilla
-          option(value='AQ') Antarctique
-          option(value='AG') Antigua-et-Barbuda
-          option(value='AN') Antilles néerlandaises
-  fieldset
-    legend.h2 Textareas
-    .input
-      label(for='textarea-message') Textarea 
-        code .input label + textarea
-      textarea#textarea-message(name='textarea-message' placeholder='Bonjour monsieur...' required='')
-  fieldset
-    legend.h2 Search
-    .search
-      label.sr-only(for='input-search' accesskey='s') Rechercher
-      input#input-search(type='search' name='input-search' placeholder='Rechercher' required='' aria-label='Search through site content')
-      button
-        svg.icon(role='img' focusable='false')
-          use(href='/sprites/util.svg#search')
-        span.sr-only Rechercher
+        label(for='textarea-message') Textarea 
+          code .input label + textarea
+        textarea#textarea-message(name='textarea-message' placeholder='Bonjour monsieur...' required='')
+.grid3.m-grid2.gap
+  div
+    h2 Search
+    search.search
+      form(action='./')
+        label.sr-only(for='input-query' accesskey='s') Rechercher
+        input#input-query(type='search' name='q' placeholder='Rechercher' required='' aria-label='Search through site content')
+        button(type='submit')
+          svg.icon(role='img' focusable='false')
+            use(href='/sprites/util.svg#search')
+          span.sr-only Rechercher

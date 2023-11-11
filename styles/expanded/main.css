@@ -2433,16 +2433,16 @@ form > [class*="grid"] > .input {
   width: 100%;
   height: 100%;
 }
-.search {
+.search form {
   display: flex;
   width: 100%;
   height: 3em;
   align-items: stretch;
 }
-.search * {
+.search form * {
   outline: none;
 }
-.search input {
+.search form input {
   flex-grow: 1;
   max-height: 100%;
   padding: 0.4em 1em;
@@ -2453,12 +2453,12 @@ form > [class*="grid"] > .input {
   border-radius: 1.5em 0 0 1.5em;
   box-shadow: inset 0 0.2em 0.5em rgba(0,0,0,0.2);
 }
-.search input:focus,
-.search input:hover,
-.search input:active {
+.search form input:focus,
+.search form input:hover,
+.search form input:active {
   border-color: #ff6347;
 }
-.search button {
+.search form button {
   min-width: 3.5em;
   color: #e9d9c4;
   background-color: #ff6347;
@@ -2466,13 +2466,13 @@ form > [class*="grid"] > .input {
   border-radius: 0 1.5em 1.5em 0;
   box-shadow: inset 0 0.2em 0.5em rgba(0,0,0,0.2);
 }
-.search button:focus,
-.search button:hover,
-.search button:active {
+.search form button:focus,
+.search form button:hover,
+.search form button:active {
   color: #fff;
   animation: anim-search 0.2s ease-in-out;
 }
-.search button svg {
+.search form button svg {
   width: 1em;
   height: 1em;
 }
@@ -2999,6 +2999,7 @@ form > [class*="grid"] > .input {
 .scroll-top {
   position: fixed;
   bottom: 0;
+  bottom: env(safe-area-inset-bottom, 0);
   right: 0;
   z-index: 4000;
   height: 3em;
@@ -3842,8 +3843,7 @@ a[aria-disabled=true]:active {
 }
 .sr-only {
   position: absolute;
-  -webkit-clip-path: inset(50%);
-          clip-path: inset(50%);
+  transform: scale(0);
 }
 .protected {
   -webkit-user-select: none;
