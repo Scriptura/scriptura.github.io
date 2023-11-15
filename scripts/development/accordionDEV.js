@@ -22,88 +22,53 @@
  * 2. Option 'singleTab'
  *
  * Inspiration pour les rôles et les attributs aria :
- * @see https://www.w3.org/TR/wai-aria-practices-1.1/examples/accordion/accordion.html
+ * @see https://www.w3.org/WAI/ARIA/apg/patterns/accordion/examples/accordion/
  * @see https://jqueryui.com/accordion/
  * @see http://accessibility.athena-ict.com/aria/examples/tabpanel2.shtml
+ *
+ * Mes remerciement à Ostara pour la factorisation du code @see https://codepen.io/ostara/pen/BajdPOO
+ * Discution sur Alsacréations @see https://forum.alsacreations.com/topic-5-87178-1-Resolu-Revue-de-code-pour-un-menu-accordeon.html
  */
 
 const accordion = () => {
 
-  const init = () => {
-    transformItems(document.querySelectorAll('.accordion > details'))
-    addEventListenerOnButtons(document.querySelectorAll('.accordion-summary'))
+  const accordions = document.querySelectorAll('.accordion')
+
+  const replaceHTML = (accordion, i) => {
+    accordion.id = `accordion-${i}`
+    accordion.setAttribute('role', 'tablist')
+    replaceDetailss(accordion.children)
   }
 
-  const transformItems = items => {
-    items.forEach((item, i) => {
+  const replaceDetailss = detailss => {
+    let i = 0
+    for (const details of detailss) {
       i++
-      replaceSummaryElement(item.firstElementChild, i)
-      replacePanelElement(item.lastElementChild, i)
-      replaceDetailsElement(item)
-      console.log(item.firstElementChild.id)
-    })
+      const html = details.innerHTML,
+            substitute = document.createElement('div')
+            
+      substitute.classList.add('accordion-details')
+      if (details.open) substitute.classList.add('open') // 1
+      details.after(substitute, details)
+      substitute.appendChild(details).insertAdjacentHTML('afterend', html)
+      details.parentElement.removeChild(details)
+      replaceSummary(details.firstElementChild, i)
+    }
   }
 
-  const replaceDetailsElement = details => {
-    const item = document.createElement('div')
-    item.classList.add('accordion-details') 
-    item.innerHTML = details.innerHTML
-    details.replaceWith(item)
-    if (details.open) openItem(item)
+  //const replaceSummary = (summary, i) => summary.outerHTML = `<button id="accordion-summary-${i}" type="button" class="accordion-summary" role="tab" aria-controls="accordion-panel-${i}" aria-expanded="false">${summary.innerHTML}</button>`
+
+  const replaceSummary = (summary, i) => {
+    summary.outerHTML = `<button id="accordion-summary-${i}" type="button" class="accordion-summary" role="tab" aria-controls="accordion-panel-${i}" aria-expanded="false">${summary.innerHTML}</button>`
   }
 
-  const replaceSummaryElement = (summary, i) => summary.outerHTML = `<button id="accordion-summary-${i}" type="button" class="accordion-summary" role="tab" aria-controls="accordion-panel-${i}" aria-expanded="false">${summary.innerHTML}</button>`
-
-  const replacePanelElement = (panel, i) => panel.outerHTML = `<div id="accordion-panel-${i}" class="accordion-panel" role="tabpanel" aria-hidden="true">${panel.innerHTML}</div>`
-
-  const openItem = item => {
-    item.classList.add('open') // 1
-    if (item.classList.contains('open')) item.firstElementChild.ariaExpanded = 'true'
-    togglePanel(getPanel(item))
+  const init = () => {
+    let i = 0
+    for (const accordion of accordions) {
+      i++
+      replaceHTML(accordion, i)
+    }
   }
-
-  const addEventListenerOnButtons = buttons => buttons.forEach(button => button.addEventListener('click', () => onTogglePanel(button)))
-
-  const closeAllOtherItems = item => getOtherItems(item).forEach(_ => closeItem(_))
-
-  const closeItem = item => {
-    item.classList.remove('open')
-    item.firstElementChild.ariaExpanded = 'false'
-    closePanel(getPanel(item))
-  }
-
-  const onTogglePanel = button => {
-    const singleTabOption = button.parentElement.parentElement.dataset.singletab // 2
-    const item = button.parentElement
-    toggleItem(item, singleTabOption)
-  }
-
-  const toggleItem = (item, singleTabOption) => {
-    let button = item.firstElementChild
-    item.classList.toggle('open')
-    item.classList.contains('open') ? button.ariaExpanded = 'true' : button.ariaExpanded = 'false' // @todo En test.
-    if (singleTabOption) closeAllOtherItems(item)
-    togglePanel(getPanel(item))
-  }
-
-  const togglePanel = panel => panel.style.maxHeight ? closePanel(panel) : openPanel(panel)
-
-  const closePanel = panel => {
-    panel.dataset.height = '0' // @todo TEST
-    panel.removeAttribute('style') //panel.style.maxHeight = null
-    panel.setAttribute('aria-hidden', 'true')
-  }
-
-  const openPanel = panel => {
-    panel.dataset.height = panel.scrollHeight // @todo TEST
-    panel.style.maxHeight = panel.dataset.height + 'px'
-    panel.setAttribute('aria-hidden', 'false')
-    //panel.addEventListener('transitionend', () => panel.removeAttribute('style'))
-  }
-
-  const getPanel = item => item.lastElementChild
-
-  const getOtherItems = item => [...item.parentElement.children].filter(_ => _ !== item)
 
   init()
 

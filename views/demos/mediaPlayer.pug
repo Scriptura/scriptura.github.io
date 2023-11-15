@@ -121,7 +121,7 @@
       svg.icon(role='img' focusable='false')
         use(href='/sprites/util.svg#info')
       div
-        p Il s'agit ici de tester la fonction "lecture suivante" dans le cas où une erreurs de lecture s'est produite sur deux players. Nous devrons ici passer du lecteur n°1 au lecteur n°4.
+        p Il s'agit ici de tester la fonction "lecture suivante" dans le cas où une erreurs de lecture s'est produite (ici les ressources des players n°2 et n°3 sont volontairement en erreur 404). La lecture passera du lecteur n°1 au lecteur n°4 sans bug.
   figure.center
     svg.size.xs-scale.decorative-svg(role='img' focusable='false' style='--size:15em')
       use(href='/sprites/various/ClefDeLAbimeMonochrome.svg#1')
@@ -189,7 +189,7 @@ hr(data-hr='✻ ✻ ✻')
     p
       code (data-id='errorId')
     .video-youtube(data-id='errorId')
-.grid2.gap
+.grid2.s-grid1.gap
   .message-highlight
     svg.icon(role='img' focusable='false')
       use(href='/sprites/util.svg#paperclip')
