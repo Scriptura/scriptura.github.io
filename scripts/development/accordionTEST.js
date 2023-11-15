@@ -32,38 +32,52 @@
 
 const accordion = () => {
 
-  const transformHTML = (() => {
+  const accordions = document.querySelectorAll('.accordion')
 
-    document.querySelectorAll('.accordion').forEach((accordion, i) => {
+  const replaceHTML = (accordion, i) => {
+    accordion.id = `accordion-${i}`
+    accordion.setAttribute('role', 'tablist')
+    replaceDetailss(accordion.children)
+    replaceSummaries(document.querySelectorAll('.accordion > * > summary'))
+    replacePanels(document.querySelectorAll('.accordion > * > :last-child'))
+  }
+
+  const replaceDetailss = detailss => {
+    let i = 0
+    for (const details of detailss) {
       i++
-      accordion.id = `accordion-${i}`
-      accordion.role = 'tablist'
-    })
+      const html = details.innerHTML,
+            substitute = document.createElement('div')
+            
+      substitute.classList.add('accordion-details')
+      if (details.open) substitute.classList.add('open') // 1
+      details.after(substitute, details)
+      substitute.appendChild(details).insertAdjacentHTML('afterend', html)
+      details.parentElement.removeChild(details)
+    }
+  }
 
-    document.querySelectorAll('.accordion > details').forEach((details, i) => {
-      i++
-      let open
-      details.open ? open = ' open' : open = '' // 1
-      details.outerHTML = `<div id="accordion-details-${i}" class="accordion-details${open}">${details.innerHTML}</div>`
-    })
+  const replaceSummaries = (summaries) => summaries.forEach((summary, i) => {
+    i++
+    replaceSummary(summary, i)
+  })
 
-    document.querySelectorAll('.accordion > * > summary').forEach((summary, i) => {
-      i++
-      summary.outerHTML = `<button id="accordion-summary-${i}" type="button" class="accordion-summary" role="tab" aria-controls="accordion-panel-${i}" aria-expanded="false">${summary.innerHTML}</button>`
-    })
+  const replaceSummary = (summary, i) => summary.outerHTML = `<button id="accordion-summary-${i}" type="button" class="accordion-summary" role="tab" aria-controls="accordion-panel-${i}" aria-expanded="false">${summary.innerHTML}</button>`
 
-    document.querySelectorAll('.accordion > * > :last-child').forEach((panel, i) => {
-      // @note On peut surcharger l'élément avec des attributs, mais il ne faut en aucun cas le remplacer pour éviter une animation d'ouverture si panneau ouvert par défaut.
-      i++
-      panel.id = 'accordion-panel-' + i
-      panel.classList.add('accordion-panel')
-      panel.role = 'tabpanel'
-      panel.ariaLabelledby = 'accordion-summary-' + i
-    })
+  const replacePanels = (panels) => panels.forEach((panel, i) => {
+    i++
+    replacePanel(panel, i)
+  })
 
-  })()
+  const replacePanel = (panel, i) => {
+    // @note On peut surcharger l'élément avec des attributs, mais il ne faut en aucun cas le remplacer pour éviter une animation d'ouverture.
+    panel.id = 'accordion-panel-' + i
+    panel.classList.add('accordion-panel')
+    panel.role = 'tabpanel'
+    panel.ariaLabelledby = 'accordion-summary-' + i
+  }
 
-  const stateManagement = (() => {
+  const stateManagement = () => {
 
     document.querySelectorAll('.accordion-details').forEach(details => {
       const summary = details.firstElementChild,
@@ -99,7 +113,7 @@ const accordion = () => {
       })
     })
 
-  })()
+  }
 
   const siblingStateManagement = el => {
     for (const sibling of el.parentElement.children) {
@@ -111,6 +125,17 @@ const accordion = () => {
       }
     }
   }
+
+  const init = () => {
+    let i = 0
+    for (const accordion of accordions) {
+      i++
+      replaceHTML(accordion, i)
+      stateManagement()
+    }
+  }
+
+  init()
 
 }
 

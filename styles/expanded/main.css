@@ -2901,7 +2901,7 @@ form > [class*="grid"] > .input {
 .accordion > * > :first-child svg {
   margin-right: 1em;
 }
-.accordion summary::before {
+.accordion > * > summary::before {
   all: unset;
 }
 .accordion .accordion-summary::after {
