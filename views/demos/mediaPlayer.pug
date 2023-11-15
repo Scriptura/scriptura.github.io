@@ -1,15 +1,8 @@
-.grid2.s-grid1.gap.gap-bottom
-  //-div
-    p
-      code audio
-    audio(controls)
-      source(src='/medias/audios/BagdadCafe.mp3')
-      p.message-error This media is not supported by your browser.
+.grid2.s-grid1.gap
   div
     p
-      //-code .media-single-player audio.media
       code audio.media
-    .column.gap
+    .grid.gap(style='--n:1')
       figure.figure-media
         figcaption Adieu mon père
         audio.media(controls)
@@ -33,7 +26,7 @@
   div
     p
       code .media-relationship(data-next-reading='true')
-    .column.gap.media-relationship(data-next-reading='true')
+    .grid.gap.media-relationship(data-next-reading='true' style='--n:1')
       figure.figure-media
         figcaption Le Feu de Saint-Elme
         audio.media(controls)
@@ -54,21 +47,6 @@
         figcaption Réminiscences
         audio.media(controls)
           source(src='/medias/audios/LesMysterieusesCitesDOr/Réminiscences.mp3')
-  div
-    p
-      code (src='urlError')
-    figure.figure-media
-      figcaption.sr-only Erreur d'URL
-      audio.media(controls)
-        source(src='/urlError.mp3')
-  div
-    p
-      code [streaming] (test)
-    figure.figure-media
-      figcaption.sr-only Web radio
-      audio.media(controls)
-        source(src='https://stream.vestaradio.com/VertigeRadio')
-.grid2.s-grid1.gap
   .grid.gap(style='--n:1')
     .message-highlight
       svg.icon(role='img' focusable='false')
@@ -98,8 +76,14 @@
           | , interprétées par Yannick Rault (
           a(href='https://citesdor.com/musiques/musiques_boub.php3') lien
           | ).
+  //-figure.center
+    svg.size.xs-scale.decorative-svg(role='img' focusable='false' style='--size:15em')
+      use(href='/sprites/various/ClefDeLAbimeMonochrome.svg#1')
+hr(data-hr='✻ ✻ ✻')
+.grid2.s-grid1.gap.gap-bottom
   div
-    h2 Test
+    p
+      code (src='urlError')
     .column.gap.media-relationship(data-next-reading='true')
       figure.figure-media
         figcaption Stridulation d'un grillon
@@ -122,9 +106,30 @@
         use(href='/sprites/util.svg#info')
       div
         p Il s'agit ici de tester la fonction "lecture suivante" dans le cas où une erreurs de lecture s'est produite (ici les ressources des players n°2 et n°3 sont volontairement en erreur 404). La lecture passera du lecteur n°1 au lecteur n°4 sans bug.
-  figure.center
-    svg.size.xs-scale.decorative-svg(role='img' focusable='false' style='--size:15em')
-      use(href='/sprites/various/ClefDeLAbimeMonochrome.svg#1')
+  div
+    p
+      code [streaming] (test)
+    .column.gap
+      figure.figure-media
+        figcaption Vertige Radio
+        audio.media(controls)
+          source(src='https://stream.vestaradio.com/VertigeRadio')
+      figure.figure-media
+        figcaption France Inter
+        audio.media(controls)
+          source(src='https://icecast.radiofrance.fr/franceinter-midfi.mp3')
+      figure.figure-media
+        figcaption France Info
+        audio.media(controls)
+          source(src='https://icecast.radiofrance.fr/franceinfo-midfi.mp3')
+      figure.figure-media
+        figcaption France Culture
+        audio.media(controls)
+          source(src='https://icecast.radiofrance.fr/franceculture-midfi.mp3')
+      figure.figure-media
+        figcaption France Musique
+        audio.media(controls)
+          source(src='https://icecast.radiofrance.fr/francemusique-midfi.mp3')
 hr(data-hr='✻ ✻ ✻')
 p
   code video.media
@@ -158,19 +163,18 @@ p
     figcaption.sr-only Erreur d'URL
     video.media(controls poster='/medias/videos/Agent327/poster.jpg' style='aspect-ratio: 21/9')
       source(src='/urlError.mp4' type='video/mp4')
-  div
-    .message-highlight
-      svg.icon(role='img' focusable='false')
-        use(href='/sprites/util.svg#quill')
-      div
-        p Crédit pour les vidéos : 
-          a(href='https://www.blender.org/about/studio/') Blender Studio
-          | .
   .message-highlight
     svg.icon(role='img' focusable='false')
       use(href='/sprites/util.svg#info')
     div
       p Certains des lecteurs présents bénéficient de sous-titres, activés ou non par défaut selon les spécifications natives du code HTML5.
+  .message-highlight
+    svg.icon(role='img' focusable='false')
+      use(href='/sprites/util.svg#quill')
+    div
+      p Crédit pour les vidéos : 
+        a(href='https://www.blender.org/about/studio/') Blender Studio
+        | .
 hr(data-hr='✻ ✻ ✻')
 .grid2.gap.gap-bottom
   div
