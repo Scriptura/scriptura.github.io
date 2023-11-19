@@ -23,8 +23,3 @@ const lineMarks = elements => {
 }
 
 lineMarks('.add-line-marks > :is(p, h2, h3, h4, h5, h6, blockquote, ul, ol, [class*=grid])') // @note Pour un meilleur contrôle il est préférable de définir explicitement les items plutôt que d'utiliser le sélecteur universel '*' et de procéder par exclusion.
-
-if (window.location.hash) window.addEventListener('load', () => { // @note Si chargement de la page avec un hash, alors défilement jusqu'à l'élément contenant l'ancre.
-  const scroll = () => document.querySelector(window.location.hash).scrollIntoView()
-  setTimeout(scroll, 2000) // @note On laisse le temps au visiteur de voir l'entête de la page avant le scroll vers l'ancre.
-})

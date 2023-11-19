@@ -69,8 +69,8 @@ const accordion = () => {
       const summary = details.firstElementChild,
             panel = details.lastElementChild
       if (details.classList.contains('open')) {
-        summary.ariaExpanded = 'true'
         panel.style.maxHeight = panel.scrollHeight + 'px'
+        summary.ariaExpanded = 'true'
         panel.ariaHidden = 'false'
       }
       else {
@@ -81,13 +81,12 @@ const accordion = () => {
 
     document.querySelectorAll('.accordion-summary').forEach(summary => {
       summary.addEventListener('click', () => {
-        const singleTab = summary.parentElement.parentElement.dataset.singletab // 2
+        const singleTabOption = summary.parentElement.parentElement.dataset.singletab, // 2
+              panel = summary.nextElementSibling
         summary.parentElement.classList.toggle('open')
         summary.parentElement.classList.contains('open') ? summary.ariaExpanded = 'true' : summary.ariaExpanded = 'false'
-        if (singleTab) siblingStateManagement(summary.parentElement)
-        const panel = summary.nextElementSibling
+        if (singleTabOption) siblingStateManagement(summary.parentElement)
         if (panel.ariaHidden === 'false') {
-          //panel.style.maxHeight = null
           panel.removeAttribute('style')
           panel.ariaHidden = 'true'
         }

@@ -478,6 +478,7 @@ main {
 .flex {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
 /* @todo
    * @see https://github.com/w3c/csswg-drafts/issues/3559#issuecomment-557711824
   @supports(gap: 1em)
@@ -2481,150 +2482,227 @@ form > [class*="grid"] > .input {
     border-color: #ffa600;
   }
 }
-.checkbox {
-  position: absolute;
-  left: -200vw;
-}
-.checkbox + label {
-  position: relative;
-  vertical-align: middle;
-  display: inline-block;
-  margin-left: 2em;
-  cursor: pointer;
-}
-.checkbox + label::before {
-  content: '';
-  display: block;
-  position: absolute;
-  top: 0.1em;
-  left: -1.8em;
-  width: 1em;
-  height: 1em;
+input[type=checkbox]:not([role=switch]),
+input[type=radio]:not([role=switch]) {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  display: inline-grid;
+  width: 1.2em;
+  height: 1.2em;
+  vertical-align: text-top;
   box-sizing: border-box;
   background-color: #272727;
-  border: 0.1em solid #383838;
-  border-radius: 0;
-  outline: 0;
+  border: 0.15em solid #383838;
+  outline: none;
   box-shadow: inset 0 0.1em 0.3em rgba(0,0,0,0.3);
   cursor: pointer;
-  transition: all 0.2s;
-  transform: scale(1.4);
 }
-.checkbox + label::after {
+input[type=checkbox]:not([role=switch]):disabled,
+input[type=radio]:not([role=switch]):disabled {
+  background: #2d2d2d repeating-linear-gradient(-45deg, transparent 0 2px, #555 2px 4px);
+  cursor: default;
+}
+input[type=checkbox]:not([role=switch]):disabled + label,
+input[type=radio]:not([role=switch]):disabled + label {
+  color: #747474;
+  cursor: default;
+}
+input[type=checkbox]:not([role=switch])::before,
+input[type=radio]:not([role=switch])::before {
   content: '';
-  position: absolute;
-  top: 0;
-  left: -1.8em;
-  width: 1em;
-  height: 1em;
+  display: block;
   background-color: #ff6347;
+  transform: scale(0);
+}
+input[type=checkbox]:not([role=switch]):focus-visible,
+input[type=radio]:not([role=switch]):focus-visible {
+  border-color: #ffa600 !important;
+}
+input[type=checkbox]:not([role=switch])::before {
   -webkit-clip-path: polygon(12% 41%, 4% 50%, 38% 84%, 95% 26%, 87% 17%, 37% 67%);
           clip-path: polygon(12% 41%, 4% 50%, 38% 84%, 95% 26%, 87% 17%, 37% 67%);
-  transform: scale(0);
-  transition: transform 0.3s;
+  transition: transform 0.2s;
 }
-.checkbox:checked + label::after {
+input[type=checkbox]:not([role=switch]):checked::before {
   transform: scale(1.5);
 }
-.checkbox[type=radio] + label::after {
-  top: 0.1em;
-  left: -1.8em;
-  -webkit-clip-path: circle(50% at 50% 50%);
-          clip-path: circle(50% at 50% 50%);
-}
-.checkbox[type=radio]:checked + label::before {
-  border-color: #ff6347;
-}
-.checkbox[type=radio]:checked + label::after {
-  transform: scale(0.7);
-}
-.checkbox[type=radio] + label::before {
+input[type=radio]:not([role=switch]) {
   border-radius: 50%;
 }
-.checkbox:focus-visible + label::before,
-.checkbox[type=radio]:focus-visible + label::before {
-  border: 0.1rem solid #ffa600;
+input[type=radio]:not([role=switch])::before {
+  -webkit-clip-path: circle(30% at 50% 50%);
+          clip-path: circle(30% at 50% 50%);
+  transition: transform 0.3s;
 }
-.checkbox:disabled + label {
-  color: #777;
-  cursor: not-allowed;
+input[type=radio]:not([role=switch]):checked::before {
+  transform: scale(1);
 }
-.checkbox:disabled + label::before {
-  cursor: not-allowed;
-  background: #2d2d2d repeating-linear-gradient(-45deg, transparent 0 2px, #555 2px 4px);
+input[type=radio]:not([role=switch]):checked {
+  border-color: #ff6347;
 }
-.switch {
+input[role=switch] {
+  all: unset;
+  vertical-align: middle;
+  box-sizing: border-box;
+  width: 5em;
+  height: 2.5em;
+  background-color: #272727;
+  border: 0.3em solid transparent;
+  border-radius: 1.25em;
+  box-shadow: inset 0 0.2em 0.5em rgba(0,0,0,0.2);
+  cursor: pointer;
+}
+input[role=switch]::before {
+  content: attr(data-a);
+  display: block;
+  width: 2.5em;
+  height: 2.5em;
+  text-align: center;
+  line-height: 2.5em;
+  color: #e9d9c4;
+  background-color: #4e6679;
+  border-radius: 1.25em;
+  box-shadow: 0 0.2em 0.5em rgba(0,0,0,0.3);
+  transform: translate(-0.3em, -0.3em);
+  transition: transform 0.2s ease-in-out;
+}
+input[role=switch]:checked::before {
+  content: attr(data-b);
+  background-color: #ff6347;
+  transform: translate(2.2em, -0.3em);
+}
+input[role=switch]:disabled {
+  background-image: repeating-linear-gradient(-45deg, rgba(255,255,255,0.1) 0 3px, #2d2d2d 0, transparent 0, transparent 6px);
+  cursor: default;
+}
+input[role=switch]:disabled::before {
+  color: #606060;
+  background-color: #383838;
+}
+input[role=switch]:disabled + label {
+  color: #747474;
+  cursor: default;
+}
+input[role=switch]:not(:checked) + label {
+  color: #747474;
+}
+input[role=switch]:focus-visible {
+  border-color: #ffa600 !important;
+}
+.switch-custom {
+  position: relative;
+  width: 5em;
+  height: 2.5em;
+}
+.switch-custom input[role=switch] {
+  position: absolute;
+  inset: 0;
+}
+.switch-custom input[role=switch]::before {
+  display: none;
+}
+.switch-custom input[role=switch] + div {
+  position: absolute;
+  left: 0;
+  width: 2.5em;
+  height: 2.5em;
+  text-align: center;
+  line-height: 2.5em;
+  color: #e9d9c4;
+  background-color: #4e6679;
+  border-radius: 1.25em;
+  box-shadow: 0 0.2em 0.5em rgba(0,0,0,0.3);
+  transition: transform 0.2s ease-in-out;
+  pointer-events: none;
+}
+.switch-custom input[role=switch]:checked + div {
+  background-color: #ff6347;
+  transform: translate(2.5em, 0);
+}
+.switch-custom :not(:checked) + div svg:nth-child(1) {
+  display: none;
+}
+.switch-custom :checked + div {
+  transform: translateX(1.25em);
+}
+.switch-custom :checked + div svg:nth-child(2) {
+  display: none;
+}
+input[role=switch]:checked:has(> .switch-custom) label {
+  color: #ffa500 !important;
+}
+.switch-svg {
+  all: unset;
   display: flex;
   align-items: center;
   gap: 1em;
-  margin-top: 0.2em;
 }
-.switch input {
+.switch-svg input {
   position: absolute;
-  right: 200vw;
+  transform: scale(0);
 }
-.switch input:focus-visible + .switch-bg {
+.switch-svg input:focus-visible + .switch-bg {
   border-color: #ffa600;
 }
-.switch .switch-bg {
+.switch-svg .switch-bg {
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2.4em;
-  height: 1.2em;
-  background-color: #2d2d2d;
+  width: 5em;
+  height: 2.5em;
+  background-color: #272727;
   border: 0.1em solid transparent;
-  border-radius: 1.2em;
+  border-radius: 2.5em;
   box-shadow: inset 0 0.2em 0.5em rgba(0,0,0,0.2);
 }
-.switch .switch-toogle {
+.switch-svg .switch-toogle {
   position: relative;
   z-index: 1;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 1.2em;
-  height: 1.2em;
+  width: 2.5em;
+  height: 2.5em;
   background-color: #ff6347;
   border-radius: 50%;
   box-shadow: 0 0.2em 0.5em rgba(0,0,0,0.3);
-  transform: translateX(-0.6em);
+  transform: translateX(-1.25em);
   transition: transform 0.2s ease-in-out;
 }
-.switch .switch-toogle svg {
+.switch-svg .switch-toogle svg {
   flex-shrink: 0;
   display: block;
   margin: auto;
-  width: 0.6em;
-  height: 0.6em;
+  width: 1.25em;
+  height: 1.25em;
   fill: curentcolor;
 }
-.switch :not(:checked) + .switch-bg .switch-toogle svg:nth-child(1) {
+.switch-svg :not(:checked) + .switch-bg .switch-toogle svg:nth-child(1) {
   display: none;
 }
-.switch :checked + .switch-bg .switch-toogle {
-  transform: translateX(0.6em);
+.switch-svg :checked + .switch-bg .switch-toogle {
+  transform: translateX(1.25em);
 }
-.switch :checked + .switch-bg .switch-toogle svg:nth-child(2) {
+.switch-svg :checked + .switch-bg .switch-toogle svg:nth-child(2) {
   display: none;
 }
-.switch :disabled ~ * {
+.switch-svg :disabled ~ * {
   color: #606060;
   cursor: not-allowed;
 }
-.switch :disabled + .switch-bg {
+.switch-svg :disabled + .switch-bg {
   background-image: repeating-linear-gradient(-45deg, rgba(255,255,255,0.1) 0 3px, #2d2d2d 0, transparent 0, transparent 6px);
 }
-.switch :disabled + .switch-bg .switch-toogle {
+.switch-svg :disabled + .switch-bg .switch-toogle {
   background-color: #383838;
 }
-:not(.switch-dual-state) > .switch input:not(:checked):not(:disabled) ~ * {
-  color: #929292;
+:not(.switch-dual-state) > .switch-svg input:not(:checked):not(:disabled) ~ :last-child {
+  color: #747474;
 }
-:not(.switch-dual-state) > .switch input:not(:checked):not(:disabled) + .switch-bg .switch-toogle {
-  color: #969696;
+:not(.switch-dual-state) > .switch-svg input:not(:checked):not(:disabled) + .switch-bg .switch-toogle {
   background-color: #4e6679;
 }
 [class^=range] {
@@ -3947,6 +4025,12 @@ a[aria-disabled=true]:active {
 }
 .scale50 {
   font-size: 50%;
+}
+.scale40 {
+  font-size: 40%;
+}
+.scale30 {
+  font-size: 30%;
 }
 .rescale {
   font-size: 1rem;

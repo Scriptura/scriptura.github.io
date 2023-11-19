@@ -2,225 +2,295 @@ form(method='get' action='./').grid4.s-grid1.m-grid2.l-grid3.gap.gap-bottom
   fieldset
     p
       code [type=checkbox].checkbox
-    div
-      input#test990.checkbox(type='checkbox' checked)
+    .flex.gap
+      input#test990(type='checkbox' checked)
       label(for='test990') Option n°1
-    div
-      input#test991.checkbox(type='checkbox')
+    .flex.gap
+      input#test991(type='checkbox')
       label(for='test991') Option n°2
-    div
-      input#test992.checkbox(type='checkbox')
+    .flex.gap
+      input#test992(type='checkbox')
       label(for='test992') Option n°3
-    div
-      input#test999.checkbox(type='checkbox' disabled)
+    .flex.gap
+      input#test999(type='checkbox' disabled)
       label(for='test999') Option n°4 (disabled)
   fieldset
     p
       code [type=radio].checkbox
-    div
-      input#test980.checkbox(type='radio' name='test45' checked)
+    .flex.gap
+      input#test980(type='radio' name='test45' checked)
       label(for='test980') Option n°1
-    div
-      input#test981.checkbox(type='radio' name='test45')
+    .flex.gap
+      input#test981(type='radio' name='test45')
       label(for='test981') Option n°2
-    div
-      input#test982.checkbox(type='radio' name='test45')
+    .flex.gap
+      input#test982(type='radio' name='test45')
       label(for='test982') Option n°3
-    div
-      input#test989.checkbox(type='radio' name='test45' disabled)
+    .flex.gap
+      input#test989(type='radio' name='test45' disabled)
       label(for='test989') Option n°4 (disabled)
   fieldset
     p
-      code label.switch [type=checkbox]
-    label.switch
-      input(type='checkbox' role='switch' checked)
-      span.switch-bg
-        span.switch-toogle
-          svg.icon(role='img' focusable='false')
-           use(href='/sprites/util.svg#check')
-          //-svg.icon(role='img' focusable='false')
-           use(href='/sprites/util.svg#xmark')
-      span Option n°1
-    label.switch
-      input(type='checkbox' role='switch')
-      span.switch-bg
-        span.switch-toogle
-          svg.icon(role='img' focusable='false')
-           use(href='/sprites/util.svg#check')
-          //-svg.icon(role='img' focusable='false')
-           use(href='/sprites/util.svg#xmark')
-      span Option n°2
-    label.switch
-      input(type='checkbox' role='switch')
-      span.switch-bg
-        span.switch-toogle
-          svg.icon(role='img' focusable='false')
-           use(href='/sprites/util.svg#check')
-          //-svg.icon(role='img' focusable='false')
-           use(href='/sprites/util.svg#xmark')
-      span Option n°3
-    label.switch
-      input(type='checkbox' role='switch' disabled)
-      span.switch-bg
-        span.switch-toogle
-          svg.icon(role='img' focusable='false')
-           use(href='/sprites/util.svg#check')
-          //-svg.icon(role='img' focusable='false')
-           use(href='/sprites/util.svg#xmark')
-      span Option n°4 (disabled)
+      code [type=checkbox role=switch]
+    .flex.gap.scale50(style='gap: 2em')
+      input#test201(type='checkbox' role='switch' checked)
+      label.rescale(for='test201') Option n°1
+    .flex.gap.scale50(style='gap: 2em')
+      input#test202(type='checkbox' role='switch')
+      label.rescale(for='test202') Option n°2
+    .flex.gap.scale50(style='gap: 2em')
+      input#test203(type='checkbox' role='switch')
+      label.rescale(for='test203') Option n°3
+    .flex.gap.scale50(style='gap: 2em')
+      input#test204(type='checkbox' role='switch' disabled)
+      label.rescale(for='test204') Option n°4 (disabled)
   fieldset
     p
-      code label.switch [type=radio]
-    label.switch
-      input(type='radio' role='switch' name='test034' checked)
-      span.switch-bg
-        span.switch-toogle
-          svg.icon(role='img' focusable='false')
-           use(href='/sprites/util.svg#check')
-          //-svg.icon(role='img' focusable='false')
-           use(href='/sprites/util.svg#xmark')
-      span Option n°1
-    label.switch
-      input(type='radio' role='switch' name='test034')
-      span.switch-bg
-        span.switch-toogle
-          svg.icon(role='img' focusable='false')
-           use(href='/sprites/util.svg#check')
-          //-svg.icon(role='img' focusable='false')
-           use(href='/sprites/util.svg#xmark')
-      span Option n°2
-    label.switch
-      input(type='radio' role='switch' name='test034')
-      span.switch-bg
-        span.switch-toogle
-          svg.icon(role='img' focusable='false')
-           use(href='/sprites/util.svg#check')
-          //-svg.icon(role='img' focusable='false')
-           use(href='/sprites/util.svg#xmark')
-      span Option n°3
-    label.switch
-      input(type='radio' role='switch' name='test034' disabled)
-      span.switch-bg
-        span.switch-toogle
-          svg.icon(role='img' focusable='false')
-           use(href='/sprites/util.svg#check')
-          //-svg.icon(role='img' focusable='false')
-           use(href='/sprites/util.svg#xmark')
-      span Option n°4 (disabled)
+      code [type=radio role=switch]
+    .flex.gap.scale50(style='gap: 2em')
+      input#test401(type='radio' role='switch' name='test500' checked)
+      label.rescale(for='test401') Option n°1
+    .flex.gap.scale50(style='gap: 2em')
+      input#test402(type='radio' role='switch' name='test500')
+      label.rescale(for='test402') Option n°2
+    .flex.gap.scale50(style='gap: 2em')
+      input#test403(type='radio' role='switch' name='test500')
+      label.rescale(for='test403') Option n°3
+    .flex.gap.scale50(style='gap: 2em')
+      input#test404(type='radio' role='switch' name='test500' disabled)
+      label.rescale(for='test404') Option n°4 (disabled)
   fieldset
     p
-      code .switch
-    .column.gap
-      label.switch
+      code [role=switch data-a data-b]
+    .grid.gap(style='--n:1')
+      .flex.gap
+        input#test301(type='checkbox' role='switch' data-a='no' data-b='yes' checked)
+        label(for='test301') Option n°1
+      .flex.gap
+        input#test302(type='checkbox' role='switch' data-a='no' data-b='yes')
+        label(for='test302') Option n°2
+      .flex.gap
+        input#test303(type='checkbox' role='switch' data-a='no' data-b='yes')
+        label(for='test303') Option n°3
+      .flex.gap
+        input#test304(type='checkbox' role='switch' data-a='no' data-b='yes' disabled)
+        label(for='test304') Option n°4 (disabled)
+  fieldset
+    p
+      code .switch-custom @todo En dev'
+    .grid.gap(style='--n:1')
+      .flex.gap
+        .switch-custom
+          input#test1000(type='checkbox' role='switch' name='test100' checked)
+          div
+            svg.icon(role='img' focusable='false')
+              use(href='/sprites/util.svg#check')
+            svg.icon(role='img' focusable='false')
+              use(href='/sprites/util.svg#xmark')
+        label(for='test1000') Option n°1
+      .flex.gap
+        .switch-custom
+          input#test1001(type='checkbox' role='switch' name='test100')
+          div
+            svg.icon(role='img' focusable='false')
+              use(href='/sprites/util.svg#check')
+            svg.icon(role='img' focusable='false')
+              use(href='/sprites/util.svg#xmark')
+        label(for='test1001') Option n°2
+  fieldset
+    p
+      code label.switch-svg [type=checkbox]
+    .grid.gap(style='--n:1')
+      label.switch-svg
         input(type='checkbox' role='switch' checked)
-        span.switch-bg.scale200
+        span.switch-bg
           span.switch-toogle
             svg.icon(role='img' focusable='false')
-            use(href='/sprites/util.svg#check')
-            //-svg.icon(role='img' focusable='false')
-            use(href='/sprites/util.svg#xmark')
+              use(href='/sprites/util.svg#check')
+            svg.icon(role='img' focusable='false')
+              use(href='/sprites/util.svg#xmark')
         span Option n°1
-      label.switch
+      label.switch-svg
         input(type='checkbox' role='switch')
-        span.switch-bg.scale200
+        span.switch-bg
           span.switch-toogle
             svg.icon(role='img' focusable='false')
-            use(href='/sprites/util.svg#check')
-            //-svg.icon(role='img' focusable='false')
-            use(href='/sprites/util.svg#xmark')
+              use(href='/sprites/util.svg#check')
+            svg.icon(role='img' focusable='false')
+              use(href='/sprites/util.svg#xmark')
         span Option n°2
-      label.switch
+      label.switch-svg
         input(type='checkbox' role='switch')
-        span.switch-bg.scale200
+        span.switch-bg
           span.switch-toogle
             svg.icon(role='img' focusable='false')
-            use(href='/sprites/util.svg#check')
-            //-svg.icon(role='img' focusable='false')
-            use(href='/sprites/util.svg#xmark')
+              use(href='/sprites/util.svg#check')
+            svg.icon(role='img' focusable='false')
+              use(href='/sprites/util.svg#xmark')
         span Option n°3
-      label.switch
+      label.switch-svg
         input(type='checkbox' role='switch' disabled)
-        span.switch-bg.scale200
+        span.switch-bg
           span.switch-toogle
             svg.icon(role='img' focusable='false')
-            use(href='/sprites/util.svg#check')
-            //-svg.icon(role='img' focusable='false')
-            use(href='/sprites/util.svg#xmark')
+              use(href='/sprites/util.svg#check')
+            svg.icon(role='img' focusable='false')
+              use(href='/sprites/util.svg#xmark')
         span Option n°4 (disabled)
   fieldset
     p
-      code .switch [type=radio]
-    .column.gap
-      label.switch
-        input(type='radio' role='switch' name='test234' checked)
-        span.switch-bg.scale200
+      code label.switch-svg [type=radio]
+    .grid.gap(style='--n:1')
+      label.switch-svg
+        input(type='radio' role='switch' name='test034' checked)
+        span.switch-bg
           span.switch-toogle
             svg.icon(role='img' focusable='false')
-            use(href='/sprites/util.svg#check')
+              use(href='/sprites/util.svg#check')
             //-svg.icon(role='img' focusable='false')
-            use(href='/sprites/util.svg#xmark')
+              use(href='/sprites/util.svg#xmark')
         span Option n°1
-      label.switch
-        input(type='radio' role='switch' name='test234')
-        span.switch-bg.scale200
+      label.switch-svg
+        input(type='radio' role='switch' name='test034')
+        span.switch-bg
           span.switch-toogle
             svg.icon(role='img' focusable='false')
-            use(href='/sprites/util.svg#check')
+              use(href='/sprites/util.svg#check')
             //-svg.icon(role='img' focusable='false')
-            use(href='/sprites/util.svg#xmark')
+              use(href='/sprites/util.svg#xmark')
         span Option n°2
-      label.switch
-        input(type='radio' role='switch' name='test234')
-        span.switch-bg.scale200
+      label.switch-svg
+        input(type='radio' role='switch' name='test034')
+        span.switch-bg
           span.switch-toogle
             svg.icon(role='img' focusable='false')
-            use(href='/sprites/util.svg#check')
+              use(href='/sprites/util.svg#check')
             //-svg.icon(role='img' focusable='false')
-            use(href='/sprites/util.svg#xmark')
+              use(href='/sprites/util.svg#xmark')
         span Option n°3
-      label.switch
-        input(type='radio' role='switch' name='test234' disabled)
-        span.switch-bg.scale200
+      label.switch-svg
+        input(type='radio' role='switch' name='test034' disabled)
+        span.switch-bg
           span.switch-toogle
             svg.icon(role='img' focusable='false')
-            use(href='/sprites/util.svg#check')
+              use(href='/sprites/util.svg#check')
             //-svg.icon(role='img' focusable='false')
-            use(href='/sprites/util.svg#xmark')
+              use(href='/sprites/util.svg#xmark')
+        span Option n°4 (disabled)
+  fieldset
+    p
+      code .switch-svg
+    .grid.gap(style='--n:1')
+      label.switch-svg
+        input(type='checkbox' role='switch' checked)
+        span.switch-bg
+          span.switch-toogle
+            svg.icon(role='img' focusable='false')
+              use(href='/sprites/util.svg#check')
+            //-svg.icon(role='img' focusable='false')
+              use(href='/sprites/util.svg#xmark')
+        span Option n°1
+      label.switch-svg
+        input(type='checkbox' role='switch')
+        span.switch-bg
+          span.switch-toogle
+            svg.icon(role='img' focusable='false')
+              use(href='/sprites/util.svg#check')
+            //-svg.icon(role='img' focusable='false')
+              use(href='/sprites/util.svg#xmark')
+        span Option n°2
+      label.switch-svg
+        input(type='checkbox' role='switch')
+        span.switch-bg
+          span.switch-toogle
+            svg.icon(role='img' focusable='false')
+              use(href='/sprites/util.svg#check')
+            //-svg.icon(role='img' focusable='false')
+              use(href='/sprites/util.svg#xmark')
+        span Option n°3
+      label.switch-svg
+        input(type='checkbox' role='switch' disabled)
+        span.switch-bg
+          span.switch-toogle
+            svg.icon(role='img' focusable='false')
+              use(href='/sprites/util.svg#check')
+            //-svg.icon(role='img' focusable='false')
+              use(href='/sprites/util.svg#xmark')
+        span Option n°4 (disabled)
+  fieldset
+    p
+      code .switch-svg [type=radio]
+    .grid.gap(style='--n:1')
+      label.switch-svg
+        input(type='radio' role='switch' name='test234' checked)
+        span.switch-bg
+          span.switch-toogle
+            svg.icon(role='img' focusable='false')
+              use(href='/sprites/util.svg#check')
+            //-svg.icon(role='img' focusable='false')
+              use(href='/sprites/util.svg#xmark')
+        span Option n°1
+      label.switch-svg
+        input(type='radio' role='switch' name='test234')
+        span.switch-bg
+          span.switch-toogle
+            svg.icon(role='img' focusable='false')
+              use(href='/sprites/util.svg#check')
+            //-svg.icon(role='img' focusable='false')
+              use(href='/sprites/util.svg#xmark')
+        span Option n°2
+      label.switch-svg
+        input(type='radio' role='switch' name='test234')
+        span.switch-bg
+          span.switch-toogle
+            svg.icon(role='img' focusable='false')
+              use(href='/sprites/util.svg#check')
+            //-svg.icon(role='img' focusable='false')
+              use(href='/sprites/util.svg#xmark')
+        span Option n°3
+      label.switch-svg
+        input(type='radio' role='switch' name='test234' disabled)
+        span.switch-bg
+          span.switch-toogle
+            svg.icon(role='img' focusable='false')
+              use(href='/sprites/util.svg#check')
+            //-svg.icon(role='img' focusable='false')
+              use(href='/sprites/util.svg#xmark')
         span Option n°4 (disabled)
   fieldset
     p
       code .switch-dual-state > .switch
-    .column.gap.switch-dual-state
-      label.switch
+    .grid.gap(style='--n:1').switch-dual-state
+      label.switch-svg
         input(type='checkbox' role='switch')
-        span.switch-bg.scale200
+        span.switch-bg
           span.switch-toogle
             svg.icon(role='img' focusable='false')
               use(href='/sprites/util.svg#moon')
             svg.icon(role='img' focusable='false')
               use(href='/sprites/util.svg#sun')
         span Option n°1
-      label.switch
+      label.switch-svg
         input(type='checkbox' role='switch')
-        span.switch-bg.scale200
+        span.switch-bg
           span.switch-toogle
             svg.icon(role='img' focusable='false')
               use(href='/sprites/util.svg#unlocked')
             svg.icon(role='img' focusable='false')
               use(href='/sprites/util.svg#locked')
         span Option n°2
-      label.switch
+      label.switch-svg
         input(type='checkbox' role='switch')
-        span.switch-bg.scale200
+        span.switch-bg
           span.switch-toogle
             svg.icon(role='img' focusable='false')
               use(href='/sprites/util.svg#eye')
             svg.icon(role='img' focusable='false')
               use(href='/sprites/util.svg#eye-blocked')
         span Option n°3
-      label.switch
+      label.switch-svg
         input(type='checkbox' role='switch')
-        span.switch-bg.scale200
+        span.switch-bg
           span.switch-toogle
             svg.icon(role='img' focusable='false')
               use(href='/sprites/util.svg#women')
@@ -230,37 +300,37 @@ form(method='get' action='./').grid4.s-grid1.m-grid2.l-grid3.gap.gap-bottom
   fieldset
     p
       code .switch-dual-state > .switch
-    .column.gap.switch-dual-state
-      label.switch
+    .grid.gap(style='--n:1').switch-dual-state
+      label.switch-svg
         input(type='checkbox' role='switch')
-        span.switch-bg.scale200
+        span.switch-bg
           span.switch-toogle
             svg.icon(role='img' focusable='false')
               use(href='/sprites/util.svg#moon')
             svg.icon(role='img' focusable='false')
               use(href='/sprites/util.svg#sun')
         span Option n°1
-      label.switch
+      label.switch-svg
         input(type='checkbox' role='switch')
-        span.switch-bg.scale200
+        span.switch-bg
           span.switch-toogle
             svg.icon(role='img' focusable='false')
               use(href='/sprites/util.svg#unlocked')
             svg.icon(role='img' focusable='false')
               use(href='/sprites/util.svg#locked')
         span Option n°2
-      label.switch
+      label.switch-svg
         input(type='checkbox' role='switch')
-        span.switch-bg.scale200
+        span.switch-bg
           span.switch-toogle
             svg.icon(role='img' focusable='false')
               use(href='/sprites/util.svg#eye')
             svg.icon(role='img' focusable='false')
               use(href='/sprites/util.svg#eye-blocked')
         span Option n°3
-      label.switch
+      label.switch-svg
         input(type='checkbox' role='switch' disabled)
-        span.switch-bg.scale200
+        span.switch-bg
           span.switch-toogle
             svg.icon(role='img' focusable='false')
               use(href='/sprites/util.svg#women')
@@ -268,17 +338,8 @@ form(method='get' action='./').grid4.s-grid1.m-grid2.l-grid3.gap.gap-bottom
               use(href='/sprites/util.svg#man')
         span Option n°4 (disabled)
 .grid2.s-grid1.gap
-  .grid.gap(style='--n:1')
-    .message-highlight
-      svg.icon(role='img' focusable='false')
-        use(href='/sprites/util.svg#info')
-      div
-        p Les bouttons checkbox et radio sont utilisés lorsqu'un choix demande à être validé après coup, au sein d'un ensemble de choix dans un formulaire. Les switchs sont utilisés pour une validation imédiate du choix de l'utilisateur.
-    .message-highlight
-      svg.icon(role='img' focusable='false')
-        use(href='/sprites/util.svg#paperclip')
-      div
-        p Le design d'un switch accessible à l'aide des seuls pseudo-éléments est tout à fait possible, nous l'avons fait à une époque. Mais cette solution rend la modularité du style parfois impossible. Le label n'étant pas indépendant du switch, son positionnement sera limité, des pseudo-éléments utilisants déjà background-image ne peuvent plus être texturés, l'effets "zoom" à l'aide de la propriété font-size sera problématique.
-  figure.center.xs-order.s-order
-    svg.size.decorative-svg(role='img' focusable='false' style='--size: 30em;--size-height: 12em')
-      use(href='/sprites/silos/39r.svg#1')
+  .message-highlight
+    svg.icon(role='img' focusable='false')
+      use(href='/sprites/util.svg#info')
+    div
+      p Les bouttons checkbox et radio sont utilisés lorsqu'un choix demande à être validé après coup, au sein d'un ensemble de choix dans un formulaire. Les switchs sont utilisés pour une validation imédiate du choix de l'utilisateur.

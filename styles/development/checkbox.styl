@@ -1,86 +1,153 @@
 _checkboxColor1 = _colorG - 20%
-_checkboxColor2 = _colorG + 31.5%
+_checkboxColor2 = _colorG - 30%
 _checkboxColor3 = _color2
 _checkboxColor5 = _color5
-_checkboxSize1 = 2px // @note Valeur en lien avec 'transform scale' sur le (pseudo-)élément.
+_checkboxSize = 1.2em
+_checkboxSize2 = 2px // @note Valeur en lien avec 'transform scale' sur le (pseudo-)élément.
 
 _switchColor1 = rgba(255, 255, 255, .1)
 _switchColor2 = _colorG - 20%
 _switchColor3 = _color2
 _switchColor5 = _color5
-_switchSize1 = 1.2em
+_switchSize = 2.5em
 _switchSize2 = 3px
+_switchBorder = .3em
 
-.checkbox
-  position: absolute // @note Label des éléments frères décalés si déclaration en relatif.
-  left: -200vw
-  & + label // @bugfix @affected Firefox @note Les pseudos éléments doivent impérativement partir du label et non des éléments checkbox et radio.
-    position: relative
-    vertical-align: middle
-    display: inline-block // @note Évite un clique involontaire de l'utilisateur sur un label doté d'un 'width100%' si définition 'block'.
-    margin-left: 2em
-    cursor: pointer
-    &::before
-      content: ''
-      display: block
-      position: absolute
-      top: .1em
-      left: -1.8em
-      width: 1em
-      height: 1em
-      box-sizing: border-box // @note Nécessité de spécifier cette règle malgré sa déclaration en globale
-      background-color: _colorG - 30%
-      border: .1em solid _colorG
-      border-radius: 0
-      outline: 0 // @todo Règle à vérifier
-      box-shadow: inset 0 .1em .3em rgba(0, 0, 0, .3)
-      cursor: pointer
-      transition: all .2s
-      transform: scale(1.4)
-    &::after
-      content: ''
-      position: absolute
-      top: 0 // @note Fixe le pseudo-élément si label sur plusieurs lignes.
-      left: -1.8em
-      width: 1em
-      height: 1em
-      background-color: _checkboxColor3
-      clip-path: polygon(12% 41%, 4% 50%, 38% 84%, 95% 26%, 87% 17%, 37% 67%) // @note L'astuce consiste à charger l'image d'une icône dans le background d'un générateur de clip-path en ligne et de la reproduire à peu près.
-      transform: scale(0)
-      transition: transform .3s
-  &:checked + label::after
+input[type=checkbox]:not([role=switch])
+input[type=radio]:not([role=switch])
+  //all: unset
+  appearance: none
+  display: inline-grid
+  width: _checkboxSize
+  height: _checkboxSize
+  vertical-align: text-top
+  box-sizing: border-box
+  background-color: _checkboxColor2
+  border: .15em solid _colorG
+  outline: none
+  box-shadow: inset 0 .1em .3em rgba(0, 0, 0, .3)
+  cursor: pointer
+  &:disabled
+    background: _checkboxColor1 repeating-linear-gradient(-45deg, transparent 0 _checkboxSize2, #555 _checkboxSize2 _checkboxSize2 * 2)
+    cursor: default
+    & + label
+      color: _colorG + 30%
+      cursor: default
+  &::before
+    content: ''
+    display: block
+    background-color: _checkboxColor3
+    transform: scale(0)
+  &:focus-visible
+    border-color: _checkboxColor5 !important // @note "!important" est nécessaire pour les boutons radio, sinon le focus ne surclasse pas la bordure définie plus haut.
+
+input[type=checkbox]:not([role=switch])
+  &::before
+    clip-path: polygon(12% 41%, 4% 50%, 38% 84%, 95% 26%, 87% 17%, 37% 67%)
+    transition: transform .2s
+  &:checked::before
     transform: scale(1.5)
-  &[type=radio] + label::after
-    top: .1em // @note Fixe le pseudo-élément si label sur plusieurs lignes.
-    left: -1.8em
-    clip-path: circle(50% at 50% 50%)
-  &[type=radio]:checked + label::before
-    border-color: _checkboxColor3
-  &[type=radio]:checked + label::after
-    transform: scale(.7)
-  &[type=radio] + label::before
-    border-radius: 50%
-  &:focus-visible + label::before
-  &[type=radio]:focus-visible + label::before
-    border: .1rem solid _checkboxColor5
-  &:disabled + label
-    color: #777
-    cursor: not-allowed
-    &::before
-      cursor: not-allowed
-      background: _checkboxColor1 repeating-linear-gradient(-45deg, transparent 0 _checkboxSize1, #555 _checkboxSize1 _checkboxSize1 * 2)
 
+input[type=radio]:not([role=switch])
+  border-radius: 50%
+  &::before
+    clip-path: circle(30% at 50% 50%)
+    transition: transform .3s
+  &:checked::before
+    transform: scale(1)
+  &:checked
+    border-color: _checkboxColor3
+
+input[role=switch]
+  all: unset
+  //appearance: none
+  vertical-align: middle // @todo À évaluer, dans un contexte géré par les éléments parents...
+  box-sizing: border-box
+  width: _switchSize * 2
+  height: _switchSize
+  background-color: _colorG - 30%
+  border: _switchBorder solid transparent // _colorG
+  border-radius: (_switchSize / 2)
+  box-shadow: inset 0 .2em .5em rgba(0, 0, 0, .2)
+  cursor: pointer
+  &::before
+    content: attr(data-a)
+    display: block
+    width: _switchSize
+    height: _switchSize
+    text-align: center
+    line-height: _switchSize
+    color: _colorT
+    background-color: _color6
+    border-radius: (_switchSize / 2)
+    box-shadow: 0 .2em .5em rgba(0, 0, 0, .3)
+    transform: translate(- _switchBorder, - _switchBorder)
+    transition: transform .2s ease-in-out
+  &:checked::before
+    content: attr(data-b)
+    background-color: _color2
+    transform: translate(_switchSize - _switchBorder, - _switchBorder)
+  &:disabled
+    background-image: repeating-linear-gradient(-45deg, _switchColor1 0 _switchSize2, _switchColor2 0, transparent 0, transparent _switchSize2 * 2)
+    cursor: default
+    &::before
+      color: _colorG + 20%
+      background-color: _colorG
+    & + label
+      color: _colorG + 30%
+      cursor: default
+  &:not(:checked)
+    & + label
+      color: _colorG + 30%
+  &:focus-visible
+    border-color: _checkboxColor5 !important // @note "!important" est nécessaire pour les boutons radio, sinon le focus ne surclasse pas la bordure définie plus haut.
 
 // @note Le design d'un switch accessible à l'aide des seuls pseudo-éléments est tout à fait possible, mais cette solution rend la modularité du style délicate. Le label n'étant pas indépendant du switch, son positionnement sera limité, des pseudo-éléments utilisants déjà background-image ne peuvent plus être texturés, l'effets "zoom" via font-size sera problématique.
 
-.switch
+.switch-custom
+  position: relative
+  width: (_switchSize * 2)
+  height: _switchSize
+  & input[role=switch]
+    position: absolute
+    inset: 0
+    &::before
+      display: none
+    & + div
+      position: absolute
+      left: 0
+      width: _switchSize
+      height: _switchSize
+      text-align: center
+      line-height: _switchSize
+      color: _colorT
+      background-color: _color6
+      border-radius: (_switchSize / 2)
+      box-shadow: 0 .2em .5em rgba(0, 0, 0, .3)
+      transition: transform .2s ease-in-out
+      pointer-events: none
+    &:checked + div
+      background-color: _color2
+      transform: translate(_switchSize, 0)
+  & :not(:checked) + div svg:nth-child(1)
+    display: none
+  & :checked + div
+    transform: translateX(round(_switchSize / 2, 2))
+    & svg:nth-child(2)
+      display: none
+
+input[role=switch]:checked:has(> .switch-custom) label
+  color: orange !important
+
+.switch-svg
+  all: unset
+  //appearance: none
   display: flex
   align-items: center
   gap: 1em
-  margin-top: .2em
   & input
     position: absolute
-    right: 200vw
+    transform: scale(0)
     &:focus-visible + .switch-bg
       border-color: _checkboxColor5
   & .switch-bg
@@ -88,11 +155,11 @@ _switchSize2 = 3px
     display: flex
     align-items: center
     justify-content: center
-    width: _switchSize1 * 2
-    height: _switchSize1
-    background-color: _switchColor2
+    width: _switchSize * 2
+    height: _switchSize
+    background-color: _colorG - 30%
     border: .1em solid transparent
-    border-radius: _switchSize1
+    border-radius: _switchSize
     box-shadow: inset 0 .2em .5em rgba(0, 0, 0, .2)
   & .switch-toogle
     position: relative
@@ -101,24 +168,24 @@ _switchSize2 = 3px
     display: flex
     align-items: center
     justify-content: center
-    width: _switchSize1
-    height: _switchSize1
+    width: _switchSize
+    height: _switchSize
     background-color: _color2
     border-radius: 50%
     box-shadow: 0 .2em .5em rgba(0, 0, 0, .3)
-    transform: translateX(- round(_switchSize1 / 2, 2))
+    transform: translateX(- round(_switchSize / 2, 2))
     transition: transform .2s ease-in-out
     & svg
      flex-shrink: 0
      display: block
      margin: auto
-     width: round(_switchSize1 / 2, 2)
-     height: round(_switchSize1 / 2, 2)
+     width: round(_switchSize / 2, 2)
+     height: round(_switchSize / 2, 2)
      fill: curentcolor
   & :not(:checked) + .switch-bg .switch-toogle svg:nth-child(1)
     display: none
   & :checked + .switch-bg .switch-toogle
-    transform: translateX(round(_switchSize1 / 2, 2))
+    transform: translateX(round(_switchSize / 2, 2))
     & svg:nth-child(2)
       display: none
   & :disabled
@@ -132,74 +199,8 @@ _switchSize2 = 3px
   //&[type=radio]:checked ~ *
   //  cursor: not-allowed
 
-:not(.switch-dual-state) > .switch input:not(:checked):not(:disabled)
-  & ~ *
-    color: grayscale(_color6) + 30%
+:not(.switch-dual-state) > .switch-svg input:not(:checked):not(:disabled)
+  & ~ :last-child
+    color: _colorG + 30%
   & + .switch-bg .switch-toogle
-    color: grayscale(_colorT) - 30%
     background-color: _color6
-
-/*
-.switch-unicode
-  position: absolute // @note Label des éléments frères décalés si déclaration en relatif
-  left: -200vw
-  & + label
-    position: relative
-    display: inline-block // @note Évite un clique involontaire par l'utilisateur car le label prend la règle 'width:100%' si 'display:block'
-    margin: 1em 0
-    padding-left: 'calc(%s + 1rem)' % round(_switchSize1 * 4.5, 2)
-  & + label::before
-    content: ''
-    position: absolute
-    top: -.6em
-    left: 0
-    height: 2.6em
-    width: 5.5em
-    background-color: _colorG - 30%
-    border: .1em solid transparent
-    border-radius: .4em // _r1
-    box-shadow: inset 0 .2em .5em rgba(0, 0, 0, .2)
-  & + label::after
-    content: ''
-    position: absolute
-    top: -.5em
-    left: .1em
-    width: 2.4em
-    height: 2.4em
-    background-color: _color2
-    border-radius: .2em
-    box-shadow: 0 .2em .5em rgba(0, 0, 0, .3)
-    transition: left .2s
-  &[type=radio] + label::before
-    border-radius: 2em
-  &[type=radio] + label::after
-    border-radius: 50%
-  &:checked + label::after
-    left: 3em
-  &:focus-visible + label::before
-    border-color: _color5
-  &:disabled + label
-    position: relative
-    color: _checkboxColor2
-    cursor: not-allowed
-  &:disabled + label::before
-  //&:disabled + label::after
-    background-image: repeating-linear-gradient(-45deg, _switchColor2 0 _switchSize2, _switchColor2 0, transparent 0, transparent _switchSize2 * 2)
-  &:disabled + label span::before
-    color: _checkboxColor2 !important
-  &:disabled + label::after
-    background-color: _colorG
-  &:checked + label span
-  & + label span::before
-    color: _colorT
-  & + label span::before
-  &:checked + label span::after
-    position: absolute
-    top: 0 // @note Fixe le pseudo-élément si label sur plusieurs lignes.
-  & + label span::before
-    content: attr(data-off)
-    left: 3.5em
-  &:checked + label span::after
-    content attr(data-on)
-    left: .8em
-*/

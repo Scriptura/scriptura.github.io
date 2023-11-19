@@ -118,6 +118,20 @@ const getStyles = (() => {
 
 
 // -----------------------------------------------------------------------------
+// @section     Anchors
+// @description Si chargement de la page avec un hash, alors défilement jusqu'à l'élément contenant l'ancre.
+// -----------------------------------------------------------------------------
+
+/**
+ *  @note Ce script fonctionne avec tous les ID sur des éléments autres que des liens, il est aussi compatible avec les liens créés en JavaScript après le chargement initial de la page, comme avec notre fonction lineMarks().
+ */
+
+if (window.location.hash) window.addEventListener('load', () => {
+  const scroll = () => document.querySelector(window.location.hash).scrollIntoView()
+  setTimeout(scroll, 2000) // @note On laisse le temps au visiteur de voir l'entête de la page avant le scroll vers l'ancre.
+})
+
+// -----------------------------------------------------------------------------
 // @section     Polyfills
 // @description Permettent de compenser un manque de support CSS dans certains navigateurs
 // -----------------------------------------------------------------------------
