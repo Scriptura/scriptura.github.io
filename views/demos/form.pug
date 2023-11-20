@@ -28,11 +28,11 @@ form(action='./')
         .input
           label(for='input-tel') Type tel
           input#input-tel(type='tel' name='input-tel' placeholder='0477446677').validation-phone-fr_FR
-          .message
-            p
-              svg.icon-inline(role='img' focusable='false')
-                use(href='/sprites/util.svg#info')
-              | Ce champ accepte uniquement les numéros de téléphone français.
+          .message-highlight
+            svg.icon(role='img' focusable='false')
+              use(href='/sprites/util.svg#info')
+            div
+              p Ce champ accepte uniquement les numéros de téléphone français.
         .grid-auto-min.gap
           .input
             label(for='input-number') Type number

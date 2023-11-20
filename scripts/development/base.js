@@ -141,12 +141,8 @@ if (window.location.hash) window.addEventListener('load', () => {
 // @note Conditional JS : plus performant que de passer par la détection d'une classe dans le HTML comme pour les autres scripts.
 const supportContainerQueries = 'container' in document.documentElement.style // Test support des Container Queries (ok pour Chrome, problème avec Firefox)
 const supportMediaQueriesRangeContext = window.matchMedia('(width > 0px)').matches // Test support des requêtes média de niveau 4 (Media Query Range Contexts).
-const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1 // @todo Solution temporaire pour Firefox.
 
-if (!supportContainerQueries || !supportMediaQueriesRangeContext || isFirefox) getStyle('/styles/gridFallback.css', 'screen')
-
-// @affected Firefox =< v108 @note Compense le non support de :has() sur les grilles.
-document.querySelectorAll('[class^=grid]').forEach(grid => grid.parentElement.classList.add('parent-grid'))
+if (!supportContainerQueries || !supportMediaQueriesRangeContext) getStyle('/styles/gridFallback.css', 'screen')
 
 
 // -----------------------------------------------------------------------------

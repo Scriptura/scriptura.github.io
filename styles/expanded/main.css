@@ -335,8 +335,7 @@ main {
 [tabindex=-1]:focus:not(:focus-visible) {
   outline: 0 !important;
 }
-:has(> [class^=grid]),
-.parent-grid {
+:has(> [class^=grid]) {
   container: grid/inline-size;
   width: 100%;
 }
