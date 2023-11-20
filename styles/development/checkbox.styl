@@ -31,7 +31,7 @@ input[type=radio]:not([role=switch])
     background: _checkboxColor1 repeating-linear-gradient(-45deg, transparent 0 _checkboxSize2, #555 _checkboxSize2 _checkboxSize2 * 2)
     cursor: default
     & + label
-      color: _colorG + 30%
+      //color: _colorG + 30%
       cursor: default
   &::before
     content: ''
@@ -94,7 +94,7 @@ input[role=switch]
       color: _colorG + 20%
       background-color: _colorG
     & + label
-      color: _colorG + 30%
+      //color: _colorG + 30%
       cursor: default
   &:not(:checked)
     & + label
@@ -108,7 +108,7 @@ input[role=switch]
   position: relative
   width: (_switchSize * 2)
   height: _switchSize
-  & input[role=switch]
+  & [role=switch]
     position: absolute
     inset: 0
     &::before
@@ -129,78 +129,19 @@ input[role=switch]
     &:checked + div
       background-color: _color2
       transform: translate(_switchSize, 0)
-  & :not(:checked) + div svg:nth-child(1)
+    &:disabled + div
+      color: _colorG + 20%
+      background-color: _colorG
+  & [role=switch]:not(:disabled).dual-state + div
+      background-color: _color2
+  & :not(:checked) + div svg:nth-child(1) // @note `:first-child` et `:last-child` ne fonctionnent pas dans ce cas car un seul svg peut être présent au lieu de deux.
     display: none
   & :checked + div
     transform: translateX(round(_switchSize / 2, 2))
-    & svg:nth-child(2)
+    & svg:nth-child(2) // @note Idem
       display: none
-
-input[role=switch]:checked:has(> .switch-custom) label
-  color: orange !important
-
-.switch-svg
-  all: unset
-  //appearance: none
-  display: flex
-  align-items: center
-  gap: 1em
-  & input
-    position: absolute
-    transform: scale(0)
-    &:focus-visible + .switch-bg
-      border-color: _checkboxColor5
-  & .switch-bg
-    flex-shrink: 0
-    display: flex
-    align-items: center
-    justify-content: center
-    width: _switchSize * 2
-    height: _switchSize
-    background-color: _colorG - 30%
-    border: .1em solid transparent
-    border-radius: _switchSize
-    box-shadow: inset 0 .2em .5em rgba(0, 0, 0, .2)
-  & .switch-toogle
-    position: relative
-    z-index: 1
-    flex-shrink: 0
-    display: flex
-    align-items: center
-    justify-content: center
-    width: _switchSize
-    height: _switchSize
-    background-color: _color2
-    border-radius: 50%
-    box-shadow: 0 .2em .5em rgba(0, 0, 0, .3)
-    transform: translateX(- round(_switchSize / 2, 2))
-    transition: transform .2s ease-in-out
-    & svg
-     flex-shrink: 0
-     display: block
-     margin: auto
-     width: round(_switchSize / 2, 2)
-     height: round(_switchSize / 2, 2)
-     fill: curentcolor
-  & :not(:checked) + .switch-bg .switch-toogle svg:nth-child(1)
-    display: none
-  & :checked + .switch-bg .switch-toogle
-    transform: translateX(round(_switchSize / 2, 2))
-    & svg:nth-child(2)
-      display: none
-  & :disabled
-    & ~ *
-      color: _colorG + 20%
-      cursor: not-allowed
-    & + .switch-bg
-      background-image: repeating-linear-gradient(-45deg, _switchColor1 0 _switchSize2, _switchColor2 0, transparent 0, transparent _switchSize2 * 2)
-    & + .switch-bg .switch-toogle
-      background-color: _colorG
-  //&[type=radio]:checked ~ *
-  //  cursor: not-allowed
-
-:not(.switch-dual-state) > .switch-svg input:not(:checked):not(:disabled)
-  & ~ :last-child
+  &:has([role=switch]:not(:checked):not(.dual-state)) + label
     color: _colorG + 30%
-  & + .switch-bg .switch-toogle
-    background-color: _color6
+  &:has(:disabled) + label
+    //color: _colorG + 30%
+    cursor: default
