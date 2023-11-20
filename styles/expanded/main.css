@@ -1964,18 +1964,18 @@ main [class^=message] {
   --bg-color: #b37400;
 }
 [class^=message][class*=highlight] {
-  --icon-size: 3em;
+  --icon-size: 2.5em;
   display: grid;
   grid-template-columns: var(--icon-size) minmax(0, 1fr);
-  grid-template-rows: minmax(5em, 1fr);
   gap: 1em;
   align-items: center;
+  min-height: 5em;
   padding-inline: 1em;
 }
 [class^=message][class*=highlight] > .icon {
   width: var(--icon-size);
   height: var(--icon-size);
-  padding: 0.75em;
+  padding: 25%;
   fill: var(--bg-color);
   background-color: currentcolor;
   -webkit-clip-path: circle(50%);
