@@ -12,7 +12,6 @@ _accordionTime1 = .5s
     display: flex
     align-items: center
     width: 100%
-    //height: 3rem
     line-height: 1 // @note Solution permettant d'harmoniser le rendu entre les éléments details/summary et les éléments remplacés.
     padding: .75em 1em
     color: _colorT
@@ -25,10 +24,8 @@ _accordionTime1 = .5s
     &:focus-within
     &:hover
       outline: none
-      //animation: animAccordion .1s ease-in-out
     &::after
       content: '\2039'
-      //content: url('data:image/svg+xml;charset=UTF-8, <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.67 3.87L9.9 2.1 0 12l9.9 9.9 1.77-1.77L3.54 12z"></path></svg>')
       margin-left: auto
       font-weight: bold
       font-size: 1.5em
@@ -42,15 +39,11 @@ _accordionTime1 = .5s
     overflow: hidden
     padding: 0 1em
     background-color: _color1
-    //border: 1px solid _accordionColor3
-    //border-top: none
     border-radius: 'calc(%s + 1px)' % _r2 // Compense le décalage de la "bordure" en box-shadow inset.
     box-shadow: _shadow17, inset 0 -1px 0 1px _accordionColor3
     transition: max-height _accordionTime1 ease-in-out
-    &[aria-hidden=true] // @note Cette spécificité empêche le lancement d'une animation au chargement de la page via le JS.
+    &[aria-hidden=true]
       max-height: 0
-      //border-color: transparent // @note "Efface" la bordure, sinon elle apparait encore lorsque le panneau est fermé.
-      //transition: max-height _accordionTime1 ease-in-out, border-color _accordionTime1 cubic-bezier(1, 0, 1, 0) // @note "Efface" la bordure au dernier moment, avant la fermeture du panneau ; mais oblige aussi à répéter la propriété max-height sinon écrasement de cette propriété.
   & > details[open] summary::after
   & .open .accordion-summary::after
     transform: rotate(-90deg)
@@ -65,10 +58,6 @@ _accordionTime1 = .5s
         background-color: _accordionColor2
         box-shadow: _shadow15
         animation: anim-accordion .1s ease-in-out
-
-.accordion-panel
-  & details:first-child // @note Correctif @todo À revoir...
-    margin-top: .75em
 
 @keyframes anim-accordion
   to

@@ -85,16 +85,20 @@ const accordion = () => {
               panel = summary.nextElementSibling
         summary.parentElement.classList.toggle('open')
         summary.parentElement.classList.contains('open') ? summary.ariaExpanded = 'true' : summary.ariaExpanded = 'false'
-        if (singleTabOption) siblingStateManagement(summary.parentElement)
         if (panel.ariaHidden === 'false') {
-          panel.removeAttribute('style')
           panel.ariaHidden = 'true'
+          panel.removeAttribute('style')
         }
         else {
           panel.style.maxHeight = panel.scrollHeight + 'px'
           panel.ariaHidden = 'false'
         }
-        //panel.addEventListener('transitionend', () => panel.removeAttribute('style'))
+        panel.addEventListener('click', () => { // @note Si click dans le panneau, suppression de max-height pour le rétablir tout de suite après. Ce qui permet de redimentionner le panneau en hauteur par un élément enfant sans limite dûe à max-height. @todo Solution pas "propre", à revoir éventuellement.
+          panel.removeAttribute('style')
+          setTimeout(() => panel.style.maxHeight = panel.scrollHeight + 'px', 1)
+        })
+        //panel.addEventListener('transitionend', () => panel.removeAttribute('style')) // @todo Solution à privilégier à la précédente, mais effet de bord non réglé pour l'instant.
+        if (singleTabOption) siblingStateManagement(summary.parentElement)
       })
     })
 
@@ -106,7 +110,7 @@ const accordion = () => {
         sibling.classList.remove('open')
         sibling.firstElementChild.ariaExpanded = 'false'
         sibling.lastElementChild.ariaHidden = 'true'
-        sibling.lastElementChild.removeAttribute('style') //sibling.lastElementChild.style.maxHeight = null
+        sibling.lastElementChild.removeAttribute('style')
       }
     }
   }

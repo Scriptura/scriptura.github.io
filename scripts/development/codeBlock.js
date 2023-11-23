@@ -22,7 +22,7 @@ const selectText = node => {
 const selectAndCopy = (() => {
   document.querySelectorAll('.pre > code:not(:empty)').forEach(el => {
     const button = document.createElement('button'),
-    text = el.dataset.select || 'Select and copy'
+          text = el.dataset.select || 'Select and copy'
     button.type = 'button'
     if (el.offsetHeight < 30) button.classList.add('copy-offset')
     el.parentElement.appendChild(button)
@@ -31,7 +31,11 @@ const selectAndCopy = (() => {
     injectSvgSprite(button, 'copy')
     button.addEventListener('click', () => {
       selectText(el)
-      document.execCommand('copy')
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(el.textContent)
+      } else {
+        document.execCommand('copy') // @note Ancienne méthode, dépréciée mais encore très bien supportée. @todo À revoir dans le temps pour la supprimer.
+      }
     })
   })
 })()

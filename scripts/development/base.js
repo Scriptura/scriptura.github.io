@@ -118,27 +118,6 @@ const getStyles = (() => {
 
 
 // -----------------------------------------------------------------------------
-// @section     URL.hash & ID
-// @description Si URL avec un hash, alors défilement jusqu'à l'ID cible.
-// -----------------------------------------------------------------------------
-
-/**
- *  @note Ce script double le comportement par défaut des navigateurs, se dernier se révélant défaillant sous Chrome, que ce soit pour les pages dotées d'un contenu conséquent ou en raison d'ancres créés en JavaScript après le chargement initial de la page (comme avec notre fonction lineMarks). Firefox ne souffre pas de ces limitations.
- *  @note Si le comportement de base s'applique avec succès, le script ne servira simplement à rien dans ce cas, sans engendrer de conflit.
- *  @note Supprime un comportement de chrome qui est de rester au même endroit d'une page si rechargement de la page.
- */
-/*
-addEventListener('load', () => {
-  if (window.location.hash) window.addEventListener('load', () => {
-    const scroll = () => document.querySelector(window.location.hash).scrollIntoView()
-    setTimeout(scroll, 2000) // @note Correction du fonctionnement après un laps de temps. 
-    //scroll()
-  })
-})
-*/
-
-
-// -----------------------------------------------------------------------------
 // @section     Polyfills
 // @description Permettent de compenser un manque de support CSS dans certains navigateurs
 // -----------------------------------------------------------------------------

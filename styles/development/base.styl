@@ -47,7 +47,7 @@ a:active
   outline: none
 
 p
-  margin-block: .75em //.75em
+  margin-block: .75em
 
 hr
   overflow: visible // @bugfix Show the overflow @affected Edge and IE.
@@ -165,9 +165,12 @@ sup
 
 details
   display: block // @bugfix Add the correct display @affected Edge, IE 10+, and Firefox.
-
-details details
-  margin-left: 2em
+  margin-top: .75em // @note Le premier élément à l'espacement d'un paragraphe.
+  & details
+  & + details
+    margin-top: 0 // @note Rétablissement des espaces afin que l'ensemble des items <details> qui se suivent aient l'apparence d'une liste.
+  & details
+    margin-left: 2em
 
 summary
   display: list-item // @bugfix Add the correct display @affected All browsers.
