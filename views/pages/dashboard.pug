@@ -481,6 +481,16 @@ block main
                   figcaption.sr-only Spring
                   video.media(controls width='1280' height='536' poster='/medias/videos/Spring/Spring.jpg' style='aspect-ratio: 21/9')
                     source(src='/medias/videos/Spring/Spring.mp4' type='video/mp4')
+      //-article.boxx.c2
+        h1.h4 Carte des utilisateurs actifs
+        .map(
+          style='aspect-ratio:1/1'
+          data-name='Via Podiensis, Le Puy – Conques'
+          data-places='[["Le Puy-en-Velay", [45.0455966440617, 3.884935601376469]], ["Saint-Étienne", [45.43389, 4.39]], ["Clermont-Ferrand", [45.783329, 3.08333]], ["Lyon", [45.7, 4.85]], ["La Chaise-Dieu", [45.316669, 3.7]], ["Conques", [44.59922220968624, 2.398123925260783]]]'
+          data-maxzoom='19'
+          data-tileserver='https://wxs.ign.fr/decouverte/geoportail/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE=normal&TILEMATRIXSET=PM&FORMAT=image/png&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}'
+          data-attribution='<a href="//www.geoportail.gouv.fr/">Geoportail France</a>'
+          )
     hr
     footer
       a.button2(href='/page/login.html')

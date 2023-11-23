@@ -2,6 +2,7 @@
 // @note Avec `minmax` la grille ne sera pas tributaire de son contenu en responsive @see https://css-tricks.com/equal-width-columns-in-css-grid-are-kinda-weird/
 
 :has(> [class^=grid])
+.parent-grid // @bugfixed @affected Firefox @note Fallback pour le sélecteur :has(), ajout de la classe via JS.
   container: grid / inline-size
   width: 100% // @note Important si le conteneur n'a pas de largeur définie par défaut.
 
@@ -21,6 +22,8 @@
     padding-bottom: var(--gap, _gap) // @note Idem.
   &.gap-vertical
     gap: 0 var(--gap, _gap)
+  //&.masonry
+  //  grid-template-rows: masonry // @note Implémentation future en CSS @todo À surveiller.
 
 .grid-auto
 .grid-auto-min

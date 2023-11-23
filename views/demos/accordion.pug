@@ -86,25 +86,28 @@
           p Morbi ac ex ornare, finibus turpis vel, pellentesque leo. Aenean dignissim eu dolor id dignissim. Duis ornare sapien ex, non porttitor sapien suscipit ut. Curabitur at tempor massa, ac finibus mi. Suspendisse nibh neque, porta et placerat vel, gravida at magna. Aenean augue dui, tincidunt nec ligula ut, laoreet tempor elit. Nullam vel sagittis eros, vel mattis ex.
           p Suspendisse fermentum luctus odio. Curabitur fringilla pulvinar interdum. Morbi porta orci neque, at commodo nulla tincidunt sed. Nulla finibus libero erat, eu auctor felis condimentum ac. Duis aliquet arcu sed luctus molestie. Pellentesque eros ipsum, ullamcorper ac turpis non, dictum hendrerit nulla. Integer mattis feugiat mauris a tincidunt. Duis fermentum faucibus nisl.
 .grid2.s-grid1.gap
-  .message-highlight
-    svg.icon(role='img' focusable='false')
-      use(href='/sprites/util.svg#paperclip')
-    div
-      p
-        | L'accordéon est basé sur les éléments html 
-        code details/summary
-        | . Le javascript transforme cette base pour permettre les animations et un meilleur contrôle, il ajoute aussi des attributs aria pour l'accessibilité. L'accordéon reste accessible au clavier comme pour le html de base.
-  .message-highlight
-    svg.icon(role='img' focusable='false')
-      use(href='/sprites/util.svg#paperclip')
-    div
-      p
-        | Notez que l'apparence de l'accordéon ne changera pas si javascript est désactivé. Seul les animations et l'option 
-        code singletab
-        |  auront disparus.
-  .message-highlight
-    svg.icon(role='img' focusable='false')
-      use(href='/sprites/util.svg#warning')
-    div
-      p
-        | Les accordéons ne doivent pas inclure d'éléments enfants provoquant un recalcul de la hauteur du panneau (animation de l'accordéon basée sur la propriété max-height).
+  div
+    .message-highlight
+      svg.icon(role='img' focusable='false')
+        use(href='/sprites/util.svg#paperclip')
+      div
+        p
+          | L'accordéon est basé sur les éléments html 
+          code details/summary
+          | . Le javascript transforme cette base pour permettre les animations et un meilleur contrôle, il ajoute aussi des attributs aria pour l'accessibilité. L'accordéon reste accessible au clavier comme pour le html de base.
+  div
+    .message-highlight
+      svg.icon(role='img' focusable='false')
+        use(href='/sprites/util.svg#paperclip')
+      div
+        p
+          | Notez que l'apparence de l'accordéon ne changera pas si javascript est désactivé. Seul les animations et l'option 
+          code singletab
+          |  auront disparus.
+  div
+    .message-highlight
+      svg.icon(role='img' focusable='false')
+        use(href='/sprites/util.svg#warning')
+      div
+        p
+          | Les accordéons ne doivent pas inclure d'éléments enfants provoquant un recalcul de la hauteur du panneau (animation de l'accordéon basée sur la propriété max-height).

@@ -4,7 +4,7 @@ mixin list(icon, name, slug)
       use(href='/sprites/util.svg#' + icon)
     a(href='/page/' + slug + '.html') #{name}
 
-ul.grid4.list-straight
+block componentLink
   //-+list('paint-roller', 'All components', 'components')
   +list('ampersand', 'Typography', 'typography')
   +list('language', 'Languages', 'languages')

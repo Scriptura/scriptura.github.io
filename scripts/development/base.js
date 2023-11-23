@@ -118,18 +118,25 @@ const getStyles = (() => {
 
 
 // -----------------------------------------------------------------------------
-// @section     Anchors
-// @description Si chargement de la page avec un hash, alors défilement jusqu'à l'élément contenant l'ancre.
+// @section     URL.hash & ID
+// @description Si URL avec un hash, alors défilement jusqu'à l'ID cible.
 // -----------------------------------------------------------------------------
 
 /**
- *  @note Ce script fonctionne avec tous les ID sur des éléments autres que des liens, il est aussi compatible avec les liens créés en JavaScript après le chargement initial de la page, comme avec notre fonction lineMarks().
+ *  @note Ce script double le comportement par défaut des navigateurs, se dernier se révélant défaillant sous Chrome, que ce soit pour les pages dotées d'un contenu conséquent ou en raison d'ancres créés en JavaScript après le chargement initial de la page (comme avec notre fonction lineMarks). Firefox ne souffre pas de ces limitations.
+ *  @note Si le comportement de base s'applique avec succès, le script ne servira simplement à rien dans ce cas, sans engendrer de conflit.
+ *  @note Supprime un comportement de chrome qui est de rester au même endroit d'une page si rechargement de la page.
  */
-
-if (window.location.hash) window.addEventListener('load', () => {
-  const scroll = () => document.querySelector(window.location.hash).scrollIntoView()
-  setTimeout(scroll, 2000) // @note On laisse le temps au visiteur de voir l'entête de la page avant le scroll vers l'ancre.
+/*
+addEventListener('load', () => {
+  if (window.location.hash) window.addEventListener('load', () => {
+    const scroll = () => document.querySelector(window.location.hash).scrollIntoView()
+    setTimeout(scroll, 2000) // @note Correction du fonctionnement après un laps de temps. 
+    //scroll()
+  })
 })
+*/
+
 
 // -----------------------------------------------------------------------------
 // @section     Polyfills
@@ -141,8 +148,12 @@ if (window.location.hash) window.addEventListener('load', () => {
 // @note Conditional JS : plus performant que de passer par la détection d'une classe dans le HTML comme pour les autres scripts.
 const supportContainerQueries = 'container' in document.documentElement.style // Test support des Container Queries (ok pour Chrome, problème avec Firefox)
 const supportMediaQueriesRangeContext = window.matchMedia('(width > 0px)').matches // Test support des requêtes média de niveau 4 (Media Query Range Contexts).
+const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1 // @todo Solution temporaire pour Firefox.
 
-if (!supportContainerQueries || !supportMediaQueriesRangeContext) getStyle('/styles/gridFallback.css', 'screen')
+if (!supportContainerQueries || !supportMediaQueriesRangeContext || isFirefox) {
+  getStyle('/styles/gridFallback.css', 'screen')
+  document.querySelectorAll('[class^=grid]').forEach(grid => grid.parentElement.classList.add('parent-grid')) // @affected Firefox =< v108 @note Compense le non support de :has() sur les grilles.
+}
 
 
 // -----------------------------------------------------------------------------

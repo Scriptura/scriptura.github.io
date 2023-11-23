@@ -15,12 +15,14 @@ _inputSize3 = 2px
 _inputBoxShadow1 = inset 0 .2em .5em rgba(0, 0, 0, .2) //0 1.5rem 2rem rgba(0, 0, 0, .2)
 
 //.input // ciblage trop général pose problème pour les élemnts imbriqués
+
+/*
 form
   & > .input
   & fieldset > .input
   & > [class*="grid"] > .input
     width: 100%
-    //margin: 1em 0
+*/
 
 .input
   & label
@@ -110,7 +112,7 @@ form
   &.disabled input
     background: _inputColor5 repeating-linear-gradient(-45deg, transparent 0 _inputSize2, _colorG _inputSize2 _inputSize2 * 2)
     background-size: 100% 100%
-    cursor: not-allowed
+    cursor: default
   & .invalid
     background-position: right .7em center // @note Révision de l'emplacement de l'astérisque si champ obligatoire
   & .invalid

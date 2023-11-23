@@ -73,6 +73,20 @@ h6
   //margin-block: 0
   font-family: _fontList2
 
+/*
+h2
+h3
+h4
+h5
+h6
+*/
+.h2
+.h3
+.h4
+.h5
+.h6
+  margin-block: .83em // @note Important à redéfinir pour les classes aposées sur d'autres éléments que des titres, comme <legend> ou <label> par exemple.
+
 // [1] @affected Chrome (and more ?) @note Pour la balise h1 définition de marges différentes selon le contexte (article, aside, nav, section), les marges doivent donc être définies.
 h1
 .h1
@@ -80,17 +94,6 @@ h1
   margin-block: clamp(.83em, 5vw, .67em)
   font-size: clamp(2em, 5vw, 2.5em)
   //font-size: 2.5em
-  /*
-  @media (max-width: _sizeXS)
-    //margin-block: .83em // @note Marge alignée sur celle de h2 (si "rattrapage")
-    font-size: 2em
-  @media (min-width: _sizeXS)
-    //margin-block: .75em // @note Moyenne entre les deux extrêmes (.83em et .67em) (si "rattrapage")
-    font-size: 2.25em
-  @media (min-width: _sizeS)
-    //margin-block: .67em // @note Marge par défaut, sans le contexte expliqué par la note [1] (si "rattrapage")
-    font-size: 2.5em
-  */
 
 h2
 .h2

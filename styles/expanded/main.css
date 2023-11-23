@@ -79,21 +79,17 @@ h6,
 .h6 {
   font-family: 'Noto Serif', serif;
 }
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  margin-block: 0.83em;
+}
 h1,
 .h1 {
   margin-block: clamp(0.83em, 5vw, 0.67em);
   font-size: clamp(2em, 5vw, 2.5em);
-/*
-  @media (max-width: _sizeXS)
-    //margin-block: .83em // @note Marge alignée sur celle de h2 (si "rattrapage")
-    font-size: 2em
-  @media (min-width: _sizeXS)
-    //margin-block: .75em // @note Moyenne entre les deux extrêmes (.83em et .67em) (si "rattrapage")
-    font-size: 2.25em
-  @media (min-width: _sizeS)
-    //margin-block: .67em // @note Marge par défaut, sans le contexte expliqué par la note [1] (si "rattrapage")
-    font-size: 2.5em
-  */
 }
 h2,
 .h2 {
@@ -335,7 +331,8 @@ main {
 [tabindex=-1]:focus:not(:focus-visible) {
   outline: 0 !important;
 }
-:has(> [class^=grid]) {
+:has(> [class^=grid]),
+.parent-grid {
   container: grid/inline-size;
   width: 100%;
 }
@@ -2267,11 +2264,6 @@ select {
   -webkit-clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
           clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
 }
-form > .input,
-form fieldset > .input,
-form > [class*="grid"] > .input {
-  width: 100%;
-}
 .input label {
   display: inline-block;
   margin-bottom: 0.5em;
@@ -2377,7 +2369,7 @@ form > [class*="grid"] > .input {
 .input.disabled input {
   background: #2d2d2d repeating-linear-gradient(-45deg, transparent 0 5px, #383838 5px 10px);
   background-size: 100% 100%;
-  cursor: not-allowed;
+  cursor: default;
 }
 .input .invalid {
   background-position: right 0.7em center;
@@ -2957,8 +2949,10 @@ input[role=switch]:focus-visible {
 }
 .tabs .tab-list {
   display: flex;
-  margin-top: 0.5em;
   padding: 0;
+}
+.tabs .tab-list + * .tab-list {
+  margin-top: 0.5em;
 }
 .tabs .tab-list button {
   z-index: 1;
@@ -3000,7 +2994,6 @@ input[role=switch]:focus-visible {
 .tabs .tab-panel {
   position: relative;
   top: -1px;
-  margin-bottom: 0.5em;
   padding: calc(.5em + 1px) 1em .5em;
   border: 1px dashed rgba(255,255,255,0.15);
   box-shadow: 0 1rem 1rem rgba(0,0,0,0.1);
