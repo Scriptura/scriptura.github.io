@@ -159,14 +159,22 @@ sup {
 }
 details {
   display: block;
-  margin-top: 0.75em;
-}
-details details,
-details + details {
-  margin-top: 0;
 }
 details details {
+  margin-block: 0;
   margin-left: 2em;
+}
+details details:first-child {
+  margin-top: 0;
+}
+details details:last-child {
+  margin-bottom: 0;
+}
+details:first-child {
+  margin-top: 0.75em;
+}
+details:last-child {
+  margin-bottom: 0.75em;
 }
 summary {
   display: list-item;

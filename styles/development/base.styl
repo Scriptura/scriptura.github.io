@@ -163,14 +163,19 @@ sub
 sup
   top: -.5em // @bugfix Prevent `sub` and `sup` elements from affecting the line height @affected All browsers.
 
-details
+details // @note [1] Tentative de reproduire avec les marges l'espacement des items d'une liste.
   display: block // @bugfix Add the correct display @affected Edge, IE 10+, and Firefox.
-  margin-top: .75em // @note Le premier élément à l'espacement d'un paragraphe.
   & details
-  & + details
-    margin-top: 0 // @note Rétablissement des espaces afin que l'ensemble des items <details> qui se suivent aient l'apparence d'une liste.
-  & details
+    margin-block: 0
     margin-left: 2em
+    &:first-child
+      margin-top: 0 // [1]
+    &:last-child
+      margin-bottom: 0 // [1]
+  &:first-child
+    margin-top: .75em // [1]
+  &:last-child
+    margin-bottom: .75em // [1]
 
 summary
   display: list-item // @bugfix Add the correct display @affected All browsers.

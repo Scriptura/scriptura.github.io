@@ -69,7 +69,7 @@ const accordion = () => {
       const summary = details.firstElementChild,
             panel = details.lastElementChild
       if (details.classList.contains('open')) {
-        panel.style.maxHeight = panel.scrollHeight + 'px'
+        //panel.style.maxHeight = panel.scrollHeight + 'px'
         summary.ariaExpanded = 'true'
         panel.ariaHidden = 'false'
       }
@@ -86,18 +86,11 @@ const accordion = () => {
         summary.parentElement.classList.toggle('open')
         summary.parentElement.classList.contains('open') ? summary.ariaExpanded = 'true' : summary.ariaExpanded = 'false'
         if (panel.ariaHidden === 'false') {
-          panel.ariaHidden = 'true'
-          panel.removeAttribute('style')
+          closedPanel(panel)
+        } else {
+          openedPanel(panel)
         }
-        else {
-          panel.style.maxHeight = panel.scrollHeight + 'px'
-          panel.ariaHidden = 'false'
-        }
-        panel.addEventListener('click', () => { // @note Si click dans le panneau, suppression de max-height pour le rétablir tout de suite après. Ce qui permet de redimentionner le panneau en hauteur par un élément enfant sans limite dûe à max-height. @todo Solution pas "propre", à revoir éventuellement.
-          panel.removeAttribute('style')
-          setTimeout(() => panel.style.maxHeight = panel.scrollHeight + 'px', 1)
-        })
-        //panel.addEventListener('transitionend', () => panel.removeAttribute('style')) // @todo Solution à privilégier à la précédente, mais effet de bord non réglé pour l'instant.
+        panel.addEventListener('transitionend', () => panel.removeAttribute('style'))
         if (singleTabOption) siblingStateManagement(summary.parentElement)
       })
     })
@@ -109,10 +102,24 @@ const accordion = () => {
       if (sibling !== el) {
         sibling.classList.remove('open')
         sibling.firstElementChild.ariaExpanded = 'false'
-        sibling.lastElementChild.ariaHidden = 'true'
-        sibling.lastElementChild.removeAttribute('style')
+        closedPanel(sibling.lastElementChild)
       }
     }
+  }
+
+  const openedPanel = panel => {
+    panel.style.maxHeight = panel.scrollHeight + 'px'
+    panel.ariaHidden = 'false'
+  }
+
+  const closedPanel = panel => {
+    // @note Redéfinition de la hauteur du panneau avant la suppression de cette même définition un laps de temps plus tard. Le laps de temps est minime mais suffisant pour être pris en compte par l'animation CSS.
+    panel.style.maxHeight = panel.scrollHeight + 'px'
+    setTimeout(() => {
+      panel.removeAttribute('style')
+      panel.ariaHidden = 'true'
+      , 1
+    })
   }
 
 }
