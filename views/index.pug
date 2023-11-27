@@ -26,7 +26,7 @@ block main
           div
             - const date = new Date().toISOString().split('T')
             - const version = date[0].replace(/-/g, '.') + '.' + Math.round(date[1].split('.')[0].replace(/:/g, '') / 500)
-            h2.h5 Version du framework&nbsp:
+            h2.h4 Version du framework&nbsp:
             ul.links
               li Draft version&nbsp;: #{version} (
                 a(href='//github.com/Scriptura/scriptura.github.io') Github
@@ -34,7 +34,7 @@ block main
         details
           summary Client test
           div
-            h2.h5 Configuration cliente&nbsp;:
+            h2.h4 Configuration cliente&nbsp;:
             ul.client-test
               li test..
       figure.center.xs-order.s-order

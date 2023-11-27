@@ -585,12 +585,13 @@ main {
 [class^=column].gap {
   -moz-column-gap: 1em;
        column-gap: 1em;
+  margin-bottom: -1em;
 }
-[class^=column].gap > :not(hr) {
+[class^=column].gap > :not(:last-child) {
   margin-bottom: 1em;
 }
 [class^=column].gap-bottom {
-  margin-bottom: 1em;
+  padding-bottom: 1em;
 }
 [class^=column].gap-vertical {
   gap: 0 1em;
@@ -2962,7 +2963,7 @@ input[role=switch]:focus-visible {
   display: flex;
   padding: 0;
 }
-.tabs .tab-list + * .tab-list {
+.tabs .tab-list ~ * .tab-list {
   margin-top: 0.5em;
 }
 .tabs .tab-list button {
@@ -3010,6 +3011,12 @@ input[role=switch]:focus-visible {
   box-shadow: 0 1rem 1rem rgba(0,0,0,0.1);
 }
 .tabs .tab-panel + .tab-panel {
+  display: none;
+}
+.tabs .tab-panel[aria-hidden=false] {
+  display: block;
+}
+.tabs .tab-panel[aria-hidden=true] {
   display: none;
 }
 .scroll-top {

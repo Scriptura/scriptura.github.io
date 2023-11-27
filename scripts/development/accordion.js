@@ -84,15 +84,15 @@ const accordion = () => {
         const details = summary.parentElement,
               singleTabOption = details.parentElement.dataset.singletab, // 2
               panel = summary.nextElementSibling
-              details.classList.toggle('open')
-        //stateInlocalStorage(details.classList.contains('open'), i)
-        details.classList.contains('open') ? summary.ariaExpanded = 'true' : summary.ariaExpanded = 'false'
-        if (panel.ariaHidden === 'false') {
-          closedPanel(panel)
-          localStorage.setItem(accordionPanel + i, 'close')
-        } else {
-          openedPanel(panel)
+        details.classList.toggle('open')
+        if (details.classList.contains('open')) {
+          summary.ariaExpanded = 'true'
           localStorage.setItem(accordionPanel + i, 'open')
+          openedPanel(panel)
+        } else {
+          summary.ariaExpanded = 'false'
+          localStorage.setItem(accordionPanel + i, 'close')
+          closedPanel(panel)
         }
         panel.addEventListener('transitionend', () => panel.removeAttribute('style'))
         if (singleTabOption) siblingStateManagement(details)
@@ -107,7 +107,7 @@ const accordion = () => {
         sibling.classList.remove('open')
         sibling.firstElementChild.ariaExpanded = 'false'
         closedPanel(sibling.lastElementChild)
-        localStorage.setItem(accordionPanel + sibling.id.match(/[0-9]$/i)[0], 'close') // @note Récupération de l'ID des panneaux frères par regex.
+        localStorage.setItem(accordionPanel + sibling.id.match(/[0-9]$/i)[0], 'close') // @note Récupération de l'ID du panneau frère par regex.
       }
     }
   }
@@ -126,13 +126,6 @@ const accordion = () => {
       , 1
     })
   }
-  
-  /*
-  const stateInlocalStorage = (openClass, i) => {
-    if (openClass) localStorage.setItem(accordionPanel + i, 'open')
-    else localStorage.removeItem(accordionPanel + i) //localStorage.setItem(accordionPanel + i, 'close')
-  }
-  */
   
 }
 

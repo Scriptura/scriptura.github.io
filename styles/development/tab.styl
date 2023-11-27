@@ -10,7 +10,7 @@ _tabBoxShadow1 = 0 -1rem 1rem rgba(0, 0, 0, .05)
     display: flex
     //margin-bottom: 0
     padding: 0
-    & + * .tab-list // Si onglets imbriqués.
+    & ~ * .tab-list // Si onglets imbriqués.
       margin-top: .5em
     & button
       z-index: 1
@@ -51,4 +51,8 @@ _tabBoxShadow1 = 0 -1rem 1rem rgba(0, 0, 0, .05)
     border: _tabBorder1
     box-shadow: 0 1rem 1rem rgba(0, 0, 0, .1)
     & + .tab-panel
+      display: none
+    &[aria-hidden=false]
+      display: block
+    &[aria-hidden=true]
       display: none

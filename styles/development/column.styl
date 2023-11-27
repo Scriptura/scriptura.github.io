@@ -56,12 +56,11 @@
 [class^=column]
   &.gap
     column-gap: _gap
-  &.gap > :not(hr) // @todo En test... // [class^=column].gap > *
+    margin-bottom: - _gap
+  &.gap > :not(:last-child) //:not(hr) // @todo En test...
     margin-bottom: _gap
   &.gap-bottom
-    margin-bottom: _gap
+    padding-bottom: _gap
   &.gap-vertical
     gap: 0 _gap
-
-//[class^=column].gap-vertical
-//  column-gap: _gap
+    //column-gap: _gap
