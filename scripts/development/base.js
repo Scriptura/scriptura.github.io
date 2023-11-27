@@ -73,7 +73,7 @@ const getScripts = (() => {
   //if (document.querySelector('.masonry')) getScript('/scripts/masonry.js')
   if (document.querySelector('[class*=validation]')) getScript('/scripts/formValidation.js')
   if (document.querySelector('[class*=-focus]')) getScript('/scripts/imageFocus.js')
-  if (document.querySelector('[class*=accordion]')) getScript('/scripts/accordion.js')
+  //if (document.querySelector('[class*=accordion]')) getScript('/scripts/accordion.js') // @todo Test en cours...
   //if (document.querySelector('[class*=tabs]')) getScript('/scripts/tab.js')
   if (document.querySelector('.pre')) getScript('/scripts/codeBlock.js')
   //if (document.querySelector('.input [type=password]')) getScript('/scripts/readablePassword.js')

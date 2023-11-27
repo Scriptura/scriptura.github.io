@@ -78,6 +78,7 @@ h6,
 .h5,
 .h6 {
   font-family: 'Noto Serif', serif;
+  text-wrap: balance;
 }
 .h2,
 .h3,
