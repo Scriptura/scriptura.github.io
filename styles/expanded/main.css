@@ -161,14 +161,14 @@ sup {
 details {
   display: block;
 }
-details details {
+details > details {
   margin-block: 0;
   margin-left: 2em;
 }
-details details:first-child {
+details > details:first-child {
   margin-top: 0;
 }
-details details:last-child {
+details > details:last-child {
   margin-bottom: 0;
 }
 details:first-child {

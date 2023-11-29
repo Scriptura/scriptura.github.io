@@ -18,18 +18,18 @@ const tabs = () => {
     const tablist = summary.parentElement.parentElement.firstElementChild,
           summaryHtml = summary.innerHTML,
           tab = document.createElement('button')
-    tab.id = 'tab-summary-' + i
+    tab.id = `tabsummary-${i}`
     tab.type = 'button'
     tab.classList.add('tab-summary')
     tab.role = 'tab'
-    tab.setAttribute('aria-controls', 'tab-panel-' + i) // @note Pas de notation `.` possible pour cet attribut.
+    tab.setAttribute('aria-controls', `tab-panel-${i}`) // @note Pas de notation `.` possible pour cet attribut.
     tablist.appendChild(tab)
     tab.insertAdjacentHTML('beforeend', summaryHtml)
     summary.parentElement.removeChild(summary)
   })
 
   document.querySelectorAll('.tabs > details > *').forEach((panel, i) => {
-    panel.id = 'tab-panel-' + i
+    panel.id = `tab-panel-${i}`
     panel.classList.add('tab-panel')
     panel.role = 'tabpanel'
     panel.ariaLabelledby = `tabsummary-${i}`
@@ -43,33 +43,32 @@ const tabs = () => {
     firstTab.ariaSelected = 'true'
   })
 
-  for (const tab of document.querySelectorAll('.tab-summary')) {
+  document.querySelectorAll('.tab-summary').forEach((tab) => {
 
     tab.addEventListener('click', () => {
-      let i = 0
-      for (const tabSibling of tab.parentElement.children) {
+      [...tab.parentElement.children].forEach(tabSibling => {
         tabSibling.disabled = false
-        tabSibling.classList.remove('current')
+        tabSibling.classList.remove('open')
         tabSibling.ariaSelected = 'false'
-        localStorage.removeItem(tabsPanel + tabSibling.id.match(/[0-9]$/i)[0])
-        i++
-      }
+        localStorage.setItem(tabsPanel + tabSibling.id.match(/[0-9]$/i)[0], 'close')
+      })
       tab.disabled = true
       tab.classList.add('current')
       tab.ariaSelected = 'true'
-      localStorage.setItem(tabsPanel + tab.id.match(/[0-9]$/i)[0], 'current')
+      localStorage.setItem(tabsPanel + tab.id.match(/[0-9]$/i)[0], 'open')
 
       const currentPanel = document.getElementById(tab.getAttribute('aria-controls'))
       currentPanel.ariaHidden = 'false'
-      for (const panel of tab.parentElement.parentElement.querySelectorAll('.tab-panel')) {
-        if (panel === currentPanel) continue
-        if (panel.parentElement === tab.parentElement.parentElement) panel.ariaHidden = 'true'
-        if (tab === tab.classList.contains('current')) tab.classList.remove('current')
-      }
+      tab.parentElement.parentElement.querySelectorAll('.tab-panel').forEach(panel => {
+        if (panel !== currentPanel) {
+          if (panel.parentElement === tab.parentElement.parentElement) panel.ariaHidden = 'true'
+          if (tab === tab.classList.contains('open')) tab.classList.remove('open')
+        }
+      })
 
     })
 
-  }
+  })
 
 }
 
