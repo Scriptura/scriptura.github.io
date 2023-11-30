@@ -140,7 +140,7 @@ input[role=switch]
     transform: translateX(round(_switchSize / 2, 2))
     & svg:nth-child(2) // @note Idem
       display: none
-  &:has([role=switch]:not(:checked):not(.dual-state)) + label
+  &:has([role=switch]:not(:checked, .dual-state)) + label
     color: _colorG + 30%
   &:has(:disabled) + label
     //color: _colorG + 30%

@@ -87,7 +87,6 @@ const getScripts = (() => {
   if (document.querySelector('.map')) getScript('/libraries/leaflet/leaflet.js')
   if (document.querySelector('.map')) getScript('/scripts/map.js')
   if (document.querySelector('[class*=language-]')) getScript('/libraries/prism/prism.js')
-  if (document.querySelector('.script-test')) getScript('/scripts/development/testDev.js')
 })()
 
 
@@ -272,17 +271,13 @@ const multipleSelectCustom = (() => {
 // -----------------------------------------------------------------------------
 
 const colorInput = (() => {
-  document.querySelectorAll('.color-output input').forEach(input => {
-    const output = document.createElement('output')
-    input.after(output)
-    const outputSelector = input.parentElement.querySelector('output')
-		output.textContent = input.value
-    //outputSelector.style.color = input.value
-		input.oninput = function() {
+  document.querySelectorAll('.input:has([type=color] + output) input').forEach(input => {
+    const output = input.nextElementSibling
+    output.textContent = input.value
+    input.oninput = function() {
       this.value = this.value
-			output.textContent = this.value
-      //outputSelector.style.color = this.value
-		}
+      output.textContent = this.value
+    }
   })
 })()
 

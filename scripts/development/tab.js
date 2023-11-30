@@ -48,7 +48,7 @@ const tabs = () => {
     tab.addEventListener('click', () => {
       [...tab.parentElement.children].forEach(tabSibling => {
         tabSibling.disabled = false
-        tabSibling.classList.remove('open')
+        tabSibling.classList.remove('current')
         tabSibling.ariaSelected = 'false'
         localStorage.setItem(tabsPanel + tabSibling.id.match(/[0-9]$/i)[0], 'close')
       })

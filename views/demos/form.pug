@@ -40,14 +40,13 @@ form(action='./')
           .input
             label(for='input-password') Type password
             input#input-password(type='password' name='input-password' placeholder='••••••••')
-        .grid-auto-min.gap
           .input
             label(for='input-color') Type color
             input#input-color(type='color' name='input-color' value='#ffa500')
-          .input.color-output
-            label(for='input-color2')
-              code .color-output
+          .input
+            label(for='input-color2') Type color + output
             input#input-color2(type='color' name='input-color2' value='#ff6347')
+            output
         .input
           label(for='input-file') Type file
           input#input-file(type='file' name='input-file')

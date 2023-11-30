@@ -42,9 +42,6 @@ figure
     padding-top: .5em
     text-align: center
 
-//:not('.masonry') > [class*=figure] + [class*=figure] // @note Solution avantageusement remplacée par un layout, grid (+ masonry) ou columns
-  //margin-top: 2em
-
 [class*=-thumbnail]
   width: 100% // Important à appliquer pour le responsive si le width n'est pas définit préalablement
   max-width: 'calc(50% - %s)' % (_gap / 2)

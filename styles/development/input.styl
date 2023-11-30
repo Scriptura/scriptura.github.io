@@ -136,21 +136,17 @@ form
   & input + [class*=message]
     margin-top: 1em
 
-//.input:has(> output) // @bugfixed Fonctionne sous Chrome mais bug sous Firefox.
-.color-output
+.input:has([type=color] + output) // @bugfixed @affected Les anciens Firefox < v108.
   position: relative
   & output
     position: absolute
-    display: inline-block
     left: .5em
     bottom: .6em
     margin: _inputSize3
-    padding: .2em .7em
-    //font-family: _fontList
+    padding: .2em .5em
+    font-family: monospace, monospace // @bugfix Déclaration double, solution de contournement pour certains navigateurs qui ont tendance à réduire la taille des polices monospaces. @affected Chrome. @see https://stackoverflow.com/questions/38781089/font-family-monospace-monospace
     color: _inputColor9
     background-color: _inputColor10
-    //border: _inputSize3 solid transparent
-    border-radius: _r2
     pointer-events: none
 
 :root .input-password input
