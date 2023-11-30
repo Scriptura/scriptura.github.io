@@ -20,16 +20,10 @@ audio
 video
   outline: none
 
-//audio
-//  height: _mediaPlayerSize // @note Harmonisation avec notre propre player personnalisé.
-
 video
   height: auto // @note Important si les dimentions de la vidéo sont définies.
   aspect-ratio: 16/9 // @bugfix Permet de garder une cohérence entre la vidéo et son poster, mais aussi entre les vidéos d'une même grille.
   object-fit cover // @affected Firefox @note Influence sur l'image des posters.
-
-//audio.media
-//  display: none // @note C'est Javascript qui se charge de la suppression, ce qui permet l'affichage d'un lecteur par défaut si JS désactivé.
 
 ::cue // @note Toutes les propriétés CSS ne sont pas applicables à ce sélecteur @see https://developer.mozilla.org/en-US/docs/Web/CSS/::cue
   line-height: 1.5 // @note Empêche le chevauchement des sous-titres si plus d'une ligne.
@@ -38,6 +32,10 @@ video
   background-color: rgba(0, 0, 0, .4)
   @media (min-width: _sizeXS)
     font-size: 1.5em
+
+audio.media
+  height: 3.05em // @note Hauteur calculée empiriquement pour une harmonisation au plus proche de notre propre player personnalisé. Ce qui évite un saut désagréable lors du remplacement.
+  //display: none // @note C'est Javascript qui se charge de la suppression, ce qui permet l'affichage d'un lecteur par défaut si JS désactivé.
 
 video.media
   display: block

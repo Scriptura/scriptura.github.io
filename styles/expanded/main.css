@@ -509,13 +509,18 @@ main {
 .order {
   order: var(--o, -1);
 }
-@container grid (35em > width) {
+@container grid (width < 35.01em) {
   .xs-order {
     order: var(--o, -1);
   }
 }
-@container grid (35em < width < 50em) {
+@container grid (35.01em < width < 50.01em) {
   .s-order {
+    order: var(--o, -1);
+  }
+}
+@container grid (50.01em < width < 70.01em) {
+  .m-order {
     order: var(--o, -1);
   }
 }
@@ -1337,6 +1342,9 @@ video {
   ::cue {
     font-size: 1.5em;
   }
+}
+audio.media {
+  height: 3.05em;
 }
 video.media {
   display: block;
@@ -2395,19 +2403,18 @@ select {
 .input input + [class*=message] {
   margin-top: 1em;
 }
-.color-output {
+.input:has([type=color] + output) {
   position: relative;
 }
-.color-output output {
+.input:has([type=color] + output) output {
   position: absolute;
-  display: inline-block;
   left: 0.5em;
   bottom: 0.6em;
   margin: 2px;
-  padding: 0.2em 0.7em;
+  padding: 0.2em 0.5em;
+  font-family: monospace, monospace;
   color: #fff;
   background-color: rgba(0,0,0,0.5);
-  border-radius: 0.3em;
   pointer-events: none;
 }
 :root .input-password input {
@@ -2640,7 +2647,8 @@ input[role=switch]:focus-visible {
 .switch-custom :checked + div svg:nth-child(2) {
   display: none;
 }
-.switch-custom:has([role=switch]:not(:checked):not(.dual-state)) + label {
+.switch-custom:has([role=switch]:not(:checked,
+.switch-custom .dual-state)) + label {
   color: #747474;
 }
 .switch-custom:has(:disabled) + label {
@@ -3257,7 +3265,7 @@ main > article > footer {
   gap: 1em;
 }
 .drop-cap,
-.no-js .add-drop-cap > :not(*) + p:first-child::first-letter {
+.no-js .add-drop-cap > p:first-child::first-letter {
   float: left;
   margin-right: 0.2em;
   padding: 0.28em 0.2em 0.12em;
@@ -3618,6 +3626,7 @@ bar-chart {
   all: unset;
   margin-block: 1.25em 0;
   font-weight: bold;
+  text-wrap: balance;
 }
 .avatars,
 .avatars > * {
@@ -3836,22 +3845,22 @@ html,
   display: none !important;
 }
 @container grid (width < 35.01em) {
-  .hidden-xs {
+  .xs-hidden {
     display: none !important;
   }
 }
 @container grid (35.01em < width < 50.01em) {
-  .hidden-s {
+  .s-hidden {
     display: none !important;
   }
 }
 @container grid (50.01em < width < 70.01em) {
-  .hidden-m {
+  .m-hidden {
     display: none !important;
   }
 }
 @container grid (70.01em < width < 92.01em) {
-  .hidden-l {
+  .l-hidden {
     display: none !important;
   }
 }

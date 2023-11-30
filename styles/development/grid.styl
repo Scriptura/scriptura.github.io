@@ -166,14 +166,19 @@
 .order
   order: var(--o, -1) // @note Valeur négative car l'utilisation de cette classe est souvent utilisée pour une monté des éléments frères plutôt qu'une descente.
 
-@container grid (35em > width)
+@container grid (width < 35.01em)
 
   .xs-order
     order: var(--o, -1)
 
-@container grid (35em < width < 50em)
+@container grid (35.01em < width < 50.01em)
 
   .s-order
+    order: var(--o, -1)
+
+@container grid (50.01em < width < 70.01em)
+
+  .m-order
     order: var(--o, -1)
 
 /*
