@@ -351,6 +351,7 @@ main {
   width: 100%;
 }
 [class^=grid] {
+  --gap: 1em;
   display: grid;
   grid-auto-flow: dense;
   grid-template-columns: repeat(var(--n, 1), minmax(0, 1fr));
@@ -359,16 +360,19 @@ main {
   grid-auto-rows: minmax(0, 1fr);
 }
 [class^=grid].gap {
-  gap: var(--gap, 1em);
+  gap: var(--gap);
 }
 [class^=grid].gap-block {
-  padding-block: var(--gap, 1em);
+  padding-block: var(--gap);
+}
+[class^=grid].gap-top {
+  padding-top: var(--gap);
 }
 [class^=grid].gap-bottom {
-  padding-bottom: var(--gap, 1em);
+  padding-bottom: var(--gap);
 }
 [class^=grid].gap-vertical {
-  gap: 0 var(--gap, 1em);
+  gap: 0 var(--gap);
 }
 .grid-auto,
 .grid-auto-min {
@@ -500,6 +504,9 @@ main {
 .flex.gap {
   gap: 1em;
 }
+.flex.gap-top {
+  margin-top: 1em;
+}
 .flex.gap-bottom {
   margin-bottom: 1em;
 }
@@ -592,11 +599,14 @@ main {
        column-gap: 1em;
   margin-bottom: -1em;
 }
-[class^=column].gap > :not(:last-child) {
+[class^=column].gap > * {
   margin-bottom: 1em;
 }
+[class^=column].gap-top {
+  margin-top: 1em;
+}
 [class^=column].gap-bottom {
-  padding-bottom: 1em;
+  margin-bottom: 0;
 }
 [class^=column].gap-vertical {
   gap: 0 1em;

@@ -7,21 +7,25 @@
   width: 100% // @note Important si le conteneur n'a pas de largeur définie par défaut.
 
 [class^=grid]
+  --gap: _gap
   display: grid
   grid-auto-flow: dense
   grid-template-columns: repeat(var(--n, 1), minmax(0, 1fr))
   &.row-defines // @note Permet aux spans de la propriété grid-row de se caler sur les lignes. Intéressant mais pas souhaitable d'emblée en production, d'où cette classe.
     grid-auto-rows: minmax(0, 1fr)
   &.gap
-    gap: var(--gap, _gap)
+    gap: var(--gap)
   &.gap-block
-    padding-block: var(--gap, _gap) // @note padding et non margin, car ne doit pas pouvoir fusionner avec les marges de l'élément suivant.
-  //&.gap-top
-  //  padding-top: var(--gap, _gap) // @note Idem.
+    //margin-block: var(--gap)
+    padding-block: var(--gap) // @note padding et non margin, car ne doit pas pouvoir fusionner avec les marges de l'élément suivant.
+  &.gap-top
+    //margin-top: var(--gap)
+    padding-top: var(--gap) // @note Idem.
   &.gap-bottom
-    padding-bottom: var(--gap, _gap) // @note Idem.
+    //margin-bottom: var(--gap)
+    padding-bottom: var(--gap) // @note Idem.
   &.gap-vertical
-    gap: 0 var(--gap, _gap)
+    gap: 0 var(--gap)
   //&.masonry
   //  grid-template-rows: masonry // @note Implémentation future en CSS @todo À surveiller.
 
@@ -151,6 +155,8 @@
   align-items: center // @todo En test...
   &.gap
     gap: _gap
+  &.gap-top
+    margin-top: _gap
   &.gap-bottom
     margin-bottom: _gap
   /* @todo

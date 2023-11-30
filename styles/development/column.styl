@@ -56,11 +56,13 @@
 [class^=column]
   &.gap
     column-gap: _gap
-    margin-bottom: - _gap
-  &.gap > :not(:last-child) //:not(hr) // @todo En test...
-    margin-bottom: _gap
+    margin-bottom: - _gap // @note À l'inverse de grid layout, le module columns a besoin des marges pour bien s'implémenter.
+  &.gap > *
+    margin-bottom: _gap // @note Idem
+  &.gap-top
+    margin-top: _gap // @note Idem
   &.gap-bottom
-    padding-bottom: _gap
+    margin-bottom: 0 // @note Idem
   &.gap-vertical
     gap: 0 _gap
     //column-gap: _gap
