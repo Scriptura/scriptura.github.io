@@ -594,6 +594,10 @@ main {
          column-count: 3;
   }
 }
+[class^=column] > * {
+  -moz-column-break-inside: avoid;
+       break-inside: avoid-column;
+}
 [class^=column].gap {
   -moz-column-gap: 1em;
        column-gap: 1em;

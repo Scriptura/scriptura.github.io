@@ -54,6 +54,8 @@
     column-count: 3
 
 [class^=column]
+  & > *
+    break-inside: avoid-column // @note Évite aux items enfants de column d'être éventuellement coupés en deux. @see https://stackoverflow.com/questions/7785374
   &.gap
     column-gap: _gap
     margin-bottom: - _gap // @note À l'inverse de grid layout, le module columns a besoin des marges pour bien s'implémenter.

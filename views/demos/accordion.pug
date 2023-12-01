@@ -92,46 +92,44 @@
               p Sed malesuada condimentum dui, vitae commodo nibh consequat sit amet. Nulla semper id nisi a aliquam. Maecenas quis magna nec lectus finibus interdum ut sed leo. Donec mollis diam id ante pharetra, at aliquam neque feugiat. Quisque id vulputate odio, quis ultricies odio. Nulla facilisi. Pellentesque ut aliquet enim. Fusce congue felis sit amet nulla bibendum condimentum. Proin lacinia ex non sem vulputate, quis laoreet dolor vestibulum. In ut molestie sem. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam eget orci ultricies, scelerisque sem vitae, bibendum augue.
           p Morbi ac ex ornare, finibus turpis vel, pellentesque leo. Aenean dignissim eu dolor id dignissim. Duis ornare sapien ex, non porttitor sapien suscipit ut. Curabitur at tempor massa, ac finibus mi. Suspendisse nibh neque, porta et placerat vel, gravida at magna. Aenean augue dui, tincidunt nec ligula ut, laoreet tempor elit. Nullam vel sagittis eros, vel mattis ex.
           p Suspendisse fermentum luctus odio. Curabitur fringilla pulvinar interdum. Morbi porta orci neque, at commodo nulla tincidunt sed. Nulla finibus libero erat, eu auctor felis condimentum ac. Duis aliquet arcu sed luctus molestie. Pellentesque eros ipsum, ullamcorper ac turpis non, dictum hendrerit nulla. Integer mattis feugiat mauris a tincidunt. Duis fermentum faucibus nisl.
-.grid2.s-grid1.gap
-  .column.gap.gap-bottom
-    .message-highlight
-      svg.icon(role='img' focusable='false')
-        use(href='/sprites/util.svg#paperclip')
-      div
-        p
-          | L'accordéon est basé sur les éléments html 
-          code details/summary
-          | . Le javascript transforme cette base pour permettre les animations et un meilleur contrôle, il ajoute aussi des attributs aria pour l'accessibilité. L'accordéon reste accessible au clavier comme pour le html de base.
-    .message-highlight
-      svg.icon(role='img' focusable='false')
-        use(href='/sprites/util.svg#paperclip')
-      div
-        p 
-          | Par défaut, l'accordéon suit le comportement de 
-          code details/summary
-          |  avec des onglets indépendant les uns des autres. L'ajout sur l'accordéon d'une option 
-          code singletab
-          |  limitera l'ouverture à un seul onglet à la fois.
-        p
-          | De même, l'attribut natif 
-          code open
-          |  sur l'élément 
-          code details
-          |  est pris en compte.
-  .column.gap.gap-bottom
-    .message-highlight
-      svg.icon(role='img' focusable='false')
-        use(href='/sprites/util.svg#paperclip')
-      div
-        p
-          | Notez que l'apparence de l'accordéon ne changera pas si javascript est désactivé. Seul les animations et l'option 
-          code singletab
-          |  auront disparus.
-    .message-highlight
-      svg.icon(role='img' focusable='false')
-        use(href='/sprites/util.svg#paperclip')
-      div
-        p
-          | Les états des onglets sont sauvegardés en 
-          code localStorage
-          |  : au rechargement de la page les panneaux seront retrouvés ouverts ou fermés tel qu'ils ont été laissés.
+.column2.gap
+  .message-highlight
+    svg.icon(role='img' focusable='false')
+      use(href='/sprites/util.svg#paperclip')
+    div
+      p
+        | L'accordéon est basé sur les éléments html 
+        code details/summary
+        | . Le javascript transforme cette base pour permettre les animations et un meilleur contrôle, il ajoute aussi des attributs aria pour l'accessibilité. L'accordéon reste accessible au clavier comme pour le html de base.
+  .message-highlight
+    svg.icon(role='img' focusable='false')
+      use(href='/sprites/util.svg#paperclip')
+    div
+      p 
+        | Par défaut, l'accordéon suit le comportement de 
+        code details/summary
+        |  avec des onglets indépendant les uns des autres. L'ajout sur l'accordéon d'une option 
+        code singletab
+        |  limitera l'ouverture à un seul onglet à la fois.
+      p
+        | De même, l'attribut natif 
+        code open
+        |  sur l'élément 
+        code details
+        |  est pris en compte.
+  .message-highlight
+    svg.icon(role='img' focusable='false')
+      use(href='/sprites/util.svg#paperclip')
+    div
+      p
+        | Notez que l'apparence de l'accordéon ne changera pas si javascript est désactivé. Seul les animations et l'option 
+        code singletab
+        |  auront disparus.
+  .message-highlight
+    svg.icon(role='img' focusable='false')
+      use(href='/sprites/util.svg#paperclip')
+    div
+      p
+        | Les états des onglets sont sauvegardés en 
+        code localStorage
+        |  : au rechargement de la page les panneaux seront retrouvés ouverts ou fermés tel qu'ils ont été laissés.
