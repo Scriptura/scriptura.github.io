@@ -47,7 +47,7 @@
     "svgo": "pnpm svgoutil && pnpm svgoplayer",
     "svgoutil": "node tasks/iconUtil && svgo --config tasks/svgoConfig.cjs -f medias/icons/utilSrc -o medias/icons/utilDest",
     "svgoplayer": "node tasks/iconPlayer && svgo --config tasks/svgoConfig.cjs -f medias/icons/playerSrc -o medias/icons/playerDest",
-    "sprite": "pnpm spriteutil | pnpm spriteplayer",
+    "sprites": "pnpm spriteutil | pnpm spriteplayer",
     "spriteutil": "svg-symbol-sprite -p '' -a 'xmlns=\"http://www.w3.org/2000/svg\"' -s '' -c false -i medias/icons/utilDest -o sprites/util.svg",
     "spriteplayer": "svg-symbol-sprite -p '' -a 'xmlns=\"http://www.w3.org/2000/svg\"' -s '' -c false -i medias/icons/playerDest -o sprites/player.svg",
     "imglist": "node tasks/imageList",
