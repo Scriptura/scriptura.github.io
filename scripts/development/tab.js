@@ -5,6 +5,18 @@ const tabs = () => {
   const slug = window.location.pathname,
         tabsPanel = `${(slug.substring(0, slug.lastIndexOf('.')) || slug).replace(/[\W_]/gi, '').toLowerCase()}TabsPanel`
 
+  const setCurrentTab = tab => {
+    tab.disabled = true
+    tab.classList.add('current')
+    tab.ariaSelected = 'true'
+  }
+
+  const setPastTab = tab => {
+    tab.disabled = false
+    tab.classList.remove('current')
+    tab.ariaSelected = 'false'
+  }
+
   const transformHTML = (() => {
 
     document.querySelectorAll('.tabs').forEach((tabs, i) => {
@@ -39,11 +51,7 @@ const tabs = () => {
       panel.parentElement.querySelector('details').remove()
     })
 
-    document.querySelectorAll('.tab-summary:first-child').forEach(firstTab => {
-      firstTab.disabled = true
-      firstTab.classList.add('current')
-      firstTab.ariaSelected = 'true'
-    })
+    document.querySelectorAll('.tab-summary:first-child').forEach(firstTab => setCurrentTab(firstTab))
 
   })()
 
@@ -51,19 +59,17 @@ const tabs = () => {
 
     document.querySelectorAll('.tab-summary').forEach((tab) => {
 
+      const currentPanel = document.getElementById(tab.getAttribute('aria-controls'))
+      console.log(currentPanel)
+
       tab.addEventListener('click', () => {
         [...tab.parentElement.children].forEach(tabSibling => {
-          tabSibling.disabled = false
-          tabSibling.classList.remove('current')
-          tabSibling.ariaSelected = 'false'
+          setPastTab(tabSibling)
           localStorage.setItem(tabsPanel + tabSibling.id.match(/[0-9]$/i)[0], 'close')
         })
-        tab.disabled = true
-        tab.classList.add('current')
-        tab.ariaSelected = 'true'
+        setCurrentTab(tab)
         localStorage.setItem(tabsPanel + tab.id.match(/[0-9]$/i)[0], 'open')
 
-        const currentPanel = document.getElementById(tab.getAttribute('aria-controls'))
         currentPanel.ariaHidden = 'false'
         tab.parentElement.parentElement.querySelectorAll('.tab-panel').forEach(panel => {
           if (panel !== currentPanel) {

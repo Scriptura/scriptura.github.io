@@ -536,8 +536,8 @@ main {
        column-gap: 0;
   position: relative;
 }
-[class^=column] > *,
-[class^=column] display: inline-block {
+[class^=column] > * {
+  display: inline-block;
   width: 100%;
   -moz-column-break-inside: avoid;
        break-inside: avoid-column;

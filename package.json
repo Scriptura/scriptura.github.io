@@ -10,15 +10,15 @@
   "devDependencies": {
     "autoprefixer-stylus": "^1.0.0",
     "browser-sync": "^2.29.3",
-    "eslint": "^8.47.0",
+    "eslint": "^8.55.0",
     "image-size": "^1.0.2",
-    "ora": "^6.3.1",
+    "ora": "^7.0.1",
     "pug": "^3.0.2",
-    "sharp": "^0.31.3",
-    "stylus": "^0.59.0",
-    "svg-symbol-sprite": "^1.4.0",
-    "svgo": "^3.0.2",
-    "terser": "^5.19.2"
+    "sharp": "^0.33.0",
+    "stylus": "^0.62.0",
+    "svg-symbol-sprite": "^1.4.1",
+    "svgo": "^3.0.5",
+    "terser": "^5.24.0"
   },
   "scripts": {
     "dev": "pnpm html | pnpm js",
