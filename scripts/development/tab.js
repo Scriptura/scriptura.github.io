@@ -22,7 +22,7 @@ const tabs = () => {
     tab.type = 'button'
     tab.classList.add('tab-summary')
     tab.role = 'tab'
-    tab.setAttribute('aria-controls', `tab-panel-${i}`) // @note Pas de notation `.` possible pour cet attribut.
+    tab.setAttribute('aria-controls', `tab-panel-${i}`) // @note Pas de notation par point possible pour cet attribut.
     tablist.appendChild(tab)
     tab.insertAdjacentHTML('beforeend', summaryHtml)
     summary.parentElement.removeChild(summary)
@@ -37,24 +37,16 @@ const tabs = () => {
     panel.parentElement.querySelector('details').remove()
   })
 
-  document.querySelectorAll('.tab-summary:first-child').forEach(firstTab => {
-    firstTab.disabled = true
-    firstTab.classList.add('current')
-    firstTab.ariaSelected = 'true'
-  })
+  document.querySelectorAll('.tab-summary:first-child').forEach(firstTab => openedPanel(firstTab))
 
   document.querySelectorAll('.tab-summary').forEach((tab) => {
 
     tab.addEventListener('click', () => {
       [...tab.parentElement.children].forEach(tabSibling => {
-        tabSibling.disabled = false
-        tabSibling.classList.remove('current')
-        tabSibling.ariaSelected = 'false'
+        closedPanel(tabSibling)
         localStorage.setItem(tabsPanel + tabSibling.id.match(/[0-9]$/i)[0], 'close')
       })
-      tab.disabled = true
-      tab.classList.add('current')
-      tab.ariaSelected = 'true'
+      openedPanel(tabSibling)
       localStorage.setItem(tabsPanel + tab.id.match(/[0-9]$/i)[0], 'open')
 
       const currentPanel = document.getElementById(tab.getAttribute('aria-controls'))
@@ -69,6 +61,18 @@ const tabs = () => {
     })
 
   })
+
+  const openedPanel = panel => {
+    panel.classList.add('current')
+    panel.disabled = true
+    panel.ariaSelected = 'true'
+  }
+
+  const closedPanel = panel => {
+    panel.classList.remove('current')
+    panel.disabled = false
+    panel.ariaSelected = 'false'
+  }
 
 }
 

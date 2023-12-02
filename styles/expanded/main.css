@@ -536,10 +536,29 @@ main {
        column-gap: 0;
   position: relative;
 }
-[class^=column] > * {
-  display: inline-block;
+[class^=column] > *,
+[class^=column] display: inline-block {
   width: 100%;
+  -moz-column-break-inside: avoid;
+       break-inside: avoid-column;
   word-wrap: break-word;
+}
+[class^=column].gap {
+  -moz-column-gap: 1em;
+       column-gap: 1em;
+  margin-bottom: -1em;
+}
+[class^=column].gap > * {
+  margin-bottom: 1em;
+}
+[class^=column].gap-top {
+  margin-top: 1em;
+}
+[class^=column].gap-bottom {
+  margin-bottom: 0;
+}
+[class^=column].gap-vertical {
+  gap: 0 1em;
 }
 @media (max-width: 35.01em) {
   .sizeXS-column2 {
@@ -550,7 +569,8 @@ main {
 @media (min-width: 35.01em) {
   .column2,
   .column3,
-  .column4 {
+  .column4,
+  .s-column2 {
     -moz-column-count: 2;
          column-count: 2;
   }
@@ -593,27 +613,6 @@ main {
     -moz-column-count: 3;
          column-count: 3;
   }
-}
-[class^=column] > * {
-  -moz-column-break-inside: avoid;
-       break-inside: avoid-column;
-}
-[class^=column].gap {
-  -moz-column-gap: 1em;
-       column-gap: 1em;
-  margin-bottom: -1em;
-}
-[class^=column].gap > * {
-  margin-bottom: 1em;
-}
-[class^=column].gap-top {
-  margin-top: 1em;
-}
-[class^=column].gap-bottom {
-  margin-bottom: 0;
-}
-[class^=column].gap-vertical {
-  gap: 0 1em;
 }
 .nav {
   position: relative;

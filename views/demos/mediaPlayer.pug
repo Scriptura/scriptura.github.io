@@ -47,38 +47,34 @@
         figcaption Réminiscences
         audio.media(controls)
           source(src='/medias/audios/LesMysterieusesCitesDOr/Réminiscences.mp3')
-  .grid.gap(style='--n:1')
-    .message-highlight
-      svg.icon(role='img' focusable='false')
-        use(href='/sprites/util.svg#info')
-      div
-        p Par défaut un seul lecteur peut être actif sur la page. En cas de nouveau player, le précédent passera sur pause, à part ce principe de base, les lecteurs sont indépendants entre eux.
-    .message-highlight
-      svg.icon(role='img' focusable='false')
-        use(href='/sprites/util.svg#cogwheel')
-      div
-        p
-          | Un élément parent bénéficiant de la classe 
-          code .media-relationship
-          |  rend ses médias enfants solidaires entre eux, sans pour autant qu'ils soient obligés d'être des élements frères.
-        p
-          code data-next-reading=false
-          |  ajoutera une option "lecture à la suite" dans le menu du player, 
-          code data-next-reading=true
-          |  activera cette même option par défaut.
-  div
-    .message-highlight
-      svg.icon(role='img' focusable='false')
-        use(href='/sprites/util.svg#quill')
-      div
-        p Crédit pour les musiques&nbsp;: 
-          em Les Mystérieuses Cités d'Or
-          | , interprétées par Yannick Rault (
-          a(href='https://citesdor.com/musiques/musiques_boub.php3') lien
-          | ).
-  //-figure.center
-    svg.size.xs-scale.decorative-svg(role='img' focusable='false' style='--size:15em')
-      use(href='/sprites/various/ClefDeLAbimeMonochrome.svg#1')
+.column.m-column2.gap.gap-top
+  .message-highlight
+    svg.icon(role='img' focusable='false')
+      use(href='/sprites/util.svg#info')
+    div
+      p Par défaut un seul lecteur peut être actif sur la page. En cas de nouveau player, le précédent passera sur pause, à part ce principe de base, les lecteurs sont indépendants entre eux.
+  .message-highlight
+    svg.icon(role='img' focusable='false')
+      use(href='/sprites/util.svg#cogwheel')
+    div
+      p
+        | Un élément parent bénéficiant de la classe 
+        code .media-relationship
+        |  rend ses médias enfants solidaires entre eux, sans pour autant qu'ils soient obligés d'être des élements frères.
+      p
+        code data-next-reading=false
+        |  ajoutera une option "lecture à la suite" dans le menu du player, 
+        code data-next-reading=true
+        |  activera cette même option par défaut.
+  .message-highlight
+    svg.icon(role='img' focusable='false')
+      use(href='/sprites/util.svg#quill')
+    div
+      p Crédit pour les musiques&nbsp;: 
+        em Les Mystérieuses Cités d'Or
+        | , interprétées par Yannick Rault (
+        a(href='https://citesdor.com/musiques/musiques_boub.php3') lien
+        | ).
 hr(data-hr='✻ ✻ ✻')
 .grid2.s-grid1.gap.gap-bottom
   div
