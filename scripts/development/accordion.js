@@ -33,7 +33,7 @@
 const accordion = () => {
 
   const slug = window.location.pathname,
-        accordionPanel = `${(slug.substring(0, slug.lastIndexOf('.')) || slug).replace(/[\W_]/gi, '' || 'index').toLowerCase()}AccordionPanel`
+        accordionPanel = `${(slug.substring(0, slug.lastIndexOf('.')) || slug).replace(/[\W_]/gi, '') || 'index'.toLowerCase()}AccordionPanel`
 
   const transformHTML = (() => {
 
