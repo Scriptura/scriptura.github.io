@@ -17,7 +17,7 @@ const tabs = () => {
     tab.ariaSelected = 'false'
   }
 
-  const transformHTML = (() => {
+  const transformHTML = () => {
 
     document.querySelectorAll('.tabs').forEach((tabs, i) => { // @note Création d'un panneau pour contenir les boutons/onglets
       const tabList = document.createElement('div')
@@ -46,9 +46,9 @@ const tabs = () => {
 
     document.querySelectorAll('.tab-summary:first-child').forEach(firstTab => setCurrentTab(firstTab))
 
-  })()
+  }
 
-  const stateManagement = (() => {
+  const stateManagement = () => {
 
     document.querySelectorAll('.tab-summary').forEach((tab) => {
 
@@ -59,17 +59,14 @@ const tabs = () => {
         localStorage.setItem(tabsPanel + tab.id.match(/[0-9]$/i)[0], 'open')
         currentPanel.ariaHidden = 'false'
         tab.parentElement.parentElement.querySelectorAll('.tab-panel').forEach(panel => {
-          if (panel !== currentPanel) {
-            if (panel.parentElement === tab.parentElement.parentElement) panel.ariaHidden = 'true'
-            if (tab === tab.classList.contains('open')) tab.classList.remove('open')
-          }
+          if (panel !== currentPanel && panel.parentElement === tab.parentElement.parentElement) panel.ariaHidden = 'true' // @note La condition empêche d'altérer les panneaux imbriqués.
         })
         siblingStateManagement(tab)
       })
 
     })
     
-  })()
+  }
 
   const siblingStateManagement = tab => {
     [...tab.parentElement.children].forEach(tabSibling => {
@@ -79,6 +76,9 @@ const tabs = () => {
       }
     })
   }
+
+  transformHTML()
+  stateManagement()
 
 }
 
