@@ -50,16 +50,14 @@ const accordion = () => {
       details.outerHTML = `<div id="accordion-details-${i}" class="accordion-details${openClass}">${details.innerHTML}</div>`
     })
 
-    document.querySelectorAll('.accordion > * > summary').forEach((summary, i) => {
-      summary.outerHTML = `<button id="accordion-summary-${i}" type="button" class="accordion-summary" role="tab" aria-controls="accordion-panel-${i}" aria-expanded="false">${summary.innerHTML}</button>`
-    })
+    document.querySelectorAll('.accordion > * > summary').forEach((summary, i) => summary.outerHTML = `<button id="accordion-summary-${i}" type="button" class="accordion-summary" role="tab" aria-controls="accordion-panel-${i}" aria-expanded="false">${summary.innerHTML}</button>`)
 
     document.querySelectorAll('.accordion > * > :last-child').forEach((panel, i) => {
       // @note On peut surcharger l'élément avec des attributs, mais il ne faut en aucun cas le remplacer pour éviter une transition d'ouverture si panneau ouvert par défaut.
-      panel.id = 'accordion-panel-' + i
+      panel.id = `accordion-panel-${i}`
       panel.classList.add('accordion-panel')
       panel.role = 'tabpanel'
-      panel.ariaLabelledby = 'accordion-summary-' + i
+      panel.setAttribute('ariaLabelledby', `accordion-summary-${i}`) // @note Cet attribut en supporte pas la notation par point.
     })
 
   })()
@@ -113,13 +111,13 @@ const accordion = () => {
   }
 
   const openedPanel = panel => {
-    panel.style.maxHeight = panel.scrollHeight + 'px'
+    panel.style.maxHeight = `${panel.scrollHeight}px`
     panel.ariaHidden = 'false'
   }
 
   const closedPanel = panel => {
     // @note Redéfinition de la hauteur du panneau avant la suppression de cette même définition un laps de temps plus tard. Le laps de temps est minime mais suffisant pour être pris en compte par la transition CSS.
-    panel.style.maxHeight = panel.scrollHeight + 'px'
+    panel.style.maxHeight = `${panel.scrollHeight}px`
     setTimeout(() => {
       panel.removeAttribute('style')
       panel.ariaHidden = 'true'
