@@ -161,21 +161,20 @@ sup {
 details {
   display: block;
 }
-details > details {
-  margin-block: 0;
-  margin-left: 2em;
-}
-details > details:first-child {
-  margin-top: 0;
-}
-details > details:last-child {
-  margin-bottom: 0;
-}
 details:first-child {
   margin-top: 0.75em;
 }
 details:last-child {
   margin-bottom: 0.75em;
+}
+details details {
+  margin: 0 0 0 2em;
+}
+details details:first-child {
+  margin-top: 0;
+}
+details details:last-child {
+  margin-bottom: 0;
 }
 summary {
   display: list-item;

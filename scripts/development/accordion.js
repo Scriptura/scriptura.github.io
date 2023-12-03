@@ -33,7 +33,7 @@
 const accordion = () => {
 
   const slug = window.location.pathname,
-        accordionPanel = `${(slug.substring(0, slug.lastIndexOf('.')) || slug).replace(/[\W_]/gi, '').toLowerCase()}AccordionPanel`
+        accordionPanel = `${(slug.substring(0, slug.lastIndexOf('.')) || slug).replace(/[\W_]/gi, '' || 'index').toLowerCase()}AccordionPanel`
 
   const transformHTML = (() => {
 
@@ -57,7 +57,7 @@ const accordion = () => {
       panel.id = `accordion-panel-${i}`
       panel.classList.add('accordion-panel')
       panel.role = 'tabpanel'
-      panel.setAttribute('ariaLabelledby', `accordion-summary-${i}`) // @note Cet attribut en supporte pas la notation par point.
+      panel.setAttribute('aria-labelledby', `accordion-summary-${i}`) // @note Cet attribut en supporte pas la notation par point.
     })
 
   })()

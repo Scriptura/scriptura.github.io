@@ -166,17 +166,16 @@ sup
 
 details // @note [1] Tentative de reproduire avec les marges l'espacement des items d'une liste.
   display: block // @bugfix Add the correct display @affected Edge, IE 10+, and Firefox.
-  & > details
-    margin-block: 0
-    margin-left: 2em
-    &:first-child
-      margin-top: 0 // [1]
-    &:last-child
-      margin-bottom: 0 // [1]
   &:first-child
     margin-top: .75em // [1]
   &:last-child
     margin-bottom: .75em // [1]
+  & details
+    margin: 0 0 0 2em
+    &:first-child
+      margin-top: 0 // [1]
+    &:last-child
+      margin-bottom: 0 // [1]
 
 summary
   display: list-item // @bugfix Add the correct display @affected All browsers.
