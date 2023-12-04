@@ -5,34 +5,16 @@ const tabs = () => {
   const slug = window.location.pathname,
         tabsPanel = `${(slug.substring(0, slug.lastIndexOf('.')) || slug).replace(/[\W_]/gi, '') || 'index'.toLowerCase()}TabsPanel`
 
-  const setCurrentTab = tab => {
-    tab.disabled = true
-    tab.classList.add('current')
-    tab.ariaSelected = 'true'
-  }
-
-  const setPastTab = tab => {
-    tab.disabled = false
-    tab.classList.remove('current')
-    tab.ariaSelected = 'false'
-  }
-
   const transformHTML = () => {
 
     document.querySelectorAll('.tabs').forEach((tabs, i) => { // @note Création d'un panneau pour contenir les boutons/onglets
-      const tabList = document.createElement('div')
-      tabList.classList.add('tab-list')
-      tabList.role = 'tablist'
-      tabList.ariaLabel = 'Entertainment'
       tabs.id = `tabs-${i}`
-      tabs.prepend(tabList)
+      tabs.insertAdjacentHTML('afterbegin', `<div role="tablist" aria-label="Entertainment" class="tab-list"></div>`)
     })
 
     document.querySelectorAll('.tabs > * > summary').forEach((summary, i) => {
-      const tablist = summary.parentElement.parentElement.firstElementChild
-
-      tablist.appendChild(summary)
-      summary.outerHTML = `<button id="tabsummary-${i}" type="button" class="tab-summary" role="tab" aria-controls="tab-panel-${i}" aria-expanded="false">${summary.innerHTML}</button>`
+      summary.parentElement.parentElement.firstElementChild.appendChild(summary) // @note Déplacement de <summary> dans "div.tab-list"
+      summary.outerHTML = `<button id="tabsummary-${i}" type="button" role="tab" class="tab-summary" aria-controls="tab-panel-${i}" aria-expanded="false">${summary.innerHTML}</button>`
     })
 
     document.querySelectorAll('.tabs > details > *').forEach((panel, i) => {
@@ -41,7 +23,7 @@ const tabs = () => {
       panel.role = 'tabpanel'
       panel.setAttribute('aria-labelledby', `tabsummary-${i}`) // @note Pas de notation par point possible pour cet attribut.
       panel.parentElement.parentElement.appendChild(panel)
-      panel.parentElement.querySelector('details').remove()
+      panel.parentElement.children[1].remove() // @note Remove <details>.
     })
 
     document.querySelectorAll('.tab-summary:first-child').forEach(firstTab => setCurrentTab(firstTab))
@@ -77,6 +59,18 @@ const tabs = () => {
     })
   }
 
+  const setCurrentTab = tab => {
+    tab.disabled = true
+    tab.classList.add('current')
+    tab.ariaSelected = 'true'
+  }
+
+  const setPastTab = tab => {
+    tab.disabled = false
+    tab.classList.remove('current')
+    tab.ariaSelected = 'false'
+  }
+  
   transformHTML()
   stateManagement()
 
