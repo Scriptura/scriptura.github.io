@@ -3,7 +3,7 @@
 const tabs = () => {
 
   const slug = window.location.pathname,
-        tabsPanel = `${(slug.substring(0, slug.lastIndexOf('.')) || slug).replace(/[\W_]/gi, '') || 'index'.toLowerCase()}TabsPanel`
+        tabsPanel = `${(slug.substring(0, slug.lastIndexOf('.')) || slug).replace(/[\W_]/gi, '') || 'index'.toLowerCase()}TabsPanel` // @note Création d'un nom de variable à partir du slug de l'URL.
 
   const transformHTML = () => {
 
@@ -13,8 +13,9 @@ const tabs = () => {
     })
 
     document.querySelectorAll('.tabs > * > summary').forEach((summary, i) => {
+      const stateAttribute = localStorage.getItem(tabsPanel + i) === 'open' ? 'true' : 'false'
       summary.parentElement.parentElement.firstElementChild.appendChild(summary) // @note Déplacement de <summary> dans "div.tab-list"
-      summary.outerHTML = `<button id="tabsummary-${i}" type="button" role="tab" class="tab-summary" aria-controls="tab-panel-${i}" aria-expanded="false">${summary.innerHTML}</button>`
+      summary.outerHTML = `<button id="tabsummary-${i}" type="button" role="tab" class="tab-summary" aria-controls="tab-panel-${i}" aria-selected="${stateAttribute}" aria-expanded="${stateAttribute}">${summary.innerHTML}</button>`
     })
 
     document.querySelectorAll('.tabs > details > *').forEach((panel, i) => {
@@ -63,12 +64,14 @@ const tabs = () => {
     tab.disabled = true
     tab.classList.add('current')
     tab.ariaSelected = 'true'
+    tab.ariaExpanded = 'true'
   }
 
   const setPastTab = tab => {
     tab.disabled = false
     tab.classList.remove('current')
     tab.ariaSelected = 'false'
+    tab.ariaExpanded = 'false'
   }
   
   transformHTML()
