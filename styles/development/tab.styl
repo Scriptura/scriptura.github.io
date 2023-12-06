@@ -34,14 +34,14 @@ _tabBoxShadow1 = 0 -1rem 1rem rgba(0, 0, 0, .05)
         &:hover
           outline: none
           box-shadow: inset 0 -.3em _tabColor3, _tabBoxShadow1
-      &.current
+      &[aria-selected=true] //.current
         z-index: 2 // Permet une gestion correcte des ombres.
         flex-shrink: 0
         max-width: 60%
         background-color: _color1
         border-bottom: none
         pointer-events: none
-      &:not(.current)
+      &[aria-selected=false] //:not(.current)
         user-select: none
   & .tab-panel
     position: relative

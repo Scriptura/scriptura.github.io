@@ -1923,7 +1923,7 @@ samp {
   color: #fff;
 }
 .pre code:empty::before {
-  content: '$ ';
+  content: '> ';
 }
 .pre code:empty::after {
   content: '_';
@@ -3010,7 +3010,7 @@ input[role=switch]:focus-visible {
     box-shadow: inset 0 -0.3em #ff6347, 0 -1rem 1rem rgba(0,0,0,0.05);
   }
 }
-.tabs .tab-list button.current {
+.tabs .tab-list button[aria-selected=true] {
   z-index: 2;
   flex-shrink: 0;
   max-width: 60%;
@@ -3018,7 +3018,7 @@ input[role=switch]:focus-visible {
   border-bottom: none;
   pointer-events: none;
 }
-.tabs .tab-list button:not(.current) {
+.tabs .tab-list button[aria-selected=false] {
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;

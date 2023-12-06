@@ -3,9 +3,8 @@
 // @see https://stackoverflow.com/questions/985272/selecting-text-in-an-element-akin-to-highlighting-with-your-mouse
 
 const selectText = node => {
-  const documentBody = document.body
-  if (documentBody.createTextRange) {
-    const range = documentBody.createTextRange()
+  if (document.body.createTextRange) {
+    const range = document.body.createTextRange()
     range.moveToElementText(node)
     range.select()
   } else if (window.getSelection) {
