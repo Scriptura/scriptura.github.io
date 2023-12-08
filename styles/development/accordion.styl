@@ -44,6 +44,8 @@ _accordionTime1 = .5s
     transition: max-height _accordionTime1 ease-in-out
     &[aria-hidden=true]
       max-height: 0
+  & > details
+    all: unset
   & > details[open] summary::after
   & .open .accordion-summary::after
     transform: rotate(-90deg)

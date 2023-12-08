@@ -167,13 +167,13 @@ details:first-child {
 details:last-child {
   margin-bottom: 0.75em;
 }
-details details {
+:not(.accordion) > details details {
   margin: 0 0 0 2em;
 }
-details details:first-child {
+:not(.accordion) > details details:first-child {
   margin-top: 0;
 }
-details details:last-child {
+:not(.accordion) > details details:last-child {
   margin-bottom: 0;
 }
 summary {
@@ -2956,6 +2956,9 @@ input[role=switch]:focus-visible {
 }
 .accordion > * > :last-child[aria-hidden=true] {
   max-height: 0;
+}
+.accordion > details {
+  all: unset;
 }
 .accordion > details[open] summary::after,
 .accordion .open .accordion-summary::after {

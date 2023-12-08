@@ -43,14 +43,15 @@ const accordion = () => {
     })
 
     document.querySelectorAll('.accordion > details').forEach((details, i) => {
-      let openClass = ''
-      if (details.open) openClass = ' open' // 1
-      if (localStorage.getItem(accordionPanel + i) === 'open') openClass = ' open' // 1
-      if (localStorage.getItem(accordionPanel + i) === 'close') openClass = ''
+      const openClass = (details.open || localStorage.getItem(accordionPanel + i) === 'open') && localStorage.getItem(accordionPanel + i) !== 'close' ? ' open' : '' // 1
       details.outerHTML = `<div id="accordion-details-${i}" class="accordion-details${openClass}">${details.innerHTML}</div>`
     })
 
-    document.querySelectorAll('.accordion > * > summary').forEach((summary, i) => summary.outerHTML = `<button id="accordion-summary-${i}" type="button" class="accordion-summary" role="tab" aria-controls="accordion-panel-${i}" aria-expanded="false">${summary.innerHTML}</button>`)
+    document.querySelectorAll('.accordion > * > summary').forEach((summary, i) => {
+      const ariaExpanded = summary.parentElement.classList.contains('open') ? 'true' : 'false'
+      console.log(ariaExpanded)
+      summary.outerHTML = `<button id="accordion-summary-${i}" type="button" class="accordion-summary" role="tab" aria-controls="accordion-panel-${i}" aria-expanded="${ariaExpanded}">${summary.innerHTML}</button>`
+    })
 
     document.querySelectorAll('.accordion > * > :last-child').forEach((panel, i) => {
       // @note On peut surcharger l'élément avec des attributs, mais il ne faut en aucun cas le remplacer pour éviter une transition d'ouverture si panneau ouvert par défaut.
@@ -58,24 +59,12 @@ const accordion = () => {
       panel.classList.add('accordion-panel')
       panel.role = 'tabpanel'
       panel.setAttribute('aria-labelledby', `accordion-summary-${i}`) // @note Cet attribut en supporte pas la notation par point.
+      panel.ariaHidden = panel.parentElement.classList.contains('open') ? 'false' : 'true' //panel.parentElement.open
     })
 
   })()
 
   const stateManagement = (() => {
-
-    document.querySelectorAll('.accordion-details').forEach(details => {
-      const summary = details.firstElementChild,
-            panel = details.lastElementChild
-      if (details.classList.contains('open')) {
-        summary.ariaExpanded = 'true'
-        panel.ariaHidden = 'false'
-      }
-      else {
-        summary.ariaExpanded = 'false'
-        panel.ariaHidden = 'true'
-      }
-    })
 
     document.querySelectorAll('.accordion-summary').forEach((summary, i) => {
       summary.addEventListener('click', () => {
@@ -92,26 +81,15 @@ const accordion = () => {
           localStorage.setItem(accordionPanel + i, 'close')
           closedPanel(panel)
         }
-        panel.addEventListener('transitionend', () => panel.removeAttribute('style'))
         if (singleTabOption) siblingStateManagement(details)
       })
     })
 
   })()
 
-  const siblingStateManagement = details => {
-    for (const sibling of details.parentElement.children) {
-      if (sibling !== details) {
-        sibling.classList.remove('open')
-        sibling.firstElementChild.ariaExpanded = 'false'
-        closedPanel(sibling.lastElementChild)
-        localStorage.setItem(accordionPanel + sibling.id.match(/[0-9]$/i)[0], 'close') // @note Récupération de l'ID du panneau frère par regex.
-      }
-    }
-  }
-
   const openedPanel = panel => {
     panel.style.maxHeight = `${panel.scrollHeight}px`
+    panel.addEventListener('transitionend', () => panel.removeAttribute('style'))
     panel.ariaHidden = 'false'
   }
 
@@ -123,6 +101,17 @@ const accordion = () => {
       panel.ariaHidden = 'true'
       , 1
     })
+  }
+
+  const siblingStateManagement = details => {
+    for (const sibling of details.parentElement.children) {
+      if (sibling !== details) {
+        sibling.classList.remove('open')
+        sibling.firstElementChild.ariaExpanded = 'false'
+        closedPanel(sibling.lastElementChild)
+        localStorage.setItem(accordionPanel + sibling.id.match(/\d+$/i)[0], 'close') // @note Récupération de l'ID du panneau frère par regex.
+      }
+    }
   }
   
 }

@@ -13,12 +13,17 @@ const tabs = () => {
     })
 
     document.querySelectorAll('.tabs > * > summary').forEach((summary, i) => {
-      const stateAttribute = localStorage.getItem(tabsPanel + i) ? localStorage.getItem(tabsPanel + i) === 'open' ? 'true' : 'false' : 'false'
+      const stateAria = localStorage.getItem(tabsPanel + i) === 'open' ? 'true' : 'false'
       summary.parentElement.parentElement.firstElementChild.appendChild(summary) // @note Déplacement de <summary> dans "div.tab-list"
-      summary.outerHTML = `<button id="tabsummary-${i}" type="button" role="tab" class="tab-summary" aria-controls="tab-panel-${i}" aria-selected="${stateAttribute}" aria-expanded="${stateAttribute}">${summary.innerHTML}</button>`
+      summary.outerHTML = `<button id="tabsummary-${i}" type="button" role="tab" class="tab-summary" aria-controls="tab-panel-${i}" aria-selected="${stateAria}" aria-expanded="${stateAria}">${summary.innerHTML}</button>`
     })
 
-    document.querySelectorAll('.tab-summary:first-child').forEach((firstTab, i) => localStorage.getItem(tabsPanel + i) && setCurrentTab(firstTab))
+    document.querySelectorAll('.tab-summary:first-child').forEach((firstTab, i) => {
+      //setCurrentTab(firstTab)
+      if (!localStorage.getItem(tabsPanel + i) || localStorage.getItem(tabsPanel + i) === 'open') setCurrentTab(firstTab)
+      else setPastTab(firstTab)
+      
+    })
 
     document.querySelectorAll('.tabs > details > *').forEach((panel, i) => {
       panel.id = `tab-panel-${i}`
@@ -27,11 +32,12 @@ const tabs = () => {
       panel.setAttribute('aria-labelledby', `tabsummary-${i}`) // @note Pas de notation par point possible pour cet attribut.
       panel.parentElement.parentElement.appendChild(panel)
       panel.parentElement.children[1].remove() // @note Remove <details>.
-
-      //if (localStorage.getItem(tabsPanel + i)) {
-      panel.ariaHidden = localStorage.getItem(tabsPanel + i) === 'open' ? 'false' : 'true'
-      //}
+      panel.ariaHidden = !localStorage.getItem(tabsPanel + i) ? 'false' : localStorage.getItem(tabsPanel + i) === 'open' ? 'false' : 'true'
     })
+
+    document.querySelectorAll('.tabs > details > :first-child').forEach(firstPanel => {
+      firstPanel.ariaHidden = 'false'
+    }) // À revoir...
 
   }
 
@@ -39,13 +45,14 @@ const tabs = () => {
 
     document.querySelectorAll('.tab-summary').forEach((tab) => {
 
+      const currentPanel = document.getElementById(tab.getAttribute('aria-controls')) // @note Cette sélection spécifique, et non "aria-hidden", empêche d'impacter les panneaux imbriqués dans d'autres panneaux.
+
       tab.addEventListener('click', () => {
-        const currentPanel = document.getElementById(tab.getAttribute('aria-controls')) // @note Cette sélection spécifique, et non "aria-hidden", empêche d'impacter les panneaux imbriqués.
         setCurrentTab(tab)
-        localStorage.setItem(tabsPanel + tab.id.match(/[0-9]$/i)[0], 'open')
+        localStorage.setItem(tabsPanel + tab.id.match(/\d+$/i)[0], 'open')
         currentPanel.ariaHidden = 'false'
         tab.parentElement.parentElement.querySelectorAll('.tab-panel').forEach(panel => {
-          if (panel !== currentPanel && panel.parentElement === tab.parentElement.parentElement) panel.ariaHidden = 'true' // @note La condition empêche d'altérer les panneaux imbriqués.
+          if (panel !== currentPanel && panel.parentElement === tab.parentElement.parentElement) panel.ariaHidden = 'true' // @note La condition empêche d'impacter les panneaux imbriqués dans d'autres panneaux.
         })
         siblingStateManagement(tab)
       })
@@ -58,7 +65,7 @@ const tabs = () => {
     [...tab.parentElement.children].forEach(tabSibling => {
       if (tabSibling !== tab) {
         setPastTab(tabSibling)
-        localStorage.setItem(tabsPanel + tabSibling.id.match(/[0-9]$/i)[0], 'close')
+        localStorage.setItem(tabsPanel + tabSibling.id.match(/\d+$/i)[0], 'close')
       }
     })
   }

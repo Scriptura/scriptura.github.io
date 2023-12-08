@@ -170,7 +170,8 @@ details // @note [1] Tentative de reproduire avec les marges l'espacement des it
     margin-top: .75em // [1]
   &:last-child
     margin-bottom: .75em // [1]
-  & details
+
+:not(.accordion) > details details
     margin: 0 0 0 2em
     &:first-child
       margin-top: 0 // [1]
