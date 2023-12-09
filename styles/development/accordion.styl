@@ -47,7 +47,7 @@ _accordionTime1 = .5s
   & > details
     all: unset
   & > details[open] summary::after
-  & .open .accordion-summary::after
+  & [data-open=true] .accordion-summary::after
     transform: rotate(-90deg)
   @media (hover: hover) and (pointer: fine)
     & > * > :first-child
