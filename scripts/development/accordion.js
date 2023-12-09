@@ -43,13 +43,12 @@ const accordion = () => {
     })
 
     document.querySelectorAll('.accordion > details').forEach((details, i) => {
-      const openClass = (details.open || localStorage.getItem(accordionPanel + i) === 'open') && localStorage.getItem(accordionPanel + i) !== 'close' ? ' open' : '' // 1
-      details.outerHTML = `<div id="accordion-details-${i}" class="accordion-details${openClass}">${details.innerHTML}</div>`
+      const dataOpen = (details.open || localStorage.getItem(accordionPanel + i) === 'open') && localStorage.getItem(accordionPanel + i) !== 'close' ? 'true' : 'false' // 1
+      details.outerHTML = `<div id="accordion-details-${i}" class="accordion-details" data-open="${dataOpen}">${details.innerHTML}</div>`
     })
 
     document.querySelectorAll('.accordion > * > summary').forEach((summary, i) => {
-      const ariaExpanded = summary.parentElement.classList.contains('open') ? 'true' : 'false'
-      console.log(ariaExpanded)
+      const ariaExpanded = summary.parentElement.dataset.open === 'true' ? 'true' : 'false'
       summary.outerHTML = `<button id="accordion-summary-${i}" type="button" class="accordion-summary" role="tab" aria-controls="accordion-panel-${i}" aria-expanded="${ariaExpanded}">${summary.innerHTML}</button>`
     })
 
@@ -59,7 +58,7 @@ const accordion = () => {
       panel.classList.add('accordion-panel')
       panel.role = 'tabpanel'
       panel.setAttribute('aria-labelledby', `accordion-summary-${i}`) // @note Cet attribut en supporte pas la notation par point.
-      panel.ariaHidden = panel.parentElement.classList.contains('open') ? 'false' : 'true' //panel.parentElement.open
+      panel.ariaHidden = panel.parentElement.dataset.open === 'true' ? 'false' : 'true' //panel.parentElement.open
     })
 
   })()
@@ -71,8 +70,8 @@ const accordion = () => {
         const details = summary.parentElement,
               singleTabOption = details.parentElement.dataset.singletab, // 2
               panel = summary.nextElementSibling
-        details.classList.toggle('open')
-        if (details.classList.contains('open')) {
+        details.dataset.open = details.dataset.open === 'true' ? 'false' : 'true'
+        if (details.dataset.open === 'true') {
           summary.ariaExpanded = 'true'
           localStorage.setItem(accordionPanel + i, 'open')
           openedPanel(panel)
@@ -106,7 +105,7 @@ const accordion = () => {
   const siblingStateManagement = details => {
     for (const sibling of details.parentElement.children) {
       if (sibling !== details) {
-        sibling.classList.remove('open')
+        sibling.dataset.open = 'false'
         sibling.firstElementChild.ariaExpanded = 'false'
         closedPanel(sibling.lastElementChild)
         localStorage.setItem(accordionPanel + sibling.id.match(/\d+$/i)[0], 'close') // @note Récupération de l'ID du panneau frère par regex.

@@ -22,7 +22,6 @@ const tabs = () => {
       //setCurrentTab(firstTab)
       if (!localStorage.getItem(tabsPanel + i) || localStorage.getItem(tabsPanel + i) === 'open') setCurrentTab(firstTab)
       else setPastTab(firstTab)
-      
     })
 
     document.querySelectorAll('.tabs > details > *').forEach((panel, i) => {

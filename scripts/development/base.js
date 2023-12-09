@@ -216,7 +216,7 @@ for (const print of document.querySelectorAll('.cmd-print')) print.onclick = () 
 const gdpr = (() => {
   //const gdprConsent = localStorage.getItem('gdprConsent')
   const template = document.getElementById('gdpr')
-  console.log(template)
+  //console.log(template)
   const target = document.querySelector('.alert')
   //document.importNode(panel.content, true)
   const clone = template.content.cloneNode(true)
@@ -231,7 +231,7 @@ const gdpr = (() => {
   }, false)
   falseConsentButton.addEventListener('click', () => {
     localStorage.setItem('gdprConsent', 'no')
-    panel.style.display = 'grid'
+    panel.style.display = 'none' // 'grid'
   }, false)
 })()
 
