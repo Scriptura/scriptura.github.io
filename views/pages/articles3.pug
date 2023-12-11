@@ -1,0 +1,594 @@
+extends ../patternLayout
+
+block variables
+  - const documentType = 'audioShare2'
+  - const pageType = 'template'
+  -
+    const data = {
+      _name: 'Hymnes & Cantiques',
+      _title: 'Hymnes & Cantiques . Scriptura',
+      _description: 'Sélection d\'hymnes et de cantiques pour la liturgie des heures'
+    }
+
+block main
+  article
+    header(role='banner')
+      h1.main-heading!= data._name
+    .grid3.s-grid1.m-grid2.l-grid2.gap.masonry
+      .accordion
+        details
+          summary Source de la lumière
+          div
+            p 1. Source de la lumière, toi la splendeur du Père,
+              br
+              | Verbe en qui l'Éternel contemple sa beauté,
+              br
+              | Astre dont le soleil n'est que le pâle reflet,
+              br
+              | Jour sacré dont le jour emprunte sa clarté.
+            p 2. Tu viens guider nos âmes, toi le chemin du Père,
+              br
+              | Tu viens nous éclairer de ta divine loi.
+              br
+              | Remplis-nous de l'espoir que n'ébranle aucun doute,
+              br
+              | Et que jamais l'erreur ne trouble notre foi.
+            p 3. Tu es le Pain vivant, tu es le Pain du ciel,
+              br
+              | L'eau vive de l'Esprit, abreuve notre cœur.
+              br
+              | Remplis de ton amour, tu nous conduis au Père,
+              br
+              | Uni à ton Église, tu viens sauver le monde.
+      .accordion
+        details
+          summary Dieu de tout, immortel, tu t’es fait mortel
+          div
+            p Dieu de tout, Immortel, Insaisissable, Invisible,
+              br
+              | Tu t'es fait mortel, à tous accessible,
+              br
+              | Visible dans ta chair pour tous les hommes,
+              br
+              | Resplendissant de gloire pour tes fidèles.
+            p Celui qui a cru a vu et contemplé ta gloire,
+              br
+              | Tu habites avec lui l'obscurité de cette vie.
+              br
+              | Soleil sans couchant, lampe inextinguible,
+              br
+              | Tu nous attires à Toi, resplendissants de lumière.
+            p Tu es de notre race quant à la chair,
+              br
+              | Nous, de ta race par la divinité ;
+              br
+              | Car en prenant notre nature humaine,
+              br
+              | Tu nous as donné ton Esprit Très Saint.
+            p Réunis, nous ne formons qu'une famille,
+              br
+              | Nous tes frères, Toi avec nous ;
+              br
+              | De chacun Tu fais ton temple, ta demeure,
+              br
+              | En Toi nous demeurons, en Toi nous reposons.
+            p De mortels, nous devenons immortels ;
+              br
+              | Sans perdre notre nature, nous devenons des fils
+              br
+              | Semblables à toi, membres de ton corps,
+              br
+              | Par ta grâce nous contemplons le Père.
+            p Gloire au Père qui nous a glorifiés,
+              br
+              | Gloire au Fils qui nous a sauvés,
+              br
+              | Gloire à l'Esprit qui nous a divinisés,
+              br
+              | Dans les siècles des siècles. Amen.
+            p – Syméon le Nouveau Théologien
+      .accordion
+        details
+          summary Ô Dieu Saint, ô Dieu Fort
+          div
+            p R. Ô Dieu Saint, ô Dieu Fort,
+              br
+              | ô Dieu Immortel, aie pitié de nous !
+            p 1. Ô Toi le longanime qui fais sans fin miséricorde,
+              br
+              | Fais-nous grâce en ton Amour ;
+              br
+              | En ta tendresse guéris-nous !
+            p 2. Nous n'avons porté ni le poids du jour, ni la brûlure du soleil,
+              br
+              | À la onzième heure, nous venons à Toi :
+              br
+              | Sauve-nous, prends pitié de nous !
+            p 3. Qui nous rendra la beauté du premier jour,
+              br
+              | Où tu nous façonnas à ton image ?
+              br
+              | Toi, le Créateur de l'Église, sauve-nous !
+            p 4. Nous avons péché contre le ciel et contre Toi,
+              br
+              | et comme le prodigue nous Te supplions :
+              br
+              | En ton pardon, accueille-nous !
+            p 5. Ô Christ, ne nous laisse pas engloutir par les Enfers,
+              br
+              | De ta chair et de ton sang souviens-Toi :
+              br
+              | Ils ont nourri nos âmes et nos corps.
+            p 6. J'ai entendu ta grâce dire aux païens :
+              br
+              | Frappez et l'on vous ouvrira !
+              br
+              | Comme la pécheresse et le publicain, vers Toi je supplie !
+            p 7. Nous nous prosternons devant ta Croix glorieuse,
+              br
+              | Nous implorons, ô Christ, le pardon de nos péchés ;
+              br
+              | Tu as tout rempli de joie, ô notre Sauveur, en sauvant le monde.
+            p 8. Gloire au Père Tout Puissant,
+              br
+              | Gloire à son Fils Jésus-Christ le Sauveur,
+              br
+              | Gloire à l'Esprit, le Consolateur !
+      .accordion
+        details
+          summary Joyeuse Lumière
+          div
+            p R. Joyeuse Lumière, splendeur éternelle du Père,
+              br
+              | Saint et bienheureux, Jésus-Christ.
+            p 1. Venant au coucher du soleil,
+              br
+              | Contemplant la lumière du soir,
+              br
+              | Nous chantons le Père et le Fils
+              br
+              | Et le Saint-Esprit de Dieu.
+            p 2. Digne es-tu en tout temps d'être loué
+              br
+              | Par de saintes voix,
+              br
+              | Fils de Dieu qui donnas la vie,
+              br
+              | Et le monde te glorifie.
+            p 3. Nous te chantons, Fils de Marie,
+              br
+              | L'Epouse sans tâche,
+              br
+              | Tu t'es vêtu de notre chair,
+              br
+              | Toi la source de la Lumière.
+            p 4. Tu es né avant tous les siècles,
+              br
+              | Rayon qui brille avec le Père,
+              br
+              | Tu dissipes l'épaisseur de la nuit,
+              br
+              | Et illumine l'âme des saints.
+            p 5. Fais descendre sur nous l'Esprit,
+              br
+              | En qui nous invoquons le Père
+              br
+              | Qu'il soit la rosée de notre âme,
+              br
+              | Et la comble de ses présents de roi.
+            p 6. En célébrant ainsi ta gloire,
+              br
+              | Nous chantons l'amour du Père,
+              br
+              | Dans la lumière de l'Esprit,
+              br
+              | Sceau brûlant qui vous unit.
+            p 7. Nous te chantons ressuscité,
+              br
+              | Toi qui surgis des ténèbres du tombeau
+              br
+              | Etoile du matin, qui devances l'aurore
+              br
+              | Dont l'éclat resplendit jusqu'au monde nouveau.
+            p 8. Reste avec nous, Seigneur,
+              br
+              | Car déjà le jour baisse,
+              br
+              | Illumine nos yeux, au soir de cette Pâque,
+              br
+              | Toi la lumière qui ne connaît pas de couchant.
+            p 9. Que ma prière vers toi, Seigneur,
+              br
+              | S'élève comme l'encens
+              br
+              | Et mes mains devant toi,
+              br
+              | Comme l'offrande du soir.
+      .accordion
+        details
+          summary Puissance, honneur et gloire
+          div
+            p R. Puissance, honneur et gloire,
+              br
+              | À l’Agneau de Dieu !
+            p 1. Tu es digne, Seigneur notre Dieu,
+              br
+              | De recevoir l'honneur, la gloire et la puissance,
+              br
+              | C'est toi qui créas l'univers,
+              br
+              | C'est par ta volonté
+              br
+              | Qu'il reçut l'existence et fut créé.
+            p 2. Tu es digne, Seigneur, de recevoir le livre,
+              br
+              | Et d'en ouvrir les pages scellées,
+              br
+              | Car tu fus immolé
+              br
+              | Nous rachetant pour Dieu, par ton sang,
+              br
+              | De toutes tribus, langues et peuples et nations.
+            p 3. Tu as fait de nous pour notre Dieu un Royaume de prêtres,
+              br
+              | Et nous régnerons sur la terre.
+              br
+              | Il est digne l'Agneau immolé,
+              br
+              | De recevoir puissance et richesse, sagesse et force,
+              br
+              | Honneur, gloire et louange.
+            p 4. Rendons gloire au Père tout-puissant,
+              br
+              | À son fils Jésus-Christ le Seigneur,
+              br
+              | À l'Esprit qui habite en nos cœurs
+              br
+              | Pour les siècles des siècles. Amen.
+      .accordion
+        details
+          summary Grandes, merveilleuses sont tes œuvres
+          div
+            p R. Grandes, merveilleuses sont tes œuvres, Seigneur,
+              br
+              | Ô roi des nations !
+            p 1. Ô Seigneur Dieu, ô Tout-Puissant,
+              br
+              | Justes et droits sont tes chemins,
+              br
+              | Ô roi des nations.
+            p 2. Qui ne te craindrait, Seigneur ?
+              br
+              | Qui ne rendrait gloire à ton nom ?
+              br
+              | Car toi seul, tu es Saint.
+            p 3. Toutes les nations viendrons se prosterner devant toi,
+              br
+              | Car tes jugements se sont révélés,
+              br
+              | Ô roi des nations.
+            p 4. Gloire au Père tout-puissant,
+              br
+              | à son Fils Jésus-Christ, le Seigneur,
+              br
+              | À l'Esprit qui habite en nos cœurs,
+              br
+              | Pour les siècles des siècles.
+      .accordion
+        details
+          summary Âme du Christ
+          div
+            p Âme du Christ sanctifie-moi
+              br
+              | Corps du Christ, sauve-moi
+              br
+              | Sang du Christ, enivre-moi,
+              br
+              | Eau du côté du Christ, lave-moi.
+              br
+              | Passion du Christ, fortifie-moi,
+              br
+              | O bon Jésus exauce-moi
+              br
+              | Dans tes blessures cache-moi,
+              br
+              | Ne permets pas que je sois séparé de toi.
+              br
+              | De l'ennemi défends-moi,
+              br
+              | A ma mort appelle-moi
+              br
+              | Ordonne-moi de venir à toi,
+              br
+              | Pour qu'avec tes saints je te loue.
+              br
+              | Dans les siècles des siècles,
+              br
+              | Amen.
+      .accordion
+        details
+          summary Magnificat
+          div
+            p Mon âme exalte le Seigneur,
+              br
+              | exulte mon esprit en Dieu, mon Sauveur.
+            p Il s'est penché sur son humble servante;
+              br
+              | désormais, tous les âges me diront bienheureuse.
+            p Le Puissant fit pour moi des merveilles ;
+              br
+              | Saint est son nom !
+            p Son amour s'étend d'âge en âge
+              br
+              | sur ceux qui le craignent.
+            p Déployant la force de son bras,
+              br
+              | il disperse les superbes.
+            p Il renverse les puissants de leurs trônes,
+              br
+              | il élève les humbles.
+            p Il comble de biens les affamés,
+              br
+              | renvoie les riches les main vides.
+            p Il relève Israël, son serviteur,
+              br
+              | Il se souvient de son amour.
+            p De la promesse faîte à nos pères,
+              br
+              | en faveur d'Abraham et de sa race, à jamais.
+      .accordion
+        details
+          summary Cantique de Syméon
+          div
+            p Maintenant, ô Maître souverain,
+              br
+              | tu peux laisser ton serviteur s''en aller
+              br
+              | en paix selon ta parole.
+            p Car mes yeux ont vu le salut
+              br
+              | que tu préparais à la face des peuples :
+              br
+              | p Lumière qui se révèle aux nations
+              br
+              | et donne gloire à ton peuple Israël.
+            p Gloire au Père, et au Fils et au Saint Esprit,
+              br
+              | pour les siècles des siècles, Amen.
+      .accordion
+        details
+          summary Impropères du Vendredi Saint
+          div
+            p R. Choeur : Mon peuple, que t'ai-je fait ?
+              br
+              | En quoi t'ai-je offensé ?
+              br
+              | Réponds-moi !
+            p Choeur et assemblée : Ô Dieu saint, ô Dieu saint fort.
+              br
+              | Ô Dieu saint, Dieu fort, immortel, prends pitié de nous.
+            p 1. Mon peuple que t'ai-je fait,
+              br
+              | En quoi t'ai-je offensé ?
+              br
+              | De l'esclavage d'Égypte moi je t'ai tiré,
+              br
+              | Mais toi tu prépares une croix pour ton Rédempteur.
+            p 2. Quarante ans je t'ai conduit à travers le désert,
+              br
+              | Je t'ai nourri de la manne,
+              br
+              | Et je t'ai fait entrer dans la Terre Promise,
+              br
+              | Mais toi, tu prépares une croix pour ton Rédempteur.
+            p 3. Qu'aurais-je dû faire pour toi que je n'ai fait ?
+              br
+              | Je t'ai planté moi-même comme une vigne choisie,
+              br
+              | Mais toi tu m'as nourri d'amertume.
+              br
+              | J'avais soif, tu m'as abreuvé de vinaigre et d'une lance
+              br
+              | Tu as percé le cœur de ton Sauveur.
+            p 4. Moi, pour toi j'ai frappé l'Égypte,
+              br
+              | Mais toi, tu m'as flagellé et tu m'as livré à la mort.
+              br
+              | Je t'ai fait sortir d'Égypte, j'ai englouti Pharaon,
+              br
+              | Mais toi, tu m'as livré aux grands prêtres.
+            p 5. Je t'ai ouvert un passage dans la mer,
+              br
+              | Mais toi tu m'as ouvert le côté avec une lance.
+              br
+              | J'ai marché devant toi dans une colonne de nuée,
+              br
+              | Mais toi, tu m'as conduit devant Pilate.
+            p 6. Quand tu étais dans le désert, je t'ai nourri de la manne,
+              br
+              | Mais toi, tu m'as frappé au visage et flagellé.
+              br
+              | J'ai fait jaillir l'eau du rocher et je t'ai sauvé,
+              br
+              | Mais toi, tu m'abreuves de fiel et de vinaigre.
+            p 7. Moi, pour toi j'ai frappé les rois de Canaan,
+              br
+              | Mais toi, tu m'as frappé d'un roseau.
+              br
+              | Moi, par ma toute puissance, je t'ai élevé, exalté,
+              br
+              | Mais toi, tu m'as élevé et cloué sur le bois de la Croix.
+      .accordion
+        details
+          summary Dieu créateur de la lumière
+          div
+            p Dieu créateur de la lumière,
+              br
+              | Qui a illuminé le jour,
+              br
+              | Tu as donné la vie au monde
+              br
+              | En lui donnant une lumière nouvelle.
+            p Toi qui lias le matin au soir
+              br
+              | Et donnas le nom au jour,
+              br
+              | Quand les ténèbres nous menacent
+              br
+              | Entends le cri de notre appel.
+            p Que notre esprit appesanti par le péché
+              br
+              | Ne s'éloigne pas de la vie,
+              br
+              | Sans cesse attiré par le néant,
+              br
+              | Pris au filet de ses fautes.
+            p Qu'il frappe à la porte du ciel
+              br
+              | Et reçoive la vie éternelle ;
+              br
+              | Et nous fuirons toute souillure
+              br
+              | Purifié de toute impureté.
+            p Gloire au Père créateur de tout,
+              br
+              | Gloire au Fils qui nous a sauvés,
+              br
+              | Et gloire à l'Esprit très saint,
+              br
+              | Dans les siècles des siècles. Amen.
+            p – Grégoire le Grand
+      .accordion
+        details
+          summary Nous te rendrons grâces, Unique Seigneur
+          div
+            p Nous te rendrons grâces, Unique Seigneur,
+              br
+              | Toi qui sondes les cœurs, Juge miséricordieux,
+              br
+              | Nous te rendons grâces, ô Verbe éternel,
+              br
+              | Descendu jusqu'à nous, homme parmi les hommes.
+            p Toi, l'Impassible, tu as voulu souffrir,
+              br
+              | Donnant aux condamnés ton impassibilité,
+              br
+              | Justice que ton jugement,
+              br
+              | Humilité ton commandement.
+            p On t'a traité comme un ennemi de Dieu,
+              br
+              | On t'a enchaîné comme un malfaiteur,
+              br
+              | Bafoué, méprisé, abandonné par tes amis,
+              br
+              | Tu as accepté une sentence injuste.
+            p Pour une parole, tu as été frappé,
+              br
+              | Pour ton silence, condamné,
+              br
+              | Couronné d'épines, chargé de la croix,
+              br
+              | Tu as été élevé de terre.
+            p Nous te rendons gloire Père, Donateur de Vie,
+              br
+              | Fils exalté dans la gloire, source d'espérance,
+              br
+              | Esprit de Dieu, don que nous adorons,
+              br
+              | Maintenant et pour les siècles sans fin. Amen.
+            p – Syméon le Nouveau Théologien
+      .accordion
+        details
+          summary Il vient notre Roi dans sa grande gloire
+          div
+            p Il vient notre Roi dans sa grande gloire
+              br
+              | Pour nous réjouir de sa glorieuse lumière ;
+              br
+              | Allumons nos lampes et sortons à sa rencontre.
+              br
+              | Réjouissons-nous en Lui comme il se réjouit en nous.
+            p Le jour s'est levé sur les hommes,
+              br
+              | La puissance des ténèbres est chassées,
+              br
+              | De sa lumière s'est levée la lumière
+              br
+              | Qui éclaire nos yeux obscurcis.
+            p Il a fait lever sa gloire sur le monde,
+              br
+              | Il a éclairé les profondeurs des abîmes.
+              br
+              | La mort est anéantie, plus de ténèbres,
+              br
+              | Les portes de l'enfer sont brisées.
+            p Il a illuminé toutes les créatures,
+              br
+              | Les morts qui gisaient dans la poussière se sont levés.
+              br
+              | Ils rendent gloire au Seigneur Tout-Puissant,
+              br
+              | Car il a fait lever sur eux le salut.
+            p Il a réalisé le salut et nous a donné la vie,
+              br
+              | Il a été élevé vers son Père.
+              br
+              | Il reviendra dans sa grande gloire
+              br
+              | Éclairer les yeux de tous ceux qui l'auront attendu.
+            p Son jour se lèvera comme l'éclair,
+              br
+              | Et ses saints sortiront à sa rencontre,
+              br
+              | Tous ceux qui se sont préparés dans la fatigue et la peine,
+              br
+              | Tenant à la main leurs lampes allumées.
+            p Gloire à toi, Père le plus aimant,
+              br
+              | Gloire à ton fils ressuscité,
+              br
+              | Et louange à l'Esprit de Vérité,
+              br
+              | Dans les siècles des siècles. Amen.
+            p – Éphrem le Syrien
+      .accordion
+        details
+          summary Angélus
+          div
+            p L'ange du Seigneur
+              br
+              | apporta l'annonce à Marie
+              br
+              | Et elle conçut du Saint Esprit.
+            p Je vous salue, Marie
+              br
+              | pleine de grâces ;
+              br
+              | le Seigneur est avec vous.
+              br
+              | Vous êtes bénie entre toutes les femme
+              br
+              | et Jésus le fruit de vos entrailles, est béni
+              br
+              | Sainte Marie, Mère de Dieu
+              br
+              | priez pour nous pauvres pécheurs
+              br
+              | maintenant et à l'heure de notre mort.
+            p Voici la Servante du Seigneur
+              br
+              | Qu'il me soit fait selon votre parole.
+            p Je vous salue...
+            p Et le Verbe s'est fait chair
+              br
+              | Et il a habité parmi nous.
+            p Je vous salue...
+            p Priez pour nous,
+              br
+              | sainte Mère de Dieu
+              br
+              | Afin que nous devenions dignes
+              br
+              | des promesses du Christ.
+            p Prions. Que ta grâce, Seigneur notre Père, se répande en nos cœurs. Par le message de l'ange, tu nous as fait connaître, l'incarnation de ton Fils bien-aimé. Conduis-nous, par sa passion et par sa croix, jusqu'à la gloire de la résurrection. Par Jésus, le Christ, notre Seigneur. Amen.
