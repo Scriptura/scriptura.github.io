@@ -7,7 +7,7 @@ const tabs = () => {
 
   const transformHTML = () => {
 
-    document.querySelectorAll('.tabs').forEach((tabs, i) => { // @note Création d'un panneau pour contenir les boutons/onglets
+    document.querySelectorAll('.tabs').forEach((tabs, i) => { // @note Création d'un panneau pour contenir les boutons/onglets.
       tabs.id = `tabs-${i}`
       tabs.insertAdjacentHTML('afterbegin', `<div role="tablist" aria-label="Entertainment" class="tab-list"></div>`)
     })
@@ -17,22 +17,22 @@ const tabs = () => {
       summary.parentElement.parentElement.firstElementChild.appendChild(summary) // @note Déplacement de <summary> dans "div.tab-list"
       //summary.outerHTML = `<button id="tabsummary-${i}" type="button" role="tab" class="tab-summary" aria-controls="tab-panel-${i}" aria-selected="${stateAria}" aria-expanded="${stateAria}">${summary.innerHTML}</button>`
       summary.outerHTML = `<button id="tabsummary-${i}" type="button" role="tab" class="tab-summary" aria-controls="tab-panel-${i}" aria-selected="false" aria-expanded="false">${summary.innerHTML}</button>`
-      document.querySelectorAll('.tab-summary:first-child').forEach(firstTab => {
-        setCurrentTab(firstTab)
-        //if (!localStorage.getItem(tabsPanel + i) || localStorage.getItem(tabsPanel + i) === 'open') setCurrentTab(firstTab)
-        //else setPastTab(firstTab)
-      })
+
     })
+
+    document.querySelectorAll('.tab-summary:first-child').forEach(firstTab => setCurrentTab(firstTab))
 
     document.querySelectorAll('.tabs > details > *').forEach((panel, i) => {
       panel.id = `tab-panel-${i}`
       panel.classList.add('tab-panel')
       panel.role = 'tabpanel'
-      //panel.ariaHidden = 'true' // @note Désactivé en attendant de fixer l'état des onglets, le panneau devra récupérer l'état de l'onglet pour connaître son propre état.
+      panel.ariaHidden = 'true'
       panel.setAttribute('aria-labelledby', `tabsummary-${i}`) // @note Pas de notation par point possible pour cet attribut car non supporté par JavaScript pour l'instant @todo À réévaluer dans le temps.
       panel.parentElement.parentElement.appendChild(panel)
       panel.parentElement.children[1].remove() // @note Remove <details>.
     })
+
+    document.querySelectorAll('.tabs > :nth-child(2)').forEach(firstPanel => firstPanel.ariaHidden = 'false')
 
   }
 

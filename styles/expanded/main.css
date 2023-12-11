@@ -3033,9 +3033,6 @@ input[role=switch]:focus-visible {
   border: 1px dashed rgba(255,255,255,0.15);
   box-shadow: 0 1rem 1rem rgba(0,0,0,0.1);
 }
-.tabs .tab-panel + .tab-panel {
-  display: none;
-}
 .tabs .tab-panel[aria-hidden=false] {
   display: block;
 }
