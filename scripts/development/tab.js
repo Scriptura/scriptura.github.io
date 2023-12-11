@@ -26,8 +26,8 @@ const tabs = () => {
       panel.id = `tab-panel-${i}`
       panel.classList.add('tab-panel')
       panel.role = 'tabpanel'
-      panel.ariaHidden = 'true'
       panel.setAttribute('aria-labelledby', `tabsummary-${i}`) // @note Pas de notation par point possible pour cet attribut car non supporté par JavaScript pour l'instant @todo À réévaluer dans le temps.
+      panel.ariaHidden = 'true'
       panel.parentElement.parentElement.appendChild(panel)
       panel.parentElement.children[1].remove() // @note Remove <details>.
     })
