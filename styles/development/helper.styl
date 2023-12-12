@@ -63,6 +63,9 @@ a[aria-disabled=true] // @tod En expérimentation.
   white-space: nowrap
   text-overflow: ellipsis
 
+.balance
+  text-wrap: balance
+
 .center
   display: grid
   place-items: center
@@ -72,6 +75,10 @@ a[aria-disabled=true] // @tod En expérimentation.
   // @note Alternative :
   //& > *
   //  place-self: center // @support @see https://caniuse.com/?search=place-self
+
+@container grid (35em > width)
+  span.br // @note un 'br' volontairement non sémantique à destination des petites définitions d'écran, à placer sur un span englobant un espace
+    display: block
 
 @container grid (35em > width)
   .xs-center

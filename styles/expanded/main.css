@@ -3899,9 +3899,17 @@ a[aria-disabled=true]:active {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+.balance {
+  text-wrap: balance;
+}
 .center {
   display: grid;
   place-items: center;
+}
+@container grid (35em > width) {
+  span.br {
+    display: block;
+  }
 }
 @container grid (35em > width) {
   .xs-center {
