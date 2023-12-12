@@ -2913,6 +2913,8 @@ input[role=switch]:focus-visible {
   gap: 0.5em;
 }
 .accordion > * > :first-child {
+  overflow: hidden;
+  white-space: nowrap;
   box-sizing: border-box;
   display: flex;
   align-items: center;
