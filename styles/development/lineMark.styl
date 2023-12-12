@@ -28,10 +28,8 @@ _lineMarkColor = _colorG + 27.5%
     transition: color .2s ease-in-out
     user-select: none // @note On évite de sélectionner les marqueurs, ceux-ci sont un élément de navigation et non de contenu.
     scroll-margin-top: _lineMarkUnit
-    &:focus
-    &:hover
-    &active
-      //color: orange
+    &:where(:focus, :hover, :active)
+      color: orange
       text-decoration: none
     &::before
       content: '- '

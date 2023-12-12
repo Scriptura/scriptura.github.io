@@ -5,7 +5,7 @@ mixin list(icon, name, slug)
     //- slug non utilisé.
     a(href='#') #{name}
 
-.grid4.gap.gap-bottom
+.grid4.m-grid2.gap.gap-bottom
   div
     p
       code ul
@@ -44,7 +44,35 @@ mixin list(icon, name, slug)
               li Magenta
               li Jaune
               li Noir
-  figure.c2.center.m-hidden
+  div
+    p
+      code ol.list-gap
+    ol.list-gap
+      li Verse 1
+      li Verse 2
+      li Verse 3
+      li Verse 4
+      li Verse 5
+      li Verse 6
+      li Verse 7
+      li Verse 8
+      li Verse 9
+  div
+    p
+      code ol.list-gap(start='0')
+    ol.list-gap(start='0')
+      li.chorus
+        code li.chorus
+        |  Chorus
+      li Verse 1
+      li Verse 2
+      li Verse 3
+      li Verse 4
+      li Verse 5
+      li Verse 6
+      li Verse 7
+      li Verse 8
+  //-figure.center.m-hidden
     svg.size.decorative-svg(role='img' focusable='false')
       use(href='/sprites/silos/245v-d1.svg#1')
 .grid-auto.gap.gap-bottom

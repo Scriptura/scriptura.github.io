@@ -44,13 +44,13 @@ html {
 }
 a {
   color: #d3b58d;
-  text-decoration: none;
+  text-underline-offset: 10%;
 }
-a:focus,
-a:hover,
-a:active {
+a:where(:focus,
+:hover,
+:active) {
   color: #ffa600;
-  text-decoration: underline;
+  text-decoration: none;
   outline: none;
 }
 p {
@@ -157,6 +157,9 @@ sub {
 }
 sup {
   top: -0.5em;
+}
+ins {
+  text-underline-offset: 10%;
 }
 details {
   display: block;
@@ -1002,6 +1005,10 @@ ol ol {
 ol ol ol {
   list-style-type: lower-greek;
 }
+.list-gap {
+  display: grid;
+  gap: 0.75em;
+}
 .list-stripe,
 .list-stripe-links {
   margin: 0;
@@ -1067,6 +1074,10 @@ ol ol ol {
 .list-rounded a {
   box-shadow: 0.5rem 0.5rem 2rem rgba(0,0,0,0.1);
   transition: color, background-color 0.3s ease-in-out;
+}
+.list-straight a,
+.list-rounded a {
+  text-decoration: none;
 }
 .list-straight li::before,
 .list-rounded li::before,
@@ -1157,6 +1168,9 @@ ol.list-rounded li::before {
 }
 [class^=grid][class*=list-] {
   gap: 1em;
+}
+[start] > .chorus {
+  list-style-type: 'R. ';
 }
 @keyframes anim-list {
   50% {
@@ -2913,8 +2927,11 @@ input[role=switch]:focus-visible {
   gap: 0.5em;
 }
 .accordion > * > :first-child {
-  overflow: hidden;
-  white-space: nowrap;
+/* @note : À mettre en corélation avec un "display: block".
+    overflow: hidden
+    white-space: nowrap
+    text-overflow: ellipsis
+    */
   box-sizing: border-box;
   display: flex;
   align-items: center;
@@ -3211,6 +3228,9 @@ input[role=switch]:focus-visible {
   font-weight: bold;
   font-variant: small-caps;
 }
+.article address a {
+  text-decoration: none;
+}
 .article time {
   grid-area: uu;
 }
@@ -3219,9 +3239,9 @@ input[role=switch]:focus-visible {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5em 0.5em;
-  font-size: 0.8em;
   margin-block: 0.75em 0;
   padding-left: 0;
+  font-size: 0.8em;
 }
 .article .keywords > :last-child {
   margin-right: 0;
@@ -3231,6 +3251,7 @@ input[role=switch]:focus-visible {
 }
 .article .keywords a {
   padding: 0.25em 0.5em 0.25em 1.25em;
+  text-decoration: none;
   white-space: nowrap;
   background-color: #282828;
   -webkit-clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
@@ -3242,9 +3263,9 @@ input[role=switch]:focus-visible {
   bottom: 1em;
   color: #6f6f6f;
 }
-.article .anchor:focus,
-.article .anchor:hover,
-.article .anchor:active {
+.article .anchor:where(:focus,
+.article .anchor :hover,
+.article .anchor :active) {
   text-decoration: none;
   color: #ffa600;
 }
@@ -3318,9 +3339,10 @@ main > article > footer {
             user-select: none;
     scroll-margin-top: 1em;
   }
-  .line-mark:focus,
-  .line-mark:hover,
-  .line-markactive {
+  .line-mark:where(:focus,
+  .line-mark :hover,
+  .line-mark :active) {
+    color: #ffa500;
     text-decoration: none;
   }
   .line-mark::before {

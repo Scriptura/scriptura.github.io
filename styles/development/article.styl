@@ -73,6 +73,10 @@ _articleHeight1 = 4em
     font-style: normal
     font-weight: bold
     font-variant: small-caps
+    & a
+      text-decoration: none
+      //&:where(:focus, :hover, :active)
+      //  text-decoration: underline
   & time
     grid-area: uu
   & .keywords
@@ -80,9 +84,9 @@ _articleHeight1 = 4em
     display: flex
     flex-wrap: wrap
     gap: (_gap / 2) (_gap / 2)
-    font-size: .8em
     margin-block: .75em 0
     padding-left: 0
+    font-size: .8em
     & > :last-child
       margin-right: 0
     & li
@@ -90,6 +94,7 @@ _articleHeight1 = 4em
       //filter: drop-shadow(_shadow8)
     & a
       padding: .25em .5em .25em 1.25em
+      text-decoration: none
       white-space: nowrap
       background-color: _colorG - 28%
       clip-path: polygon(.75em 0, 100% 0, 100% 100%, .75em 100%, 0 50%)
@@ -98,9 +103,7 @@ _articleHeight1 = 4em
     right: 0
     bottom: 1em
     color: _articleColor2
-    &:focus
-    &:hover
-    &:active
+    &:where(:focus, :hover, :active)
       text-decoration: none
       color: _color5
   & > footer
