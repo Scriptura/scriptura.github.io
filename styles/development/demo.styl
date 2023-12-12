@@ -69,8 +69,15 @@ _demoColorDeviation = 10
       transform: translate(2.85em, .9em) rotate(45deg) !important
 
 .demo-icons
-  & ruby:hover *
-      color: _color5
+  & ruby
+    padding: 1em 0 .5em
+    background-color: _colorG
+    border-radius: _r2
+    transition: all .3s ease-in-out
+    &:hover
+      background-color: _color2
+      & *
+        color: _colorW
   & svg
     font-size: 2em
   & rt

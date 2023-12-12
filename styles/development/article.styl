@@ -30,17 +30,17 @@ _articleHeight1 = 4em
     @media (min-width: _sizeS)
       padding: 4em 6em
       &:nth-child(odd)
-        margin-left: auto
+        margin-inline-start: auto
       &:nth-child(even)
-        margin-right: auto
+        margin-inline-end: auto
       // @note Sur 3 rangées (minmax de topic à 65em), résultat non satisfaisant : impression visuelle d'un désordre.
       /*
       &:nth-child(4n+2)
-        margin-left: 0
+        margin-inline-start: 0
       &:nth-child(4n+3)
         margin-inline: auto
       &:nth-child(4n+4)
-        margin-left: auto
+        margin-inline-start: auto
       &:nth-child(4n+5)
         margin-inline: auto
       */
@@ -52,7 +52,7 @@ _articleHeight1 = 4em
   & article header
     position: relative
     margin-block-end: 1em
-    padding-bottom: 1em
+    padding-block-end: 1em
     border-bottom: .1em solid _colorG + 5%
   & .sub-header
     margin-block: 2em 1em
@@ -88,7 +88,7 @@ _articleHeight1 = 4em
     padding-inline-start: 0
     font-size: .8em
     & > :last-child
-      margin-right: 0
+      margin-inline-end: 0
     & li
       margin-block-end: .75em
       //filter: drop-shadow(_shadow8)
@@ -103,9 +103,11 @@ _articleHeight1 = 4em
     right: 0
     bottom: 1em
     color: _articleColor2
-    &:where(:focus, :hover, :active)
-      text-decoration: none
-      color: _color5
+    text-decoration: none
+    &:focus
+    &:hover
+    &:active
+      color: _colorW
   & > footer
     grid-column: 1
     display: flex

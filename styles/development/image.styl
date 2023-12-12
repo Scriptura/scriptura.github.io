@@ -17,7 +17,7 @@ svg
   aspect-ratio: 1
 
 .icon-inline
-  margin-right: .5em // @todo Valeur à supprimer, c'est le contexte qui doit déterminer l'espacement. Gros traf' en perspective...
+  margin-inline-end: .5em // @todo Valeur à supprimer, c'est le contexte qui doit déterminer l'espacement. Gros traf' en perspective...
 
 img
   vertical-align: middle // Évite un décalage possible de l'élément suivant
@@ -39,7 +39,7 @@ figure
   box-shadow: _shadow11
   user-select: none
   & figcaption
-    padding-top: .5em
+    padding-block-start: .5em
     text-align: center
 
 [class*=-thumbnail]
@@ -50,11 +50,11 @@ figure
 
   [class*=-alignleft]
     float: left
-    margin-right: _gap
+    margin-inline-end: _gap
 
   [class*=-alignright]
     float: right
-    margin-left: _gap
+    margin-inline-start: _gap
 
   :where([class*=-alignleft], [class*=-alignright]) ~ :where(h2, h3, hr, aside)
   //:where([class*=-alignleft], [class*=-alignright]) ~ :not(p)

@@ -49,7 +49,7 @@ _breadcrumbColor2 = _color2
   & li:first-child > *
     padding-inline-start: 1em
   & li + li
-    margin-left: -1em
+    margin-inline-start: -1em
   @media (max-width: _sizeNav)
     /*
     li
@@ -63,6 +63,6 @@ _breadcrumbColor2 = _color2
     & > :nth-last-child(3) // [1]
       display: none
     & > :nth-last-child(2) // [1]
-      margin-left: 0
+      margin-inline-start: 0
       & a
         padding-inline-start: 1em

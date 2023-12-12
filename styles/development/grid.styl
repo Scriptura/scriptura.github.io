@@ -20,10 +20,10 @@
     padding-block: var(--gap) // @note padding et non margin, car ne doit pas pouvoir fusionner avec les marges de l'élément suivant.
   &.gap-top
     //margin-block-start: var(--gap)
-    padding-top: var(--gap) // @note Idem.
+    padding-block-start: var(--gap) // @note Idem.
   &.gap-bottom
     //margin-block-end: var(--gap)
-    padding-bottom: var(--gap) // @note Idem.
+    padding-block-end: var(--gap) // @note Idem.
   &.gap-vertical
     gap: 0 var(--gap)
   //&.masonry
@@ -164,10 +164,10 @@
   @supports(gap: 1em)
     & > * + *
       float: left
-      margin-left: 1em
+      margin-inline-start: 1em
   */
   & .item-push
-    margin-left: auto
+    margin-inline-start: auto
 
 .order
   order: var(--o, -1) // @note Valeur négative car l'utilisation de cette classe est souvent utilisée pour une monté des éléments frères plutôt qu'une descente.

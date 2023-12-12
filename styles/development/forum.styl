@@ -57,12 +57,12 @@ _forumSize = 35.01em
       flex-wrap: wrap
       gap: (_gap / 2) (_gap / 2)
       font-size: .8em
-      margin-bottom: 1em
-      //margin-left: auto
+      margin-block-end: 1em
+      //margin-inline-start: auto
       & > :last-child
-        margin-right: 0
+        margin-inline-end: 0
       & li
-        margin-bottom: .5em
+        margin-block-end: .5em
       & a
         padding: .25em .5em .25em 1.25em
         white-space: nowrap
@@ -97,7 +97,7 @@ _forumAvatarsY = round(_forumAvatarsSize / 3 - .2em, 1)
 .avatars
   grid-area: aaa
   @media (max-width: _forumSize)
-    margin-bottom: 2em // @note Valeur obtenue de manière un peu empirique, liée à la propriété font-size définie ci après.
+    margin-block-end: 2em // @note Valeur obtenue de manière un peu empirique, liée à la propriété font-size définie ci après.
     font-size: .5em
   position: relative
   margin: auto
