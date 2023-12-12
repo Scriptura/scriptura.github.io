@@ -10,10 +10,10 @@ _articleHeight1 = 4em
   & > header
     grid-column: span 2
   & h1
-    margin-bottom: .44em // @note Compense de manière "artisanale" le gap entre header et .wrapper @todo À revoir.
+    margin-block-end: .44em // @note Compense de manière "artisanale" le gap entre header et .wrapper @todo À revoir.
   @media (max-width: _sizeXS)
     & .wrapper
-      margin-top: - _gap
+      margin-block-start: - _gap
     & article
       padding-block: 1em
   //& > :not(header)
@@ -51,7 +51,7 @@ _articleHeight1 = 4em
     grid-template-areas: 'aa tt' 'aa uu'
   & article header
     position: relative
-    margin-bottom: 1em
+    margin-block-end: 1em
     padding-bottom: 1em
     border-bottom: .1em solid _colorG + 5%
   & .sub-header
@@ -85,12 +85,12 @@ _articleHeight1 = 4em
     flex-wrap: wrap
     gap: (_gap / 2) (_gap / 2)
     margin-block: .75em 0
-    padding-left: 0
+    padding-inline-start: 0
     font-size: .8em
     & > :last-child
       margin-right: 0
     & li
-      margin-bottom: .75em
+      margin-block-end: .75em
       //filter: drop-shadow(_shadow8)
     & a
       padding: .25em .5em .25em 1.25em

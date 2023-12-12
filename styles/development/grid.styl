@@ -19,10 +19,10 @@
     //margin-block: var(--gap)
     padding-block: var(--gap) // @note padding et non margin, car ne doit pas pouvoir fusionner avec les marges de l'élément suivant.
   &.gap-top
-    //margin-top: var(--gap)
+    //margin-block-start: var(--gap)
     padding-top: var(--gap) // @note Idem.
   &.gap-bottom
-    //margin-bottom: var(--gap)
+    //margin-block-end: var(--gap)
     padding-bottom: var(--gap) // @note Idem.
   &.gap-vertical
     gap: 0 var(--gap)
@@ -156,9 +156,9 @@
   &.gap
     gap: _gap
   &.gap-top
-    margin-top: _gap
+    margin-block-start: _gap
   &.gap-bottom
-    margin-bottom: _gap
+    margin-block-end: _gap
   /* @todo
    * @see https://github.com/w3c/csswg-drafts/issues/3559#issuecomment-557711824
   @supports(gap: 1em)

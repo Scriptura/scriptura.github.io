@@ -22,7 +22,7 @@ ol ol ol
 .list-stripe-links
   //all: unset // @note Ne pas utiliser : ne travaille pas de concert avec la classe `.grid`.
   margin: 0
-  padding-left: 0
+  padding-inline-start: 0
   & li
     display: block
   & > *
@@ -47,7 +47,7 @@ ol ol ol
 .list-straight
 .list-rounded
   margin: 0
-  padding-left: 0
+  padding-inline-start: 0
   & li
     display: grid
     grid-template-columns: 3em minmax(0, 1fr)
@@ -100,16 +100,16 @@ ol ol ol
     width: _listSize + .5
     clip-path: polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%)
   & li::before
-    padding-right: .7em
+    padding-inline-end: .7em
   & svg
     min-height: 100%
-    padding-left: .7em
-    padding-right: 1.1em
+    padding-inline-start: .7em
+    padding-inline-end: 1.1em
   & a
     position: relative
     right: .5em
     width: calc(100% + .5em)
-    padding-left: 1.5em
+    padding-inline-start: 1.5em
     clip-path: polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%)
 
 .list-rounded

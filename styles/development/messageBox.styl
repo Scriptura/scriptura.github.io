@@ -2,18 +2,18 @@ _messageColor1 = _colorG + 7%
 
 [class^=message]
   --color: currentColor
-  --color-link: _colorT2
+  //--color-link: _colorT2
   --bg-color: _messageColor1
   padding: .15em 1em
   color: var(--color)
   background-color: var(--bg-color)
   box-shadow: _shadow5
   //overflow hidden // @note Evite un conflit avec les margins et padding des éléments enfants. Mais pose des problèmes avec les pseudo-éléments.
-  & a
-    color: var(--color-link)
+  //& a
+  //  color: var(--color-link)
 
 main [class^=message]
-  //margin-bottom: 1em
+  //margin-block-end: 1em
   border-radius: _r2
 
 .message-info

@@ -50,7 +50,7 @@ video.media
   gap: _mediaPlayerGap
   width: 100%
   height: _mediaPlayerSize
-  padding-right: _mediaPlayerGap
+  padding-inline-end: _mediaPlayerGap
   background-color: _colorG + 7%
   border-radius: (_mediaPlayerSize / 2)
   box-shadow: _shadow17
@@ -216,7 +216,7 @@ video.media
     &:focus-within
     &:hover
     &:active
-      padding-left: _mediaPlayerGap
+      padding-inline-start: _mediaPlayerGap
       animation: anim-button .6s ease-in-out
       & .media-volume-bar
         display: inherit
@@ -275,7 +275,7 @@ video.media
     background-color: #000
 */
 video + .media-player
-  margin-top: .5em
+  margin-block-start: .5em
 
 .waiting .media-play-pause.active
   animation: anim-waiting  1s infinite

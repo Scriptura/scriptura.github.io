@@ -29,11 +29,12 @@ _forumSize = 35.01em
     &:hover
     &:active
       & + * h2 a
-        color: _color5
+        color: _colorW
         text-decoration: underline
   & > * a // @note Rétablit le clique des liens de base.
     position: relative
     z-index: 3
+    text-decoration: none
   & > :nth-child(2)
   & > :nth-child(3)
     display: flex
@@ -74,6 +75,11 @@ _forumSize = 35.01em
     font-weight: bold
     //font-size: 1em
     text-wrap: balance
+    & a
+      &:focus
+      &:hover
+      &:active
+        text-decoration: underline
 
 _forumAvatarsSize = 3.5em
 _forumAvatarsX = round(_forumAvatarsSize / 3, 1)

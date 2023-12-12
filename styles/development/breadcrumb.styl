@@ -47,7 +47,7 @@ _breadcrumbColor2 = _color2
     transition: background-color .3s ease-in-out
     clip-path: polygon(0 0, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0 100%)
   & li:first-child > *
-    padding-left: 1em
+    padding-inline-start: 1em
   & li + li
     margin-left: -1em
   @media (max-width: _sizeNav)
@@ -65,4 +65,4 @@ _breadcrumbColor2 = _color2
     & > :nth-last-child(2) // [1]
       margin-left: 0
       & a
-        padding-left: 1em
+        padding-inline-start: 1em
