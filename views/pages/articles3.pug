@@ -19,7 +19,7 @@ block main
         details
           summary Source de la lumière
           div
-            ol.list-gap
+            ol.list-gap(style='--list-start:1.3em')
               li Source de la lumière,
                 span.br  
                 | toi la splendeur du Père,
@@ -70,7 +70,7 @@ block main
         details
           summary Dieu de tout, immortel, tu t’es fait mortel
           div
-            ol.list-gap
+            ol.list-gap(style='--list-start:1.3em')
               li Dieu de tout, Immortel,
                 span.br  
                 | Insaisissable, Invisible,
@@ -166,7 +166,7 @@ block main
         details
           summary Ô Dieu Saint, ô Dieu Fort
           div
-            ol.list-gap(start='0')
+            ol.list-gap(start='0' style='--list-start:1.3em')
               li.chorus Ô Dieu Saint, ô Dieu Fort,
                 br
                 | ô Dieu Immortel, aie pitié de nous !
@@ -214,7 +214,7 @@ block main
         details
           summary Joyeuse Lumière
           div
-            ol.list-gap(start='0')
+            ol.list-gap(start='0' style='--list-start:1.3em')
               li.chorus Joyeuse Lumière, splendeur éternelle du Père,
                 br
                 | Saint et bienheureux, Jésus-Christ.
@@ -285,7 +285,7 @@ block main
         details
           summary Puissance, honneur et gloire
           div
-            ol.list-gap(start='0')
+            ol.list-gap(start='0' style='--list-start:1.3em')
               li.chorus Puissance, honneur et gloire,
                 br
                 | À l’Agneau de Dieu !
@@ -327,7 +327,7 @@ block main
         details
           summary Grandes, merveilleuses sont tes œuvres
           div
-            ol.list-gap(start='0')
+            ol.list-gap(start='0' style='--list-start:1.3em')
               li.chorus Grandes, merveilleuses sont tes œuvres, Seigneur,
                 br
                 | Ô roi des nations !
@@ -357,7 +357,7 @@ block main
         details
           summary Âme du Christ
           div
-            ul.list-gap
+            ul.list-gap(style='--list-start:1.3em')
               li Âme du Christ sanctifie-moi
                 br
                 | Corps du Christ, sauve-moi
@@ -385,7 +385,7 @@ block main
         details
           summary Magnificat
           div
-            ul.list-gap
+            ul.list-gap(style='--list-start:1.3em')
               li Mon âme exalte le Seigneur,
                 br
                 | exulte mon esprit en Dieu, mon Sauveur.
@@ -417,33 +417,37 @@ block main
         details
           summary Cantique de Syméon
           div
-            ul.list-gap
-              li Maintenant, ô Maître souverain,
+            ul.list-gap(style='--list-start:1.3em')
+              li Maintenant, ô Maître souverain, +
                 br
-                | tu peux laisser ton serviteur s''en aller
+                | tu peux laisser ton serviteur s'en aller
                 br
                 | en paix selon ta parole.
               li Car mes yeux ont vu le salut
                 br
-                | que tu préparais à la face des peuples :
-                br
-                | p Lumière qui se révèle aux nations
+                | que tu préparais à la face des peuples :
+              li Lumière qui se révèle aux nations
                 br
                 | et donne gloire à ton peuple Israël.
               li Gloire au Père, et au Fils et au Saint Esprit,
                 br
                 | pour les siècles des siècles, Amen.
+            p – Luc, 2, 29-31
       .accordion
         details
           summary Impropères du Vendredi Saint
           div
-            ol.list-gap(start='-1')
-              li.chorus Choeur : Mon peuple, que t'ai-je fait ?
+            ol.list-gap(start='-1' style='--list-start:1.3em')
+              li.chorus
+                em Chœur :
+                |  Mon peuple, que t'ai-je fait ?
                 br
                 | En quoi t'ai-je offensé ?
                 br
                 | Réponds-moi !
-              li.chorus Choeur et assemblée : Ô Dieu saint, ô Dieu saint fort.
+              li.chorus
+                em Chœur et assemblée :
+                |  Ô Dieu saint, ô Dieu saint fort.
                 br
                 | Ô Dieu saint, Dieu fort, immortel, prends pitié de nous.
               li Mon peuple que t'ai-je fait,
@@ -501,7 +505,7 @@ block main
         details
           summary Dieu créateur de la lumière
           div
-            ul.list-gap
+            ul.list-gap(style='--list-start:1.3em')
               li Dieu créateur de la lumière,
                 br
                 | Qui a illuminé le jour,
@@ -542,7 +546,7 @@ block main
         details
           summary Nous te rendrons grâces, Unique Seigneur
           div
-            ul.list-gap
+            ul.list-gap(style='--list-start:1.3em')
               li Nous te rendrons grâces, Unique Seigneur,
                 br
                 | Toi qui sondes les cœurs, Juge miséricordieux,
@@ -583,7 +587,7 @@ block main
         details
           summary Il vient notre Roi dans sa grande gloire
           div
-            ul.list-gap
+            ul.list-gap(style='--list-start:1.3em')
               li Il vient notre Roi dans sa grande gloire
                 br
                 | Pour nous réjouir de sa glorieuse lumière ;
@@ -638,7 +642,7 @@ block main
         details
           summary Angélus
           div
-            ul.list-gap
+            ul.list-gap(style='--list-start:1.3em')
               li L'ange du Seigneur
                 br
                 | apporta l'annonce à Marie
@@ -679,7 +683,7 @@ block main
         details
           summary Viens, Esprit Saint, viens, Consolateur
           div
-            ol.list-gap(start='0')
+            ol.list-gap(start='0' style='--list-start:1.3em')
               li.chorus Viens, Esprit Saint, viens en nos cœurs,
                 br
                 | Viens, Esprit Saint, viens, Consolateur.
@@ -736,7 +740,7 @@ block main
         details
           summary Cantique de Zacharie
           div
-            ul.list-gap
+            ul.list-gap(style='--list-start:1.3em')
               li Béni soit le Seigneur, le Dieu d'Israël,
                 br
                 | qui visite et rachète son peuple.

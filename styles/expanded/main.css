@@ -1006,6 +1006,16 @@ a.logo-nav:hover::after {
 .alert #gdpr-see .mm {
   margin-block-end: 1em;
 }
+ul,
+ol {
+  padding-inline-start: var(--list-start, 2.5em);
+}
+ul :where(ul,
+ol :where(ul,
+ul ol),
+ol ol) {
+  padding-inline-start: 2.5em;
+}
 ul {
   list-style-type: square;
 }
@@ -1132,8 +1142,7 @@ ol ol ol {
 }
 .list-straight svg {
   min-height: 100%;
-  padding-inline-start: 0.7em;
-  padding-inline-end: 1.1em;
+  padding-inline: 0.7em 1.1em;
 }
 .list-straight a {
   position: relative;

@@ -40,6 +40,12 @@ for (const masonry of document.querySelectorAll('.masonry')) {
     resizeTimeout = setTimeout(() => {grid.resizeAllGridItems()}, 200) // Limitation du nombre de calculs @see https://stackoverflow.com/questions/5836779/
   })
 
+  window.addEventListener('scroll', () => { // @note Cette astuce permet de corriger un bug dû à un conflit avec l'attribut `loading='lazy'` si présent sur des images.
+    let resizeTimeout
+    clearTimeout(resizeTimeout)
+    resizeTimeout = setTimeout(() => {grid.resizeAllGridItems()}, 200) // Limitation du nombre de calculs @see https://stackoverflow.com/questions/5836779/
+  })
+
   document.querySelectorAll('.accordion').forEach(e => e.addEventListener('transitionend', () => grid.resizeAllGridItems())) // Composants dont l'action nécessite un recalcul de la grille.
 
 }

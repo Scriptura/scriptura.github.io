@@ -44,34 +44,64 @@ mixin list(icon, name, slug)
               li Magenta
               li Jaune
               li Noir
+  figure.center.c2
+    svg.size.decorative-svg.xs-hidden.s-hidden.m-hidden(role='img' focusable='false')
+      use(href='/sprites/silos/245v-d1.svg#1')
+  div
+    p
+      code Basic list
+    p A paragraph...
+    ul
+      li Artichauts
+      li Carottes
+      li Concombres
+      li Poireaux
+      li Choux
+        ul
+          li Composition
+          li Saveur
+          li Taille
+          li Couleurs
+            ul
+              li Cyan
+              li Magenta
+              li Jaune
+              li Noir
+  div
+    p
+      code ul(style='--list-start:1.3em')
+    p A paragraph...
+    ul(style='--list-start:1.3em')
+      li Artichauts
+      li Carottes
+      li Concombres
+      li Poireaux
+      li Choux
+        ul
+          li Composition
+          li Saveur
+          li Taille
+          li Couleurs
+            ul
+              li Cyan
+              li Magenta
+              li Jaune
+              li Noir
   div
     p
       code ol.list-gap
-    ol.list-gap
-      li Verse 1
-      li Verse 2
-      li Verse 3
-      li Verse 4
-      li Verse 5
-      li Verse 6
-      li Verse 7
-      li Verse 8
-      li Verse 9
+    ol.list-gap(style='--list-start:1.3em')
+      - for (let i = 1; i < 11; i++)
+        li List item #{i}
   div
     p
       code ol.list-gap(start='0')
-    ol.list-gap(start='0')
+    ol.list-gap(start='0' style='--list-start:1.3em')
       li.chorus
         code li.chorus
-        |  Chorus
-      li Verse 1
-      li Verse 2
-      li Verse 3
-      li Verse 4
-      li Verse 5
-      li Verse 6
-      li Verse 7
-      li Verse 8
+        |  List item 1
+        - for (let i = 2; i < 11; i++)
+          li List item #{i}
 .grid-auto.gap.gap-bottom
   div
     p

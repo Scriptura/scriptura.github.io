@@ -1,0 +1,19 @@
+@use 'test1';
+@use 'test2';
+
+$colorTest: tomato;
+
+input {
+  border: $colorTest 2px solid;
+}
+
+label {
+  font-family: system-ui;
+  font-size: 1.25rem;
+  & input {
+    border: blue 2px dashed;
+  }
+  :has(.accordion) & {
+    border: blue 2px dashed;
+  }
+}
