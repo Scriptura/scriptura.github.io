@@ -1,0 +1,75 @@
+// @note Doublage des variables Sass par les variables CSS natives impliquées dans les médias queries. @todo en attendant un support total d'usage pour les variables natives.
+
+// @subsection Breakpoints
+// @bugfix Nécessité de préciser deux chiffres après la virgule pour éviter un arrondissement de la valeur par les navigateurs, créant ainsi la possibilité d'un décalage entre 'max-width' et 'min-width' sur les media queries.
+$sizeXS:   35.01em;
+$sizeS:    50.01em;
+$sizeM:    70.01em;
+$sizeL:    92.01em;
+$sizeXL:  120.01em; // @todo : Valeur non utilisée pour l'instant.
+$sizeXXL: 140.01em; // @note Idem.
+$sizeNav:  90.01em; // @note À caler sur la taille du contenu de '.nav-main ul'. @note Prévoir de la marge en raison des différences d'interprétation des fonts selon les navigateurs
+
+// @subsection Grid
+$gap: 1em;
+$wrap: 90em + $gap * 2; // @note La fonction calc() n'est pas implémentée pour les media queries, ou alors partiellement (unité de même type). @see https://stackoverflow.com/questions/23667208 @todo À réévaluer dans le temps...
+
+
+:root {
+
+  --gap: #{$gap};   // Gouttière, largeur entre deux modules (en unité em/rem)
+  --wrap: #{$wrap}; // Largeur maximale du contenu (+ prise en compte du padding interne)
+
+  // @subsection  Web fonts
+  // @note Le chargement des polices via @font-face est fortement recommandé pour ne pas dépendre de l'environnement de l'utilisateur. Ce qui permet d'avoir la maitrise du design du site. Les CDNs sont un mal à proscrire également.
+  --fontList1: 'Noto Sans', sans-serif;
+  --fontList2: 'Noto Serif', serif;
+
+  // @subsection Colors
+
+  // Dark theme
+  --colorT: hsl(35, 45%, 84%);     // couleur primaire du texte
+  --colorT2: hsl(34, 44%, 69%);    // couleur secondaire du texte
+  --colorG: hsl(0, 0%, 22%);       // gris de référence
+  --colorW: hsl(0, 0%, 100%);      // blanc de référence
+  --colorB: hsl(0, 0%, 0%);        // noir de référence
+  --color1: var(--colorG);           // couleur de fond
+  --color2: hsl(9, 100%, 64%);     // couleur dominante 2 (tomato)
+  --color3: hsl(12, 63%, 49%);     // couleur secondaire
+  --color4: hsl(96, 41%, 29%);     // couleur secondaire
+  --color5: hsl(39, 100%, 50%);    // couleur secondaire
+  --color6: hsl(207, 22%, 39%);    // couleur secondaire
+  --colorS: hsl(9, 100%, 64%, .5); // dérivée de `--color2`
+
+  /*
+  // Light theme
+  --colorT: hsl(9, 63%, 16%);      // couleur primaire du texte
+  --colorT2: hsl(34, 20%, 45%);    // couleur secondaire du texte
+  --colorG: hsl(0, 0%, 22%);       // gris de référence
+  --colorW: hsl(0, 0%, 100%);      // blanc de référence
+  --color1: hsl(55, 100%, 95%);    // couleur de fond
+  --color2: hsl(9, 100%, 64%);     // couleur dominante 2 (tomato)
+  --color3: hsl(12, 63%, 49%);     // couleur secondaire
+  --color4: hsl(154, 69%, 42%);    // couleur secondaire
+  --color5: hsl(60, 63%, 67%);     // couleur secondaire
+  --color6: hsl(207, 47%, 68%);    // couleur secondaire
+  --colorS: rgba(255, 99, 71, .5); // dérivée de --color2
+  */
+
+  // @subsection Shadows
+  // @note Seules les ombres de référence - et donc redontantes - sont placées ici, les autres sont directement intégrées à leur propriété.
+  --shadow1: 0.5rem 0.5rem 2rem hsla(0, 0%, 0%, 0.15);
+  --shadow2: inset 0 0 0.1em hsla(0, 0%, 0%, 0.3), 0 0.5rem 2rem hsla(0, 0%, 0%, 0.3); // ombres interieures en em, ombres exterieures en rem
+  --shadow3: 0 0 1.5rem hsla(0, 0%, 0%, 0.2);
+  --shadow4: 0 1.5rem 2rem hsla(0, 0%, 0%, 0.4);
+  --shadow5: 0 0 2rem hsla(0, 0%, 0%, 0.2);
+  --shadow6: 0.5rem 0.5rem 2rem hsla(0, 0%, 0%, 0.1);
+  --shadow7: 0.5rem 0.5rem 2rem hsla(0, 0%, 0%, 0.25);
+  --shadow8: 0 1rem 1rem hsla(0, 0%, 0%, 0.1); // .accordion
+  //--shadow9: 0 0 0 1000em #222; // Ombre spécifique pour remplacer éventuellement le background-color d'un élément parent.
+
+  // @subsection Rounds
+  --r1: .3em;  // Boites
+  --r2: .3em;  // Éléments internes
+
+}

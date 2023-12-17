@@ -242,7 +242,7 @@ const gdpr = (() => {
 // -----------------------------------------------------------------------------
 
 const dateInputToday = (() => { // @note Date du jour si présence de la classe 'today-date' @see https://css-tricks.com/prefilling-date-input/
-  document.querySelectorAll('input[type="date"].today-date').forEach(e => e.valueAsDate = new Date())
+  document.querySelectorAll('input[type=date].today-date').forEach(e => e.valueAsDate = new Date()) // @bugfixed Semble problématique sur certains navigateurs. @todo À voir dans le temps.
 })()
 
 
