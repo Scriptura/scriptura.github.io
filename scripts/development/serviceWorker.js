@@ -3,7 +3,7 @@
 
 
 const addResourcesToCache = async resources => {
-  const cache = await caches.open('v5')
+  const cache = await caches.open('v6')
   await cache.addAll(resources)
 }
 

@@ -898,27 +898,24 @@ a.logo-nav:hover::after {
 }
 
 @media (max-width: $sizeNav) {
-  :where(html,
-  body).active {
+  :where(html, body).active {
     overflow: clip;
   }
-
-  body.active::before {
-    content: '';
-    position: absolute;
-    z-index: 1;
-    inset: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: hsla(0, 0%, 0%, 0.7);
-  }
-
-  body.active :where(main,
-  body.active footer,
-  body.active aside) {
-    user-select: none;
-    pointer-events: none;
-    filter: blur(2px) grayscale(1);
+  body.active {
+    &::before {
+      content: '';
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: hsla(0, 0%, 0%, 0.7);
+    }
+    & :where(main, footer, aside) {
+      user-select: none;
+      pointer-events: none;
+      filter: blur(2px) grayscale(1);
+    }
   }
 
   .sub-nav li:nth-child(1) {
@@ -988,47 +985,40 @@ a.logo-nav:hover::after {
     padding: 0.5em;
     cursor: pointer;
     background-color: hsl(0, 0%, 15%);
-  }
-
-  .cmd-nav svg {
-    width: 100%;
-    height: 100%;
-    transition: 0.2s background-color;
-  }
-
-  .cmd-nav rect {
-    transform-origin: center;
-    fill: var(--colorT);
-    transition: 0.2s all ease-in-out;
-  }
-
-  .cmd-nav:not(:focus):not(:hover):not(.active) svg {
-    border-radius: 50%;
-    background-color: var(--color2);
-  }
-
-  .cmd-nav:not(:focus):not(:hover):not(.active) rect {
-    x: 450px;
-    width: 100px;
-    height: 100px;
-  }
-
-  .cmd-nav:focus,
-  .cmd-nav:hover,
-  .cmd-nav.active {
-    background-color: var(--color2);
-  }
-
-  .cmd-nav.active svg :nth-child(1) {
-    transform: translate(-177px, 177px) rotate(45deg);
-  }
-
-  .cmd-nav.active svg :nth-child(2) {
-    transform: rotate(-45deg);
-  }
-
-  .cmd-nav.active svg :nth-child(3) {
-    transform: translate(-177px, -177px) rotate(-45deg);
+    & svg {
+      width: 100%;
+      height: 100%;
+      transition: 0.2s background-color;
+    }
+    & rect {
+      transform-origin: center;
+      fill: var(--colorT);
+      transition: 0.2s all ease-in-out;
+    }
+    &:not(:focus):not(:hover):not(.active) svg {
+      border-radius: 50%;
+      background-color: var(--color2);
+    }
+    &:not(:focus):not(:hover):not(.active) rect {
+      x: 450px;
+      width: 100px;
+      height: 100px;
+    }
+    &:where(:focus, :hover, .active) {
+      background-color: var(--color2);
+    }
+    &.active svg :nth-child(1) {
+      transform: translate(-177px, 177px) rotate(45deg);
+    }
+    &.active svg :nth-child(2) {
+      transform: rotate(-45deg);
+    }
+    &.active svg :nth-child(3) {
+      transform: translate(-177px, -177px) rotate(-45deg);
+    }
+    .no-js & {
+      display: none;
+    }
   }
 }
 
@@ -1036,10 +1026,6 @@ a.logo-nav:hover::after {
   .cmd-nav {
     display: none;
   }
-}
-
-.no-js .cmd-nav {
-  display: none;
 }
 
 @keyframes anim-logo {
@@ -1053,62 +1039,51 @@ a.logo-nav:hover::after {
   display: flex;
   margin: 0;
   padding: 0;
-}
-
-.breadcrumb li {
-  list-style: none;
-  filter: drop-shadow(0.5rem 0.5rem 0.5rem hsla(0, 0%, 0%, 0.25));
-  overflow: hidden;
-}
-
-.breadcrumb li a:focus,
-.breadcrumb li a:hover,
-.breadcrumb li a:active {
-  color: var(--colorW);
-  background-color: var(--color2);
-}
-
-.breadcrumb li:nth-last-child(3) {
-  z-index: 2;
-  flex-shrink: 0;
-}
-
-.breadcrumb li:nth-last-child(2) {
-  z-index: 1;
-  flex-shrink: 0;
-}
-
-.breadcrumb li:last-child div {
-  color: var(--colorW);
-}
-
-.breadcrumb li:last-child div span {
-  color: var(--colorT2);
-}
-
-.breadcrumb li > * {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  position: relative;
-  display: block;
-  line-height: 2.5;
-  padding: 0 1.88em;
-  text-decoration: none;
-  background-size: cover;
-  background-repeat: no-repeat;
-  color: var(--colorT2);
-  background-color: hsl(0, 0%, 15%);
-  transition: background-color 0.3s ease-in-out;
-  clip-path: polygon(0 0, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0 100%);
-}
-
-.breadcrumb li:first-child > * {
-  padding-inline-start: var(--gap);
-}
-
-.breadcrumb li + li {
-  margin-inline-start: -1em;
+  & li {
+    list-style: none;
+    filter: drop-shadow(0.5rem 0.5rem 0.5rem hsla(0, 0%, 0%, 0.25));
+    overflow: hidden;
+    & a:where(:focus, :hover, :active) {
+      color: var(--colorW);
+      background-color: var(--color2);
+    }
+    &:nth-last-child(3) {
+      z-index: 2;
+      flex-shrink: 0;
+    }
+    &:nth-last-child(2) {
+      z-index: 1;
+      flex-shrink: 0;
+    }
+    &:last-child div {
+      color: var(--colorW);
+    }
+    &:last-child div span {
+      color: var(--colorT2);
+    }
+    & > * {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      position: relative;
+      display: block;
+      line-height: 2.5;
+      padding: 0 1.88em;
+      text-decoration: none;
+      background-size: cover;
+      background-repeat: no-repeat;
+      color: var(--colorT2);
+      background-color: hsl(0, 0%, 15%);
+      transition: background-color 0.3s ease-in-out;
+      clip-path: polygon(0 0, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0 100%);
+    }
+    &:first-child > * {
+      padding-inline-start: var(--gap);
+    }
+    & + li {
+      margin-inline-start: -1em;
+    }
+  }
 }
 
 @media (max-width: $sizeNav) {
