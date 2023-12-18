@@ -4,7 +4,6 @@
 // @see https://stackoverflow.com/questions/22937618
 
 const formValidation = (() => {
-
   const classMessageError = 'message-warning'
 
   function createMessageError(input, el, text) {
@@ -28,23 +27,36 @@ const formValidation = (() => {
   const validationName = (() => {
     document.querySelectorAll('.validation-name').forEach(input => {
       input.addEventListener('input', () => validationInit(input), false)
-      input.addEventListener('change', () => {
-        input.value = input.value.replace(/  +/g, ' ') // @note Réduire les espaces internes dupliqués à un seul.
-        input.value = input.value.trim()
-        input.value = input.value.replace(/^\p{CWU}/u, char => char.toLocaleUpperCase())
-        validationInit(input)
-      }, false)
+      input.addEventListener(
+        'change',
+        () => {
+          input.value = input.value.replace(/  +/g, ' ') // @note Réduire les espaces internes dupliqués à un seul.
+          input.value = input.value.trim()
+          input.value = input.value.replace(/^\p{CWU}/u, char =>
+            char.toLocaleUpperCase(),
+          )
+          validationInit(input)
+        },
+        false,
+      )
     })
     function validationInit(input) {
       const el = input.parentNode.querySelector('.' + classMessageError)
-      if (input.value.length > 41) { // @note Il existe des noms de famille hawaïens de 35 lettres...
-        let text = "Entrée invalide\u00a0: chaîne de caractères trop longue."
+      if (input.value.length > 41) {
+        // @note Il existe des noms de famille hawaïens de 35 lettres...
+        let text = 'Entrée invalide\u00a0: chaîne de caractères trop longue.'
         createMessageError(input, el, text)
       } else if (input.value.match('\\d')) {
-        let text = "Entrée invalide\u00a0: présence de caractères numériques."
+        let text = 'Entrée invalide\u00a0: présence de caractères numériques.'
         createMessageError(input, el, text)
-      } else if (input.value.match('[\\\\/\\[\\]|%&!?\+÷×=±_{}()<>;:,$€£¥¢*§@~`•√π¶∆^°²©®™✓\#\"]')) { // @note Le point l'espace et les guillemets simples sont exclus du test.
-        let text = "Entrée invalide\u00a0: présence de caractères spéciaux non autorisés."
+      } else if (
+        input.value.match(
+          '[\\\\/\\[\\]|%&!?+÷×=±_{}()<>;:,$€£¥¢*§@~`•√π¶∆^°²©®™✓#"]',
+        )
+      ) {
+        // @note Le point l'espace et les guillemets simples sont exclus du test.
+        let text =
+          'Entrée invalide\u00a0: présence de caractères spéciaux non autorisés.'
         createMessageError(input, el, text)
       } else {
         removeMessageError(input, el)
@@ -55,16 +67,20 @@ const formValidation = (() => {
   const validationEmail = (() => {
     document.querySelectorAll('.validation-email').forEach(input => {
       input.addEventListener('input', () => validationInit(input), false)
-      input.addEventListener('change', () => {
-        input.value = input.value.replace(/ +/g, '') // @note Suppression les espaces internes
-        input.value = input.value.trim()
-        validationExit(input)
-      }, false)
+      input.addEventListener(
+        'change',
+        () => {
+          input.value = input.value.replace(/ +/g, '') // @note Suppression les espaces internes
+          input.value = input.value.trim()
+          validationExit(input)
+        },
+        false,
+      )
     })
     function validationInit(input) {
       const el = input.parentNode.querySelector('.' + classMessageError)
       if (input.value.match(/@.*@/)) {
-        let text = "Entrée invalide\u00a0: présence de plusieurs arobases."
+        let text = 'Entrée invalide\u00a0: présence de plusieurs arobases.'
         createMessageError(input, el, text)
       } else {
         removeMessageError(input, el)
@@ -72,10 +88,12 @@ const formValidation = (() => {
     }
     function validationExit(input) {
       const el = input.parentNode.querySelector('.' + classMessageError)
-      if (!input.value) { // @note Nettoyage du message d'erreur si au final l'utilisateur laisse le champ vide après avoir tenté de le compléter.
+      if (!input.value) {
+        // @note Nettoyage du message d'erreur si au final l'utilisateur laisse le champ vide après avoir tenté de le compléter.
         removeMessageError(input, el)
       } else if (!input.value.match(/@/)) {
-        let text = "Entrée invalide\u00a0: absence du caractère arobase obligatoire."
+        let text =
+          'Entrée invalide\u00a0: absence du caractère arobase obligatoire.'
         createMessageError(input, el, text)
       } else if (!input.value.match(/\S+@\S+\.\S+/)) {
         let text = "Entrée invalide\u00a0: l'addresse mail n'est pas conforme."
@@ -89,17 +107,23 @@ const formValidation = (() => {
   const validationUrl = (() => {
     document.querySelectorAll('.validation-url').forEach(input => {
       input.addEventListener('input', () => validationInit(input), false)
-      input.addEventListener('change', () => {
-        input.value = input.value.replace(/ +/g, '') // @note Suppression les espaces internes.
-        input.value = input.value.trim()
-        input.value = input.value.replace(/^\p{CWL}/u, char => char.toLocaleLowerCase()) // @note Les noms de domaines et protocoles sont toujours insensibles à la case.
-        validationExit(input)
-      }, false)
+      input.addEventListener(
+        'change',
+        () => {
+          input.value = input.value.replace(/ +/g, '') // @note Suppression les espaces internes.
+          input.value = input.value.trim()
+          input.value = input.value.replace(/^\p{CWL}/u, char =>
+            char.toLocaleLowerCase(),
+          ) // @note Les noms de domaines et protocoles sont toujours insensibles à la case.
+          validationExit(input)
+        },
+        false,
+      )
     })
     function validationInit(input) {
       const el = input.parentNode.querySelector('.' + classMessageError)
       if (input.value.match(/@.*@/)) {
-        let text = "Entrée invalide\u00a0: présence de plusieurs arobases."
+        let text = 'Entrée invalide\u00a0: présence de plusieurs arobases.'
         createMessageError(input, el, text)
       } else {
         removeMessageError(input, el)
@@ -115,10 +139,13 @@ const formValidation = (() => {
         //console.error(error)
         url = false
       }
-      if (!input.value) { // Nettoyage du message d'erreur si au final l'utilisateur laisse le champ vide après avoir tenté de le compléter.
+      if (!input.value) {
+        // Nettoyage du message d'erreur si au final l'utilisateur laisse le champ vide après avoir tenté de le compléter.
         removeMessageError(input, el)
-      } else if (!input.value.match(/http/)) { // @see https://stackoverflow.com/questions/3809401#3809435
-        let text = "Entrée invalide\u00a0: il manque un protocole à votre url (https://, http://, ...)."
+      } else if (!input.value.match(/http/)) {
+        // @see https://stackoverflow.com/questions/3809401#3809435
+        let text =
+          'Entrée invalide\u00a0: il manque un protocole à votre url (https://, http://, ...).'
         createMessageError(input, el, text)
       } else if (!url) {
         let text = "Entrée invalide\u00a0: l'url n'est pas conforme."
@@ -132,18 +159,24 @@ const formValidation = (() => {
   const validationPhoneFrFR = (() => {
     document.querySelectorAll('.validation-phone-fr_FR').forEach(input => {
       input.addEventListener('input', () => validationInit(input), false)
-      input.addEventListener('change', () => {
-        input.value = input.value.replace(/ +/g, '') // @note Suppression les espaces internes.
-        input.value = input.value.trim()
-        validationExit(input)
-      }, false)
+      input.addEventListener(
+        'change',
+        () => {
+          input.value = input.value.replace(/ +/g, '') // @note Suppression les espaces internes.
+          input.value = input.value.trim()
+          validationExit(input)
+        },
+        false,
+      )
     })
     function validationInit(input) {
       const el = input.parentNode.querySelector('.' + classMessageError)
-      if (!input.value) { // @note Nettoyage du message d'erreur si au final l'utilisateur laisse le champ vide après avoir tenté de le compléter.
+      if (!input.value) {
+        // @note Nettoyage du message d'erreur si au final l'utilisateur laisse le champ vide après avoir tenté de le compléter.
         removeMessageError(input, el)
       } else if (input.value.match(/(?!\+)\D/)) {
-        let text = "Entrée invalide\u00a0: présence de caractères non autorisés."
+        let text =
+          'Entrée invalide\u00a0: présence de caractères non autorisés.'
         createMessageError(input, el, text)
       } else {
         removeMessageError(input, el)
@@ -151,18 +184,18 @@ const formValidation = (() => {
     }
     function validationExit(input) {
       const el = input.parentNode.querySelector('.' + classMessageError)
-      if (!input.value) { // @note Nettoyage du message d'erreur si au final l'utilisateur laisse le champ vide après avoir tenté de le compléter.
+      if (!input.value) {
+        // @note Nettoyage du message d'erreur si au final l'utilisateur laisse le champ vide après avoir tenté de le compléter.
         removeMessageError(input, el)
-      //} else if (!input.value.match(/\+\D/)) {
-      //  let text = "Entrée invalide\u00a0: présence de caractères non numériques."
-      //  createMessageError(input, el, text)
+        //} else if (!input.value.match(/\+\D/)) {
+        //  let text = "Entrée invalide\u00a0: présence de caractères non numériques."
+        //  createMessageError(input, el, text)
       } else if (!input.value.match(/^((0|0033|\+33)[1-9][0-9]{8})$/)) {
-        let text = "Entrée invalide\u00a0: format incorrect pour la France."
+        let text = 'Entrée invalide\u00a0: format incorrect pour la France.'
         createMessageError(input, el, text)
       } else {
         removeMessageError(input, el)
       }
     }
   })()
-
 })()

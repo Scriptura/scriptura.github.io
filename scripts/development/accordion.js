@@ -31,46 +31,58 @@
  */
 
 const accordion = () => {
-
   const slug = window.location.pathname,
-        accordionPanel = `${(slug.substring(0, slug.lastIndexOf('.')) || slug).replace(/[\W_]/gi, '') || 'index'.toLowerCase()}AccordionPanel` // @note Création d'un nom de variable à partir du slug de l'URL.
+    accordionPanel = `${
+      (slug.substring(0, slug.lastIndexOf('.')) || slug).replace(
+        /[\W_]/gi,
+        ''
+      ) || 'index'.toLowerCase()
+    }AccordionPanel` // @note Création d'un nom de variable à partir du slug de l'URL.
 
   const transformHTML = (() => {
-
     document.querySelectorAll('.accordion').forEach((accordion, i) => {
       accordion.id = `accordion-${i}`
       accordion.role = 'tablist'
     })
 
     document.querySelectorAll('.accordion > details').forEach((details, i) => {
-      const dataOpen = (details.open || localStorage.getItem(accordionPanel + i) === 'open') && localStorage.getItem(accordionPanel + i) !== 'close' ? 'true' : 'false' // 1
+      const dataOpen =
+        (details.open || localStorage.getItem(accordionPanel + i) === 'open') &&
+        localStorage.getItem(accordionPanel + i) !== 'close'
+          ? 'true'
+          : 'false' // 1
       details.outerHTML = `<div id="accordion-details-${i}" class="accordion-details" data-open="${dataOpen}">${details.innerHTML}</div>`
     })
 
-    document.querySelectorAll('.accordion > * > summary').forEach((summary, i) => {
-      const ariaExpanded = summary.parentElement.dataset.open === 'true' ? 'true' : 'false'
-      summary.outerHTML = `<button id="accordion-summary-${i}" type="button" class="accordion-summary" role="tab" aria-controls="accordion-panel-${i}" aria-expanded="${ariaExpanded}">${summary.innerHTML}</button>`
-    })
+    document
+      .querySelectorAll('.accordion > * > summary')
+      .forEach((summary, i) => {
+        const ariaExpanded =
+          summary.parentElement.dataset.open === 'true' ? 'true' : 'false'
+        summary.outerHTML = `<button id="accordion-summary-${i}" type="button" class="accordion-summary" role="tab" aria-controls="accordion-panel-${i}" aria-expanded="${ariaExpanded}">${summary.innerHTML}</button>`
+      })
 
-    document.querySelectorAll('.accordion > * > :last-child').forEach((panel, i) => {
-      // @note On peut surcharger l'élément avec des attributs, mais il ne faut en aucun cas le remplacer pour éviter une transition d'ouverture si panneau ouvert par défaut.
-      panel.id = `accordion-panel-${i}`
-      panel.classList.add('accordion-panel')
-      panel.role = 'tabpanel'
-      panel.setAttribute('aria-labelledby', `accordion-summary-${i}`) // @note Cet attribut en supporte pas la notation par point.
-      panel.ariaHidden = panel.parentElement.dataset.open === 'true' ? 'false' : 'true' //panel.parentElement.open
-    })
-
+    document
+      .querySelectorAll('.accordion > * > :last-child')
+      .forEach((panel, i) => {
+        // @note On peut surcharger l'élément avec des attributs, mais il ne faut en aucun cas le remplacer pour éviter une transition d'ouverture si panneau ouvert par défaut.
+        panel.id = `accordion-panel-${i}`
+        panel.classList.add('accordion-panel')
+        panel.role = 'tabpanel'
+        panel.setAttribute('aria-labelledby', `accordion-summary-${i}`) // @note Cet attribut en supporte pas la notation par point.
+        panel.ariaHidden =
+          panel.parentElement.dataset.open === 'true' ? 'false' : 'true' //panel.parentElement.open
+      })
   })()
 
   const stateManagement = (() => {
-
     document.querySelectorAll('.accordion-summary').forEach((summary, i) => {
       summary.addEventListener('click', () => {
         const details = summary.parentElement,
-              singleTabOption = details.parentElement.dataset.singletab, // 2
-              panel = summary.nextElementSibling
-        details.dataset.open = details.dataset.open === 'true' ? 'false' : 'true'
+          singleTabOption = details.parentElement.dataset.singletab, // 2
+          panel = summary.nextElementSibling
+        details.dataset.open =
+          details.dataset.open === 'true' ? 'false' : 'true'
         if (details.dataset.open === 'true') {
           summary.ariaExpanded = 'true'
           localStorage.setItem(accordionPanel + i, 'open')
@@ -83,36 +95,38 @@ const accordion = () => {
         if (singleTabOption) siblingStateManagement(details)
       })
     })
-
   })()
 
-  const openedPanel = panel => {
+  const openedPanel = (panel) => {
     panel.style.maxHeight = `${panel.scrollHeight}px`
-    panel.addEventListener('transitionend', () => panel.removeAttribute('style'))
+    panel.addEventListener('transitionend', () =>
+      panel.removeAttribute('style')
+    )
     panel.ariaHidden = 'false'
   }
 
-  const closedPanel = panel => {
+  const closedPanel = (panel) => {
     // @note Redéfinition de la hauteur du panneau avant la suppression de cette même définition un laps de temps plus tard. Le laps de temps est minime mais suffisant pour être pris en compte par la transition CSS.
     panel.style.maxHeight = `${panel.scrollHeight}px`
     setTimeout(() => {
       panel.removeAttribute('style')
-      panel.ariaHidden = 'true'
-      , 1
+      ;(panel.ariaHidden = 'true'), 1
     })
   }
 
-  const siblingStateManagement = details => {
+  const siblingStateManagement = (details) => {
     for (const sibling of details.parentElement.children) {
       if (sibling !== details) {
         sibling.dataset.open = 'false'
         sibling.firstElementChild.ariaExpanded = 'false'
         closedPanel(sibling.lastElementChild)
-        localStorage.setItem(accordionPanel + sibling.id.match(/\d+$/i)[0], 'close') // @note Récupération de l'ID du panneau frère par regex.
+        localStorage.setItem(
+          accordionPanel + sibling.id.match(/\d+$/i)[0],
+          'close'
+        ) // @note Récupération de l'ID du panneau frère par regex.
       }
     }
   }
-  
 }
 
 window.addEventListener('DOMContentLoaded', accordion()) // @note S'assurer que le script est bien chargé après le DOM et ce quelque soit la manière dont il est appelé.

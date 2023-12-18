@@ -10,7 +10,7 @@
 document.documentElement.classList.replace('no-js', 'js')
 
 // printDetect :
-if(!window.print) document.documentElement.classList.add('no-print') // @see Firefox Android a perdu sa fonction d'impression...
+if (!window.print) document.documentElement.classList.add('no-print') // @see Firefox Android a perdu sa fonction d'impression...
 
 // @see https://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript
 // @deprecated Script remplacé par règle CSS @media (hover hover) and (pointer fine)
@@ -27,13 +27,15 @@ const touchDetect = (() => {
 // @description Expérience hors ligne pour application web progressive (PWA)
 // -----------------------------------------------------------------------------
 
-const registerServiceWorker = async () => { // @see https://developer.mozilla.org/fr/docs/Web/API/Service_Worker_API/Using_Service_Workers
+const registerServiceWorker = async () => {
+  // @see https://developer.mozilla.org/fr/docs/Web/API/Service_Worker_API/Using_Service_Workers
   if ('serviceWorker' in navigator) {
     try {
       const registration = await navigator.serviceWorker.register('/sw.js')
-      if (registration.installing) console.log("Installation du service worker en cours")
-      else if (registration.waiting) console.log("Service worker installé")
-      else if (registration.active) console.log("Service worker actif")
+      if (registration.installing)
+        console.log('Installation du service worker en cours')
+      else if (registration.waiting) console.log('Service worker installé')
+      else if (registration.active) console.log('Service worker actif')
     } catch (error) {
       console.error(`L'enregistrement du service worker a échoué : ${error}`)
     }
@@ -53,42 +55,53 @@ registerServiceWorker()
  * @param {string} hook : le placement du script, 'head' ou 'footer', footer par défaut.
  */
 
-const getScript = (url, hook = 'footer') => new Promise((resolve, reject) => { // @see https://stackoverflow.com/questions/16839698#61903296
-  const script = document.createElement('script')
-  script.src = url
-  script.async = 1
-  script.onerror = reject
-  script.onload = script.onreadystatechange = () => {
-    const loadState = this.readyState
-    if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
-    script.onload = script.onreadystatechange = null
-    resolve()
-  }
-  if (hook === 'footer') document.body.appendChild(script)
-  else if (hook === 'head') document.head.appendChild(script)
-  else console.error("Error: le choix de l'élement html pour getScript() n'est pas correct.")
-})
+const getScript = (url, hook = 'footer') =>
+  new Promise((resolve, reject) => {
+    // @see https://stackoverflow.com/questions/16839698#61903296
+    const script = document.createElement('script')
+    script.src = url
+    script.async = 1
+    script.onerror = reject
+    script.onload = script.onreadystatechange = () => {
+      const loadState = this.readyState
+      if (loadState && loadState !== 'loaded' && loadState !== 'complete')
+        return
+      script.onload = script.onreadystatechange = null
+      resolve()
+    }
+    if (hook === 'footer') document.body.appendChild(script)
+    else if (hook === 'head') document.head.appendChild(script)
+    else
+      console.error(
+        "Error: le choix de l'élement html pour getScript() n'est pas correct."
+      )
+  })
 
 const getScripts = (() => {
   //if (document.querySelector('.masonry')) getScript('/scripts/masonry.js')
-  if (document.querySelector('[class*=validation]')) getScript('/scripts/formValidation.js')
-  if (document.querySelector('[class*=-focus]')) getScript('/scripts/imageFocus.js')
-  if (document.querySelector('[class*=accordion]')) getScript('/scripts/accordion.js')
+  if (document.querySelector('[class*=validation]'))
+    getScript('/scripts/formValidation.js')
+  if (document.querySelector('[class*=-focus]'))
+    getScript('/scripts/imageFocus.js')
+  if (document.querySelector('[class*=accordion]'))
+    getScript('/scripts/accordion.js')
   //if (document.querySelector('[class*=tabs]')) getScript('/scripts/tab.js')
   if (document.querySelector('.pre')) getScript('/scripts/codeBlock.js')
   //if (document.querySelector('.input [type=password]')) getScript('/scripts/readablePassword.js')
   if (document.querySelector('[class^=range]')) getScript('/scripts/range.js')
-  if (document.querySelector('.add-line-marks')) getScript('/scripts/lineMark.js')
+  if (document.querySelector('.add-line-marks'))
+    getScript('/scripts/lineMark.js')
   //if (document.querySelector('pie-chart')) getScript('/scripts/pieChart.js')
   //if (document.querySelector('bar-chart')) getScript('/scripts/barChart.js')
   //if (document.querySelector('.media')) getScript('/scripts/development/mediaPlayer.js')
   if (document.querySelector('.video-youtube')) getScript('/scripts/youtube.js')
-  if (document.querySelector('.client-test')) getScript('/scripts/clientTest.js')
+  if (document.querySelector('.client-test'))
+    getScript('/scripts/clientTest.js')
   if (document.querySelector('.map')) getScript('/libraries/leaflet/leaflet.js')
   if (document.querySelector('.map')) getScript('/scripts/map.js')
-  if (document.querySelector('[class*=language-]')) getScript('/libraries/prism/prism.js')
+  if (document.querySelector('[class*=language-]'))
+    getScript('/libraries/prism/prism.js')
 })()
-
 
 // -----------------------------------------------------------------------------
 // @section     Get Styles
@@ -100,21 +113,24 @@ const getScripts = (() => {
  * @param {string} media : le media pour lequel les styles sont destinés, par défaut : 'all'
  */
 
- const getStyle = (url, media = 'all') => new Promise((resolve, reject) => { // @see https://stackoverflow.com/questions/16839698#61903296
-  const link = document.createElement('link')
-  link.rel= 'stylesheet'
-  link.href = url
-  link.media = media
-  //document.head.appendChild(link)
-  const target = document.querySelector('[rel=stylesheet]')
-  document.head.insertBefore(link, target.nextSibling)
-})
+const getStyle = (url, media = 'all') =>
+  new Promise((resolve, reject) => {
+    // @see https://stackoverflow.com/questions/16839698#61903296
+    const link = document.createElement('link')
+    link.rel = 'stylesheet'
+    link.href = url
+    link.media = media
+    //document.head.appendChild(link)
+    const target = document.querySelector('[rel=stylesheet]')
+    document.head.insertBefore(link, target.nextSibling)
+  })
 
 const getStyles = (() => {
-  if (document.querySelector('pre > code[class*=language]')) getStyle('/styles/prism.css', 'screen')
-  if (document.querySelector('[class*=map]')) getStyle('/libraries/leaflet/leaflet.css', 'screen, print')
+  if (document.querySelector('pre > code[class*=language]'))
+    getStyle('/styles/prism.css', 'screen')
+  if (document.querySelector('[class*=map]'))
+    getStyle('/libraries/leaflet/leaflet.css', 'screen, print')
 })()
-
 
 // -----------------------------------------------------------------------------
 // @section     Polyfills
@@ -125,14 +141,16 @@ const getStyles = (() => {
 // @see https://css-tricks.com/a-new-container-query-polyfill-that-just-works/
 // @note Conditional JS : plus performant que de passer par la détection d'une classe dans le HTML comme pour les autres scripts.
 const supportContainerQueries = 'container' in document.documentElement.style // Test support des Container Queries (ok pour Chrome, problème avec Firefox)
-const supportMediaQueriesRangeContext = window.matchMedia('(width > 0px)').matches // Test support des requêtes média de niveau 4 (Media Query Range Contexts).
+const supportMediaQueriesRangeContext =
+  window.matchMedia('(width > 0px)').matches // Test support des requêtes média de niveau 4 (Media Query Range Contexts).
 const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1 // @todo Solution temporaire pour Firefox.
 
 if (!supportContainerQueries || !supportMediaQueriesRangeContext || isFirefox) {
   getStyle('/styles/gridFallback.css', 'screen')
-  document.querySelectorAll('[class^=grid]').forEach(grid => grid.parentElement.classList.add('parent-grid')) // @affected Firefox =< v108 @note Compense le non support de :has() sur les grilles.
+  document
+    .querySelectorAll('[class^=grid]')
+    .forEach((grid) => grid.parentElement.classList.add('parent-grid')) // @affected Firefox =< v108 @note Compense le non support de :has() sur les grilles.
 }
-
 
 // -----------------------------------------------------------------------------
 // @section     Utilities
@@ -145,8 +163,7 @@ if (!supportContainerQueries || !supportMediaQueriesRangeContext || isFirefox) {
 //}
 
 const fadeOut = (el, duration) => {
-  el.style.opacity = 1
-  (function fade() {
+  el.style.opacity = 1(function fade() {
     if ((el.style.opacity -= 30 / duration) < 0) {
       el.style.opacity = 0 // reset derrière la décrémentation
       el.style.display = 'none'
@@ -158,17 +175,15 @@ const fadeOut = (el, duration) => {
 
 const fadeIn = (el, duration) => {
   el.style.opacity = 0
-  el.style.display = 'block'
-  (function fade() {
+  el.style.display = 'block'(function fade() {
     let op = parseFloat(el.style.opacity)
     if (!((op += 30 / duration) > 1)) {
       el.style.opacity = op
       requestAnimationFrame(fade)
     }
-    if (op > .99) el.style.opacity = 1 // reset derrière l'incrémentation
+    if (op > 0.99) el.style.opacity = 1 // reset derrière l'incrémentation
   })()
 }
-
 
 // -----------------------------------------------------------------------------
 // @section     Sprites SVG
@@ -182,10 +197,11 @@ const fadeIn = (el, duration) => {
 const injectSvgSprite = (targetElement, spriteId, svgFile) => {
   const path = '/sprites/' // Chemin des fichiers de sprites SVG
   svgFile = svgFile || 'util'
-  const icon = `<svg role="img" focusable="false"><use href="${path + svgFile}.svg#${spriteId}"></use></svg>`
+  const icon = `<svg role="img" focusable="false"><use href="${
+    path + svgFile
+  }.svg#${spriteId}"></use></svg>`
   targetElement.insertAdjacentHTML('beforeEnd', icon)
 }
-
 
 // -----------------------------------------------------------------------------
 // @section     External links
@@ -195,18 +211,19 @@ const injectSvgSprite = (targetElement, spriteId, svgFile) => {
 // @note Par défaut tous les liens externes conduisent à l'ouverture d'un nouvel onglet, sauf les liens internes
 
 const externalLinks = (() => {
-  document.querySelectorAll('a').forEach(a => {
-    if (a.hostname !== window.location.hostname) a.setAttribute('target', '_blank')
+  document.querySelectorAll('a').forEach((a) => {
+    if (a.hostname !== window.location.hostname)
+      a.setAttribute('target', '_blank')
   })
 })()
-
 
 // -----------------------------------------------------------------------------
 // @section     Cmd Print
 // @description Commande pour l'impression
 // -----------------------------------------------------------------------------
 
-for (const print of document.querySelectorAll('.cmd-print')) print.onclick = () => window.print()
+for (const print of document.querySelectorAll('.cmd-print'))
+  print.onclick = () => window.print()
 
 // -----------------------------------------------------------------------------
 // @section     GDPR / gprd
@@ -224,27 +241,37 @@ const gdpr = (() => {
   const panel = document.getElementById('gdpr-see')
   const trueConsentButton = document.getElementById('gdpr-true-consent')
   const falseConsentButton = document.getElementById('gdpr-false-consent')
-  if (localStorage.getItem('gdprConsent') === 'yes') panel.style.display = 'none'
-  trueConsentButton.addEventListener('click', () => {
-    localStorage.setItem('gdprConsent', 'yes')
+  if (localStorage.getItem('gdprConsent') === 'yes')
     panel.style.display = 'none'
-  }, false)
-  falseConsentButton.addEventListener('click', () => {
-    localStorage.setItem('gdprConsent', 'no')
-    panel.style.display = 'none' // 'grid'
-  }, false)
+  trueConsentButton.addEventListener(
+    'click',
+    () => {
+      localStorage.setItem('gdprConsent', 'yes')
+      panel.style.display = 'none'
+    },
+    false
+  )
+  falseConsentButton.addEventListener(
+    'click',
+    () => {
+      localStorage.setItem('gdprConsent', 'no')
+      panel.style.display = 'none' // 'grid'
+    },
+    false
+  )
 })()
-
 
 // -----------------------------------------------------------------------------
 // @section     Dates
 // @description Champs pour les dates
 // -----------------------------------------------------------------------------
 
-const dateInputToday = (() => { // @note Date du jour si présence de la classe 'today-date' @see https://css-tricks.com/prefilling-date-input/
-  document.querySelectorAll('input[type=date].today-date').forEach(e => e.valueAsDate = new Date()) // @bugfixed Semble problématique sur certains navigateurs. @todo À voir dans le temps.
+const dateInputToday = (() => {
+  // @note Date du jour si présence de la classe 'today-date' @see https://css-tricks.com/prefilling-date-input/
+  document
+    .querySelectorAll('input[type=date].today-date')
+    .forEach((e) => (e.valueAsDate = new Date())) // @bugfixed Semble problématique sur certains navigateurs. @todo À voir dans le temps.
 })()
-
 
 // -----------------------------------------------------------------------------
 // @section     Multiple Select
@@ -252,10 +279,11 @@ const dateInputToday = (() => { // @note Date du jour si présence de la classe 
 // -----------------------------------------------------------------------------
 
 const multipleSelectCustom = (() => {
-  document.querySelectorAll('.input select[multiple]').forEach(select => {
+  document.querySelectorAll('.input select[multiple]').forEach((select) => {
     const maxLength = 7,
-          length = select.length
-    if(length < maxLength) { // @note Permet d'afficher toutes les options du sélecteur multiple à l'écran (pour les desktops)
+      length = select.length
+    if (length < maxLength) {
+      // @note Permet d'afficher toutes les options du sélecteur multiple à l'écran (pour les desktops)
       select.size = length
       select.style.overflow = 'hidden'
     } else {
@@ -264,23 +292,23 @@ const multipleSelectCustom = (() => {
   })
 })()
 
-
 // -----------------------------------------------------------------------------
 // @section     Color inputs
 // @description Champs pour les couleurs
 // -----------------------------------------------------------------------------
 
 const colorInput = (() => {
-  document.querySelectorAll('.input:has([type=color] + output) input').forEach(input => {
-    const output = input.nextElementSibling
-    output.textContent = input.value
-    input.oninput = function() {
-      this.value = this.value
-      output.textContent = this.value
-    }
-  })
+  document
+    .querySelectorAll('.input:has([type=color] + output) input')
+    .forEach((input) => {
+      const output = input.nextElementSibling
+      output.textContent = input.value
+      input.oninput = function () {
+        this.value = this.value
+        output.textContent = this.value
+      }
+    })
 })()
-
 
 // -----------------------------------------------------------------------------
 // @section     Scroll To Top
@@ -292,7 +320,7 @@ const colorInput = (() => {
 
 const scrollToTop = (() => {
   const footer = document.querySelector('.footer'),
-        button = document.createElement('button')
+    button = document.createElement('button')
   button.type = 'button'
   button.classList.add('scroll-top')
   button.setAttribute('aria-label', 'Scroll to top')
@@ -300,15 +328,17 @@ const scrollToTop = (() => {
   footer.appendChild(button)
   const item = document.querySelector('.scroll-top')
   item.classList.add('hide')
-  const position = () => { // 1
+  const position = () => {
+    // 1
     const yy = window.innerHeight / 2 // 2
     let y = window.scrollY
     if (y > yy) item.classList.remove('hide')
     else item.classList.add('hide')
   }
   window.addEventListener('scroll', position)
-  const scroll = () => { // 3
-    window.scrollTo({top: 0})
+  const scroll = () => {
+    // 3
+    window.scrollTo({ top: 0 })
   }
   item.addEventListener('click', scroll, false)
 })()
@@ -337,7 +367,6 @@ if (sb != 'auto') html.style.scrollBehavior = ''
 window.scrollTo({top: 0})
 */
 
-
 // -----------------------------------------------------------------------------
 // @section     Navigation
 // @description Menu principal
@@ -345,17 +374,20 @@ window.scrollTo({top: 0})
 
 const mainMenu = (() => {
   const button = document.querySelector('.cmd-nav'),
-        subNav = document.querySelector('.sub-nav'),
-        content = document.querySelectorAll('body > :not(.nav')
+    subNav = document.querySelector('.sub-nav'),
+    content = document.querySelectorAll('body > :not(.nav')
   button.addEventListener('click', () => {
     document.documentElement.classList.toggle('active')
     document.body.classList.toggle('active')
     button.classList.toggle('active')
     subNav.classList.toggle('active')
-    content.forEach(e => e.hasAttribute('inert') ? e.removeAttribute('inert') : e.setAttribute('inert', ''))
+    content.forEach((e) =>
+      e.hasAttribute('inert')
+        ? e.removeAttribute('inert')
+        : e.setAttribute('inert', '')
+    )
   })
 })()
-
 
 // -----------------------------------------------------------------------------
 // @section     Drop cap
@@ -367,11 +399,16 @@ const mainMenu = (() => {
 // @todo À convertir côté backend dans un helper.
 
 const addDropCap = (() => {
-  document.querySelectorAll('.add-drop-cap > p:first-child').forEach(
-    e => e.innerHTML = e.innerHTML.replace(/^(\w)/, '<span class="drop-cap">$1</span>')
-  )
+  document
+    .querySelectorAll('.add-drop-cap > p:first-child')
+    .forEach(
+      (e) =>
+        (e.innerHTML = e.innerHTML.replace(
+          /^(\w)/,
+          '<span class="drop-cap">$1</span>'
+        ))
+    )
 })()
-
 
 // -----------------------------------------------------------------------------
 // @section     Postponed footnotes
@@ -391,7 +428,6 @@ const footnotes = (() => {
   }
 })()
 */
-
 
 // -----------------------------------------------------------------------------
 // @section     Horizontal progress bar
@@ -428,8 +464,11 @@ function buttonEffect(e) {
   const frame = e.dataset.frame
   if ('vibrate' in navigator) navigator.vibrate(frame ? frame : 200)
 }
-document.querySelectorAll('button[class*=button]').forEach(e => e && e.addEventListener('click', () => buttonEffect(e), false))
-
+document
+  .querySelectorAll('button[class*=button]')
+  .forEach(
+    (e) => e && e.addEventListener('click', () => buttonEffect(e), false)
+  )
 
 /*
 Mode "application" ou "navigateur" :
@@ -439,4 +478,3 @@ window.matchMedia('(display-mode: standalone)').addEventListener('change', e => 
 })
 console.log('DISPLAY_MODE_CHANGED', displayMode)
 */
-

@@ -15,16 +15,14 @@
  */
 
 const youtubeVideo = (() => {
-
-  document.querySelectorAll('.video-youtube').forEach(e => {
-
+  document.querySelectorAll('.video-youtube').forEach((e) => {
     const id = e.dataset.id
     const json = `https://youtube.com/oembed?url=http://youtube.com/watch?v=${id}` // Par défaut : `&format=json` ; alternative : `&format=xml`
     //const maxThumbnail = `https://img.youtube.com/vi/${id}/maxresdefault.jpg` // Qualité pas toujours disponible.
 
     fetch(json)
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         const el = document.createElement('div')
         el.classList.add('thumbnail-youtube')
         el.style.backgroundImage = `url(${data.thumbnail_url})`
@@ -41,14 +39,12 @@ const youtubeVideo = (() => {
           e.appendChild(iframe)
         })
       })
-      .catch(error => {
+      .catch((error) => {
         const div = document.createElement('div')
         div.classList.add('thumbnail-youtube')
         div.innerHTML = `<div class="video-youtube-error">Erreur : cette vidéo n'existe pas !<br>(ou a été supprimée...)<br><svg class="icon scale250" role="img" focusable="false"><use href="/sprites/util.svg#space-invader"></use></svg></div>`
         e.appendChild(div)
         console.error('Une requête pour une vidéo YouTube a échoué.')
       })
-
   })
-
 })()

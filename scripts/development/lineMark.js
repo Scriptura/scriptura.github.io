@@ -22,7 +22,9 @@ const lineMarks = elements => {
   }
 }
 
-lineMarks('.add-line-marks > :where(p, h2, h3, h4, h5, h6, blockquote, ul, ol, [class*=grid])') // @note Pour un meilleur contrôle il est préférable de définir explicitement les items plutôt que d'utiliser le sélecteur universel '*' et de procéder par exclusion.
+lineMarks(
+  '.add-line-marks > :where(p, h2, h3, h4, h5, h6, blockquote, ul, ol, [class*=grid])',
+) // @note Pour un meilleur contrôle il est préférable de définir explicitement les items plutôt que d'utiliser le sélecteur universel '*' et de procéder par exclusion.
 
 /**
  * @description Si URL avec un hash, alors défilement jusqu'à l'ID cible.
@@ -31,8 +33,9 @@ lineMarks('.add-line-marks > :where(p, h2, h3, h4, h5, h6, blockquote, ul, ol, [
  * @note Limitation du scope aux ancres `#mark*`.
  */
 const hash = window.location.hash
-if (hash.substring(0, 5) === '#mark') window.addEventListener('load', () => {
-  const scroll = () => document.querySelector(hash).scrollIntoView()
-  //setTimeout(scroll, 2000) // @note Correction du fonctionnement après un laps de temps. 
-  scroll()
-})
+if (hash.substring(0, 5) === '#mark')
+  window.addEventListener('load', () => {
+    const scroll = () => document.querySelector(hash).scrollIntoView()
+    //setTimeout(scroll, 2000) // @note Correction du fonctionnement après un laps de temps.
+    scroll()
+  })

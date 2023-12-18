@@ -1,19 +1,22 @@
 'use strict'
 
 const imageFocus = (() => {
-
   const focusItems = document.querySelectorAll('[class*=-focus]'),
-        targetClass = 'picture-area',
-        content = document.querySelectorAll('body > :not(.picture-area')
+    targetClass = 'picture-area',
+    content = document.querySelectorAll('body > :not(.picture-area')
 
   const freezePage = () => {
     document.documentElement.classList.toggle('freeze') // @note Ne pas proposer la classe sur le body sinon effet de scrool lors du dézoom. @affected Chrome et, dans une moindre mesure, Firefox.
-    content.forEach(e => e.hasAttribute('inert') ? e.removeAttribute('inert') : e.setAttribute('inert', ''))
+    content.forEach(e =>
+      e.hasAttribute('inert')
+        ? e.removeAttribute('inert')
+        : e.setAttribute('inert', ''),
+    )
   }
 
   const cloneImage = item => {
     const image = item.querySelector('img'),
-          clone = image.cloneNode(true)
+      clone = image.cloneNode(true)
     document.body.appendChild(clone)
     wrapClone(clone)
     focusRemove(image)
@@ -37,7 +40,7 @@ const imageFocus = (() => {
 
   const addControlButtons = () => {
     const el = document.getElementsByClassName(targetClass)[0],
-          shrinkButton = document.createElement('button')
+      shrinkButton = document.createElement('button')
     const fullscreenButton = document.createElement('button')
     injectSvgSprite(shrinkButton, 'minimize')
     shrinkButton.classList.add('shrink-button')
@@ -52,7 +55,7 @@ const imageFocus = (() => {
     }
   }
 
-  const focusEvent = (item) => {
+  const focusEvent = item => {
     item.addEventListener('click', () => {
       cloneImage(item)
       freezePage()
@@ -61,23 +64,23 @@ const imageFocus = (() => {
 
   const focusRemove = image => {
     const el = document.getElementsByClassName(targetClass)[0],
-          shrinkButton = el.querySelector('.shrink-button'),
-          button = image.parentElement.parentElement.querySelector('button')
-      shrinkButton.addEventListener('click', () => {
+      shrinkButton = el.querySelector('.shrink-button'),
+      button = image.parentElement.parentElement.querySelector('button')
+    shrinkButton.addEventListener('click', () => {
       el.remove()
       freezePage()
       button.focus() // @note Retour du focus sur le bouton de l'image cliquée au départ.
     })
   }
-  
+
   const fullscreen = item => {
     const fullscreenButton = document.querySelector('.fullscreen-button')
-    document.fullscreenEnabled && fullscreenButton.addEventListener('click', () => item.requestFullscreen())
+    document.fullscreenEnabled &&
+      fullscreenButton.addEventListener('click', () => item.requestFullscreen())
   }
 
   focusItems.forEach(item => {
     addFocusButton(item)
     focusEvent(item)
   })
-
 })()

@@ -21,7 +21,7 @@ const selectText = node => {
 const selectAndCopy = (() => {
   document.querySelectorAll('.pre > code:not(:empty)').forEach(el => {
     const button = document.createElement('button'),
-          text = el.dataset.select || 'Select and copy'
+      text = el.dataset.select || 'Select and copy'
     button.type = 'button'
     if (el.offsetHeight < 30) button.classList.add('copy-offset')
     el.parentElement.appendChild(button)
@@ -42,9 +42,9 @@ const selectAndCopy = (() => {
 const addTitleCodeBlock = (() => {
   document.querySelectorAll('.pre').forEach(el => {
     const item = document.createElement('div'),
-          span = document.createElement('span'),
-          reqText = el.children[0].dataset.code,
-          text = document.createTextNode(reqText)
+      span = document.createElement('span'),
+      reqText = el.children[0].dataset.code,
+      text = document.createTextNode(reqText)
     el.appendChild(item)
     injectSvgSprite(item, 'code')
     if (reqText) {

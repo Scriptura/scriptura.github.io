@@ -1,13 +1,12 @@
 // @documentation @see https://developer.mozilla.org/fr/docs/Web/API/Service_Worker_API/Using_Service_Workers
 // @note Ce code s'exécute dans son propre worker ou thread :
 
-
-const addResourcesToCache = async resources => {
+const addResourcesToCache = async (resources) => {
   const cache = await caches.open('v6')
   await cache.addAll(resources)
 }
 
-self.addEventListener('install', event => {
+self.addEventListener('install', (event) => {
   event.waitUntil(
     addResourcesToCache([
       '/',

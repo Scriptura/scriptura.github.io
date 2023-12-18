@@ -25,9 +25,10 @@ $wrap: 90em + $gap * 2; // @note La fonction calc() n'est pas implémentée pour
   --fontList1: 'Noto Sans', sans-serif;
   --fontList2: 'Noto Serif', serif;
 
-  // @subsection Colors
+  // @subsection Color themes
 
   // Dark theme
+  --color-scheme: dark;
   --colorT: hsl(35, 45%, 84%);     // couleur primaire du texte
   --colorT2: hsl(34, 44%, 69%);    // couleur secondaire du texte
   --colorG: hsl(0, 0%, 22%);       // gris de référence
@@ -43,17 +44,19 @@ $wrap: 90em + $gap * 2; // @note La fonction calc() n'est pas implémentée pour
 
   /*
   // Light theme
+  --color-scheme: light;
   --colorT: hsl(9, 63%, 16%);      // couleur primaire du texte
   --colorT2: hsl(34, 20%, 45%);    // couleur secondaire du texte
   --colorG: hsl(0, 0%, 22%);       // gris de référence
   --colorW: hsl(0, 0%, 100%);      // blanc de référence
+  --colorB: hsl(0, 0%, 0%);        // noir de référence
   --color1: hsl(55, 100%, 95%);    // couleur de fond
   --color2: hsl(9, 100%, 64%);     // couleur dominante 2 (tomato)
   --color3: hsl(12, 63%, 49%);     // couleur secondaire
   --color4: hsl(154, 69%, 42%);    // couleur secondaire
   --color5: hsl(60, 63%, 67%);     // couleur secondaire
   --color6: hsl(207, 47%, 68%);    // couleur secondaire
-  --colorS: rgba(255, 99, 71, .5); // dérivée de --color2
+  --colorS: rgba(255, 99, 71, .5); // dérivée de `--color2`
   */
 
   // @subsection Shadows
