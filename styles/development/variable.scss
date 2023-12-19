@@ -2,45 +2,64 @@
 
 // @subsection Breakpoints
 // @bugfix Nécessité de préciser deux chiffres après la virgule pour éviter un arrondissement de la valeur par les navigateurs, créant ainsi la possibilité d'un décalage entre 'max-width' et 'min-width' sur les media queries.
-$sizeXS:   35.01em;
-$sizeS:    50.01em;
-$sizeM:    70.01em;
-$sizeL:    92.01em;
-$sizeXL:  120.01em; // @todo : Valeur non utilisée pour l'instant.
+$sizeXS: 35.01em;
+$sizeS: 50.01em;
+$sizeM: 70.01em;
+$sizeL: 92.01em;
+$sizeXL: 120.01em; // @todo : Valeur non utilisée pour l'instant.
 $sizeXXL: 140.01em; // @note Idem.
-$sizeNav:  90.01em; // @note À caler sur la taille du contenu de '.nav-main ul'. @note Prévoir de la marge en raison des différences d'interprétation des fonts selon les navigateurs
+$sizeNav: 90.01em; // @note À caler sur la taille du contenu de '.nav-main ul'. @note Prévoir de la marge en raison des différences d'interprétation des fonts selon les navigateurs
 
 // @subsection Grid
 $gap: 1em;
 $wrap: 90em + $gap * 2; // @note La fonction calc() n'est pas implémentée pour les media queries, ou alors partiellement (unité de même type). @see https://stackoverflow.com/questions/23667208 @todo À réévaluer dans le temps...
 
-
 :root {
-
-  --gap: #{$gap};   // Gouttière, largeur entre deux modules (en unité em/rem)
+  --gap: #{$gap}; // Gouttière, largeur entre deux modules (en unité em/rem)
   --wrap: #{$wrap}; // Largeur maximale du contenu (+ prise en compte du padding interne)
 
   // @subsection  Web fonts
   // @note Le chargement des polices via @font-face est fortement recommandé pour ne pas dépendre de l'environnement de l'utilisateur. Ce qui permet d'avoir la maitrise du design du site. Les CDNs sont un mal à proscrire également.
-  --fontList1: 'Noto Sans', sans-serif;
-  --fontList2: 'Noto Serif', serif;
+  --font-list1: 'Noto Sans', sans-serif;
+  --font-list2: 'Noto Serif', serif;
 
   // @subsection Color themes
 
   // Dark theme
   --color-scheme: dark;
-  --colorT: hsl(35, 45%, 84%);     // couleur primaire du texte
-  --colorT2: hsl(34, 44%, 69%);    // couleur secondaire du texte
-  --colorG: hsl(0, 0%, 22%);       // gris de référence
-  --colorW: hsl(0, 0%, 100%);      // blanc de référence
-  --colorB: hsl(0, 0%, 0%);        // noir de référence
-  --color1: var(--colorG);           // couleur de fond
-  --color2: hsl(9, 100%, 64%);     // couleur dominante 2 (tomato)
-  --color3: hsl(12, 63%, 49%);     // couleur secondaire
-  --color4: hsl(96, 41%, 29%);     // couleur secondaire
-  --color5: hsl(39, 100%, 50%);    // couleur secondaire
-  --color6: hsl(207, 22%, 39%);    // couleur secondaire
-  --colorS: hsl(9, 100%, 64%, .5); // dérivée de `--color2`
+  --colorT: hsl(35, 45%, 84%); // couleur primaire du texte
+  --colorT2: hsl(34, 44%, 69%); // couleur secondaire du texte
+  --colorG: hsl(0, 0%, 22%); // gris de référence
+  --colorW: hsl(0, 0%, 100%); // blanc de référence
+  --colorB: hsl(0, 0%, 0%); // noir de référence
+  --color1: var(--colorG); // couleur de fond
+  --color2: hsl(9, 100%, 64%); // couleur dominante 2 (tomato)
+  --color3: hsl(12, 63%, 49%); // couleur secondaire
+  --color4: hsl(96, 41%, 29%); // couleur secondaire
+  --color5: hsl(39, 100%, 50%); // couleur secondaire
+  --color6: hsl(207, 22%, 39%); // couleur secondaire
+  --colorG: hsl(0, 0%, 22%);
+  --colorA005: hsla(0, 0%, 100%, 0.05);
+  --colorA1: hsla(0, 0%, 100%, 0.1);
+  --colorA15: hsla(0, 0%, 100%, 0.15);
+  --colorA2: hsla(0, 0%, 100%, 0.2);
+  --colorA3: hsla(0, 0%, 100%, 0.3);
+  --colorA7: hsla(0, 0%, 100%, 0.7);
+  --colorA5: hsla(0, 0%, 100%, 0.5);
+  --colorAB0: hsla(0, 0%, 0%, 0);
+  --colorAB1: hsla(0, 0%, 0%, 0.1);
+  --colorAB2: hsla(0, 0%, 0%, 0.2);
+  --colorAB25: hsla(0, 0%, 0%, 0.25);
+  --colorAB005: hsla(0, 0%, 0%, 0.05);
+  --colorAB3: hsla(0, 0%, 0%, 0.3);
+  --colorAB4: hsla(0, 0%, 0%, 0.4);
+  --colorAB5: hsla(0, 0%, 0%, 0.5);
+  --colorAB7: hsla(0, 0%, 0%, 0.7);
+  --colorAB8: hsla(0, 0%, 0%, 0.8);
+  --colorAS2: hsl(9, 100%, 64%, 0.5); // dérivée de `--color2`
+  --colorAS22: hsla(0, 100%, 50%, 0.3);
+  --colorS4: hsl(96, 41%, 53%);
+  --colorS5: hsla(30, 31%, 54%);
 
   /*
   // Light theme
@@ -62,7 +81,8 @@ $wrap: 90em + $gap * 2; // @note La fonction calc() n'est pas implémentée pour
   // @subsection Shadows
   // @note Seules les ombres de référence - et donc redontantes - sont placées ici, les autres sont directement intégrées à leur propriété.
   --shadow1: 0.5rem 0.5rem 2rem hsla(0, 0%, 0%, 0.15);
-  --shadow2: inset 0 0 0.1em hsla(0, 0%, 0%, 0.3), 0 0.5rem 2rem hsla(0, 0%, 0%, 0.3); // ombres interieures en em, ombres exterieures en rem
+  --shadow2: inset 0 0 0.1em hsla(0, 0%, 0%, 0.3),
+    0 0.5rem 2rem hsla(0, 0%, 0%, 0.3); // ombres interieures en em, ombres exterieures en rem
   --shadow3: 0 0 1.5rem hsla(0, 0%, 0%, 0.2);
   --shadow4: 0 1.5rem 2rem hsla(0, 0%, 0%, 0.4);
   --shadow5: 0 0 2rem hsla(0, 0%, 0%, 0.2);
@@ -72,7 +92,6 @@ $wrap: 90em + $gap * 2; // @note La fonction calc() n'est pas implémentée pour
   //--shadow9: 0 0 0 1000em #222; // Ombre spécifique pour remplacer éventuellement le background-color d'un élément parent.
 
   // @subsection Rounds
-  --r1: .3em;  // Boites
-  --r2: .3em;  // Éléments internes
-
+  --r1: 0.3em; // Boites
+  --r2: 0.3em; // Éléments internes
 }

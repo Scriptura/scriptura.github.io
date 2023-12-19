@@ -14,7 +14,7 @@ html {
   -webkit-text-size-adjust: 100%;
   color: var(--colorT);
   background-color: var(--color1);
-  font-family: var(--fontList1);
+  font-family: var(--font-list1);
   line-height: 1.5;
   scroll-behavior: smooth;
 }
@@ -27,12 +27,13 @@ html {
 
 ::selection {
   color: var(--colorW);
-  background-color: var(--colorS);
+  background-color: var(--colorAS2);
 }
 
 a {
   color: var(--colorT2);
   text-underline-offset: 10%;
+
   &:where(:focus, :hover, :active) {
     color: var(--colorW);
     text-decoration: none;
@@ -53,7 +54,7 @@ hr {
   background-image: repeating-linear-gradient(
     -45deg,
     transparent 0 5px,
-    hsla(0, 0%, 100%, 0.1) 5px 10px
+    var(--colorA1) 5px 10px
   );
   border: none;
 }
@@ -70,7 +71,7 @@ h6,
 .h4,
 .h5,
 .h6 {
-  font-family: var(--fontList2);
+  font-family: var(--font-list2);
   text-wrap: balance;
 }
 
@@ -255,7 +256,7 @@ ruby * {
 
 .main-heading {
   word-wrap: break-word;
-  text-shadow: 0.2em 0.2em 0.2em hsla(0, 0%, 0%, 0.3);
+  text-shadow: 0.2em 0.2em 0.2em var(--colorAB3);
 }
 
 .main-heading span {
@@ -280,7 +281,7 @@ hr[data-hr]::after,
   height: 100%;
   font-size: 2em;
   text-align: center;
-  color: hsla(0, 0%, 100%, 0.2);
+  color: var(--colorA2);
 }
 
 .decorative-hr hr::after {
@@ -294,7 +295,7 @@ hr[data-hr]::after,
   background: repeating-linear-gradient(
       -45deg,
       transparent 0 5px,
-      hsla(0, 0%, 100%, 0.1) 5px 10px
+      var(--colorA1) 5px 10px
     )
     no-repeat;
   background-size: 0.5em 100%;
@@ -306,7 +307,7 @@ hr[data-hr]::after,
     line-height: 0.5;
     font-size: 3rem;
     color: var(--color2);
-    font-family: var(--fontList2);
+    font-family: var(--font-list2);
   }
 
   &::before {
@@ -764,7 +765,7 @@ main {
 .logo-nav {
   grid-area: logo;
   display: block;
-  box-shadow: 0.5rem 0.5rem 0.5rem hsla(0, 0%, 0%, 0.2);
+  box-shadow: 0.5rem 0.5rem 0.5rem var(--colorAB2);
   background-color: var(--color2);
 
   &::after {
@@ -792,7 +793,7 @@ a.logo-nav:hover::after {
 
 .sub-nav {
   grid-area: subnav;
-  box-shadow: 0.5rem 0.5rem 0.5rem hsla(0, 0%, 0%, 0.2);
+  box-shadow: 0.5rem 0.5rem 0.5rem var(--colorAB2);
   display: flex;
   width: 100%;
   margin: 0;
@@ -806,7 +807,7 @@ a.logo-nav:hover::after {
     display: block;
     padding: 0 1em;
     line-height: 2.5;
-    box-shadow: inset 0.5rem 0.5rem 0.5rem hsla(0, 0%, 0%, 0.2);
+    box-shadow: inset 0.5rem 0.5rem 0.5rem var(--colorAB2);
   }
 
   & .current {
@@ -817,12 +818,12 @@ a.logo-nav:hover::after {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    color: var(--colorT2);
+    //color: var(--colorT2);
     text-decoration: none;
   }
 
   & a:where(:focus, :hover, :active) {
-    color: var(--colorW);
+    //color: var(--colorW);
     background-color: var(--color2);
   }
 
@@ -907,7 +908,7 @@ a.logo-nav:hover::after {
       inset: 0;
       width: 100vw;
       height: 100vh;
-      background-color: hsla(0, 0%, 0%, 0.7);
+      background-color: var(--colorAB7);
     }
     & :where(main, footer, aside) {
       user-select: none;
@@ -1051,7 +1052,7 @@ a.logo-nav:hover::after {
 
   & li {
     list-style: none;
-    filter: drop-shadow(0.5rem 0.5rem 0.5rem hsla(0, 0%, 0%, 0.25));
+    filter: drop-shadow(0.5rem 0.5rem 0.5rem var(--colorAB25));
     overflow: hidden;
 
     & a:where(:focus, :hover, :active) {
@@ -1105,7 +1106,7 @@ a.logo-nav:hover::after {
     }
 
     & + li {
-      margin-inline-start: -1em;
+      margin-inline-start: calc(-1 * var(--gap));
     }
   }
 }
@@ -1379,7 +1380,7 @@ svg {
 
 .decorative-svg {
   fill: var(--colorT2);
-  filter: drop-shadow(0.2em 0.2em 0.2em hsla(0, 0%, 0%, 0.3));
+  filter: drop-shadow(0.2em 0.2em 0.2em var(--colorAB3));
 }
 
 .icon,
@@ -1455,7 +1456,7 @@ figure {
   cursor: zoom-in;
   transition: 0.15s transform;
   &:where(:focus-within, :hover) {
-    box-shadow: 0.5em 0.5em 2em hsla(0, 0%, 0%, 0.3);
+    box-shadow: 0.5em 0.5em 2em var(--colorAB3);
     transform: scale(1.01);
   }
 }
@@ -1574,7 +1575,7 @@ video {
 ::cue {
   line-height: 1.5;
   font-size: 2em;
-  background-color: hsla(0, 0%, 0%, 0.4);
+  background-color: var(--colorAB4);
 }
 
 @media (min-width: #{$sizeXS}) {
@@ -1590,7 +1591,7 @@ audio.media {
 video.media {
   display: block;
   background-color: var(--colorB);
-  box-shadow: 0.5rem 0.5rem 2rem hsla(0, 0%, 0%, 0.25);
+  box-shadow: 0.5rem 0.5rem 2rem var(--colorAB25);
 }
 
 .media-player {
@@ -1971,7 +1972,7 @@ video + .media-player {
       cursor: pointer;
 
       & svg {
-        fill: hsla(0, 0%, 100%, 0.7);
+        fill: var(--colorA7);
       }
 
       &:where(:focus, :hover) svg {
@@ -1990,7 +1991,7 @@ video + .media-player {
     white-space: nowrap;
     text-align: right;
     text-overflow: ellipsis;
-    text-shadow: 0 0 0.2em hsla(0, 0%, 0%, 0.8);
+    text-shadow: 0 0 0.2em var(--colorAB8);
   }
 }
 
@@ -2064,7 +2065,7 @@ video + .media-player {
 }
 
 .map-vintage::before {
-  background-image: radial-gradient(var(--colorB), hsl(30, 31%, 54%));
+  background-image: radial-gradient(var(--colorAB0), var(--colorS5));
 }
 
 .map-vintage::after {
@@ -2103,7 +2104,7 @@ video + .media-player {
   z-index: -1;
   height: 4em;
   width: 4em;
-  border: 1em solid hsla(0, 100%, 50%, 0.3);
+  border: 1em solid var(--colorAS22);
   clip-path: polygon(
     45% 0%,
     55% 0%,
@@ -2131,7 +2132,7 @@ video + .media-player {
 }
 
 .marker-icon {
-  filter: drop-shadow(0.3em 0.3em 0.3em hsla(0, 0%, 0%, 0.5));
+  filter: drop-shadow(0.3em 0.3em 0.3em var(--colorAB5));
 }
 
 .marker-icon > :first-child {
@@ -2266,9 +2267,9 @@ samp {
   position: relative;
   min-height: 3em;
   padding: 1em;
-  background-color: hsl(0, 0%, 12%);
+  background-color: hsl(0, 0%, 13%);
   border-radius: 0.3em;
-  box-shadow: 0 0 2rem hsla(0, 0%, 0%, 0.3);
+  box-shadow: 0 0 2rem var(--colorAB3);
   line-height: 1.25em;
 
   &:where(:focus, :active) {
@@ -2732,9 +2733,9 @@ select {
   width: 100%;
   color: currentcolor;
   background-color: hsl(0, 0%, 14%) !important;
-  border: 2px solid hsl(0, 0%, 23%);
+  border: 2px solid var(--colorG);
   border-radius: 0.3em;
-  box-shadow: inset 0 0.2em 0.5em hsla(0, 0%, 0%, 0.2) !important;
+  box-shadow: inset 0 0.2em 0.5em var(--colorAB2) !important;
 }
 
 .input
@@ -2871,7 +2872,7 @@ select {
   padding: 0.2em 0.5em;
   font-family: monospace, monospace;
   color: var(--colorW);
-  background-color: hsla(0, 0%, 0%, 0.5);
+  background-color: var(--colorAB5);
   pointer-events: none;
 }
 
@@ -2928,10 +2929,10 @@ select {
   padding: 0.4em 1em;
   color: currentcolor;
   background-color: hsl(0, 0%, 14%);
-  border: 2px solid hsl(0, 0%, 23%);
+  border: 2px solid var(--colorG);
   border-right: none;
   border-radius: 1.5em 0 0 1.5em;
-  box-shadow: inset 0 0.2em 0.5em hsla(0, 0%, 0%, 0.2);
+  box-shadow: inset 0 0.2em 0.5em var(--colorAB2);
 }
 
 .search form input:focus,
@@ -2946,7 +2947,7 @@ select {
   background-color: var(--color2);
   border: none;
   border-radius: 0 1.5em 1.5em 0;
-  box-shadow: inset 0 0.2em 0.5em hsla(0, 0%, 0%, 0.2);
+  box-shadow: inset 0 0.2em 0.5em var(--colorAB2);
 }
 
 .search form button:focus,
@@ -2978,7 +2979,7 @@ input[type='radio']:not([role='switch']) {
   background-color: hsl(0, 0%, 15%);
   border: 0.15em solid var(--color1);
   outline: none;
-  box-shadow: inset 0 0.1em 0.3em hsla(0, 0%, 0%, 0.3);
+  box-shadow: inset 0 0.1em 0.3em var(--colorAB3);
   cursor: pointer;
 }
 
@@ -3046,7 +3047,7 @@ input[role='switch'] {
   background-color: hsl(0, 0%, 15%);
   border: 0.3em solid transparent;
   border-radius: 1.25em;
-  box-shadow: inset 0 0.2em 0.5em hsla(0, 0%, 0%, 0.2);
+  box-shadow: inset 0 0.2em 0.5em var(--colorAB2);
   cursor: pointer;
 }
 
@@ -3060,7 +3061,7 @@ input[role='switch']::before {
   color: var(--colorT);
   background-color: var(--color6);
   border-radius: 1.25em;
-  box-shadow: 0 0.2em 0.5em hsla(0, 0%, 0%, 0.3);
+  box-shadow: 0 0.2em 0.5em var(--colorAB3);
   transform: translate(-0.3em, -0.3em);
   transition: transform 0.2s ease-in-out;
 }
@@ -3074,7 +3075,7 @@ input[role='switch']:checked::before {
 input[role='switch']:disabled {
   background-image: repeating-linear-gradient(
     -45deg,
-    hsla(0, 0%, 100%, 0.1) 0 3px,
+    var(--colorA1) 0 3px,
     hsl(0, 0%, 18%) 0,
     transparent 0,
     transparent 6px
@@ -3124,7 +3125,7 @@ input[role='switch']:focus-visible {
   color: var(--colorT);
   background-color: var(--color6);
   border-radius: 1.25em;
-  box-shadow: 0 0.2em 0.5em hsla(0, 0%, 0%, 0.3);
+  box-shadow: 0 0.2em 0.5em var(--colorAB3);
   transition: transform 0.2s ease-in-out;
   pointer-events: none;
 }
@@ -3189,12 +3190,12 @@ input[role='switch']:focus-visible {
     ),
     linear-gradient(
       to top,
-      hsla(0, 0%, 100%, 0.051) 0,
-      hsla(0, 0%, 100%, 0.051) 33.3%,
+      var(--colorA005) 0,
+      var(--colorA005) 33.3%,
       hsl(0, 0%, 13%) 33.3%,
       hsl(0, 0%, 13%) 66.6%,
-      hsla(0, 0%, 100%, 0.051) 66.6%,
-      hsla(0, 0%, 100%, 0.051)
+      var(--colorA005) 66.6%,
+      var(--colorA005)
     );
 }
 
@@ -3215,8 +3216,8 @@ input[role='switch']:focus-visible {
   background: hsl(0, 0%, 18%)
     repeating-linear-gradient(
       -90deg,
-      hsla(0, 0%, 100%, 0.1) 0 3px,
-      hsla(0, 0%, 100%, 0.1) 0,
+      var(--colorA1) 0 3px,
+      var(--colorA1) 0,
       transparent 0,
       transparent 6px
     );
@@ -3292,7 +3293,7 @@ input[role='switch']:focus-visible {
   content: '';
   background-color: var(--color);
   border-radius: 50% 50% 0 50%;
-  box-shadow: 0 0.5rem 2rem hsla(0, 0%, 0%, 0.3);
+  box-shadow: 0 0.5rem 2rem var(--colorAB3);
   transform: rotate(45deg);
 }
 
@@ -3302,7 +3303,7 @@ input[role='switch']:focus-visible {
   min-height: 3.5em;
   background-color: var(--color);
   border-radius: 0.3em;
-  box-shadow: 0 0.5rem 2rem hsla(0, 0%, 0%, 0.3);
+  box-shadow: 0 0.5rem 2rem var(--colorAB3);
 }
 
 [class^='range'] .phylactery::after {
@@ -3314,7 +3315,7 @@ input[role='switch']:focus-visible {
   height: 1.5em;
   background-color: var(--color);
   clip-path: polygon(50% 100%, 0 0, 100% 0);
-  filter: drop-shadow(0 0.5rem 2rem hsla(0, 0%, 0%, 0.3));
+  filter: drop-shadow(0 0.5rem 2rem var(--colorAB3));
 }
 
 .range-multithumb {
@@ -3333,12 +3334,12 @@ input[role='switch']:focus-visible {
     ),
     linear-gradient(
       to top,
-      hsla(0, 0%, 100%, 0.051) 0,
-      hsla(0, 0%, 100%, 0.051) 33.3%,
+      var(--colorA005) 0,
+      var(--colorA005) 33.3%,
       hsl(0, 0%, 13%) 33.3%,
       hsl(0, 0%, 13%) 66.6%,
-      hsla(0, 0%, 100%, 0.051) 66.6%,
-      hsla(0, 0%, 100%, 0.051)
+      var(--colorA005) 66.6%,
+      var(--colorA005)
     );
 }
 
@@ -3347,7 +3348,7 @@ input[role='switch']:focus-visible {
   all: unset;
   --color: var(--colorT);
   --bg-color: var(--color2);
-  --bg-color2: hsla(0, 0%, 0%, 0.1);
+  --bg-color2: var(--colorAB1);
   overflow: hidden;
   position: relative;
   color: var(--color);
@@ -3381,7 +3382,7 @@ input[role='switch']:focus-visible {
 
 .button:active,
 .round-button:active {
-  box-shadow: inset 0 0 0.1em hsla(0, 0%, 0%, 0.3);
+  box-shadow: inset 0 0 0.1em var(--colorAB3);
   transform: translateY(0.05em);
 }
 
@@ -3482,81 +3483,79 @@ input[role='switch']:focus-visible {
   display: flex;
   flex-direction: column;
   gap: 0.5em;
-}
 
-.accordion > * > :first-child {
-  /* @note : À mettre en corélation avec un "display: block".
+  & > * > :first-child {
+    /* @note : À mettre en corélation avec un "display: block".
     overflow: hidden
     white-space: nowrap
     text-overflow: ellipsis
     */
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  line-height: 1;
-  padding: 0.75em 1em;
-  color: var(--colorT);
-  background-color: hsl(0, 0%, 27%);
-  border: none;
-  border-radius: 0.3em;
-  box-shadow: var(--shadow8);
-  cursor: pointer;
-  outline: none;
-}
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    line-height: 1;
+    padding: 0.75em 1em;
+    color: var(--colorT);
+    background-color: hsl(0, 0%, 27%);
+    border: none;
+    border-radius: 0.3em;
+    box-shadow: var(--shadow8);
+    cursor: pointer;
+    outline: none;
 
-.accordion > * > :first-child:focus-within,
-.accordion > * > :first-child:hover {
-  outline: none;
-}
+    &:focus-within,
+    &:hover {
+      outline: none;
+    }
 
-.accordion > * > :first-child::after {
-  content: '\2039';
-  margin-inline-start: auto;
-  font-weight: bold;
-  font-size: 1.5em;
-}
+    &::after {
+      content: '\2039';
+      margin-inline-start: auto;
+      font-weight: bold;
+    }
 
-.accordion > * > :first-child svg {
-  margin-inline-end: 1em;
-}
+    & svg {
+      margin-inline-end: 1em;
+    }
+  }
 
-.accordion > * > summary::before {
-  all: unset;
-}
+  & > * > summary::before {
+    all: unset;
+  }
 
-.accordion .accordion-summary::after {
-  transition: transform 0.5s ease-in-out;
-}
+  & .accordion-summary::after {
+    transition: transform 0.5s ease-in-out;
+  }
 
-.accordion > * > :last-child {
-  overflow: hidden;
-  padding: 0 1em;
-  background-color: var(--color1);
-  border-radius: calc(0.3em + 1px);
-  box-shadow: var(--shadow8), inset 0 -1px 0 1px hsla(0, 0%, 100%, 0.1);
-  transition: max-height 0.5s ease-in-out;
-}
+  & > * > :last-child {
+    overflow: hidden;
+    padding: 0 1em;
+    background-color: var(--color1);
+    border-radius: calc(0.3em + 1px);
+    box-shadow: var(--shadow8), inset 0 -1px 0 1px var(--colorA1);
+    transition: max-height 0.5s ease-in-out;
 
-.accordion > * > :last-child[aria-hidden='true'] {
-  max-height: 0;
-}
+    &[aria-hidden='true'] {
+      max-height: 0;
+    }
+  }
 
-.accordion > details {
-  all: unset;
-}
+  & > details {
+    all: unset;
+  }
 
-.accordion > details[open] summary::after,
-.accordion [data-open='true'] .accordion-summary::after {
-  transform: rotate(-90deg);
+  & > details[open] summary::after,
+  & [data-open='true'] .accordion-summary::after {
+    transform: rotate(-90deg);
+  }
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .accordion > * > :first-child:focus-visible,
-  .accordion > * > :first-child:hover {
+  .accordion > * > :first-child:where(:focus-visible, :hover) {
     color: var(--colorW);
     background-color: var(--color2);
-    box-shadow: 0.5rem 0.5rem 2rem hsla(0, 0%, 0%, 0.25);
+    box-shadow: 0.5rem 0.5rem 2rem var(--colorAB25);
     animation: anim-accordion 0.1s ease-in-out;
   }
 }
@@ -3587,9 +3586,9 @@ input[role='switch']:focus-visible {
   text-decoration: none;
   color: inherit;
   background-color: hsl(0, 0%, 27%);
-  border: 1px dashed hsla(0, 0%, 100%, 0.15);
+  border: 1px dashed var(--colorA15);
   border-radius: 0.5em 0.5em 0 0;
-  box-shadow: 0 -1rem 1rem hsla(0, 0%, 0%, 0.05);
+  box-shadow: 0 -1rem 1rem var(--colorAB005);
   cursor: pointer;
   transition: 0.2s box-shadow ease-in-out;
 }
@@ -3598,7 +3597,7 @@ input[role='switch']:focus-visible {
   .tabs .tab-list button:focus-visible,
   .tabs .tab-list button:hover {
     outline: none;
-    box-shadow: inset 0 -0.3em var(--color2), 0 -1rem 1rem hsla(0, 0%, 0%, 0.05);
+    box-shadow: inset 0 -0.3em var(--color2), 0 -1rem 1rem var(--colorAB005);
   }
 }
 
@@ -3619,7 +3618,7 @@ input[role='switch']:focus-visible {
   position: relative;
   top: -1px;
   padding: calc(0.5em + 1px) 1em 0.5em;
-  border: 1px dashed hsla(0, 0%, 100%, 0.15);
+  border: 1px dashed var(--colorA15);
   box-shadow: var(--shadow8);
 }
 
@@ -3642,49 +3641,65 @@ input[role='switch']:focus-visible {
   background-color: transparent;
   border: none;
   outline: none;
-}
 
-.scroll-top.hide {
-  display: none;
-}
+  &.hide {
+    display: none;
+  }
 
-.scroll-top svg {
-  height: 2em;
-  width: 2em;
-  fill: var(--colorB);
-  opacity: 0.5;
-}
+  & svg {
+    height: 2em;
+    width: 2em;
+    fill: var(--colorB);
+    opacity: 0.5;
+  }
 
-.scroll-top:focus-within svg {
-  fill: var(--color5);
-}
+  &:focus-within svg {
+    fill: var(--color5);
+  }
 
-.scroll-top:hover svg,
-.scroll-top:active svg {
-  fill: hsl(0, 0%, 61%);
+  &:where(:hover, :active) svg {
+    fill: hsl(0, 0%, 61%);
+  }
 }
 
 .footer {
   padding: 0 1em;
   color: var(--colorT2);
   background-color: hsl(0, 0%, 15%);
-}
 
-.footer a {
-  color: var(--colorT);
-  text-decoration: none;
-}
+  & a {
+    color: var(--colorT);
+    text-decoration: none;
 
-.footer a:focus,
-.footer a:hover,
-.footer a:active {
-  text-decoration: underline;
-}
+    &:where(:focus, :hover, :active) {
+      text-decoration: underline;
+    }
+  }
 
-.footer .wrap {
-  display: flex;
-  max-width: 92em;
-  margin: 0 auto;
+  & .wrap {
+    display: flex;
+    max-width: 92em;
+    margin: 0 auto;
+
+    & > :first-child {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  & .logo,
+  & .logo svg {
+    width: 2em;
+    height: 2em;
+  }
+
+  & .logo {
+    margin-inline-end: 1em;
+  }
+
+  & .wrap > :nth-child(2) {
+    text-align: center;
+  }
 }
 
 @media (max-width: #{$sizeXS}) {
@@ -3704,25 +3719,6 @@ input[role='switch']:focus-visible {
   }
 }
 
-.footer .wrap > :first-child {
-  display: flex;
-  align-items: center;
-}
-
-.footer .logo,
-.footer .logo svg {
-  width: 2em;
-  height: 2em;
-}
-
-.footer .logo {
-  margin-inline-end: 1em;
-}
-
-.footer .wrap > :nth-child(2) {
-  text-align: center;
-}
-
 .article {
   display: grid;
   grid-template-columns: minmax(0, 60em) minmax(0, 1fr);
@@ -3735,56 +3731,12 @@ input[role='switch']:focus-visible {
   & h1 {
     margin-block-end: 0.44em;
   }
-}
 
-@media (max-width: #{$sizeXS}) {
-  .article {
-    & .wrapper {
-      margin-block-start: calc(-1 * var(--gap));
-    }
-
-    & article {
-      padding-block: var(--gap);
-    }
+  & > :where(.wrapper, article, form) {
+    grid-column: 1;
+    max-width: 55em;
   }
-}
 
-.article > .wrapper,
-.article > article,
-.article > form {
-  grid-column: 1;
-  max-width: 55em;
-}
-
-@media (min-width: #{$sizeXS}) {
-  .article > .wrapper,
-  .article > article,
-  .article > form {
-    border-radius: var(--r1);
-    box-shadow: var(--shadow3);
-  }
-}
-
-@media (min-width: #{$sizeXS}) and (max-width: #{$sizeS}) {
-  .article > .wrapper,
-  .article > article,
-  .article > form {
-    padding: 2.5em 4em;
-  }
-}
-
-@media (min-width: #{$sizeS}) {
-  .article {
-    & > :where(.wrapper, article, form) {
-      padding: 4em 6em;
-    }
-    & > :where(.wrapper, article, form):nth-child(odd) {
-      margin-inline-start: auto;
-    }
-  }
-}
-
-.article {
   & .sub-header,
   & article header {
     display: grid;
@@ -3830,6 +3782,7 @@ input[role='switch']:focus-visible {
       text-decoration: none;
     }
   }
+
   & time {
     grid-area: uu;
   }
@@ -3861,7 +3814,7 @@ input[role='switch']:focus-visible {
   }
 
   & .anchor {
-    // Sur les commentaires.
+    // @note Ancre placée sur les commentaires.
     position: absolute;
     right: 0;
     bottom: 1em;
@@ -3872,12 +3825,49 @@ input[role='switch']:focus-visible {
       color: var(--colorW);
     }
   }
+
   & > footer {
     grid-column: 1;
     display: flex;
     justify-content: flex-end;
     gap: var(--gap);
     max-width: 55em;
+  }
+}
+
+@media (max-width: #{$sizeXS}) {
+  .article {
+    & .wrapper {
+      margin-block-start: calc(-1 * var(--gap));
+    }
+
+    & article {
+      padding-block: var(--gap);
+    }
+  }
+}
+
+@media (min-width: #{$sizeXS}) {
+  .article > :where(.wrapper, article, form) {
+    border-radius: var(--r1);
+    box-shadow: var(--shadow3);
+  }
+}
+
+@media (min-width: #{$sizeXS}) and (max-width: #{$sizeS}) {
+  .article > :where(.wrapper, article, form) {
+    padding: 2.5em 4em;
+  }
+}
+
+@media (min-width: #{$sizeS}) {
+  .article {
+    & > :where(.wrapper, article, form) {
+      padding: 4em 6em;
+    }
+    & > :where(.wrapper, article, form):nth-child(odd) {
+      margin-inline-start: auto;
+    }
   }
 }
 
@@ -3916,9 +3906,9 @@ main > article > footer {
   line-height: 1;
   font-size: 3em;
   font-weight: bold;
-  font-family: var(--fontList2);
+  font-family: var(--font-list2);
   color: var(--color2);
-  background-color: hsla(0, 0%, 100%, 0.051);
+  background-color: var(--colorA005);
   transform: translateY(0.05em);
 }
 
@@ -3948,19 +3938,19 @@ main > article > footer {
     transition: color 0.2s ease-in-out;
     user-select: none;
     scroll-margin-block-start: 1em;
-  }
 
-  .line-mark:where(:focus, .line-mark :hover, .line-mark :active) {
-    color: var(--color5);
-    text-decoration: none;
-  }
+    &:where(:focus, :hover, :active) {
+      color: var(--colorW);
+      text-decoration: none;
+    }
 
-  .line-mark::before {
-    content: '- ';
-  }
+    &::before {
+      content: '- ';
+    }
 
-  .line-mark::after {
-    content: ' -';
+    &::after {
+      content: ' -';
+    }
   }
 
   h2 .line-mark,
@@ -4015,7 +4005,7 @@ main > article > footer {
 .progress,
 .progress::-webkit-progress-bar {
   background-color: hsl(0, 0%, 19%);
-  box-shadow: inset 0 0.2em 0.5em hsla(0, 0%, 0%, 0.2);
+  box-shadow: inset 0 0.2em 0.5em var(--colorAB2);
   border-radius: 0.5em;
 }
 
@@ -4030,12 +4020,11 @@ main > article > footer {
   background-image: repeating-linear-gradient(
     -45deg,
     transparent 0 0.5rem,
-    hsla(0, 0%, 100%, 0.2) 0.5rem 1rem
+    var(--colorA2) 0.5rem 1rem
   );
   background-size: calc(1rem / 0.707) 100%, 100% 800%;
   background-position: inherit;
-  box-shadow: inset 0 2px 9px hsla(0, 0%, 100%, 0.3),
-    inset 0 -2px 6px hsla(0, 0%, 0%, 0.4);
+  box-shadow: inset 0 2px 9px var(--colorA3), inset 0 -2px 6px var(--colorAB4);
   border-radius: 0.5em;
 }
 
@@ -4045,12 +4034,11 @@ main > article > footer {
   background-image: repeating-linear-gradient(
     -45deg,
     transparent 0 0.5rem,
-    hsla(0, 0%, 100%, 0.2) 0.5rem 1rem
+    var(--colorA2) 0.5rem 1rem
   );
   background-size: calc(1rem / 0.707) 100%, 100% 800%;
   background-position: inherit;
-  box-shadow: inset 0 2px 9px hsla(0, 0%, 100%, 0.3),
-    inset 0 -2px 6px hsla(0, 0%, 0%, 0.4);
+  box-shadow: inset 0 2px 9px var(--colorA3), inset 0 -2px 6px var(--colorAB4);
   border-radius: 0.5em;
 }
 
@@ -4070,15 +4058,18 @@ main > article > footer {
   width: 6em;
   height: 6em;
   animation: anim-loader var(--frame) linear infinite;
+
   &::before,
   &::after {
     content: '';
     position: absolute;
   }
+
   &::before {
     inset: 1px;
     animation: anim-loader calc(var(--frame) * 4.7) ease infinite;
   }
+
   &::after {
     inset: 7px;
     animation: anim-loader calc(var(--frame) * 1.51) ease infinite;
@@ -4131,6 +4122,7 @@ bar-chart {
 
 .ribbon-content {
   position: relative;
+
   & > [class*='ribbon'] {
     --color: currentcolor;
     --bg-color: hsl(0, 0%, 33%);
@@ -4144,6 +4136,7 @@ bar-chart {
     text-decoration: none;
     color: var(--color);
     user-select: none;
+
     &::before,
     &::after {
       content: '';
@@ -4160,12 +4153,14 @@ bar-chart {
         0 2em
       );
     }
+
     &::before {
       top: 0.1em;
       height: 1.8em;
-      border: 2px dotted hsla(0, 0%, 100%, 0.2);
+      border: 2px dotted var(--colorA2);
       border-inline: none;
     }
+
     &::after {
       z-index: -1;
       background-color: var(--bg-color);
@@ -4173,74 +4168,70 @@ bar-chart {
       transition: background-color 0.2s ease-in-out;
     }
   }
+
+  & > [class*='ribbon-top'] {
+    filter: drop-shadow(0 0.5em 0.5em var(--colorAB1));
+
+    &::after {
+      background-image: linear-gradient(
+        to top,
+        var(--colorAB3),
+        var(--colorAB2) 1.25em
+      );
+    }
+  }
+
+  & > [class*='ribbon-bottom'] {
+    filter: drop-shadow(0 -0.5rem 0.5rem var(--colorAB1));
+
+    &::after {
+      background-image: linear-gradient(
+        to top,
+        var(--colorAB2),
+        var(--colorAB3) 1.25em
+      );
+    }
+  }
+
+  & > .ribbon-top-left {
+    top: 0;
+    left: 0;
+    transform: translate(-2.35em, 1.4em) rotate(-45deg);
+  }
+
+  & > .ribbon-top-right {
+    top: 0;
+    right: 0;
+    transform: translate(2.35em, 1.4em) rotate(45deg);
+  }
+
+  & > .ribbon-bottom-left {
+    bottom: 0;
+    left: 0;
+    transform: translate(-2.35em, -1.4em) rotate(225deg);
+  }
+
+  & > .ribbon-bottom-right {
+    bottom: 0;
+    right: 0;
+    transform: translate(2.35em, -1.4em) rotate(135deg);
+  }
 }
 
 .ribbon-content > a[class*='ribbon'] {
   transition: color 0.2s ease-in-out;
-}
 
-.ribbon-content > a[class*='ribbon']::after {
-  background-color: var(--color2);
-}
+  &::after {
+    background-color: var(--color2);
+  }
 
-.ribbon-content > a[class*='ribbon']:focus,
-.ribbon-content > a[class*='ribbon']:hover,
-.ribbon-content > a[class*='ribbon']:active {
-  color: hsl(0, 0%, 18%);
-}
+  &:where(:focus, :hover, :active) {
+    color: hsl(0, 0%, 18%);
 
-.ribbon-content > a[class*='ribbon']:focus::after,
-.ribbon-content > a[class*='ribbon']:hover::after,
-.ribbon-content > a[class*='ribbon']:active::after {
-  background-color: var(--color5);
-}
-
-.ribbon-content > [class*='ribbon-top'] {
-  filter: drop-shadow(0 0.5em 0.5em hsla(0, 0%, 0%, 0.1));
-}
-
-.ribbon-content > [class*='ribbon-top']::after {
-  background-image: linear-gradient(
-    to top,
-    hsla(0, 0%, 0%, 0.3),
-    hsla(0, 0%, 0%, 0.2) 1.25em
-  );
-}
-
-.ribbon-content > [class*='ribbon-bottom'] {
-  filter: drop-shadow(0 -0.5rem 0.5rem hsla(0, 0%, 0%, 0.1));
-}
-
-.ribbon-content > [class*='ribbon-bottom']::after {
-  background-image: linear-gradient(
-    to top,
-    hsla(0, 0%, 0%, 0.2),
-    hsla(0, 0%, 0%, 0.3) 1.25em
-  );
-}
-
-.ribbon-content > .ribbon-top-left {
-  top: 0;
-  left: 0;
-  transform: translate(-2.35em, 1.4em) rotate(-45deg);
-}
-
-.ribbon-content > .ribbon-top-right {
-  top: 0;
-  right: 0;
-  transform: translate(2.35em, 1.4em) rotate(45deg);
-}
-
-.ribbon-content > .ribbon-bottom-left {
-  bottom: 0;
-  left: 0;
-  transform: translate(-2.35em, -1.4em) rotate(225deg);
-}
-
-.ribbon-content > .ribbon-bottom-right {
-  bottom: 0;
-  right: 0;
-  transform: translate(2.35em, -1.4em) rotate(135deg);
+    &::after {
+      background-color: var(--color5);
+    }
+  }
 }
 
 .forum {
@@ -4255,10 +4246,90 @@ bar-chart {
   display: grid;
   grid-template-rows: repeat(2, auto);
   padding-inline: 1em;
-  background-color: hsl(0, 0%, 24%);
+  background-color: hsl(0, 0%, 26%);
   border-radius: var(--r1);
   box-shadow: var(--shadow1);
   gap: 0 1em;
+
+  & .topic-link {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+
+    &:where(:hover, :active) + * h2 a {
+      color: var(--colorW);
+      text-decoration: underline;
+    }
+  }
+
+  & > * a {
+    position: relative;
+    z-index: 3;
+    text-decoration: none;
+  }
+
+  & > :nth-child(2),
+  & > :nth-child(3) {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0 1em;
+  }
+
+  & :where(p, ul, li) {
+    all: unset;
+  }
+
+  & > :nth-child(2) {
+    grid-area: ttt;
+  }
+
+  & > :nth-child(2) div {
+    flex-shrink: 0;
+  }
+
+  & > :nth-child(3) {
+    flex-wrap: wrap;
+  }
+
+  & > :nth-child(3) p {
+    justify-content: start;
+    margin-block: 0.25em 1em;
+  }
+
+  & > :nth-child(3) ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em 0.5em;
+    font-size: 0.8em;
+    margin-block-end: 1em;
+  }
+
+  & > :nth-child(3) ul > :last-child {
+    margin-inline-end: 0;
+  }
+
+  & > :nth-child(3) ul li {
+    margin-block-end: 0.5em;
+  }
+
+  & > :nth-child(3) ul a {
+    padding: 0.25em 0.5em 0.25em 1.25em;
+    white-space: nowrap;
+    background-color: hsl(0, 0%, 16%);
+    clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
+  }
+
+  & h2 {
+    all: unset;
+    margin-block: 1.25em 0;
+    font-weight: bold;
+    text-wrap: balance;
+
+    & a:where(:focus, :hover, :active) {
+      text-decoration: underline;
+    }
+  }
 }
 
 @media (max-width: #{$sizeXS}) {
@@ -4273,89 +4344,6 @@ bar-chart {
     grid-template-columns: 4em minmax(0, 1fr);
     grid-template-areas: 'aaa ttt' 'aaa uuu';
   }
-}
-
-.topic-item .topic-link {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-}
-
-.topic-item .topic-link:hover + * h2 a,
-.topic-item .topic-link:active + * h2 a {
-  color: var(--colorW);
-  text-decoration: underline;
-}
-
-.topic-item > * a {
-  position: relative;
-  z-index: 3;
-  text-decoration: none;
-}
-
-.topic-item > :nth-child(2),
-.topic-item > :nth-child(3) {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 0 1em;
-}
-
-.topic-item :where(p, .topic-item ul, .topic-item li) {
-  all: unset;
-}
-
-.topic-item > :nth-child(2) {
-  grid-area: ttt;
-}
-
-.topic-item > :nth-child(2) div {
-  flex-shrink: 0;
-}
-
-.topic-item > :nth-child(3) {
-  flex-wrap: wrap;
-}
-
-.topic-item > :nth-child(3) p {
-  justify-content: start;
-  margin-block: 0.25em 1em;
-}
-
-.topic-item > :nth-child(3) ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5em 0.5em;
-  font-size: 0.8em;
-  margin-block-end: 1em;
-}
-
-.topic-item > :nth-child(3) ul > :last-child {
-  margin-inline-end: 0;
-}
-
-.topic-item > :nth-child(3) ul li {
-  margin-block-end: 0.5em;
-}
-
-.topic-item > :nth-child(3) ul a {
-  padding: 0.25em 0.5em 0.25em 1.25em;
-  white-space: nowrap;
-  background-color: hsl(0, 0%, 16%);
-  clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
-}
-
-.topic-item h2 {
-  all: unset;
-  margin-block: 1.25em 0;
-  font-weight: bold;
-  text-wrap: balance;
-}
-
-.topic-item h2 a:focus,
-.topic-item h2 a:hover,
-.topic-item h2 a:active {
-  text-decoration: underline;
 }
 
 .avatars,
@@ -4399,7 +4387,7 @@ bar-chart {
 }
 
 .topic-solved > :nth-child(2) svg:first-child {
-  color: hsl(96, 41%, 53%);
+  color: var(--colorS4);
 }
 
 html,
@@ -4453,18 +4441,18 @@ html,
 
 [class*='demo-items'] {
   --itemHeight: 2em;
-}
 
-[class*='demo-items'] > * {
-  box-sizing: border-box;
-  padding: 1em;
-  background-color: hsl(0, 0%, 27%);
-  box-shadow: var(--shadow1);
-}
+  & > * {
+    box-sizing: border-box;
+    padding: 1em;
+    background-color: hsl(0, 0%, 27%);
+    box-shadow: var(--shadow1);
+  }
 
-[class*='demo-items'] > * code {
-  margin-left: 0.2em;
-  background-color: hsla(0, 0%, 0%, 0.2);
+  & > * code {
+    margin-left: 0.2em;
+    background-color: var(--colorAB2);
+  }
 }
 
 .demo-items-empty > * {
@@ -4476,87 +4464,86 @@ html,
   padding: 1em;
   background-color: hsl(0, 0%, 27%);
   box-shadow: var(--shadow1);
-}
 
-.demo-item.ribbon-content {
-  min-height: 7.5em;
+  &.ribbon-content {
+    min-height: 7.5em;
+  }
 }
 
 .demo-items-color {
   color: hsl(0, 0%, 20%);
-}
 
-.demo-items-color > :nth-child(1n) {
-  background-color: hsl(15, 100%, 50%);
-}
+  & > :nth-child(1n) {
+    background-color: hsl(15, 100%, 50%);
+  }
 
-.demo-items-color > :nth-child(2n) {
-  background-color: hsl(25, 100%, 50%);
-}
+  & > :nth-child(2n) {
+    background-color: hsl(25, 100%, 50%);
+  }
 
-.demo-items-color > :nth-child(3n) {
-  background-color: hsl(35, 100%, 50%);
-}
+  & > :nth-child(3n) {
+    background-color: hsl(35, 100%, 50%);
+  }
 
-.demo-items-color > :nth-child(4n) {
-  background-color: hsl(45, 100%, 50%);
-}
+  & > :nth-child(4n) {
+    background-color: hsl(45, 100%, 50%);
+  }
 
-.demo-items-color > :nth-child(5n) {
-  background-color: hsl(55, 100%, 50%);
-}
+  & > :nth-child(5n) {
+    background-color: hsl(55, 100%, 50%);
+  }
 
-.demo-items-color > :nth-child(6n) {
-  background-color: hsl(65, 100%, 50%);
-}
+  & > :nth-child(6n) {
+    background-color: hsl(65, 100%, 50%);
+  }
 
-.demo-items-color > :nth-child(7n) {
-  background-color: hsl(75, 100%, 50%);
-}
+  & > :nth-child(7n) {
+    background-color: hsl(75, 100%, 50%);
+  }
 
-.demo-items-color > :nth-child(8n) {
-  background-color: hsl(85, 100%, 50%);
-}
+  & > :nth-child(8n) {
+    background-color: hsl(85, 100%, 50%);
+  }
 
-.demo-items-color > :nth-child(9n) {
-  background-color: hsl(95, 100%, 50%);
-}
+  & > :nth-child(9n) {
+    background-color: hsl(95, 100%, 50%);
+  }
 
-.demo-items-color > :nth-child(10n) {
-  background-color: hsl(105, 100%, 50%);
-}
+  & > :nth-child(10n) {
+    background-color: hsl(105, 100%, 50%);
+  }
 
-.demo-items-color > :nth-child(11n) {
-  background-color: hsl(115, 100%, 50%);
-}
+  & > :nth-child(11n) {
+    background-color: hsl(115, 100%, 50%);
+  }
 
-.demo-items-color > :nth-child(12n) {
-  background-color: hsl(125, 100%, 50%);
-}
+  & > :nth-child(12n) {
+    background-color: hsl(125, 100%, 50%);
+  }
 
-.demo-items-color > :nth-child(13n) {
-  background-color: hsl(135, 100%, 50%);
-}
+  & > :nth-child(13n) {
+    background-color: hsl(135, 100%, 50%);
+  }
 
-.demo-items-color > :nth-child(14n) {
-  background-color: hsl(145, 100%, 50%);
-}
+  & > :nth-child(14n) {
+    background-color: hsl(145, 100%, 50%);
+  }
 
-.demo-items-color code {
-  background-color: hsl(0, 0%, 27%);
+  & code {
+    background-color: hsl(0, 0%, 27%);
+  }
 }
-
 .demo-counter > * {
   counter-increment: div;
-}
 
-.demo-counter > ::before {
-  content: counter(div) '.';
-  display: inline;
-}
+  &::before {
+    content: counter(div) '.';
+    display: inline;
+  }
 
-.demo-counter > * :first-child {
-  display: inline;
+  & :first-child {
+    display: inline;
+  }
 }
 
 .type-components .box2 {
@@ -4588,7 +4575,7 @@ html,
     aspect-ratio: 1/1;
     background-image: linear-gradient(
       -135deg,
-      hsla(0, 0%, 100%, 0.051),
+      var(--colorA005),
       transparent 50%
     );
     background-repeat: no-repeat;
