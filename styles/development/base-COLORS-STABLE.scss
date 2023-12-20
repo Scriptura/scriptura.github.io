@@ -731,7 +731,7 @@ main {
   z-index: 2000;
   display: grid;
   user-select: none;
-  background-color: var(--colorG15);
+  background-color: hsl(0, 0%, 15%);
 
   & .avatar {
     display: inline-block;
@@ -739,7 +739,7 @@ main {
     width: 1.7em;
     aspect-ratio: 1;
     margin-inline-end: 0.5em;
-    background-color: var(--colorG27);
+    background-color: hsl(0, 0%, 7%);
     background-image: var(--img, '');
     background-size: cover;
     border-radius: 50%;
@@ -845,7 +845,7 @@ a.logo-nav:hover::after {
     & li {
       flex: 1;
       flex-basis: 50%;
-      background-color: var(--colorG15);
+      background-color: hsl(0, 0%, 15%);
       transform: rotate(90deg);
       transition: transform 0.4s ease-in-out;
     }
@@ -985,7 +985,7 @@ a.logo-nav:hover::after {
   .cmd-nav {
     padding: 0.5em;
     cursor: pointer;
-    background-color: var(--colorG15);
+    background-color: hsl(0, 0%, 15%);
 
     & svg {
       width: 100%;
@@ -1090,7 +1090,7 @@ a.logo-nav:hover::after {
       background-size: cover;
       background-repeat: no-repeat;
       color: var(--colorT2);
-      background-color: var(--colorG15);
+      background-color: hsl(0, 0%, 15%);
       transition: background-color 0.3s ease-in-out;
       clip-path: polygon(
         0 0,
@@ -1133,11 +1133,11 @@ a.logo-nav:hover::after {
 }
 
 .alert {
-  --alert-color: var(--colorG13);
+  --alert-color: hsl(0, 0%, 13%);
   --alert-bg-color: var(--colorT);
   --alert-color-link: var(--colorW);
   --alert-icon-size: 3em;
-  --alert-icon-color: var(--colorG13);
+  --alert-icon-color: hsl(0, 0%, 13%);
 
   & .wrap {
     display: grid;
@@ -1206,12 +1206,11 @@ ol ol ol {
 
   & li {
     display: block;
-    border-radius: var(--r2);
   }
 
   & > * {
     padding: 0.5em 1em;
-    background-color: var(--colorG27);
+    background-color: hsl(0, 0%, 26%);
     box-shadow: var(--shadow6);
   }
 }
@@ -1267,7 +1266,7 @@ ol ol ol {
     width: 100%;
     min-height: 2.5em;
     padding: 0.5em 1em;
-    background-color: var(--colorG27);
+    background-color: hsl(0, 0%, 26%);
     text-decoration: none;
 
     &:where(:focus, :hover, :active) {
@@ -1294,7 +1293,6 @@ ol ol ol {
   & li::before,
   & svg {
     width: 3em;
-    border-radius: var(--r2) 0 0 var(--r2);
     clip-path: polygon(
       0% 0%,
       calc(100% - 1em) 0,
@@ -1318,7 +1316,6 @@ ol ol ol {
     right: 0.5em;
     width: calc(100% + 0.5em);
     padding-inline-start: 1.5em;
-    border-radius: 0 var(--r2) var(--r2) 0;
     clip-path: polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%);
   }
 }
@@ -1414,7 +1411,7 @@ figure {
   width: 100%;
   padding: 0.5em;
   color: var(--colorT);
-  background-color: var(--colorG27);
+  background-color: hsl(0, 0%, 27%);
   box-shadow: var(--shadow5);
   user-select: none;
 
@@ -1493,7 +1490,7 @@ figure {
   right: 1em;
   width: 1.2em;
   height: 1.2em;
-  color: var(--colorG60);
+  color: hsl(0, 0%, 61%);
 }
 
 .picture-area {
@@ -1503,7 +1500,7 @@ figure {
   display: grid;
   align-items: center;
   justify-content: center;
-  background-color: var(--colorG13);
+  background-color: hsl(0, 0%, 13%);
   cursor: zoom-out;
 
   & img {
@@ -1518,7 +1515,7 @@ figure {
     right: 1em;
     width: 2em;
     height: 2em;
-    color: var(--colorG60);
+    color: hsl(0, 0%, 61%);
     cursor: zoom-out;
 
     &:where(:focus-within, :hover, :active) {
@@ -1606,7 +1603,7 @@ video.media {
   width: 100%;
   height: 3.5em;
   padding-inline-end: 0.5em;
-  background-color: var(--colorG27);
+  background-color: hsl(0, 0%, 27%);
   border-radius: 1.75em;
   box-shadow: var(--shadow8);
   user-select: none;
@@ -1661,13 +1658,13 @@ video.media {
   & .media-extend-menu button {
     width: 2.5em;
     height: 2.5em;
-    background-color: var(--colorG33);
+    background-color: hsl(0, 0%, 33%);
     border-radius: 50%;
   }
 
   & .media-fullscreen:hover,
   & .media-menu:hover {
-    background-color: var(--colorG38);
+    background-color: hsl(0, 0%, 38%);
   }
 
   & .media-mute:focus-visible,
@@ -1685,7 +1682,7 @@ video.media {
   }
 
   & .media-extend-menu button:hover {
-    background-color: var(--colorG38);
+    background-color: hsl(0, 0%, 38%);
   }
 
   & .media-extend-menu button:active,
@@ -1719,7 +1716,7 @@ video.media {
   & .media-progress-bar {
     --position: 0%;
     --position-buffer: 100%;
-    --color-buffer: var(--colorG33);
+    --color-buffer: hsl(0, 0%, 33%);
     background-image: linear-gradient(
         90deg,
         var(--color-slide) 0,
@@ -1735,8 +1732,8 @@ video.media {
         90deg,
         transparent 0,
         transparent 2px,
-        var(--colorG33) 2px,
-        var(--colorG33) 4px
+        hsl(0, 0%, 33%) 2px,
+        hsl(0, 0%, 33%) 4px
       );
   }
 
@@ -1753,14 +1750,14 @@ video.media {
   }
 
   & .media-volume-bar {
-    background-color: var(--colorG38);
+    background-color: hsl(0, 0%, 38%);
   }
 
   & .media-play-pause {
     position: relative;
     z-index: 1;
     width: 3.5em;
-    background-color: var(--colorG33);
+    background-color: hsl(0, 0%, 33%);
     border-radius: 50%;
   }
 
@@ -1779,7 +1776,7 @@ video.media {
   }
 
   & .media-play-pause:hover::before {
-    border-block-color: var(--colorG38);
+    border-block-color: hsl(0, 0%, 38%);
   }
 
   & .media-play-pause.active::before {
@@ -1804,7 +1801,7 @@ video.media {
     font-size: 0.8em;
     text-align: center;
     line-height: 1;
-    background-color: var(--colorG38);
+    background-color: hsl(0, 0%, 38%);
     border-radius: 0.3em;
   }
 
@@ -1816,7 +1813,7 @@ video.media {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    background-color: var(--colorG33);
+    background-color: hsl(0, 0%, 33%);
     border-radius: 1.25em;
     outline: none;
     transition: padding-left 0.6s ease-in;
@@ -1878,7 +1875,7 @@ video.media {
       grid-template-columns: repeat(var(--mem), 2.5em);
       gap: 0.5em;
       padding: 0.5em;
-      background-color: var(--colorG27);
+      background-color: hsl(0, 0%, 27%);
       border-radius: 1.75em;
       box-shadow: var(--shadow8);
     }
@@ -1889,7 +1886,7 @@ video.media {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    color: var(--colorG60);
+    color: hsl(0, 0%, 61%);
   }
 }
 
@@ -2010,13 +2007,13 @@ video + .media-player {
 
 @keyframes anim-button {
   50% {
-    background-color: var(--colorG38);
+    background-color: hsl(0, 0%, 38%);
   }
 }
 
 @keyframes anim-mute {
   50% {
-    color: var(--colorG33);
+    color: hsl(0, 0%, 33%);
   }
 }
 
@@ -2082,7 +2079,7 @@ video + .media-player {
 
 :root .map .leaflet-popup-content-wrapper {
   font-size: 1rem;
-  color: var(--colorG38);
+  color: hsl(0, 0%, 47%);
   border-radius: 0.2em;
   box-shadow: var(--shadow6);
 }
@@ -2175,7 +2172,7 @@ video + .media-player {
 .card p {
   margin: 0;
   padding: 2rem;
-  background-color: var(--colorG27);
+  background-color: hsl(0, 0%, 27%);
   box-shadow: var(--shadow3);
 }
 
@@ -2201,7 +2198,7 @@ video + .media-player {
   margin: 0 auto;
   padding: 1em 0;
   color: var(--colorT);
-  background-color: var(--colorG27);
+  background-color: hsl(0, 0%, 27%);
   box-shadow: var(--shadow3);
 }
 
@@ -2229,7 +2226,7 @@ video + .media-player {
     grid-area: aa;
     width: 3em;
     aspect-ratio: 1;
-    background: var(--colorG13) var(--img, '');
+    background: hsl(0, 0%, 13%) var(--img, '');
     background-size: cover;
     border-radius: 50%;
   }
@@ -2262,7 +2259,7 @@ samp {
 
 :not(pre) > code {
   padding: 0.2em;
-  background-color: var(--colorG15);
+  background-color: hsl(0, 0%, 15%);
 }
 
 .pre {
@@ -2270,7 +2267,7 @@ samp {
   position: relative;
   min-height: 3em;
   padding: 1em;
-  background-color: var(--colorG13);
+  background-color: hsl(0, 0%, 13%);
   border-radius: 0.3em;
   box-shadow: 0 0 2rem var(--colorAB3);
   line-height: 1.25em;
@@ -2343,7 +2340,7 @@ samp {
 
 [class^='message'] {
   --color: currentcolor;
-  --bg-color: var(--colorG27);
+  --bg-color: hsl(0, 0%, 27%);
   padding: 0.15em 1em;
   color: var(--color);
   background-color: var(--bg-color);
@@ -2386,7 +2383,7 @@ main [class^='message'] {
 }
 
 .message-warning {
-  --bg-color: var(--colorS52);
+  --bg-color: hsl(39, 100%, 35%);
 }
 
 [role='region'][aria-labelledby][tabindex]:has([class^='table']) {
@@ -2414,7 +2411,7 @@ main [class^='message'] {
   & td {
     vertical-align: top;
     padding: 0.5em 1em;
-    box-shadow: inset 0 0 1px var(--colorG13);
+    box-shadow: inset 0 0 1px hsl(0, 0%, 13%);
   }
 
   & thead th {
@@ -2426,11 +2423,11 @@ main [class^='message'] {
 
   & tfoot,
   & tbody th {
-    background-color: var(--colorG18);
+    background-color: hsl(0, 0%, 18%);
   }
 
   & tbody tr:nth-child(odd) {
-    background-color: var(--colorG27);
+    background-color: hsl(0, 0%, 27%);
   }
 
   & tbody tr:nth-child(even) {
@@ -2478,7 +2475,7 @@ main [class^='message'] {
     }
 
     & tbody tr {
-      background-color: var(--colorG27) !important;
+      background-color: hsl(0, 0%, 27%) !important;
       box-shadow: var(--shadow5);
 
       & > * {
@@ -2628,13 +2625,13 @@ input[type='search']::-webkit-search-cancel-button {
   height: 24px;
   width: 24px;
   margin-inline-start: 0.4em;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
   cursor: pointer;
 }
 
 input[type='search']::-webkit-search-cancel-button:hover,
 input[type='search']::-webkit-search-cancel-button:active {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffa500'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
 }
 
 input[type='file'],
@@ -2682,13 +2679,13 @@ select {
   -webkit-appearance: none;
   height: 24px;
   width: 24px;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
   cursor: pointer;
 }
 
 ::-webkit-clear-button:focus,
 ::-webkit-clear-button:hover {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffa500'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
 }
 
 [type='time']::-webkit-clear-button {
@@ -2702,7 +2699,7 @@ select {
 }
 
 ::placeholder {
-  color: var(--colorG60);
+  color: hsl(0, 0%, 51%);
 }
 
 :focus::placeholder {
@@ -2720,7 +2717,7 @@ select {
   left: 0.8em;
   width: 1.6em;
   height: 0.8em;
-  background-color: var(--colorS52);
+  background-color: hsl(39, 100%, 40%);
   clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
 }
 
@@ -2735,8 +2732,8 @@ select {
 .input textarea {
   width: 100%;
   color: currentcolor;
-  background-color: var(--colorG18) !important;
-  border: 2px solid var(--colorG27);
+  background-color: hsl(0, 0%, 14%) !important;
+  border: 2px solid var(--colorG);
   border-radius: 0.3em;
   box-shadow: inset 0 0.2em 0.5em var(--colorAB2) !important;
 }
@@ -2766,7 +2763,7 @@ select {
 .input input[type='datetime-local'],
 .input input[type='week'],
 .input input[type='month'] {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/></svg>");
 }
 
 .input input[type='date']:focus,
@@ -2777,7 +2774,7 @@ select {
 .input input[type='datetime-local']:hover,
 .input input[type='week']:hover,
 .input input[type='month']:hover {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='orange'><path d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/></svg>");
 }
 
 .input input[type='month'] {
@@ -2785,27 +2782,27 @@ select {
 }
 
 .input input[type='time'] {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'/><path d='M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z'></path></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'/><path d='M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z'></path></svg>");
 }
 
 .input input[type='time']:focus,
 .input input[type='time']:hover {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'/><path d='M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z'></path></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='orange'><path d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'/><path d='M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z'></path></svg>");
 }
 
 .input input[type='file'] {
   padding-inline-end: 3em;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z'></path></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z'></path></svg>");
 }
 
 .input input[type='file']:focus,
 .input input[type='file']:hover,
 .input input[type='file']:active {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z'></path></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='orange'><path d='M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z'></path></svg>");
 }
 
 .input select:not([multiple]) {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z'/></svg>");
   background-size: 1.5em 1.5em;
   background-repeat: no-repeat;
   background-position: calc(100% - 0.4em) 50%;
@@ -2813,11 +2810,11 @@ select {
 
 .input select:not([multiple]):focus,
 .input select:not([multiple]):hover {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='orange'><path d='M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z'/></svg>");
 }
 
 .input select:not([multiple]):active {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z'/></svg>");
 }
 
 .input select[multiple] {
@@ -2841,11 +2838,11 @@ select {
 }
 
 .input.disabled label {
-  color: var(--colorG60);
+  color: hsl(0, 0%, 47%);
 }
 
 .input.disabled input {
-  background: var(--colorG18)
+  background: hsl(0, 0%, 18%)
     repeating-linear-gradient(-45deg, transparent 0 5px, var(--color1) 5px 10px);
   background-size: 100% 100%;
   cursor: default;
@@ -2886,31 +2883,33 @@ select {
 
 .input-password {
   position: relative;
+}
 
-  & button {
-    position: absolute;
-    bottom: 3em/2;
-    right: 0.5em;
-    width: 2.1em;
-    height: 2.8em;
-    padding: 0.5em;
-    color: hsl(0, 0%, 47%);
-    background-color: transparent;
-    border: none;
+.input-password button {
+  position: absolute;
+  bottom: 3em/2;
+  right: 0.5em;
+  width: 2.1em;
+  height: 2.8em;
+  padding: 0.5em;
+  color: hsl(0, 0%, 47%);
+  background-color: transparent;
+  border: none;
+}
 
-    &:focus {
-      outline: none;
-    }
+.input-password button:focus {
+  outline: none;
+}
 
-    &:where(:focus, :hover, :active) {
-      color: var(--color5);
-    }
+.input-password button:focus,
+.input-password button:hover,
+.input-password button:active {
+  color: var(--color5);
+}
 
-    & svg {
-      width: 100%;
-      height: 100%;
-    }
-  }
+.input-password button svg {
+  width: 100%;
+  height: 100%;
 }
 
 .search form {
@@ -2918,45 +2917,49 @@ select {
   width: 100%;
   height: 3em;
   align-items: stretch;
+}
 
-  & * {
-    outline: none;
-  }
+.search form * {
+  outline: none;
+}
 
-  & input {
-    flex-grow: 1;
-    max-height: 100%;
-    padding: 0.4em 1em;
-    color: currentcolor;
-    background-color: var(--colorG18);
-    border: 2px solid var(--colorG27);
-    border-right: none;
-    border-radius: 1.5em 0 0 1.5em;
-    box-shadow: inset 0 0.2em 0.5em var(--colorAB2);
+.search form input {
+  flex-grow: 1;
+  max-height: 100%;
+  padding: 0.4em 1em;
+  color: currentcolor;
+  background-color: hsl(0, 0%, 14%);
+  border: 2px solid var(--colorG);
+  border-right: none;
+  border-radius: 1.5em 0 0 1.5em;
+  box-shadow: inset 0 0.2em 0.5em var(--colorAB2);
+}
 
-    &:where(:focus, :hover, :active) {
-      border-color: var(--color2);
-    }
-  }
+.search form input:focus,
+.search form input:hover,
+.search form input:active {
+  border-color: var(--color2);
+}
 
-  & button {
-    min-width: 3.5em;
-    color: var(--colorT);
-    background-color: var(--color2);
-    border: none;
-    border-radius: 0 1.5em 1.5em 0;
-    box-shadow: inset 0 0.2em 0.5em var(--colorAB2);
+.search form button {
+  min-width: 3.5em;
+  color: var(--colorT);
+  background-color: var(--color2);
+  border: none;
+  border-radius: 0 1.5em 1.5em 0;
+  box-shadow: inset 0 0.2em 0.5em var(--colorAB2);
+}
 
-    &:where(:focus, :hover, :active) {
-      color: var(--colorW);
-      animation: anim-search 0.2s ease-in-out;
-    }
+.search form button:focus,
+.search form button:hover,
+.search form button:active {
+  color: var(--colorW);
+  animation: anim-search 0.2s ease-in-out;
+}
 
-    & svg {
-      width: 1em;
-      height: 1em;
-    }
-  }
+.search form button svg {
+  width: 1em;
+  height: 1em;
 }
 
 @keyframes anim-invalid-input {
@@ -2965,43 +2968,48 @@ select {
   }
 }
 
-:where(input[type='checkbox'], input[type='radio']):not([role='switch']) {
+input[type='checkbox']:not([role='switch']),
+input[type='radio']:not([role='switch']) {
   appearance: none;
   display: inline-grid;
   width: 1.2em;
   height: 1.2em;
   vertical-align: text-top;
   box-sizing: border-box;
-  background-color: var(--colorG15);
+  background-color: hsl(0, 0%, 15%);
   border: 0.15em solid var(--color1);
   outline: none;
   box-shadow: inset 0 0.1em 0.3em var(--colorAB3);
   cursor: pointer;
+}
 
-  &:disabled {
-    background: var(--colorG18)
-      repeating-linear-gradient(
-        -45deg,
-        transparent 0 2px,
-        var(--colorG33) 2px 4px
-      );
-    cursor: default;
+input[type='checkbox']:not([role='switch']):disabled,
+input[type='radio']:not([role='switch']):disabled {
+  background: hsl(0, 0%, 18%)
+    repeating-linear-gradient(
+      -45deg,
+      transparent 0 2px,
+      hsl(0, 0%, 33%) 2px 4px
+    );
+  cursor: default;
+}
 
-    & + label {
-      cursor: default;
-    }
-  }
+input[type='checkbox']:not([role='switch']):disabled + label,
+input[type='radio']:not([role='switch']):disabled + label {
+  cursor: default;
+}
 
-  &::before {
-    content: '';
-    display: block;
-    background-color: var(--color2);
-    transform: scale(0);
-  }
+input[type='checkbox']:not([role='switch'])::before,
+input[type='radio']:not([role='switch'])::before {
+  content: '';
+  display: block;
+  background-color: var(--color2);
+  transform: scale(0);
+}
 
-  &:focus-visible {
-    border-color: var(--color5) !important;
-  }
+input[type='checkbox']:not([role='switch']):focus-visible,
+input[type='radio']:not([role='switch']):focus-visible {
+  border-color: var(--color5) !important;
 }
 
 input[type='checkbox']:not([role='switch'])::before {
@@ -3015,19 +3023,19 @@ input[type='checkbox']:not([role='switch']):checked::before {
 
 input[type='radio']:not([role='switch']) {
   border-radius: 50%;
+}
 
-  &::before {
-    clip-path: circle(30% at 50% 50%);
-    transition: transform 0.3s;
-  }
-
-  &:checked {
-    border-color: var(--color2);
-  }
+input[type='radio']:not([role='switch'])::before {
+  clip-path: circle(30% at 50% 50%);
+  transition: transform 0.3s;
 }
 
 input[type='radio']:not([role='switch']):checked::before {
   transform: scale(1);
+}
+
+input[type='radio']:not([role='switch']):checked {
+  border-color: var(--color2);
 }
 
 input[role='switch'] {
@@ -3036,124 +3044,125 @@ input[role='switch'] {
   box-sizing: border-box;
   width: 5em;
   height: 2.5em;
-  background-color: var(--colorG15);
+  background-color: hsl(0, 0%, 15%);
   border: 0.3em solid transparent;
   border-radius: 1.25em;
   box-shadow: inset 0 0.2em 0.5em var(--colorAB2);
   cursor: pointer;
+}
 
-  &::before {
-    content: attr(data-a);
-    display: block;
-    width: 2.5em;
-    height: 2.5em;
-    text-align: center;
-    line-height: 2.5em;
-    color: var(--colorT);
-    background-color: var(--color6);
-    border-radius: 1.25em;
-    box-shadow: 0 0.2em 0.5em var(--colorAB3);
-    transform: translate(-0.3em, -0.3em);
-    transition: transform 0.2s ease-in-out;
-  }
+input[role='switch']::before {
+  content: attr(data-a);
+  display: block;
+  width: 2.5em;
+  height: 2.5em;
+  text-align: center;
+  line-height: 2.5em;
+  color: var(--colorT);
+  background-color: var(--color6);
+  border-radius: 1.25em;
+  box-shadow: 0 0.2em 0.5em var(--colorAB3);
+  transform: translate(-0.3em, -0.3em);
+  transition: transform 0.2s ease-in-out;
+}
 
-  &:checked::before {
-    content: attr(data-b);
-    background-color: var(--color2);
-    transform: translate(2.2em, -0.3em);
-  }
+input[role='switch']:checked::before {
+  content: attr(data-b);
+  background-color: var(--color2);
+  transform: translate(2.2em, -0.3em);
+}
 
-  &:disabled {
-    background-image: repeating-linear-gradient(
-      -45deg,
-      var(--colorA1) 0 3px,
-      var(--colorG18) 0,
-      transparent 0,
-      transparent 6px
-    );
-    cursor: default;
+input[role='switch']:disabled {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--colorA1) 0 3px,
+    hsl(0, 0%, 18%) 0,
+    transparent 0,
+    transparent 6px
+  );
+  cursor: default;
+}
 
-    &::before {
-      color: var(--colorG38);
-      background-color: var(--color1);
-    }
+input[role='switch']:disabled::before {
+  color: hsl(0, 0%, 38%);
+  background-color: var(--color1);
+}
 
-    & + label {
-      cursor: default;
-    }
-  }
+input[role='switch']:disabled + label {
+  cursor: default;
+}
 
-  &:not(:checked) + label {
-    color: hsl(0, 0%, 45%);
-  }
+input[role='switch']:not(:checked) + label {
+  color: hsl(0, 0%, 45%);
+}
 
-  &:focus-visible {
-    border-color: var(--color5) !important;
-  }
+input[role='switch']:focus-visible {
+  border-color: var(--color5) !important;
 }
 
 .switch-custom {
   position: relative;
   width: 5em;
   height: 2.5em;
+}
 
-  & [role='switch'] {
-    position: absolute;
-    inset: 0;
+.switch-custom [role='switch'] {
+  position: absolute;
+  inset: 0;
+}
 
-    &::before {
-      display: none;
-    }
+.switch-custom [role='switch']::before {
+  display: none;
+}
 
-    & + div {
-      position: absolute;
-      left: 0;
-      width: 2.5em;
-      height: 2.5em;
-      text-align: center;
-      line-height: 2.5em;
-      color: var(--colorT);
-      background-color: var(--color6);
-      border-radius: 1.25em;
-      box-shadow: 0 0.2em 0.5em var(--colorAB3);
-      transition: transform 0.2s ease-in-out;
-      pointer-events: none;
-    }
+.switch-custom [role='switch'] + div {
+  position: absolute;
+  left: 0;
+  width: 2.5em;
+  height: 2.5em;
+  text-align: center;
+  line-height: 2.5em;
+  color: var(--colorT);
+  background-color: var(--color6);
+  border-radius: 1.25em;
+  box-shadow: 0 0.2em 0.5em var(--colorAB3);
+  transition: transform 0.2s ease-in-out;
+  pointer-events: none;
+}
 
-    &:checked + div {
-      background-color: var(--color2);
-      transform: translate(2.5em, 0);
-    }
+.switch-custom [role='switch']:checked + div {
+  background-color: var(--color2);
+  transform: translate(2.5em, 0);
+}
 
-    &:disabled + div {
-      color: var(--colorG38);
-      background-color: var(--color1);
-    }
+.switch-custom [role='switch']:disabled + div {
+  color: hsl(0, 0%, 38%);
+  background-color: var(--color1);
+}
 
-    &:not(:disabled).dual-state + div {
-      background-color: var(--color2);
-    }
-  }
+.switch-custom [role='switch']:not(:disabled).dual-state + div {
+  background-color: var(--color2);
+}
 
-  & :not(:checked) + div svg:nth-child(1) {
-    display: none;
-  }
+.switch-custom :not(:checked) + div svg:nth-child(1) {
+  display: none;
+}
 
-  & :checked + div {
-    transform: translateX(1.25em);
+.switch-custom :checked + div {
+  transform: translateX(1.25em);
+}
 
-    & svg:nth-child(2) {
-      display: none;
-    }
-  }
+.switch-custom :checked + div svg:nth-child(2) {
+  display: none;
+}
 
-  &:has([role='switch']:not(:checked, .dual-state)) + label {
-    color: hsl(0, 0%, 45%);
-  }
+.switch-custom:has([role='switch']:not(:checked, .switch-custom .dual-state))
+  + label {
+  color: hsl(0, 0%, 45%);
+}
 
-  &:has(:disabled) + label {
-    cursor: default;
-  }
+.switch-custom:has(:disabled) + label {
+  cursor: default;
 }
 
 [class^='range'] {
@@ -3162,106 +3171,60 @@ input[role='switch'] {
   display: grid;
   gap: 0.5em;
   margin-block-end: 1em;
+}
 
-  & input {
-    grid-column: 1;
-    grid-row: 2;
-    pointer-events: none;
-    -webkit-appearance: none;
-    width: 100%;
-    height: 0.3em;
-    max-width: 100%;
-    cursor: pointer;
-    background: linear-gradient(
-        90deg,
-        var(--color) 0,
-        var(--color) var(--percent),
-        transparent var(--percent)
-      ),
-      linear-gradient(
-        to top,
-        var(--colorA005) 0,
-        var(--colorA005) 33.3%,
-        var(--colorG13) 33.3%,
-        var(--colorG13) 66.6%,
-        var(--colorA005) 66.6%,
-        var(--colorA005)
-      );
+[class^='range'] input {
+  grid-column: 1;
+  grid-row: 2;
+  pointer-events: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 0.3em;
+  max-width: 100%;
+  cursor: pointer;
+  background: linear-gradient(
+      90deg,
+      var(--color) 0,
+      var(--color) var(--percent),
+      transparent var(--percent)
+    ),
+    linear-gradient(
+      to top,
+      var(--colorA005) 0,
+      var(--colorA005) 33.3%,
+      hsl(0, 0%, 13%) 33.3%,
+      hsl(0, 0%, 13%) 66.6%,
+      var(--colorA005) 66.6%,
+      var(--colorA005)
+    );
+}
 
-    & ~ input {
-      background: initial;
-    }
+[class^='range'] input ~ input {
+  background: initial;
+}
 
-    &:disabled {
-      --color: var(--colorG27);
-      cursor: default;
+[class^='range'] input:disabled {
+  --color: hsl(0, 0%, 27%);
+  cursor: not-allowed;
+}
 
-      & + output {
-        color: hsl(0, 0%, 45%);
+[class^='range'] input:disabled + output {
+  color: hsl(0, 0%, 45%);
+}
 
-        &::after {
-          background: var(--colorG18)
-            repeating-linear-gradient(
-              -90deg,
-              var(--colorA1) 0 3px,
-              var(--colorA1) 0,
-              transparent 0,
-              transparent 6px
-            );
-        }
-      }
-    }
+[class^='range'] input:disabled + output::after {
+  background: hsl(0, 0%, 18%)
+    repeating-linear-gradient(
+      -90deg,
+      var(--colorA1) 0 3px,
+      var(--colorA1) 0,
+      transparent 0,
+      transparent 6px
+    );
+}
 
-    &:focus {
-      outline: none;
-    }
-  }
-
-  & output {
-    position: relative;
-    margin: 0 auto 2em;
-    text-align: center;
-
-    &:not(.phylactery) {
-      --size: 5em;
-      width: var(--size);
-      line-height: var(--size);
-      vertical-align: middle;
-
-      &::after {
-        position: absolute;
-        z-index: -1;
-        inset: 0;
-        box-sizing: border-box;
-        content: '';
-        background-color: var(--color);
-        border-radius: 50% 50% 0 50%;
-        box-shadow: 0 0.5rem 2rem var(--colorAB3);
-        transform: rotate(45deg);
-      }
-    }
-  }
-
-  & .phylactery {
-    min-width: var(--size, 4em);
-    padding: 1em;
-    min-height: 3.5em;
-    background-color: var(--color);
-    border-radius: 0.3em;
-    box-shadow: 0 0.5rem 2rem var(--colorAB3);
-
-    &::after {
-      position: absolute;
-      content: '';
-      bottom: -1em;
-      left: calc(50% - 1em);
-      width: 2em;
-      height: 1.5em;
-      background-color: var(--color);
-      clip-path: polygon(50% 100%, 0 0, 100% 0);
-      filter: drop-shadow(0 0.5rem 2rem var(--colorAB3));
-    }
-  }
+[class^='range'] input:focus {
+  outline: none;
 }
 
 [class^='range'] ::-webkit-slider-thumb {
@@ -3281,8 +3244,8 @@ input[role='switch'] {
 }
 
 [class^='range'] input:disabled::-webkit-slider-thumb {
-  border-color: var(--colorG33);
-  background: var(--colorG18)
+  border-color: hsl(0, 0%, 30%);
+  background: hsl(0, 0%, 18%)
     repeating-linear-gradient(-45deg, transparent 0 3px, var(--color1) 3px 6px);
 }
 
@@ -3304,34 +3267,80 @@ input[role='switch'] {
 }
 
 [class^='range'] input:disabled::-moz-range-thumb {
-  border-color: var(--colorG33);
-  background: var(--colorG18)
+  border-color: hsl(0, 0%, 30%);
+  background: hsl(0, 0%, 18%)
     repeating-linear-gradient(-45deg, transparent 0 3px, var(--color1) 3px 6px);
+}
+
+[class^='range'] output {
+  position: relative;
+  margin: 0 auto 2em;
+  text-align: center;
+}
+
+[class^='range'] output:not(.phylactery) {
+  --size: 5em;
+  width: var(--size);
+  line-height: var(--size);
+  vertical-align: middle;
+}
+
+[class^='range'] output:not(.phylactery)::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  box-sizing: border-box;
+  content: '';
+  background-color: var(--color);
+  border-radius: 50% 50% 0 50%;
+  box-shadow: 0 0.5rem 2rem var(--colorAB3);
+  transform: rotate(45deg);
+}
+
+[class^='range'] .phylactery {
+  min-width: var(--size, 4em);
+  padding: 1em;
+  min-height: 3.5em;
+  background-color: var(--color);
+  border-radius: 0.3em;
+  box-shadow: 0 0.5rem 2rem var(--colorAB3);
+}
+
+[class^='range'] .phylactery::after {
+  position: absolute;
+  content: '';
+  bottom: -1em;
+  left: calc(50% - 1em);
+  width: 2em;
+  height: 1.5em;
+  background-color: var(--color);
+  clip-path: polygon(50% 100%, 0 0, 100% 0);
+  filter: drop-shadow(0 0.5rem 2rem var(--colorAB3));
 }
 
 .range-multithumb {
   --start: 0;
   --stop: 0;
   --color: var(--color2);
+}
 
-  & input {
-    background: linear-gradient(
-        90deg,
-        transparent var(--start),
-        var(--color) var(--start),
-        var(--color) var(--stop),
-        transparent var(--stop)
-      ),
-      linear-gradient(
-        to top,
-        var(--colorA005) 0,
-        var(--colorA005) 33.3%,
-        var(--colorG13) 33.3%,
-        var(--colorG13) 66.6%,
-        var(--colorA005) 66.6%,
-        var(--colorA005)
-      );
-  }
+.range-multithumb input {
+  background: linear-gradient(
+      90deg,
+      transparent var(--start),
+      var(--color) var(--start),
+      var(--color) var(--stop),
+      transparent var(--stop)
+    ),
+    linear-gradient(
+      to top,
+      var(--colorA005) 0,
+      var(--colorA005) 33.3%,
+      hsl(0, 0%, 13%) 33.3%,
+      hsl(0, 0%, 13%) 66.6%,
+      var(--colorA005) 66.6%,
+      var(--colorA005)
+    );
 }
 
 .button,
@@ -3348,60 +3357,74 @@ input[role='switch'] {
   transition-property: translate, box-shadow;
   user-select: none;
   cursor: pointer;
+}
 
-  &:where(:focus-visible, :hover) {
-    box-shadow: var(--shadow2);
-    transform: translateY(-0.1rem);
-  }
+.button:focus-visible,
+.round-button:focus-visible,
+.button:hover,
+.round-button:hover {
+  box-shadow: var(--shadow2);
+  transform: translateY(-0.1rem);
+}
 
-  &:focus-visible::after,
-  &:hover::after {
-    transform: scaleX(1);
-    transform-origin: left center;
-  }
+.button:focus-visible::after,
+.round-button:focus-visible::after,
+.button:hover::after,
+.round-button:hover::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
 
-  &:focus-visible::before {
-    background-color: var(--color5);
-  }
+.button:focus-visible::before,
+.round-button:focus-visible::before {
+  background-color: var(--color5);
+}
 
-  &:active {
-    box-shadow: inset 0 0 0.1em var(--colorAB3);
-    transform: translateY(0.05em);
-  }
+.button:active,
+.round-button:active {
+  box-shadow: inset 0 0 0.1em var(--colorAB3);
+  transform: translateY(0.05em);
+}
 
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-  }
+.button::before,
+.round-button::before,
+.button::after,
+.round-button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
 
-  &::before {
-    z-index: -2;
-    background-color: var(--bg-color);
-  }
+.button::before,
+.round-button::before {
+  z-index: -2;
+  background-color: var(--bg-color);
+}
 
-  &::after {
-    z-index: -1;
-    background-color: var(--bg-color2);
-    transform: scaleX(0);
-    transform-origin: left center;
-    transition: transform 0.4s;
-  }
+.button::after,
+.round-button::after {
+  z-index: -1;
+  background-color: var(--bg-color2);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.4s;
+}
 
-  &:disabled {
-    box-shadow: var(--shadow2);
-    transform: none;
-    cursor: default;
+.button:disabled,
+.round-button:disabled {
+  box-shadow: var(--shadow2);
+  transform: none;
+  cursor: not-allowed;
+}
 
-    &::before {
-      background-color: var(--color1);
-    }
+.button:disabled::before,
+.round-button:disabled::before {
+  background-color: var(--color1);
+}
 
-    &::after {
-      content: none;
-    }
-  }
+.button:disabled::after,
+.round-button:disabled::after {
+  content: none;
 }
 
 .button {
@@ -3418,20 +3441,24 @@ input[role='switch'] {
   width: 4em;
   border-width: 0.25em;
   border-radius: 50%;
+}
 
-  & svg {
-    height: 1.5em;
-    width: 1.5em;
-    margin: auto;
-  }
+.round-button svg {
+  height: 1.5em;
+  width: 1.5em;
+  margin: auto;
+}
 
-  &::before {
-    border-radius: 50%;
-  }
+.round-button::before {
+  border-radius: 50%;
+}
+
+.round-button + .round-button-test {
+  margin-inline-start: 0.5em;
 }
 
 .button2 {
-  --color: var(--colorG38);
+  --color: hsl(0, 0%, 38%);
   all: unset;
   width: 3em;
   aspect-ratio: 1;
@@ -3443,11 +3470,13 @@ input[role='switch'] {
   box-shadow: var(--shadow3);
   cursor: pointer;
   transition: transform 0.5s;
+}
 
-  &:where(:focus, :hover, :active) {
-    --color: var(--color5);
-    transform: rotate(360deg);
-  }
+.button2:focus,
+.button2:hover,
+.button2:active {
+  --color: var(--color5);
+  transform: rotate(360deg);
 }
 
 .accordion {
@@ -3468,7 +3497,7 @@ input[role='switch'] {
     line-height: 1;
     padding: 0.75em 1em;
     color: var(--colorT);
-    background-color: var(--colorG27);
+    background-color: hsl(0, 0%, 27%);
     border: none;
     border-radius: 0.3em;
     box-shadow: var(--shadow8);
@@ -3537,69 +3566,68 @@ input[role='switch'] {
   }
 }
 
-.tabs {
-  & .tab-list {
-    display: flex;
-    padding: 0;
+.tabs .tab-list {
+  display: flex;
+  padding: 0;
+}
 
-    & ~ * .tab-list {
-      margin-block-start: 0.5em;
-    }
+.tabs .tab-list ~ * .tab-list {
+  margin-block-start: 0.5em;
+}
 
-    & button {
-      z-index: 1;
-      overflow: hidden;
-      display: block;
-      height: 2.5em;
-      padding: 0 1em;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      text-decoration: none;
-      color: inherit;
-      background-color: var(--colorG27);
-      border: 1px dashed var(--colorA15);
-      border-radius: 0.5em 0.5em 0 0;
-      box-shadow: 0 -1rem 1rem var(--colorAB005);
-      cursor: pointer;
-      transition: 0.2s box-shadow ease-in-out;
-
-      &[aria-selected='true'] {
-        z-index: 2;
-        flex-shrink: 0;
-        max-width: 60%;
-        background-color: var(--color1);
-        border-bottom: none;
-        pointer-events: none;
-      }
-      
-      &[aria-selected='false'] {
-        user-select: none;
-      }
-    }
-  }
-
-  & .tab-panel {
-    position: relative;
-    top: -1px;
-    padding: calc(0.5em + 1px) 1em 0.5em;
-    border: 1px dashed var(--colorA15);
-    box-shadow: var(--shadow8);
-
-    &[aria-hidden='false'] {
-      display: block;
-    }
-    
-    &[aria-hidden='true'] {
-      display: none;
-    }
-  }
+.tabs .tab-list button {
+  z-index: 1;
+  overflow: hidden;
+  display: block;
+  height: 2.5em;
+  padding: 0 1em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-decoration: none;
+  color: inherit;
+  background-color: hsl(0, 0%, 27%);
+  border: 1px dashed var(--colorA15);
+  border-radius: 0.5em 0.5em 0 0;
+  box-shadow: 0 -1rem 1rem var(--colorAB005);
+  cursor: pointer;
+  transition: 0.2s box-shadow ease-in-out;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .tabs .tab-list button:where(:focus-visible, :hover) {
+  .tabs .tab-list button:focus-visible,
+  .tabs .tab-list button:hover {
     outline: none;
     box-shadow: inset 0 -0.3em var(--color2), 0 -1rem 1rem var(--colorAB005);
   }
+}
+
+.tabs .tab-list button[aria-selected='true'] {
+  z-index: 2;
+  flex-shrink: 0;
+  max-width: 60%;
+  background-color: var(--color1);
+  border-bottom: none;
+  pointer-events: none;
+}
+
+.tabs .tab-list button[aria-selected='false'] {
+  user-select: none;
+}
+
+.tabs .tab-panel {
+  position: relative;
+  top: -1px;
+  padding: calc(0.5em + 1px) 1em 0.5em;
+  border: 1px dashed var(--colorA15);
+  box-shadow: var(--shadow8);
+}
+
+.tabs .tab-panel[aria-hidden='false'] {
+  display: block;
+}
+
+.tabs .tab-panel[aria-hidden='true'] {
+  display: none;
 }
 
 .scroll-top {
@@ -3630,14 +3658,14 @@ input[role='switch'] {
   }
 
   &:where(:hover, :active) svg {
-    fill: var(--colorG60);
+    fill: hsl(0, 0%, 61%);
   }
 }
 
 .footer {
   padding: 0 1em;
   color: var(--colorT2);
-  background-color: var(--colorG15);
+  background-color: hsl(0, 0%, 15%);
 
   & a {
     color: var(--colorT);
@@ -3720,7 +3748,7 @@ input[role='switch'] {
     position: relative;
     margin-block-end: 1em;
     padding-block-end: 1em;
-    border-bottom: 0.1em solid var(--colorG27);
+    border-bottom: 0.1em solid hsl(0, 0%, 26%);
   }
 
   & .sub-header {
@@ -3739,7 +3767,7 @@ input[role='switch'] {
     grid-area: aa;
     width: 3em;
     aspect-ratio: 1;
-    background: var(--colorG13) var(--img, '');
+    background: hsl(0, 0%, 13%) var(--img, '');
     background-size: cover;
     border-radius: 50%;
   }
@@ -3780,7 +3808,7 @@ input[role='switch'] {
       padding: 0.25em 0.5em 0.25em 1.25em;
       text-decoration: none;
       white-space: nowrap;
-      background-color: var(--colorG15);
+      background-color: hsl(0, 0%, 16%);
       clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
     }
   }
@@ -3790,7 +3818,7 @@ input[role='switch'] {
     position: absolute;
     right: 0;
     bottom: 1em;
-    color: var(--colorG38);
+    color: hsl(0, 0%, 44%);
     text-decoration: none;
 
     &:where(:focus, :hover, :active) {
@@ -3905,7 +3933,7 @@ main > article > footer {
     font-size: 1rem;
     font-weight: normal;
     text-decoration: none;
-    color: var(--colorG38);
+    color: hsl(0, 0%, 44%);
     outline: none;
     transition: color 0.2s ease-in-out;
     user-select: none;
@@ -3940,7 +3968,7 @@ main > article > footer {
 }
 
 .calendar-white {
-  background-color: hsl(0, 0%, 100%);
+  background-color: var(--colorW);
 }
 
 .calendar-green {
@@ -3976,7 +4004,7 @@ main > article > footer {
 
 .progress,
 .progress::-webkit-progress-bar {
-  background-color: var(--colorG18);
+  background-color: hsl(0, 0%, 19%);
   box-shadow: inset 0 0.2em 0.5em var(--colorAB2);
   border-radius: 0.5em;
 }
@@ -4097,7 +4125,7 @@ bar-chart {
 
   & > [class*='ribbon'] {
     --color: currentcolor;
-    --bg-color: var(--colorG33);
+    --bg-color: hsl(0, 0%, 33%);
     position: absolute;
     z-index: 2000;
     line-height: 2em;
@@ -4198,7 +4226,7 @@ bar-chart {
   }
 
   &:where(:focus, :hover, :active) {
-    color: var(--colorG18);
+    color: hsl(0, 0%, 18%);
 
     &::after {
       background-color: var(--color5);
@@ -4218,9 +4246,9 @@ bar-chart {
   display: grid;
   grid-template-rows: repeat(2, auto);
   padding-inline: 1em;
-  background-color: var(--colorG27);
+  background-color: hsl(0, 0%, 26%);
   border-radius: var(--r1);
-  box-shadow: var(--shadow1); // var(--shadow3);
+  box-shadow: var(--shadow1);
   gap: 0 1em;
 
   & .topic-link {
@@ -4288,7 +4316,7 @@ bar-chart {
   & > :nth-child(3) ul a {
     padding: 0.25em 0.5em 0.25em 1.25em;
     white-space: nowrap;
-    background-color: var(--colorG15);
+    background-color: hsl(0, 0%, 16%);
     clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
   }
 
@@ -4318,37 +4346,20 @@ bar-chart {
   }
 }
 
+.avatars,
+.avatars > * {
+  width: 3.5em;
+  height: 3.5em;
+  background-image: var(--img, '');
+  background-color: hsl(0, 0%, 13%);
+  background-size: cover;
+  border-radius: 50%;
+}
+
 .avatars {
   grid-area: aaa;
   position: relative;
   margin: auto;
-
-  &,
-  & > * {
-    width: 3.5em;
-    height: 3.5em;
-    background-image: var(--img, '');
-    background-color: var(--colorG13);
-    background-size: cover;
-    border-radius: 50%;
-    border: 0.2em solid var(--colorG27);
-  }
-
-  & > * {
-    position: absolute;
-  }
-
-  & > :nth-child(1) {
-    transform: translate(1.2em, 1em) scale(0.5);
-  }
-  
-  & > :nth-child(2) {
-    transform: translate(1.2em, 0.2em) scale(0.5);
-  }
-  
-  & > :nth-child(3) {
-    transform: translate(1.2em, -0.6em) scale(0.5);
-  }
 }
 
 @media (max-width: #{$sizeXS}) {
@@ -4358,6 +4369,23 @@ bar-chart {
   }
 }
 
+.avatars > * {
+  position: absolute;
+  border: 0.2em solid hsl(0, 0%, 30%);
+}
+
+.avatars > :nth-child(1) {
+  transform: translate(1.2em, 1em) scale(0.5);
+}
+
+.avatars > :nth-child(2) {
+  transform: translate(1.2em, 0.2em) scale(0.5);
+}
+
+.avatars > :nth-child(3) {
+  transform: translate(1.2em, -0.6em) scale(0.5);
+}
+
 .topic-solved > :nth-child(2) svg:first-child {
   color: var(--colorS4);
 }
@@ -4365,7 +4393,7 @@ bar-chart {
 html,
 .nav,
 .cmd-nav,
-.cmd-nav:not(:focus, :hover, .active) svg,
+.cmd-nav:not(:focus):not(:hover):not(.active) svg,
 .sub-nav li > *,
 .sub-nav .current::after,
 .breadcrumb li > *,
@@ -4417,7 +4445,7 @@ html,
   & > * {
     box-sizing: border-box;
     padding: 1em;
-    background-color: var(--colorG27);
+    background-color: hsl(0, 0%, 27%);
     box-shadow: var(--shadow1);
   }
 
@@ -4434,7 +4462,7 @@ html,
 .demo-item {
   box-sizing: border-box;
   padding: 1em;
-  background-color: var(--colorG27);
+  background-color: hsl(0, 0%, 27%);
   box-shadow: var(--shadow1);
 
   &.ribbon-content {
@@ -4443,7 +4471,7 @@ html,
 }
 
 .demo-items-color {
-  color: var(--colorG18);
+  color: hsl(0, 0%, 20%);
 
   & > :nth-child(1n) {
     background-color: hsl(15, 100%, 50%);
@@ -4502,7 +4530,7 @@ html,
   }
 
   & code {
-    background-color: var(--colorG27);
+    background-color: hsl(0, 0%, 27%);
   }
 }
 .demo-counter > * {
@@ -4580,7 +4608,7 @@ html,
   }
   & rt {
     font-size: 0.8em;
-    color: var(--colorG38);
+    color: hsl(0, 0%, 38%);
   }
 }
 

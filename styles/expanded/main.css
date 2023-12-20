@@ -19,18 +19,25 @@
   --font-list1: "Noto Sans", sans-serif;
   --font-list2: "Noto Serif", serif;
   --color-scheme: dark;
-  --colorT: hsl(35, 45%, 84%);
-  --colorT2: hsl(34, 44%, 69%);
-  --colorG: hsl(0, 0%, 22%);
+  --colorG13: hsl(0, 0%, 13%);
+  --colorG15: hsl(0, 0%, 15%);
+  --colorG18: hsl(0, 0%, 18%);
+  --colorG22: hsl(0, 0%, 22%);
+  --colorG27: hsl(0, 0%, 27%);
+  --colorG33: hsl(0, 0%, 33%);
+  --colorG38: hsl(0, 0%, 38%);
+  --colorG60: hsl(0, 0%, 60%);
   --colorW: hsl(0, 0%, 100%);
   --colorB: hsl(0, 0%, 0%);
-  --color1: var(--colorG);
+  --colorT: hsl(35, 45%, 84%);
+  --colorT2: hsl(34, 44%, 69%);
+  --color1: var(--colorG22);
   --color2: hsl(9, 100%, 64%);
   --color3: hsl(12, 63%, 49%);
   --color4: hsl(96, 41%, 29%);
   --color5: hsl(39, 100%, 50%);
   --color6: hsl(207, 22%, 39%);
-  --colorG: hsl(0, 0%, 22%);
+  --colorA003: hsla(0, 0%, 100%, 0.03);
   --colorA005: hsla(0, 0%, 100%, 0.05);
   --colorA1: hsla(0, 0%, 100%, 0.1);
   --colorA15: hsla(0, 0%, 100%, 0.15);
@@ -52,6 +59,7 @@
   --colorAS22: hsla(0, 100%, 50%, 0.3);
   --colorS4: hsl(96, 41%, 53%);
   --colorS5: hsla(30, 31%, 54%);
+  --colorS52: hsl(39, 100%, 35%);
   /*
   // Light theme
   --color-scheme: light;
@@ -717,7 +725,7 @@ main {
   z-index: 2000;
   display: grid;
   user-select: none;
-  background-color: hsl(0, 0%, 15%);
+  background-color: var(--colorG15);
 }
 .nav .avatar {
   display: inline-block;
@@ -725,7 +733,7 @@ main {
   width: 1.7em;
   aspect-ratio: 1;
   margin-inline-end: 0.5em;
-  background-color: hsl(0, 0%, 7%);
+  background-color: var(--colorG27);
   background-image: var(--img, "");
   background-size: cover;
   border-radius: 50%;
@@ -819,7 +827,7 @@ a.logo-nav:hover::after {
   .sub-nav li {
     flex: 1;
     flex-basis: 50%;
-    background-color: hsl(0, 0%, 15%);
+    background-color: var(--colorG15);
     transform: rotate(90deg);
     transition: transform 0.4s ease-in-out;
   }
@@ -930,7 +938,7 @@ a.logo-nav:hover::after {
   .cmd-nav {
     padding: 0.5em;
     cursor: pointer;
-    background-color: hsl(0, 0%, 15%);
+    background-color: var(--colorG15);
   }
   .cmd-nav svg {
     width: 100%;
@@ -1018,7 +1026,7 @@ a.logo-nav:hover::after {
   background-size: cover;
   background-repeat: no-repeat;
   color: var(--colorT2);
-  background-color: hsl(0, 0%, 15%);
+  background-color: var(--colorG15);
   transition: background-color 0.3s ease-in-out;
   clip-path: polygon(0 0, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0 100%);
 }
@@ -1045,11 +1053,11 @@ a.logo-nav:hover::after {
   }
 }
 .alert {
-  --alert-color: hsl(0, 0%, 13%);
+  --alert-color: var(--colorG13);
   --alert-bg-color: var(--colorT);
   --alert-color-link: var(--colorW);
   --alert-icon-size: 3em;
-  --alert-icon-color: hsl(0, 0%, 13%);
+  --alert-icon-color: var(--colorG13);
 }
 .alert .wrap {
   display: grid;
@@ -1114,11 +1122,12 @@ ol ol ol {
 .list-stripe li,
 .list-stripe-links li {
   display: block;
+  border-radius: var(--r2);
 }
 .list-stripe > *,
 .list-stripe-links > * {
   padding: 0.5em 1em;
-  background-color: hsl(0, 0%, 26%);
+  background-color: var(--colorG27);
   box-shadow: var(--shadow6);
 }
 
@@ -1170,7 +1179,7 @@ ol ol ol {
   width: 100%;
   min-height: 2.5em;
   padding: 0.5em 1em;
-  background-color: hsl(0, 0%, 26%);
+  background-color: var(--colorG27);
   text-decoration: none;
 }
 .list-straight a:where(:focus, :hover, :active),
@@ -1192,6 +1201,7 @@ ol ol ol {
 }
 .list-straight li::before, .list-straight svg {
   width: 3em;
+  border-radius: var(--r2) 0 0 var(--r2);
   clip-path: polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%);
 }
 .list-straight li::before {
@@ -1206,6 +1216,7 @@ ol ol ol {
   right: 0.5em;
   width: calc(100% + 0.5em);
   padding-inline-start: 1.5em;
+  border-radius: 0 var(--r2) var(--r2) 0;
   clip-path: polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%);
 }
 
@@ -1288,7 +1299,7 @@ figure {
   width: 100%;
   padding: 0.5em;
   color: var(--colorT);
-  background-color: hsl(0, 0%, 27%);
+  background-color: var(--colorG27);
   box-shadow: var(--shadow5);
   user-select: none;
 }
@@ -1359,7 +1370,7 @@ figure {
   right: 1em;
   width: 1.2em;
   height: 1.2em;
-  color: hsl(0, 0%, 61%);
+  color: var(--colorG60);
 }
 
 .picture-area {
@@ -1369,7 +1380,7 @@ figure {
   display: grid;
   align-items: center;
   justify-content: center;
-  background-color: hsl(0, 0%, 13%);
+  background-color: var(--colorG13);
   cursor: zoom-out;
 }
 .picture-area img {
@@ -1383,7 +1394,7 @@ figure {
   right: 1em;
   width: 2em;
   height: 2em;
-  color: hsl(0, 0%, 61%);
+  color: var(--colorG60);
   cursor: zoom-out;
 }
 .picture-area button:where(:focus-within, :hover, :active) {
@@ -1463,7 +1474,7 @@ video.media {
   width: 100%;
   height: 3.5em;
   padding-inline-end: 0.5em;
-  background-color: hsl(0, 0%, 27%);
+  background-color: var(--colorG27);
   border-radius: 1.75em;
   box-shadow: var(--shadow8);
   user-select: none;
@@ -1503,11 +1514,11 @@ video.media {
 .media-player .media-mute, .media-player .media-fullscreen, .media-player .media-menu, .media-player .media-extend-menu button {
   width: 2.5em;
   height: 2.5em;
-  background-color: hsl(0, 0%, 33%);
+  background-color: var(--colorG33);
   border-radius: 50%;
 }
 .media-player .media-fullscreen:hover, .media-player .media-menu:hover {
-  background-color: hsl(0, 0%, 38%);
+  background-color: var(--colorG38);
 }
 .media-player .media-mute:focus-visible, .media-player .media-fullscreen:focus-visible, .media-player .media-menu:focus-visible {
   border: 0.2em solid var(--color5);
@@ -1519,7 +1530,7 @@ video.media {
   border: 0.2em solid var(--color5);
 }
 .media-player .media-extend-menu button:hover {
-  background-color: hsl(0, 0%, 38%);
+  background-color: var(--colorG38);
 }
 .media-player .media-extend-menu button:active, .media-player .media-extend-menu button.active {
   background-color: var(--color2);
@@ -1545,8 +1556,8 @@ video.media {
 .media-player .media-progress-bar {
   --position: 0%;
   --position-buffer: 100%;
-  --color-buffer: hsl(0, 0%, 33%);
-  background-image: linear-gradient(90deg, var(--color-slide) 0, var(--color-slide) var(--position), transparent var(--position)), linear-gradient(90deg, var(--color-buffer) var(--position-buffer), transparent var(--position-buffer)), repeating-linear-gradient(90deg, transparent 0, transparent 2px, hsl(0, 0%, 33%) 2px, hsl(0, 0%, 33%) 4px);
+  --color-buffer: var(--colorG33);
+  background-image: linear-gradient(90deg, var(--color-slide) 0, var(--color-slide) var(--position), transparent var(--position)), linear-gradient(90deg, var(--color-buffer) var(--position-buffer), transparent var(--position-buffer)), repeating-linear-gradient(90deg, transparent 0, transparent 2px, var(--colorG33) 2px, var(--colorG33) 4px);
 }
 .media-player .media-volume-bar {
   background-image: linear-gradient(90deg, var(--color-slide) var(--position), transparent var(--position));
@@ -1555,13 +1566,13 @@ video.media {
   background: none;
 }
 .media-player .media-volume-bar {
-  background-color: hsl(0, 0%, 38%);
+  background-color: var(--colorG38);
 }
 .media-player .media-play-pause {
   position: relative;
   z-index: 1;
   width: 3.5em;
-  background-color: hsl(0, 0%, 33%);
+  background-color: var(--colorG33);
   border-radius: 50%;
 }
 .media-player .media-play-pause::before {
@@ -1576,7 +1587,7 @@ video.media {
   border-block-color: var(--color5);
 }
 .media-player .media-play-pause:hover::before {
-  border-block-color: hsl(0, 0%, 38%);
+  border-block-color: var(--colorG38);
 }
 .media-player .media-play-pause.active::before {
   border-block-color: var(--color2);
@@ -1598,7 +1609,7 @@ video.media {
   font-size: 0.8em;
   text-align: center;
   line-height: 1;
-  background-color: hsl(0, 0%, 38%);
+  background-color: var(--colorG38);
   border-radius: 0.3em;
 }
 .media-player .media-tags > *.active {
@@ -1608,7 +1619,7 @@ video.media {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  background-color: hsl(0, 0%, 33%);
+  background-color: var(--colorG33);
   border-radius: 1.25em;
   outline: none;
   transition: padding-left 0.6s ease-in;
@@ -1655,7 +1666,7 @@ video.media {
   grid-template-columns: repeat(var(--mem), 2.5em);
   gap: 0.5em;
   padding: 0.5em;
-  background-color: hsl(0, 0%, 27%);
+  background-color: var(--colorG27);
   border-radius: 1.75em;
   box-shadow: var(--shadow8);
 }
@@ -1664,7 +1675,7 @@ video.media {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  color: hsl(0, 0%, 61%);
+  color: var(--colorG60);
 }
 
 .media-player .media-progress-bar:hover::-webkit-slider-thumb,
@@ -1773,12 +1784,12 @@ video + .media-player {
 }
 @keyframes anim-button {
   50% {
-    background-color: hsl(0, 0%, 38%);
+    background-color: var(--colorG38);
   }
 }
 @keyframes anim-mute {
   50% {
-    color: hsl(0, 0%, 33%);
+    color: var(--colorG33);
   }
 }
 @keyframes anim-waiting {
@@ -1841,7 +1852,7 @@ video + .media-player {
 
 :root .map .leaflet-popup-content-wrapper {
   font-size: 1rem;
-  color: hsl(0, 0%, 47%);
+  color: var(--colorG38);
   border-radius: 0.2em;
   box-shadow: var(--shadow6);
 }
@@ -1916,7 +1927,7 @@ video + .media-player {
 .card p {
   margin: 0;
   padding: 2rem;
-  background-color: hsl(0, 0%, 27%);
+  background-color: var(--colorG27);
   box-shadow: var(--shadow3);
 }
 
@@ -1941,7 +1952,7 @@ video + .media-player {
   margin: 0 auto;
   padding: 1em 0;
   color: var(--colorT);
-  background-color: hsl(0, 0%, 27%);
+  background-color: var(--colorG27);
   box-shadow: var(--shadow3);
 }
 
@@ -1969,7 +1980,7 @@ video + .media-player {
   grid-area: aa;
   width: 3em;
   aspect-ratio: 1;
-  background: hsl(0, 0%, 13%) var(--img, "");
+  background: var(--colorG13) var(--img, "");
   background-size: cover;
   border-radius: 50%;
 }
@@ -1998,7 +2009,7 @@ samp {
 
 :not(pre) > code {
   padding: 0.2em;
-  background-color: hsl(0, 0%, 15%);
+  background-color: var(--colorG15);
 }
 
 .pre {
@@ -2006,7 +2017,7 @@ samp {
   position: relative;
   min-height: 3em;
   padding: 1em;
-  background-color: hsl(0, 0%, 13%);
+  background-color: var(--colorG13);
   border-radius: 0.3em;
   box-shadow: 0 0 2rem var(--colorAB3);
   line-height: 1.25em;
@@ -2069,7 +2080,7 @@ samp {
 }
 [class^=message] {
   --color: currentcolor;
-  --bg-color: hsl(0, 0%, 27%);
+  --bg-color: var(--colorG27);
   padding: 0.15em 1em;
   color: var(--color);
   background-color: var(--bg-color);
@@ -2110,7 +2121,7 @@ main [class^=message] {
 }
 
 .message-warning {
-  --bg-color: hsl(39, 100%, 35%);
+  --bg-color: var(--colorS52);
 }
 
 [role=region][aria-labelledby][tabindex]:has([class^=table]) {
@@ -2136,7 +2147,7 @@ main [class^=message] {
 [class^=table] th, [class^=table] td {
   vertical-align: top;
   padding: 0.5em 1em;
-  box-shadow: inset 0 0 1px hsl(0, 0%, 13%);
+  box-shadow: inset 0 0 1px var(--colorG13);
 }
 [class^=table] thead th {
   position: sticky;
@@ -2145,10 +2156,10 @@ main [class^=message] {
   background-color: var(--color2);
 }
 [class^=table] tfoot, [class^=table] tbody th {
-  background-color: hsl(0, 0%, 18%);
+  background-color: var(--colorG18);
 }
 [class^=table] tbody tr:nth-child(odd) {
-  background-color: hsl(0, 0%, 27%);
+  background-color: var(--colorG27);
 }
 [class^=table] tbody tr:nth-child(even) {
   background-color: var(--color1);
@@ -2185,7 +2196,7 @@ main [class^=message] {
     display: none;
   }
   .table-responsive tbody tr {
-    background-color: hsl(0, 0%, 27%) !important;
+    background-color: var(--colorG27) !important;
     box-shadow: var(--shadow5);
   }
   .table-responsive tbody tr > * {
@@ -2328,13 +2339,13 @@ input[type=search]::-webkit-search-cancel-button {
   height: 24px;
   width: 24px;
   margin-inline-start: 0.4em;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
   cursor: pointer;
 }
 
 input[type=search]::-webkit-search-cancel-button:hover,
 input[type=search]::-webkit-search-cancel-button:active {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffa500'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
 }
 
 input[type=file],
@@ -2381,13 +2392,13 @@ select {
   -webkit-appearance: none;
   height: 24px;
   width: 24px;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
   cursor: pointer;
 }
 
 ::-webkit-clear-button:focus,
 ::-webkit-clear-button:hover {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffa500'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
 }
 
 [type=time]::-webkit-clear-button {
@@ -2401,7 +2412,7 @@ select {
 }
 
 ::placeholder {
-  color: hsl(0, 0%, 51%);
+  color: var(--colorG60);
 }
 
 :focus::placeholder {
@@ -2419,7 +2430,7 @@ select {
   left: 0.8em;
   width: 1.6em;
   height: 0.8em;
-  background-color: hsl(39, 100%, 40%);
+  background-color: var(--colorS52);
   clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
 }
 
@@ -2433,8 +2444,8 @@ select {
 .input textarea {
   width: 100%;
   color: currentcolor;
-  background-color: hsl(0, 0%, 14%) !important;
-  border: 2px solid var(--colorG);
+  background-color: var(--colorG18) !important;
+  border: 2px solid var(--colorG27);
   border-radius: 0.3em;
   box-shadow: inset 0 0.2em 0.5em var(--colorAB2) !important;
 }
@@ -2463,7 +2474,7 @@ select {
 .input input[type=datetime-local],
 .input input[type=week],
 .input input[type=month] {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/></svg>");
 }
 
 .input input[type=date]:focus,
@@ -2474,7 +2485,7 @@ select {
 .input input[type=datetime-local]:hover,
 .input input[type=week]:hover,
 .input input[type=month]:hover {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='orange'><path d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/></svg>");
 }
 
 .input input[type=month] {
@@ -2482,27 +2493,27 @@ select {
 }
 
 .input input[type=time] {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'/><path d='M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z'></path></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'/><path d='M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z'></path></svg>");
 }
 
 .input input[type=time]:focus,
 .input input[type=time]:hover {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='orange'><path d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'/><path d='M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z'></path></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'/><path d='M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z'></path></svg>");
 }
 
 .input input[type=file] {
   padding-inline-end: 3em;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z'></path></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z'></path></svg>");
 }
 
 .input input[type=file]:focus,
 .input input[type=file]:hover,
 .input input[type=file]:active {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='orange'><path d='M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z'></path></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z'></path></svg>");
 }
 
 .input select:not([multiple]) {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z'/></svg>");
   background-size: 1.5em 1.5em;
   background-repeat: no-repeat;
   background-position: calc(100% - 0.4em) 50%;
@@ -2510,11 +2521,11 @@ select {
 
 .input select:not([multiple]):focus,
 .input select:not([multiple]):hover {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='orange'><path d='M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z'/></svg>");
 }
 
 .input select:not([multiple]):active {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z'/></svg>");
 }
 
 .input select[multiple] {
@@ -2538,11 +2549,11 @@ select {
 }
 
 .input.disabled label {
-  color: hsl(0, 0%, 47%);
+  color: var(--colorG60);
 }
 
 .input.disabled input {
-  background: hsl(0, 0%, 18%) repeating-linear-gradient(-45deg, transparent 0 5px, var(--color1) 5px 10px);
+  background: var(--colorG18) repeating-linear-gradient(-45deg, transparent 0 5px, var(--color1) 5px 10px);
   background-size: 100% 100%;
   cursor: default;
 }
@@ -2583,7 +2594,6 @@ select {
 .input-password {
   position: relative;
 }
-
 .input-password button {
   position: absolute;
   bottom: 3em/2;
@@ -2595,17 +2605,12 @@ select {
   background-color: transparent;
   border: none;
 }
-
 .input-password button:focus {
   outline: none;
 }
-
-.input-password button:focus,
-.input-password button:hover,
-.input-password button:active {
+.input-password button:where(:focus, :hover, :active) {
   color: var(--color5);
 }
-
 .input-password button svg {
   width: 100%;
   height: 100%;
@@ -2617,29 +2622,23 @@ select {
   height: 3em;
   align-items: stretch;
 }
-
 .search form * {
   outline: none;
 }
-
 .search form input {
   flex-grow: 1;
   max-height: 100%;
   padding: 0.4em 1em;
   color: currentcolor;
-  background-color: hsl(0, 0%, 14%);
-  border: 2px solid var(--colorG);
+  background-color: var(--colorG18);
+  border: 2px solid var(--colorG27);
   border-right: none;
   border-radius: 1.5em 0 0 1.5em;
   box-shadow: inset 0 0.2em 0.5em var(--colorAB2);
 }
-
-.search form input:focus,
-.search form input:hover,
-.search form input:active {
+.search form input:where(:focus, :hover, :active) {
   border-color: var(--color2);
 }
-
 .search form button {
   min-width: 3.5em;
   color: var(--colorT);
@@ -2648,14 +2647,10 @@ select {
   border-radius: 0 1.5em 1.5em 0;
   box-shadow: inset 0 0.2em 0.5em var(--colorAB2);
 }
-
-.search form button:focus,
-.search form button:hover,
-.search form button:active {
+.search form button:where(:focus, :hover, :active) {
   color: var(--colorW);
   animation: anim-search 0.2s ease-in-out;
 }
-
 .search form button svg {
   width: 1em;
   height: 1em;
@@ -2666,42 +2661,33 @@ select {
     border-color: var(--color5);
   }
 }
-input[type=checkbox]:not([role=switch]),
-input[type=radio]:not([role=switch]) {
+:where(input[type=checkbox], input[type=radio]):not([role=switch]) {
   appearance: none;
   display: inline-grid;
   width: 1.2em;
   height: 1.2em;
   vertical-align: text-top;
   box-sizing: border-box;
-  background-color: hsl(0, 0%, 15%);
+  background-color: var(--colorG15);
   border: 0.15em solid var(--color1);
   outline: none;
   box-shadow: inset 0 0.1em 0.3em var(--colorAB3);
   cursor: pointer;
 }
-
-input[type=checkbox]:not([role=switch]):disabled,
-input[type=radio]:not([role=switch]):disabled {
-  background: hsl(0, 0%, 18%) repeating-linear-gradient(-45deg, transparent 0 2px, hsl(0, 0%, 33%) 2px 4px);
+:where(input[type=checkbox], input[type=radio]):not([role=switch]):disabled {
+  background: var(--colorG18) repeating-linear-gradient(-45deg, transparent 0 2px, var(--colorG33) 2px 4px);
   cursor: default;
 }
-
-input[type=checkbox]:not([role=switch]):disabled + label,
-input[type=radio]:not([role=switch]):disabled + label {
+:where(input[type=checkbox], input[type=radio]):not([role=switch]):disabled + label {
   cursor: default;
 }
-
-input[type=checkbox]:not([role=switch])::before,
-input[type=radio]:not([role=switch])::before {
+:where(input[type=checkbox], input[type=radio]):not([role=switch])::before {
   content: "";
   display: block;
   background-color: var(--color2);
   transform: scale(0);
 }
-
-input[type=checkbox]:not([role=switch]):focus-visible,
-input[type=radio]:not([role=switch]):focus-visible {
+:where(input[type=checkbox], input[type=radio]):not([role=switch]):focus-visible {
   border-color: var(--color5) !important;
 }
 
@@ -2717,18 +2703,16 @@ input[type=checkbox]:not([role=switch]):checked::before {
 input[type=radio]:not([role=switch]) {
   border-radius: 50%;
 }
-
 input[type=radio]:not([role=switch])::before {
   clip-path: circle(30% at 50% 50%);
   transition: transform 0.3s;
 }
+input[type=radio]:not([role=switch]):checked {
+  border-color: var(--color2);
+}
 
 input[type=radio]:not([role=switch]):checked::before {
   transform: scale(1);
-}
-
-input[type=radio]:not([role=switch]):checked {
-  border-color: var(--color2);
 }
 
 input[role=switch] {
@@ -2737,13 +2721,12 @@ input[role=switch] {
   box-sizing: border-box;
   width: 5em;
   height: 2.5em;
-  background-color: hsl(0, 0%, 15%);
+  background-color: var(--colorG15);
   border: 0.3em solid transparent;
   border-radius: 1.25em;
   box-shadow: inset 0 0.2em 0.5em var(--colorAB2);
   cursor: pointer;
 }
-
 input[role=switch]::before {
   content: attr(data-a);
   display: block;
@@ -2758,31 +2741,25 @@ input[role=switch]::before {
   transform: translate(-0.3em, -0.3em);
   transition: transform 0.2s ease-in-out;
 }
-
 input[role=switch]:checked::before {
   content: attr(data-b);
   background-color: var(--color2);
   transform: translate(2.2em, -0.3em);
 }
-
 input[role=switch]:disabled {
-  background-image: repeating-linear-gradient(-45deg, var(--colorA1) 0 3px, hsl(0, 0%, 18%) 0, transparent 0, transparent 6px);
+  background-image: repeating-linear-gradient(-45deg, var(--colorA1) 0 3px, var(--colorG18) 0, transparent 0, transparent 6px);
   cursor: default;
 }
-
 input[role=switch]:disabled::before {
-  color: hsl(0, 0%, 38%);
+  color: var(--colorG38);
   background-color: var(--color1);
 }
-
 input[role=switch]:disabled + label {
   cursor: default;
 }
-
 input[role=switch]:not(:checked) + label {
   color: hsl(0, 0%, 45%);
 }
-
 input[role=switch]:focus-visible {
   border-color: var(--color5) !important;
 }
@@ -2792,16 +2769,13 @@ input[role=switch]:focus-visible {
   width: 5em;
   height: 2.5em;
 }
-
 .switch-custom [role=switch] {
   position: absolute;
   inset: 0;
 }
-
 .switch-custom [role=switch]::before {
   display: none;
 }
-
 .switch-custom [role=switch] + div {
   position: absolute;
   left: 0;
@@ -2816,37 +2790,29 @@ input[role=switch]:focus-visible {
   transition: transform 0.2s ease-in-out;
   pointer-events: none;
 }
-
 .switch-custom [role=switch]:checked + div {
   background-color: var(--color2);
   transform: translate(2.5em, 0);
 }
-
 .switch-custom [role=switch]:disabled + div {
-  color: hsl(0, 0%, 38%);
+  color: var(--colorG38);
   background-color: var(--color1);
 }
-
 .switch-custom [role=switch]:not(:disabled).dual-state + div {
   background-color: var(--color2);
 }
-
 .switch-custom :not(:checked) + div svg:nth-child(1) {
   display: none;
 }
-
 .switch-custom :checked + div {
   transform: translateX(1.25em);
 }
-
 .switch-custom :checked + div svg:nth-child(2) {
   display: none;
 }
-
-.switch-custom:has([role=switch]:not(:checked, .switch-custom .dual-state)) + label {
+.switch-custom:has([role=switch]:not(:checked, .dual-state)) + label {
   color: hsl(0, 0%, 45%);
 }
-
 .switch-custom:has(:disabled) + label {
   cursor: default;
 }
@@ -2858,7 +2824,6 @@ input[role=switch]:focus-visible {
   gap: 0.5em;
   margin-block-end: 1em;
 }
-
 [class^=range] input {
   grid-column: 1;
   grid-row: 2;
@@ -2868,28 +2833,64 @@ input[role=switch]:focus-visible {
   height: 0.3em;
   max-width: 100%;
   cursor: pointer;
-  background: linear-gradient(90deg, var(--color) 0, var(--color) var(--percent), transparent var(--percent)), linear-gradient(to top, var(--colorA005) 0, var(--colorA005) 33.3%, hsl(0, 0%, 13%) 33.3%, hsl(0, 0%, 13%) 66.6%, var(--colorA005) 66.6%, var(--colorA005));
+  background: linear-gradient(90deg, var(--color) 0, var(--color) var(--percent), transparent var(--percent)), linear-gradient(to top, var(--colorA005) 0, var(--colorA005) 33.3%, var(--colorG13) 33.3%, var(--colorG13) 66.6%, var(--colorA005) 66.6%, var(--colorA005));
 }
-
 [class^=range] input ~ input {
   background: initial;
 }
-
 [class^=range] input:disabled {
-  --color: hsl(0, 0%, 27%);
-  cursor: not-allowed;
+  --color: var(--colorG27);
+  cursor: default;
 }
-
 [class^=range] input:disabled + output {
   color: hsl(0, 0%, 45%);
 }
-
 [class^=range] input:disabled + output::after {
-  background: hsl(0, 0%, 18%) repeating-linear-gradient(-90deg, var(--colorA1) 0 3px, var(--colorA1) 0, transparent 0, transparent 6px);
+  background: var(--colorG18) repeating-linear-gradient(-90deg, var(--colorA1) 0 3px, var(--colorA1) 0, transparent 0, transparent 6px);
 }
-
 [class^=range] input:focus {
   outline: none;
+}
+[class^=range] output {
+  position: relative;
+  margin: 0 auto 2em;
+  text-align: center;
+}
+[class^=range] output:not(.phylactery) {
+  --size: 5em;
+  width: var(--size);
+  line-height: var(--size);
+  vertical-align: middle;
+}
+[class^=range] output:not(.phylactery)::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  box-sizing: border-box;
+  content: "";
+  background-color: var(--color);
+  border-radius: 50% 50% 0 50%;
+  box-shadow: 0 0.5rem 2rem var(--colorAB3);
+  transform: rotate(45deg);
+}
+[class^=range] .phylactery {
+  min-width: var(--size, 4em);
+  padding: 1em;
+  min-height: 3.5em;
+  background-color: var(--color);
+  border-radius: 0.3em;
+  box-shadow: 0 0.5rem 2rem var(--colorAB3);
+}
+[class^=range] .phylactery::after {
+  position: absolute;
+  content: "";
+  bottom: -1em;
+  left: calc(50% - 1em);
+  width: 2em;
+  height: 1.5em;
+  background-color: var(--color);
+  clip-path: polygon(50% 100%, 0 0, 100% 0);
+  filter: drop-shadow(0 0.5rem 2rem var(--colorAB3));
 }
 
 [class^=range] ::-webkit-slider-thumb {
@@ -2909,8 +2910,8 @@ input[role=switch]:focus-visible {
 }
 
 [class^=range] input:disabled::-webkit-slider-thumb {
-  border-color: hsl(0, 0%, 30%);
-  background: hsl(0, 0%, 18%) repeating-linear-gradient(-45deg, transparent 0 3px, var(--color1) 3px 6px);
+  border-color: var(--colorG33);
+  background: var(--colorG18) repeating-linear-gradient(-45deg, transparent 0 3px, var(--color1) 3px 6px);
 }
 
 [class^=range] ::-moz-range-thumb {
@@ -2931,54 +2932,8 @@ input[role=switch]:focus-visible {
 }
 
 [class^=range] input:disabled::-moz-range-thumb {
-  border-color: hsl(0, 0%, 30%);
-  background: hsl(0, 0%, 18%) repeating-linear-gradient(-45deg, transparent 0 3px, var(--color1) 3px 6px);
-}
-
-[class^=range] output {
-  position: relative;
-  margin: 0 auto 2em;
-  text-align: center;
-}
-
-[class^=range] output:not(.phylactery) {
-  --size: 5em;
-  width: var(--size);
-  line-height: var(--size);
-  vertical-align: middle;
-}
-
-[class^=range] output:not(.phylactery)::after {
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  box-sizing: border-box;
-  content: "";
-  background-color: var(--color);
-  border-radius: 50% 50% 0 50%;
-  box-shadow: 0 0.5rem 2rem var(--colorAB3);
-  transform: rotate(45deg);
-}
-
-[class^=range] .phylactery {
-  min-width: var(--size, 4em);
-  padding: 1em;
-  min-height: 3.5em;
-  background-color: var(--color);
-  border-radius: 0.3em;
-  box-shadow: 0 0.5rem 2rem var(--colorAB3);
-}
-
-[class^=range] .phylactery::after {
-  position: absolute;
-  content: "";
-  bottom: -1em;
-  left: calc(50% - 1em);
-  width: 2em;
-  height: 1.5em;
-  background-color: var(--color);
-  clip-path: polygon(50% 100%, 0 0, 100% 0);
-  filter: drop-shadow(0 0.5rem 2rem var(--colorAB3));
+  border-color: var(--colorG33);
+  background: var(--colorG18) repeating-linear-gradient(-45deg, transparent 0 3px, var(--color1) 3px 6px);
 }
 
 .range-multithumb {
@@ -2986,9 +2941,8 @@ input[role=switch]:focus-visible {
   --stop: 0;
   --color: var(--color2);
 }
-
 .range-multithumb input {
-  background: linear-gradient(90deg, transparent var(--start), var(--color) var(--start), var(--color) var(--stop), transparent var(--stop)), linear-gradient(to top, var(--colorA005) 0, var(--colorA005) 33.3%, hsl(0, 0%, 13%) 33.3%, hsl(0, 0%, 13%) 66.6%, var(--colorA005) 66.6%, var(--colorA005));
+  background: linear-gradient(90deg, transparent var(--start), var(--color) var(--start), var(--color) var(--stop), transparent var(--stop)), linear-gradient(to top, var(--colorA005) 0, var(--colorA005) 33.3%, var(--colorG13) 33.3%, var(--colorG13) 66.6%, var(--colorA005) 66.6%, var(--colorA005));
 }
 
 .button,
@@ -3006,49 +2960,38 @@ input[role=switch]:focus-visible {
   user-select: none;
   cursor: pointer;
 }
-
-.button:focus-visible,
-.round-button:focus-visible,
-.button:hover,
-.round-button:hover {
+.button:where(:focus-visible, :hover),
+.round-button:where(:focus-visible, :hover) {
   box-shadow: var(--shadow2);
   transform: translateY(-0.1rem);
 }
-
-.button:focus-visible::after,
+.button:focus-visible::after, .button:hover::after,
 .round-button:focus-visible::after,
-.button:hover::after,
 .round-button:hover::after {
   transform: scaleX(1);
   transform-origin: left center;
 }
-
 .button:focus-visible::before,
 .round-button:focus-visible::before {
   background-color: var(--color5);
 }
-
 .button:active,
 .round-button:active {
   box-shadow: inset 0 0 0.1em var(--colorAB3);
   transform: translateY(0.05em);
 }
-
-.button::before,
+.button::before, .button::after,
 .round-button::before,
-.button::after,
 .round-button::after {
   content: "";
   position: absolute;
   inset: 0;
 }
-
 .button::before,
 .round-button::before {
   z-index: -2;
   background-color: var(--bg-color);
 }
-
 .button::after,
 .round-button::after {
   z-index: -1;
@@ -3057,19 +3000,16 @@ input[role=switch]:focus-visible {
   transform-origin: left center;
   transition: transform 0.4s;
 }
-
 .button:disabled,
 .round-button:disabled {
   box-shadow: var(--shadow2);
   transform: none;
-  cursor: not-allowed;
+  cursor: default;
 }
-
 .button:disabled::before,
 .round-button:disabled::before {
   background-color: var(--color1);
 }
-
 .button:disabled::after,
 .round-button:disabled::after {
   content: none;
@@ -3090,23 +3030,17 @@ input[role=switch]:focus-visible {
   border-width: 0.25em;
   border-radius: 50%;
 }
-
 .round-button svg {
   height: 1.5em;
   width: 1.5em;
   margin: auto;
 }
-
 .round-button::before {
   border-radius: 50%;
 }
 
-.round-button + .round-button-test {
-  margin-inline-start: 0.5em;
-}
-
 .button2 {
-  --color: hsl(0, 0%, 38%);
+  --color: var(--colorG38);
   all: unset;
   width: 3em;
   aspect-ratio: 1;
@@ -3119,10 +3053,7 @@ input[role=switch]:focus-visible {
   cursor: pointer;
   transition: transform 0.5s;
 }
-
-.button2:focus,
-.button2:hover,
-.button2:active {
+.button2:where(:focus, :hover, :active) {
   --color: var(--color5);
   transform: rotate(360deg);
 }
@@ -3145,7 +3076,7 @@ input[role=switch]:focus-visible {
   line-height: 1;
   padding: 0.75em 1em;
   color: var(--colorT);
-  background-color: hsl(0, 0%, 27%);
+  background-color: var(--colorG27);
   border: none;
   border-radius: 0.3em;
   box-shadow: var(--shadow8);
@@ -3204,11 +3135,9 @@ input[role=switch]:focus-visible {
   display: flex;
   padding: 0;
 }
-
 .tabs .tab-list ~ * .tab-list {
   margin-block-start: 0.5em;
 }
-
 .tabs .tab-list button {
   z-index: 1;
   overflow: hidden;
@@ -3219,20 +3148,12 @@ input[role=switch]:focus-visible {
   text-overflow: ellipsis;
   text-decoration: none;
   color: inherit;
-  background-color: hsl(0, 0%, 27%);
+  background-color: var(--colorG27);
   border: 1px dashed var(--colorA15);
   border-radius: 0.5em 0.5em 0 0;
   box-shadow: 0 -1rem 1rem var(--colorAB005);
   cursor: pointer;
   transition: 0.2s box-shadow ease-in-out;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .tabs .tab-list button:focus-visible,
-  .tabs .tab-list button:hover {
-    outline: none;
-    box-shadow: inset 0 -0.3em var(--color2), 0 -1rem 1rem var(--colorAB005);
-  }
 }
 .tabs .tab-list button[aria-selected=true] {
   z-index: 2;
@@ -3242,11 +3163,9 @@ input[role=switch]:focus-visible {
   border-bottom: none;
   pointer-events: none;
 }
-
 .tabs .tab-list button[aria-selected=false] {
   user-select: none;
 }
-
 .tabs .tab-panel {
   position: relative;
   top: -1px;
@@ -3254,15 +3173,19 @@ input[role=switch]:focus-visible {
   border: 1px dashed var(--colorA15);
   box-shadow: var(--shadow8);
 }
-
 .tabs .tab-panel[aria-hidden=false] {
   display: block;
 }
-
 .tabs .tab-panel[aria-hidden=true] {
   display: none;
 }
 
+@media (hover: hover) and (pointer: fine) {
+  .tabs .tab-list button:where(:focus-visible, :hover) {
+    outline: none;
+    box-shadow: inset 0 -0.3em var(--color2), 0 -1rem 1rem var(--colorAB005);
+  }
+}
 .scroll-top {
   position: fixed;
   bottom: 0;
@@ -3288,13 +3211,13 @@ input[role=switch]:focus-visible {
   fill: var(--color5);
 }
 .scroll-top:where(:hover, :active) svg {
-  fill: hsl(0, 0%, 61%);
+  fill: var(--colorG60);
 }
 
 .footer {
   padding: 0 1em;
   color: var(--colorT2);
-  background-color: hsl(0, 0%, 15%);
+  background-color: var(--colorG15);
 }
 .footer a {
   color: var(--colorT);
@@ -3362,7 +3285,7 @@ input[role=switch]:focus-visible {
   position: relative;
   margin-block-end: 1em;
   padding-block-end: 1em;
-  border-bottom: 0.1em solid hsl(0, 0%, 26%);
+  border-bottom: 0.1em solid var(--colorG27);
 }
 .article .sub-header {
   margin-block: 2em 1em;
@@ -3377,7 +3300,7 @@ input[role=switch]:focus-visible {
   grid-area: aa;
   width: 3em;
   aspect-ratio: 1;
-  background: hsl(0, 0%, 13%) var(--img, "");
+  background: var(--colorG13) var(--img, "");
   background-size: cover;
   border-radius: 50%;
 }
@@ -3412,14 +3335,14 @@ input[role=switch]:focus-visible {
   padding: 0.25em 0.5em 0.25em 1.25em;
   text-decoration: none;
   white-space: nowrap;
-  background-color: hsl(0, 0%, 16%);
+  background-color: var(--colorG15);
   clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
 }
 .article .anchor {
   position: absolute;
   right: 0;
   bottom: 1em;
-  color: hsl(0, 0%, 44%);
+  color: var(--colorG38);
   text-decoration: none;
 }
 .article .anchor:where(:focus, :hover, :active) {
@@ -3517,7 +3440,7 @@ main > article > footer {
     font-size: 1rem;
     font-weight: normal;
     text-decoration: none;
-    color: hsl(0, 0%, 44%);
+    color: var(--colorG38);
     outline: none;
     transition: color 0.2s ease-in-out;
     user-select: none;
@@ -3547,7 +3470,7 @@ main > article > footer {
 }
 
 .calendar-white {
-  background-color: var(--colorW);
+  background-color: hsl(0, 0%, 100%);
 }
 
 .calendar-green {
@@ -3583,7 +3506,7 @@ main > article > footer {
 
 .progress,
 .progress::-webkit-progress-bar {
-  background-color: hsl(0, 0%, 19%);
+  background-color: var(--colorG18);
   box-shadow: inset 0 0.2em 0.5em var(--colorAB2);
   border-radius: 0.5em;
 }
@@ -3674,7 +3597,7 @@ bar-chart {
 }
 
 ::-webkit-scrollbar-track {
-  background: hsla(0, 0%, 100%, 0.03);
+  background: var(--colorA003);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -3682,7 +3605,7 @@ bar-chart {
 }
 
 * {
-  scrollbar-color: var(--color2) hsla(0, 0%, 100%, 0.03);
+  scrollbar-color: var(--color2) var(--colorA003);
 }
 
 .ribbon-content {
@@ -3690,7 +3613,7 @@ bar-chart {
 }
 .ribbon-content > [class*=ribbon] {
   --color: currentcolor;
-  --bg-color: hsl(0, 0%, 33%);
+  --bg-color: var(--colorG33);
   position: absolute;
   z-index: 2000;
   line-height: 2em;
@@ -3760,7 +3683,7 @@ bar-chart {
   background-color: var(--color2);
 }
 .ribbon-content > a[class*=ribbon]:where(:focus, :hover, :active) {
-  color: hsl(0, 0%, 18%);
+  color: var(--colorG18);
 }
 .ribbon-content > a[class*=ribbon]:where(:focus, :hover, :active)::after {
   background-color: var(--color5);
@@ -3778,7 +3701,7 @@ bar-chart {
   display: grid;
   grid-template-rows: repeat(2, auto);
   padding-inline: 1em;
-  background-color: hsl(0, 0%, 26%);
+  background-color: var(--colorG27);
   border-radius: var(--r1);
   box-shadow: var(--shadow1);
   gap: 0 1em;
@@ -3835,7 +3758,7 @@ bar-chart {
 .topic-item > :nth-child(3) ul a {
   padding: 0.25em 0.5em 0.25em 1.25em;
   white-space: nowrap;
-  background-color: hsl(0, 0%, 16%);
+  background-color: var(--colorG15);
   clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
 }
 .topic-item h2 {
@@ -3860,20 +3783,31 @@ bar-chart {
     grid-template-areas: "aaa ttt" "aaa uuu";
   }
 }
-.avatars,
-.avatars > * {
-  width: 3.5em;
-  height: 3.5em;
-  background-image: var(--img, "");
-  background-color: hsl(0, 0%, 13%);
-  background-size: cover;
-  border-radius: 50%;
-}
-
 .avatars {
   grid-area: aaa;
   position: relative;
   margin: auto;
+}
+.avatars, .avatars > * {
+  width: 3.5em;
+  height: 3.5em;
+  background-image: var(--img, "");
+  background-color: var(--colorG13);
+  background-size: cover;
+  border-radius: 50%;
+  border: 0.2em solid var(--colorG27);
+}
+.avatars > * {
+  position: absolute;
+}
+.avatars > :nth-child(1) {
+  transform: translate(1.2em, 1em) scale(0.5);
+}
+.avatars > :nth-child(2) {
+  transform: translate(1.2em, 0.2em) scale(0.5);
+}
+.avatars > :nth-child(3) {
+  transform: translate(1.2em, -0.6em) scale(0.5);
 }
 
 @media (max-width: 35.01em) {
@@ -3882,23 +3816,6 @@ bar-chart {
     font-size: 0.5em;
   }
 }
-.avatars > * {
-  position: absolute;
-  border: 0.2em solid hsl(0, 0%, 30%);
-}
-
-.avatars > :nth-child(1) {
-  transform: translate(1.2em, 1em) scale(0.5);
-}
-
-.avatars > :nth-child(2) {
-  transform: translate(1.2em, 0.2em) scale(0.5);
-}
-
-.avatars > :nth-child(3) {
-  transform: translate(1.2em, -0.6em) scale(0.5);
-}
-
 .topic-solved > :nth-child(2) svg:first-child {
   color: var(--colorS4);
 }
@@ -3906,7 +3823,7 @@ bar-chart {
 html,
 .nav,
 .cmd-nav,
-.cmd-nav:not(:focus):not(:hover):not(.active) svg,
+.cmd-nav:not(:focus, :hover, .active) svg,
 .sub-nav li > *,
 .sub-nav .current::after,
 .breadcrumb li > *,
@@ -3958,7 +3875,7 @@ html,
 [class*=demo-items] > * {
   box-sizing: border-box;
   padding: 1em;
-  background-color: hsl(0, 0%, 27%);
+  background-color: var(--colorG27);
   box-shadow: var(--shadow1);
 }
 [class*=demo-items] > * code {
@@ -3973,7 +3890,7 @@ html,
 .demo-item {
   box-sizing: border-box;
   padding: 1em;
-  background-color: hsl(0, 0%, 27%);
+  background-color: var(--colorG27);
   box-shadow: var(--shadow1);
 }
 .demo-item.ribbon-content {
@@ -3981,7 +3898,7 @@ html,
 }
 
 .demo-items-color {
-  color: hsl(0, 0%, 20%);
+  color: var(--colorG18);
 }
 .demo-items-color > :nth-child(1n) {
   background-color: hsl(15, 100%, 50%);
@@ -4026,7 +3943,7 @@ html,
   background-color: hsl(145, 100%, 50%);
 }
 .demo-items-color code {
-  background-color: hsl(0, 0%, 27%);
+  background-color: var(--colorG27);
 }
 
 .demo-counter > * {
@@ -4093,7 +4010,7 @@ html,
 }
 .demo-icons rt {
   font-size: 0.8em;
-  color: hsl(0, 0%, 38%);
+  color: var(--colorG38);
 }
 
 .hidden,

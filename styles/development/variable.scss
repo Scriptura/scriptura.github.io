@@ -27,18 +27,25 @@ $wrap: 90em + $gap * 2; // @note La fonction calc() n'est pas implémentée pour
 
   // Dark theme
   --color-scheme: dark;
-  --colorT: hsl(35, 45%, 84%); // couleur primaire du texte
-  --colorT2: hsl(34, 44%, 69%); // couleur secondaire du texte
-  --colorG: hsl(0, 0%, 22%); // gris de référence
+  --colorG13: hsl(0, 0%, 13%);
+  --colorG15: hsl(0, 0%, 15%);
+  --colorG18: hsl(0, 0%, 18%);
+  --colorG22: hsl(0, 0%, 22%); // gris de référence
+  --colorG27: hsl(0, 0%, 27%);
+  --colorG33: hsl(0, 0%, 33%);
+  --colorG38: hsl(0, 0%, 38%);
+  --colorG60: hsl(0, 0%, 60%);
   --colorW: hsl(0, 0%, 100%); // blanc de référence
   --colorB: hsl(0, 0%, 0%); // noir de référence
-  --color1: var(--colorG); // couleur de fond
+  --colorT: hsl(35, 45%, 84%); // couleur primaire du texte
+  --colorT2: hsl(34, 44%, 69%); // couleur secondaire du texte
+  --color1: var(--colorG22); // couleur de fond
   --color2: hsl(9, 100%, 64%); // couleur dominante 2 (tomato)
   --color3: hsl(12, 63%, 49%); // couleur secondaire
   --color4: hsl(96, 41%, 29%); // couleur secondaire
   --color5: hsl(39, 100%, 50%); // couleur secondaire
   --color6: hsl(207, 22%, 39%); // couleur secondaire
-  --colorG: hsl(0, 0%, 22%);
+  --colorA003: hsla(0, 0%, 100%, 0.03);
   --colorA005: hsla(0, 0%, 100%, 0.05);
   --colorA1: hsla(0, 0%, 100%, 0.1);
   --colorA15: hsla(0, 0%, 100%, 0.15);
@@ -60,6 +67,7 @@ $wrap: 90em + $gap * 2; // @note La fonction calc() n'est pas implémentée pour
   --colorAS22: hsla(0, 100%, 50%, 0.3);
   --colorS4: hsl(96, 41%, 53%);
   --colorS5: hsla(30, 31%, 54%);
+  --colorS52: hsl(39, 100%, 35%);
 
   /*
   // Light theme
