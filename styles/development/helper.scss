@@ -1,1 +1,224 @@
+@use 'variable' as *;
 
+.hidden,
+[hidden] {
+  display: none !important;
+}
+
+@container grid (width < #{$sizeXS}) {
+  .xs-hidden {
+    display: none !important;
+  }
+}
+
+@container grid (#{$sizeXS} < width < #{$sizeS}) {
+  .s-hidden {
+    display: none !important;
+  }
+}
+
+@container grid (#{$sizeS} < width < #{$sizeM}) {
+  .m-hidden {
+    display: none !important;
+  }
+}
+
+@container grid (#{$sizeM} < width < #{$sizeL}) {
+  .l-hidden {
+    display: none !important;
+  }
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+a[aria-disabled='true'] {
+  cursor: not-allowed;
+}
+
+a[aria-disabled='true']:active {
+  pointer-events: none;
+}
+
+.sr-only {
+  position: absolute;
+  transform: scale(0);
+}
+
+.protected {
+  user-select: none;
+}
+
+.onaline {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.balance {
+  text-wrap: balance;
+}
+
+.center {
+  display: grid;
+  place-items: center;
+}
+
+@container grid (35em > width) {
+  span.br {
+    display: block;
+  }
+}
+
+@container grid (35em > width) {
+  .xs-center {
+    display: grid;
+    place-items: center;
+  }
+}
+
+.rotate90 {
+  transform: rotate(90deg);
+}
+
+.rotate180 {
+  transform: rotate(180deg);
+}
+
+.reverse {
+  transform: scaleX(-1);
+}
+
+.size {
+  --size: 25em;
+  --size-width: var(--size);
+  --size-height: var(--size);
+  width: var(--size-width);
+  height: var(--size-height);
+  max-width: 100%;
+  max-height: 100vh;
+}
+
+.vw80 {
+  --size: 25em;
+  --size-width: var(--size);
+  width: calc(var(--size) * 0.8);
+}
+
+.scale300 {
+  font-size: 300%;
+}
+
+.scale250 {
+  font-size: 250%;
+}
+
+.scale200 {
+  font-size: 200%;
+}
+
+.scale175 {
+  font-size: 175%;
+}
+
+.scale160 {
+  font-size: 160%;
+}
+
+.scale150 {
+  font-size: 150%;
+}
+
+.scale140 {
+  font-size: 140%;
+}
+
+.scale130 {
+  font-size: 130%;
+}
+
+.scale120 {
+  font-size: 120%;
+}
+
+.scale115 {
+  font-size: 115%;
+}
+
+.scale110 {
+  font-size: 110%;
+}
+
+.scale105 {
+  font-size: 105%;
+}
+
+.scale95 {
+  font-size: 95%;
+}
+
+.scale90 {
+  font-size: 90%;
+}
+
+.scale85 {
+  font-size: 85%;
+}
+
+.scale80 {
+  font-size: 80%;
+}
+
+.scale75 {
+  font-size: 75%;
+}
+
+.scale70 {
+  font-size: 70%;
+}
+
+.scale60 {
+  font-size: 60%;
+}
+
+.scale50 {
+  font-size: 50%;
+}
+
+.scale40 {
+  font-size: 40%;
+}
+
+.scale30 {
+  font-size: 30%;
+}
+
+.rescale {
+  font-size: 1rem;
+}
+
+@container grid (35em > width) {
+  .xs-scale {
+    font-size: var(--xs-scale, 80%);
+  }
+}
+
+.blink {
+  animation: anim-blink 1.2s infinite;
+}
+
+.no-overscroll {
+  overscroll-behavior-x: none;
+}
+
+.no-print .cmd-print {
+  display: none;
+}
+
+@keyframes anim-blink {
+  50% {
+    display: none;
+    filter: invert(1);
+  }
+}

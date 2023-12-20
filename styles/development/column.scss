@@ -1,0 +1,88 @@
+@use 'variable' as *;
+
+[class^='column'] {
+  column-gap: 0;
+  position: relative;
+
+  & > * {
+    display: inline-block;
+    width: 100%;
+    break-inside: avoid-column;
+    word-wrap: break-word;
+  }
+
+  &.gap {
+    column-gap: var(--gap);
+    margin-block-end: calc(-1 * var(--gap));
+  }
+
+  &.gap > * {
+    margin-block-end: var(--gap);
+  }
+
+  &.gap-top {
+    margin-block-start: var(--gap);
+  }
+
+  &.gap-bottom {
+    margin-block-end: 0;
+  }
+
+  &.gap-vertical {
+    gap: 0 var(--gap);
+  }
+}
+
+@media (max-width: #{$sizeXS}) {
+  .sizeXS-column2 {
+    column-count: 2;
+  }
+}
+
+@media (min-width: #{$sizeXS}) {
+  .column2,
+  .column3,
+  .column4,
+  .s-column2 {
+    column-count: 2;
+  }
+
+  .column5,
+  .column6 {
+    column-count: 3;
+  }
+}
+
+@media (min-width: #{$sizeS}) {
+  .column3,
+  .column4 {
+    column-count: 3;
+  }
+
+  .column5,
+  .column6 {
+    column-count: 4;
+  }
+
+  .m-column2 {
+    column-count: 2;
+  }
+}
+
+@media (min-width: #{$sizeL}) {
+  .column4 {
+    column-count: 4;
+  }
+
+  .column5 {
+    column-count: 5;
+  }
+
+  .column6 {
+    column-count: 6;
+  }
+
+  .l-column3 {
+    column-count: 3;
+  }
+}

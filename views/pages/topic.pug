@@ -39,7 +39,7 @@ block main
     - for (let i = 0; i < 20; i++)
       article.links.decorative-hr(id='comment-' + (i + 1))
         header
-          h2.sr-only Commentaire numéro #{i} du sujet en cours.
+          h2.sr-only Commentaire numéro #{i + 1} du sujet "Lorem ipsum dolor sit amet".
           - if (i % 2)
            .avatar(style='--img:url(/medias/images/uploads/pisit-heng-w300.webp)')
           - else

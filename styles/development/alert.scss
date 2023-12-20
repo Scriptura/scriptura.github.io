@@ -1,0 +1,42 @@
+@use 'variable' as *;
+
+.alert {
+  --alert-color: var(--colorG13);
+  --alert-bg-color: var(--colorT);
+  --alert-color-link: var(--colorW);
+  --alert-icon-size: 3em;
+  --alert-icon-color: var(--colorG13);
+
+  & .wrap {
+    display: grid;
+    grid-template-columns: minmax(1em, 1fr) minmax(0, 92em) minmax(1em, 1fr);
+    padding-block: var(--gap);
+    color: var(--alert-color);
+    background-color: var(--alert-bg-color);
+    box-shadow: var(--shadow1);
+
+    & > * {
+      grid-column: 2/3;
+    }
+  }
+
+  & .mm {
+    display: grid;
+    grid-template-columns: var(--alert-icon-size) minmax(0, 1fr);
+    gap: var(--gap);
+
+    & .icon {
+      width: var(--alert-icon-size);
+      height: var(--alert-icon-size);
+      margin: auto;
+      padding: 0.75em;
+      fill: var(--alert-bg-color);
+      background-color: var(--alert-icon-color);
+      clip-path: circle(50%);
+    }
+  }
+
+  & #gdpr-see .mm {
+    margin-block-end: var(--gap);
+  }
+}

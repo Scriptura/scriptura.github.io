@@ -1,1 +1,33 @@
+@use 'variable' as *;
 
+.scroll-top {
+  position: fixed;
+  bottom: 0;
+  bottom: env(safe-area-inset-bottom, 0);
+  right: 0;
+  z-index: 4000;
+  height: 3em;
+  width: 3em;
+  background-color: transparent;
+  border: none;
+  outline: none;
+
+  &.hide {
+    display: none;
+  }
+
+  & svg {
+    height: 2em;
+    width: 2em;
+    fill: var(--colorB);
+    opacity: 0.5;
+  }
+
+  &:focus-within svg {
+    fill: var(--color5);
+  }
+
+  &:where(:hover, :active) svg {
+    fill: var(--colorG60);
+  }
+}

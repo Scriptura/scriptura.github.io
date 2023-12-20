@@ -1,1 +1,319 @@
+@use 'variable' as *;
 
+.nav {
+  position: relative;
+  z-index: 2000;
+  display: grid;
+  user-select: none;
+  background-color: var(--colorG15);
+
+  & .avatar {
+    display: inline-block;
+    vertical-align: -0.5em;
+    width: 1.7em;
+    aspect-ratio: 1;
+    margin-inline-end: 0.5em;
+    background-color: var(--colorG27);
+    background-image: var(--img, '');
+    background-size: cover;
+    border-radius: 50%;
+  }
+}
+
+@media (max-width: #{$sizeNav}) {
+  .nav {
+    grid-template-rows: 3em;
+    grid-template-columns: 3em minmax(0, 1fr) 3em;
+    grid-template-areas: 'logo breadcrumb cmd';
+  }
+}
+
+@media (min-width: #{$sizeNav}) {
+  .nav {
+    grid-template-rows: repeat(2, 2.5em);
+    grid-template-columns: 5em minmax(0, 1fr);
+    grid-template-areas: 'logo subnav' 'logo breadcrumb';
+  }
+}
+
+.logo-nav {
+  grid-area: logo;
+  display: block;
+  box-shadow: 0.5rem 0.5rem 0.5rem var(--colorAB2);
+  background-color: var(--color2);
+
+  &::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-image: url('../medias/images/logo/logo.svg');
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    background-size: auto 70%;
+    filter: brightness(1.25) contrast(1.25);
+  }
+}
+
+a.logo-nav:focus-within,
+a.logo-nav:hover {
+  background-color: var(--color5);
+}
+
+a.logo-nav:focus-within::after,
+a.logo-nav:hover::after {
+  animation: anim-logo 0.5s ease-in-out;
+}
+
+.sub-nav {
+  grid-area: subnav;
+  box-shadow: 0.5rem 0.5rem 0.5rem var(--colorAB2);
+  display: flex;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+
+  & li {
+    list-style: none;
+  }
+
+  & li > * {
+    display: block;
+    padding: 0 1em;
+    line-height: 2.5;
+    box-shadow: inset 0.5rem 0.5rem 0.5rem var(--colorAB2);
+  }
+
+  & .current {
+    background-color: var(--color2);
+  }
+
+  & a {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    //color: var(--colorT2);
+    text-decoration: none;
+  }
+
+  & a:where(:focus, :hover, :active) {
+    //color: var(--colorW);
+    background-color: var(--color2);
+  }
+
+  & a:where(:focus, :hover, :active) svg {
+    animation: anim-jump 0.5s ease-in-out;
+  }
+}
+
+@media (max-width: #{$sizeNav}) {
+  .sub-nav {
+    position: absolute;
+    z-index: 800;
+    top: 3em;
+    left: 0;
+    width: 100vw;
+    flex-wrap: wrap;
+    transform: translateX(-110vw);
+
+    & li {
+      flex: 1;
+      flex-basis: 50%;
+      background-color: var(--colorG15);
+      transform: rotate(90deg);
+      transition: transform 0.4s ease-in-out;
+    }
+
+    & li > * {
+      line-height: 3;
+    }
+
+    &.active li {
+      transform: translateX(110vw) rotate(0deg);
+    }
+  }
+}
+
+@media (min-width: #{$sizeNav}) {
+  .sub-nav {
+    & .current {
+      position: relative;
+      z-index: 10;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: calc(50% - 1em);
+        width: 2em;
+        height: 1em;
+        background-color: var(--color2);
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
+      }
+    }
+
+    & > :last-child {
+      margin-inline-start: auto;
+    }
+  }
+}
+
+@media (min-width: #{$sizeXS}) and (max-width: #{$sizeNav}) {
+  .sub-nav li {
+    flex-basis: 33%;
+  }
+}
+
+@media (min-width: #{$sizeS}) and (max-width: #{$sizeNav}) {
+  .sub-nav li {
+    flex-basis: 25%;
+  }
+}
+
+@media (max-width: #{$sizeNav}) {
+  :where(html, body).active {
+    overflow: clip;
+  }
+  body.active {
+    &::before {
+      content: '';
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: var(--colorAB7);
+    }
+    & :where(main, footer, aside) {
+      user-select: none;
+      pointer-events: none;
+      filter: blur(2px) grayscale(1);
+    }
+  }
+
+  .sub-nav li {
+    &:nth-child(1) {
+      transition-delay: 0.03s;
+    }
+
+    &:nth-child(2) {
+      transition-delay: 0.06s;
+    }
+
+    &:nth-child(3) {
+      transition-delay: 0.08s;
+    }
+
+    &:nth-child(4) {
+      transition-delay: 0.11s;
+    }
+
+    &:nth-child(5) {
+      transition-delay: 0.14s;
+    }
+
+    &:nth-child(6) {
+      transition-delay: 0.17s;
+    }
+
+    &:nth-child(7) {
+      transition-delay: 0.19s;
+    }
+
+    &:nth-child(8) {
+      transition-delay: 0.22s;
+    }
+
+    &:nth-child(9) {
+      transition-delay: 0.25s;
+    }
+
+    &:nth-child(10) {
+      transition-delay: 0.28s;
+    }
+
+    &:nth-child(11) {
+      transition-delay: 0.31s;
+    }
+
+    &:nth-child(12) {
+      transition-delay: 0.33s;
+    }
+  }
+}
+
+@media (min-width: #{$sizeNav}) {
+  @keyframes anim-jump {
+    30% {
+      transform: translateY(-0.3em);
+    }
+  }
+}
+
+.cmd-nav {
+  all: unset;
+  grid-area: cmd;
+}
+
+@media (max-width: #{$sizeNav}) {
+  .cmd-nav {
+    padding: 0.5em;
+    cursor: pointer;
+    background-color: var(--colorG15);
+
+    & svg {
+      width: 100%;
+      height: 100%;
+      transition: 0.2s background-color;
+    }
+
+    & rect {
+      transform-origin: center;
+      fill: var(--colorT);
+      transition: 0.2s all ease-in-out;
+    }
+
+    &:not(:focus, :hover, .active) svg {
+      border-radius: 50%;
+      background-color: var(--color2);
+    }
+
+    &:not(:focus, :hover, .active) rect {
+      x: 450px;
+      width: 100px;
+      height: 100px;
+    }
+
+    &:where(:focus, :hover, .active) {
+      background-color: var(--color2);
+    }
+
+    &.active svg :nth-child(1) {
+      transform: translate(-177px, 177px) rotate(45deg);
+    }
+
+    &.active svg :nth-child(2) {
+      transform: rotate(-45deg);
+    }
+
+    &.active svg :nth-child(3) {
+      transform: translate(-177px, -177px) rotate(-45deg);
+    }
+
+    .no-js & {
+      display: none;
+    }
+  }
+}
+
+@media (min-width: #{$sizeNav}) {
+  .cmd-nav {
+    display: none;
+  }
+}
+
+@keyframes anim-logo {
+  30% {
+    transform: rotate(-30deg);
+  }
+}

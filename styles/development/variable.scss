@@ -30,21 +30,22 @@ $wrap: 90em + $gap * 2; // @note La fonction calc() n'est pas implémentée pour
   --colorG13: hsl(0, 0%, 13%);
   --colorG15: hsl(0, 0%, 15%);
   --colorG18: hsl(0, 0%, 18%);
-  --colorG22: hsl(0, 0%, 22%); // gris de référence
+  --colorG22: hsl(0, 0%, 22%);          // gris de référence
   --colorG27: hsl(0, 0%, 27%);
   --colorG33: hsl(0, 0%, 33%);
   --colorG38: hsl(0, 0%, 38%);
+  --colorG45: hsl(0, 0%, 45%);
   --colorG60: hsl(0, 0%, 60%);
-  --colorW: hsl(0, 0%, 100%); // blanc de référence
-  --colorB: hsl(0, 0%, 0%); // noir de référence
-  --colorT: hsl(35, 45%, 84%); // couleur primaire du texte
-  --colorT2: hsl(34, 44%, 69%); // couleur secondaire du texte
-  --color1: var(--colorG22); // couleur de fond
-  --color2: hsl(9, 100%, 64%); // couleur dominante 2 (tomato)
-  --color3: hsl(12, 63%, 49%); // couleur secondaire
-  --color4: hsl(96, 41%, 29%); // couleur secondaire
-  --color5: hsl(39, 100%, 50%); // couleur secondaire
-  --color6: hsl(207, 22%, 39%); // couleur secondaire
+  --colorW: hsl(0, 0%, 100%);           // blanc de référence
+  --colorB: hsl(0, 0%, 0%);             // noir de référence
+  --colorT: hsl(35, 45%, 84%);          // couleur primaire du texte
+  --colorT2: hsl(34, 44%, 69%);         // couleur secondaire du texte
+  --color1: var(--colorG22);              // couleur de fond
+  --color2: hsl(9, 100%, 64%);          // couleur dominante 2 (tomato)
+  --color3: hsl(12, 63%, 49%);          // couleur secondaire
+  --color4: hsl(96, 41%, 29%);          // couleur secondaire
+  --color5: hsl(39, 100%, 50%);         // couleur secondaire
+  --color6: hsl(207, 22%, 39%);         // couleur secondaire
   --colorA003: hsla(0, 0%, 100%, 0.03);
   --colorA005: hsla(0, 0%, 100%, 0.05);
   --colorA1: hsla(0, 0%, 100%, 0.1);
@@ -63,7 +64,7 @@ $wrap: 90em + $gap * 2; // @note La fonction calc() n'est pas implémentée pour
   --colorAB5: hsla(0, 0%, 0%, 0.5);
   --colorAB7: hsla(0, 0%, 0%, 0.7);
   --colorAB8: hsla(0, 0%, 0%, 0.8);
-  --colorAS2: hsl(9, 100%, 64%, 0.5); // dérivée de `--color2`
+  --colorAS2: hsl(9, 100%, 64%, 0.5);   // dérivée de `--color2`
   --colorAS22: hsla(0, 100%, 50%, 0.3);
   --colorS4: hsl(96, 41%, 53%);
   --colorS5: hsla(30, 31%, 54%);
@@ -72,19 +73,54 @@ $wrap: 90em + $gap * 2; // @note La fonction calc() n'est pas implémentée pour
   /*
   // Light theme
   --color-scheme: light;
-  --colorT: hsl(9, 63%, 16%);      // couleur primaire du texte
-  --colorT2: hsl(34, 20%, 45%);    // couleur secondaire du texte
-  --colorG: hsl(0, 0%, 22%);       // gris de référence
-  --colorW: hsl(0, 0%, 100%);      // blanc de référence
-  --colorB: hsl(0, 0%, 0%);        // noir de référence
-  --color1: hsl(55, 100%, 95%);    // couleur de fond
-  --color2: hsl(9, 100%, 64%);     // couleur dominante 2 (tomato)
-  --color3: hsl(12, 63%, 49%);     // couleur secondaire
-  --color4: hsl(154, 69%, 42%);    // couleur secondaire
-  --color5: hsl(60, 63%, 67%);     // couleur secondaire
-  --color6: hsl(207, 47%, 68%);    // couleur secondaire
-  --colorS: rgba(255, 99, 71, .5); // dérivée de `--color2`
+  --colorG13: hsl(10, 50%, 13%);
+  --colorG15: hsl(10, 50%, 15%);
+  --colorG18: hsl(10, 50%, 18%);
+  --colorG22: hsl(10, 50%, 22%);          // gris de référence
+  --colorG27: hsl(55, 100%, 93%);
+  --colorG33: hsl(10, 50%, 33%);
+  --colorG38: hsl(10, 50%, 38%);
+  --colorG45: hsl(10, 50%, 45%);
+  --colorG60: hsl(10, 50%, 60%);
+  --colorW: hsl(0, 0%, 100%);           // blanc de référence
+  --colorB: hsl(0, 0%, 0%);             // noir de référence
+  --colorT: hsl(9, 63%, 16%);           // couleur primaire du texte
+  --colorT2: hsl(34, 20%, 45%);         // couleur secondaire du texte
+  --colorW: hsl(0, 0%, 100%);           // blanc de référence
+  --colorB: hsl(0, 0%, 0%);             // noir de référence
+  --color1: hsl(55, 100%, 95%);         // couleur de fond
+  --color2: hsl(9, 100%, 64%);          // couleur dominante 2 (tomato)
+  --color3: hsl(12, 63%, 49%);          // couleur secondaire
+  --color4: hsl(154, 69%, 42%);         // couleur secondaire
+  --color5: hsl(60, 63%, 67%);          // couleur secondaire
+  --color6: hsl(207, 47%, 68%);         // couleur secondaire
+  --colorA003: hsla(0, 0%, 100%, 0.03);
+  --colorA005: hsla(0, 0%, 100%, 0.05);
+  --colorA1: hsla(0, 0%, 100%, 0.1);
+  --colorA15: hsla(0, 0%, 100%, 0.15);
+  --colorA2: hsla(0, 0%, 100%, 0.2);
+  --colorA3: hsla(0, 0%, 100%, 0.3);
+  --colorA7: hsla(0, 0%, 100%, 0.7);
+  --colorA5: hsla(0, 0%, 100%, 0.5);
+  --colorAB0: hsla(0, 0%, 0%, 0);
+  --colorAB1: hsla(0, 0%, 0%, 0.1);
+  --colorAB2: hsla(0, 0%, 0%, 0.2);
+  --colorAB25: hsla(0, 0%, 0%, 0.25);
+  --colorAB005: hsla(0, 0%, 0%, 0.05);
+  --colorAB3: hsla(0, 0%, 0%, 0.3);
+  --colorAB4: hsla(0, 0%, 0%, 0.4);
+  --colorAB5: hsla(0, 0%, 0%, 0.5);
+  --colorAB7: hsla(0, 0%, 0%, 0.7);
+  --colorAB8: hsla(0, 0%, 0%, 0.8);
+  --colorAS2: hsl(9, 100%, 64%, 0.5);     // dérivée de `--color2`
+  --colorAS22: hsla(0, 100%, 50%, 0.3);
+  --colorS4: hsl(96, 41%, 53%);
+  --colorS5: hsla(30, 31%, 54%);
+  --colorS52: hsl(39, 100%, 35%);
   */
+
+  // @subsection Borders
+  --border1: 0.2em solid transparent;
 
   // @subsection Shadows
   // @note Seules les ombres de référence - et donc redontantes - sont placées ici, les autres sont directement intégrées à leur propriété.

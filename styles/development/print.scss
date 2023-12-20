@@ -4,7 +4,6 @@
 
 @use 'font';
 @use 'base';
-/*
 @use 'typography';
 //@use 'layout';
 @use 'grid';
@@ -42,7 +41,6 @@
 //@use 'skin';
 //@use 'demo';
 @use 'helper'; // @note Les helpers s'appliquent à la fin dans le but d'écraser des styles tels que font-size.
-*/
 
 body > :not(main, footer),
 form,
