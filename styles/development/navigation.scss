@@ -7,6 +7,18 @@
   user-select: none;
   background-color: var(--colorG15);
 
+  @media (max-width: #{$sizeNav}) {
+    grid-template-rows: 3em;
+    grid-template-columns: 3em minmax(0, 1fr) 3em;
+    grid-template-areas: 'logo breadcrumb cmd';
+  }
+
+  @media (min-width: #{$sizeNav}) {
+    grid-template-rows: repeat(2, 2.5em);
+    grid-template-columns: 5em minmax(0, 1fr);
+    grid-template-areas: 'logo subnav' 'logo breadcrumb';
+  }
+
   & .avatar {
     display: inline-block;
     vertical-align: -0.5em;
@@ -17,22 +29,6 @@
     background-image: var(--img, '');
     background-size: cover;
     border-radius: 50%;
-  }
-}
-
-@media (max-width: #{$sizeNav}) {
-  .nav {
-    grid-template-rows: 3em;
-    grid-template-columns: 3em minmax(0, 1fr) 3em;
-    grid-template-areas: 'logo breadcrumb cmd';
-  }
-}
-
-@media (min-width: #{$sizeNav}) {
-  .nav {
-    grid-template-rows: repeat(2, 2.5em);
-    grid-template-columns: 5em minmax(0, 1fr);
-    grid-template-areas: 'logo subnav' 'logo breadcrumb';
   }
 }
 
@@ -55,14 +51,12 @@
   }
 }
 
-a.logo-nav:focus-within,
-a.logo-nav:hover {
+a.logo-nav:where(:focus-within, :hover) {
   background-color: var(--color5);
-}
 
-a.logo-nav:focus-within::after,
-a.logo-nav:hover::after {
-  animation: anim-logo 0.5s ease-in-out;
+  &::after {
+    animation: anim-logo 0.5s ease-in-out;
+  }
 }
 
 .sub-nav {
@@ -73,41 +67,7 @@ a.logo-nav:hover::after {
   margin: 0;
   padding: 0;
 
-  & li {
-    list-style: none;
-  }
-
-  & li > * {
-    display: block;
-    padding: 0 1em;
-    line-height: 2.5;
-    box-shadow: inset 0.5rem 0.5rem 0.5rem var(--colorAB2);
-  }
-
-  & .current {
-    background-color: var(--color2);
-  }
-
-  & a {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    //color: var(--colorT2);
-    text-decoration: none;
-  }
-
-  & a:where(:focus, :hover, :active) {
-    //color: var(--colorW);
-    background-color: var(--color2);
-  }
-
-  & a:where(:focus, :hover, :active) svg {
-    animation: anim-jump 0.5s ease-in-out;
-  }
-}
-
-@media (max-width: #{$sizeNav}) {
-  .sub-nav {
+  @media (max-width: #{$sizeNav}) {
     position: absolute;
     z-index: 800;
     top: 3em;
@@ -132,10 +92,8 @@ a.logo-nav:hover::after {
       transform: translateX(110vw) rotate(0deg);
     }
   }
-}
 
-@media (min-width: #{$sizeNav}) {
-  .sub-nav {
+  @media (min-width: #{$sizeNav}) {
     & .current {
       position: relative;
       z-index: 10;
@@ -156,17 +114,94 @@ a.logo-nav:hover::after {
       margin-inline-start: auto;
     }
   }
-}
 
-@media (min-width: #{$sizeXS}) and (max-width: #{$sizeNav}) {
-  .sub-nav li {
-    flex-basis: 33%;
+  & li {
+    list-style: none;
+
+    @media (min-width: #{$sizeXS}) and (max-width: #{$sizeNav}) {
+      flex-basis: 33%;
+    }
+
+    @media (min-width: #{$sizeS}) and (max-width: #{$sizeNav}) {
+      flex-basis: 25%;
+    }
+
+    @media (max-width: #{$sizeNav}) {
+      &:nth-child(1) {
+        transition-delay: 0.03s;
+      }
+
+      &:nth-child(2) {
+        transition-delay: 0.06s;
+      }
+
+      &:nth-child(3) {
+        transition-delay: 0.08s;
+      }
+
+      &:nth-child(4) {
+        transition-delay: 0.11s;
+      }
+
+      &:nth-child(5) {
+        transition-delay: 0.14s;
+      }
+
+      &:nth-child(6) {
+        transition-delay: 0.17s;
+      }
+
+      &:nth-child(7) {
+        transition-delay: 0.19s;
+      }
+
+      &:nth-child(8) {
+        transition-delay: 0.22s;
+      }
+
+      &:nth-child(9) {
+        transition-delay: 0.25s;
+      }
+
+      &:nth-child(10) {
+        transition-delay: 0.28s;
+      }
+
+      &:nth-child(11) {
+        transition-delay: 0.31s;
+      }
+
+      &:nth-child(12) {
+        transition-delay: 0.33s;
+      }
+    }
+    & > * {
+      display: block;
+      padding: 0 1em;
+      line-height: 2.5;
+      box-shadow: inset 0.5rem 0.5rem 0.5rem var(--colorAB2);
+    }
   }
-}
 
-@media (min-width: #{$sizeS}) and (max-width: #{$sizeNav}) {
-  .sub-nav li {
-    flex-basis: 25%;
+  & .current {
+    background-color: var(--color2);
+  }
+
+  & a {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    //color: var(--colorT2);
+    text-decoration: none;
+
+    &:where(:focus, :hover, :active) {
+      //color: var(--colorW);
+      background-color: var(--color2);
+
+      & svg {
+        animation: anim-jump 0.5s ease-in-out;
+      }
+    }
   }
 }
 
@@ -190,56 +225,6 @@ a.logo-nav:hover::after {
       filter: blur(2px) grayscale(1);
     }
   }
-
-  .sub-nav li {
-    &:nth-child(1) {
-      transition-delay: 0.03s;
-    }
-
-    &:nth-child(2) {
-      transition-delay: 0.06s;
-    }
-
-    &:nth-child(3) {
-      transition-delay: 0.08s;
-    }
-
-    &:nth-child(4) {
-      transition-delay: 0.11s;
-    }
-
-    &:nth-child(5) {
-      transition-delay: 0.14s;
-    }
-
-    &:nth-child(6) {
-      transition-delay: 0.17s;
-    }
-
-    &:nth-child(7) {
-      transition-delay: 0.19s;
-    }
-
-    &:nth-child(8) {
-      transition-delay: 0.22s;
-    }
-
-    &:nth-child(9) {
-      transition-delay: 0.25s;
-    }
-
-    &:nth-child(10) {
-      transition-delay: 0.28s;
-    }
-
-    &:nth-child(11) {
-      transition-delay: 0.31s;
-    }
-
-    &:nth-child(12) {
-      transition-delay: 0.33s;
-    }
-  }
 }
 
 @media (min-width: #{$sizeNav}) {
@@ -253,10 +238,12 @@ a.logo-nav:hover::after {
 .cmd-nav {
   all: unset;
   grid-area: cmd;
-}
 
-@media (max-width: #{$sizeNav}) {
-  .cmd-nav {
+  @media (min-width: #{$sizeNav}) {
+    display: none;
+  }
+
+  @media (max-width: #{$sizeNav}) {
     padding: 0.5em;
     cursor: pointer;
     background-color: var(--colorG15);
@@ -303,12 +290,6 @@ a.logo-nav:hover::after {
     .no-js & {
       display: none;
     }
-  }
-}
-
-@media (min-width: #{$sizeNav}) {
-  .cmd-nav {
-    display: none;
   }
 }
 

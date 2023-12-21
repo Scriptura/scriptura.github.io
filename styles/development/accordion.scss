@@ -39,6 +39,15 @@
     & svg {
       margin-inline-end: 1em;
     }
+
+    &:where(:focus-visible, :hover) {
+      @media (hover: hover) and (pointer: fine) {
+        color: var(--colorW);
+        background-color: var(--color2);
+        box-shadow: 0.5rem 0.5rem 2rem var(--colorAB25);
+        animation: anim-accordion 0.1s ease-in-out;
+      }
+    }
   }
 
   & > * > summary::before {
@@ -69,15 +78,6 @@
   & > details[open] summary::after,
   & [data-open='true'] .accordion-summary::after {
     transform: rotate(-90deg);
-  }
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .accordion > * > :first-child:where(:focus-visible, :hover) {
-    color: var(--colorW);
-    background-color: var(--color2);
-    box-shadow: 0.5rem 0.5rem 2rem var(--colorAB25);
-    animation: anim-accordion 0.1s ease-in-out;
   }
 }
 

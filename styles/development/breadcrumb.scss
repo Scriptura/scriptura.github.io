@@ -65,10 +65,8 @@
       margin-inline-start: calc(-1 * var(--gap));
     }
   }
-}
 
-@media (max-width: #{$sizeNav}) {
-  .breadcrumb {
+  @media (max-width: #{$sizeNav}) {
     & li > * {
       line-height: 3;
       padding: 0 2.25em;

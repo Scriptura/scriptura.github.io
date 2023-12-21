@@ -121,6 +121,7 @@
   --shadow8: 0 1rem 1rem hsla(0, 0%, 0%, 0.1);
   --r1: 0.3em;
   --r2: 0.3em;
+  --r3: .2em;
 }
 
 :root {
@@ -761,18 +762,6 @@ main {
   user-select: none;
   background-color: var(--colorG15);
 }
-.nav .avatar {
-  display: inline-block;
-  vertical-align: -0.5em;
-  width: 1.7em;
-  aspect-ratio: 1;
-  margin-inline-end: 0.5em;
-  background-color: var(--colorG27);
-  background-image: var(--img, "");
-  background-size: cover;
-  border-radius: 50%;
-}
-
 @media (max-width: 90.01em) {
   .nav {
     grid-template-rows: 3em;
@@ -787,6 +776,18 @@ main {
     grid-template-areas: "logo subnav" "logo breadcrumb";
   }
 }
+.nav .avatar {
+  display: inline-block;
+  vertical-align: -0.5em;
+  width: 1.7em;
+  aspect-ratio: 1;
+  margin-inline-end: 0.5em;
+  background-color: var(--colorG27);
+  background-image: var(--img, "");
+  background-size: cover;
+  border-radius: 50%;
+}
+
 .logo-nav {
   grid-area: logo;
   display: block;
@@ -805,13 +806,10 @@ main {
   filter: brightness(1.25) contrast(1.25);
 }
 
-a.logo-nav:focus-within,
-a.logo-nav:hover {
+a.logo-nav:where(:focus-within, :hover) {
   background-color: var(--color5);
 }
-
-a.logo-nav:focus-within::after,
-a.logo-nav:hover::after {
+a.logo-nav:where(:focus-within, :hover)::after {
   animation: anim-logo 0.5s ease-in-out;
 }
 
@@ -823,31 +821,6 @@ a.logo-nav:hover::after {
   margin: 0;
   padding: 0;
 }
-.sub-nav li {
-  list-style: none;
-}
-.sub-nav li > * {
-  display: block;
-  padding: 0 1em;
-  line-height: 2.5;
-  box-shadow: inset 0.5rem 0.5rem 0.5rem var(--colorAB2);
-}
-.sub-nav .current {
-  background-color: var(--color2);
-}
-.sub-nav a {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  text-decoration: none;
-}
-.sub-nav a:where(:focus, :hover, :active) {
-  background-color: var(--color2);
-}
-.sub-nav a:where(:focus, :hover, :active) svg {
-  animation: anim-jump 0.5s ease-in-out;
-}
-
 @media (max-width: 90.01em) {
   .sub-nav {
     position: absolute;
@@ -891,6 +864,9 @@ a.logo-nav:hover::after {
     margin-inline-start: auto;
   }
 }
+.sub-nav li {
+  list-style: none;
+}
 @media (min-width: 35.01em) and (max-width: 90.01em) {
   .sub-nav li {
     flex-basis: 33%;
@@ -902,23 +878,6 @@ a.logo-nav:hover::after {
   }
 }
 @media (max-width: 90.01em) {
-  :where(html, body).active {
-    overflow: clip;
-  }
-  body.active::before {
-    content: "";
-    position: absolute;
-    z-index: 1;
-    inset: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: var(--colorAB7);
-  }
-  body.active :where(main, footer, aside) {
-    user-select: none;
-    pointer-events: none;
-    filter: blur(2px) grayscale(1);
-  }
   .sub-nav li:nth-child(1) {
     transition-delay: 0.03s;
   }
@@ -956,6 +915,47 @@ a.logo-nav:hover::after {
     transition-delay: 0.33s;
   }
 }
+.sub-nav li > * {
+  display: block;
+  padding: 0 1em;
+  line-height: 2.5;
+  box-shadow: inset 0.5rem 0.5rem 0.5rem var(--colorAB2);
+}
+.sub-nav .current {
+  background-color: var(--color2);
+}
+.sub-nav a {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-decoration: none;
+}
+.sub-nav a:where(:focus, :hover, :active) {
+  background-color: var(--color2);
+}
+.sub-nav a:where(:focus, :hover, :active) svg {
+  animation: anim-jump 0.5s ease-in-out;
+}
+
+@media (max-width: 90.01em) {
+  :where(html, body).active {
+    overflow: clip;
+  }
+  body.active::before {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--colorAB7);
+  }
+  body.active :where(main, footer, aside) {
+    user-select: none;
+    pointer-events: none;
+    filter: blur(2px) grayscale(1);
+  }
+}
 @media (min-width: 90.01em) {
   @keyframes anim-jump {
     30% {
@@ -967,7 +967,11 @@ a.logo-nav:hover::after {
   all: unset;
   grid-area: cmd;
 }
-
+@media (min-width: 90.01em) {
+  .cmd-nav {
+    display: none;
+  }
+}
 @media (max-width: 90.01em) {
   .cmd-nav {
     padding: 0.5em;
@@ -1009,11 +1013,7 @@ a.logo-nav:hover::after {
     display: none;
   }
 }
-@media (min-width: 90.01em) {
-  .cmd-nav {
-    display: none;
-  }
-}
+
 @keyframes anim-logo {
   30% {
     transform: rotate(-30deg);
@@ -1070,7 +1070,6 @@ a.logo-nav:hover::after {
 .breadcrumb li + li {
   margin-inline-start: calc(-1 * var(--gap));
 }
-
 @media (max-width: 90.01em) {
   .breadcrumb li > * {
     line-height: 3;
@@ -1086,6 +1085,7 @@ a.logo-nav:hover::after {
     padding-inline-start: var(--gap);
   }
 }
+
 .alert {
   --alert-color: var(--colorG13);
   --alert-bg-color: var(--colorT);
@@ -1235,7 +1235,7 @@ ol ol ol {
 }
 .list-straight li::before, .list-straight svg {
   width: 3em;
-  border-radius: var(--r2) 0 0 var(--r2);
+  border-radius: var(--r3) 0 0 var(--r3);
   clip-path: polygon(0% 0%, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0% 100%);
 }
 .list-straight li::before {
@@ -1250,7 +1250,7 @@ ol ol ol {
   right: 0.5em;
   width: calc(100% + 0.5em);
   padding-inline-start: 1.5em;
-  border-radius: 0 var(--r2) var(--r2) 0;
+  border-radius: 0 var(--r3) var(--r3) 0;
   clip-path: polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%);
 }
 
@@ -1957,14 +1957,19 @@ video + .media-player {
     transform: translate(0, 0);
   }
 }
-.card h2,
-.card p {
+.card {
+  /*
+  &:hover svg:hover {
+    background-color: var(--color5);
+  }
+  */
+}
+.card h2, .card p {
   margin: 0;
   padding: 2rem;
   background-color: var(--colorG27);
   box-shadow: var(--shadow3);
 }
-
 .card h2 {
   margin-block-end: 0;
   text-align: center;
@@ -1973,12 +1978,10 @@ video + .media-player {
 .card h2 span {
   color: var(--color2);
 }
-
 .card p {
   margin-block-start: 0;
   border-radius: 2px 2px 0.5rem 0.5rem;
 }
-
 .card > a svg {
   display: block;
   width: calc(100% - 4px);
@@ -1989,20 +1992,12 @@ video + .media-player {
   background-color: var(--colorG27);
   box-shadow: var(--shadow3);
 }
-
 .card svg {
   transition: background-color 0.5s, color 0.5s;
 }
-
-.card:focus-within svg,
-.card:hover svg,
-.card svg:hover {
+.card:focus-within svg, .card:hover svg, .card svg:hover {
   color: var(--colorW);
   background-color: var(--color2);
-}
-
-.card:hover svg:hover {
-  background-color: var(--color5);
 }
 
 .user-def {
@@ -3128,6 +3123,14 @@ input[type=radio]:not([role=switch]):checked::before {
 .accordion > * > :first-child svg {
   margin-inline-end: 1em;
 }
+@media (hover: hover) and (pointer: fine) {
+  .accordion > * > :first-child:where(:focus-visible, :hover) {
+    color: var(--colorW);
+    background-color: var(--color2);
+    box-shadow: 0.5rem 0.5rem 2rem var(--colorAB25);
+    animation: anim-accordion 0.1s ease-in-out;
+  }
+}
 .accordion > * > summary::before {
   all: unset;
 }
@@ -3152,14 +3155,6 @@ input[type=radio]:not([role=switch]):checked::before {
   transform: rotate(-90deg);
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .accordion > * > :first-child:where(:focus-visible, :hover) {
-    color: var(--colorW);
-    background-color: var(--color2);
-    box-shadow: 0.5rem 0.5rem 2rem var(--colorAB25);
-    animation: anim-accordion 0.1s ease-in-out;
-  }
-}
 @keyframes anim-accordion {
   to {
     transform: scale(1.01) translateZ(0);

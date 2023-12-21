@@ -121,7 +121,7 @@ ol ol ol {
   & li::before,
   & svg {
     width: 3em;
-    border-radius: var(--r2) 0 0 var(--r2);
+    border-radius: var(--r3) 0 0 var(--r3);
     clip-path: polygon(
       0% 0%,
       calc(100% - 1em) 0,
@@ -145,7 +145,7 @@ ol ol ol {
     right: 0.5em;
     width: calc(100% + 0.5em);
     padding-inline-start: 1.5em;
-    border-radius: 0 var(--r2) var(--r2) 0;
+    border-radius: 0 var(--r3) var(--r3) 0;
     clip-path: polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%);
   }
 }

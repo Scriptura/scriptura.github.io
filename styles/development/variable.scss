@@ -138,4 +138,5 @@ $wrap: 90em + $gap * 2; // @note La fonction calc() n'est pas implémentée pour
   // @subsection Rounds
   --r1: 0.3em; // Boites
   --r2: 0.3em; // Éléments internes
+  --r3: .2em; // Éléments de liste
 }
