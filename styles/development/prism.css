@@ -1,9 +1,9 @@
-// CDN :
-// https://unpkg.com/browse/prism-themes@1.9.0/themes/
-// https://unpkg.com/prismjs@1.29.0/themes/prism.css
-// https://unpkg.com/prism-themes@1.9.0/themes/prism-one-dark.min.css
+/* CDN : */
+/* https://unpkg.com/browse/prism-themes@1.9.0/themes/ */
+/* https://unpkg.com/prismjs@1.29.0/themes/prism.css */
+/* https://unpkg.com/prism-themes@1.9.0/themes/prism-one-dark.min.css */
 
-// One Dark theme @see https://github.com/PrismJS/prism-themes/blob/master/themes/prism-one-dark.css
+/* One Dark theme @see https://github.com/PrismJS/prism-themes/blob/master/themes/prism-one-dark.css */
 /*
 code[class*="language-"],
 pre[class*="language-"] {
@@ -72,13 +72,13 @@ pre[class*="language-"] {
 	color: hsl(187, 47%, 55%);
 }
 
-// HTML overrides
+/* HTML overrides */
 .token.attr-value > .token.punctuation.attr-equals,
 .token.special-attr > .token.attr-value > .token.value.css {
 	color: hsl(220, 14%, 71%);
 }
 
-// CSS overrides
+/* CSS overrides */
 .language-css .token.selector {
 	color: hsl(355, 65%, 65%);
 }
@@ -101,7 +101,7 @@ pre[class*="language-"] {
 	color: hsl(286, 60%, 67%);
 }
 
-// JS overrides
+/* JS overrides */
 .language-javascript .token.operator {
 	color: hsl(286, 60%, 67%);
 }
@@ -110,7 +110,7 @@ pre[class*="language-"] {
 	color: hsl(5, 48%, 51%);
 }
 
-// JSON overrides
+/* JSON overrides */
 .language-json .token.operator {
 	color: hsl(220, 14%, 71%);
 }
@@ -119,7 +119,7 @@ pre[class*="language-"] {
 	color: hsl(29, 54%, 61%);
 }
 
-// MD overrides
+/* MD overrides */
 .language-markdown .token.url,
 .language-markdown .token.url > .token.operator,
 .language-markdown .token.url-reference.url > .token.string {
@@ -160,7 +160,7 @@ pre[class*="language-"] {
 	color: hsl(355, 65%, 65%);
 }
 
-// General
+/* General */
 .token.bold {
 	font-weight: bold;
 }
