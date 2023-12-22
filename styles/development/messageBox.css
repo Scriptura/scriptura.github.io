@@ -1,0 +1,47 @@
+[class^='message'] {
+  --color: currentcolor;
+  --bg-color: var(--colorG27);
+  padding: 0.15em 1em;
+  color: var(--color);
+  background-color: var(--bg-color);
+  box-shadow: var(--shadow1);
+
+  &[class*='highlight'] {
+    --icon-size: 2.5em;
+    display: grid;
+    grid-template-columns: var(--icon-size) minmax(0, 1fr);
+    gap: 1em;
+    align-items: center;
+    min-height: 5em;
+    padding-inline: 1em;
+  }
+
+  &[class*='highlight'] > .icon {
+    width: var(--icon-size);
+    height: var(--icon-size);
+    padding: 25%;
+    fill: var(--bg-color);
+    background-color: currentcolor;
+    clip-path: circle(50%);
+  }
+}
+
+main [class^='message'] {
+  border-radius: var(--r2);
+}
+
+.message-info {
+  --bg-color: var(--color6);
+}
+
+.message-success {
+  --bg-color: var(--color4);
+}
+
+.message-error {
+  --bg-color: var(--color3);
+}
+
+.message-warning {
+  --bg-color: var(--colorS52);
+}

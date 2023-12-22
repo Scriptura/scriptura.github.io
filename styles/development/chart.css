@@ -1,0 +1,9 @@
+pie-chart {
+  --pie-chart-color-label: var(--color1);
+  filter: drop-shadow(var(--shadow4));
+}
+
+bar-chart {
+  --bar-chart-color-label: var(--color1);
+  filter: drop-shadow(var(--shadow4));
+}

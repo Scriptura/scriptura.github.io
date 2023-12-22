@@ -1,0 +1,181 @@
+svg {
+  max-width: 100%;
+  fill: currentcolor;
+}
+
+.decorative-svg {
+  fill: var(--colorT2);
+  filter: drop-shadow(0.2em 0.2em 0.2em var(--colorAB3));
+}
+
+.icon,
+.icon-inline {
+  display: inline-block;
+  vertical-align: sub;
+  height: 1.2em;
+  aspect-ratio: 1;
+}
+
+.icon-inline {
+  margin-inline-end: 0.5em;
+}
+
+img {
+  vertical-align: middle;
+  max-width: 100%;
+  height: auto;
+  border-style: none;
+  user-select: none;
+}
+
+figure {
+  margin: 0;
+}
+
+[class*='figure-image'] {
+  width: 100%;
+  padding: 0.5em;
+  color: var(--colorT);
+  background-color: var(--colorG27);
+  box-shadow: var(--shadow5);
+  user-select: none;
+
+  & figcaption {
+    padding-block-start: 0.5em;
+    text-align: center;
+  }
+}
+
+[class*='-thumbnail'] {
+  width: 100%;
+  max-width: calc(50% - 0.5em);
+}
+
+@media (max-width: $sizeS) {
+  [class*='-thumbnail'] {
+    max-width: 20em;
+    margin-inline: auto;
+  }
+}
+
+@media (min-width: $sizeS) {
+  [class*='-alignleft'] {
+    float: left;
+    margin-inline-end: var(--gap);
+  }
+
+  [class*='-alignright'] {
+    float: right;
+    margin-inline-start: var(--gap);
+  }
+
+  :where([class*='-alignleft'], [class*='-alignright'])
+    ~ :where(h2, h3, hr, aside) {
+    clear: both;
+  }
+}
+
+.js [class*='-focus'] {
+  position: relative;
+  z-index: 1;
+  cursor: zoom-in;
+  transition: 0.15s transform;
+  &:where(:focus-within, :hover) {
+    box-shadow: 0.5em 0.5em 2em var(--colorAB3);
+    transform: scale(1.01);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  [class*='-focus']:focus-within {
+    background-color: var(--color5);
+
+    & button {
+      color: var(--color5);
+    }
+  }
+}
+
+[class*='-focus'] button,
+.picture-area button {
+  all: unset;
+  position: absolute;
+  z-index: 1;
+  outline: none !important;
+  cursor: zoom-in;
+
+  & svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+[class*='-focus'] button {
+  top: 1em;
+  right: 1em;
+  width: 1.2em;
+  height: 1.2em;
+  color: var(--colorG60);
+}
+
+.picture-area {
+  position: fixed;
+  z-index: 4001;
+  inset: 0;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--colorG13);
+  cursor: zoom-out;
+
+  & img {
+    all: unset;
+    max-width: 100%;
+    max-height: 100vh;
+    background-color: var(--colorB);
+  }
+
+  & button {
+    bottom: 1em;
+    right: 1em;
+    width: 2em;
+    height: 2em;
+    color: var(--colorG60);
+    cursor: zoom-out;
+
+    &:where(:focus-within, :hover, :active) {
+      color: var(--color5);
+    }
+
+    &.fullscreen-button {
+      transform: translateX(-3em);
+      cursor: zoom-in;
+    }
+  }
+}
+
+.freeze {
+  overflow: clip;
+}
+
+img:fullscreen {
+  object-fit: contain;
+}
+
+.mosaic {
+  & figure {
+    padding: 0.2em;
+  }
+
+  & img {
+    aspect-ratio: 1;
+    object-fit: cover;
+  }
+
+  & button {
+    top: 0.5em;
+    right: 0.5em;
+    width: 1em;
+    height: 1em;
+  }
+}

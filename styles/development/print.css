@@ -1,0 +1,140 @@
+@charset "utf-8"; /* Les guillemets doubles évitents une erreur au validateur du W3C. @see https:/* validator.w3.org/ */
+
+@import 'variable';
+@import 'font';
+@import 'base';
+@import 'typography';
+/* @import 'layout'; */
+@import 'grid';
+@import 'column';
+/* @import 'navigation'; */
+/* @import 'breadcrumb'; */
+/* @import 'alert'; */
+@import 'list';
+@import 'image';
+/* @import 'mediaPlayer'; */
+/* @import 'map'; */
+/* @import 'card'; */
+@import 'codeBlock';
+@import 'messageBox';
+@import 'table';
+/* @import 'form'; */
+/* @import 'input'; */
+/* @import 'checkbox'; */
+/* @import 'range'; */
+/* @import 'button'; */
+/* @import 'accordion'; */
+/* @import 'tab'; */
+/* @import 'scrollTop'; */
+@import 'footer';
+@import 'article';
+@import 'dropCap';
+/* @import 'lineMark'; */
+/* @import 'calendar'; */
+/* @import 'progress'; */
+/* @import 'loader'; */
+@import 'chart';
+/* @import 'scrollBar'; */
+@import 'ribbon';
+/* @import 'forum'; */
+/* @import 'skin'; */
+/* @import 'demo'; */
+@import 'helper'; /* @note Les helpers s'appliquent à la fin dans le but d'écraser des styles tels que font-size. */
+
+body > :not(main, footer),
+form,
+fieldset,
+/* input, */
+/* textarea, */
+button,
+audio,
+video,
+[class*=player],
+/* .map, */
+.accordion,
+.card,
+pre button,
+pre div,
+.line-mark {
+  display: none !important;
+}
+
+* {
+  text-shadow: none !important;
+}
+
+*,
+::before,
+::after {
+  color: black !important;
+}
+
+body,
+.article {
+  display: block; /* @affected Firefox */
+}
+
+.footer {
+  width: 100vw;
+  & > * {
+    flex-direction: column;
+  }
+} /* @note Harmonisation entre navigateurs. */
+
+pre,
+blockquote,
+tr,
+img,
+figure,
+[class*=figure] {
+  break-inside: avoid;
+}
+
+p,
+h2,
+h3 {
+  orphans: 3;
+  widows: 3;
+}
+
+h2,
+h3 {
+  break-after: avoid;
+}
+
+a,
+h1 span {
+  color: tomato !important;
+}
+
+[class*=figure] {
+  box-shadow: none !important;
+  border: .1em solid #ddd; /* @affected Firefox @note Pas de prise en compte de la bordure si 1px. */
+}
+
+[class*=-alignleft] {
+  float: left;
+  margin-inline-end: var(--gap);
+}
+
+[class*=-alignright] {
+  float: right;
+  margin-inline-start: var(--gap);
+}
+
+.article .wrapper {
+  text-align: justify;
+  margin-block-start: var(--gap);
+  padding: 0 !important; /* @affected Firefox */
+  box-shadow: none !important; /* @affected Firefox */
+}
+
+.keywords a {
+  background: #efefef !important;
+}
+
+.avatar,
+.avatars,
+.keywords {
+  print-color-adjust: exact !important;
+}

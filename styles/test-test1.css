@@ -1,0 +1,10 @@
+.test1 {
+  color: $color1;
+}
+
+
+@container grid ($sizeS < width) {
+  .test3 {
+    color: orange;
+  }
+}

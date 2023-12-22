@@ -1,0 +1,13 @@
+.drop-cap,
+.no-js .add-drop-cap > p:first-child::first-letter {
+  float: left;
+  margin-inline-end: 0.2em;
+  padding: 0.28em 0.2em 0.12em;
+  line-height: 1;
+  font-size: 3em;
+  font-weight: bold;
+  font-family: var(--font-list2);
+  color: var(--color2);
+  background-color: var(--colorA005);
+  transform: translateY(0.05em);
+}

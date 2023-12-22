@@ -1,0 +1,180 @@
+@define-mixin range-block-thumb {
+  pointer-events: auto;
+  width: 2.3em;
+  height: 2.3em;
+  background-color: hsl(9, 80%, 57%);
+  border: 0.2em solid var(--color);
+  border-radius: 50%;
+  box-shadow: var(--shadow2);
+}
+
+@define-mixin range-block-thumb-visible {
+  background-color: var(--color5);
+  border-color: var(--color5);
+}
+
+@define-mixin range-block-thumb-disabled {
+  background: var(--colorG18)
+    repeating-linear-gradient(-45deg, transparent 0 3px, var(--color1) 3px 6px);
+  border-color: var(--colorG33);
+}
+
+[class^='range'] {
+  --color: var(--color2);
+  --percent: 0;
+  display: grid;
+  gap: 0.5em;
+  margin-block-end: 1em;
+
+  & input {
+    grid-column: 1;
+    grid-row: 2;
+    pointer-events: none;
+    -webkit-appearance: none;
+    width: 100%;
+    height: 0.3em;
+    max-width: 100%;
+    background: linear-gradient(
+        90deg,
+        var(--color) 0,
+        var(--color) var(--percent),
+        transparent var(--percent)
+      ),
+      linear-gradient(
+        to top,
+        var(--colorA005) 0,
+        var(--colorA005) 33.3%,
+        var(--colorG13) 33.3%,
+        var(--colorG13) 66.6%,
+        var(--colorA005) 66.6%,
+        var(--colorA005)
+      );
+    cursor: pointer;
+
+    & ~ input {
+      background: initial;
+    }
+
+    &:disabled {
+      --color: var(--colorG27);
+      cursor: default;
+
+      & + output {
+        color: var(--colorG45);
+
+        &::after {
+          background: var(--colorG18)
+            repeating-linear-gradient(
+              -90deg,
+              var(--colorA1) 0 3px,
+              var(--colorA1) 0,
+              transparent 0,
+              transparent 6px
+            );
+        }
+      }
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  & output {
+    position: relative;
+    margin: 0 auto 2em;
+    text-align: center;
+
+    &:not(.phylactery) {
+      --size: 5em;
+      width: var(--size);
+      line-height: var(--size);
+      vertical-align: middle;
+
+      &::after {
+        position: absolute;
+        z-index: -1;
+        inset: 0;
+        box-sizing: border-box;
+        content: '';
+        background-color: var(--color);
+        border-radius: 50% 50% 0 50%;
+        box-shadow: 0 0.5rem 2rem var(--colorAB3);
+        transform: rotate(45deg);
+      }
+    }
+  }
+
+  & .phylactery {
+    min-width: var(--size, 4em);
+    padding: 1em;
+    min-height: 3.5em;
+    background-color: var(--color);
+    border-radius: 0.3em;
+    box-shadow: 0 0.5rem 2rem var(--colorAB3);
+
+    &::after {
+      position: absolute;
+      content: '';
+      bottom: -1em;
+      left: calc(50% - 1em);
+      width: 2em;
+      height: 1.5em;
+      background-color: var(--color);
+      clip-path: polygon(50% 100%, 0 0, 100% 0);
+      filter: drop-shadow(0 0.5rem 2rem var(--colorAB3));
+    }
+  }
+}
+
+[class^='range'] ::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  @add-mixin range-block-thumb;
+}
+
+[class^='range'] :focus-visible::-webkit-slider-thumb {
+  @add-mixin range-block-thumb-visible;
+}
+
+[class^='range'] input:disabled::-webkit-slider-thumb {
+  @add-mixin range-block-thumb-disabled;
+}
+
+[class^='range'] ::-moz-range-thumb {
+  box-sizing: border-box;
+  border: none;
+  @add-mixin range-block-thumb;
+}
+
+[class^='range'] :focus-visible::-moz-range-thumb {
+  @add-mixin range-block-thumb-visible;
+}
+
+[class^='range'] input:disabled::-moz-range-thumb {
+  @add-mixin range-block-thumb-disabled;
+}
+
+.range-multithumb {
+  --start: 0;
+  --stop: 0;
+  --color: var(--color2);
+
+  & input {
+    background: linear-gradient(
+        90deg,
+        transparent var(--start),
+        var(--color) var(--start),
+        var(--color) var(--stop),
+        transparent var(--stop)
+      ),
+      linear-gradient(
+        to top,
+        var(--colorA005) 0,
+        var(--colorA005) 33.3%,
+        var(--colorG13) 33.3%,
+        var(--colorG13) 66.6%,
+        var(--colorA005) 66.6%,
+        var(--colorA005)
+      );
+  }
+}

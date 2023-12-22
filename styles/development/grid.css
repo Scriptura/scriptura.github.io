@@ -1,0 +1,227 @@
+:has(> [class^='grid']),
+.parent-grid {
+  container: grid/inline-size;
+  width: 100%;
+}
+
+[class^='grid'] {
+  display: grid;
+  grid-auto-flow: dense;
+  grid-template-columns: repeat(var(--n, 1), minmax(0, 1fr));
+
+  &.row-defines {
+    grid-auto-rows: minmax(0, 1fr);
+  }
+
+  &.gap {
+    gap: var(--gap);
+  }
+
+  &.gap-block {
+    padding-block: var(--gap);
+  }
+
+  &.gap-top {
+    padding-block-start: var(--gap);
+  }
+
+  &.gap-bottom {
+    padding-block-end: var(--gap);
+  }
+
+  &.gap-vertical {
+    gap: 0 var(--gap);
+  }
+}
+
+.grid-auto,
+.grid-auto-min {
+  grid-template-columns: repeat(auto-fit, minmax(var(--size-grid, 15em), 1fr));
+}
+
+.grid-auto-min {
+  --size-grid: 10em;
+}
+
+@media (max-width: $sizeXS) {
+  .xs-grid-auto {
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(var(--xs-size-grid, 11em), 1fr)
+    );
+  }
+}
+
+@container grid (35em < width) {
+  .grid2,
+  .grid3,
+  .grid4 {
+    --n: 2;
+  }
+
+  .c2,
+  .c3,
+  .c4 {
+    grid-column: span 2;
+  }
+}
+
+@container grid (50em < width) {
+  .grid3,
+  .grid4 {
+    --n: 3;
+  }
+
+  .c3,
+  .c4 {
+    grid-column: span 3;
+  }
+}
+
+@container grid (70em < width) {
+  .grid4 {
+    --n: 4;
+  }
+
+  .c4 {
+    grid-column: span 4;
+  }
+}
+
+.r2 {
+  grid-row: span 2;
+}
+
+.r3 {
+  grid-row: span 3;
+}
+
+.r4 {
+  grid-row: span 4;
+}
+
+@container grid (35em < width) {
+  :root .xs-grid2 {
+    --n: 2;
+  }
+
+  .xs-c1 {
+    grid-column: span 1;
+  }
+
+  .xs-c2 {
+    grid-column: span 2;
+  }
+}
+
+@container grid (35em < width < 50em) {
+  :root .s-grid1 {
+    --n: 1;
+  }
+
+  :root .s-grid2 {
+    --n: 2;
+  }
+
+  .s-c1 {
+    grid-column: span 1;
+  }
+
+  .s-c2 {
+    grid-column: span 2;
+  }
+}
+
+@container grid (50em < width < 70em) {
+  :root .m-grid1 {
+    --n: 1;
+  }
+
+  :root .m-grid2 {
+    --n: 2;
+  }
+
+  :root .m-grid3 {
+    --n: 3;
+  }
+
+  :root .m-grid4 {
+    --n: 4;
+  }
+
+  .m-c1 {
+    grid-column: span 1;
+  }
+
+  .m-c2 {
+    grid-column: span 2;
+  }
+}
+
+@container grid (70em < width < 92em) {
+  :root .l-grid1 {
+    --n: 1;
+  }
+
+  :root .l-grid2 {
+    --n: 2;
+  }
+
+  :root .l-grid3 {
+    --n: 3;
+  }
+
+  :root .l-grid4 {
+    --n: 4;
+  }
+}
+
+@container grid (92em < width) {
+  :root .xl-grid2 {
+    --n: 2;
+  }
+}
+
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  &.gap {
+    gap: var(--gap);
+  }
+
+  &.gap-top {
+    margin-block-start: var(--gap);
+  }
+
+  &.gap-bottom {
+    margin-block-end: var(--gap);
+  }
+
+  & .item-push {
+    margin-inline-start: auto;
+  }
+}
+
+.order {
+  order: var(--o, -1);
+}
+
+@container grid (width < $sizeXS) {
+  .xs-order {
+    order: var(--o, -1);
+  }
+}
+
+@container grid ($sizeXS < width < $sizeS) {
+  .s-order {
+    order: var(--o, -1);
+  }
+}
+
+@container grid ($sizeS < width < $sizeM) {
+  .m-order {
+    order: var(--o, -1);
+  }
+}

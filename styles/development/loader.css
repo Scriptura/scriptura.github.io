@@ -1,0 +1,42 @@
+.loader {
+  --frame: 1s;
+  --color: var(--color2);
+  position: relative;
+  width: 6em;
+  height: 6em;
+  animation: anim-loader var(--frame) linear infinite;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+  }
+
+  &::before {
+    inset: 1px;
+    animation: anim-loader calc(var(--frame) * 4.7) ease infinite;
+  }
+
+  &::after {
+    inset: 7px;
+    animation: anim-loader calc(var(--frame) * 1.51) ease infinite;
+  }
+}
+
+.loader,
+.loader::before,
+.loader::after {
+  border: 5px solid var(--color);
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+}
+
+@keyframes anim-loader {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}

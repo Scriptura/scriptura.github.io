@@ -1,0 +1,15 @@
+.test1 {
+  color: green;
+}
+
+@container grid (35em < width) {
+  .test3 {
+    color: orange;
+  }
+}
+
+.test2 {
+  color: blue;
+}
+
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInRlc3QtdGVzdDEuY3NzIiwidGVzdC10ZXN0Mi5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxZQUFjO0FBQ2hCOztBQUdBO0VBQ0U7SUFDRSxhQUFhO0VBQ2Y7QUFDRjs7QUNUQTtFQUNFLFdBQVc7QUFDYiIsImZpbGUiOiJ0ZXN0LXByb2QuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLnRlc3QxIHtcbiAgY29sb3I6ICRjb2xvcjE7XG59XG5cblxuQGNvbnRhaW5lciBncmlkICgkc2l6ZVMgPCB3aWR0aCkge1xuICAudGVzdDMge1xuICAgIGNvbG9yOiBvcmFuZ2U7XG4gIH1cbn1cbiIsIi50ZXN0MiB7XG4gIGNvbG9yOiBibHVlO1xufSJdfQ== */

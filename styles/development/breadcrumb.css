@@ -1,0 +1,85 @@
+.breadcrumb {
+  grid-area: breadcrumb;
+  display: flex;
+  margin: 0;
+  padding: 0;
+
+  & li {
+    list-style: none;
+    filter: drop-shadow(0.5rem 0.5rem 0.5rem var(--colorAB25));
+    overflow: hidden;
+
+    & a:where(:focus, :hover, :active) {
+      color: var(--colorW);
+      background-color: var(--color2);
+    }
+
+    &:nth-last-child(3) {
+      z-index: 2;
+      flex-shrink: 0;
+    }
+
+    &:nth-last-child(2) {
+      z-index: 1;
+      flex-shrink: 0;
+    }
+
+    &:last-child div {
+      color: var(--colorW);
+    }
+
+    &:last-child div span {
+      color: var(--colorT2);
+    }
+
+    & > * {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      position: relative;
+      display: block;
+      line-height: 2.5;
+      padding: 0 1.88em;
+      text-decoration: none;
+      background-size: cover;
+      background-repeat: no-repeat;
+      color: var(--colorT2);
+      background-color: var(--colorG15);
+      transition: background-color 0.3s ease-in-out;
+      clip-path: polygon(
+        0 0,
+        calc(100% - 1em) 0,
+        100% 50%,
+        calc(100% - 1em) 100%,
+        0 100%
+      );
+    }
+
+    &:first-child > * {
+      padding-inline-start: var(--gap);
+    }
+
+    & + li {
+      margin-inline-start: calc(-1 * var(--gap));
+    }
+  }
+
+  @media (max-width: $sizeNav) {
+    & li > * {
+      line-height: 3;
+      padding: 0 2.25em;
+    }
+
+    & > :nth-last-child(3) {
+      display: none;
+    }
+
+    & > :nth-last-child(2) {
+      margin-inline-start: 0;
+    }
+
+    & > :nth-last-child(2) a {
+      padding-inline-start: var(--gap);
+    }
+  }
+}

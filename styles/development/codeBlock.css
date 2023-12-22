@@ -1,0 +1,90 @@
+code,
+kbd,
+samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+  word-break: break-all;
+  color: var(--colorT2);
+  border-radius: 0.3em;
+}
+
+:not(pre) > code {
+  padding: 0.2em;
+  background-color: var(--colorG15);
+}
+
+.pre {
+  overflow: auto;
+  position: relative;
+  min-height: 3em;
+  padding: 1em;
+  background-color: var(--colorG13);
+  border-radius: 0.3em;
+  box-shadow: 0 0 2rem var(--colorAB3);
+  line-height: 1.25em;
+
+  &:where(:focus, :active) {
+    outline: 0.1em solid var(--color2);
+  }
+
+  & code {
+    white-space: pre;
+    color: var(--colorT);
+    transition: color 0.5s ease-in-out;
+
+    &:focus-within {
+      color: var(--colorW);
+    }
+
+    &:empty::before {
+      content: '> ';
+    }
+
+    &:empty::after {
+      content: '_';
+      animation: anim-blink-empty 1s steps(2, start) infinite;
+    }
+  }
+
+  & div {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    display: flex;
+    font-size: 1em;
+    color: var(--colorT2);
+    gap: 0.5em;
+  }
+
+  & svg {
+    display: block;
+    width: 1em;
+    height: 1em;
+    fill: currentcolor;
+  }
+
+  & button {
+    position: absolute;
+    bottom: 1.1em;
+    right: 1em;
+    padding: 0;
+    border: none;
+    color: var(--colorT2);
+    background-color: transparent;
+
+    &:where(:focus, :hover, :active) {
+      color: var(--color5);
+      outline: none;
+    }
+  }
+}
+
+.copy-offset + div {
+  right: 2.5em;
+}
+
+@keyframes anim-blink-empty {
+  50% {
+    content: '';
+  }
+}

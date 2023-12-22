@@ -1,0 +1,49 @@
+html,
+body {
+  overflow-x: clip;
+  height: 100%;
+}
+
+body {
+  display: grid;
+  grid-template-rows: repeat(3, auto) 1fr;
+  grid-template-columns: minmax(1em, 1fr) minmax(0, 92em) minmax(1em, 1fr);
+  grid-template-areas:
+    'n n n'
+    '. h .'
+    'i i i'
+    '. m .'
+    'a a a'
+    'f f f';
+  margin: 0;
+}
+
+main {
+  grid-area: m;
+  word-break: break-word;
+  padding-block-end: var(--gap);
+}
+
+.nav {
+  grid-area: n;
+}
+
+.header {
+  grid-area: h;
+}
+
+.alert {
+  grid-area: i;
+}
+
+.aside {
+  grid-area: a;
+}
+
+.footer {
+  grid-area: f;
+}
+
+[tabindex='-1']:focus:not(:focus-visible) {
+  outline: 0 !important;
+}
