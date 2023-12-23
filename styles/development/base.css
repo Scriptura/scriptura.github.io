@@ -1,5 +1,14 @@
+/**
+ * @note Les ressets CSS sont inspiré de Bootstrap Reboot et Normalize CSS 8.0.1 puis étendu par nos soins.
+ * @see https://github.com/twbs/bootstrap/blob/v4-dev/scss/_reboot.scss
+ * @see https://github.com/necolas/normalize.css
+ * @see https://github.com/alsacreations/KNACSS/blob/v8/sass/base/_reset.scss
+ * @see https://github.com/alsacreations/KNACSS/blob/master/sass/_vendor/_reboot.scss
+ */
+
 :root {
   color-scheme: var(--color-scheme);
+  /*font-size: 1rem; /* Ability to the value of the root font sizes, affecting the value of `rem`. Null by default, thus nothing is generated. */
 }
 
 *,
@@ -9,17 +18,21 @@
 }
 
 html {
-  -webkit-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%; /* @bugfix Prevent adjustments of font size after orientation changes @affected iOS. */
+  /* -webkit-tap-highlight-color: transparent /* Change the default tap highlight to be completely transparent. @affected iOS. */
   color: var(--colorT);
   background-color: var(--color1);
   font-family: var(--font-list1);
-  line-height: 1.5;
+  /**
+   * Sur les verrous CSS @see https://hugogiraudel.com/2020/05/18/using-calc-to-figure-out-optimal-line-height/
+   * Outil en ligne @see https://modern-fluid-typography.vercel.app
+   * Le site étant entièrement scalable dans son ensemble, il n'y a pas d'utilisation de vérrou CSS en raison de ses effets de bords sur certains éléments (typographie, pre > code, ribbons...).
+  /* font-size: clamp(1em, .7vw + .1em, 1.125em); */
+  line-height: 1.5; /* @bugfix Correct the line height @affected All browsers. */
   scroll-behavior: smooth;
-}
 
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
+  @media (prefers-reduced-motion: reduce) {
+    scroll-behavior: auto; /* Désactivation du défilement fluide si réduction des animations dans les préférences utilisateur du navigateur @see https://developer.mozilla.org/fr/docs/Web/CSS/scroll-behavior#Accessibilité */
   }
 }
 
@@ -44,11 +57,11 @@ p {
 }
 
 hr {
-  overflow: visible;
-  box-sizing: content-box;
-  height: 0.5em;
+  overflow: visible; /* @bugfix Show the overflow @affected Edge and IE. */
+  box-sizing: content-box; /* @bugfix Add the correct box sizing @affected Firefox. */
+  height: 0.5em; /* @bugfix Add the correct box sizing @affected Firefox @note Toujours définir une valeur. */
   margin: 2.5em 0;
-  color: transparent;
+  color: transparent; /* @bugfix Reset gray color. @affected Firefox. */
   background-image: repeating-linear-gradient(
     -45deg,
     transparent 0 5px,
@@ -73,18 +86,17 @@ h6,
   text-wrap: balance;
 }
 
-.h2,
-.h3,
-.h4,
-.h5,
-.h6 {
-  margin-block: 0.83em;
+:where(.h2, .h3, .h4, .h5, .h6) {
+  margin-block: 0.83em; /* @note Important à redéfinir pour les classes aposées sur d'autres éléments que des titres, comme <legend> ou <label> par exemple. */
+  fieldset > legend& {
+    padding-block-start: 0.83em; /* @bugfix @affected Chrome @note Si pas de correctif la marge passe en dessous du fieldset conteneur. */
+  }
 }
 
 h1,
 .h1 {
-  margin-block: clamp(0.83em, 5vw, 0.67em);
-  font-size: clamp(2em, 5vw, 2.5em);
+  margin-block: clamp(0.83em, 5vw, 0.67em); /* 0.83em */
+  font-size: clamp(2em, 5vw, 2.5em); /* 2.5em */
 }
 
 h2,
@@ -114,20 +126,20 @@ h6,
 
 pre {
   margin: 0;
-  font-family: monospace, monospace;
-  font-size: 1em;
+  font-family: monospace, monospace; /* @bugfix Correct the inheritance and scaling of font size @affected All browsers. */
+  font-size: 1em; /* @bugfix Correct the odd `em` font sizing @affected All browsers. */
   white-space: pre-wrap;
+  /* word-break: keep-all; */
 }
 
 abbr[title] {
-  border-bottom: none;
-  text-decoration: underline;
-  text-decoration: underline dotted;
+  text-decoration: underline; /* @bugfix Add the correct text decoration @affected Chrome, Edge, IE, Opera, and Safari. */
+  text-decoration: underline dotted; /* @bugfix Add the correct text decoration @affected Chrome, Edge, IE, Opera, and Safari. */
 }
 
 b,
 strong {
-  font-weight: bold;
+  font-weight: bold; /* @bugfix Add the correct font weight @affected Chrome, Edge, and Safari. */
 }
 
 i,
@@ -140,20 +152,21 @@ blockquote {
 }
 
 q {
-  quotes: '\201C''\201D''\2018''\2019';
+  quotes: '\201C''\201D''\2018''\2019'; /* Harmonisation des citations. */
 }
 
 mark {
   color: currentcolor;
-  background-color: var(--color3);
+  background-color: var(--color3); /* var(--color2) */
 }
 
 small {
-  font-size: 80%;
+  font-size: 80%; /* @bugfix Add the correct font size @affected All browsers. */
 }
 
 sub,
 sup {
+  /* @bugfix Prevent `sub` and `sup` elements from affecting the line height @affected All browsers. */
   position: relative;
   line-height: 0;
   font-size: 75%;
@@ -161,11 +174,11 @@ sup {
 }
 
 sub {
-  bottom: -0.25em;
+  bottom: -0.25em; /* @bugfix Prevent `sub` and `sup` elements from affecting the line height @affected All browsers. */
 }
 
 sup {
-  top: -0.5em;
+  top: -0.5em; /* @bugfix Prevent `sub` and `sup` elements from affecting the line height @affected All browsers. */
 }
 
 ins {
@@ -173,6 +186,7 @@ ins {
 }
 
 details {
+  /* @note Tentative de reproduire avec les marges l'espacement des items d'une liste. */
   display: block;
 
   &:first-child {
@@ -197,7 +211,7 @@ details {
 }
 
 summary {
-  display: list-item;
+  display: list-item; /* @bugfix Add the correct display @affected All browsers. */
   list-style: none;
   cursor: pointer;
 
@@ -213,6 +227,7 @@ summary {
   }
 
   &::before {
+    /* @note Nous n'utilisons pas ::marker car le rendu diffère sur mobiles, ceci nous permet aussi de personnaliser la puce. @affected Chrome mobile. */
     content: '➤';
     display: inline-block;
     margin-inline-end: 0.5em;
@@ -225,11 +240,11 @@ summary {
 }
 
 template {
-  display: none;
+  display: none; /* @bugfix Add the correct display @affected IE 10+. */
 }
 
 [hidden] {
-  display: none;
+  display: none; /* @bugfix Add the correct display @affected IE 10. */
 }
 
 iframe {
@@ -242,8 +257,8 @@ iframe {
 ruby {
   display: grid;
   gap: 0.5em;
-}
 
-ruby * {
-  margin: auto;
+  & * {
+    margin: auto;
+  }
 }
