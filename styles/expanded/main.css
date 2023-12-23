@@ -1,6 +1,6 @@
-@charset "utf-8"; /* Les guillemets doubles évitents une erreur au validateur du W3C. @see https://validator.w3.org/ */ /* @note Doublage des variables Sass par les variables CSS natives impliquées dans les médias queries. @todo en attendant un support total d'usage pour les variables natives. */ /* @subsection Breakpoints */ /* @bugfix Nécessité de préciser deux chiffres après la virgule pour éviter un arrondissement de la valeur par les navigateurs, créant ainsi la possibilité d'un décalage entre 'max-width' et 'min-width' sur les media queries. */ /* @subsection Grid */ /* @note La fonction calc() n'est pas implémentée pour les media queries, ou alors partiellement (unité de même type). @see https://stackoverflow.com/questions/23667208 @todo À réévaluer dans le temps... */ :root {
+@charset "utf-8"; /* Les guillemets doubles évitents une erreur au validateur du W3C. @see https://validator.w3.org/ */ /* @note Doublage des variables Sass par les variables CSS natives impliquées dans les médias queries. @todo en attendant un support total d'usage pour les variables natives. */ /* @subsection Breakpoints */ /* @bugfix Nécessité de préciser deux chiffres après la virgule pour éviter un arrondissement de la valeur par les navigateurs, créant ainsi la possibilité d'un décalage entre 'max-width' et 'min-width' sur les media queries. */ /* @subsection Layout & Grid */ /* @note La fonction calc() n'est pas implémentée pour les media queries, ou alors partiellement (unité de même type). @see https://stackoverflow.com/questions/23667208 @todo À réévaluer dans le temps... */ :root {
   --gap: 1em; /* Gouttière, largeur entre deux modules (en unité em/rem) */
-  --wrap: 90em + 1em * 2; /* Largeur maximale du contenu (+ prise en compte du padding interne) */
+  --wrap: 92em; /* Largeur maximale du contenu (+ prise en compte du padding interne) */
 
   /* @subsection  Web fonts */
   /* @note Le chargement des polices via @font-face est fortement recommandé pour ne pas dépendre de l'environnement de l'utilisateur. Ce qui permet d'avoir la maitrise du design du site. Les CDNs sont un mal à proscrire également. */
@@ -145,14 +145,17 @@
  * @see https://github.com/alsacreations/KNACSS/blob/master/sass/_vendor/_reboot.scss
  */ :root {
   color-scheme: var(--color-scheme);
-  /*font-size: 1rem; /* Ability to the value of the root font sizes, affecting the value of `rem`. Null by default, thus nothing is generated. */
+  /* Ability to the value of the root font sizes, affecting the value of `rem`. Null by default, thus nothing is generated. */
+  /*font-size: 1rem; */
 } *,
 ::before,
 ::after {
   box-sizing: border-box;
 } html {
-  -webkit-text-size-adjust: 100%; /* @bugfix Prevent adjustments of font size after orientation changes @affected iOS. */
-  /* -webkit-tap-highlight-color: transparent /* Change the default tap highlight to be completely transparent. @affected iOS. */
+  /* @bugfix Prevent adjustments of font size after orientation changes @affected iOS. */
+  -webkit-text-size-adjust: 100%;
+  /* -webkit-tap-highlight-color: transparent */
+  /* Change the default tap highlight to be completely transparent. @affected iOS. */
   color: var(--colorT);
   background-color: var(--color1);
   font-family: var(--font-list1);
@@ -161,11 +164,13 @@
    * Outil en ligne @see https://modern-fluid-typography.vercel.app
    * Le site étant entièrement scalable dans son ensemble, il n'y a pas d'utilisation de vérrou CSS en raison de ses effets de bords sur certains éléments (typographie, pre > code, ribbons...).
   /* font-size: clamp(1em, .7vw + .1em, 1.125em); */
-  line-height: 1.5; /* @bugfix Correct the line height @affected All browsers. */
+  /* @bugfix Correct the line height @affected All browsers. */
+  line-height: 1.5;
   scroll-behavior: smooth;
 
   @media (prefers-reduced-motion: reduce) {
-    scroll-behavior: auto; /* Désactivation du défilement fluide si réduction des animations dans les préférences utilisateur du navigateur @see https://developer.mozilla.org/fr/docs/Web/CSS/scroll-behavior#Accessibilité */
+    /* Désactivation du défilement fluide si réduction des animations dans les préférences utilisateur du navigateur @see https://developer.mozilla.org/fr/docs/Web/CSS/scroll-behavior#Accessibilité */
+    scroll-behavior: auto;
   }
 } ::selection {
   color: var(--colorW);
@@ -182,11 +187,15 @@
 } p {
   margin-block: 0.75em;
 } hr {
-  overflow: visible; /* @bugfix Show the overflow @affected Edge and IE. */
-  box-sizing: content-box; /* @bugfix Add the correct box sizing @affected Firefox. */
-  height: 0.5em; /* @bugfix Add the correct box sizing @affected Firefox @note Toujours définir une valeur. */
+  /* @bugfix Show the overflow @affected Edge and IE. */
+  overflow: visible;
+  /* @bugfix Add the correct box sizing @affected Firefox. */
+  box-sizing: content-box;
+  /* @bugfix Add the correct box sizing @affected Firefox @note Toujours définir une valeur. */
+  height: 0.5em;
   margin: 2.5em 0;
-  color: transparent; /* @bugfix Reset gray color. @affected Firefox. */
+  /* @bugfix Reset gray color. @affected Firefox. */
+  color: transparent;
   background-image: repeating-linear-gradient(
     -45deg,
     transparent 0 5px,
@@ -208,9 +217,11 @@ h6,
   font-family: var(--font-list2);
   text-wrap: balance;
 } :where(.h2, .h3, .h4, .h5, .h6) {
-  margin-block: 0.83em; /* @note Important à redéfinir pour les classes aposées sur d'autres éléments que des titres, comme <legend> ou <label> par exemple. */
+  /* @note Important à redéfinir pour les classes aposées sur d'autres éléments que des titres, comme <legend> ou <label> par exemple. */
+  margin-block: 0.83em;
   fieldset > legend& {
-    padding-block-start: 0.83em; /* @bugfix @affected Chrome @note Si pas de correctif la marge passe en dessous du fieldset conteneur. */
+    /* @bugfix @affected Chrome @note Si pas de correctif la marge passe en dessous du fieldset conteneur. */
+    padding-block-start: 0.83em;
   }
 } h1,
 .h1 {
@@ -233,28 +244,35 @@ h6,
   font-size: 1em;
 } pre {
   margin: 0;
-  font-family: monospace, monospace; /* @bugfix Correct the inheritance and scaling of font size @affected All browsers. */
-  font-size: 1em; /* @bugfix Correct the odd `em` font sizing @affected All browsers. */
+  /* @bugfix Correct the inheritance and scaling of font size @affected All browsers. */
+  font-family: monospace, monospace;
+  /* @bugfix Correct the odd `em` font sizing @affected All browsers. */
+  font-size: 1em;
   white-space: pre-wrap;
   /* word-break: keep-all; */
 } abbr[title] {
-  text-decoration: underline; /* @bugfix Add the correct text decoration @affected Chrome, Edge, IE, Opera, and Safari. */
-  text-decoration: underline dotted; /* @bugfix Add the correct text decoration @affected Chrome, Edge, IE, Opera, and Safari. */
+  /* @bugfix Add the correct text decoration @affected Chrome, Edge, IE, Opera, and Safari. */
+  text-decoration: underline;
+  /* @bugfix Idem */
+  text-decoration: underline dotted;
 } b,
 strong {
-  font-weight: bold; /* @bugfix Add the correct font weight @affected Chrome, Edge, and Safari. */
+  /* @bugfix Add the correct font weight @affected Chrome, Edge, and Safari. */
+  font-weight: bold;
 } i,
 em {
   font-style: italic;
 } blockquote {
   margin: 0;
 } q {
-  quotes: '\201C''\201D''\2018''\2019'; /* Harmonisation des citations. */
+  /* Harmonisation des citations. */
+  quotes: '\201C''\201D''\2018''\2019';
 } mark {
   color: currentcolor;
-  background-color: var(--color3); /* var(--color2) */
+  background-color: var(--color3); /* --color2 */
 } small {
-  font-size: 80%; /* @bugfix Add the correct font size @affected All browsers. */
+  /* @bugfix Add the correct font size @affected All browsers. */
+  font-size: 80%;
 } sub,
 sup {
   /* @bugfix Prevent `sub` and `sup` elements from affecting the line height @affected All browsers. */
@@ -263,9 +281,11 @@ sup {
   font-size: 75%;
   vertical-align: baseline;
 } sub {
-  bottom: -0.25em; /* @bugfix Prevent `sub` and `sup` elements from affecting the line height @affected All browsers. */
+  /* @bugfix Prevent `sub` and `sup` elements from affecting the line height @affected All browsers. */
+  bottom: -0.25em;
 } sup {
-  top: -0.5em; /* @bugfix Prevent `sub` and `sup` elements from affecting the line height @affected All browsers. */
+  /* @bugfix Prevent `sub` and `sup` elements from affecting the line height @affected All browsers. */
+  top: -0.5em;
 } ins {
   text-underline-offset: 10%;
 } details {
@@ -292,7 +312,8 @@ sup {
     }
   }
 } summary {
-  display: list-item; /* @bugfix Add the correct display @affected All browsers. */
+  /* @bugfix Add the correct display @affected All browsers. */
+  display: list-item;
   list-style: none;
   cursor: pointer;
 
@@ -318,11 +339,15 @@ sup {
   details[open] > &::before {
     transform: rotate(90deg);
   }
-} template {
-  display: none; /* @bugfix Add the correct display @affected IE 10+. */
-} [hidden] {
-  display: none; /* @bugfix Add the correct display @affected IE 10. */
-} iframe {
+} /*
+template {
+  display: none; /* @bugfix Add the correct display @affected IE 10+.
+}
+
+[hidden] {
+  display: none; /* @bugfix Add the correct display @affected IE 10.
+}
+*/ iframe {
   overflow: hidden;
   width: 100%;
   height: 100%;
@@ -337,6 +362,7 @@ sup {
 } ::marker {
   color: var(--color2);
 } .main-heading {
+  /* @note Alias de overflow-wrap @see https://developer.mozilla.org/fr/docs/Web/CSS/overflow-wrap */
   word-wrap: break-word;
   text-shadow: 0.2em 0.2em 0.2em var(--colorAB3);
 } .main-heading span {
@@ -344,20 +370,23 @@ sup {
 } hr[data-hr],
 .decorative-hr hr {
   display: block;
+  /* clear: both: */
   width: 100%;
   height: 2em;
   margin: 2em 0;
   line-height: 1;
+  /* letter-spacing: 0.5em; */
   background-image: none;
-} hr[data-hr]::after,
-.decorative-hr hr::after {
-  content: attr(data-hr);
-  display: block;
-  width: 100%;
-  height: 100%;
-  font-size: 2em;
-  text-align: center;
-  color: var(--colorA2);
+
+  &::after {
+    content: attr(data-hr);
+    display: block;
+    width: 100%;
+    height: 100%;
+    font-size: 2em;
+    text-align: center;
+    color: var(--colorA2);
+  }
 } .decorative-hr hr::after {
   content: '✻ ✻ ✻';
 } .blockquote blockquote {
@@ -383,17 +412,18 @@ sup {
   }
 
   &::before {
-    content: '\00AB';
+    content: '\00AB'; /* '\201D' */
     top: -0.1em;
   }
 
   &::after {
-    content: '\00BB';
+    content: '\00BB'; /* '\201C' */
     bottom: 0;
   }
 
   & footer {
     margin-block: 0.75em;
+    /* text-align: right; */
   }
 
   & footer::before {
@@ -403,32 +433,38 @@ sup {
   & footer::after {
     content: '.';
   }
-} :lang(he) {
+} /* @note Grec ancien (grc), grec moderne ('el'). */ :lang(he) {
   direction: rtl;
+  /* font-family: $font-list; */
 } .verse {
   color: var(--color2);
 } .links p a {
+  
   &:not([href^='#'])::after {
+    /* @note Liens internes, sauf pour les ancres. */
     content: ' ↩';
   }
+  /* Liens externes */
   &[href*='//']::after
   {
     content: ' ↗';
   }
 } .justify {
   hyphens: auto;
-} @media (min-width: 35.01em) {
+} @media (width > 35.01em) {
   .justify {
     text-align: justify;
   }
 } html,
 body {
+  /* @note Pour des éléments en clip-path dont l'élément d'origine dépasse de la page, tel que les Ribbons @bugfixed @affected Android @note La sélection du couple `html/body` est nécessaire pour couper les dépassements sous ce navigateur, la sélection d'un seul des deux serait insufisant. La valeur hidden pourrait faire l'affaire, mais elle entre en conflit avec `position: sticky`. */
   overflow-x: clip;
+  /* @note Alternative plus fiable sur mobile que `min-height:100vh` sur le body. */
   height: 100%;
 } body {
   display: grid;
   grid-template-rows: repeat(3, auto) 1fr;
-  grid-template-columns: minmax(1em, 1fr) minmax(0, 92em) minmax(1em, 1fr);
+  grid-template-columns: minmax(var(--gap), 1fr) minmax(0, var(--wrap)) minmax(var(--gap), 1fr);
   grid-template-areas:
     'n n n'
     '. h .'
@@ -436,10 +472,12 @@ body {
     '. m .'
     'a a a'
     'f f f';
+    /* @bugfix Suppression des marges @affected All browser. */
   margin: 0;
 } main {
   grid-area: m;
   word-break: break-word;
+  /* @note Ne pas définir de padding latéral à ce niveau pour éviter de devoir rattraper ce padding sur les élements enfants */
   padding-block-end: var(--gap);
 } .nav {
   grid-area: n;
@@ -452,6 +490,7 @@ body {
 } .footer {
   grid-area: f;
 } [tabindex='-1']:focus:not(:focus-visible) {
+  /* Future-proof rule: in browsers that support :focus-visible, suppress the focus outline on elements that programmatically receive focus but wouldn't normally show a visible focus outline. In general, this would mean that the outline is only applied if the interaction that led to the element receiving programmatic focus was a keyboard interaction, or the browser has somehow determined that the user is primarily a keyboard user and/or wants focus outlines to always be presented. @see https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible @see https://developer.paciellogroup.com/blog/2018/03/focus-visible-and-backwards-compatibility/ */
   outline: 0 !important;
 } :has(> [class^='grid']),
 .parent-grid {

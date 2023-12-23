@@ -1,13 +1,15 @@
 html,
 body {
+  /* @note Pour des éléments en clip-path dont l'élément d'origine dépasse de la page, tel que les Ribbons @bugfixed @affected Android @note La sélection du couple `html/body` est nécessaire pour couper les dépassements sous ce navigateur, la sélection d'un seul des deux serait insufisant. La valeur hidden pourrait faire l'affaire, mais elle entre en conflit avec `position: sticky`. */
   overflow-x: clip;
+  /* @note Alternative plus fiable sur mobile que `min-height:100vh` sur le body. */
   height: 100%;
 }
 
 body {
   display: grid;
   grid-template-rows: repeat(3, auto) 1fr;
-  grid-template-columns: minmax(1em, 1fr) minmax(0, 92em) minmax(1em, 1fr);
+  grid-template-columns: minmax(var(--gap), 1fr) minmax(0, var(--wrap)) minmax(var(--gap), 1fr);
   grid-template-areas:
     'n n n'
     '. h .'
@@ -15,12 +17,14 @@ body {
     '. m .'
     'a a a'
     'f f f';
+    /* @bugfix Suppression des marges @affected All browser. */
   margin: 0;
 }
 
 main {
   grid-area: m;
   word-break: break-word;
+  /* @note Ne pas définir de padding latéral à ce niveau pour éviter de devoir rattraper ce padding sur les élements enfants */
   padding-block-end: var(--gap);
 }
 
@@ -45,5 +49,6 @@ main {
 }
 
 [tabindex='-1']:focus:not(:focus-visible) {
+  /* Future-proof rule: in browsers that support :focus-visible, suppress the focus outline on elements that programmatically receive focus but wouldn't normally show a visible focus outline. In general, this would mean that the outline is only applied if the interaction that led to the element receiving programmatic focus was a keyboard interaction, or the browser has somehow determined that the user is primarily a keyboard user and/or wants focus outlines to always be presented. @see https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible @see https://developer.paciellogroup.com/blog/2018/03/focus-visible-and-backwards-compatibility/ */
   outline: 0 !important;
 }

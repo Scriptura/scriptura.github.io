@@ -11,9 +11,10 @@ $sizeXL: 120.01em;
 $sizeXXL: 140.01em;
 $sizeNav: 90.01em;
 
-/* @subsection Grid */
+/* @subsection Layout & Grid */
 $gap: 1em;
-$wrap: 90em + $gap * 2; /* @note La fonction calc() n'est pas implémentée pour les media queries, ou alors partiellement (unité de même type). @see https://stackoverflow.com/questions/23667208 @todo À réévaluer dans le temps... */
+/* @note La fonction calc() n'est pas implémentée pour les media queries, ou alors partiellement (unité de même type). @see https://stackoverflow.com/questions/23667208 @todo À réévaluer dans le temps... */
+$wrap: 92em;
 
 :root {
   --gap: $gap; /* Gouttière, largeur entre deux modules (en unité em/rem) */

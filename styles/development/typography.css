@@ -3,6 +3,7 @@
 }
 
 .main-heading {
+  /* @note Alias de overflow-wrap @see https://developer.mozilla.org/fr/docs/Web/CSS/overflow-wrap */
   word-wrap: break-word;
   text-shadow: 0.2em 0.2em 0.2em var(--colorAB3);
 }
@@ -14,22 +15,23 @@
 hr[data-hr],
 .decorative-hr hr {
   display: block;
+  /* clear: both: */
   width: 100%;
   height: 2em;
   margin: 2em 0;
   line-height: 1;
+  /* letter-spacing: 0.5em; */
   background-image: none;
-}
 
-hr[data-hr]::after,
-.decorative-hr hr::after {
-  content: attr(data-hr);
-  display: block;
-  width: 100%;
-  height: 100%;
-  font-size: 2em;
-  text-align: center;
-  color: var(--colorA2);
+  &::after {
+    content: attr(data-hr);
+    display: block;
+    width: 100%;
+    height: 100%;
+    font-size: 2em;
+    text-align: center;
+    color: var(--colorA2);
+  }
 }
 
 .decorative-hr hr::after {
@@ -59,17 +61,18 @@ hr[data-hr]::after,
   }
 
   &::before {
-    content: '\00AB';
+    content: '\00AB'; /* '\201D' */
     top: -0.1em;
   }
 
   &::after {
-    content: '\00BB';
+    content: '\00BB'; /* '\201C' */
     bottom: 0;
   }
 
   & footer {
     margin-block: 0.75em;
+    /* text-align: right; */
   }
 
   & footer::before {
@@ -81,8 +84,11 @@ hr[data-hr]::after,
   }
 }
 
+/* @note Grec ancien (grc), grec moderne ('el'). */
+
 :lang(he) {
   direction: rtl;
+  /* font-family: $font-list; */
 }
 
 .verse {
@@ -90,9 +96,12 @@ hr[data-hr]::after,
 }
 
 .links p a {
+  
   &:not([href^='#'])::after {
+    /* @note Liens internes, sauf pour les ancres. */
     content: ' ↩';
   }
+  /* Liens externes */
   &[href*='//']::after
   {
     content: ' ↗';
@@ -103,7 +112,7 @@ hr[data-hr]::after,
   hyphens: auto;
 }
 
-@media (min-width: $sizeXS) {
+@media (width > $sizeXS) {
   .justify {
     text-align: justify;
   }

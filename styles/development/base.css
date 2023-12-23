@@ -8,7 +8,8 @@
 
 :root {
   color-scheme: var(--color-scheme);
-  /*font-size: 1rem; /* Ability to the value of the root font sizes, affecting the value of `rem`. Null by default, thus nothing is generated. */
+  /* Ability to the value of the root font sizes, affecting the value of `rem`. Null by default, thus nothing is generated. */
+  /*font-size: 1rem; */
 }
 
 *,
@@ -18,8 +19,10 @@
 }
 
 html {
-  -webkit-text-size-adjust: 100%; /* @bugfix Prevent adjustments of font size after orientation changes @affected iOS. */
-  /* -webkit-tap-highlight-color: transparent /* Change the default tap highlight to be completely transparent. @affected iOS. */
+  /* @bugfix Prevent adjustments of font size after orientation changes @affected iOS. */
+  -webkit-text-size-adjust: 100%;
+  /* -webkit-tap-highlight-color: transparent */
+  /* Change the default tap highlight to be completely transparent. @affected iOS. */
   color: var(--colorT);
   background-color: var(--color1);
   font-family: var(--font-list1);
@@ -28,11 +31,13 @@ html {
    * Outil en ligne @see https://modern-fluid-typography.vercel.app
    * Le site étant entièrement scalable dans son ensemble, il n'y a pas d'utilisation de vérrou CSS en raison de ses effets de bords sur certains éléments (typographie, pre > code, ribbons...).
   /* font-size: clamp(1em, .7vw + .1em, 1.125em); */
-  line-height: 1.5; /* @bugfix Correct the line height @affected All browsers. */
+  /* @bugfix Correct the line height @affected All browsers. */
+  line-height: 1.5;
   scroll-behavior: smooth;
 
   @media (prefers-reduced-motion: reduce) {
-    scroll-behavior: auto; /* Désactivation du défilement fluide si réduction des animations dans les préférences utilisateur du navigateur @see https://developer.mozilla.org/fr/docs/Web/CSS/scroll-behavior#Accessibilité */
+    /* Désactivation du défilement fluide si réduction des animations dans les préférences utilisateur du navigateur @see https://developer.mozilla.org/fr/docs/Web/CSS/scroll-behavior#Accessibilité */
+    scroll-behavior: auto;
   }
 }
 
@@ -57,11 +62,15 @@ p {
 }
 
 hr {
-  overflow: visible; /* @bugfix Show the overflow @affected Edge and IE. */
-  box-sizing: content-box; /* @bugfix Add the correct box sizing @affected Firefox. */
-  height: 0.5em; /* @bugfix Add the correct box sizing @affected Firefox @note Toujours définir une valeur. */
+  /* @bugfix Show the overflow @affected Edge and IE. */
+  overflow: visible;
+  /* @bugfix Add the correct box sizing @affected Firefox. */
+  box-sizing: content-box;
+  /* @bugfix Add the correct box sizing @affected Firefox @note Toujours définir une valeur. */
+  height: 0.5em;
   margin: 2.5em 0;
-  color: transparent; /* @bugfix Reset gray color. @affected Firefox. */
+  /* @bugfix Reset gray color. @affected Firefox. */
+  color: transparent;
   background-image: repeating-linear-gradient(
     -45deg,
     transparent 0 5px,
@@ -87,9 +96,11 @@ h6,
 }
 
 :where(.h2, .h3, .h4, .h5, .h6) {
-  margin-block: 0.83em; /* @note Important à redéfinir pour les classes aposées sur d'autres éléments que des titres, comme <legend> ou <label> par exemple. */
+  /* @note Important à redéfinir pour les classes aposées sur d'autres éléments que des titres, comme <legend> ou <label> par exemple. */
+  margin-block: 0.83em;
   fieldset > legend& {
-    padding-block-start: 0.83em; /* @bugfix @affected Chrome @note Si pas de correctif la marge passe en dessous du fieldset conteneur. */
+    /* @bugfix @affected Chrome @note Si pas de correctif la marge passe en dessous du fieldset conteneur. */
+    padding-block-start: 0.83em;
   }
 }
 
@@ -126,20 +137,25 @@ h6,
 
 pre {
   margin: 0;
-  font-family: monospace, monospace; /* @bugfix Correct the inheritance and scaling of font size @affected All browsers. */
-  font-size: 1em; /* @bugfix Correct the odd `em` font sizing @affected All browsers. */
+  /* @bugfix Correct the inheritance and scaling of font size @affected All browsers. */
+  font-family: monospace, monospace;
+  /* @bugfix Correct the odd `em` font sizing @affected All browsers. */
+  font-size: 1em;
   white-space: pre-wrap;
   /* word-break: keep-all; */
 }
 
 abbr[title] {
-  text-decoration: underline; /* @bugfix Add the correct text decoration @affected Chrome, Edge, IE, Opera, and Safari. */
-  text-decoration: underline dotted; /* @bugfix Add the correct text decoration @affected Chrome, Edge, IE, Opera, and Safari. */
+  /* @bugfix Add the correct text decoration @affected Chrome, Edge, IE, Opera, and Safari. */
+  text-decoration: underline;
+  /* @bugfix Idem */
+  text-decoration: underline dotted;
 }
 
 b,
 strong {
-  font-weight: bold; /* @bugfix Add the correct font weight @affected Chrome, Edge, and Safari. */
+  /* @bugfix Add the correct font weight @affected Chrome, Edge, and Safari. */
+  font-weight: bold;
 }
 
 i,
@@ -152,16 +168,18 @@ blockquote {
 }
 
 q {
-  quotes: '\201C''\201D''\2018''\2019'; /* Harmonisation des citations. */
+  /* Harmonisation des citations. */
+  quotes: '\201C''\201D''\2018''\2019';
 }
 
 mark {
   color: currentcolor;
-  background-color: var(--color3); /* var(--color2) */
+  background-color: var(--color3); /* --color2 */
 }
 
 small {
-  font-size: 80%; /* @bugfix Add the correct font size @affected All browsers. */
+  /* @bugfix Add the correct font size @affected All browsers. */
+  font-size: 80%;
 }
 
 sub,
@@ -174,11 +192,13 @@ sup {
 }
 
 sub {
-  bottom: -0.25em; /* @bugfix Prevent `sub` and `sup` elements from affecting the line height @affected All browsers. */
+  /* @bugfix Prevent `sub` and `sup` elements from affecting the line height @affected All browsers. */
+  bottom: -0.25em;
 }
 
 sup {
-  top: -0.5em; /* @bugfix Prevent `sub` and `sup` elements from affecting the line height @affected All browsers. */
+  /* @bugfix Prevent `sub` and `sup` elements from affecting the line height @affected All browsers. */
+  top: -0.5em;
 }
 
 ins {
@@ -211,7 +231,8 @@ details {
 }
 
 summary {
-  display: list-item; /* @bugfix Add the correct display @affected All browsers. */
+  /* @bugfix Add the correct display @affected All browsers. */
+  display: list-item;
   list-style: none;
   cursor: pointer;
 
@@ -239,13 +260,15 @@ summary {
   }
 }
 
+/*
 template {
-  display: none; /* @bugfix Add the correct display @affected IE 10+. */
+  display: none; /* @bugfix Add the correct display @affected IE 10+.
 }
 
 [hidden] {
-  display: none; /* @bugfix Add the correct display @affected IE 10. */
+  display: none; /* @bugfix Add the correct display @affected IE 10.
 }
+*/
 
 iframe {
   overflow: hidden;
