@@ -114,7 +114,7 @@
   }
 }
 
-@media (max-width: $sizeXS) {
+@media (width < $sizeXS) {
   .article {
     & .wrapper {
       margin-block-start: calc(-1 * var(--gap));
@@ -126,20 +126,20 @@
   }
 }
 
-@media (min-width: $sizeXS) {
+@media (width > $sizeXS) {
   .article > :where(.wrapper, article, form) {
     border-radius: var(--r1);
     box-shadow: var(--shadow3);
   }
 }
 
-@media (min-width: $sizeXS) and (max-width: $sizeS) {
+@media ($sizeXS < width < $sizeS) {
   .article > :where(.wrapper, article, form) {
     padding: 2.5em 4em;
   }
 }
 
-@media (min-width: $sizeS) {
+@media (width > $sizeS) {
   .article {
     & > :where(.wrapper, article, form) {
       padding: 4em 6em;
@@ -150,19 +150,19 @@
   }
 }
 
-@media (min-width: $sizeXS) and (max-width: $sizeS) {
+@media ($sizeXS < width < $sizeS) {
   .article > footer {
     padding-inline: 4em;
   }
 }
 
-@media (min-width: $sizeS) {
+@media (width > $sizeS) {
   .article > footer {
     padding-inline: 6em;
   }
 }
 
-@media (min-width: $sizeXS) {
+@media (width > $sizeXS) {
   .boxx {
     padding: 4em 6em;
     border-radius: var(--r1);

@@ -1,10 +1,10 @@
-@media (max-width: $sizeS) {
+@media (width < $sizeS) {
   .line-mark {
     display: none;
   }
 }
 
-@media (min-width: $sizeS) {
+@media (width > $sizeS) {
   .add-line-marks > * {
     position: relative;
   }

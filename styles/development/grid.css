@@ -43,7 +43,7 @@
   --size-grid: 10em;
 }
 
-@media (max-width: $sizeXS) {
+@media (width < $sizeXS) {
   .xs-grid-auto {
     grid-template-columns: repeat(
       auto-fit,

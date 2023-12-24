@@ -38,7 +38,7 @@
   }
 }
 
-@media (max-width: $sizeXS) {
+@media (width < $sizeXS) {
   .footer .wrap {
     flex-direction: column;
     align-items: center;
@@ -48,7 +48,7 @@
   }
 }
 
-@media (min-width: $sizeXS) {
+@media (width > $sizeXS) {
   .footer .wrap {
     justify-content: space-between;
     align-items: center;

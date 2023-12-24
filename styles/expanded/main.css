@@ -529,7 +529,7 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(var(--size-grid, 15em), 1fr));
 } .grid-auto-min {
   --size-grid: 10em;
-} @media (max-width: 35.01em) {
+} @media (width < 35.01em) {
   .xs-grid-auto {
     grid-template-columns: repeat(
       auto-fit,
@@ -709,11 +709,11 @@ body {
   &.gap-vertical {
     gap: 0 var(--gap);
   }
-} @media (max-width: 35.01em) {
+} @media (width < 35.01em) {
   .sizeXS-column2 {
     column-count: 2;
   }
-} @media (min-width: 35.01em) {
+} @media (width > 35.01em) {
   .column2,
   .column3,
   .column4,
@@ -725,7 +725,7 @@ body {
   .column6 {
     column-count: 3;
   }
-} @media (min-width: 50.01em) {
+} @media (width > 50.01em) {
   .column3,
   .column4 {
     column-count: 3;
@@ -739,7 +739,7 @@ body {
   .m-column2 {
     column-count: 2;
   }
-} @media (min-width: 92.01em) {
+} @media (width > 92.01em) {
   .column4 {
     column-count: 4;
   }
@@ -762,13 +762,13 @@ body {
   user-select: none;
   background-color: var(--colorG15);
 
-  @media (max-width: 90.01em) {
+  @media (width < 90.01em) {
     grid-template-rows: 3em;
     grid-template-columns: 3em minmax(0, 1fr) 3em;
     grid-template-areas: 'logo breadcrumb cmd';
   }
 
-  @media (min-width: 90.01em) {
+  @media (width > 90.01em) {
     grid-template-rows: repeat(2, 2.5em);
     grid-template-columns: 5em minmax(0, 1fr);
     grid-template-areas: 'logo subnav' 'logo breadcrumb';
@@ -805,7 +805,7 @@ body {
 
   a&:where(:focus-within, :hover) {
     background-color: var(--color5);
-  
+
     &::after {
       animation: anim-logo 0.5s ease-in-out;
     }
@@ -818,7 +818,7 @@ body {
   margin: 0;
   padding: 0;
 
-  @media (max-width: 90.01em) {
+  @media (width < 90.01em) {
     position: absolute;
     z-index: 800;
     top: 3em;
@@ -844,7 +844,7 @@ body {
     }
   }
 
-  @media (min-width: 90.01em) {
+  @media (width > 90.01em) {
     & .current {
       position: relative;
       z-index: 10;
@@ -869,15 +869,15 @@ body {
   & li {
     list-style: none;
 
-    @media (min-width: 35.01em) and (max-width: 90.01em) {
+    @media (35.01em < width < 90.01em) {
       flex-basis: 33%;
     }
 
-    @media (min-width: 50.01em) and (max-width: 90.01em) {
+    @media (50.01em < width < 90.01em) {
       flex-basis: 25%;
     }
 
-    @media (max-width: 90.01em) {
+    @media (width > 90.01em) {
       &:nth-child(1) {
         transition-delay: 0.03s;
       }
@@ -954,7 +954,7 @@ body {
       }
     }
   }
-} @media (max-width: 90.01em) {
+} @media (width < 90.01em) {
   :where(html, body).active {
     overflow: clip;
   }
@@ -964,8 +964,6 @@ body {
       position: absolute;
       z-index: 1;
       inset: 0;
-      width: 100vw;
-      height: 100vh;
       background-color: var(--colorAB7);
     }
     & :where(main, footer, aside) {
@@ -974,7 +972,7 @@ body {
       filter: blur(2px) grayscale(1);
     }
   }
-} @media (min-width: 90.01em) {
+} @media (width > 90.01em) {
   @keyframes anim-jump {
     30% {
       transform: translateY(-0.3em);
@@ -984,11 +982,11 @@ body {
   all: unset;
   grid-area: cmd;
 
-  @media (min-width: 90.01em) {
+  @media (width > 90.01em) {
     display: none;
   }
 
-  @media (max-width: 90.01em) {
+  @media (width < 90.01em) {
     padding: 0.5em;
     cursor: pointer;
     background-color: var(--colorG15);
@@ -1005,15 +1003,17 @@ body {
       transition: 0.2s all ease-in-out;
     }
 
-    &:not(:focus, :hover, .active) svg {
-      border-radius: 50%;
-      background-color: var(--color2);
-    }
+    &:not(:focus, :hover, .active) {
+      & svg {
+        border-radius: 50%;
+        background-color: var(--color2);
+      }
 
-    &:not(:focus, :hover, .active) rect {
-      x: 450px;
-      width: 100px;
-      height: 100px;
+      & rect {
+        x: 450px;
+        width: 100px;
+        height: 100px;
+      }
     }
 
     &:where(:focus, :hover, .active) {
@@ -1106,7 +1106,7 @@ body {
     }
   }
 
-  @media (max-width: 90.01em) {
+  @media (width < 90.01em) {
     & li > * {
       line-height: 3;
       padding: 0 2.25em;
@@ -1373,12 +1373,12 @@ ol {
 } [class*='-thumbnail'] {
   width: 100%;
   max-width: calc(50% - 0.5em);
-} @media (max-width: 50.01em) {
+} @media (width < 50.01em) {
   [class*='-thumbnail'] {
     max-width: 20em;
     margin-inline: auto;
   }
-} @media (min-width: 50.01em) {
+} @media (width > 50.01em) {
   [class*='-alignleft'] {
     float: left;
     margin-inline-end: var(--gap);
@@ -1497,8 +1497,8 @@ video {
   line-height: 1.5;
   font-size: 2em;
   background-color: var(--colorAB4);
-} @media (min-width: 35.01em) {
-  ::cue {
+
+  @container grid (width > 35.01em) {
     font-size: 1.5em;
   }
 } audio.media {
@@ -1630,32 +1630,13 @@ video {
     --position: 0%;
     --position-buffer: 100%;
     --color-buffer: var(--colorG33);
-    background-image: linear-gradient(
-        90deg,
-        var(--color-slide) 0,
-        var(--color-slide) var(--position),
-        transparent var(--position)
-      ),
-      linear-gradient(
-        90deg,
-        var(--color-buffer) var(--position-buffer),
-        transparent var(--position-buffer)
-      ),
-      repeating-linear-gradient(
-        90deg,
-        transparent 0,
-        transparent 2px,
-        var(--colorG33) 2px,
-        var(--colorG33) 4px
-      );
+    background-image: linear-gradient(90deg, var(--color-slide) 0, var(--color-slide) var(--position), transparent var(--position)),
+      linear-gradient(90deg, var(--color-buffer) var(--position-buffer), transparent var(--position-buffer)),
+      repeating-linear-gradient(90deg, transparent 0, transparent 2px, var(--colorG33) 2px, var(--colorG33) 4px);
   }
 
   & .media-volume-bar {
-    background-image: linear-gradient(
-      90deg,
-      var(--color-slide) var(--position),
-      transparent var(--position)
-    );
+    background-image: linear-gradient(90deg, var(--color-slide) var(--position), transparent var(--position));
   }
 
   & .media-mute {
@@ -3300,7 +3281,7 @@ select {
   & .wrap > :nth-child(2) {
     text-align: center;
   }
-} @media (max-width: 35.01em) {
+} @media (width < 35.01em) {
   .footer .wrap {
     flex-direction: column;
     align-items: center;
@@ -3308,7 +3289,7 @@ select {
     line-height: 1;
     padding: 1em;
   }
-} @media (min-width: 35.01em) {
+} @media (width > 35.01em) {
   .footer .wrap {
     justify-content: space-between;
     align-items: center;
@@ -3427,7 +3408,7 @@ select {
     gap: var(--gap);
     max-width: 55em;
   }
-} @media (max-width: 35.01em) {
+} @media (width < 35.01em) {
   .article {
     & .wrapper {
       margin-block-start: calc(-1 * var(--gap));
@@ -3437,16 +3418,16 @@ select {
       padding-block: var(--gap);
     }
   }
-} @media (min-width: 35.01em) {
+} @media (width > 35.01em) {
   .article > :where(.wrapper, article, form) {
     border-radius: var(--r1);
     box-shadow: var(--shadow3);
   }
-} @media (min-width: 35.01em) and (max-width: 50.01em) {
+} @media (35.01em < width < 50.01em) {
   .article > :where(.wrapper, article, form) {
     padding: 2.5em 4em;
   }
-} @media (min-width: 50.01em) {
+} @media (width > 50.01em) {
   .article {
     & > :where(.wrapper, article, form) {
       padding: 4em 6em;
@@ -3455,15 +3436,15 @@ select {
       margin-inline-start: auto;
     }
   }
-} @media (min-width: 35.01em) and (max-width: 50.01em) {
+} @media (35.01em < width < 50.01em) {
   .article > footer {
     padding-inline: 4em;
   }
-} @media (min-width: 50.01em) {
+} @media (width > 50.01em) {
   .article > footer {
     padding-inline: 6em;
   }
-} @media (min-width: 35.01em) {
+} @media (width > 35.01em) {
   .boxx {
     padding: 4em 6em;
     border-radius: var(--r1);
@@ -3486,11 +3467,11 @@ select {
   color: var(--color2);
   background-color: var(--colorA005);
   transform: translateY(0.05em);
-} @media (max-width: 50.01em) {
+} @media (width < 50.01em) {
   .line-mark {
     display: none;
   }
-} @media (min-width: 50.01em) {
+} @media (width > 50.01em) {
   .add-line-marks > * {
     position: relative;
   }
@@ -3850,12 +3831,12 @@ select {
       text-decoration: underline;
     }
   }
-} @media (max-width: 35.01em) {
+} @media (width < 35.01em) {
   .topic-item {
     grid-template-columns: minmax(0, 1fr) 2em;
     grid-template-areas: 'ttt ttt' 'uuu aaa';
   }
-} @media (min-width: 35.01em) {
+} @media (width > 35.01em) {
   .topic-item {
     grid-template-columns: 4em minmax(0, 1fr);
     grid-template-areas: 'aaa ttt' 'aaa uuu';
@@ -3891,7 +3872,7 @@ select {
   & > :nth-child(3) {
     transform: translate(1.2em, -0.6em) scale(0.5);
   }
-} @media (max-width: 35.01em) {
+} @media (width < 35.01em) {
   .avatars {
     margin-block-end: 2em;
     font-size: 0.5em;
@@ -4045,17 +4026,17 @@ select {
   }
 } .type-components .box2 {
   scroll-margin-block-start: 1em;
-} @media (max-width: 50.01em) {
+} @media (width < 50.01em) {
   .type-components .box2 {
     position: relative;
     padding: 0;
   }
-} @media (min-width: 50.01em) {
+} @media (width > 50.01em) {
   .type-components .box2 {
     padding: 4em 6em;
     box-shadow: var(--shadow3);
   }
-} @media (max-width: 50.01em) {
+} @media (width < 50.01em) {
   .type-components .box2.ribbon-content::before {
     content: '';
     position: absolute;
@@ -4073,7 +4054,7 @@ select {
     background-position: 100% 0%;
     pointer-events: none;
   }
-} @media (max-width: 50.01em) {
+} @media (width < 50.01em) {
   .type-components .box2 > .ribbon-top-right {
     transform: translate(2.85em, 0.9em) rotate(45deg) !important;
   }

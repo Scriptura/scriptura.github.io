@@ -5,13 +5,13 @@
   user-select: none;
   background-color: var(--colorG15);
 
-  @media (max-width: $sizeNav) {
+  @media (width < $sizeNav) {
     grid-template-rows: 3em;
     grid-template-columns: 3em minmax(0, 1fr) 3em;
     grid-template-areas: 'logo breadcrumb cmd';
   }
 
-  @media (min-width: $sizeNav) {
+  @media (width > $sizeNav) {
     grid-template-rows: repeat(2, 2.5em);
     grid-template-columns: 5em minmax(0, 1fr);
     grid-template-areas: 'logo subnav' 'logo breadcrumb';
@@ -50,7 +50,7 @@
 
   a&:where(:focus-within, :hover) {
     background-color: var(--color5);
-  
+
     &::after {
       animation: anim-logo 0.5s ease-in-out;
     }
@@ -65,7 +65,7 @@
   margin: 0;
   padding: 0;
 
-  @media (max-width: $sizeNav) {
+  @media (width < $sizeNav) {
     position: absolute;
     z-index: 800;
     top: 3em;
@@ -91,7 +91,7 @@
     }
   }
 
-  @media (min-width: $sizeNav) {
+  @media (width > $sizeNav) {
     & .current {
       position: relative;
       z-index: 10;
@@ -116,15 +116,15 @@
   & li {
     list-style: none;
 
-    @media (min-width: $sizeXS) and (max-width: $sizeNav) {
+    @media ($sizeXS < width < $sizeNav) {
       flex-basis: 33%;
     }
 
-    @media (min-width: $sizeS) and (max-width: $sizeNav) {
+    @media ($sizeS < width < $sizeNav) {
       flex-basis: 25%;
     }
 
-    @media (max-width: $sizeNav) {
+    @media (width > $sizeNav) {
       &:nth-child(1) {
         transition-delay: 0.03s;
       }
@@ -203,7 +203,7 @@
   }
 }
 
-@media (max-width: $sizeNav) {
+@media (width < $sizeNav) {
   :where(html, body).active {
     overflow: clip;
   }
@@ -213,8 +213,6 @@
       position: absolute;
       z-index: 1;
       inset: 0;
-      width: 100vw;
-      height: 100vh;
       background-color: var(--colorAB7);
     }
     & :where(main, footer, aside) {
@@ -225,7 +223,7 @@
   }
 }
 
-@media (min-width: $sizeNav) {
+@media (width > $sizeNav) {
   @keyframes anim-jump {
     30% {
       transform: translateY(-0.3em);
@@ -237,11 +235,11 @@
   all: unset;
   grid-area: cmd;
 
-  @media (min-width: $sizeNav) {
+  @media (width > $sizeNav) {
     display: none;
   }
 
-  @media (max-width: $sizeNav) {
+  @media (width < $sizeNav) {
     padding: 0.5em;
     cursor: pointer;
     background-color: var(--colorG15);
@@ -258,15 +256,17 @@
       transition: 0.2s all ease-in-out;
     }
 
-    &:not(:focus, :hover, .active) svg {
-      border-radius: 50%;
-      background-color: var(--color2);
-    }
+    &:not(:focus, :hover, .active) {
+      & svg {
+        border-radius: 50%;
+        background-color: var(--color2);
+      }
 
-    &:not(:focus, :hover, .active) rect {
-      x: 450px;
-      width: 100px;
-      height: 100px;
+      & rect {
+        x: 450px;
+        width: 100px;
+        height: 100px;
+      }
     }
 
     &:where(:focus, :hover, .active) {

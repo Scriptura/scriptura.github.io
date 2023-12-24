@@ -109,21 +109,21 @@
   scroll-margin-block-start: 1em;
 }
 
-@media (max-width: $sizeS) {
+@media (width < $sizeS) {
   .type-components .box2 {
     position: relative;
     padding: 0;
   }
 }
 
-@media (min-width: $sizeS) {
+@media (width > $sizeS) {
   .type-components .box2 {
     padding: 4em 6em;
     box-shadow: var(--shadow3);
   }
 }
 
-@media (max-width: $sizeS) {
+@media (width < $sizeS) {
   .type-components .box2.ribbon-content::before {
     content: '';
     position: absolute;
@@ -143,7 +143,7 @@
   }
 }
 
-@media (max-width: $sizeS) {
+@media (width < $sizeS) {
   .type-components .box2 > .ribbon-top-right {
     transform: translate(2.85em, 0.9em) rotate(45deg) !important;
   }

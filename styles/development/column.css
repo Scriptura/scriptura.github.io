@@ -31,13 +31,13 @@
   }
 }
 
-@media (max-width: $sizeXS) {
+@media (width < $sizeXS) {
   .sizeXS-column2 {
     column-count: 2;
   }
 }
 
-@media (min-width: $sizeXS) {
+@media (width > $sizeXS) {
   .column2,
   .column3,
   .column4,
@@ -51,7 +51,7 @@
   }
 }
 
-@media (min-width: $sizeS) {
+@media (width > $sizeS) {
   .column3,
   .column4 {
     column-count: 3;
@@ -67,7 +67,7 @@
   }
 }
 
-@media (min-width: $sizeL) {
+@media (width > $sizeL) {
   .column4 {
     column-count: 4;
   }

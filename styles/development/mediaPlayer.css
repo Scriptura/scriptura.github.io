@@ -19,10 +19,8 @@ video {
   line-height: 1.5;
   font-size: 2em;
   background-color: var(--colorAB4);
-}
 
-@media (min-width: $sizeXS) {
-  ::cue {
+  @container grid (width > $sizeXS) {
     font-size: 1.5em;
   }
 }
@@ -160,32 +158,13 @@ video.media {
     --position: 0%;
     --position-buffer: 100%;
     --color-buffer: var(--colorG33);
-    background-image: linear-gradient(
-        90deg,
-        var(--color-slide) 0,
-        var(--color-slide) var(--position),
-        transparent var(--position)
-      ),
-      linear-gradient(
-        90deg,
-        var(--color-buffer) var(--position-buffer),
-        transparent var(--position-buffer)
-      ),
-      repeating-linear-gradient(
-        90deg,
-        transparent 0,
-        transparent 2px,
-        var(--colorG33) 2px,
-        var(--colorG33) 4px
-      );
+    background-image: linear-gradient(90deg, var(--color-slide) 0, var(--color-slide) var(--position), transparent var(--position)),
+      linear-gradient(90deg, var(--color-buffer) var(--position-buffer), transparent var(--position-buffer)),
+      repeating-linear-gradient(90deg, transparent 0, transparent 2px, var(--colorG33) 2px, var(--colorG33) 4px);
   }
 
   & .media-volume-bar {
-    background-image: linear-gradient(
-      90deg,
-      var(--color-slide) var(--position),
-      transparent var(--position)
-    );
+    background-image: linear-gradient(90deg, var(--color-slide) var(--position), transparent var(--position));
   }
 
   & .media-mute {

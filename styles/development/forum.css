@@ -96,14 +96,14 @@
   }
 }
 
-@media (max-width: $sizeXS) {
+@media (width < $sizeXS) {
   .topic-item {
     grid-template-columns: minmax(0, 1fr) 2em;
     grid-template-areas: 'ttt ttt' 'uuu aaa';
   }
 }
 
-@media (min-width: $sizeXS) {
+@media (width > $sizeXS) {
   .topic-item {
     grid-template-columns: 4em minmax(0, 1fr);
     grid-template-areas: 'aaa ttt' 'aaa uuu';
@@ -143,7 +143,7 @@
   }
 }
 
-@media (max-width: $sizeXS) {
+@media (width < $sizeXS) {
   .avatars {
     margin-block-end: 2em;
     font-size: 0.5em;

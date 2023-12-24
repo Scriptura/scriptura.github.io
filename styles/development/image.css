@@ -51,14 +51,14 @@ figure {
   max-width: calc(50% - 0.5em);
 }
 
-@media (max-width: $sizeS) {
+@media (width < $sizeS) {
   [class*='-thumbnail'] {
     max-width: 20em;
     margin-inline: auto;
   }
 }
 
-@media (min-width: $sizeS) {
+@media (width > $sizeS) {
   [class*='-alignleft'] {
     float: left;
     margin-inline-end: var(--gap);
