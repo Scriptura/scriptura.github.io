@@ -129,7 +129,8 @@
        url('../fonts/notoSans-Regular.woff') format('woff');
   font-weight: normal;
   font-style: normal;
-  font-display: swap; /* @see https://css-tricks.com/almanac/properties/f/font-display/ */
+  /* @see https://css-tricks.com/almanac/properties/f/font-display/ */
+  font-display: swap;
 } @font-face {
   font-family: 'Noto Serif';
   src: url('../fonts/notoSerif-Regular.woff2') format('woff2'),
@@ -393,12 +394,7 @@ template {
   position: relative;
   margin: 0;
   padding-inline-start: 2em;
-  background: repeating-linear-gradient(
-      -45deg,
-      transparent 0 5px,
-      var(--colorA1) 5px 10px
-    )
-    no-repeat;
+  background: repeating-linear-gradient(-45deg, transparent 0 5px, var(--colorA1) 5px 10px) no-repeat;
   background-size: 0.5em 100%;
 
   &::before,
@@ -439,7 +435,6 @@ template {
 } .verse {
   color: var(--color2);
 } .links p a {
-  
   &:not([href^='#'])::after {
     /* @note Liens internes, sauf pour les ancres. */
     content: ' ↩';
@@ -451,8 +446,8 @@ template {
   }
 } .justify {
   hyphens: auto;
-} @media (width > 35.01em) {
-  .justify {
+
+  @media (width > 35.01em) {
     text-align: justify;
   }
 } html,
@@ -492,16 +487,18 @@ body {
 } [tabindex='-1']:focus:not(:focus-visible) {
   /* Future-proof rule: in browsers that support :focus-visible, suppress the focus outline on elements that programmatically receive focus but wouldn't normally show a visible focus outline. In general, this would mean that the outline is only applied if the interaction that led to the element receiving programmatic focus was a keyboard interaction, or the browser has somehow determined that the user is primarily a keyboard user and/or wants focus outlines to always be presented. @see https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible @see https://developer.paciellogroup.com/blog/2018/03/focus-visible-and-backwards-compatibility/ */
   outline: 0 !important;
-} :has(> [class^='grid']),
+} /* @note Utiliser .grid2 pour avoir deux colonnes, etc., au-delà de .grid4 utiliser .grid-auto (qui par défaut aura 5 colonnes max pour la largeur prévue de notre site). */ /* @note Avec `minmax` la grille ne sera pas tributaire de son contenu en responsive @see https://css-tricks.com/equal-width-columns-in-css-grid-are-kinda-weird/ */ :has(> [class^='grid']),
 .parent-grid {
+  /* @note ".parent-grid" est un fallback pour le sélecteur :has(), ajout de la classe via JS. */
   container: grid/inline-size;
-  width: 100%;
+  width: 100%; /* @note Important si le conteneur n'a pas de largeur définie par défaut. */
 } [class^='grid'] {
   display: grid;
   grid-auto-flow: dense;
   grid-template-columns: repeat(var(--n, 1), minmax(0, 1fr));
 
   &.row-defines {
+    /* @note Permet aux spans de la propriété grid-row de se caler sur les lignes. Intéressant mais pas souhaitable d'emblée en production, d'où cette classe. */
     grid-auto-rows: minmax(0, 1fr);
   }
 
@@ -510,31 +507,39 @@ body {
   }
 
   &.gap-block {
+    /* @note padding et non margin, car ne doit pas pouvoir fusionner avec les marges de l'élément suivant. */
     padding-block: var(--gap);
   }
 
   &.gap-top {
+    /* @note Idem. */
     padding-block-start: var(--gap);
   }
 
   &.gap-bottom {
+    /* @note Idem. */
     padding-block-end: var(--gap);
   }
 
   &.gap-vertical {
     gap: 0 var(--gap);
   }
+  /*
+  &.masonry {
+    grid-template-rows: masonry; /* @note Implémentation future en CSS @todo À surveiller.
+  }
+  */
 } .grid-auto,
 .grid-auto-min {
+  /* @note Ne pas définir la variable au-dessus de sa valeur par défaut afin d'éviter des dépassement sur les écrans de petites définitions. Préférer alors les grilles prédéfinies. */
   grid-template-columns: repeat(auto-fit, minmax(var(--size-grid, 15em), 1fr));
 } .grid-auto-min {
+  /* @note Valeur réduite évitant de définir trop fréquement la variable de .grid-auto via du style en ligne. */
   --size-grid: 10em;
 } @media (width < 35.01em) {
   .xs-grid-auto {
-    grid-template-columns: repeat(
-      auto-fit,
-      minmax(var(--xs-size-grid, 11em), 1fr)
-    );
+    /* @todo Valeur arbitraire à redéfinir. */
+    grid-template-columns: repeat(auto-fit, minmax(var(--xs-size-grid, 11em), 1fr));
   }
 } @container grid (35em < width) {
   .grid2,
@@ -665,6 +670,7 @@ body {
     margin-inline-start: auto;
   }
 } .order {
+  /* @note Valeur négative car l'utilisation de cette classe est souvent utilisée pour une monté des éléments frères plutôt qu'une descente. */
   order: var(--o, -1);
 } @container grid (width < 35.01em) {
   .xs-order {
@@ -678,24 +684,64 @@ body {
   .m-order {
     order: var(--o, -1);
   }
-} [class^='column'] {
+} /* @note Mémento de nos (presques) équivalences grid/flex codées ultérieurement : */ /* with Grid layout: */ /*
+.summary {
+  display: grid;
+  gap: $gap;
+
+  @media (min-width: $sizeXS) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: $sizeS) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (min-width: $sizeL) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+*/ /* with flexbox: */ /*
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $gap;
+
+  & > * {
+    flex: 1 0 100%; /* = [flex-grow flex-shrink flex-basis]
+
+    @media (min-width: $sizeXS) {
+      flex-basis: calc(50% - $gap);
+    }
+
+    @media (min-width: $sizeS) {
+      flex-basis: calc(33% - $gap);
+    }
+
+    @media (min-width: _sizeL) {
+      flex-basis: calc(25% - $gap);
+    }
+  }
+}
+*/ /* @bug @affected Chrome @note Nombreux bugs : éléments html ou effets d'ombre tronqués s'ils dépassent des colonnes, drop-shadow utilisé sur des éléments internes aux colonnes créé des artefacts. */ [class^='column'] {
   column-gap: 0;
   position: relative;
 
   & > * {
     display: inline-block;
     width: 100%;
-    break-inside: avoid-column;
-    word-wrap: break-word;
+    break-inside: avoid-column; /* @note Évite aux items enfants de column d'être éventuellement coupés en deux. @see https://stackoverflow.com/questions/7785374 */
+    word-wrap: break-word; /* @note Alias de overflow-wrap @see https://developer.mozilla.org/fr/docs/Web/CSS/overflow-wrap */
   }
 
   &.gap {
     column-gap: var(--gap);
-    margin-block-end: calc(-1 * var(--gap));
-  }
+    /* @note À l'inverse de grid layout, le module columns a besoin des marges pour bien s'implémenter. */
+    margin-block-end: calc(var(--gap)*-1);
 
-  &.gap > * {
-    margin-block-end: var(--gap);
+    & > * {
+      margin-block-end: var(--gap);
+    }
   }
 
   &.gap-top {
@@ -708,6 +754,7 @@ body {
 
   &.gap-vertical {
     gap: 0 var(--gap);
+    /* column-gap: var(--gap); */
   }
 } @media (width < 35.01em) {
   .sizeXS-column2 {
@@ -757,6 +804,7 @@ body {
   }
 } .nav {
   position: relative;
+  /* @note Permet de passer au-dessus du pseudo élément de body (ce dernier faisant un effet d'ombrage sur le contenu en version mobile) et aussi de certains éléments définis par des sources externes (comme les Maps Leaflet). */
   z-index: 2000;
   display: grid;
   user-select: none;
@@ -764,12 +812,14 @@ body {
 
   @media (width < 90.01em) {
     grid-template-rows: 3em;
+    /* @note Laisse une place au logo du site. */
     grid-template-columns: 3em minmax(0, 1fr) 3em;
     grid-template-areas: 'logo breadcrumb cmd';
   }
 
   @media (width > 90.01em) {
     grid-template-rows: repeat(2, 2.5em);
+    /* @note Laisse une place au logo du site. */
     grid-template-columns: 5em minmax(0, 1fr);
     grid-template-areas: 'logo subnav' 'logo breadcrumb';
   }
@@ -796,7 +846,7 @@ body {
     display: block;
     width: 100%;
     height: 100%;
-    background-image: url('../medias/images/logo/logo.svg');
+    background-image: url('../medias/images/logo/logo.svg'); /* '../medias/images/logo/195v.svg' */
     background-repeat: no-repeat;
     background-position: 50% 50%;
     background-size: auto 70%;
@@ -818,6 +868,33 @@ body {
   margin: 0;
   padding: 0;
 
+  & .current {
+    background-color: var(--color2);
+
+    @media (width > 90.01em) {
+      position: relative;
+      /* @note La valeur doit être suffisante pour passer au-dessus des items de ".breadcrumb." */
+      z-index: 10;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: calc(50% - 1em);
+        width: 2em;
+        height: 1em;
+        background-color: var(--color2);
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
+      }
+    }
+  }
+
+  @media (width > 90.01em) {
+    & > :last-child {
+      margin-inline-start: auto;
+    }
+  }
+
   @media (width < 90.01em) {
     position: absolute;
     z-index: 800;
@@ -833,36 +910,16 @@ body {
       background-color: var(--colorG15);
       transform: rotate(90deg);
       transition: transform 0.4s ease-in-out;
-    }
 
-    & li > * {
-      line-height: 3;
-    }
-
-    &.active li {
-      transform: translateX(110vw) rotate(0deg);
-    }
-  }
-
-  @media (width > 90.01em) {
-    & .current {
-      position: relative;
-      z-index: 10;
-
-      &::after {
-        content: '';
-        position: absolute;
-        top: 100%;
-        left: calc(50% - 1em);
-        width: 2em;
-        height: 1em;
-        background-color: var(--color2);
-        clip-path: polygon(0 0, 100% 0, 50% 100%);
+      .active & {
+        /* @note L'utilisation des pourcentages provoque un effet de bord avec overflow:clip sur le body ; à éviter. Valeur au-delà de 100vw afin de cacher les ombres des boîtes. */
+        transform: translateX(110vw) rotate(0deg);
       }
-    }
-
-    & > :last-child {
-      margin-inline-start: auto;
+      /*
+      & > * {
+        line-height: 3;
+      }
+      */
     }
   }
 
@@ -877,54 +934,43 @@ body {
       flex-basis: 25%;
     }
 
-    @media (width > 90.01em) {
-      &:nth-child(1) {
-        transition-delay: 0.03s;
-      }
-
-      &:nth-child(2) {
-        transition-delay: 0.06s;
-      }
-
-      &:nth-child(3) {
-        transition-delay: 0.08s;
-      }
-
-      &:nth-child(4) {
-        transition-delay: 0.11s;
-      }
-
-      &:nth-child(5) {
-        transition-delay: 0.14s;
-      }
-
-      &:nth-child(6) {
-        transition-delay: 0.17s;
-      }
-
-      &:nth-child(7) {
-        transition-delay: 0.19s;
-      }
-
-      &:nth-child(8) {
-        transition-delay: 0.22s;
-      }
-
-      &:nth-child(9) {
-        transition-delay: 0.25s;
-      }
-
-      &:nth-child(10) {
-        transition-delay: 0.28s;
-      }
-
-      &:nth-child(11) {
-        transition-delay: 0.31s;
-      }
-
-      &:nth-child(12) {
-        transition-delay: 0.33s;
-      }
+    @media (width < 90.01em) {
+        &:nth-child(1) {
+          transition-delay: 0.05s;
+        }
+        &:nth-child(2) {
+          transition-delay: 0.1s;
+        }
+        &:nth-child(3) {
+          transition-delay: 0.15s;
+        }
+        &:nth-child(4) {
+          transition-delay: 0.2s;
+        }
+        &:nth-child(5) {
+          transition-delay: 0.25s;
+        }
+        &:nth-child(6) {
+          transition-delay: 0.3s;
+        }
+        &:nth-child(7) {
+          transition-delay: 0.35s;
+        }
+        &:nth-child(8) {
+          transition-delay: 0.4s;
+        }
+        &:nth-child(9) {
+          transition-delay: 0.45s;
+        }
+        &:nth-child(10) {
+          transition-delay: 0.5s;
+        }
+        &:nth-child(11) {
+          transition-delay: 0.55s;
+        }
+        &:nth-child(12) {
+          transition-delay: 0.6s;
+        }
     }
     & > * {
       display: block;
@@ -934,19 +980,15 @@ body {
     }
   }
 
-  & .current {
-    background-color: var(--color2);
-  }
-
   & a {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    //color: var(--colorT2);
+    /* color: var(--colorT2); */
     text-decoration: none;
 
     &:where(:focus, :hover, :active) {
-      //color: var(--colorW);
+      /* color: var(--colorW); */
       background-color: var(--color2);
 
       & svg {
@@ -1001,6 +1043,7 @@ body {
       transform-origin: center;
       fill: var(--colorT);
       transition: 0.2s all ease-in-out;
+      /* transition-property: x, y, width, height, transform; */
     }
 
     &:not(:focus, :hover, .active) {
@@ -1068,10 +1111,10 @@ body {
 
     &:last-child div {
       color: var(--colorW);
-    }
 
-    &:last-child div span {
-      color: var(--colorT2);
+      & span {
+        color: var(--colorT2);
+      }
     }
 
     & > * {
@@ -1088,13 +1131,7 @@ body {
       color: var(--colorT2);
       background-color: var(--colorG15);
       transition: background-color 0.3s ease-in-out;
-      clip-path: polygon(
-        0 0,
-        calc(100% - 1em) 0,
-        100% 50%,
-        calc(100% - 1em) 100%,
-        0 100%
-      );
+      clip-path: polygon(0 0, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0 100%);
     }
 
     &:first-child > * {
@@ -1102,7 +1139,7 @@ body {
     }
 
     & + li {
-      margin-inline-start: calc(-1 * var(--gap));
+      margin-inline-start: calc(var(--gap)*-1);
     }
   }
 
@@ -1113,15 +1150,17 @@ body {
     }
 
     & > :nth-last-child(3) {
+      /* @note Ne pas mettre :first-child car les premiers items peuvent être en display:none */
       display: none;
     }
 
     & > :nth-last-child(2) {
+      /* @note Ne pas mettre :first-child car les premiers items peuvent être en display:none */
       margin-inline-start: 0;
-    }
 
-    & > :nth-last-child(2) a {
-      padding-inline-start: var(--gap);
+      & a {
+        padding-inline-start: var(--gap);
+      }
     }
   }
 } .alert {
@@ -1158,27 +1197,31 @@ body {
       background-color: var(--alert-icon-color);
       clip-path: circle(50%);
     }
-  }
 
-  & #gdpr-see .mm {
-    margin-block-end: var(--gap);
+    #gdpr-see & {
+      margin-block-end: var(--gap);
+    }
   }
 } ul,
 ol {
   padding-inline-start: var(--list-start, 2.5em);
-} ul :where(ul, ol :where(ul, ul ol), ol ol) {
+} ul :where(ul, ol) {
   padding-inline-start: 2.5em;
 } ul {
   list-style-type: square;
 } ol ol {
   list-style-type: lower-latin;
-} ol ol ol {
-  list-style-type: lower-greek;
+
+  & ol {
+    list-style-type: lower-greek;
+  }
 } .list-gap {
   display: grid;
-  gap: 0.75em;
+  gap: 0.75em; /* @note Écart calé sur les paragraphes. */
 } .list-stripe,
 .list-stripe-links {
+  /* @note Ne pas utiliser : ne travaille pas de concert avec la classe `.grid`. */
+  /* all: unset; */
   margin: 0;
   padding-inline-start: 0;
 
@@ -1235,6 +1278,15 @@ ol {
     transition: color, background-color 0.3s ease-in-out;
   }
 
+  & li::before,
+  & svg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--colorT);
+    background-color: var(--color2);
+  }
+
   & a {
     display: flex;
     align-items: center;
@@ -1245,19 +1297,10 @@ ol {
     text-decoration: none;
 
     &:where(:focus, :hover, :active) {
-      //color: var(--colorW);
+      /* color: var(--colorW); */
       background-color: var(--color2);
-      //text-decoration: none;
+      /* text-decoration: none; */
     }
-  }
-
-  & li::before,
-  & svg {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--colorT);
-    background-color: var(--color2);
   }
 } .list-straight {
   & li {
@@ -1282,6 +1325,7 @@ ol {
 
   & svg {
     min-height: 100%;
+    /* @note Détermine en creux la taille de l'icône. */
     padding-inline: 0.7em 1.1em;
   }
 
@@ -1305,6 +1349,7 @@ ol {
   & svg {
     width: 2.5em;
     height: 2.5em;
+    /* @note Pour centrer la "puce" si contenu de l'item trop important. @todo Résultat visuel à évaluer. */
     margin: auto 0;
     transition: transform 0.3s ease-in-out;
   }
@@ -1331,6 +1376,7 @@ ol {
 } [class^='grid'][class*='list-'] {
   gap: var(--gap);
 } [start] > .chorus {
+  /* @note Pour les refrains. Pour la cohérence de la liste les numéros doivent être définis avec l'attribut `start="0" afin de commencer par "1".` */
   list-style-type: 'R. ';
 } @keyframes anim-list {
   50% {
@@ -1342,7 +1388,7 @@ ol {
 } .decorative-svg {
   fill: var(--colorT2);
   filter: drop-shadow(0.2em 0.2em 0.2em var(--colorAB3));
-} .icon,
+} /* @note Éviter un espace de nom trop générique qui pourrait engendrer des effets de bord. */ .icon,
 .icon-inline {
   display: inline-block;
   vertical-align: sub;
@@ -1351,12 +1397,21 @@ ol {
 } .icon-inline {
   margin-inline-end: 0.5em;
 } img {
+  /* @note Évite un décalage possible de l'élément suivant. */
   vertical-align: middle;
+  /* @bugfix @todo Depuis l'introduction des attributs 'srcset' et 'sizes' la largeur ne doit plus dépendre de l'image par défaut. */
+  /* width: 100%; */
   max-width: 100%;
   height: auto;
   border-style: none;
+  /* @note N'a pas pour vocation ici de "protéger" l'image, mais d'éviter la surbrillance non attendue suite à une sélection involontaire. */
   user-select: none;
+
+  &:fullscreen {
+    object-fit: contain;
+  }
 } figure {
+  /* @bugfix @affected All browers. */
   margin: 0;
 } [class*='figure-image'] {
   width: 100%;
@@ -1371,8 +1426,9 @@ ol {
     text-align: center;
   }
 } [class*='-thumbnail'] {
+  /* @note Important à appliquer pour le responsive si le width n'est pas définit préalablement. */
   width: 100%;
-  max-width: calc(50% - 0.5em);
+  max-width: calc(50% - var(--gap)/2);
 } @media (width < 50.01em) {
   [class*='-thumbnail'] {
     max-width: 20em;
@@ -1389,12 +1445,12 @@ ol {
     margin-inline-start: var(--gap);
   }
 
-  :where([class*='-alignleft'], [class*='-alignright'])
-    ~ :where(h2, h3, hr, aside) {
+  :where([class*='-alignleft'], [class*='-alignright']) ~ :where(h2, h3, hr, aside) {
     clear: both;
   }
 } .js [class*='-focus'] {
   position: relative;
+  /* @note Évite un conflit avec d'autres éléments HTML positionnés en relatifs dans la mise en page, tel que les ancres line-mark. */
   z-index: 1;
   cursor: zoom-in;
   transition: 0.15s transform;
@@ -1415,6 +1471,7 @@ ol {
   all: unset;
   position: absolute;
   z-index: 1;
+  /* @affected Firefox @note La propriété !important est obligatoire pour que ce navigateur prenne en compte la règle. */
   outline: none !important;
   cursor: zoom-in;
 
@@ -1430,6 +1487,7 @@ ol {
   color: var(--colorG60);
 } .picture-area {
   position: fixed;
+  /* @note Doit passer au dessus de tout autre élément, notamment le scroll top. */
   z-index: 4001;
   inset: 0;
   display: grid;
@@ -1442,6 +1500,7 @@ ol {
     all: unset;
     max-width: 100%;
     max-height: 100vh;
+    /* @note Pour les images dotées d'un canal alpha. */
     background-color: var(--colorB);
   }
 
@@ -1464,8 +1523,6 @@ ol {
   }
 } .freeze {
   overflow: clip;
-} img:fullscreen {
-  object-fit: contain;
 } .mosaic {
   & figure {
     padding: 0.2em;
@@ -3262,6 +3319,19 @@ select {
     max-width: 92em;
     margin: 0 auto;
 
+    @media (width < 35.01em) {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      line-height: 1;
+      padding: 1em;
+    }
+
+    @media (width > 35.01em) {
+      justify-content: space-between;
+      align-items: center;
+    }
+
     & > :first-child {
       display: flex;
       align-items: center;
@@ -3280,19 +3350,6 @@ select {
 
   & .wrap > :nth-child(2) {
     text-align: center;
-  }
-} @media (width < 35.01em) {
-  .footer .wrap {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    line-height: 1;
-    padding: 1em;
-  }
-} @media (width > 35.01em) {
-  .footer .wrap {
-    justify-content: space-between;
-    align-items: center;
   }
 } .article {
   display: grid;
@@ -3411,7 +3468,7 @@ select {
 } @media (width < 35.01em) {
   .article {
     & .wrapper {
-      margin-block-start: calc(-1 * var(--gap));
+      margin-block-start: calc(var(--gap)*-1);
     }
 
     & article {
@@ -3553,7 +3610,7 @@ select {
     transparent 0 0.5rem,
     var(--colorA2) 0.5rem 1rem
   );
-  background-size: calc(1rem / 0.707) 100%, 100% 800%;
+  background-size: 1.41443rem 100%, 100% 800%;
   background-position: inherit;
   box-shadow: inset 0 2px 9px var(--colorA3), inset 0 -2px 6px var(--colorAB4);
   border-radius: 0.5em;
@@ -3565,7 +3622,7 @@ select {
     transparent 0 0.5rem,
     var(--colorA2) 0.5rem 1rem
   );
-  background-size: calc(1rem / 0.707) 100%, 100% 800%;
+  background-size: 1.41443rem 100%, 100% 800%;
   background-position: inherit;
   box-shadow: inset 0 2px 9px var(--colorA3), inset 0 -2px 6px var(--colorAB4);
   border-radius: 0.5em;
@@ -3574,7 +3631,7 @@ select {
     background-position: 0 0;
   }
   100% {
-    background-position: calc(10 * 1rem / 0.707) 100%;
+    background-position: 14.14427rem 100%;
   }
 } .loader {
   --frame: 1s;
@@ -3592,12 +3649,12 @@ select {
 
   &::before {
     inset: 1px;
-    animation: anim-loader calc(var(--frame) * 4.7) ease infinite;
+    animation: anim-loader calc(var(--frame)*4.7) ease infinite;
   }
 
   &::after {
     inset: 7px;
-    animation: anim-loader calc(var(--frame) * 1.51) ease infinite;
+    animation: anim-loader calc(var(--frame)*1.51) ease infinite;
   }
 } .loader,
 .loader::before,
@@ -4143,7 +4200,7 @@ select {
 } .vw80 {
   --size: 25em;
   --size-width: var(--size);
-  width: calc(var(--size) * 0.8);
+  width: calc(var(--size)*0.8);
 } .scale300 {
   font-size: 300%;
 } .scale250 {

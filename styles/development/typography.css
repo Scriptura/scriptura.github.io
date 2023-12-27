@@ -42,12 +42,7 @@ hr[data-hr],
   position: relative;
   margin: 0;
   padding-inline-start: 2em;
-  background: repeating-linear-gradient(
-      -45deg,
-      transparent 0 5px,
-      var(--colorA1) 5px 10px
-    )
-    no-repeat;
+  background: repeating-linear-gradient(-45deg, transparent 0 5px, var(--colorA1) 5px 10px) no-repeat;
   background-size: 0.5em 100%;
 
   &::before,
@@ -96,7 +91,6 @@ hr[data-hr],
 }
 
 .links p a {
-  
   &:not([href^='#'])::after {
     /* @note Liens internes, sauf pour les ancres. */
     content: ' ↩';
@@ -110,10 +104,8 @@ hr[data-hr],
 
 .justify {
   hyphens: auto;
-}
 
-@media (width > $sizeXS) {
-  .justify {
+  @media (width > $sizeXS) {
     text-align: justify;
   }
 }

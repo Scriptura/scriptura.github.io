@@ -1,5 +1,6 @@
 .nav {
   position: relative;
+  /* @note Permet de passer au-dessus du pseudo élément de body (ce dernier faisant un effet d'ombrage sur le contenu en version mobile) et aussi de certains éléments définis par des sources externes (comme les Maps Leaflet). */
   z-index: 2000;
   display: grid;
   user-select: none;
@@ -7,12 +8,14 @@
 
   @media (width < $sizeNav) {
     grid-template-rows: 3em;
+    /* @note Laisse une place au logo du site. */
     grid-template-columns: 3em minmax(0, 1fr) 3em;
     grid-template-areas: 'logo breadcrumb cmd';
   }
 
   @media (width > $sizeNav) {
     grid-template-rows: repeat(2, 2.5em);
+    /* @note Laisse une place au logo du site. */
     grid-template-columns: 5em minmax(0, 1fr);
     grid-template-areas: 'logo subnav' 'logo breadcrumb';
   }
@@ -41,7 +44,7 @@
     display: block;
     width: 100%;
     height: 100%;
-    background-image: url('../medias/images/logo/logo.svg');
+    background-image: url('../medias/images/logo/logo.svg'); /* '../medias/images/logo/195v.svg' */
     background-repeat: no-repeat;
     background-position: 50% 50%;
     background-size: auto 70%;
@@ -65,6 +68,33 @@
   margin: 0;
   padding: 0;
 
+  & .current {
+    background-color: var(--color2);
+
+    @media (width > $sizeNav) {
+      position: relative;
+      /* @note La valeur doit être suffisante pour passer au-dessus des items de ".breadcrumb." */
+      z-index: 10;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: calc(50% - 1em);
+        width: 2em;
+        height: 1em;
+        background-color: var(--color2);
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
+      }
+    }
+  }
+
+  @media (width > $sizeNav) {
+    & > :last-child {
+      margin-inline-start: auto;
+    }
+  }
+
   @media (width < $sizeNav) {
     position: absolute;
     z-index: 800;
@@ -80,36 +110,16 @@
       background-color: var(--colorG15);
       transform: rotate(90deg);
       transition: transform 0.4s ease-in-out;
-    }
 
-    & li > * {
-      line-height: 3;
-    }
-
-    &.active li {
-      transform: translateX(110vw) rotate(0deg);
-    }
-  }
-
-  @media (width > $sizeNav) {
-    & .current {
-      position: relative;
-      z-index: 10;
-
-      &::after {
-        content: '';
-        position: absolute;
-        top: 100%;
-        left: calc(50% - 1em);
-        width: 2em;
-        height: 1em;
-        background-color: var(--color2);
-        clip-path: polygon(0 0, 100% 0, 50% 100%);
+      .active & {
+        /* @note L'utilisation des pourcentages provoque un effet de bord avec overflow:clip sur le body ; à éviter. Valeur au-delà de 100vw afin de cacher les ombres des boîtes. */
+        transform: translateX(110vw) rotate(0deg);
       }
-    }
-
-    & > :last-child {
-      margin-inline-start: auto;
+      /*
+      & > * {
+        line-height: 3;
+      }
+      */
     }
   }
 
@@ -124,53 +134,11 @@
       flex-basis: 25%;
     }
 
-    @media (width > $sizeNav) {
-      &:nth-child(1) {
-        transition-delay: 0.03s;
-      }
-
-      &:nth-child(2) {
-        transition-delay: 0.06s;
-      }
-
-      &:nth-child(3) {
-        transition-delay: 0.08s;
-      }
-
-      &:nth-child(4) {
-        transition-delay: 0.11s;
-      }
-
-      &:nth-child(5) {
-        transition-delay: 0.14s;
-      }
-
-      &:nth-child(6) {
-        transition-delay: 0.17s;
-      }
-
-      &:nth-child(7) {
-        transition-delay: 0.19s;
-      }
-
-      &:nth-child(8) {
-        transition-delay: 0.22s;
-      }
-
-      &:nth-child(9) {
-        transition-delay: 0.25s;
-      }
-
-      &:nth-child(10) {
-        transition-delay: 0.28s;
-      }
-
-      &:nth-child(11) {
-        transition-delay: 0.31s;
-      }
-
-      &:nth-child(12) {
-        transition-delay: 0.33s;
+    @media (width < $sizeNav) {
+      @for $i from 1 to 12 {
+        &:nth-child($i) {
+          transition-delay: calc($i * 0.05s);
+        }
       }
     }
     & > * {
@@ -181,19 +149,15 @@
     }
   }
 
-  & .current {
-    background-color: var(--color2);
-  }
-
   & a {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    //color: var(--colorT2);
+    /* color: var(--colorT2); */
     text-decoration: none;
 
     &:where(:focus, :hover, :active) {
-      //color: var(--colorW);
+      /* color: var(--colorW); */
       background-color: var(--color2);
 
       & svg {
@@ -254,6 +218,7 @@
       transform-origin: center;
       fill: var(--colorT);
       transition: 0.2s all ease-in-out;
+      /* transition-property: x, y, width, height, transform; */
     }
 
     &:not(:focus, :hover, .active) {

@@ -4,7 +4,8 @@
        url('../fonts/notoSans-Regular.woff') format('woff');
   font-weight: normal;
   font-style: normal;
-  font-display: swap; /* @see https://css-tricks.com/almanac/properties/f/font-display/ */
+  /* @see https://css-tricks.com/almanac/properties/f/font-display/ */
+  font-display: swap;
 }
 
 @font-face {

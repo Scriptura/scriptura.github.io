@@ -32,9 +32,9 @@
       background-color: var(--alert-icon-color);
       clip-path: circle(50%);
     }
-  }
 
-  & #gdpr-see .mm {
-    margin-block-end: var(--gap);
+    #gdpr-see & {
+      margin-block-end: var(--gap);
+    }
   }
 }

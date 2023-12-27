@@ -26,10 +26,10 @@
 
     &:last-child div {
       color: var(--colorW);
-    }
 
-    &:last-child div span {
-      color: var(--colorT2);
+      & span {
+        color: var(--colorT2);
+      }
     }
 
     & > * {
@@ -46,13 +46,7 @@
       color: var(--colorT2);
       background-color: var(--colorG15);
       transition: background-color 0.3s ease-in-out;
-      clip-path: polygon(
-        0 0,
-        calc(100% - 1em) 0,
-        100% 50%,
-        calc(100% - 1em) 100%,
-        0 100%
-      );
+      clip-path: polygon(0 0, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0 100%);
     }
 
     &:first-child > * {
@@ -71,15 +65,17 @@
     }
 
     & > :nth-last-child(3) {
+      /* @note Ne pas mettre :first-child car les premiers items peuvent être en display:none */
       display: none;
     }
 
     & > :nth-last-child(2) {
+      /* @note Ne pas mettre :first-child car les premiers items peuvent être en display:none */
       margin-inline-start: 0;
-    }
 
-    & > :nth-last-child(2) a {
-      padding-inline-start: var(--gap);
+      & a {
+        padding-inline-start: var(--gap);
+      }
     }
   }
 }

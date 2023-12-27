@@ -23,6 +23,9 @@ devDependencies:
   postcss:
     specifier: ^8.4.32
     version: 8.4.32
+  postcss-calc:
+    specifier: ^9.0.1
+    version: 9.0.1(postcss@8.4.32)
   postcss-cli:
     specifier: ^11.0.0
     version: 11.0.0(postcss@8.4.32)
@@ -2544,6 +2547,17 @@ packages:
     dependencies:
       postcss: 8.4.32
       postcss-selector-parser: 6.0.13
+    dev: true
+
+  /postcss-calc@9.0.1(postcss@8.4.32):
+    resolution: {integrity: sha512-TipgjGyzP5QzEhsOZUaIkeO5mKeMFpebWzRogWG/ysonUlnHcq5aJe0jOjpfzUU8PeSaBQnrE8ehR0QA5vs8PQ==}
+    engines: {node: ^14 || ^16 || >=18.0}
+    peerDependencies:
+      postcss: ^8.2.2
+    dependencies:
+      postcss: 8.4.32
+      postcss-selector-parser: 6.0.13
+      postcss-value-parser: 4.2.0
     dev: true
 
   /postcss-clamp@4.1.0(postcss@8.4.32):

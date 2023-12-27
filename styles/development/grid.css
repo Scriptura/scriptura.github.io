@@ -1,7 +1,11 @@
+/* @note Utiliser .grid2 pour avoir deux colonnes, etc., au-delà de .grid4 utiliser .grid-auto (qui par défaut aura 5 colonnes max pour la largeur prévue de notre site). */
+/* @note Avec `minmax` la grille ne sera pas tributaire de son contenu en responsive @see https://css-tricks.com/equal-width-columns-in-css-grid-are-kinda-weird/ */
+
 :has(> [class^='grid']),
 .parent-grid {
+  /* @note ".parent-grid" est un fallback pour le sélecteur :has(), ajout de la classe via JS. */
   container: grid/inline-size;
-  width: 100%;
+  width: 100%; /* @note Important si le conteneur n'a pas de largeur définie par défaut. */
 }
 
 [class^='grid'] {
@@ -10,6 +14,7 @@
   grid-template-columns: repeat(var(--n, 1), minmax(0, 1fr));
 
   &.row-defines {
+    /* @note Permet aux spans de la propriété grid-row de se caler sur les lignes. Intéressant mais pas souhaitable d'emblée en production, d'où cette classe. */
     grid-auto-rows: minmax(0, 1fr);
   }
 
@@ -18,37 +23,45 @@
   }
 
   &.gap-block {
+    /* @note padding et non margin, car ne doit pas pouvoir fusionner avec les marges de l'élément suivant. */
     padding-block: var(--gap);
   }
 
   &.gap-top {
+    /* @note Idem. */
     padding-block-start: var(--gap);
   }
 
   &.gap-bottom {
+    /* @note Idem. */
     padding-block-end: var(--gap);
   }
 
   &.gap-vertical {
     gap: 0 var(--gap);
   }
+  /*
+  &.masonry {
+    grid-template-rows: masonry; /* @note Implémentation future en CSS @todo À surveiller.
+  }
+  */
 }
 
 .grid-auto,
 .grid-auto-min {
+  /* @note Ne pas définir la variable au-dessus de sa valeur par défaut afin d'éviter des dépassement sur les écrans de petites définitions. Préférer alors les grilles prédéfinies. */
   grid-template-columns: repeat(auto-fit, minmax(var(--size-grid, 15em), 1fr));
 }
 
 .grid-auto-min {
+  /* @note Valeur réduite évitant de définir trop fréquement la variable de .grid-auto via du style en ligne. */
   --size-grid: 10em;
 }
 
 @media (width < $sizeXS) {
   .xs-grid-auto {
-    grid-template-columns: repeat(
-      auto-fit,
-      minmax(var(--xs-size-grid, 11em), 1fr)
-    );
+    /* @todo Valeur arbitraire à redéfinir. */
+    grid-template-columns: repeat(auto-fit, minmax(var(--xs-size-grid, 11em), 1fr));
   }
 }
 
@@ -205,6 +218,7 @@
 }
 
 .order {
+  /* @note Valeur négative car l'utilisation de cette classe est souvent utilisée pour une monté des éléments frères plutôt qu'une descente. */
   order: var(--o, -1);
 }
 
@@ -225,3 +239,49 @@
     order: var(--o, -1);
   }
 }
+
+/* @note Mémento de nos (presques) équivalences grid/flex codées ultérieurement : */
+
+/* with Grid layout: */
+/*
+.summary {
+  display: grid;
+  gap: $gap;
+
+  @media (min-width: $sizeXS) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: $sizeS) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (min-width: $sizeL) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+*/
+/* with flexbox: */
+/*
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $gap;
+
+  & > * {
+    flex: 1 0 100%; /* = [flex-grow flex-shrink flex-basis]
+
+    @media (min-width: $sizeXS) {
+      flex-basis: calc(50% - $gap);
+    }
+
+    @media (min-width: $sizeS) {
+      flex-basis: calc(33% - $gap);
+    }
+
+    @media (min-width: _sizeL) {
+      flex-basis: calc(25% - $gap);
+    }
+  }
+}
+*/

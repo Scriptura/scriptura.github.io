@@ -3,7 +3,7 @@ ol {
   padding-inline-start: var(--list-start, 2.5em);
 }
 
-ul :where(ul, ol :where(ul, ul ol), ol ol) {
+ul :where(ul, ol) {
   padding-inline-start: 2.5em;
 }
 
@@ -13,19 +13,21 @@ ul {
 
 ol ol {
   list-style-type: lower-latin;
-}
 
-ol ol ol {
-  list-style-type: lower-greek;
+  & ol {
+    list-style-type: lower-greek;
+  }
 }
 
 .list-gap {
   display: grid;
-  gap: 0.75em;
+  gap: 0.75em; /* @note Écart calé sur les paragraphes. */
 }
 
 .list-stripe,
 .list-stripe-links {
+  /* @note Ne pas utiliser : ne travaille pas de concert avec la classe `.grid`. */
+  /* all: unset; */
   margin: 0;
   padding-inline-start: 0;
 
@@ -86,6 +88,15 @@ ol ol ol {
     transition: color, background-color 0.3s ease-in-out;
   }
 
+  & li::before,
+  & svg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--colorT);
+    background-color: var(--color2);
+  }
+
   & a {
     display: flex;
     align-items: center;
@@ -96,19 +107,10 @@ ol ol ol {
     text-decoration: none;
 
     &:where(:focus, :hover, :active) {
-      //color: var(--colorW);
+      /* color: var(--colorW); */
       background-color: var(--color2);
-      //text-decoration: none;
+      /* text-decoration: none; */
     }
-  }
-
-  & li::before,
-  & svg {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--colorT);
-    background-color: var(--color2);
   }
 }
 
@@ -135,6 +137,7 @@ ol ol ol {
 
   & svg {
     min-height: 100%;
+    /* @note Détermine en creux la taille de l'icône. */
     padding-inline: 0.7em 1.1em;
   }
 
@@ -160,6 +163,7 @@ ol ol ol {
   & svg {
     width: 2.5em;
     height: 2.5em;
+    /* @note Pour centrer la "puce" si contenu de l'item trop important. @todo Résultat visuel à évaluer. */
     margin: auto 0;
     transition: transform 0.3s ease-in-out;
   }
@@ -192,6 +196,7 @@ ol:where(.list-straight, .list-rounded) li {
 }
 
 [start] > .chorus {
+  /* @note Pour les refrains. Pour la cohérence de la liste les numéros doivent être définis avec l'attribut `start="0" afin de commencer par "1".` */
   list-style-type: 'R. ';
 }
 

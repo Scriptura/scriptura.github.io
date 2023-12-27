@@ -1,3 +1,5 @@
+/* @bug @affected Chrome @note Nombreux bugs : éléments html ou effets d'ombre tronqués s'ils dépassent des colonnes, drop-shadow utilisé sur des éléments internes aux colonnes créé des artefacts. */
+
 [class^='column'] {
   column-gap: 0;
   position: relative;
@@ -5,17 +7,18 @@
   & > * {
     display: inline-block;
     width: 100%;
-    break-inside: avoid-column;
-    word-wrap: break-word;
+    break-inside: avoid-column; /* @note Évite aux items enfants de column d'être éventuellement coupés en deux. @see https://stackoverflow.com/questions/7785374 */
+    word-wrap: break-word; /* @note Alias de overflow-wrap @see https://developer.mozilla.org/fr/docs/Web/CSS/overflow-wrap */
   }
 
   &.gap {
     column-gap: var(--gap);
+    /* @note À l'inverse de grid layout, le module columns a besoin des marges pour bien s'implémenter. */
     margin-block-end: calc(-1 * var(--gap));
-  }
 
-  &.gap > * {
-    margin-block-end: var(--gap);
+    & > * {
+      margin-block-end: var(--gap);
+    }
   }
 
   &.gap-top {
@@ -28,6 +31,7 @@
 
   &.gap-vertical {
     gap: 0 var(--gap);
+    /* column-gap: var(--gap); */
   }
 }
 
