@@ -22,7 +22,7 @@
     border-radius: 2px 2px 0.5rem 0.5rem;
   }
   
-  & > a svg {
+  & svg {
     display: block;
     width: calc(100% - 4px);
     height: 8em;
@@ -31,24 +31,13 @@
     color: var(--colorT);
     background-color: var(--colorG27);
     box-shadow: var(--shadow3);
-  }
-  
-  & svg {
     transition: background-color 0.5s, color 0.5s;
   }
 
-  &:focus-within svg,
-  &:hover svg,
-  & svg:hover {
+  &:where(:focus-within, :hover) svg {
     color: var(--colorW);
     background-color: var(--color2);
   }
-
-  /*
-  &:hover svg:hover {
-    background-color: var(--color5);
-  }
-  */
 }
 
 .user-def {
@@ -70,10 +59,10 @@
     font-style: normal;
     font-weight: bold;
     font-variant: small-caps;
-  }
 
-  & address a {
-    text-decoration: none;
+    & a {
+      text-decoration: none;
+    }
   }
 
   & time {

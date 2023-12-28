@@ -246,7 +246,7 @@
 /*
 .summary {
   display: grid;
-  gap: $gap;
+  gap: var(--gap);
 
   @media (min-width: $sizeXS) {
     grid-template-columns: repeat(2, 1fr);
@@ -266,21 +266,21 @@
 .summary {
   display: flex;
   flex-wrap: wrap;
-  gap: $gap;
+  gap: var(--gap);
 
   & > * {
     flex: 1 0 100%; /* = [flex-grow flex-shrink flex-basis]
 
     @media (min-width: $sizeXS) {
-      flex-basis: calc(50% - $gap);
+      flex-basis: calc(50% - var(--gap));
     }
 
     @media (min-width: $sizeS) {
-      flex-basis: calc(33% - $gap);
+      flex-basis: calc(33% - var(--gap));
     }
 
-    @media (min-width: _sizeL) {
-      flex-basis: calc(25% - $gap);
+    @media (min-width: $sizeL) {
+      flex-basis: calc(25% - var(--gap));
     }
   }
 }

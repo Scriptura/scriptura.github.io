@@ -126,7 +126,7 @@
   & li {
     list-style: none;
 
-    @media ($sizeXS < width < $sizeNav) {
+    @media ($sizeXS < width < $sizeS) {
       flex-basis: 33%;
     }
 
