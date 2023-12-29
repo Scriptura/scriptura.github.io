@@ -103,8 +103,11 @@
     width: 100vw;
     flex-wrap: wrap;
     transform: translateX(-110vw);
+  }
 
-    & li {
+  & li {
+    list-style: none;
+    @media (width < $sizeNav) {
       flex: 1;
       flex-basis: 50%;
       background-color: var(--colorG15);
@@ -115,16 +118,12 @@
         /* @note L'utilisation des pourcentages provoque un effet de bord avec overflow:clip sur le body ; à éviter. Valeur au-delà de 100vw afin de cacher les ombres des boîtes. */
         transform: translateX(110vw) rotate(0deg);
       }
-      /*
-      & > * {
-        line-height: 3;
+      @for $i from 1 to 12 {
+        &:nth-child($i) {
+          transition-delay: calc($i * 0.05s);
+        }
       }
-      */
     }
-  }
-
-  & li {
-    list-style: none;
 
     @media ($sizeXS < width < $sizeS) {
       flex-basis: 33%;
@@ -134,18 +133,16 @@
       flex-basis: 25%;
     }
 
-    @media (width < $sizeNav) {
-      @for $i from 1 to 12 {
-        &:nth-child($i) {
-          transition-delay: calc($i * 0.05s);
-        }
-      }
-    }
     & > * {
       display: block;
       padding: 0 1em;
-      line-height: 2.5;
       box-shadow: inset 0.5rem 0.5rem 0.5rem var(--colorAB2);
+      @media (width < $sizeNav) {
+        line-height: 3;
+      }
+      @media (width > $sizeNav) {
+        line-height: 2.5;
+      }
     }
   }
 
