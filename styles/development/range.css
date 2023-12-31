@@ -1,4 +1,4 @@
-@define-mixin range-block-thumb {
+@mixin range-block-thumb {
   pointer-events: auto;
   width: 2.3em;
   height: 2.3em;
@@ -8,12 +8,12 @@
   box-shadow: var(--shadow2);
 }
 
-@define-mixin range-block-thumb-visible {
+@mixin range-block-thumb-visible {
   background-color: var(--color5);
   border-color: var(--color5);
 }
 
-@define-mixin range-block-thumb-disabled {
+@mixin range-block-thumb-disabled {
   background: var(--colorG18)
     repeating-linear-gradient(-45deg, transparent 0 3px, var(--color1) 3px 6px);
   border-color: var(--colorG33);
@@ -27,6 +27,7 @@
   margin-block-end: 1em;
 
   & input {
+    /* @see https://css-tricks.com/multi-thumb-sliders-particular-two-thumb-case/ */
     grid-column: 1;
     grid-row: 2;
     pointer-events: none;
@@ -52,6 +53,8 @@
     cursor: pointer;
 
     & ~ input {
+      /* @note Le sélecteur n'équivaut pas à `:last-child` */
+      /* @bugfixed @affected Firefox @note La ligne de fond passe au-dessus des curseurs si transparence non définie. */
       background: initial;
     }
 
@@ -125,37 +128,40 @@
       filter: drop-shadow(0 0.5rem 2rem var(--colorAB3));
     }
   }
-}
 
-[class^='range'] ::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  @add-mixin range-block-thumb;
-}
+  /* Les déclarations propriétaires suivantes ne sont pas factorisables. */
 
-[class^='range'] :focus-visible::-webkit-slider-thumb {
-  @add-mixin range-block-thumb-visible;
-}
-
-[class^='range'] input:disabled::-webkit-slider-thumb {
-  @add-mixin range-block-thumb-disabled;
-}
-
-[class^='range'] ::-moz-range-thumb {
-  box-sizing: border-box;
-  border: none;
-  @add-mixin range-block-thumb;
-}
-
-[class^='range'] :focus-visible::-moz-range-thumb {
-  @add-mixin range-block-thumb-visible;
-}
-
-[class^='range'] input:disabled::-moz-range-thumb {
-  @add-mixin range-block-thumb-disabled;
+  & ::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    @include range-block-thumb;
+  }
+  
+  & :focus-visible::-webkit-slider-thumb {
+    @include range-block-thumb-visible;
+  }
+  
+  & input:disabled::-webkit-slider-thumb {
+    @include range-block-thumb-disabled;
+  }
+  
+  & ::-moz-range-thumb {
+    box-sizing: border-box;
+    border: none;
+    @include range-block-thumb;
+  }
+  
+  & :focus-visible::-moz-range-thumb {
+    @include range-block-thumb-visible;
+  }
+  
+  & input:disabled::-moz-range-thumb {
+    @include range-block-thumb-disabled;
+  }
 }
 
 .range-multithumb {
   --start: 0;
+  /* @note `--stop: 0` Évite une apparition flash de la barre au chargement de la page, il vaut mieux que la couleur apparaisse après le calcul par le script. */
   --stop: 0;
   --color: var(--color2);
 

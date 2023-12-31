@@ -39,7 +39,8 @@
 /* @import 'forum'; */
 /* @import 'skin'; */
 /* @import 'demo'; */
-@import 'helper'; /* @note Les helpers s'appliquent à la fin dans le but d'écraser des styles tels que font-size. */
+/* @note Les helpers s'appliquent à la fin dans le but d'écraser des styles tels que font-size. */
+@import 'helper';
 
 body > :not(main, footer),
 form,

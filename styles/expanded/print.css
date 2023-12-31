@@ -1449,7 +1449,7 @@ samp {
     color: var(--colorG18);
   } .ribbon-content > a[class*='ribbon']:where(:focus, :hover, :active)::after {
       background-color: var(--color5);
-    } /* @import 'forum'; */ /* @import 'skin'; */ /* @import 'demo'; */ .hidden,
+    } /* @import 'forum'; */ /* @import 'skin'; */ /* @import 'demo'; */ /* @note Les helpers s'appliquent à la fin dans le but d'écraser des styles tels que font-size. */ .hidden,
 [hidden] {
   display: none !important;
 } @container grid (width < 35.01em) {
@@ -1469,19 +1469,41 @@ samp {
     display: none !important;
   }
 } .invisible {
+  /* @note Cacher l'élément en laissant son emplacement @affected Lecteurs d'écran inclus. */
   visibility: hidden;
-} a[aria-disabled='true'] {
+} a[aria-disabled='true'] { /* @todo En expérimentation. */
   cursor: not-allowed;
 } a[aria-disabled='true']:active {
-  pointer-events: none;
-} .sr-only {
+    pointer-events: none;
+  } .sr-only {
+  /* @note Caché visuellement mais disponible pour les lecteurs d'écran. */
+  /* @see https://github.com/h5bp/html5-boilerplate/blob/master/dist/css/style.css */  
   position: absolute;
+  /* @note Plus propre à l'inspection des éléments que `clip-path: inset(50%)` */
   transform: scale(0);
-} .protected {
+} /*
+.sr-only {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  white-space: nowrap;
+  border: 0;
+  clip-path: rect(0, 0, 0, 0);
+}
+*/ /*
+.relative {
+  /* @note Classe habituellement ajoutée en js sur des éléments parents
+  position: relative;
+}
+*/ .protected {
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
 } .onaline {
+  /* @note Texte sur une ligne sans dépassement. */
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -1490,8 +1512,15 @@ samp {
 } .center {
   display: grid;
   place-items: center;
+  /* @note Alternative : */
+  /*
+  & > * {
+    place-self: center;
+  }
+  */
 } @container grid (35em > width) {
-  span.br {
+  span.xs-br {
+    /* @note un 'br' volontairement non sémantique à destination des petites définitions d'écran, à placer sur un span englobant un espace. */
     display: block;
   }
 } @container grid (35em > width) {
@@ -1500,10 +1529,10 @@ samp {
     place-items: center;
   }
 } .rotate90 {
-  transform: rotate(90deg);
-} .rotate180 {
-  transform: rotate(180deg);
-} .reverse {
+    transform: rotate(90deg);
+  } .rotate180 {
+    transform: rotate(180deg);
+  } .reverse {
   transform: scaleX(-1);
 } .size {
   --size: 25em;
@@ -1517,57 +1546,51 @@ samp {
   --size: 25em;
   --size-width: var(--size);
   width: calc(var(--size)*0.8);
-} /*
-@each $scale in 300, 250, 200, 175, 160, 150, 140, 130, 120, 115, 110, 105, 95, 90, 85, 80, 75, 70, 60, 50, 40, 30 {
-  .scale$(scale) {
-    font-size: $(scale)%;
-  }
-}
-*/ .scale300 {
-  font-size: 300%;
-} .scale250 {
-  font-size: 250%;
-} .scale200 {
-  font-size: 200%;
-} .scale175 {
-  font-size: 175%;
-} .scale160 {
-  font-size: 160%;
-} .scale150 {
-  font-size: 150%;
-} .scale140 {
-  font-size: 140%;
-} .scale130 {
-  font-size: 130%;
-} .scale120 {
-  font-size: 120%;
-} .scale115 {
-  font-size: 115%;
-} .scale110 {
-  font-size: 110%;
-} .scale105 {
-  font-size: 105%;
-} .scale95 {
-  font-size: 95%;
-} .scale90 {
-  font-size: 90%;
-} .scale85 {
-  font-size: 85%;
-} .scale80 {
-  font-size: 80%;
-} .scale75 {
-  font-size: 75%;
-} .scale70 {
-  font-size: 70%;
-} .scale60 {
-  font-size: 60%;
-} .scale50 {
-  font-size: 50%;
-} .scale40 {
-  font-size: 40%;
-} .scale30 {
-  font-size: 30%;
-} .rescale {
+} .scale300 {
+    font-size: 300%;
+  } .scale250 {
+    font-size: 250%;
+  } .scale200 {
+    font-size: 200%;
+  } .scale175 {
+    font-size: 175%;
+  } .scale160 {
+    font-size: 160%;
+  } .scale150 {
+    font-size: 150%;
+  } .scale140 {
+    font-size: 140%;
+  } .scale130 {
+    font-size: 130%;
+  } .scale120 {
+    font-size: 120%;
+  } .scale115 {
+    font-size: 115%;
+  } .scale110 {
+    font-size: 110%;
+  } .scale105 {
+    font-size: 105%;
+  } .scale95 {
+    font-size: 95%;
+  } .scale90 {
+    font-size: 90%;
+  } .scale85 {
+    font-size: 85%;
+  } .scale80 {
+    font-size: 80%;
+  } .scale75 {
+    font-size: 75%;
+  } .scale70 {
+    font-size: 70%;
+  } .scale60 {
+    font-size: 60%;
+  } .scale50 {
+    font-size: 50%;
+  } .scale40 {
+    font-size: 40%;
+  } .scale30 {
+    font-size: 30%;
+  } .rescale {
   font-size: 1rem;
 } @container grid (35em > width) {
   .xs-scale {
@@ -1584,7 +1607,7 @@ samp {
     display: none;
     filter: invert(1);
   }
-} /* @note Les helpers s'appliquent à la fin dans le but d'écraser des styles tels que font-size. */ body > :not(main, footer),
+} body > :not(main, footer),
 form,
 fieldset,
 /* input, */

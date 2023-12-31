@@ -1063,6 +1063,7 @@ body {
 } .alert .wrap {
     display: grid;
     grid-template-columns: minmax(1em, 1fr) minmax(0, 92em) minmax(1em, 1fr);
+    gap: var(--gap);
     padding-block: var(--gap);
     color: var(--alert-color);
     background-color: var(--alert-bg-color);
@@ -1082,8 +1083,6 @@ body {
       background-color: var(--alert-icon-color);
       -webkit-clip-path: circle(50%);
               clip-path: circle(50%);
-    } #gdpr-see .alert .mm {
-      margin-block-end: var(--gap);
     } ul,
 ol {
   padding-inline-start: var(--list-start, 2.5em);
@@ -1389,19 +1388,26 @@ video {
   -o-object-fit: cover;
      object-fit: cover;
 } ::cue {
+  /* @note Empêche le chevauchement des sous-titres si plus d'une ligne. */
   line-height: 1.5;
   font-size: 2em;
+  /*color: #fff; */
   background-color: var(--colorAB4);
+  /*  @note Les propriétés CSS applicables à ce sélecteur sont limitées. @see https://developer.mozilla.org/en-US/docs/Web/CSS/::cue */
+  /* @note '#fff' par défaut. */
 } @container grid (width > 35.01em) { ::cue {
     font-size: 1.5em;
 }
   } audio.media {
-  height: 3.05em;
-} video.media {
-  display: block;
-  background-color: var(--colorB);
-  box-shadow: 0.5rem 0.5rem 2rem var(--colorAB25);
-} .media-player {
+    /* @note Hauteur calculée empiriquement pour une harmonisation au plus proche de notre propre player personnalisé. Ce qui évite un saut désagréable lors du remplacement. */
+    height: 3.05em;
+    /* @note C'est Javascript qui se charge de la suppression, ce qui permet l'affichage d'un lecteur par défaut si JS désactivé. */
+    /* display: none; */
+  } video.media {
+    display: block;
+    background-color: var(--colorB);
+    box-shadow: 0.5rem 0.5rem 2rem var(--colorAB25);
+  } .media-player {
   position: relative;
   display: flex;
   justify-content: space-between;
@@ -1454,35 +1460,34 @@ video {
   } .media-player .media-fullscreen:hover,
   .media-player .media-menu:hover {
     background-color: var(--colorG38);
-  } .media-player .media-mute:focus-visible,
-  .media-player .media-fullscreen:focus-visible,
-  .media-player .media-menu:focus-visible {
+  } .media-player :where(.media-mute, .media-fullscreen, .media-menu):focus-visible {
     border: 0.2em solid var(--color5);
   } .media-player .media-fullscreen.active {
     background-color: var(--color2);
   } .media-player .media-extend-menu button:focus-visible {
-    border: 0.2em solid var(--color5);
-  } .media-player .media-extend-menu button:hover {
-    background-color: var(--colorG38);
-  } .media-player .media-extend-menu button:active,
-  .media-player .media-extend-menu button.active {
-    background-color: var(--color2);
-  } .media-player .media-time {
+      border: 0.2em solid var(--color5);
+    } .media-player .media-extend-menu button:hover {
+      background-color: var(--colorG38);
+    } .media-player .media-extend-menu button:active {
+      background-color: var(--color2);
+    } .media-player .media-time {
     flex-shrink: 0;
   } .media-player .media-progress-bar,
   .media-player .media-volume-bar {
     --position: 0%;
     --color-slide: var(--color2);
     all: unset;
+    /* align-self: stretch; */
     width: 100%;
+    /* @affected Firefox. */
     min-width: 0;
     height: 0.31em;
+    /* @note S'ajoute à la propriété height, ne doit pas dépasser la hauteur du player. */
     padding-block: 1em;
     color: var(--color2);
     background-clip: content-box;
     cursor: pointer;
-  } .media-player .media-progress-bar:focus-visible,
-  .media-player .media-volume-bar:focus-visible {
+  } .media-player :where(.media-progress-bar, .media-volume-bar):focus-visible {
     --color-slide: var(--color5);
   } .media-player .media-progress-bar {
     --position: 0%;
@@ -1504,21 +1509,21 @@ video {
     background-color: var(--colorG33);
     border-radius: 50%;
   } .media-player .media-play-pause::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border: 0.41em solid transparent;
-    border-radius: 50%;
-  } .media-player .media-play-pause:focus-visible::before,
-  .media-player .media-play-pause.active:focus-visible::before {
-    border-block-color: var(--color5);
-  } .media-player .media-play-pause:hover::before {
-    border-block-color: var(--colorG38);
-  } .media-player .media-play-pause.active::before {
-    border-block-color: var(--color2);
-    animation: anim-play 20s linear infinite var(--play-state, running);
-  } .media-player .media-tags {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border: 0.41em solid transparent;
+      border-radius: 50%;
+    } .media-player .media-play-pause:focus-visible::before,
+    .media-player .media-play-pause.active:focus-visible::before {
+      border-block-color: var(--color5);
+    } .media-player .media-play-pause:hover::before {
+      border-block-color: var(--colorG38);
+    } .media-player .media-play-pause.active::before {
+      border-block-color: var(--color2);
+      animation: anim-play 20s linear infinite var(--play-state, running);
+    } .media-player .media-tags {
     position: absolute;
     display: flex;
     gap: 0.3em;
@@ -1526,18 +1531,18 @@ video {
     bottom: 0.2em;
     left: 4em;
   } .media-player .media-tags > * {
-    position: relative;
-    display: none;
-    min-width: 2.5em;
-    padding: 0.1em 0.3em;
-    font-size: 0.8em;
-    text-align: center;
-    line-height: 1;
-    background-color: var(--colorG38);
-    border-radius: 0.3em;
-  } .media-player .media-tags > *.active {
-    display: block;
-  } .media-player .media-extend-volume {
+      position: relative;
+      display: none;
+      min-width: 2.5em;
+      padding: 0.1em 0.3em;
+      font-size: 0.8em;
+      text-align: center;
+      line-height: 1;
+      background-color: var(--colorG38);
+      border-radius: 0.3em;
+    } .media-player .media-tags > *.active {
+        display: block;
+      } .media-player .media-extend-volume {
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -1545,17 +1550,13 @@ video {
     border-radius: 1.25em;
     outline: none;
     transition: padding-left 0.6s ease-in;
-  } .media-player .media-extend-volume:focus-within,
-  .media-player .media-extend-volume:hover,
-  .media-player .media-extend-volume:active {
-    padding-inline-start: 0.5em;
-    animation: anim-button 0.6s ease-in-out;
-  } .media-player .media-extend-volume:focus-within .media-volume-bar,
-  .media-player .media-extend-volume:hover .media-volume-bar,
-  .media-player .media-extend-volume:active .media-volume-bar {
-    display: inherit;
-    max-width: 10em;
-  } .media-player .media-play-pause.active ~ .media-extend-volume .media-mute.active {
+  } .media-player .media-extend-volume:where(:focus-within, :hover, :active) {
+      padding-inline-start: calc(var(--gap)/2);
+      animation: anim-button 0.6s ease-in-out;
+    } .media-player .media-extend-volume:where(:focus-within, :hover, :active) .media-volume-bar {
+        display: inherit;
+        max-width: 10em;
+      } .media-player .media-play-pause.active ~ .media-extend-volume .media-mute.active {
     animation: anim-mute 1s infinite;
   } .media-player .media-volume-bar {
     width: 100%;
@@ -1563,17 +1564,17 @@ video {
     transition: max-width 0.6s ease-in-out;
   } .media-player .media-progress-bar {
     flex-grow: 1;
+    /* @note S'étend au détriment de la barre de progression qui, elle, rapetisse. */
     width: 10%;
   } .media-player .media-extend-menu {
     --mem: 6;
     display: none;
-  } .media-player .media-extend-menu:has(> :nth-child(7):last-child),
-    .media-player .media-extend-menu:has(button:nth-child(8):last-child) {
+  } .media-player .media-extend-menu:has(> :nth-child(7):last-child, button:nth-child(8):last-child) {
       --mem: 4;
-    } .media-player .media-extend-menu:has(> :nth-child(9):last-child),
-    .media-player .media-extend-menu:has(> :nth-child(10):last-child) {
+    } .media-player .media-extend-menu:has(> :nth-child(9):last-child, > :nth-child(10):last-child) {
       --mem: 5;
     } .media-player .media-extend-menu:has(> :nth-child(5):last-child) {
+      /* @affected Firefox. @note Si moins de 6 boutons, sachant qu'il n'y en a jamais moins de 5. @todo À réévaluer dans le temps. */
       --mem: 5;
     } .media-player .media-extend-menu.active {
       position: absolute;
@@ -1581,9 +1582,10 @@ video {
       bottom: 3.5em;
       right: 0;
       display: grid;
+      /* grid-auto-flow: dense; */
       grid-template-columns: repeat(var(--mem), 2.5em);
-      gap: 0.5em;
-      padding: 0.5em;
+      gap: calc(var(--gap)/2);
+      padding: calc(var(--gap)/2);
       background-color: var(--colorG27);
       border-radius: 1.75em;
       box-shadow: var(--shadow8);
@@ -1593,43 +1595,37 @@ video {
     white-space: nowrap;
     text-overflow: ellipsis;
     color: var(--colorG60);
-  } .media-player .media-progress-bar:hover::-webkit-slider-thumb,
-.media-player .media-volume-bar:hover::-webkit-slider-thumb,
-.media-player .media-progress-bar:active::-webkit-slider-thumb,
-.media-player .media-volume-bar:active::-webkit-slider-thumb {
-  /* @note Sélecteurs non factorisables. */
-  background-color: var(--color2);
-} .media-player .media-progress-bar:focus-visible::-webkit-slider-thumb,
-.media-player .media-volume-bar:focus-visible::-webkit-slider-thumb {
-  background-color: var(--color5);
-} .media-player .media-progress-bar:hover::-moz-range-thumb,
-.media-player .media-volume-bar:hover::-moz-range-thumb,
-.media-player .media-progress-bar:active::-moz-range-thumb,
-.media-player .media-volume-bar:active::-moz-range-thumb {
-  background-color: var(--color2);
-} .media-player .media-progress-bar:focus-visible::-moz-range-thumb,
-.media-player .media-volume-bar:focus-visible::-moz-range-thumb {
-  background-color: var(--color5);
-} .media-player ::-webkit-slider-thumb {
-  -webkit-appearance: none;
+  } .media-player :where(.media-progress-bar, .media-volume-bar):hover::-webkit-slider-thumb, .media-player :where(.media-progress-bar, .media-volume-bar):active::-webkit-slider-thumb {
+        /* @note Sélecteurs non factorisables. */
+        background-color: var(--color2);
+      } .media-player :where(.media-progress-bar, .media-volume-bar):focus-visible::-webkit-slider-thumb {
+      background-color: var(--color5);
+    } .media-player :where(.media-progress-bar, .media-volume-bar):hover::-moz-range-thumb, .media-player :where(.media-progress-bar, .media-volume-bar):active::-moz-range-thumb {
+        background-color: var(--color2);
+      } .media-player :where(.media-progress-bar, .media-volume-bar):focus-visible::-moz-range-thumb {
+      background-color: var(--color5);
+    } .media-player ::-webkit-slider-thumb {
+    -webkit-appearance: none;
   pointer-events: auto;
   width: 1em;
   aspect-ratio: 1;
   background-color: transparent;
   border-radius: 50%;
-} .media-player ::-moz-range-thumb {
-  box-sizing: border-box;
-  border: none;
+  } .media-player ::-moz-range-thumb {
+    /* @affected Firefox @note Définition obligatoire de cette règle malgré sa déclaration en globale. */
+    box-sizing: border-box;
+    border: none;
   pointer-events: auto;
   width: 1em;
   aspect-ratio: 1;
   background-color: transparent;
   border-radius: 50%;
-} video + .media-player {
-  margin-block-start: 0.5em;
-} .waiting .media-play-pause.active {
-  animation: anim-waiting 1s infinite;
-} .video-youtube {
+  } video + .media-player {
+    margin-block-start: 0.5em;
+  } .media-player.waiting .media-play-pause.active {
+    animation: anim-waiting 1s infinite;
+  } .video-youtube {
+  /* @note Évite un léger resize entre le thumbnail et le chargement de la vidéo. */
   position: relative;
   aspect-ratio: 16/9;
   -webkit-user-select: none;
@@ -1638,6 +1634,7 @@ video {
   background-color: var(--colorB);
 } .video-youtube iframe,
   .video-youtube > div {
+    /* @note Idem. */
     position: absolute;
     inset: 0;
   } .video-youtube .video-youtube-error {
@@ -1646,6 +1643,7 @@ video {
     display: grid;
     place-content: center;
     background-size: cover;
+    /* @note Pour positionner correctement les images plus petites que l'élément. */
     background-position: 50% 50%;
   } .video-youtube .thumbnail-youtube button {
       all: unset;
@@ -2497,6 +2495,7 @@ select {
   gap: 0.5em;
   margin-block-end: 1em;
 } [class^='range'] input {
+    /* @see https://css-tricks.com/multi-thumb-sliders-particular-two-thumb-case/ */
     grid-column: 1;
     grid-row: 2;
     pointer-events: none;
@@ -2521,6 +2520,8 @@ select {
       );
     cursor: pointer;
   } [class^='range'] input ~ input {
+      /* @note Le sélecteur n'équivaut pas à `:last-child` */
+      /* @bugfixed @affected Firefox @note La ligne de fond passe au-dessus des curseurs si transparence non définie. */
       background: transparent none repeat 0 0 / auto auto padding-box border-box scroll;
       background: initial;
     } [class^='range'] input:disabled {
@@ -2576,8 +2577,8 @@ select {
       -webkit-clip-path: polygon(50% 100%, 0 0, 100% 0);
               clip-path: polygon(50% 100%, 0 0, 100% 0);
       filter: drop-shadow(0 0.5rem 2rem var(--colorAB3));
-    } [class^='range'] ::-webkit-slider-thumb {
-  -webkit-appearance: none;
+    } /* Les déclarations propriétaires suivantes ne sont pas factorisables. */ [class^='range'] ::-webkit-slider-thumb {
+    -webkit-appearance: none;
   pointer-events: auto;
   width: 2.3em;
   height: 2.3em;
@@ -2585,16 +2586,16 @@ select {
   border: 0.2em solid var(--color);
   border-radius: 50%;
   box-shadow: var(--shadow2);
-} [class^='range'] :focus-visible::-webkit-slider-thumb {
+  } [class^='range'] :focus-visible::-webkit-slider-thumb {
   background-color: var(--color5);
   border-color: var(--color5);
-} [class^='range'] input:disabled::-webkit-slider-thumb {
+  } [class^='range'] input:disabled::-webkit-slider-thumb {
   background: var(--colorG18)
     repeating-linear-gradient(-45deg, transparent 0 3px, var(--color1) 3px 6px);
   border-color: var(--colorG33);
-} [class^='range'] ::-moz-range-thumb {
-  box-sizing: border-box;
-  border: none;
+  } [class^='range'] ::-moz-range-thumb {
+    box-sizing: border-box;
+    border: none;
   pointer-events: auto;
   width: 2.3em;
   height: 2.3em;
@@ -2602,15 +2603,16 @@ select {
   border: 0.2em solid var(--color);
   border-radius: 50%;
   box-shadow: var(--shadow2);
-} [class^='range'] :focus-visible::-moz-range-thumb {
+  } [class^='range'] :focus-visible::-moz-range-thumb {
   background-color: var(--color5);
   border-color: var(--color5);
-} [class^='range'] input:disabled::-moz-range-thumb {
+  } [class^='range'] input:disabled::-moz-range-thumb {
   background: var(--colorG18)
     repeating-linear-gradient(-45deg, transparent 0 3px, var(--color1) 3px 6px);
   border-color: var(--colorG33);
-} .range-multithumb {
+  } .range-multithumb {
   --start: 0;
+  /* @note `--stop: 0` Évite une apparition flash de la barre au chargement de la page, il vaut mieux que la couleur apparaisse après le calcul par le script. */
   --stop: 0;
   --color: var(--color2);
 } .range-multithumb input {
@@ -3431,38 +3433,41 @@ select {
   background-color: var(--colorG27);
   box-shadow: var(--shadow1);
 } .demo-item.ribbon-content {
+    /* @note Si ribbon, alors une hauteur minimum doit être présente sur les éléments parents vides. */
     min-height: 7.5em;
   } .demo-items-color {
   color: var(--colorG18);
 } .demo-items-color > :nth-child(1n) {
-    background-color: hsl(15, 100%, 50%);
-  } .demo-items-color > :nth-child(2n) {
-    background-color: hsl(25, 100%, 50%);
-  } .demo-items-color > :nth-child(3n) {
-    background-color: hsl(35, 100%, 50%);
-  } .demo-items-color > :nth-child(4n) {
-    background-color: hsl(45, 100%, 50%);
-  } .demo-items-color > :nth-child(5n) {
-    background-color: hsl(55, 100%, 50%);
-  } .demo-items-color > :nth-child(6n) {
-    background-color: hsl(65, 100%, 50%);
-  } .demo-items-color > :nth-child(7n) {
-    background-color: hsl(75, 100%, 50%);
-  } .demo-items-color > :nth-child(8n) {
-    background-color: hsl(85, 100%, 50%);
-  } .demo-items-color > :nth-child(9n) {
-    background-color: hsl(95, 100%, 50%);
-  } .demo-items-color > :nth-child(10n) {
-    background-color: hsl(105, 100%, 50%);
-  } .demo-items-color > :nth-child(11n) {
-    background-color: hsl(115, 100%, 50%);
-  } .demo-items-color > :nth-child(12n) {
-    background-color: hsl(125, 100%, 50%);
-  } .demo-items-color > :nth-child(13n) {
-    background-color: hsl(135, 100%, 50%);
-  } .demo-items-color > :nth-child(14n) {
-    background-color: hsl(145, 100%, 50%);
-  } .demo-items-color code {
+      background-color: hsl(15, 100%, 50%);
+    } .demo-items-color > :nth-child(2n) {
+      background-color: hsl(22, 100%, 50%);
+    } .demo-items-color > :nth-child(3n) {
+      background-color: hsl(29, 100%, 50%);
+    } .demo-items-color > :nth-child(4n) {
+      background-color: hsl(36, 100%, 50%);
+    } .demo-items-color > :nth-child(5n) {
+      background-color: hsl(43, 100%, 50%);
+    } .demo-items-color > :nth-child(6n) {
+      background-color: hsl(50, 100%, 50%);
+    } .demo-items-color > :nth-child(7n) {
+      background-color: hsl(57, 100%, 50%);
+    } .demo-items-color > :nth-child(8n) {
+      background-color: hsl(64, 100%, 50%);
+    } .demo-items-color > :nth-child(9n) {
+      background-color: hsl(71, 100%, 50%);
+    } .demo-items-color > :nth-child(10n) {
+      background-color: hsl(78, 100%, 50%);
+    } .demo-items-color > :nth-child(11n) {
+      background-color: hsl(85, 100%, 50%);
+    } .demo-items-color > :nth-child(12n) {
+      background-color: hsl(92, 100%, 50%);
+    } .demo-items-color > :nth-child(13n) {
+      background-color: hsl(99, 100%, 50%);
+    } .demo-items-color > :nth-child(14n) {
+      background-color: hsl(106, 100%, 50%);
+    } .demo-items-color > :nth-child(15n) {
+      background-color: hsl(113, 100%, 50%);
+    } .demo-items-color code {
     background-color: var(--colorG27);
   } .demo-counter > * {
   counter-increment: div;
@@ -3519,7 +3524,37 @@ select {
   } .demo-icons rt {
     font-size: 0.8em;
     color: var(--colorG38);
-  } .hidden,
+  } /*
+body::after {
+  content: 'XS';
+  position: fixed;
+  z-index: 5000;
+  bottom: .5em;
+  left: .5em;
+  width: 3em;
+  height: 3em;
+  line-height: 3em;
+  text-align: center;
+  color: #fff;
+  background-color: orange;
+  border-radius: 50%;
+  @media (min-width: $sizeS) {
+    content: 'S';
+  }
+  @media (min-width: $sizeM) {
+    content: 'M';
+  }
+  @media (min-width: $sizeL) {
+    content: 'L';
+  }
+  @media (min-width: $sizeXL) {
+    content: 'XL';
+  }
+  @media (min-width: $sizeXXL) {
+    content: 'XXL';
+  }
+}
+*/ .hidden,
 [hidden] {
   display: none !important;
 } @container grid (width < 35.01em) {
@@ -3539,19 +3574,41 @@ select {
     display: none !important;
   }
 } .invisible {
+  /* @note Cacher l'élément en laissant son emplacement @affected Lecteurs d'écran inclus. */
   visibility: hidden;
-} a[aria-disabled='true'] {
+} a[aria-disabled='true'] { /* @todo En expérimentation. */
   cursor: not-allowed;
 } a[aria-disabled='true']:active {
-  pointer-events: none;
-} .sr-only {
+    pointer-events: none;
+  } .sr-only {
+  /* @note Caché visuellement mais disponible pour les lecteurs d'écran. */
+  /* @see https://github.com/h5bp/html5-boilerplate/blob/master/dist/css/style.css */  
   position: absolute;
+  /* @note Plus propre à l'inspection des éléments que `clip-path: inset(50%)` */
   transform: scale(0);
-} .protected {
+} /*
+.sr-only {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  white-space: nowrap;
+  border: 0;
+  clip-path: rect(0, 0, 0, 0);
+}
+*/ /*
+.relative {
+  /* @note Classe habituellement ajoutée en js sur des éléments parents
+  position: relative;
+}
+*/ .protected {
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
 } .onaline {
+  /* @note Texte sur une ligne sans dépassement. */
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -3560,8 +3617,15 @@ select {
 } .center {
   display: grid;
   place-items: center;
+  /* @note Alternative : */
+  /*
+  & > * {
+    place-self: center;
+  }
+  */
 } @container grid (35em > width) {
-  span.br {
+  span.xs-br {
+    /* @note un 'br' volontairement non sémantique à destination des petites définitions d'écran, à placer sur un span englobant un espace. */
     display: block;
   }
 } @container grid (35em > width) {
@@ -3570,10 +3634,10 @@ select {
     place-items: center;
   }
 } .rotate90 {
-  transform: rotate(90deg);
-} .rotate180 {
-  transform: rotate(180deg);
-} .reverse {
+    transform: rotate(90deg);
+  } .rotate180 {
+    transform: rotate(180deg);
+  } .reverse {
   transform: scaleX(-1);
 } .size {
   --size: 25em;
@@ -3587,57 +3651,51 @@ select {
   --size: 25em;
   --size-width: var(--size);
   width: calc(var(--size)*0.8);
-} /*
-@each $scale in 300, 250, 200, 175, 160, 150, 140, 130, 120, 115, 110, 105, 95, 90, 85, 80, 75, 70, 60, 50, 40, 30 {
-  .scale$(scale) {
-    font-size: $(scale)%;
-  }
-}
-*/ .scale300 {
-  font-size: 300%;
-} .scale250 {
-  font-size: 250%;
-} .scale200 {
-  font-size: 200%;
-} .scale175 {
-  font-size: 175%;
-} .scale160 {
-  font-size: 160%;
-} .scale150 {
-  font-size: 150%;
-} .scale140 {
-  font-size: 140%;
-} .scale130 {
-  font-size: 130%;
-} .scale120 {
-  font-size: 120%;
-} .scale115 {
-  font-size: 115%;
-} .scale110 {
-  font-size: 110%;
-} .scale105 {
-  font-size: 105%;
-} .scale95 {
-  font-size: 95%;
-} .scale90 {
-  font-size: 90%;
-} .scale85 {
-  font-size: 85%;
-} .scale80 {
-  font-size: 80%;
-} .scale75 {
-  font-size: 75%;
-} .scale70 {
-  font-size: 70%;
-} .scale60 {
-  font-size: 60%;
-} .scale50 {
-  font-size: 50%;
-} .scale40 {
-  font-size: 40%;
-} .scale30 {
-  font-size: 30%;
-} .rescale {
+} .scale300 {
+    font-size: 300%;
+  } .scale250 {
+    font-size: 250%;
+  } .scale200 {
+    font-size: 200%;
+  } .scale175 {
+    font-size: 175%;
+  } .scale160 {
+    font-size: 160%;
+  } .scale150 {
+    font-size: 150%;
+  } .scale140 {
+    font-size: 140%;
+  } .scale130 {
+    font-size: 130%;
+  } .scale120 {
+    font-size: 120%;
+  } .scale115 {
+    font-size: 115%;
+  } .scale110 {
+    font-size: 110%;
+  } .scale105 {
+    font-size: 105%;
+  } .scale95 {
+    font-size: 95%;
+  } .scale90 {
+    font-size: 90%;
+  } .scale85 {
+    font-size: 85%;
+  } .scale80 {
+    font-size: 80%;
+  } .scale75 {
+    font-size: 75%;
+  } .scale70 {
+    font-size: 70%;
+  } .scale60 {
+    font-size: 60%;
+  } .scale50 {
+    font-size: 50%;
+  } .scale40 {
+    font-size: 40%;
+  } .scale30 {
+    font-size: 30%;
+  } .rescale {
   font-size: 1rem;
 } @container grid (35em > width) {
   .xs-scale {

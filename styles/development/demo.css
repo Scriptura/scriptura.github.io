@@ -25,6 +25,7 @@
   box-shadow: var(--shadow1);
 
   &.ribbon-content {
+    /* @note Si ribbon, alors une hauteur minimum doit être présente sur les éléments parents vides. */
     min-height: 7.5em;
   }
 }
@@ -32,60 +33,12 @@
 .demo-items-color {
   color: var(--colorG18);
 
-  & > :nth-child(1n) {
-    background-color: hsl(15, 100%, 50%);
-  }
-
-  & > :nth-child(2n) {
-    background-color: hsl(25, 100%, 50%);
-  }
-
-  & > :nth-child(3n) {
-    background-color: hsl(35, 100%, 50%);
-  }
-
-  & > :nth-child(4n) {
-    background-color: hsl(45, 100%, 50%);
-  }
-
-  & > :nth-child(5n) {
-    background-color: hsl(55, 100%, 50%);
-  }
-
-  & > :nth-child(6n) {
-    background-color: hsl(65, 100%, 50%);
-  }
-
-  & > :nth-child(7n) {
-    background-color: hsl(75, 100%, 50%);
-  }
-
-  & > :nth-child(8n) {
-    background-color: hsl(85, 100%, 50%);
-  }
-
-  & > :nth-child(9n) {
-    background-color: hsl(95, 100%, 50%);
-  }
-
-  & > :nth-child(10n) {
-    background-color: hsl(105, 100%, 50%);
-  }
-
-  & > :nth-child(11n) {
-    background-color: hsl(115, 100%, 50%);
-  }
-
-  & > :nth-child(12n) {
-    background-color: hsl(125, 100%, 50%);
-  }
-
-  & > :nth-child(13n) {
-    background-color: hsl(135, 100%, 50%);
-  }
-
-  & > :nth-child(14n) {
-    background-color: hsl(145, 100%, 50%);
+  $demoColorDeg: 15;
+  $demoColorDeviation: 7;
+  @for $i from 1 to 15 {
+    & > :nth-child($(i)n) {
+      background-color: hsl(calc($i * $demoColorDeviation - $demoColorDeviation + $demoColorDeg), 100%, 50%);
+    }
   }
 
   & code {
@@ -170,3 +123,35 @@
     color: var(--colorG38);
   }
 }
+
+/*
+body::after {
+  content: 'XS';
+  position: fixed;
+  z-index: 5000;
+  bottom: .5em;
+  left: .5em;
+  width: 3em;
+  height: 3em;
+  line-height: 3em;
+  text-align: center;
+  color: #fff;
+  background-color: orange;
+  border-radius: 50%;
+  @media (min-width: $sizeS) {
+    content: 'S';
+  }
+  @media (min-width: $sizeM) {
+    content: 'M';
+  }
+  @media (min-width: $sizeL) {
+    content: 'L';
+  }
+  @media (min-width: $sizeXL) {
+    content: 'XL';
+  }
+  @media (min-width: $sizeXXL) {
+    content: 'XXL';
+  }
+}
+*/

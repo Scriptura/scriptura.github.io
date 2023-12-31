@@ -8,6 +8,7 @@
   & .wrap {
     display: grid;
     grid-template-columns: minmax(1em, 1fr) minmax(0, 92em) minmax(1em, 1fr);
+    gap: var(--gap);
     padding-block: var(--gap);
     color: var(--alert-color);
     background-color: var(--alert-bg-color);
@@ -31,10 +32,6 @@
       fill: var(--alert-bg-color);
       background-color: var(--alert-icon-color);
       clip-path: circle(50%);
-    }
-
-    #gdpr-see & {
-      margin-block-end: var(--gap);
     }
   }
 }
