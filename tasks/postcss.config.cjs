@@ -12,6 +12,6 @@ module.exports = {
         'nesting-rules': true
       }
     }),
-    process.env === 'compressed' ? require('postcss-minify') : ''
+    process.env.NODE_ENV === 'production' ? require('postcss-minify') : ''
   ],
 }

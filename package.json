@@ -44,7 +44,7 @@
     "jsyoutube": "terser scripts/development/youtube.js -o scripts/youtube.js -c -m",
     "jsclienttest": "terser scripts/development/clientTest.js -o scripts/clientTest.js -c -m",
     "css": "pnpm cssexp | pnpm csscom",
-    "csscom": "postcss styles/development/{main,print,prism,gridFallback}.css --dir styles --config tasks/postcss.config.cjs --env compressed --watch --verbose",
+    "csscom": "postcss styles/development/{main,print,prism,gridFallback}.css --dir styles --config tasks/postcss.config.cjs --env production --watch --verbose",
     "cssexp": "postcss styles/development/{main,print,prism,gridFallback}.css --dir styles/expanded --config tasks/postcss.config.cjs --watch --verbose",
     "img": "node tasks/images",
     "icon": "pnpm svgo && pnpm sprite && pnpm html",
