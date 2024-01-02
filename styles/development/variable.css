@@ -1,14 +1,16 @@
 /* @note Doublage des variables Sass par les variables CSS natives impliquées dans les médias queries. @todo en attendant un support total d'usage pour les variables natives. */
 
 /* @subsection Breakpoints */
-/* @bugfix Nécessité de préciser deux chiffres après la virgule pour éviter un arrondissement de la valeur par les navigateurs, créant ainsi la possibilité d'un décalage entre 'max-width' et 'min-width' sur les media queries. */
 
+/* @bugfix Nécessité de préciser deux chiffres après la virgule pour éviter un arrondissement de la valeur par les navigateurs. */
+/* @note L'idée étant d'avoir une précision au-délà du pixel, nous évitant ainsi de devoir utiliser les opérateur logiques CSS4 de type "<=". @todo En test...*/
 $sizeXS: 35.01em;
 $sizeS: 50.01em;
 $sizeM: 70.01em;
 $sizeL: 92.01em;
 $sizeXL: 120.01em;
 $sizeXXL: 140.01em;
+/* @note Attention, il s'agit d'un nombre magique qui tente d'anticiper la taille minimale nécessaire au menu en desktop. @todo À remplacer par une solution plus fiable à l'avenir, mais qui ne serait peut-être alors pas mobile first... */
 $sizeNav: 90.01em;
 
 /* @subsection Layout & Grid */
@@ -42,7 +44,7 @@ $wrap: 92em;
   --colorB: hsl(0, 0%, 0%);             /* noir de référence */
   --colorT: hsl(35, 45%, 84%);          /* couleur primaire du texte */
   --colorT2: hsl(34, 44%, 69%);         /* couleur secondaire du texte */
-  --color1: var(--colorG22);              /* couleur de fond */
+  --color1: var(--colorG22);            /* couleur de fond */
   --color2: hsl(9, 100%, 64%);          /* couleur dominante 2 (tomato) */
   --color3: hsl(12, 63%, 49%);          /* couleur secondaire */
   --color4: hsl(96, 41%, 29%);          /* couleur secondaire */

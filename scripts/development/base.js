@@ -32,8 +32,7 @@ const registerServiceWorker = async () => {
   if ('serviceWorker' in navigator) {
     try {
       const registration = await navigator.serviceWorker.register('/sw.js')
-      if (registration.installing)
-        console.log('Installation du service worker en cours')
+      if (registration.installing) console.log('Installation du service worker en cours')
       else if (registration.waiting) console.log('Service worker installé')
       else if (registration.active) console.log('Service worker actif')
     } catch (error) {
@@ -64,43 +63,33 @@ const getScript = (url, hook = 'footer') =>
     script.onerror = reject
     script.onload = script.onreadystatechange = () => {
       const loadState = this.readyState
-      if (loadState && loadState !== 'loaded' && loadState !== 'complete')
-        return
+      if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
       script.onload = script.onreadystatechange = null
       resolve()
     }
     if (hook === 'footer') document.body.appendChild(script)
     else if (hook === 'head') document.head.appendChild(script)
-    else
-      console.error(
-        "Error: le choix de l'élement html pour getScript() n'est pas correct."
-      )
+    else console.error("Error: le choix de l'élement html pour getScript() n'est pas correct.")
   })
 
 const getScripts = (() => {
   //if (document.querySelector('.masonry')) getScript('/scripts/masonry.js')
-  if (document.querySelector('[class*=validation]'))
-    getScript('/scripts/formValidation.js')
-  if (document.querySelector('[class*=-focus]'))
-    getScript('/scripts/imageFocus.js')
-  if (document.querySelector('[class*=accordion]'))
-    getScript('/scripts/accordion.js')
+  if (document.querySelector('[class*=validation]')) getScript('/scripts/formValidation.js')
+  if (document.querySelector('[class*=-focus]')) getScript('/scripts/imageFocus.js')
+  if (document.querySelector('[class*=accordion]')) getScript('/scripts/accordion.js')
   //if (document.querySelector('[class*=tabs]')) getScript('/scripts/tab.js')
   if (document.querySelector('.pre')) getScript('/scripts/codeBlock.js')
   //if (document.querySelector('.input [type=password]')) getScript('/scripts/readablePassword.js')
   if (document.querySelector('[class^=range]')) getScript('/scripts/range.js')
-  if (document.querySelector('.add-line-marks'))
-    getScript('/scripts/lineMark.js')
+  if (document.querySelector('.add-line-marks')) getScript('/scripts/lineMark.js')
   //if (document.querySelector('pie-chart')) getScript('/scripts/pieChart.js')
   //if (document.querySelector('bar-chart')) getScript('/scripts/barChart.js')
   //if (document.querySelector('.media')) getScript('/scripts/development/mediaPlayer.js')
   if (document.querySelector('.video-youtube')) getScript('/scripts/youtube.js')
-  if (document.querySelector('.client-test'))
-    getScript('/scripts/clientTest.js')
+  if (document.querySelector('.client-test')) getScript('/scripts/clientTest.js')
   if (document.querySelector('.map')) getScript('/libraries/leaflet/leaflet.js')
   if (document.querySelector('.map')) getScript('/scripts/map.js')
-  if (document.querySelector('[class*=language-]'))
-    getScript('/libraries/prism/prism.js')
+  if (document.querySelector('[class*=language-]')) getScript('/libraries/prism/prism.js')
 })()
 
 // -----------------------------------------------------------------------------
@@ -126,10 +115,8 @@ const getStyle = (url, media = 'all') =>
   })
 
 const getStyles = (() => {
-  if (document.querySelector('pre > code[class*=language]'))
-    getStyle('/styles/prism.css', 'screen')
-  if (document.querySelector('[class*=map]'))
-    getStyle('/libraries/leaflet/leaflet.css', 'screen, print')
+  if (document.querySelector('pre > code[class*=language]')) getStyle('/styles/prism.css', 'screen')
+  if (document.querySelector('[class*=map]')) getStyle('/libraries/leaflet/leaflet.css', 'screen, print')
 })()
 
 // -----------------------------------------------------------------------------
@@ -141,15 +128,12 @@ const getStyles = (() => {
 // @see https://css-tricks.com/a-new-container-query-polyfill-that-just-works/
 // @note Conditional JS : plus performant que de passer par la détection d'une classe dans le HTML comme pour les autres scripts.
 const supportContainerQueries = 'container' in document.documentElement.style // Test support des Container Queries (ok pour Chrome, problème avec Firefox)
-const supportMediaQueriesRangeContext =
-  window.matchMedia('(width > 0px)').matches // Test support des requêtes média de niveau 4 (Media Query Range Contexts).
+const supportMediaQueriesRangeContext = window.matchMedia('(width > 0px)').matches // Test support des requêtes média de niveau 4 (Media Query Range Contexts).
 const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1 // @todo Solution temporaire pour Firefox.
 
 if (!supportContainerQueries || !supportMediaQueriesRangeContext || isFirefox) {
   getStyle('/styles/gridFallback.css', 'screen')
-  document
-    .querySelectorAll('[class^=grid]')
-    .forEach((grid) => grid.parentElement.classList.add('parent-grid')) // @affected Firefox =< v108 @note Compense le non support de :has() sur les grilles.
+  document.querySelectorAll('[class^=grid]').forEach(grid => grid.parentElement.classList.add('parent-grid')) // @affected Firefox =< v108 @note Compense le non support de :has() sur les grilles.
 }
 
 // -----------------------------------------------------------------------------
@@ -197,9 +181,7 @@ const fadeIn = (el, duration) => {
 const injectSvgSprite = (targetElement, spriteId, svgFile) => {
   const path = '/sprites/' // Chemin des fichiers de sprites SVG
   svgFile = svgFile || 'util'
-  const icon = `<svg role="img" focusable="false"><use href="${
-    path + svgFile
-  }.svg#${spriteId}"></use></svg>`
+  const icon = `<svg role="img" focusable="false"><use href="${path + svgFile}.svg#${spriteId}"></use></svg>`
   targetElement.insertAdjacentHTML('beforeEnd', icon)
 }
 
@@ -211,9 +193,8 @@ const injectSvgSprite = (targetElement, spriteId, svgFile) => {
 // @note Par défaut tous les liens externes conduisent à l'ouverture d'un nouvel onglet, sauf les liens internes
 
 const externalLinks = (() => {
-  document.querySelectorAll('a').forEach((a) => {
-    if (a.hostname !== window.location.hostname)
-      a.setAttribute('target', '_blank')
+  document.querySelectorAll('a').forEach(a => {
+    if (a.hostname !== window.location.hostname) a.setAttribute('target', '_blank')
   })
 })()
 
@@ -222,8 +203,7 @@ const externalLinks = (() => {
 // @description Commande pour l'impression
 // -----------------------------------------------------------------------------
 
-for (const print of document.querySelectorAll('.cmd-print'))
-  print.onclick = () => window.print()
+for (const print of document.querySelectorAll('.cmd-print')) print.onclick = () => window.print()
 
 // -----------------------------------------------------------------------------
 // @section     GDPR / gprd
@@ -241,15 +221,14 @@ const gdpr = (() => {
   const panel = document.getElementById('gdpr-see')
   const trueConsentButton = document.getElementById('gdpr-true-consent')
   const falseConsentButton = document.getElementById('gdpr-false-consent')
-  if (localStorage.getItem('gdprConsent') === 'yes')
-    panel.style.display = 'none'
+  if (localStorage.getItem('gdprConsent') === 'yes') panel.style.display = 'none'
   trueConsentButton.addEventListener(
     'click',
     () => {
       localStorage.setItem('gdprConsent', 'yes')
       panel.style.display = 'none'
     },
-    false
+    false,
   )
   falseConsentButton.addEventListener(
     'click',
@@ -257,7 +236,7 @@ const gdpr = (() => {
       localStorage.setItem('gdprConsent', 'no')
       panel.style.display = 'none' // 'grid'
     },
-    false
+    false,
   )
 })()
 
@@ -268,9 +247,7 @@ const gdpr = (() => {
 
 const dateInputToday = (() => {
   // @note Date du jour si présence de la classe 'today-date' @see https://css-tricks.com/prefilling-date-input/
-  document
-    .querySelectorAll('input[type=date].today-date')
-    .forEach((e) => (e.valueAsDate = new Date())) // @bugfixed Semble problématique sur certains navigateurs. @todo À voir dans le temps.
+  document.querySelectorAll('input[type=date].today-date').forEach(e => (e.valueAsDate = new Date())) // @bugfixed Semble problématique sur certains navigateurs. @todo À voir dans le temps.
 })()
 
 // -----------------------------------------------------------------------------
@@ -279,7 +256,7 @@ const dateInputToday = (() => {
 // -----------------------------------------------------------------------------
 
 const multipleSelectCustom = (() => {
-  document.querySelectorAll('.input select[multiple]').forEach((select) => {
+  document.querySelectorAll('.input select[multiple]').forEach(select => {
     const maxLength = 7,
       length = select.length
     if (length < maxLength) {
@@ -298,16 +275,14 @@ const multipleSelectCustom = (() => {
 // -----------------------------------------------------------------------------
 
 const colorInput = (() => {
-  document
-    .querySelectorAll('.input:has([type=color] + output) input')
-    .forEach((input) => {
-      const output = input.nextElementSibling
-      output.textContent = input.value
-      input.oninput = function () {
-        this.value = this.value
-        output.textContent = this.value
-      }
-    })
+  document.querySelectorAll('.input:has([type=color] + output) input').forEach(input => {
+    const output = input.nextElementSibling
+    output.textContent = input.value
+    input.oninput = function () {
+      this.value = this.value
+      output.textContent = this.value
+    }
+  })
 })()
 
 // -----------------------------------------------------------------------------
@@ -376,16 +351,13 @@ const mainMenu = (() => {
   const button = document.querySelector('.cmd-nav'),
     subNav = document.querySelector('.sub-nav'),
     content = document.querySelectorAll('body > :not(.nav')
+
   button.addEventListener('click', () => {
     document.documentElement.classList.toggle('active')
     document.body.classList.toggle('active')
     button.classList.toggle('active')
     subNav.classList.toggle('active')
-    content.forEach((e) =>
-      e.hasAttribute('inert')
-        ? e.removeAttribute('inert')
-        : e.setAttribute('inert', '')
-    )
+    content.forEach(e => (e.hasAttribute('inert') ? e.removeAttribute('inert') : e.setAttribute('inert', '')))
   })
 })()
 
@@ -401,13 +373,7 @@ const mainMenu = (() => {
 const addDropCap = (() => {
   document
     .querySelectorAll('.add-drop-cap > p:first-child')
-    .forEach(
-      (e) =>
-        (e.innerHTML = e.innerHTML.replace(
-          /^(\w)/,
-          '<span class="drop-cap">$1</span>'
-        ))
-    )
+    .forEach(e => (e.innerHTML = e.innerHTML.replace(/^(\w)/, '<span class="drop-cap">$1</span>')))
 })()
 
 // -----------------------------------------------------------------------------
@@ -464,11 +430,7 @@ function buttonEffect(e) {
   const frame = e.dataset.frame
   if ('vibrate' in navigator) navigator.vibrate(frame ? frame : 200)
 }
-document
-  .querySelectorAll('button[class*=button]')
-  .forEach(
-    (e) => e && e.addEventListener('click', () => buttonEffect(e), false)
-  )
+document.querySelectorAll('button[class*=button]').forEach(e => e && e.addEventListener('click', () => buttonEffect(e), false))
 
 /*
 Mode "application" ou "navigateur" :

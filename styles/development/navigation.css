@@ -8,14 +8,12 @@
 
   @media (width < $sizeNav) {
     grid-template-rows: 3em;
-    /* @note Laisse une place au logo du site. */
     grid-template-columns: 3em minmax(0, 1fr) 3em;
     grid-template-areas: 'logo breadcrumb cmd';
   }
 
   @media (width > $sizeNav) {
     grid-template-rows: repeat(2, 2.5em);
-    /* @note Laisse une place au logo du site. */
     grid-template-columns: 5em minmax(0, 1fr);
     grid-template-areas: 'logo subnav' 'logo breadcrumb';
   }
@@ -196,6 +194,10 @@
   all: unset;
   grid-area: cmd;
 
+  .no-js & {
+    display: none;
+  }
+
   @media (width > $sizeNav) {
     display: none;
   }
@@ -204,6 +206,10 @@
     padding: 0.5em;
     cursor: pointer;
     background-color: var(--colorG15);
+
+    &:where(:focus, :hover, .active) {
+      background-color: var(--color2);
+    }
 
     & svg {
       width: 100%;
@@ -231,24 +237,18 @@
       }
     }
 
-    &:where(:focus, :hover, .active) {
-      background-color: var(--color2);
-    }
+    &.active svg {
+      & :nth-child(1) {
+        transform: translate(-177px, 177px) rotate(45deg);
+      }
 
-    &.active svg :nth-child(1) {
-      transform: translate(-177px, 177px) rotate(45deg);
-    }
+      & :nth-child(2) {
+        transform: rotate(-45deg);
+      }
 
-    &.active svg :nth-child(2) {
-      transform: rotate(-45deg);
-    }
-
-    &.active svg :nth-child(3) {
-      transform: translate(-177px, -177px) rotate(-45deg);
-    }
-
-    .no-js & {
-      display: none;
+      & :nth-child(3) {
+        transform: translate(-177px, -177px) rotate(-45deg);
+      }
     }
   }
 }
