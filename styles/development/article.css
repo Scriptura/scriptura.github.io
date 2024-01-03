@@ -8,12 +8,31 @@
   }
 
   & h1 {
+    /* @note Nombre magique qui compense le gap entre header et .wrapper @todo À revoir. */
     margin-block-end: 0.44em;
   }
 
   & > :where(.wrapper, article, form) {
     grid-column: 1;
     max-width: 55em;
+
+    @media (width > $sizeXS) {
+      border-radius: var(--r1);
+      box-shadow: var(--shadow3);
+    }
+
+    @media ($sizeXS < width < $sizeS) {
+      padding: 2.5em 4em;
+    }
+
+    @media (width > $sizeS) {
+      padding: 4em 6em;
+
+      &:nth-child(odd) {
+        /* @note Limitation à 2 rangées car impression visuelle d'un désordre à partir de 3 rangées. */
+        margin-inline-start: auto;
+      }
+    }
   }
 
   & .sub-header,
@@ -36,6 +55,10 @@
 
   & article {
     position: relative;
+    
+    @media (width < $sizeXS) {
+      padding-block: var(--gap);
+    }
   }
 
   & form {
@@ -111,54 +134,20 @@
     justify-content: flex-end;
     gap: var(--gap);
     max-width: 55em;
-  }
-}
 
-@media (width < $sizeXS) {
-  .article {
+    @media ($sizeXS < width < $sizeS) {
+      padding-inline: 4em;
+    }
+
+    @media (width > $sizeS) {
+      padding-inline: 6em;
+    }
+  }
+
+  @media (width < $sizeXS) {
     & .wrapper {
-      margin-block-start: calc(-1 * var(--gap));
+      margin-block-start: calc(var(--gap) * -1);
     }
-
-    & article {
-      padding-block: var(--gap);
-    }
-  }
-}
-
-@media (width > $sizeXS) {
-  .article > :where(.wrapper, article, form) {
-    border-radius: var(--r1);
-    box-shadow: var(--shadow3);
-  }
-}
-
-@media ($sizeXS < width < $sizeS) {
-  .article > :where(.wrapper, article, form) {
-    padding: 2.5em 4em;
-  }
-}
-
-@media (width > $sizeS) {
-  .article {
-    & > :where(.wrapper, article, form) {
-      padding: 4em 6em;
-    }
-    & > :where(.wrapper, article, form):nth-child(odd) {
-      margin-inline-start: auto;
-    }
-  }
-}
-
-@media ($sizeXS < width < $sizeS) {
-  .article > footer {
-    padding-inline: 4em;
-  }
-}
-
-@media (width > $sizeS) {
-  .article > footer {
-    padding-inline: 6em;
   }
 }
 
@@ -168,11 +157,4 @@
     border-radius: var(--r1);
     box-shadow: var(--shadow3);
   }
-}
-
-main > article > footer {
-  grid-column: 1;
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--gap);
 }

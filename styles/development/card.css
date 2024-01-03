@@ -10,6 +10,7 @@
   & h2 {
     margin-block-end: 0;
     text-align: center;
+    /* @note Unités fixes en raison de la nature différentes des éléments. */
     border-radius: 0.5rem 0.5rem 2px 2px;
 
     & span {
@@ -19,6 +20,7 @@
 
   & p {
     margin-block-start: 0;
+    /* @note Unités fixes en raison de la nature différentes des éléments. */
     border-radius: 2px 2px 0.5rem 0.5rem;
   }
   

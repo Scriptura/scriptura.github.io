@@ -6,6 +6,16 @@
   height: 6em;
   animation: anim-loader var(--frame) linear infinite;
 
+  &,
+  &::before,
+  &::after {
+    /* @note Les pixels donnent un rendus plus précis quelque soit l'échelle. */
+    border: 5px solid var(--color);
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+  }
+
   &::before,
   &::after {
     content: '';
@@ -13,23 +23,18 @@
   }
 
   &::before {
+    /* @note Les pixels donnent un rendus plus précis quelque soit l'échelle. */
     inset: 1px;
+    /* @note Multiplicateur arbitraire. */
     animation: anim-loader calc(var(--frame) * 4.7) ease infinite;
   }
 
   &::after {
+    /* @note Les pixels donnent un rendus plus précis quelque soit l'échelle. */
     inset: 7px;
+    /* @note Multiplicateur arbitraire. */
     animation: anim-loader calc(var(--frame) * 1.51) ease infinite;
   }
-}
-
-.loader,
-.loader::before,
-.loader::after {
-  border: 5px solid var(--color);
-  border-top-color: transparent;
-  border-bottom-color: transparent;
-  border-radius: 50%;
 }
 
 @keyframes anim-loader {

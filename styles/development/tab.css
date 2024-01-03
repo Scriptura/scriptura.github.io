@@ -4,6 +4,7 @@
     padding: 0;
 
     & ~ * .tab-list {
+      /* @note Si onglets imbriqués. */
       margin-block-start: 0.5em;
     }
 
@@ -21,10 +22,12 @@
       border: 1px dashed var(--colorA15);
       border-radius: 0.5em 0.5em 0 0;
       box-shadow: 0 -1rem 1rem var(--colorAB005);
+      /* filter: drop-shadow(0 -.5rem .5rem rgba(0, 0, 0, .1)); */
       cursor: pointer;
       transition: 0.2s box-shadow ease-in-out;
 
       &[aria-selected='true'] {
+        /* @note Permet une gestion correcte des ombres. */
         z-index: 2;
         flex-shrink: 0;
         max-width: 60%;
@@ -41,7 +44,9 @@
 
   & .tab-panel {
     position: relative;
+    /* @note Compensation de la bordure inférieure des onglets. */
     top: -1px;
+    /* @note Idem. */
     padding: calc(0.5em + 1px) 1em 0.5em;
     border: 1px dashed var(--colorA15);
     box-shadow: var(--shadow8);

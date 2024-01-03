@@ -12,21 +12,34 @@
   padding-inline: 1em;
   background-color: var(--colorG27);
   border-radius: var(--r1);
-  box-shadow: var(--shadow1); /* var(--shadow3); */
+  box-shadow: var(--shadow1);
   gap: 0 1em;
 
+  @media (width < $sizeXS) {
+    grid-template-columns: minmax(0, 1fr) 2em;
+    grid-template-areas: 'ttt ttt' 'uuu aaa';
+  }
+
+  @media (width > $sizeXS) {
+    grid-template-columns: 4em minmax(0, 1fr);
+    grid-template-areas: 'aaa ttt' 'aaa uuu';
+  }
+
   & .topic-link {
+    /* @note Permet à tout l'élément d'être cliquable (simulation d'imbrication des liens) */
     position: absolute;
     inset: 0;
     z-index: 1;
 
     &:where(:hover, :active) + * h2 a {
-      color: var(--colorW);
+      /* @note Pas de focus car tabindex='-1' */
+      /* color: var(--colorW); */
       text-decoration: underline;
     }
   }
 
   & > * a {
+    /* @note Rétablit la possibilité de cliquer les liens de base en les faisant passer au dessus. */
     position: relative;
     z-index: 3;
     text-decoration: none;
@@ -54,59 +67,53 @@
 
   & > :nth-child(3) {
     flex-wrap: wrap;
-  }
 
-  & > :nth-child(3) p {
-    justify-content: start;
-    margin-block: 0.25em 1em;
-  }
+    & p {
+      justify-content: start;
+      margin-block: 0.25em 1em;
+    }
 
-  & > :nth-child(3) ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5em 0.5em;
-    font-size: 0.8em;
-    margin-block-end: 1em;
-  }
+    & ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: calc(var(--gap) / 2) calc(var(--gap) / 2);
+      font-size: 0.8em;
+      margin-block-end: 1em;
 
-  & > :nth-child(3) ul > :last-child {
-    margin-inline-end: 0;
-  }
+      & li {
+        margin-block-end: 0.5em;
+      }
 
-  & > :nth-child(3) ul li {
-    margin-block-end: 0.5em;
-  }
+      & > :last-child {
+        margin-inline-end: 0;
+      }
 
-  & > :nth-child(3) ul a {
-    padding: 0.25em 0.5em 0.25em 1.25em;
-    white-space: nowrap;
-    background-color: var(--colorG15);
-    clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
+      & a {
+        padding: 0.25em 0.5em 0.25em 1.25em;
+        white-space: nowrap;
+        background-color: var(--colorG15);
+        clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
+      }
+    }
   }
 
   & h2 {
     all: unset;
     margin-block: 1.25em 0;
     font-weight: bold;
+    /* font-size: 1em; */
     text-wrap: balance;
+    & a {
+      color: var(--colorT);
+    }
 
     & a:where(:focus, :hover, :active) {
       text-decoration: underline;
     }
   }
-}
 
-@media (width < $sizeXS) {
-  .topic-item {
-    grid-template-columns: minmax(0, 1fr) 2em;
-    grid-template-areas: 'ttt ttt' 'uuu aaa';
-  }
-}
-
-@media (width > $sizeXS) {
-  .topic-item {
-    grid-template-columns: 4em minmax(0, 1fr);
-    grid-template-areas: 'aaa ttt' 'aaa uuu';
+  &.topic-solved > :nth-child(2) svg:first-child {
+    color: var(--colorS4);
   }
 }
 
@@ -114,6 +121,12 @@
   grid-area: aaa;
   position: relative;
   margin: auto;
+
+  @media (width < $sizeXS) {
+    /* @note Valeur obtenue de manière un peu empirique, liée à la propriété font-size définie ci après. */
+    margin-block-end: 2em;
+    font-size: 0.5em;
+  }
 
   &,
   & > * {
@@ -141,15 +154,4 @@
   & > :nth-child(3) {
     transform: translate(1.2em, -0.6em) scale(0.5);
   }
-}
-
-@media (width < $sizeXS) {
-  .avatars {
-    margin-block-end: 2em;
-    font-size: 0.5em;
-  }
-}
-
-.topic-solved > :nth-child(2) svg:first-child {
-  color: var(--colorS4);
 }

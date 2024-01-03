@@ -1,5 +1,6 @@
 @media (width < $sizeS) {
   .line-mark {
+    /* @note Un match media javascript peutconditionner le script, mais cette solution est moins modulable et surtout moins robuste que la solution CSS. */
     display: none;
   }
 }
@@ -16,12 +17,14 @@
     width: 4em;
     height: 2em;
     vertical-align: sub;
+    /* @note Unité rem obligatoire car ne doit pas dépendre de l'élément parent. */
     font-size: 1rem;
     font-weight: normal;
     text-decoration: none;
     color: var(--colorG38);
     outline: none;
     transition: color 0.2s ease-in-out;
+    /* @note On évite de sélectionner les marqueurs, ceux-ci sont un élément de navigation et non de contenu. */
     user-select: none;
     scroll-margin-block-start: 1em;
 

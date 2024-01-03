@@ -1,16 +1,24 @@
+/* @note En raison de leurs éventails d'utilisations les inputs ne sont pas stylés par défaut. Ne sont placées ici que des règles d'harmonisation. */
+
 fieldset {
   margin: 0;
+  /* @bugfix @affected Firefox. */
   padding: 0;
   border: none;
 }
 
 legend {
+  /* @bugfix Correct the text wrapping @affected Edge and IE. */
   box-sizing: border-box;
-  color: inherit;
+  /* @bugfix Correct the text wrapping @affected Edge and IE. */
   display: table;
+  /* @bugfix Correct the text wrapping @affected Edge and IE. */
   max-width: 100%;
+  /* @note personnalisation de l'élément, optimisé pour un `.h2` @todo À vérifier dans le temps... */
   margin-block: 0.83em 0.415em;
+  /* @bugfix Remove the padding so developers are not caught out when they zero out `fieldset` elements @affected All browsers. */
   padding: 0;
+  /* @bugfix Correct the text wrapping @affected Edge and IE. */
   white-space: normal;
   font-weight: bold;
 }
@@ -24,19 +32,33 @@ input,
 optgroup,
 select,
 textarea {
+  /* @bugfix Change the font styles @affected All browsers. */
   font-family: inherit;
+  /* @bugfix Change the font styles @affected All browsers. */
   font-size: 100%;
+  /* @bugfix Change the font styles @affected All browsers. */
   line-height: 1.15;
+  /* @bugfix Remove the margin @affected Firefox and Safari. */
   margin: 0;
 }
 
 button,
 input {
-  overflow: visible;
+  overflow: visible; /* @bugfix Show the overflow @affected Edge. */
+  /* line-height: normal; /* @affected Firefox 4+. */
+  /* border-radius: 0; /* @affected Chrome 62+/OS X. */
 }
+
+/*
+button[disabled],
+html input[disabled] {
+  cursor: default
+}
+*/
 
 button,
 select {
+  /* @bugfix Remove the inheritance of text transform. @affected Edge, Firefox, and IE. */
   text-transform: none;
 }
 
@@ -44,7 +66,10 @@ button,
 input[type='button'],
 input[type='reset'],
 input[type='submit'] {
+  /* @bugfix Correct the inability to style clickable types @affected iOS and Safari. */
   -webkit-appearance: button;
+  /* outline: none; */
+  /* @todo Test du 10.10.2020 */
   cursor: pointer;
 }
 
@@ -52,7 +77,9 @@ button::-moz-focus-inner,
 input[type='button']::-moz-focus-inner,
 input[type='reset']::-moz-focus-inner,
 input[type='submit']::-moz-focus-inner {
+  /* @bugfix Remove the inner border @affected Firefox. */
   border-style: none;
+  /* @bugfix Remove the inner padding @affected Firefox. */
   padding: 0;
 }
 
@@ -60,6 +87,7 @@ button:-moz-focusring,
 input[type='button']:-moz-focusring,
 input[type='reset']:-moz-focusring,
 input[type='submit']:-moz-focusring {
+  /* @bugfix Restore the focus styles unset by the previous rule. */
   outline: 1px dotted ButtonText;
 }
 
@@ -69,15 +97,13 @@ select {
 }
 
 select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
+  /* appearance: none; */
   border-radius: 0;
   vertical-align: baseline;
 }
 
 select[multiple] option {
-  padding-block-start: 0;
-  padding-block-end: 0;
+  padding-block: 0;
 }
 
 select[multiple] option {
@@ -85,19 +111,19 @@ select[multiple] option {
 }
 
 select[multiple] option:checked {
-  background: var(--color2)
-    linear-gradient(0deg, var(--color2) 0%, var(--color2) 100%);
+  /* @see https://stackoverflow.com/a/50618702/4960244 */
+  background: var(--color2) linear-gradient(0deg, var(--color2) 0%, var(--color2) 100%);
 }
 
 textarea {
+  /* @note inline-block par défaut. */
   display: block;
-  overflow: auto;
 }
 
 input[type='radio'],
 input[type='checkbox'] {
+  /* @bugfix @tofo À évaluer. */
   box-sizing: border-box;
-  padding: 0;
 }
 
 input[type='number'] {
@@ -111,30 +137,34 @@ input[type='number']::-webkit-inner-spin-button {
 
 input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button {
+  /* @bugfix Correct the cursor style of increment and decrement buttons. @affected Chrome. */
   height: auto;
 }
 
 input[type='search'] {
+  /* @bugfix Correct the odd appearance @affected Chrome and Safari. */
   -webkit-appearance: textfield;
+  /* @bugfix Correct the outline style @affected Safari. */
   outline-offset: -2px;
-}
 
-input[type='search']::-webkit-search-decoration {
-  -webkit-appearance: none;
-}
+  &::-webkit-search-decoration {
+    /* @bugfix Remove the inner padding @affected Chrome and Safari on macOS. */
+    -webkit-appearance: none;
+  }
 
-input[type='search']::-webkit-search-cancel-button {
-  -webkit-appearance: none;
-  height: 24px;
-  width: 24px;
-  margin-inline-start: 0.4em;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
-  cursor: pointer;
-}
+  &::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    height: 24px;
+    width: 24px;
+    margin-inline-start: 0.4em;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
+    cursor: pointer;
+  }
 
-input[type='search']::-webkit-search-cancel-button:hover,
-input[type='search']::-webkit-search-cancel-button:active {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
+  &::-webkit-search-cancel-button:hover,
+  &::-webkit-search-cancel-button:active {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
+  }
 }
 
 input[type='file'],
@@ -144,6 +174,7 @@ input[type='datetime-local'],
 input[type='week'],
 input[type='month'],
 select {
+  /* @affected Chrome mobile @note Suppression de la flèche de sélection sous ce navigateur. */
   -webkit-appearance: none;
   background-size: 1.5em 1.5em;
   background-repeat: no-repeat;
@@ -156,6 +187,7 @@ select {
   input[type='datetime-local'],
   input[type='week'],
   input[type='month'] {
+    /* @note Évite la superposition de la fonction clear et du datepicker. */
     padding-inline-end: 3em !important;
     cursor: pointer;
   }
@@ -171,6 +203,8 @@ select {
 ::-webkit-file-upload-button,
 ::file-selector-button {
   display: none;
+  /* -webkit-appearance: button /* @bugfix Correct the inability to style clickable types @affected iOS and Safari. */
+  /* font: inherit /* @bugfix Change font properties to `inherit` @affected Safari. */
 }
 
 ::-webkit-calendar-picker-indicator {
@@ -178,26 +212,36 @@ select {
   cursor: pointer;
 }
 
+/*
+::-webkit-inner-spin-button {
+  display: none;
+}
+*/
+
 ::-webkit-clear-button {
   -webkit-appearance: none;
+  /* @affected Chrome mobile */
   height: 24px;
   width: 24px;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
   cursor: pointer;
-}
 
-::-webkit-clear-button:focus,
-::-webkit-clear-button:hover {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
-}
-
-[type='time']::-webkit-clear-button {
-  transform: translateX(-1.4em);
+  &:focus,
+  &:hover {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
+  }
+  
+  [type='time']& {
+    transform: translateX(-1.4em);
+  }
 }
 
 :-webkit-autofill {
+  /* @note Préremplissage des champs par le navigateur. @affected Chrome. */
   -webkit-text-fill-color: var(--colorT);
+  /* @note Hack pour éviter l'affichage par défaut de l'autoremplissage, car les autres solutions se sont montrées inefficaces @todo Solution temporaire à évaluer. */
   transition-property: background-color;
+  /* @note Idem. */
   transition-delay: 1000000s;
 }
 
@@ -216,9 +260,10 @@ select {
 .invalid + [class*='message']::before {
   content: '';
   position: absolute;
-  top: -0.7em;
+  /* @note Légère correction de la position car décalage visible du pseudo-élément dans certaines situations. */
+  top: calc(0.8em * -1 + .1em);
   left: 0.8em;
-  width: 1.6em;
+  width: calc(0.8em * 2);
   height: 0.8em;
   background-color: var(--colorS52);
   clip-path: polygon(50% 0%, 0% 100%, 100% 100%);

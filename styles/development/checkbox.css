@@ -1,4 +1,5 @@
 :where(input[type='checkbox'], input[type='radio']):not([role='switch']) {
+  /* all: unset */
   appearance: none;
   display: inline-grid;
   width: 1.2em;
@@ -33,6 +34,7 @@
   }
 
   &:focus-visible {
+    /* @note "!important" est nécessaire pour les boutons radio, sinon le focus ne surclasse pas la bordure définie plus haut. */
     border-color: var(--color5) !important;
   }
 }
@@ -56,15 +58,18 @@ input[type='radio']:not([role='switch']) {
 
   &:checked {
     border-color: var(--color2);
+
+    &::before {
+      transform: scale(1);
+    }
   }
 }
 
-input[type='radio']:not([role='switch']):checked::before {
-  transform: scale(1);
-}
-
-:where(input[type='checkbox'], input[type='radio'])[role='switch'] {
+/* :where(input[type='checkbox'], input[type='radio'])[role='switch'] */
+[role='switch'] {
   all: unset;
+  /* appearance: none; */
+  /* @todo À évaluer, dans un contexte géré par les éléments parents... */
   vertical-align: middle;
   box-sizing: border-box;
   width: 5em;
@@ -121,11 +126,13 @@ input[type='radio']:not([role='switch']):checked::before {
   }
 
   &:focus-visible {
+    /* @note "!important" est nécessaire pour les boutons radio, sinon le focus ne surclasse pas la bordure définie plus haut. */
     border-color: var(--color5) !important;
   }
 }
 
 .switch-custom {
+  /* @note Le design d'un switch accessible à l'aide des seuls pseudo-éléments est techniquement possible, mais cette solution rend la modularité du style délicate. Le label n'étant pas indépendant du switch, son positionnement serait alors limité, des pseudo-éléments utilisants déjà background-image ne peuvent plus être texturés, l'effets "zoom" via font-size serait problématique. */
   position: relative;
   width: 5em;
   height: 2.5em;
@@ -169,6 +176,7 @@ input[type='radio']:not([role='switch']):checked::before {
   }
 
   & :not(:checked) + div svg:nth-child(1) {
+    /* @note `:first-child` et `:last-child` ne fonctionnent pas comme attendu dans ce cas car possibilité d'un seul SVG présent au lieu de deux. */
     display: none;
   }
 
@@ -176,6 +184,7 @@ input[type='radio']:not([role='switch']):checked::before {
     transform: translateX(1.25em);
 
     & svg:nth-child(2) {
+      /* @note Idem. */
       display: none;
     }
   }

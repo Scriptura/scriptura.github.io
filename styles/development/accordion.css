@@ -53,6 +53,7 @@
   }
 
   & .accordion-summary::after {
+    /* @note Sprécifique aux éléments remplacés. */
     transition: transform 0.5s ease-in-out;
   }
 
@@ -60,7 +61,8 @@
     overflow: hidden;
     padding: 0 1em;
     background-color: var(--color1);
-    border-radius: calc(0.3em + 1px);
+    /* Compense le décalage de la "bordure" en box-shadow inset. */
+    border-radius: calc(var(--r2) + 1px);
     box-shadow: var(--shadow8), inset 0 -1px 0 1px var(--colorA1);
     transition: max-height 0.5s ease-in-out;
 

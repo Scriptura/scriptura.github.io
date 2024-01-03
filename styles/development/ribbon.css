@@ -1,10 +1,16 @@
+/* @bug @affected Chrome @note Effet de bord indésirables si utilisation avec la propriété column-count sur l'élément parent (sauf pour le premier item). 1/ Bandeau tronqué si placé sur un élément avec la propriété. 2/ Liens non cliquables si utilisation de clip-path.
+ */
+
 .ribbon-content {
   position: relative;
+  /* @note Pas de hauteur minimum, celle-ci doit être gérée en fonction de la boite. */
+  /* min-height: 7.5em */
 
   & > [class*='ribbon'] {
     --color: currentcolor;
     --bg-color: var(--colorG33);
     position: absolute;
+    /* @note Au cas où le ribbon est placé après le contenu de .ribbon-hook. @todo Valeur importante pour passer par dessus les .map. */
     z-index: 2000;
     line-height: 2em;
     display: block;
@@ -74,6 +80,9 @@
   & > .ribbon-top-left {
     top: 0;
     left: 0;
+    /* Alternative possible mais positionnement plus difficile à comprendre car tient compte de la direction imposée par rotate. */
+    /* transform rotate(-45deg) translate(-2.65em, -.7em) */
+    /* @note L'ordre des valeurs est importante. */
     transform: translate(-2.35em, 1.4em) rotate(-45deg);
   }
 
@@ -94,20 +103,26 @@
     right: 0;
     transform: translate(2.35em, -1.4em) rotate(135deg);
   }
-}
 
-.ribbon-content > a[class*='ribbon'] {
-  transition: color 0.2s ease-in-out;
-
-  &::after {
-    background-color: var(--color2);
-  }
-
-  &:where(:focus, :hover, :active) {
-    color: var(--colorG18);
-
+  & > a[class*='ribbon'] {
+    transition: color 0.2s ease-in-out;
+  
+    /*
+    &::before {
+      border-color: rgba(0, 0, 0, .3);
+    }
+    */
+  
     &::after {
-      background-color: var(--color5);
+      background-color: var(--color2);
+    }
+  
+    &:where(:focus, :hover, :active) {
+      color: var(--colorG18);
+  
+      &::after {
+        background-color: var(--color5);
+      }
     }
   }
 }

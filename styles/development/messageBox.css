@@ -4,7 +4,10 @@
   padding: 0.15em 1em;
   color: var(--color);
   background-color: var(--bg-color);
+  border-radius: var(--r2);
   box-shadow: var(--shadow1);
+  /* @note Evite un conflit avec les margins et padding des éléments enfants. Mais pose des problèmes avec les pseudo-éléments. */
+  /* overflow hidden */
 
   &[class*='highlight'] {
     --icon-size: 2.5em;
@@ -14,20 +17,16 @@
     align-items: center;
     min-height: 5em;
     padding-inline: 1em;
-  }
 
-  &[class*='highlight'] > .icon {
-    width: var(--icon-size);
-    height: var(--icon-size);
-    padding: 25%;
-    fill: var(--bg-color);
-    background-color: currentcolor;
-    clip-path: circle(50%);
+    & > .icon {
+      width: var(--icon-size);
+      height: var(--icon-size);
+      padding: 25%;
+      fill: var(--bg-color);
+      background-color: currentcolor;
+      clip-path: circle(50%);
+    }
   }
-}
-
-main [class^='message'] {
-  border-radius: var(--r2);
 }
 
 .message-info {

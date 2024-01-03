@@ -4,6 +4,7 @@
   height: 1.3em;
   width: 1.3em;
   margin-inline-end: 0.5em;
+  /* background-color: var(--colorG); */
 }
 
 .calendar-white {
@@ -29,3 +30,9 @@
 .calendar-black {
   background-color: var(--colorB);
 }
+
+/*
+.calendar-gold {
+  background-color: hsl(51, 100%, 50%);
+}
+*/

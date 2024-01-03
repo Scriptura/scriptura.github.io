@@ -33,10 +33,10 @@ form
   & textarea
     width: 100%
     color: currentColor
-    background-color: _inputColor1 !important // @bugfixed @affected Chrome @note Le !important contre le style par défaut des préremplissages.
+    background-color: _inputColor1 !important // @bugfix @affected Chrome @note Le !important contre le style par défaut des préremplissages.
     border: _inputSize3 solid _inputColor8 // @note Permet d'anticiper le comportement des bordures colorées de '.invalid' en évitant des rattrapages en padding aléatoires selon le type d'input
     border-radius: _r2
-    box-shadow: _inputBoxShadow1 !important // @bugfixed @affected Chrome @note Le !important supplante le style par défaut des préremplissages.
+    box-shadow: _inputBoxShadow1 !important // @bugfix @affected Chrome @note Le !important supplante le style par défaut des préremplissages.
   & input:not([type=button], [type=submit], [type=range])
   & select:not([multiple])
     height: _inputSize1 // @note Permet d'approcher un alignement "pixel perfect" entre les différents champs lorqu'ils sont alignés.

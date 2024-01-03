@@ -2,8 +2,11 @@
   padding: 0 1em;
   color: var(--colorT2);
   background-color: var(--colorG15);
+  /* @todo En test... */
+  box-shadow: 0.5rem 0.5rem 1rem hsla(0, 0%, 0%, 0.15);
 
   & a {
+    /* font-variant: small-caps; */
     color: var(--colorT);
     text-decoration: none;
 
@@ -36,14 +39,14 @@
     }
   }
 
-  & .logo,
-  & .logo svg {
-    width: 2em;
-    height: 2em;
-  }
-
   & .logo {
     margin-inline-end: 1em;
+
+    &,
+    & svg {
+      width: 2em;
+      height: 2em;
+    }
   }
 
   & .wrap > :nth-child(2) {

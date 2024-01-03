@@ -1,52 +1,48 @@
+/* @note Impossible d'animer la couleur de la barre avec une animation classique sur background-position. @see https://codepen.io/olivier-c/pen/vYvEjmb */
+/* Solution de contournement. @see https://codepen.io/olivier-c/pen/poqvVqw */
+/* @see https://www.w3docs.com/snippets/css/how-to-animate-the-background-of-the-progress-bar.html */
+/* @see https://www.w3docs.com/tools/code-editor/18675 */
+
 .progress {
   --color: var(--color2);
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+  /* @todo La déclaration suivante ne semble plus nécessaire si définition de l'élement, à évaluer. */
+  /* appearance: none; */
   width: 100%;
   height: 1em;
   border: none;
   animation: anim-progress 4s linear infinite;
-}
 
-.progress,
-.progress::-webkit-progress-bar {
-  background-color: var(--colorG18);
-  box-shadow: inset 0 0.2em 0.5em var(--colorAB2);
-  border-radius: 0.5em;
-}
+  &,
+  &::-webkit-progress-bar {
+    background-color: var(--colorG18);
+    box-shadow: inset 0 0.2em 0.5em var(--colorAB2);
+    border-radius: 0.5em;
+  }
 
-.progress::-webkit-progress-inner-element,
-.progress::-webkit-progress-bar {
-  background-position: inherit;
-}
+  &::-webkit-progress-inner-element,
+  &::-webkit-progress-bar {
+    background-position: inherit;
+  }
 
-.progress::-webkit-progress-value {
-  min-width: 1em;
-  background-color: var(--color);
-  background-image: repeating-linear-gradient(
-    -45deg,
-    transparent 0 0.5rem,
-    var(--colorA2) 0.5rem 1rem
-  );
-  background-size: calc(1rem / 0.707) 100%, 100% 800%;
-  background-position: inherit;
-  box-shadow: inset 0 2px 9px var(--colorA3), inset 0 -2px 6px var(--colorAB4);
-  border-radius: 0.5em;
-}
+  &::-webkit-progress-value {
+    min-width: 1em;
+    background-color: var(--color);
+    background-image: repeating-linear-gradient(-45deg, transparent 0 0.5rem, var(--colorA2) 0.5rem 1rem);
+    background-size: calc(1rem / cos(45deg)) 100%, 100% 800%;
+    background-position: inherit;
+    box-shadow: inset 0 2px 9px var(--colorA3), inset 0 -2px 6px var(--colorAB4);
+    border-radius: 0.5em;
+  }
 
-.progress::-moz-progress-bar {
-  min-width: 1em;
-  background-color: var(--color);
-  background-image: repeating-linear-gradient(
-    -45deg,
-    transparent 0 0.5rem,
-    var(--colorA2) 0.5rem 1rem
-  );
-  background-size: calc(1rem / 0.707) 100%, 100% 800%;
-  background-position: inherit;
-  box-shadow: inset 0 2px 9px var(--colorA3), inset 0 -2px 6px var(--colorAB4);
-  border-radius: 0.5em;
+  &::-moz-progress-bar {
+    min-width: 1em;
+    background-color: var(--color);
+    background-image: repeating-linear-gradient(-45deg, transparent 0 0.5rem, var(--colorA2) 0.5rem 1rem);
+    background-size: calc(1rem / cos(45deg)) 100%, 100% 800%;
+    background-position: inherit;
+    box-shadow: inset 0 2px 9px var(--colorA3), inset 0 -2px 6px var(--colorAB4);
+    border-radius: 0.5em;
+  }
 }
 
 @keyframes anim-progress {
@@ -54,6 +50,6 @@
     background-position: 0 0;
   }
   100% {
-    background-position: calc(10 * 1rem / 0.707) 100%;
+    background-position: calc(10 * 1rem / cos(45deg)) 100%;
   }
 }

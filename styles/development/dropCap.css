@@ -1,8 +1,12 @@
+/* @note Les propriétés applicables au sélecteur ::first-letter varient d'un navigateur à l'autre ; la solution retenue pour l'instant est un wrapper en javascript 'span.dropcap' sur la première lettre. */
+
 .drop-cap,
 .no-js .add-drop-cap > p:first-child::first-letter {
   float: left;
   margin-inline-end: 0.2em;
+  /* @todo Valeur spécifique à la font utilisée, à évaluer. */
   padding: 0.28em 0.2em 0.12em;
+  /* @affected Chrome. */
   line-height: 1;
   font-size: 3em;
   font-weight: bold;
@@ -10,4 +14,6 @@
   color: var(--color2);
   background-color: var(--colorA005);
   transform: translateY(0.05em);
+  /* clip-path: polygon(0 .1em, .1em .1em, .1em 0, calc(100% - .1em) 0, calc(100% - .1em) .1em, 100% .1em, 100% calc(100% - .1em), calc(100% - .1em) calc(100% - .1em), calc(100% - .1em) 100%, .1em 100%, .1em calc(100% - .1em), 0 calc(100% - .1em)); */
+  /* clip-path: polygon(0 0, 40% 0, 40% 10%, 60% 10%, 60% 0, 100% 0, 100% 40%, 90% 40%, 90% 60%, 100% 60%, 100% 100%, 60% 100%, 60% 90%, 40% 90%, 40% 100%, 0 100%, 0 60%, 10% 60%, 10% 40%, 0 40%); */
 }
