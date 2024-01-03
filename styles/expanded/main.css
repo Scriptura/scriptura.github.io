@@ -155,37 +155,37 @@
 } html {
   /* @bugfix Prevent adjustments of font size after orientation changes @affected iOS. */
   -webkit-text-size-adjust: 100%;
+  /* -webkit-tap-highlight-color: transparent */
   /* Change the default tap highlight to be completely transparent. @affected iOS. */
   color: var(--colorT);
   background-color: var(--color1);
   font-family: var(--font-list1);
-  /* @bugfix Correct the line height @affected All browsers. */
-  line-height: 1.5;
-  scroll-behavior: smooth;
-  /* -webkit-tap-highlight-color: transparent */
   /**
    * Sur les verrous CSS @see https://hugogiraudel.com/2020/05/18/using-calc-to-figure-out-optimal-line-height/
    * Outil en ligne @see https://modern-fluid-typography.vercel.app
    * Le site étant entièrement scalable dans son ensemble, il n'y a pas d'utilisation de vérrou CSS en raison de ses effets de bords sur certains éléments (typographie, pre > code, ribbons...).
   /* font-size: clamp(1em, .7vw + .1em, 1.125em); */
-} @media (prefers-reduced-motion: reduce) { html {
+  /* @bugfix Correct the line height @affected All browsers. */
+  line-height: 1.5;
+  scroll-behavior: smooth;
+
+  @media (prefers-reduced-motion: reduce) {
     /* Désactivation du défilement fluide si réduction des animations dans les préférences utilisateur du navigateur @see https://developer.mozilla.org/fr/docs/Web/CSS/scroll-behavior#Accessibilité */
     scroll-behavior: auto;
-}
-  } ::-moz-selection {
-  color: var(--colorW);
-  background-color: var(--colorAS2);
+  }
 } ::selection {
   color: var(--colorW);
   background-color: var(--colorAS2);
 } a {
   color: var(--colorT2);
   text-underline-offset: 10%;
-} a:where(:focus, :hover, :active) {
+
+  &:where(:focus, :hover, :active) {
     color: var(--colorW);
     text-decoration: none;
     outline: none;
-  } p {
+  }
+} p {
   margin-block: 0.75em;
 } hr {
   /* @bugfix Show the overflow @affected Edge and IE. */
@@ -220,10 +220,11 @@ h6,
 } :where(.h2, .h3, .h4, .h5, .h6) {
   /* @note Important à redéfinir pour les classes aposées sur d'autres éléments que des titres, comme <legend> ou <label> par exemple. */
   margin-block: 0.83em;
-} fieldset > legend:where(.h2, .h3, .h4, .h5, .h6) {
+  fieldset > legend& {
     /* @bugfix @affected Chrome @note Si pas de correctif la marge passe en dessous du fieldset conteneur. */
     padding-block-start: 0.83em;
-  } h1,
+  }
+} h1,
 .h1 {
   margin-block: clamp(0.83em, 5vw, 0.67em); /* 0.83em */
   font-size: clamp(2em, 5vw, 2.5em); /* 2.5em */
@@ -254,8 +255,7 @@ h6,
   /* @bugfix Add the correct text decoration @affected Chrome, Edge, IE, Opera, and Safari. */
   text-decoration: underline;
   /* @bugfix Idem */
-  -webkit-text-decoration: underline dotted;
-          text-decoration: underline dotted;
+  text-decoration: underline dotted;
 } b,
 strong {
   /* @bugfix Add the correct font weight @affected Chrome, Edge, and Safari. */
@@ -292,37 +292,55 @@ sup {
 } details {
   /* @note Tentative de reproduire avec les marges l'espacement des items d'une liste. */
   display: block;
-} details:first-child {
+
+  &:first-child {
     margin-block-start: 0.75em;
-  } details:last-child {
+  }
+
+  &:last-child {
     margin-block-end: 0.75em;
-  } :not(.accordion) > details details {
+  }
+
+  :not(.accordion) > & details {
     margin: 0 0 0 2em;
-  } :not(.accordion) > details details:first-child {
+
+    &:first-child {
       margin-block-start: 0;
-    } :not(.accordion) > details details:last-child {
+    }
+
+    &:last-child {
       margin-block-end: 0;
-    } summary {
+    }
+  }
+} summary {
   /* @bugfix Add the correct display @affected All browsers. */
   display: list-item;
   list-style: none;
   cursor: pointer;
-} summary:focus-visible,
-  summary:hover {
+
+  &:focus-visible,
+  &:hover {
     outline: none;
     color: var(--colorW);
     text-decoration: underline;
-  } summary:focus-visible::before, summary:hover::before {
+
+    &::before {
       color: var(--colorW);
-    } summary::before {
+    }
+  }
+
+  &::before {
     /* @note Nous n'utilisons pas ::marker car le rendu diffère sur mobiles, ceci nous permet aussi de personnaliser la puce. @affected Chrome mobile. */
     content: '➤';
     display: inline-block;
     margin-inline-end: 0.5em;
     color: var(--color2);
-  } details[open] > summary::before {
+  }
+
+  details[open] > &::before {
     transform: rotate(90deg);
-  } /*
+  }
+} /*
 template {
   display: none; /* @bugfix Add the correct display @affected IE 10+.
 }
@@ -338,9 +356,11 @@ template {
 } ruby {
   display: grid;
   gap: 0.5em;
-} ruby * {
+
+  & * {
     margin: auto;
-  } ::marker {
+  }
+} ::marker {
   color: var(--color2);
 } .main-heading {
   /* @note Alias de overflow-wrap @see https://developer.mozilla.org/fr/docs/Web/CSS/overflow-wrap */
@@ -358,7 +378,8 @@ template {
   line-height: 1;
   /* letter-spacing: 0.5em; */
   background-image: none;
-} hr[data-hr]::after, .decorative-hr hr::after {
+
+  &::after {
     content: attr(data-hr);
     display: block;
     width: 100%;
@@ -366,7 +387,8 @@ template {
     font-size: 2em;
     text-align: center;
     color: var(--colorA2);
-  } .decorative-hr hr::after {
+  }
+} .decorative-hr hr::after {
   content: '✻ ✻ ✻';
 } .blockquote blockquote {
   position: relative;
@@ -374,45 +396,61 @@ template {
   padding-inline-start: 2em;
   background: repeating-linear-gradient(-45deg, transparent 0 5px, var(--colorA1) 5px 10px) no-repeat;
   background-size: 0.5em 100%;
-} .blockquote blockquote::before,
-  .blockquote blockquote::after {
+
+  &::before,
+  &::after {
     position: absolute;
     left: -0.1em;
     line-height: 0.5;
     font-size: 3rem;
     color: var(--color2);
     font-family: var(--font-list2);
-  } .blockquote blockquote::before {
+  }
+
+  &::before {
     content: '\00AB'; /* '\201D' */
     top: -0.1em;
-  } .blockquote blockquote::after {
+  }
+
+  &::after {
     content: '\00BB'; /* '\201C' */
     bottom: 0;
-  } .blockquote blockquote footer {
+  }
+
+  & footer {
     margin-block: 0.75em;
     /* text-align: right; */
-  } .blockquote blockquote footer::before {
+  }
+
+  & footer::before {
     content: '\2014 \00A0';
-  } .blockquote blockquote footer::after {
+  }
+
+  & footer::after {
     content: '.';
-  } /* @note Grec ancien (grc), grec moderne ('el'). */ :lang(he) {
+  }
+} /* @note Grec ancien (grc), grec moderne ('el'). */ :lang(he) {
   direction: rtl;
   /* font-family: $font-list; */
 } .verse {
   color: var(--color2);
-} .links p a:not([href^='#'])::after {
+} .links p a {
+  &:not([href^='#'])::after {
     /* @note Liens internes, sauf pour les ancres. */
     content: ' ↩';
-  } /* Liens externes */ .links p a[href*='//']::after
+  }
+  /* Liens externes */
+  &[href*='//']::after
   {
     content: ' ↗';
-  } .justify {
-  -webkit-hyphens: auto;
-          hyphens: auto;
-} @media (width > 35.01em) { .justify {
+  }
+} .justify {
+  hyphens: auto;
+
+  @media (width > 35.01em) {
     text-align: justify;
-}
-  } html,
+  }
+} html,
 body {
   /* @note Pour des éléments en clip-path dont l'élément d'origine dépasse de la page, tel que les Ribbons @bugfixed @affected Android @note La sélection du couple `html/body` est nécessaire pour couper les dépassements sous ce navigateur, la sélection d'un seul des deux serait insufisant. La valeur hidden pourrait faire l'affaire, mais elle entre en conflit avec `position: sticky`. */
   overflow-x: clip;
@@ -458,28 +496,40 @@ body {
   display: grid;
   grid-auto-flow: dense;
   grid-template-columns: repeat(var(--n, 1), minmax(0, 1fr));
+
+  &.row-defines {
+    /* @note Permet aux spans de la propriété grid-row de se caler sur les lignes. Intéressant mais pas souhaitable d'emblée en production, d'où cette classe. */
+    grid-auto-rows: minmax(0, 1fr);
+  }
+
+  &.gap {
+    gap: var(--gap);
+  }
+
+  &.gap-block {
+    /* @note padding et non margin, car ne doit pas pouvoir fusionner avec les marges de l'élément suivant. */
+    padding-block: var(--gap);
+  }
+
+  &.gap-top {
+    /* @note Idem. */
+    padding-block-start: var(--gap);
+  }
+
+  &.gap-bottom {
+    /* @note Idem. */
+    padding-block-end: var(--gap);
+  }
+
+  &.gap-vertical {
+    gap: 0 var(--gap);
+  }
   /*
   &.masonry {
     grid-template-rows: masonry; /* @note Implémentation future en CSS @todo À surveiller.
   }
   */
-} .row-defines[class^='grid'] {
-    /* @note Permet aux spans de la propriété grid-row de se caler sur les lignes. Intéressant mais pas souhaitable d'emblée en production, d'où cette classe. */
-    grid-auto-rows: minmax(0, 1fr);
-  } .gap[class^='grid'] {
-    gap: var(--gap);
-  } .gap-block[class^='grid'] {
-    /* @note padding et non margin, car ne doit pas pouvoir fusionner avec les marges de l'élément suivant. */
-    padding-block: var(--gap);
-  } .gap-top[class^='grid'] {
-    /* @note Idem. */
-    padding-block-start: var(--gap);
-  } .gap-bottom[class^='grid'] {
-    /* @note Idem. */
-    padding-block-end: var(--gap);
-  } .gap-vertical[class^='grid'] {
-    gap: 0 var(--gap);
-  } .grid-auto,
+} .grid-auto,
 .grid-auto-min {
   /* @note Ne pas définir la variable au-dessus de sa valeur par défaut afin d'éviter des dépassement sur les écrans de petites définitions. Préférer alors les grilles prédéfinies. */
   grid-template-columns: repeat(auto-fit, minmax(var(--size-grid, 15em), 1fr));
@@ -603,15 +653,23 @@ body {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-} .flex.gap {
+
+  &.gap {
     gap: var(--gap);
-  } .flex.gap-top {
+  }
+
+  &.gap-top {
     margin-block-start: var(--gap);
-  } .flex.gap-bottom {
+  }
+
+  &.gap-bottom {
     margin-block-end: var(--gap);
-  } .flex .item-push {
+  }
+
+  & .item-push {
     margin-inline-start: auto;
-  } .order {
+  }
+} .order {
   /* @note Valeur négative car l'utilisation de cette classe est souvent utilisée pour une monté des éléments frères plutôt qu'une descente. */
   order: var(--o, -1);
 } @container grid (width < 35.01em) {
@@ -666,107 +724,107 @@ body {
   }
 }
 */ /* @bug @affected Chrome @note Nombreux bugs : éléments html ou effets d'ombre tronqués s'ils dépassent des colonnes, drop-shadow utilisé sur des éléments internes aux colonnes créé des artefacts. */ [class^='column'] {
-  -moz-column-gap: 0;
-       column-gap: 0;
+  column-gap: 0;
   position: relative;
-} [class^='column'] > * {
+
+  & > * {
     display: inline-block;
     width: 100%;
     /* @note Évite aux items enfants de column d'être éventuellement coupés en deux. @see https://stackoverflow.com/questions/7785374 */
-    -moz-column-break-inside: avoid;
-         break-inside: avoid-column;
+    break-inside: avoid-column;
     /* @note Alias de overflow-wrap @see https://developer.mozilla.org/fr/docs/Web/CSS/overflow-wrap */
     word-wrap: break-word;
-  } .gap[class^='column'] {
-    -moz-column-gap: var(--gap);
-         column-gap: var(--gap);
+  }
+
+  &.gap {
+    column-gap: var(--gap);
     /* @note À l'inverse de grid layout, le module columns a besoin des marges pour bien s'implémenter. */
     margin-block-end: calc(var(--gap)*-1);
-  } .gap[class^='column'] > * {
+
+    & > * {
       margin-block-end: var(--gap);
-    } .gap-top[class^='column'] {
+    }
+  }
+
+  &.gap-top {
     margin-block-start: var(--gap);
-  } .gap-bottom[class^='column'] {
+  }
+
+  &.gap-bottom {
     margin-block-end: 0;
-  } .gap-vertical[class^='column'] {
+  }
+
+  &.gap-vertical {
     gap: 0 var(--gap);
     /* column-gap: var(--gap); */
-  } @media (width < 35.01em) {
+  }
+} @media (width < 35.01em) {
   .sizeXS-column2 {
-    -moz-column-count: 2;
-         column-count: 2;
+    column-count: 2;
   }
 } @media (width > 35.01em) {
   .column2,
   .column3,
   .column4,
   .s-column2 {
-    -moz-column-count: 2;
-         column-count: 2;
+    column-count: 2;
   }
 
   .column5,
   .column6 {
-    -moz-column-count: 3;
-         column-count: 3;
+    column-count: 3;
   }
 } @media (width > 50.01em) {
   .column3,
   .column4 {
-    -moz-column-count: 3;
-         column-count: 3;
+    column-count: 3;
   }
 
   .column5,
   .column6 {
-    -moz-column-count: 4;
-         column-count: 4;
+    column-count: 4;
   }
 
   .m-column2 {
-    -moz-column-count: 2;
-         column-count: 2;
+    column-count: 2;
   }
 } @media (width > 92.01em) {
   .column4 {
-    -moz-column-count: 4;
-         column-count: 4;
+    column-count: 4;
   }
 
   .column5 {
-    -moz-column-count: 5;
-         column-count: 5;
+    column-count: 5;
   }
 
   .column6 {
-    -moz-column-count: 6;
-         column-count: 6;
+    column-count: 6;
   }
 
   .l-column3 {
-    -moz-column-count: 3;
-         column-count: 3;
+    column-count: 3;
   }
 } .nav {
   position: relative;
   /* @note Permet de passer au-dessus du pseudo élément de body (ce dernier faisant un effet d'ombrage sur le contenu en version mobile) et aussi de certains éléments définis par des sources externes (comme les Maps Leaflet). */
   z-index: 2000;
   display: grid;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
+  user-select: none;
   background-color: var(--colorG15);
-} @media (width < 90.01em) { .nav {
+
+  @media (width < 90.01em) {
     grid-template-rows: 3em;
     grid-template-columns: 3em minmax(0, 1fr) 3em;
     grid-template-areas: 'logo breadcrumb cmd';
-}
-  } @media (width > 90.01em) { .nav {
+  }
+
+  @media (width > 90.01em) {
     grid-template-rows: repeat(2, 2.5em);
     grid-template-columns: 5em minmax(0, 1fr);
     grid-template-areas: 'logo subnav' 'logo breadcrumb';
-}
-  } .nav .avatar {
+  }
+
+  & .avatar {
     display: inline-block;
     vertical-align: -0.5em;
     width: 1.7em;
@@ -776,12 +834,14 @@ body {
     background-image: var(--img, '');
     background-size: cover;
     border-radius: 50%;
-  } .logo-nav {
+  }
+} .logo-nav {
   grid-area: logo;
   display: block;
   box-shadow: 0.5rem 0.5rem 0.5rem var(--colorAB2);
   background-color: var(--color2);
-} .logo-nav::after {
+
+  &::after {
     content: '';
     display: block;
     width: 100%;
@@ -791,26 +851,32 @@ body {
     background-position: 50% 50%;
     background-size: auto 70%;
     filter: brightness(1.25) contrast(1.25);
-  } a.logo-nav:where(:focus-within, :hover) {
+  }
+
+  a&:where(:focus-within, :hover) {
     background-color: var(--color5);
-  } a.logo-nav:where(:focus-within, :hover)::after {
+
+    &::after {
       animation: anim-logo 0.5s ease-in-out;
-    } .sub-nav {
+    }
+  }
+} .sub-nav {
   grid-area: subnav;
   box-shadow: 0.5rem 0.5rem 0.5rem var(--colorAB2);
   display: flex;
   width: 100%;
   margin: 0;
   padding: 0;
-} .sub-nav .current {
+
+  & .current {
     background-color: var(--color2);
-  } @media (width > 90.01em) { .sub-nav .current {
+
+    @media (width > 90.01em) {
       position: relative;
       /* @note La valeur doit être suffisante pour passer au-dessus des items de ".breadcrumb." */
       z-index: 10;
-  }
 
-      .sub-nav .current::after {
+      &::after {
         content: '';
         position: absolute;
         top: 100%;
@@ -818,14 +884,18 @@ body {
         width: 2em;
         height: 1em;
         background-color: var(--color2);
-        -webkit-clip-path: polygon(0 0, 100% 0, 50% 100%);
-                clip-path: polygon(0 0, 100% 0, 50% 100%);
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
       }
-    } @media (width > 90.01em) {
-    .sub-nav > :last-child {
+    }
+  }
+
+  @media (width > 90.01em) {
+    & > :last-child {
       margin-inline-start: auto;
     }
-  } @media (width < 90.01em) { .sub-nav {
+  }
+
+  @media (width < 90.01em) {
     position: absolute;
     z-index: 800;
     top: 3em;
@@ -833,102 +903,114 @@ body {
     width: 100vw;
     flex-wrap: wrap;
     transform: translateX(-110vw);
-}
-  } .sub-nav li {
+  }
+
+  & li {
     list-style: none;
-  } @media (width < 90.01em) { .sub-nav li {
+    @media (width < 90.01em) {
       flex: 1;
       flex-basis: 50%;
       background-color: var(--colorG15);
       transform: rotate(90deg);
       transition: transform 0.4s ease-in-out;
-  }
 
-      .active .sub-nav li {
+      .active & {
         /* @note L'utilisation des pourcentages provoque un effet de bord avec overflow:clip sur le body ; à éviter. Valeur au-delà de 100vw afin de cacher les ombres des boîtes. */
         transform: translateX(110vw) rotate(0deg);
       }
-        .sub-nav li:nth-child(1) {
+        &:nth-child(1) {
           transition-delay: 0.05s;
         }
-        .sub-nav li:nth-child(2) {
+        &:nth-child(2) {
           transition-delay: 0.1s;
         }
-        .sub-nav li:nth-child(3) {
+        &:nth-child(3) {
           transition-delay: 0.15s;
         }
-        .sub-nav li:nth-child(4) {
+        &:nth-child(4) {
           transition-delay: 0.2s;
         }
-        .sub-nav li:nth-child(5) {
+        &:nth-child(5) {
           transition-delay: 0.25s;
         }
-        .sub-nav li:nth-child(6) {
+        &:nth-child(6) {
           transition-delay: 0.3s;
         }
-        .sub-nav li:nth-child(7) {
+        &:nth-child(7) {
           transition-delay: 0.35s;
         }
-        .sub-nav li:nth-child(8) {
+        &:nth-child(8) {
           transition-delay: 0.4s;
         }
-        .sub-nav li:nth-child(9) {
+        &:nth-child(9) {
           transition-delay: 0.45s;
         }
-        .sub-nav li:nth-child(10) {
+        &:nth-child(10) {
           transition-delay: 0.5s;
         }
-        .sub-nav li:nth-child(11) {
+        &:nth-child(11) {
           transition-delay: 0.55s;
         }
-        .sub-nav li:nth-child(12) {
+        &:nth-child(12) {
           transition-delay: 0.6s;
         }
-    } @media (35.01em < width < 50.01em) { .sub-nav li {
+    }
+
+    @media (35.01em < width < 50.01em) {
       flex-basis: 33%;
-  }
-    } @media (50.01em < width < 90.01em) { .sub-nav li {
+    }
+
+    @media (50.01em < width < 90.01em) {
       flex-basis: 25%;
-  }
-    } .sub-nav li > * {
+    }
+
+    & > * {
       display: block;
       padding: 0 1em;
       box-shadow: inset 0.5rem 0.5rem 0.5rem var(--colorAB2);
-    } @media (width < 90.01em) { .sub-nav li > * {
+      @media (width < 90.01em) {
         line-height: 3;
-    }
-      } @media (width > 90.01em) { .sub-nav li > * {
+      }
+      @media (width > 90.01em) {
         line-height: 2.5;
+      }
     }
-      } .sub-nav a {
+  }
+
+  & a {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     /* color: var(--colorT2); */
     text-decoration: none;
-  } .sub-nav a:where(:focus, :hover, :active) {
+
+    &:where(:focus, :hover, :active) {
       /* color: var(--colorW); */
       background-color: var(--color2);
-    } .sub-nav a:where(:focus, :hover, :active) svg {
+
+      & svg {
         animation: anim-jump 0.5s ease-in-out;
-      } @media (width < 90.01em) {
+      }
+    }
+  }
+} @media (width < 90.01em) {
   :where(html, body).active {
     overflow: clip;
   }
-    body.active::before {
+  body.active {
+    &::before {
       content: '';
       position: absolute;
       z-index: 1;
       inset: 0;
       background-color: var(--colorAB7);
     }
-    body.active :where(main, footer, aside) {
-      -webkit-user-select: none;
-         -moz-user-select: none;
-              user-select: none;
+    & :where(main, footer, aside) {
+      user-select: none;
       pointer-events: none;
       filter: blur(2px) grayscale(1);
     }
+  }
 } @media (width > 90.01em) {
   @keyframes anim-jump {
     30% {
@@ -938,55 +1020,65 @@ body {
 } .cmd-nav {
   all: unset;
   grid-area: cmd;
-} .no-js .cmd-nav {
+
+  .no-js & {
     display: none;
-  } @media (width > 90.01em) { .cmd-nav {
+  }
+
+  @media (width > 90.01em) {
     display: none;
-}
-  } @media (width < 90.01em) { .cmd-nav {
+  }
+
+  @media (width < 90.01em) {
     padding: 0.5em;
     cursor: pointer;
     background-color: var(--colorG15);
-}
 
-    .cmd-nav:where(:focus, :hover, .active) {
+    &:where(:focus, :hover, .active) {
       background-color: var(--color2);
     }
 
-    .cmd-nav svg {
+    & svg {
       width: 100%;
       height: 100%;
       transition: 0.2s background-color;
     }
 
-    .cmd-nav rect {
+    & rect {
       transform-origin: center;
       fill: var(--colorT);
       transition: 0.2s all ease-in-out;
       /* transition-property: x, y, width, height, transform; */
     }
-      .cmd-nav:not(:focus, :hover, .active) svg {
+
+    &:not(:focus, :hover, .active) {
+      & svg {
         border-radius: 50%;
         background-color: var(--color2);
       }
 
-      .cmd-nav:not(:focus, :hover, .active) rect {
+      & rect {
         x: 450px;
         width: 100px;
         height: 100px;
       }
-      .cmd-nav.active svg :nth-child(1) {
+    }
+
+    &.active svg {
+      & :nth-child(1) {
         transform: translate(-177px, 177px) rotate(45deg);
       }
 
-      .cmd-nav.active svg :nth-child(2) {
+      & :nth-child(2) {
         transform: rotate(-45deg);
       }
 
-      .cmd-nav.active svg :nth-child(3) {
+      & :nth-child(3) {
         transform: translate(-177px, -177px) rotate(-45deg);
       }
-  } @keyframes anim-logo {
+    }
+  }
+} @keyframes anim-logo {
   30% {
     transform: rotate(-30deg);
   }
@@ -995,24 +1087,36 @@ body {
   display: flex;
   margin: 0;
   padding: 0;
-} .breadcrumb li {
+
+  & li {
     list-style: none;
     filter: drop-shadow(0.5rem 0.5rem 0.5rem var(--colorAB25));
     overflow: hidden;
-  } .breadcrumb li a:where(:focus, :hover, :active) {
+
+    & a:where(:focus, :hover, :active) {
       color: var(--colorW);
       background-color: var(--color2);
-    } .breadcrumb li:nth-last-child(3) {
+    }
+
+    &:nth-last-child(3) {
       z-index: 2;
       flex-shrink: 0;
-    } .breadcrumb li:nth-last-child(2) {
+    }
+
+    &:nth-last-child(2) {
       z-index: 1;
       flex-shrink: 0;
-    } .breadcrumb li:last-child div {
+    }
+
+    &:last-child div {
       color: var(--colorW);
-    } .breadcrumb li:last-child div span {
+
+      & span {
         color: var(--colorT2);
-      } .breadcrumb li > * {
+      }
+    }
+
+    & > * {
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -1026,38 +1130,46 @@ body {
       color: var(--colorT2);
       background-color: var(--colorG15);
       transition: background-color 0.3s ease-in-out;
-      -webkit-clip-path: polygon(0 0, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0 100%);
-              clip-path: polygon(0 0, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0 100%);
-    } .breadcrumb li:first-child > * {
+      clip-path: polygon(0 0, calc(100% - 1em) 0, 100% 50%, calc(100% - 1em) 100%, 0 100%);
+    }
+
+    &:first-child > * {
       padding-inline-start: var(--gap);
-    } .breadcrumb li + li {
+    }
+
+    & + li {
       margin-inline-start: calc(var(--gap)*-1);
-    } @media (width < 90.01em) {
-    .breadcrumb li > * {
+    }
+  }
+
+  @media (width < 90.01em) {
+    & li > * {
       line-height: 3;
       padding: 0 2.25em;
     }
 
-    .breadcrumb > :nth-last-child(3) {
+    & > :nth-last-child(3) {
       /* @note Ne pas mettre :first-child car les premiers items peuvent être en display:none */
       display: none;
     }
 
-    .breadcrumb > :nth-last-child(2) {
+    & > :nth-last-child(2) {
       /* @note Ne pas mettre :first-child car les premiers items peuvent être en display:none */
       margin-inline-start: 0;
-    }
 
-      .breadcrumb > :nth-last-child(2) a {
+      & a {
         padding-inline-start: var(--gap);
       }
-  } .alert {
+    }
+  }
+} .alert {
   --alert-color: var(--colorG13);
   --alert-bg-color: var(--colorT);
   --alert-color-link: var(--colorW);
   --alert-icon-size: 3em;
   --alert-icon-color: var(--colorG13);
-} .alert .wrap {
+
+  & .wrap {
     display: grid;
     grid-template-columns: minmax(1em, 1fr) minmax(0, 92em) minmax(1em, 1fr);
     gap: var(--gap);
@@ -1065,22 +1177,28 @@ body {
     color: var(--alert-color);
     background-color: var(--alert-bg-color);
     box-shadow: var(--shadow1);
-  } .alert .wrap > * {
+
+    & > * {
       grid-column: 2/3;
-    } .alert .mm {
+    }
+  }
+
+  & .mm {
     display: grid;
     grid-template-columns: var(--alert-icon-size) minmax(0, 1fr);
     gap: var(--gap);
-  } .alert .mm .icon {
+
+    & .icon {
       width: var(--alert-icon-size);
       height: var(--alert-icon-size);
       margin: auto;
       padding: 0.75em;
       fill: var(--alert-bg-color);
       background-color: var(--alert-icon-color);
-      -webkit-clip-path: circle(50%);
-              clip-path: circle(50%);
-    } ul,
+      clip-path: circle(50%);
+    }
+  }
+} ul,
 ol {
   padding-inline-start: var(--list-start, 2.5em);
 } ul :where(ul, ol) {
@@ -1089,66 +1207,83 @@ ol {
   list-style-type: square;
 } ol ol {
   list-style-type: lower-latin;
-} ol ol ol {
+
+  & ol {
     list-style-type: lower-greek;
-  } .list-gap {
+  }
+} .list-gap {
   display: grid;
   gap: 0.75em; /* @note Écart calé sur les paragraphes. */
 } .list-stripe,
 .list-stripe-links {
+  /* @note Ne pas utiliser : ne travaille pas de concert avec la classe `.grid`. */
   /* all: unset; */
   margin: 0;
   padding-inline-start: 0;
-  /* @note Ne pas utiliser : ne travaille pas de concert avec la classe `.grid`. */
-} .list-stripe li, .list-stripe-links li {
+
+  & li {
     display: block;
     border-radius: var(--r2);
-  } .list-stripe > *, .list-stripe-links > * {
+  }
+
+  & > * {
     padding: 0.5em 1em;
     background-color: var(--colorG27);
     box-shadow: var(--shadow6);
-  } .list-stripe-links a {
+  }
+} .list-stripe-links {
+  & a {
     display: block;
     color: var(--colorT);
     text-decoration: none;
-  } .list-stripe-links li:focus-within,
-  .list-stripe-links li:hover {
+  }
+
+  & li:focus-within,
+  & li:hover {
     background-color: var(--color2);
     outline: none;
     animation: anim-list 0.05s ease-in-out;
-  } .list-straight,
+  }
+} .list-straight,
 .list-rounded {
   margin: 0;
   padding-inline-start: 0;
-} .list-straight li, .list-rounded li {
+
+  & li {
     display: grid;
     grid-template-columns: 3em minmax(0, 1fr);
-  } .list-straight li:focus-within,
-    .list-rounded li:focus-within,
-    .list-straight li:hover,
-    .list-rounded li:hover {
+
+    &:focus-within,
+    &:hover {
       animation: anim-list 0.05s ease-in-out;
-    } .list-straight li:where(:focus-within, :hover, :active) svg, .list-rounded li:where(:focus-within, :hover, :active) svg, .list-straight li:focus-within::before, .list-rounded li:focus-within::before, .list-straight li:hover::before, .list-rounded li:hover::before, .list-straight li:active::before, .list-rounded li:active::before {
+    }
+
+    &:where(:focus-within, :hover, :active) svg,
+    &:focus-within::before,
+    &:hover::before,
+    &:active::before {
       color: var(--colorW);
       background-color: var(--color5);
-    } .list-straight li::before,
-  .list-rounded li::before,
-  .list-straight svg,
-  .list-rounded svg,
-  .list-straight a,
-  .list-rounded a {
+    }
+  }
+
+  & li::before,
+  & svg,
+  & a {
     box-shadow: var(--shadow6);
     transition: color, background-color 0.3s ease-in-out;
-  } .list-straight li::before,
-  .list-rounded li::before,
-  .list-straight svg,
-  .list-rounded svg {
+  }
+
+  & li::before,
+  & svg {
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--colorT);
     background-color: var(--color2);
-  } .list-straight a, .list-rounded a {
+  }
+
+  & a {
     display: flex;
     align-items: center;
     width: 100%;
@@ -1156,70 +1291,85 @@ ol {
     padding: 0.5em 1em;
     background-color: var(--colorG27);
     text-decoration: none;
-  } .list-straight a:where(:focus, :hover, :active), .list-rounded a:where(:focus, :hover, :active) {
+
+    &:where(:focus, :hover, :active) {
       /* color: var(--colorW); */
       background-color: var(--color2);
       /* text-decoration: none; */
-    } .list-straight li {
+    }
+  }
+} .list-straight {
+  & li {
     box-shadow: var(--shadow6);
-  } .list-straight li::before,
-  .list-straight svg {
+  }
+  & li::before,
+  & svg {
     width: 3em;
     border-radius: var(--r3) 0 0 var(--r3);
-    -webkit-clip-path: polygon(
+    clip-path: polygon(
       0% 0%,
       calc(100% - 1em) 0,
       100% 50%,
       calc(100% - 1em) 100%,
       0% 100%
     );
-            clip-path: polygon(
-      0% 0%,
-      calc(100% - 1em) 0,
-      100% 50%,
-      calc(100% - 1em) 100%,
-      0% 100%
-    );
-  } .list-straight li::before {
+  }
+
+  & li::before {
     padding-inline-end: 0.7em;
-  } .list-straight svg {
+  }
+
+  & svg {
     min-height: 100%;
     /* @note Détermine en creux la taille de l'icône. */
     padding-inline: 0.7em 1.1em;
-  } .list-straight a {
+  }
+
+  & a {
     position: relative;
     right: 0.5em;
     width: calc(100% + 0.5em);
     padding-inline-start: 1.5em;
     border-radius: 0 var(--r3) var(--r3) 0;
-    -webkit-clip-path: polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%);
-            clip-path: polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%);
-  } .list-rounded li:focus-within svg,
-  .list-rounded li:hover svg,
-  .list-rounded li:focus-within::before,
-  .list-rounded li:hover::before {
+    clip-path: polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%);
+  }
+} .list-rounded {
+  & li:focus-within svg,
+  & li:hover svg,
+  & li:focus-within::before,
+  & li:hover::before {
     transform: rotate(360deg);
-  } .list-rounded li::before,
-  .list-rounded svg {
+  }
+
+  & li::before,
+  & svg {
     width: 2.5em;
     height: 2.5em;
     /* @note Pour centrer la "puce" si contenu de l'item trop important. @todo Résultat visuel à évaluer. */
     margin: auto 0;
     transition: transform 0.3s ease-in-out;
-  } .list-rounded li::before {
+  }
+
+  & li::before {
     border-radius: 50%;
-  } .list-rounded svg {
+  }
+
+  & svg {
     position: relative;
     padding-inline: 0.7em;
-    -webkit-clip-path: circle(50%);
-            clip-path: circle(50%);
-  } .list-rounded a {
+    clip-path: circle(50%);
+  }
+
+  & a {
     border-radius: 1.25em;
-  } ol:where(.list-straight, .list-rounded) li {
+  }
+} ol:where(.list-straight, .list-rounded) li {
   counter-increment: li;
-} ol:where(.list-straight, .list-rounded) li::before {
+
+  &::before {
     content: counter(li);
-  } [class^='grid'][class*='list-'] {
+  }
+} [class^='grid'][class*='list-'] {
   gap: var(--gap);
 } [start] > .chorus {
   /* @note Pour les refrains. Pour la cohérence de la liste les numéros doivent être définis avec l'attribut `start="0" afin de commencer par "1".` */
@@ -1245,21 +1395,18 @@ ol {
 } img {
   /* @note Évite un décalage possible de l'élément suivant. */
   vertical-align: middle;
+  /* @bugfix @todo Depuis l'introduction des attributs 'srcset' et 'sizes' la largeur ne doit plus dépendre de l'image par défaut. */
   /* width: 100%; */
   max-width: 100%;
   height: auto;
   border-style: none;
   /* @note N'a pas pour vocation ici de "protéger" l'image, mais d'éviter la surbrillance non attendue suite à une sélection involontaire. */
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
-  /* @bugfix @todo Depuis l'introduction des attributs 'srcset' et 'sizes' la largeur ne doit plus dépendre de l'image par défaut. */
-} img:-webkit-full-screen {
+  user-select: none;
+
+  &:fullscreen {
     object-fit: contain;
-  } img:fullscreen {
-    -o-object-fit: contain;
-       object-fit: contain;
-  } figure {
+  }
+} figure {
   /* @bugfix @affected All browers. */
   margin: 0;
 } [class*='figure-image'] {
@@ -1268,13 +1415,13 @@ ol {
   color: var(--colorT);
   background-color: var(--colorG27);
   box-shadow: var(--shadow5);
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
-} [class*='figure-image'] figcaption {
+  user-select: none;
+
+  & figcaption {
     padding-block-start: 0.5em;
     text-align: center;
-  } [class*='-thumbnail'] {
+  }
+} [class*='-thumbnail'] {
   /* @note Important à appliquer pour le responsive si le width n'est pas définit préalablement. */
   width: 100%;
   max-width: calc(50% - var(--gap)/2);
@@ -1303,17 +1450,18 @@ ol {
   z-index: 1;
   cursor: zoom-in;
   transition: 0.15s transform;
-} .js [class*='-focus']:where(:focus-within, :hover) {
+  &:where(:focus-within, :hover) {
     box-shadow: 0.5em 0.5em 2em var(--colorAB3);
     transform: scale(1.01);
-  } @media (hover: hover) and (pointer: fine) {
+  }
+} @media (hover: hover) and (pointer: fine) {
   [class*='-focus']:focus-within {
     background-color: var(--color5);
-  }
 
-    [class*='-focus']:focus-within button {
+    & button {
       color: var(--color5);
     }
+  }
 } [class*='-focus'] button,
 .picture-area button {
   all: unset;
@@ -1322,10 +1470,12 @@ ol {
   /* @affected Firefox @note La propriété !important est obligatoire pour que ce navigateur prenne en compte la règle. */
   outline: none !important;
   cursor: zoom-in;
-} [class*='-focus'] button svg, .picture-area button svg {
+
+  & svg {
     width: 100%;
     height: 100%;
-  } [class*='-focus'] button {
+  }
+} [class*='-focus'] button {
   top: 1em;
   right: 1em;
   width: 1.2em;
@@ -1341,38 +1491,51 @@ ol {
   justify-content: center;
   background-color: var(--colorG13);
   cursor: zoom-out;
-} .picture-area img {
+
+  & img {
     all: unset;
     max-width: 100%;
     max-height: 100vh;
     /* @note Pour les images dotées d'un canal alpha. */
     background-color: var(--colorB);
-  } .picture-area button {
+  }
+
+  & button {
     bottom: 1em;
     right: 1em;
     width: 2em;
     height: 2em;
     color: var(--colorG60);
     cursor: zoom-out;
-  } .picture-area button:where(:focus-within, :hover, :active) {
+
+    &:where(:focus-within, :hover, :active) {
       color: var(--color5);
-    } .picture-area button.fullscreen-button {
+    }
+
+    &.fullscreen-button {
       transform: translateX(-3em);
       cursor: zoom-in;
-    } .freeze {
+    }
+  }
+} .freeze {
   overflow: clip;
-} .mosaic figure {
+} .mosaic {
+  & figure {
     padding: 0.2em;
-  } .mosaic img {
+  }
+
+  & img {
     aspect-ratio: 1;
-    -o-object-fit: cover;
-       object-fit: cover;
-  } .mosaic button {
+    object-fit: cover;
+  }
+
+  & button {
     top: 0.5em;
     right: 0.5em;
     width: 1em;
     height: 1em;
-  } audio,
+  }
+} audio,
 video,
 canvas {
   width: 100%;
@@ -1382,29 +1545,33 @@ video {
 } video {
   height: auto;
   aspect-ratio: 16/9;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 } ::cue {
+  /*  @note Les propriétés CSS applicables à ce sélecteur sont limitées. @see https://developer.mozilla.org/en-US/docs/Web/CSS/::cue */
   /* @note Empêche le chevauchement des sous-titres si plus d'une ligne. */
   line-height: 1.5;
   font-size: 2em;
+  /* @note '#fff' par défaut. */
   /*color: #fff; */
   background-color: var(--colorAB4);
-  /*  @note Les propriétés CSS applicables à ce sélecteur sont limitées. @see https://developer.mozilla.org/en-US/docs/Web/CSS/::cue */
-  /* @note '#fff' par défaut. */
-} @container grid (width > 35.01em) { ::cue {
+
+  @container grid (width > 35.01em) {
     font-size: 1.5em;
-}
-  } audio.media {
+  }
+} .media {
+  audio& {
     /* @note Hauteur calculée empiriquement pour une harmonisation au plus proche de notre propre player personnalisé. Ce qui évite un saut désagréable lors du remplacement. */
     height: 3.05em;
     /* @note C'est Javascript qui se charge de la suppression, ce qui permet l'affichage d'un lecteur par défaut si JS désactivé. */
     /* display: none; */
-  } video.media {
+  }
+
+  video& {
     display: block;
     background-color: var(--colorB);
     box-shadow: 0.5rem 0.5rem 2rem var(--colorAB25);
-  } .media-player {
+  }
+} .media-player {
   position: relative;
   display: flex;
   justify-content: space-between;
@@ -1416,10 +1583,9 @@ video {
   background-color: var(--colorG27);
   border-radius: 1.75em;
   box-shadow: var(--shadow8);
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
-} .media-player button {
+  user-select: none;
+
+  & button {
     all: unset;
     box-sizing: border-box;
     flex-shrink: 0;
@@ -1427,50 +1593,85 @@ video {
     height: 3.5em;
     outline: none;
     cursor: pointer;
-  } .media-player button svg {
+
+    & svg {
       width: 1.2em;
       height: 1.2em;
       margin: auto;
-    } .media-player :where(.media-play-pause, .media-mute, .media-picture-in-picture) > :nth-child(2) {
+    }
+  }
+
+  & :where(.media-play-pause, .media-mute, .media-picture-in-picture) {
+    & > :nth-child(2) {
       display: none;
-    } .media-player :where(.media-play-pause, .media-mute, .media-picture-in-picture) > :last-child {
+    }
+    & > :last-child {
       display: none;
-    } .media-player .active:where(.media-play-pause, .media-mute, .media-picture-in-picture) > :first-child {
+    }
+
+    &.active > :first-child {
       display: none;
-    } .media-player .active:where(.media-play-pause, .media-mute, .media-picture-in-picture) > :last-child {
-      display: inline;
+    }
+
+    &.active > :last-child {
       display: initial;
-    } .media-player .media-play-pause:disabled > :nth-child(2) {
-      display: inline;
+    }
+  }
+
+  & .media-play-pause:disabled {
+    & > :nth-child(2) {
       display: initial;
-    } .media-player .media-play-pause:disabled > :first-child,
-    .media-player .media-play-pause:disabled > :last-child {
+    }
+
+    & > :first-child,
+    & > :last-child {
       display: none;
-    } .media-player .media-mute,
-  .media-player .media-fullscreen,
-  .media-player .media-menu,
-  .media-player .media-extend-menu button {
+    }
+  }
+
+  & .media-mute,
+  & .media-fullscreen,
+  & .media-menu,
+  & .media-extend-menu button {
     width: 2.5em;
     height: 2.5em;
     background-color: var(--colorG33);
     border-radius: 50%;
-  } .media-player .media-fullscreen:hover,
-  .media-player .media-menu:hover {
+  }
+
+  & .media-fullscreen:hover,
+  & .media-menu:hover {
     background-color: var(--colorG38);
-  } .media-player :where(.media-mute, .media-fullscreen, .media-menu):focus-visible {
+  }
+
+  & :where(.media-mute, .media-fullscreen, .media-menu):focus-visible {
     border: 0.2em solid var(--color5);
-  } .media-player .media-fullscreen.active {
+  }
+
+  & .media-fullscreen.active {
     background-color: var(--color2);
-  } .media-player .media-extend-menu button:focus-visible {
+  }
+
+  & .media-extend-menu button {
+    &:focus-visible {
       border: 0.2em solid var(--color5);
-    } .media-player .media-extend-menu button:hover {
+    }
+
+    &:hover {
       background-color: var(--colorG38);
-    } .media-player .media-extend-menu button:active {
+    }
+
+    &:active {
       background-color: var(--color2);
-    } .media-player .media-time {
+    }
+  }
+
+  & .media-time {
     flex-shrink: 0;
-  } .media-player .media-progress-bar,
-  .media-player .media-volume-bar {
+  }
+
+  & .media-progress-bar,
+  & .media-volume-bar {
     --position: 0%;
     --color-slide: var(--color2);
     all: unset;
@@ -1484,50 +1685,73 @@ video {
     color: var(--color2);
     background-clip: content-box;
     cursor: pointer;
-  } .media-player :where(.media-progress-bar, .media-volume-bar):focus-visible {
+  }
+
+  & :where(.media-progress-bar, .media-volume-bar):focus-visible {
     --color-slide: var(--color5);
-  } .media-player .media-progress-bar {
+  }
+
+  & .media-progress-bar {
     --position: 0%;
     --position-buffer: 100%;
     --color-buffer: var(--colorG33);
     background-image: linear-gradient(90deg, var(--color-slide) 0, var(--color-slide) var(--position), transparent var(--position)),
       linear-gradient(90deg, var(--color-buffer) var(--position-buffer), transparent var(--position-buffer)),
       repeating-linear-gradient(90deg, transparent 0, transparent 2px, var(--colorG33) 2px, var(--colorG33) 4px);
-  } .media-player .media-volume-bar {
+  }
+
+  & .media-volume-bar {
     background-image: linear-gradient(90deg, var(--color-slide) var(--position), transparent var(--position));
-  } .media-player .media-mute {
+  }
+
+  & .media-mute {
     background: none;
-  } .media-player .media-volume-bar {
+  }
+
+  & .media-volume-bar {
     background-color: var(--colorG38);
-  } .media-player .media-play-pause {
+  }
+
+  & .media-play-pause {
     position: relative;
     z-index: 1;
     width: 3.5em;
     background-color: var(--colorG33);
     border-radius: 50%;
-  } .media-player .media-play-pause::before {
+
+    &::before {
       content: '';
       position: absolute;
       inset: 0;
       z-index: -1;
       border: 0.41em solid transparent;
       border-radius: 50%;
-    } .media-player .media-play-pause:focus-visible::before,
-    .media-player .media-play-pause.active:focus-visible::before {
+    }
+
+    &:focus-visible::before,
+    &:focus-visible.active::before {
       border-block-color: var(--color5);
-    } .media-player .media-play-pause:hover::before {
+    }
+
+    &:hover::before {
       border-block-color: var(--colorG38);
-    } .media-player .media-play-pause.active::before {
+    }
+
+    &.active::before {
       border-block-color: var(--color2);
       animation: anim-play 20s linear infinite var(--play-state, running);
-    } .media-player .media-tags {
+    }
+  }
+
+  & .media-tags {
     position: absolute;
     display: flex;
     gap: 0.3em;
     z-index: 1;
     bottom: 0.2em;
     left: 4em;
-  } .media-player .media-tags > * {
+
+    & > * {
       position: relative;
       display: none;
       min-width: 2.5em;
@@ -1537,9 +1761,14 @@ video {
       line-height: 1;
       background-color: var(--colorG38);
       border-radius: 0.3em;
-    } .media-player .media-tags > *.active {
+
+      &.active {
         display: block;
-      } .media-player .media-extend-volume {
+      }
+    }
+  }
+
+  & .media-extend-volume {
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -1547,33 +1776,52 @@ video {
     border-radius: 1.25em;
     outline: none;
     transition: padding-left 0.6s ease-in;
-  } .media-player .media-extend-volume:where(:focus-within, :hover, :active) {
+
+    &:where(:focus-within, :hover, :active) {
       padding-inline-start: calc(var(--gap)/2);
       animation: anim-button 0.6s ease-in-out;
-    } .media-player .media-extend-volume:where(:focus-within, :hover, :active) .media-volume-bar {
+
+      & .media-volume-bar {
         display: inherit;
         max-width: 10em;
-      } .media-player .media-play-pause.active ~ .media-extend-volume .media-mute.active {
+      }
+    }
+  }
+
+  & .media-play-pause.active ~ .media-extend-volume .media-mute.active {
     animation: anim-mute 1s infinite;
-  } .media-player .media-volume-bar {
+  }
+
+  & .media-volume-bar {
     width: 100%;
     max-width: 0;
     transition: max-width 0.6s ease-in-out;
-  } .media-player .media-progress-bar {
+  }
+
+  & .media-progress-bar {
     flex-grow: 1;
     /* @note S'étend au détriment de la barre de progression qui, elle, rapetisse. */
     width: 10%;
-  } .media-player .media-extend-menu {
+  }
+
+  & .media-extend-menu {
     --mem: 6;
     display: none;
-  } .media-player .media-extend-menu:has(> :nth-child(7):last-child, button:nth-child(8):last-child) {
+
+    &:has(> :nth-child(7):last-child, button:nth-child(8):last-child) {
       --mem: 4;
-    } .media-player .media-extend-menu:has(> :nth-child(9):last-child, > :nth-child(10):last-child) {
+    }
+
+    &:has(> :nth-child(9):last-child, > :nth-child(10):last-child) {
       --mem: 5;
-    } .media-player .media-extend-menu:has(> :nth-child(5):last-child) {
+    }
+
+    &:has(> :nth-child(5):last-child) {
       /* @affected Firefox. @note Si moins de 6 boutons, sachant qu'il n'y en a jamais moins de 5. @todo À réévaluer dans le temps. */
       --mem: 5;
-    } .media-player .media-extend-menu.active {
+    }
+
+    &.active {
       position: absolute;
       z-index: 200;
       bottom: 3.5em;
@@ -1586,29 +1834,52 @@ video {
       background-color: var(--colorG27);
       border-radius: 1.75em;
       box-shadow: var(--shadow8);
-    } .media-player.error {
+    }
+  }
+
+  &.error {
     flex-shrink: 1;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     color: var(--colorG60);
-  } .media-player :where(.media-progress-bar, .media-volume-bar):hover::-webkit-slider-thumb, .media-player :where(.media-progress-bar, .media-volume-bar):active::-webkit-slider-thumb {
+  }
+
+  & :where(.media-progress-bar, .media-volume-bar) {
+    &:hover,
+    &:active {
+      &::-webkit-slider-thumb {
         /* @note Sélecteurs non factorisables. */
         background-color: var(--color2);
-      } .media-player :where(.media-progress-bar, .media-volume-bar):focus-visible::-webkit-slider-thumb {
+      }
+    }
+
+    &:focus-visible::-webkit-slider-thumb {
       background-color: var(--color5);
-    } .media-player :where(.media-progress-bar, .media-volume-bar):hover::-moz-range-thumb, .media-player :where(.media-progress-bar, .media-volume-bar):active::-moz-range-thumb {
+    }
+
+    &:hover,
+    &:active {
+      &::-moz-range-thumb {
         background-color: var(--color2);
-      } .media-player :where(.media-progress-bar, .media-volume-bar):focus-visible::-moz-range-thumb {
+      }
+    }
+
+    &:focus-visible::-moz-range-thumb {
       background-color: var(--color5);
-    } .media-player ::-webkit-slider-thumb {
+    }
+  }
+
+  & ::-webkit-slider-thumb {
     -webkit-appearance: none;
   pointer-events: auto;
   width: 1em;
   aspect-ratio: 1;
   background-color: transparent;
   border-radius: 50%;
-  } .media-player ::-moz-range-thumb {
+  }
+  
+  & ::-moz-range-thumb {
     /* @affected Firefox @note Définition obligatoire de cette règle malgré sa déclaration en globale. */
     box-sizing: border-box;
     border: none;
@@ -1617,42 +1888,58 @@ video {
   aspect-ratio: 1;
   background-color: transparent;
   border-radius: 50%;
-  } video + .media-player {
+  }
+
+  video + & {
     margin-block-start: 0.5em;
-  } .media-player.waiting .media-play-pause.active {
+  }
+
+  &.waiting .media-play-pause.active {
     animation: anim-waiting 1s infinite;
-  } .video-youtube {
+  }
+} .video-youtube {
   /* @note Évite un léger resize entre le thumbnail et le chargement de la vidéo. */
   position: relative;
   aspect-ratio: 16/9;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
+  user-select: none;
   background-color: var(--colorB);
-} .video-youtube iframe,
-  .video-youtube > div {
+
+  & iframe,
+  & > div {
     /* @note Idem. */
     position: absolute;
     inset: 0;
-  } .video-youtube .video-youtube-error {
+  }
+
+  & .video-youtube-error {
     text-align: center;
-  } .video-youtube .thumbnail-youtube {
+  }
+
+  & .thumbnail-youtube {
     display: grid;
     place-content: center;
     background-size: cover;
     /* @note Pour positionner correctement les images plus petites que l'élément. */
     background-position: 50% 50%;
-  } .video-youtube .thumbnail-youtube button {
+
+    & button {
       all: unset;
       position: relative;
       width: 5em;
       outline: none;
       cursor: pointer;
-    } .video-youtube .thumbnail-youtube button svg {
+
+      & svg {
         fill: var(--colorA7);
-      } .video-youtube .thumbnail-youtube button:where(:focus, :hover) svg {
+      }
+
+      &:where(:focus, :hover) svg {
         fill: var(--color5);
-      } .video-youtube .video-youtube-title {
+      }
+    }
+  }
+
+  & .video-youtube-title {
     position: absolute;
     top: 0;
     left: 0;
@@ -1663,7 +1950,8 @@ video {
     text-align: right;
     text-overflow: ellipsis;
     text-shadow: 0 0 0.2em var(--colorAB8);
-  } @keyframes anim-play {
+  }
+} @keyframes anim-play {
   from {
     transform: rotate(0deg);
   }
@@ -1694,46 +1982,60 @@ video {
   background-color: hsl(40, 11%, 89%);
   /* Évite occasionnellement un débordement des tuiles. */
   overflow: hidden;
-} @media (orientation: landscape) { .map {
+
+  @media (orientation: landscape) {
     aspect-ratio: 16/9;
-}
-  } .map-grayscale .leaflet-layer {
+  }
+} .map-grayscale .leaflet-layer {
   filter: grayscale(1);
 } .map-dark .leaflet-layer {
   filter: grayscale(1) invert(1) brightness(1.1) contrast(0.7);
 } .map-vintage {
   position: relative;
-} .map-vintage .leaflet-layer {
+
+  & .leaflet-layer {
     filter: sepia(0.5);
-  } .map-vintage::before,
-  .map-vintage::after {
+  }
+
+  &::before,
+  &::after {
     /* @note On ne peut pas appliquer de filtre SVG directement sur les tuiles, on passe par un pseudo-élément. */
     content: '';
     position: absolute;
     z-index: 500;
     inset: 0;
     pointer-events: none;
-  } .map-vintage::before {
+  }
+
+  &::before {
     background-image: radial-gradient(var(--colorAB0), var(--colorS5));
-  } .map-vintage::after {
+  }
+
+  &::after {
     filter: url('../sprites/filter.svg#noise') sepia(1) opacity(0.4);
-  } :root .map .leaflet-control {
+  }
+} :root .map {
+  & .leaflet-control {
     border: none;
     box-shadow: var(--shadow6);
-  } :root .map .leaflet-popup-content-wrapper {
+  }
+
+  & .leaflet-popup-content-wrapper {
     /* @note Unité rem obligatoire pour éviter les conflits sur la carte. */
     font-size: 1rem;
     color: var(--colorG38);
     border-radius: 0.2em;
     box-shadow: var(--shadow6);
-  } .leaflet-popup-content {
+  }
+} .leaflet-popup-content {
   max-width: calc(100vw - 6em);
 } .leaflet-popup-tip {
   box-shadow: var(--shadow6);
 } .leaflet-marker-icon {
   /* @note Pour prévenir l'effet sur :focus et :hover. */
   outline: none;
-} .leaflet-marker-icon:focus-visible::after {
+
+  &:focus-visible::after {
     content: '';
     display: block;
     box-sizing: border-box;
@@ -1743,21 +2045,29 @@ video {
     width: 4em;
     border: 1em solid var(--colorAS22);
     /* @note Affiche un viseur autour du marqueur qui permet de l'identifier. */
-    -webkit-clip-path: polygon(45% 0%, 55% 0%, 55% 45%, 100% 45%, 100% 55%, 55% 55%, 55% 100%, 45% 100%, 45% 55%, 0% 55%, 0% 45%, 45% 45%);
-            clip-path: polygon(45% 0%, 55% 0%, 55% 45%, 100% 45%, 100% 55%, 55% 55%, 55% 100%, 45% 100%, 45% 55%, 0% 55%, 0% 45%, 45% 45%);
+    clip-path: polygon(45% 0%, 55% 0%, 55% 45%, 100% 45%, 100% 55%, 55% 55%, 55% 100%, 45% 100%, 45% 55%, 0% 55%, 0% 45%, 45% 45%);
     transform: translate(-0.35em, -2.5em);
-  } .leaflet-marker-icon:where(:focus, :hover) .marker-icon {
+  }
+
+  &:where(:focus, :hover) .marker-icon {
     animation: anim-bounce 0.35s ease infinite alternate;
-  } .marker-icon {
+  }
+} .marker-icon {
   filter: drop-shadow(0.3em 0.3em 0.3em var(--colorAB5));
-} .marker-icon > :first-child {
+
+  & > :first-child {
     fill: var(--color, hsl(16, 100%, 66%));
-  } .marker-icon > :last-child {
+  }
+  
+  & > :last-child {
     fill: var(--colorB);
     opacity: 0.15;
-  } .start-map .marker-icon {
+  }
+
+  .start-map & {
     animation: anim-drop 1s ease;
-  } @keyframes anim-bounce {
+  }
+} @keyframes anim-bounce {
   to {
     transform: translate(0, -16px);
   }
@@ -1777,24 +2087,33 @@ video {
   100% {
     transform: translate(0, 0);
   }
-} .card h2,
-  .card p {
+} .card {
+  & h2,
+  & p {
     margin: 0;
     padding: 2rem;
     background-color: var(--colorG27);
     box-shadow: var(--shadow3);
-  } .card h2 {
+  }
+
+  & h2 {
     margin-block-end: 0;
     text-align: center;
     /* @note Unités fixes en raison de la nature différentes des éléments. */
     border-radius: 0.5rem 0.5rem 2px 2px;
-  } .card h2 span {
+
+    & span {
       color: var(--color2);
-    } .card p {
+    }
+  }
+
+  & p {
     margin-block-start: 0;
     /* @note Unités fixes en raison de la nature différentes des éléments. */
     border-radius: 2px 2px 0.5rem 0.5rem;
-  } .card svg {
+  }
+  
+  & svg {
     display: block;
     width: calc(100% - 4px);
     height: 8em;
@@ -1804,31 +2123,41 @@ video {
     background-color: var(--colorG27);
     box-shadow: var(--shadow3);
     transition: background-color 0.5s, color 0.5s;
-  } .card:where(:focus-within, :hover) svg {
+  }
+
+  &:where(:focus-within, :hover) svg {
     color: var(--colorW);
     background-color: var(--color2);
-  } .user-def {
+  }
+} .user-def {
   display: grid;
   grid-template-columns: 3.5em minmax(0, 1fr);
   grid-template-areas: 'aa tt' 'aa uu';
-} .user-def .avatar {
+
+  & .avatar {
     grid-area: aa;
     width: 3em;
     aspect-ratio: 1;
     background: var(--colorG13) var(--img, '');
     background-size: cover;
     border-radius: 50%;
-  } .user-def address {
+  }
+
+  & address {
     grid-area: tt;
     font-style: normal;
     font-weight: bold;
-    font-feature-settings: "smcp";
     font-variant: small-caps;
-  } .user-def address a {
+
+    & a {
       text-decoration: none;
-    } .user-def time {
+    }
+  }
+
+  & time {
     grid-area: uu;
-  } code,
+  }
+} code,
 kbd,
 samp {
   font-family: monospace, monospace;
@@ -1848,20 +2177,31 @@ samp {
   border-radius: 0.3em;
   box-shadow: 0 0 2rem var(--colorAB3);
   line-height: 1.25em;
-} .pre:where(:focus, :active) {
+
+  &:where(:focus, :active) {
     outline: 0.1em solid var(--color2);
-  } .pre code {
+  }
+
+  & code {
     white-space: pre;
     color: var(--colorT);
     transition: color 0.5s ease-in-out;
-  } .pre code:focus-within {
+
+    &:focus-within {
       color: var(--colorW);
-    } .pre code:empty::before {
+    }
+
+    &:empty::before {
       content: '> ';
-    } .pre code:empty::after {
+    }
+
+    &:empty::after {
       content: '_';
       animation: anim-blink-empty 1s steps(2, start) infinite;
-    } .pre div {
+    }
+  }
+
+  & div {
     position: absolute;
     top: 1em;
     right: 1em;
@@ -1869,12 +2209,16 @@ samp {
     font-size: 1em;
     color: var(--colorT2);
     gap: 0.5em;
-  } .pre svg {
+  }
+
+  & svg {
     display: block;
     width: 1em;
     height: 1em;
     fill: currentcolor;
-  } .pre button {
+  }
+
+  & button {
     position: absolute;
     bottom: 1.1em;
     right: 1em;
@@ -1882,10 +2226,13 @@ samp {
     border: none;
     color: var(--colorT2);
     background-color: transparent;
-  } .pre button:where(:focus, :hover, :active) {
+
+    &:where(:focus, :hover, :active) {
       color: var(--color5);
       outline: none;
-    } .copy-offset + div {
+    }
+  }
+} .copy-offset + div {
   right: 2.5em;
 } @keyframes anim-blink-empty {
   50% {
@@ -1901,7 +2248,8 @@ samp {
   box-shadow: var(--shadow1);
   /* @note Evite un conflit avec les margins et padding des éléments enfants. Mais pose des problèmes avec les pseudo-éléments. */
   /* overflow hidden */
-} [class^='message'][class*='highlight'] {
+
+  &[class*='highlight'] {
     --icon-size: 2.5em;
     display: grid;
     grid-template-columns: var(--icon-size) minmax(0, 1fr);
@@ -1909,15 +2257,17 @@ samp {
     align-items: center;
     min-height: 5em;
     padding-inline: 1em;
-  } [class^='message'][class*='highlight'] > .icon {
+
+    & > .icon {
       width: var(--icon-size);
       height: var(--icon-size);
       padding: 25%;
       fill: var(--bg-color);
       background-color: currentcolor;
-      -webkit-clip-path: circle(50%);
-              clip-path: circle(50%);
-    } .message-info {
+      clip-path: circle(50%);
+    }
+  }
+} .message-info {
   --bg-color: var(--color6);
 } .message-success {
   --bg-color: var(--color4);
@@ -1937,28 +2287,42 @@ samp {
   font-weight: normal;
   word-break: normal;
   text-align: left;
-} [class^='table'] th {
+
+  & th {
     font-weight: normal;
-  } [class^='table'] th,
-  [class^='table'] td {
+  }
+
+  & th,
+  & td {
     vertical-align: top;
     padding: 0.5em 1em;
     box-shadow: inset 0 0 1px var(--colorG13);
-  } [class^='table'] thead th {
+  }
+
+  & thead th {
     position: sticky;
     top: 0;
     z-index: 1;
     background-color: var(--color2);
-  } [class^='table'] tfoot,
-  [class^='table'] tbody th {
+  }
+
+  & tfoot,
+  & tbody th {
     background-color: var(--colorG18);
-  } [class^='table'] tbody tr:nth-child(odd) {
+  }
+
+  & tbody tr:nth-child(odd) {
     background-color: var(--colorG27);
-  } [class^='table'] tbody tr:nth-child(even) {
+  }
+
+  & tbody tr:nth-child(even) {
     background-color: var(--color1);
-  } [class^='table'] tbody :empty::after {
+  }
+
+  & tbody :empty::after {
     content: '/';
-  } @container (35em > width) {
+  }
+} @container (35em > width) {
   [role='region'][aria-labelledby][tabindex]:has(.table-responsive) {
     all: unset;
   }
@@ -1967,51 +2331,51 @@ samp {
     margin-block-start: -0.5em;
     border-collapse: separate;
     border-spacing: 0 0.5em;
-  }
 
-    .table-responsive thead,
-    .table-responsive tfoot {
+    & thead,
+    & tfoot {
       display: none;
     }
 
-    .table-responsive td {
+    & td {
       display: block;
     }
 
-    .table-responsive td:last-child {
+    & td:last-child {
       padding-block-end: 1em;
     }
 
-    .table-responsive td {
+    & td {
       box-shadow: none;
     }
 
-    .table-responsive tr > :first-child {
+    & tr > :first-child {
       padding-block-start: 1em;
     }
 
-    .table-responsive tfoot :empty {
+    & tfoot :empty {
       display: none;
     }
 
-    .table-responsive tbody tr {
+    & tbody tr {
       background-color: var(--colorG27) !important;
       box-shadow: var(--shadow5);
-    }
 
-      .table-responsive tbody tr > * {
+      & > * {
         padding: 0 1em;
       }
+    }
 
-    .table-responsive tbody th::before,
-    .table-responsive tbody td::before {
+    & tbody th::before,
+    & tbody td::before {
       content: attr(data-thead) ' ';
       color: var(--colorT2);
     }
 
-    .table-responsive tbody :empty::after {
+    & tbody :empty::after {
       content: '...';
     }
+  }
 } /* @note En raison de leurs éventails d'utilisations les inputs ne sont pas stylés par défaut. Ne sont placées ici que des règles d'harmonisation. */ fieldset {
   margin: 0;
   /* @bugfix @affected Firefox. */
@@ -2106,8 +2470,7 @@ input[type='checkbox'] {
   box-sizing: border-box;
 } input[type='number'] {
   -moz-appearance: textfield;
-  -webkit-appearance: textfield;
-          appearance: textfield;
+  appearance: textfield;
 } input[type='number']::-webkit-inner-spin-button {
   -webkit-appearance: none;
 } input[type='number']::-webkit-inner-spin-button,
@@ -2119,20 +2482,26 @@ input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: textfield;
   /* @bugfix Correct the outline style @affected Safari. */
   outline-offset: -2px;
-} input[type='search']::-webkit-search-decoration {
+
+  &::-webkit-search-decoration {
     /* @bugfix Remove the inner padding @affected Chrome and Safari on macOS. */
     -webkit-appearance: none;
-  } input[type='search']::-webkit-search-cancel-button {
+  }
+
+  &::-webkit-search-cancel-button {
     -webkit-appearance: none;
     height: 24px;
     width: 24px;
     margin-inline-start: 0.4em;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
     cursor: pointer;
-  } input[type='search']::-webkit-search-cancel-button:hover,
-  input[type='search']::-webkit-search-cancel-button:active {
+  }
+
+  &::-webkit-search-cancel-button:hover,
+  &::-webkit-search-cancel-button:active {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
-  } input[type='file'],
+  }
+} input[type='file'],
 input[type='date'],
 input[type='time'],
 input[type='datetime-local'],
@@ -2178,25 +2547,24 @@ select {
   width: 24px;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
   cursor: pointer;
-} ::-webkit-clear-button:focus,
-  ::-webkit-clear-button:hover {
+
+  &:focus,
+  &:hover {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
-  } [type='time']::-webkit-clear-button {
+  }
+  
+  [type='time']& {
     transform: translateX(-1.4em);
-  } :-webkit-autofill {
+  }
+} :-webkit-autofill {
   /* @note Préremplissage des champs par le navigateur. @affected Chrome. */
   -webkit-text-fill-color: var(--colorT);
   /* @note Hack pour éviter l'affichage par défaut de l'autoremplissage, car les autres solutions se sont montrées inefficaces @todo Solution temporaire à évaluer. */
-  -webkit-transition-property: background-color;
   transition-property: background-color;
   /* @note Idem. */
   transition-delay: 1000000s;
-} ::-moz-placeholder {
-  color: var(--colorG60);
 } ::placeholder {
   color: var(--colorG60);
-} :focus::-moz-placeholder {
-  color: transparent;
 } :focus::placeholder {
   color: transparent;
 } .invalid + [class*='message'] {
@@ -2210,12 +2578,16 @@ select {
   width: 1.6em;
   height: 0.8em;
   background-color: var(--colorS52);
-  -webkit-clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-          clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-} .input label {
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+} .input {
+  & label {
     display: inline-block;
     margin-block-end: 0.5em;
-  } .input input:not([type='button'], [type='submit'], [type='range']), .input select, .input textarea {
+  }
+
+  & input:not([type='button'], [type='submit'], [type='range']),
+  & select,
+  & textarea {
     width: 100%;
     color: currentcolor;
     /* @bugfix @affected Chrome @note Le !important supplante le style par défaut des préremplissages. */
@@ -2225,88 +2597,137 @@ select {
     border-radius: 0.3em;
     /* @bugfix @affected Chrome @note Le !important supplante le style par défaut des préremplissages. */
     box-shadow: inset 0 0.2em 0.5em var(--colorAB2) !important;
-  } .input input:not([type='button'], [type='submit'], [type='range']), .input select:not([multiple]) {
+  }
+
+  & input:not([type='button'], [type='submit'], [type='range']),
+  & select:not([multiple]) {
     /* @note Permet d'approcher un alignement "pixel perfect" entre les différents champs lorqu'ils sont alignés. */
     height: 3em;
     max-height: 3em;
     line-height: 3em;
     padding-inline: 1em;
-  } .input input[type='color'] {
+  }
+
+  & input[type='color'] {
     /* @note Les padding top et bottom doivent être les mêmes que les autres inputs pour rester verticalement aligné avec ces derniers. Ce comportement ne peut être corrigé par `box-sizing: border-box`. */
     padding: 2px !important;
-  } .input input[type='color']::-webkit-color-swatch {
+
+    &::-webkit-color-swatch {
       border: none;
-    } .input input[type='color']::-webkit-color-swatch-wrapper {
+    }
+
+    &::-webkit-color-swatch-wrapper {
       padding: 0;
-    } .input input[type='date'],
-  .input input[type='datetime-local'],
-  .input input[type='week'],
-  .input input[type='month'] {
+    }
+  }
+
+  & input[type='date'],
+  & input[type='datetime-local'],
+  & input[type='week'],
+  & input[type='month'] {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/></svg>");
-  } .input input[type='date']:focus,
-  .input input[type='datetime-local']:focus,
-  .input input[type='week']:focus,
-  .input input[type='month']:focus,
-  .input input[type='date']:hover,
-  .input input[type='datetime-local']:hover,
-  .input input[type='week']:hover,
-  .input input[type='month']:hover {
+  }
+
+  & input[type='date']:focus,
+  & input[type='datetime-local']:focus,
+  & input[type='week']:focus,
+  & input[type='month']:focus,
+  & input[type='date']:hover,
+  & input[type='datetime-local']:hover,
+  & input[type='week']:hover,
+  & input[type='month']:hover {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/></svg>");
-  } .input input[type='month'] {
+  }
+
+  & input[type='month'] {
     text-transform: capitalize;
-  } .input input[type='time'] {
+  }
+
+  & input[type='time'] {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'/><path d='M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z'></path></svg>");
-  } .input input[type='time']:focus,
-  .input input[type='time']:hover {
+  }
+
+  & input[type='time']:focus,
+  & input[type='time']:hover {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'/><path d='M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z'></path></svg>");
-  } .input input[type='file'] {
+  }
+
+  & input[type='file'] {
     padding-inline-end: 3em;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z'></path></svg>");
-  } .input input[type='file']:focus,
-  .input input[type='file']:hover,
-  .input input[type='file']:active {
+  }
+
+  & input[type='file']:focus,
+  & input[type='file']:hover,
+  & input[type='file']:active {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z'></path></svg>");
-  } .input select:not([multiple]) {
+  }
+
+  & select:not([multiple]) {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z'/></svg>");
     background-size: 1.5em 1.5em;
     background-repeat: no-repeat;
     background-position: calc(100% - 0.4em) 50%;
-  } .input select:not([multiple]):focus,
-  .input select:not([multiple]):hover {
+  }
+
+  & select:not([multiple]):focus,
+  & select:not([multiple]):hover {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z'/></svg>");
-  } .input select:not([multiple]):active {
+  }
+
+  & select:not([multiple]):active {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z'/></svg>");
-  } .input select[multiple] {
+  }
+
+  & select[multiple] {
     /* @affected Chrome Androïd. */
     min-height: 3em;
     padding: 0.4em 1em;
-  } .input textarea {
+  }
+
+  & textarea {
     min-height: 9.75em;
     max-height: 50vh;
     padding: 1em;
     line-height: 1.5;
     resize: vertical;
-  } .input input:not([type='button']):focus,
-  .input select:focus,
-  .input textarea:focus {
+  }
+
+  & input:not([type='button']):focus,
+  & select:focus,
+  & textarea:focus {
     border-color: var(--color2);
     outline: none;
-  } .input.disabled label {
+  }
+
+  &.disabled label {
     color: var(--colorG60);
-  } .input.disabled input {
+  }
+
+  &.disabled input {
     background: var(--colorG18) repeating-linear-gradient(-45deg, transparent 0 5px, var(--color1) 5px 10px);
     background-size: 100% 100%;
     cursor: default;
-  } .input .invalid {
+  }
+
+  & .invalid {
     /* @note Révision de l'emplacement de l'astérisque si champ obligatoire. */
     background-position: right 0.7em center;
-  } .input .invalid {
+  }
+
+  & .invalid {
     animation: anim-invalid-input 2s ease-in-out infinite !important;
-  } .input input + [class*='message'] {
+  }
+
+  & input + [class*='message'] {
     margin-block-start: 1em;
-  } .input:has([type='color'] + output) {
+  }
+
+  &:has([type='color'] + output) {
     position: relative;
-  } .input:has([type='color'] + output) output {
+  }
+
+  &:has([type='color'] + output) output {
     /* @note Les sélecteur :has() n'est pas encore supporté de manière large. @affected Firefox < v108. */
     position: absolute;
     left: 0.5em;
@@ -2318,13 +2739,15 @@ select {
     color: var(--colorW);
     background-color: var(--colorAB5);
     pointer-events: none;
-  } :root .input-password input {
+  }
+} :root .input-password input {
   /* @note Évite que le texte saisit ne passe sous l'icône. */
   padding-inline-end: 3em;
   letter-spacing: 0.4em;
 } .input-password {
   position: relative;
-} .input-password button {
+
+  & button {
     position: absolute;
     bottom: 3em/2;
     right: 0.5em;
@@ -2334,21 +2757,31 @@ select {
     color: hsl(0, 0%, 47%);
     background-color: transparent;
     border: none;
-  } .input-password button:focus {
+
+    &:focus {
       outline: none;
-    } .input-password button:where(:focus, :hover, :active) {
+    }
+
+    &:where(:focus, :hover, :active) {
       color: var(--color5);
-    } .input-password button svg {
+    }
+
+    & svg {
       width: 100%;
       height: 100%;
-    } .search form {
+    }
+  }
+} .search form {
   display: flex;
   width: 100%;
   height: 3em;
   align-items: stretch;
-} .search form * {
+
+  & * {
     outline: none;
-  } .search form input {
+  }
+
+  & input {
     flex-grow: 1;
     max-height: 100%;
     padding: 0.4em 1em;
@@ -2358,30 +2791,37 @@ select {
     border-right: none;
     border-radius: 1.5em 0 0 1.5em;
     box-shadow: inset 0 0.2em 0.5em var(--colorAB2);
-  } .search form input:where(:focus, :hover, :active) {
+
+    &:where(:focus, :hover, :active) {
       border-color: var(--color2);
-    } .search form button {
+    }
+  }
+
+  & button {
     min-width: 3.5em;
     color: var(--colorT);
     background-color: var(--color2);
     border: none;
     border-radius: 0 1.5em 1.5em 0;
     box-shadow: inset 0 0.2em 0.5em var(--colorAB2);
-  } .search form button:where(:focus, :hover, :active) {
+
+    &:where(:focus, :hover, :active) {
       color: var(--colorW);
       animation: anim-search 0.2s ease-in-out;
-    } .search form button svg {
+    }
+
+    & svg {
       width: 1em;
       height: 1em;
-    } @keyframes anim-invalid-input {
+    }
+  }
+} @keyframes anim-invalid-input {
   50% {
     border-color: var(--color5);
   }
 } :where(input[type='checkbox'], input[type='radio']):not([role='switch']) {
   /* all: unset */
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  appearance: none;
   display: inline-grid;
   width: 1.2em;
   height: 1.2em;
@@ -2392,7 +2832,8 @@ select {
   outline: none;
   box-shadow: inset 0 0.1em 0.3em var(--colorAB3);
   cursor: pointer;
-} :where(input[type='checkbox'], input[type='radio']):not([role='switch']):disabled {
+
+  &:disabled {
     background: var(--colorG18)
       repeating-linear-gradient(
         -45deg,
@@ -2400,34 +2841,46 @@ select {
         var(--colorG33) 2px 4px
       );
     cursor: default;
-  } :where(input[type='checkbox'], input[type='radio']):not([role='switch']):disabled + label {
+
+    & + label {
       cursor: default;
-    } :where(input[type='checkbox'], input[type='radio']):not([role='switch'])::before {
+    }
+  }
+
+  &::before {
     content: '';
     display: block;
     background-color: var(--color2);
     transform: scale(0);
-  } :where(input[type='checkbox'], input[type='radio']):not([role='switch']):focus-visible {
+  }
+
+  &:focus-visible {
     /* @note "!important" est nécessaire pour les boutons radio, sinon le focus ne surclasse pas la bordure définie plus haut. */
     border-color: var(--color5) !important;
-  } input[type='checkbox']:not([role='switch'])::before {
-  -webkit-clip-path: polygon(12% 41%, 4% 50%, 38% 84%, 95% 26%, 87% 17%, 37% 67%);
-          clip-path: polygon(12% 41%, 4% 50%, 38% 84%, 95% 26%, 87% 17%, 37% 67%);
+  }
+} input[type='checkbox']:not([role='switch'])::before {
+  clip-path: polygon(12% 41%, 4% 50%, 38% 84%, 95% 26%, 87% 17%, 37% 67%);
   transition: transform 0.2s;
 } input[type='checkbox']:not([role='switch']):checked::before {
   transform: scale(1.5);
 } input[type='radio']:not([role='switch']) {
   border-radius: 50%;
-} input[type='radio']:not([role='switch'])::before {
-    -webkit-clip-path: circle(30% at 50% 50%);
-            clip-path: circle(30% at 50% 50%);
+
+  &::before {
+    clip-path: circle(30% at 50% 50%);
     transition: transform 0.3s;
-  } input[type='radio']:not([role='switch']):checked {
+  }
+
+  &:checked {
     border-color: var(--color2);
-  } input[type='radio']:not([role='switch']):checked::before {
+
+    &::before {
       transform: scale(1);
-    } /* :where(input[type='checkbox'], input[type='radio'])[role='switch'] */ [role='switch'] {
+    }
+  }
+} /* :where(input[type='checkbox'], input[type='radio'])[role='switch'] */ [role='switch'] {
   all: unset;
+  /* appearance: none; */
   /* @todo À évaluer, dans un contexte géré par les éléments parents... */
   vertical-align: middle;
   box-sizing: border-box;
@@ -2438,8 +2891,8 @@ select {
   border-radius: 1.25em;
   box-shadow: inset 0 0.2em 0.5em var(--colorAB2);
   cursor: pointer;
-  /* appearance: none; */
-} [role='switch']::before {
+
+  &::before {
     content: attr(data-a);
     display: block;
     width: 2.5em;
@@ -2452,11 +2905,15 @@ select {
     box-shadow: 0 0.2em 0.5em var(--colorAB3);
     transform: translate(-0.3em, -0.3em);
     transition: transform 0.2s ease-in-out;
-  } [role='switch']:checked::before {
+  }
+
+  &:checked::before {
     content: attr(data-b);
     background-color: var(--color2);
     transform: translate(2.2em, -0.3em);
-  } [role='switch']:disabled {
+  }
+
+  &:disabled {
     background-image: repeating-linear-gradient(
       -45deg,
       var(--colorA1) 0 3px,
@@ -2465,27 +2922,40 @@ select {
       transparent 6px
     );
     cursor: default;
-  } [role='switch']:disabled::before {
+
+    &::before {
       color: var(--colorG38);
       background-color: var(--color1);
-    } [role='switch']:disabled + label {
+    }
+
+    & + label {
       cursor: default;
-    } [role='switch']:not(:checked) + label {
+    }
+  }
+
+  &:not(:checked) + label {
     color: var(--colorG45);
-  } [role='switch']:focus-visible {
+  }
+
+  &:focus-visible {
     /* @note "!important" est nécessaire pour les boutons radio, sinon le focus ne surclasse pas la bordure définie plus haut. */
     border-color: var(--color5) !important;
-  } .switch-custom {
+  }
+} .switch-custom {
   /* @note Le design d'un switch accessible à l'aide des seuls pseudo-éléments est techniquement possible, mais cette solution rend la modularité du style délicate. Le label n'étant pas indépendant du switch, son positionnement serait alors limité, des pseudo-éléments utilisants déjà background-image ne peuvent plus être texturés, l'effets "zoom" via font-size serait problématique. */
   position: relative;
   width: 5em;
   height: 2.5em;
-} .switch-custom [role='switch'] {
+
+  & [role='switch'] {
     position: absolute;
     inset: 0;
-  } .switch-custom [role='switch']::before {
+
+    &::before {
       display: none;
-    } .switch-custom [role='switch'] + div {
+    }
+
+    & + div {
       position: absolute;
       left: 0;
       width: 2.5em;
@@ -2498,33 +2968,52 @@ select {
       box-shadow: 0 0.2em 0.5em var(--colorAB3);
       transition: transform 0.2s ease-in-out;
       pointer-events: none;
-    } .switch-custom [role='switch']:checked + div {
+    }
+
+    &:checked + div {
       background-color: var(--color2);
       transform: translate(2.5em, 0);
-    } .switch-custom [role='switch']:disabled + div {
+    }
+
+    &:disabled + div {
       color: var(--colorG38);
       background-color: var(--color1);
-    } .switch-custom .dual-state[role='switch']:not(:disabled) + div {
+    }
+
+    &:not(:disabled).dual-state + div {
       background-color: var(--color2);
-    } .switch-custom :not(:checked) + div svg:nth-child(1) {
+    }
+  }
+
+  & :not(:checked) + div svg:nth-child(1) {
     /* @note `:first-child` et `:last-child` ne fonctionnent pas comme attendu dans ce cas car possibilité d'un seul SVG présent au lieu de deux. */
     display: none;
-  } .switch-custom :checked + div {
+  }
+
+  & :checked + div {
     transform: translateX(1.25em);
-  } .switch-custom :checked + div svg:nth-child(2) {
+
+    & svg:nth-child(2) {
       /* @note Idem. */
       display: none;
-    } .switch-custom:has([role='switch']:not(:checked, .dual-state)) + label {
+    }
+  }
+
+  &:has([role='switch']:not(:checked, .dual-state)) + label {
     color: var(--colorG45);
-  } .switch-custom:has(:disabled) + label {
+  }
+
+  &:has(:disabled) + label {
     cursor: default;
-  } [class^='range'] {
+  }
+} [class^='range'] {
   --color: var(--color2);
   --percent: 0;
   display: grid;
   gap: 0.5em;
   margin-block-end: 1em;
-} [class^='range'] input {
+
+  & input {
     /* @see https://css-tricks.com/multi-thumb-sliders-particular-two-thumb-case/ */
     grid-column: 1;
     grid-row: 2;
@@ -2549,17 +3038,21 @@ select {
         var(--colorA005)
       );
     cursor: pointer;
-  } [class^='range'] input ~ input {
+
+    & ~ input {
       /* @note Le sélecteur n'équivaut pas à `:last-child` */
       /* @bugfixed @affected Firefox @note La ligne de fond passe au-dessus des curseurs si transparence non définie. */
-      background: transparent none repeat 0 0 / auto auto padding-box border-box scroll;
       background: initial;
-    } [class^='range'] input:disabled {
+    }
+
+    &:disabled {
       --color: var(--colorG27);
       cursor: default;
-    } [class^='range'] input:disabled + output {
+
+      & + output {
         color: var(--colorG45);
-      } [class^='range'] input:disabled + output::after {
+
+        &::after {
           background: var(--colorG18)
             repeating-linear-gradient(
               -90deg,
@@ -2568,18 +3061,27 @@ select {
               transparent 0,
               transparent 6px
             );
-        } [class^='range'] input:focus {
+        }
+      }
+    }
+
+    &:focus {
       outline: none;
-    } [class^='range'] output {
+    }
+  }
+
+  & output {
     position: relative;
     margin: 0 auto 2em;
     text-align: center;
-  } [class^='range'] output:not(.phylactery) {
+
+    &:not(.phylactery) {
       --size: 5em;
       width: var(--size);
       line-height: var(--size);
       vertical-align: middle;
-    } [class^='range'] output:not(.phylactery)::after {
+
+      &::after {
         position: absolute;
         z-index: -1;
         inset: 0;
@@ -2589,14 +3091,19 @@ select {
         border-radius: 50% 50% 0 50%;
         box-shadow: 0 0.5rem 2rem var(--colorAB3);
         transform: rotate(45deg);
-      } [class^='range'] .phylactery {
+      }
+    }
+  }
+
+  & .phylactery {
     min-width: var(--size, 4em);
     padding: 1em;
     min-height: 3.5em;
     background-color: var(--color);
     border-radius: 0.3em;
     box-shadow: 0 0.5rem 2rem var(--colorAB3);
-  } [class^='range'] .phylactery::after {
+
+    &::after {
       position: absolute;
       content: '';
       bottom: -1em;
@@ -2604,10 +3111,14 @@ select {
       width: 2em;
       height: 1.5em;
       background-color: var(--color);
-      -webkit-clip-path: polygon(50% 100%, 0 0, 100% 0);
-              clip-path: polygon(50% 100%, 0 0, 100% 0);
+      clip-path: polygon(50% 100%, 0 0, 100% 0);
       filter: drop-shadow(0 0.5rem 2rem var(--colorAB3));
-    } /* Les déclarations propriétaires suivantes ne sont pas factorisables. */ [class^='range'] ::-webkit-slider-thumb {
+    }
+  }
+
+  /* Les déclarations propriétaires suivantes ne sont pas factorisables. */
+
+  & ::-webkit-slider-thumb {
     -webkit-appearance: none;
   pointer-events: auto;
   width: 2.3em;
@@ -2616,14 +3127,20 @@ select {
   border: 0.2em solid var(--color);
   border-radius: 50%;
   box-shadow: var(--shadow2);
-  } [class^='range'] :focus-visible::-webkit-slider-thumb {
+  }
+  
+  & :focus-visible::-webkit-slider-thumb {
   background-color: var(--color5);
   border-color: var(--color5);
-  } [class^='range'] input:disabled::-webkit-slider-thumb {
+  }
+  
+  & input:disabled::-webkit-slider-thumb {
   background: var(--colorG18)
     repeating-linear-gradient(-45deg, transparent 0 3px, var(--color1) 3px 6px);
   border-color: var(--colorG33);
-  } [class^='range'] ::-moz-range-thumb {
+  }
+  
+  & ::-moz-range-thumb {
     box-sizing: border-box;
     border: none;
   pointer-events: auto;
@@ -2633,19 +3150,25 @@ select {
   border: 0.2em solid var(--color);
   border-radius: 50%;
   box-shadow: var(--shadow2);
-  } [class^='range'] :focus-visible::-moz-range-thumb {
+  }
+  
+  & :focus-visible::-moz-range-thumb {
   background-color: var(--color5);
   border-color: var(--color5);
-  } [class^='range'] input:disabled::-moz-range-thumb {
+  }
+  
+  & input:disabled::-moz-range-thumb {
   background: var(--colorG18)
     repeating-linear-gradient(-45deg, transparent 0 3px, var(--color1) 3px 6px);
   border-color: var(--colorG33);
-  } .range-multithumb {
+  }
+} .range-multithumb {
   --start: 0;
   /* @note `--stop: 0` Évite une apparition flash de la barre au chargement de la page, il vaut mieux que la couleur apparaisse après le calcul par le script. */
   --stop: 0;
   --color: var(--color2);
-} .range-multithumb input {
+
+  & input {
     background: linear-gradient(
         90deg,
         transparent var(--start),
@@ -2662,7 +3185,8 @@ select {
         var(--colorA005) 66.6%,
         var(--colorA005)
       );
-  } /* @note Toujours privilégier l'élément HTML <button> sur l'élément <input type=button> car il permet de réaliser des rendus plus complexe en acceptant des éléments enfants. */ .button,
+  }
+} /* @note Toujours privilégier l'élément HTML <button> sur l'élément <input type=button> car il permet de réaliser des rendus plus complexe en acceptant des éléments enfants. */ .button,
 .round-button {
   /* [class*=button] @deprecated Espace de nom trop généraliste. Conflits avec les styles de certaines classes de plugins tels que Leaflet. */
   all: unset;
@@ -2675,53 +3199,67 @@ select {
   box-shadow: var(--shadow2);
   transition: all 0.2s linear;
   transition-property: translate, box-shadow;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
+  user-select: none;
   cursor: pointer;
-} .button:where(:focus-visible, :hover), .round-button:where(:focus-visible, :hover) {
+
+  &:where(:focus-visible, :hover) {
     box-shadow: var(--shadow2);
     /* @note En rem car ne dépend pas de la taille du bouton. */
     transform: translateY(-0.1rem);
-  } .button:focus-visible::after,
-  .round-button:focus-visible::after,
-  .button:hover::after,
-  .round-button:hover::after {
+  }
+
+  &:focus-visible::after,
+  &:hover::after {
     transform: scaleX(1);
     transform-origin: left center;
-  } .button:focus-visible::before, .round-button:focus-visible::before {
+  }
+
+  &:focus-visible::before {
     background-color: var(--color5);
-  } .button:active, .round-button:active {
+  }
+
+  &:active {
     box-shadow: inset 0 0 0.1em var(--colorAB3);
     /* @note En em car dépend de la taille du bouton. */
     transform: translateY(0.05em);
-  } .button::before,
-  .round-button::before,
-  .button::after,
-  .round-button::after {
+  }
+
+  &::before,
+  &::after {
     content: '';
     position: absolute;
     inset: 0;
-  } .button::before, .round-button::before {
+  }
+
+  &::before {
     z-index: -2;
     background-color: var(--bg-color);
-  } .button::after, .round-button::after {
+  }
+
+  &::after {
     z-index: -1;
     background-color: var(--bg-color2);
     transform: scaleX(0);
     transform-origin: left center;
     transition: transform 0.4s;
-  } .button:disabled, .round-button:disabled {
+  }
+
+  &:disabled {
     /* &[disabled] */
     box-shadow: var(--shadow2);
     transform: none;
     cursor: default;
     /* pointer-events: none; */
-  } .button:disabled::before, .round-button:disabled::before {
+
+    &::before {
       background-color: var(--color1);
-    } .button:disabled::after, .round-button:disabled::after {
+    }
+
+    &::after {
       content: none;
-    } .button {
+    }
+  }
+} .button {
   padding: 0.5em 1em;
   line-height: 2;
   white-space: nowrap;
@@ -2733,13 +3271,17 @@ select {
   width: 4em;
   border-width: 0.25em;
   border-radius: 50%;
-} .round-button svg {
+
+  & svg {
     height: 1.5em;
     width: 1.5em;
     margin: auto;
-  } .round-button::before {
+  }
+
+  &::before {
     border-radius: 50%;
-  } .button2 {
+  }
+} .button2 {
   --color: var(--colorG38);
   all: unset;
   width: 3em;
@@ -2752,14 +3294,17 @@ select {
   box-shadow: var(--shadow3);
   cursor: pointer;
   transition: transform 0.5s;
-} .button2:where(:focus, :hover, :active) {
+
+  &:where(:focus, :hover, :active) {
     --color: var(--color5);
     transform: rotate(360deg);
-  } .accordion {
+  }
+} .accordion {
   display: flex;
   flex-direction: column;
   gap: 0.5em;
-} .accordion > * > :first-child {
+
+  & > * > :first-child {
     /* @note : À mettre en corélation avec un "display: block".
     overflow: hidden
     white-space: nowrap
@@ -2778,27 +3323,42 @@ select {
     box-shadow: var(--shadow8);
     cursor: pointer;
     outline: none;
-  } .accordion > * > :first-child:focus-within,
-    .accordion > * > :first-child:hover {
+
+    &:focus-within,
+    &:hover {
       outline: none;
-    } .accordion > * > :first-child::after {
+    }
+
+    &::after {
       content: '\2039';
       margin-inline-start: auto;
       font-weight: bold;
-    } .accordion > * > :first-child svg {
+    }
+
+    & svg {
       margin-inline-end: 1em;
-    } @media (hover: hover) and (pointer: fine) { .accordion > * > :first-child:where(:focus-visible, :hover) {
+    }
+
+    &:where(:focus-visible, :hover) {
+      @media (hover: hover) and (pointer: fine) {
         color: var(--colorW);
         background-color: var(--color2);
         box-shadow: 0.5rem 0.5rem 2rem var(--colorAB25);
         animation: anim-accordion 0.1s ease-in-out;
+      }
     }
-      } .accordion > * > summary::before {
+  }
+
+  & > * > summary::before {
     all: unset;
-  } .accordion .accordion-summary::after {
+  }
+
+  & .accordion-summary::after {
     /* @note Sprécifique aux éléments remplacés. */
     transition: transform 0.5s ease-in-out;
-  } .accordion > * > :last-child {
+  }
+
+  & > * > :last-child {
     overflow: hidden;
     padding: 0 1em;
     background-color: var(--color1);
@@ -2806,24 +3366,35 @@ select {
     border-radius: calc(var(--r2) + 1px);
     box-shadow: var(--shadow8), inset 0 -1px 0 1px var(--colorA1);
     transition: max-height 0.5s ease-in-out;
-  } .accordion > * > [aria-hidden='true']:last-child {
+
+    &[aria-hidden='true'] {
       max-height: 0;
-    } .accordion > details {
+    }
+  }
+
+  & > details {
     all: unset;
-  } .accordion > details[open] summary::after,
-  .accordion [data-open='true'] .accordion-summary::after {
+  }
+
+  & > details[open] summary::after,
+  & [data-open='true'] .accordion-summary::after {
     transform: rotate(-90deg);
-  } @keyframes anim-accordion {
+  }
+} @keyframes anim-accordion {
   to {
     transform: scale(1.01) translateZ(0);
   }
-} .tabs .tab-list {
+} .tabs {
+  & .tab-list {
     display: flex;
     padding: 0;
-  } .tabs .tab-list ~ * .tab-list {
+
+    & ~ * .tab-list {
       /* @note Si onglets imbriqués. */
       margin-block-start: 0.5em;
-    } .tabs .tab-list button {
+    }
+
+    & button {
       z-index: 1;
       overflow: hidden;
       display: block;
@@ -2840,7 +3411,8 @@ select {
       /* filter: drop-shadow(0 -.5rem .5rem rgba(0, 0, 0, .1)); */
       cursor: pointer;
       transition: 0.2s box-shadow ease-in-out;
-    } .tabs .tab-list button[aria-selected='true'] {
+
+      &[aria-selected='true'] {
         /* @note Permet une gestion correcte des ombres. */
         z-index: 2;
         flex-shrink: 0;
@@ -2848,11 +3420,15 @@ select {
         background-color: var(--color1);
         border-bottom: none;
         pointer-events: none;
-      } .tabs .tab-list button[aria-selected='false'] {
-        -webkit-user-select: none;
-           -moz-user-select: none;
-                user-select: none;
-      } .tabs .tab-panel {
+      }
+
+      &[aria-selected='false'] {
+        user-select: none;
+      }
+    }
+  }
+
+  & .tab-panel {
     position: relative;
     /* @note Compensation de la bordure inférieure des onglets. */
     top: -1px;
@@ -2860,11 +3436,16 @@ select {
     padding: calc(0.5em + 1px) 1em 0.5em;
     border: 1px dashed var(--colorA15);
     box-shadow: var(--shadow8);
-  } .tabs .tab-panel[aria-hidden='false'] {
+
+    &[aria-hidden='false'] {
       display: block;
-    } .tabs .tab-panel[aria-hidden='true'] {
+    }
+
+    &[aria-hidden='true'] {
       display: none;
-    } @media (hover: hover) and (pointer: fine) {
+    }
+  }
+} @media (hover: hover) and (pointer: fine) {
   .tabs .tab-list button:where(:focus-visible, :hover) {
     outline: none;
     box-shadow: inset 0 -0.3em var(--color2), 0 -1rem 1rem var(--colorAB005);
@@ -2883,119 +3464,171 @@ select {
   background-color: transparent;
   border: none;
   outline: none;
-} .scroll-top.hide {
+
+  &.hide {
     display: none;
-  } .scroll-top svg {
+  }
+
+  & svg {
     height: 2em;
     width: 2em;
     fill: var(--colorB);
     opacity: 0.5;
-  } .scroll-top:focus-within svg {
+  }
+
+  &:focus-within svg {
     fill: var(--color5);
-  } .scroll-top:where(:hover, :active) svg {
+  }
+
+  &:where(:hover, :active) svg {
     fill: var(--colorG60);
-  } .footer {
+  }
+} .footer {
   padding: 0 1em;
   color: var(--colorT2);
   background-color: var(--colorG15);
   /* @todo En test... */
   box-shadow: 0.5rem 0.5rem 1rem hsla(0, 0%, 0%, 0.15);
-} .footer a {
+
+  & a {
     /* font-variant: small-caps; */
     color: var(--colorT);
     text-decoration: none;
-  } .footer a:where(:focus, :hover, :active) {
+
+    &:where(:focus, :hover, :active) {
       text-decoration: underline;
-    } .footer .wrap {
+    }
+  }
+
+  & .wrap {
     display: flex;
     max-width: 92em;
     margin: 0 auto;
-  } @media (width < 35.01em) { .footer .wrap {
+
+    @media (width < 35.01em) {
       flex-direction: column;
       align-items: center;
       text-align: center;
       line-height: 1;
       padding: 1em;
-  }
-    } @media (width > 35.01em) { .footer .wrap {
+    }
+
+    @media (width > 35.01em) {
       justify-content: space-between;
       align-items: center;
-  }
-    } .footer .wrap > :first-child {
+    }
+
+    & > :first-child {
       display: flex;
       align-items: center;
-    } .footer .logo {
+    }
+  }
+
+  & .logo {
     margin-inline-end: 1em;
-  } .footer .logo,
-    .footer .logo svg {
+
+    &,
+    & svg {
       width: 2em;
       height: 2em;
-    } .footer .wrap > :nth-child(2) {
+    }
+  }
+
+  & .wrap > :nth-child(2) {
     text-align: center;
-  } .article {
+  }
+} .article {
   display: grid;
   grid-template-columns: minmax(0, 60em) minmax(0, 1fr);
   gap: var(--gap) 0;
-} .article > header {
+
+  & > header {
     grid-column: span 2;
-  } .article h1 {
-    /* @note Nombre magique qui compense le gap entre header et .wrapper @todo À revoir. */
-    margin-block-end: 0.44em;
-  } .article > :where(.wrapper, article, form) {
-    grid-column: 1;
-    max-width: 55em;
-  } @media (width > 35.01em) { .article > :where(.wrapper, article, form) {
-      border-radius: var(--r1);
-      box-shadow: var(--shadow3);
-  }
-    } @media (35.01em < width < 50.01em) { .article > :where(.wrapper, article, form) {
-      padding: 2.5em 4em;
-  }
-    } @media (width > 50.01em) { .article > :where(.wrapper, article, form) {
-      padding: 4em 6em;
   }
 
-      .article > :where(.wrapper, article, form):nth-child(odd) {
+  & h1 {
+    /* @note Nombre magique qui compense le gap entre header et .wrapper @todo À revoir. */
+    margin-block-end: 0.44em;
+  }
+
+  & > :where(.wrapper, article, form) {
+    grid-column: 1;
+    max-width: 55em;
+
+    @media (width > 35.01em) {
+      border-radius: var(--r1);
+      box-shadow: var(--shadow3);
+    }
+
+    @media (35.01em < width < 50.01em) {
+      padding: 2.5em 4em;
+    }
+
+    @media (width > 50.01em) {
+      padding: 4em 6em;
+
+      &:nth-child(odd) {
         /* @note Limitation à 2 rangées car impression visuelle d'un désordre à partir de 3 rangées. */
         margin-inline-start: auto;
       }
-    } .article .sub-header,
-  .article article header {
+    }
+  }
+
+  & .sub-header,
+  & article header {
     display: grid;
     grid-template-columns: 3.5em minmax(0, 1fr);
     grid-template-areas: 'aa tt' 'aa uu';
-  } .article article header {
+  }
+
+  & article header {
     position: relative;
     margin-block-end: 1em;
     padding-block-end: 1em;
     border-bottom: 0.1em solid var(--colorG27);
-  } .article .sub-header {
-    margin-block: 2em 1em;
-  } .article article {
-    position: relative;
-  } @media (width < 35.01em) { .article article {
-      padding-block: var(--gap);
   }
-    } .article form {
+
+  & .sub-header {
+    margin-block: 2em 1em;
+  }
+
+  & article {
+    position: relative;
+    
+    @media (width < 35.01em) {
+      padding-block: var(--gap);
+    }
+  }
+
+  & form {
     width: 100%;
-  } .article .avatar {
+  }
+
+  & .avatar {
     grid-area: aa;
     width: 3em;
     aspect-ratio: 1;
     background: var(--colorG13) var(--img, '');
     background-size: cover;
     border-radius: 50%;
-  } .article address {
+  }
+
+  & address {
     grid-area: tt;
     font-style: normal;
     font-weight: bold;
-    font-feature-settings: "smcp";
     font-variant: small-caps;
-  } .article address a {
+
+    & a {
       text-decoration: none;
-    } .article time {
+    }
+  }
+
+  & time {
     grid-area: uu;
-  } .article .keywords {
+  }
+
+  & .keywords {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
@@ -3003,43 +3636,59 @@ select {
     margin-block: 0.75em 0;
     padding-inline-start: 0;
     font-size: 0.8em;
-  } .article .keywords > :last-child {
+
+    & > :last-child {
       margin-inline-end: 0;
-    } .article .keywords li {
+    }
+
+    & li {
       margin-block-end: 0.75em;
-    } .article .keywords a {
+    }
+
+    & a {
       padding: 0.25em 0.5em 0.25em 1.25em;
       text-decoration: none;
       white-space: nowrap;
       background-color: var(--colorG15);
-      -webkit-clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
-              clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
-    } .article .anchor {
+      clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
+    }
+  }
+
+  & .anchor {
     /* @note Ancre placée sur les commentaires. */
     position: absolute;
     right: 0;
     bottom: 1em;
     color: var(--colorG38);
     text-decoration: none;
-  } .article .anchor:where(:focus, :hover, :active) {
+
+    &:where(:focus, :hover, :active) {
       color: var(--colorW);
-    } .article > footer {
+    }
+  }
+
+  & > footer {
     grid-column: 1;
     display: flex;
     justify-content: flex-end;
     gap: var(--gap);
     max-width: 55em;
-  } @media (35.01em < width < 50.01em) { .article > footer {
+
+    @media (35.01em < width < 50.01em) {
       padding-inline: 4em;
-  }
-    } @media (width > 50.01em) { .article > footer {
+    }
+
+    @media (width > 50.01em) {
       padding-inline: 6em;
+    }
   }
-    } @media (width < 35.01em) {
-    .article .wrapper {
+
+  @media (width < 35.01em) {
+    & .wrapper {
       margin-block-start: calc(var(--gap)*-1);
     }
-  } @media (width > 35.01em) {
+  }
+} @media (width > 35.01em) {
   .boxx {
     padding: 4em 6em;
     border-radius: var(--r1);
@@ -3086,24 +3735,22 @@ select {
     outline: none;
     transition: color 0.2s ease-in-out;
     /* @note On évite de sélectionner les marqueurs, ceux-ci sont un élément de navigation et non de contenu. */
-    -webkit-user-select: none;
-       -moz-user-select: none;
-            user-select: none;
+    user-select: none;
     scroll-margin-block-start: 1em;
-  }
 
-    .line-mark:where(:focus, :hover, :active) {
+    &:where(:focus, :hover, :active) {
       color: var(--colorW);
       text-decoration: none;
     }
 
-    .line-mark::before {
+    &::before {
       content: '- ';
     }
 
-    .line-mark::after {
+    &::after {
       content: ' -';
     }
+  }
 
   h2 .line-mark,
   h3 .line-mark {
@@ -3134,21 +3781,26 @@ select {
 }
 */ /* @note Impossible d'animer la couleur de la barre avec une animation classique sur background-position. @see https://codepen.io/olivier-c/pen/vYvEjmb */ /* Solution de contournement. @see https://codepen.io/olivier-c/pen/poqvVqw */ /* @see https://www.w3docs.com/snippets/css/how-to-animate-the-background-of-the-progress-bar.html */ /* @see https://www.w3docs.com/tools/code-editor/18675 */ .progress {
   --color: var(--color2);
+  /* @todo La déclaration suivante ne semble plus nécessaire si définition de l'élement, à évaluer. */
   /* appearance: none; */
   width: 100%;
   height: 1em;
   border: none;
   animation: anim-progress 4s linear infinite;
-  /* @todo La déclaration suivante ne semble plus nécessaire si définition de l'élement, à évaluer. */
-} .progress,
-  .progress::-webkit-progress-bar {
+
+  &,
+  &::-webkit-progress-bar {
     background-color: var(--colorG18);
     box-shadow: inset 0 0.2em 0.5em var(--colorAB2);
     border-radius: 0.5em;
-  } .progress::-webkit-progress-inner-element,
-  .progress::-webkit-progress-bar {
+  }
+
+  &::-webkit-progress-inner-element,
+  &::-webkit-progress-bar {
     background-position: inherit;
-  } .progress::-webkit-progress-value {
+  }
+
+  &::-webkit-progress-value {
     min-width: 1em;
     background-color: var(--color);
     background-image: repeating-linear-gradient(-45deg, transparent 0 0.5rem, var(--colorA2) 0.5rem 1rem);
@@ -3156,7 +3808,9 @@ select {
     background-position: inherit;
     box-shadow: inset 0 2px 9px var(--colorA3), inset 0 -2px 6px var(--colorAB4);
     border-radius: 0.5em;
-  } .progress::-moz-progress-bar {
+  }
+
+  &::-moz-progress-bar {
     min-width: 1em;
     background-color: var(--color);
     background-image: repeating-linear-gradient(-45deg, transparent 0 0.5rem, var(--colorA2) 0.5rem 1rem);
@@ -3164,7 +3818,8 @@ select {
     background-position: inherit;
     box-shadow: inset 0 2px 9px var(--colorA3), inset 0 -2px 6px var(--colorAB4);
     border-radius: 0.5em;
-  } @keyframes anim-progress {
+  }
+} @keyframes anim-progress {
   0% {
     background-position: 0 0;
   }
@@ -3178,29 +3833,37 @@ select {
   width: 6em;
   height: 6em;
   animation: anim-loader var(--frame) linear infinite;
-} .loader,
-  .loader::before,
-  .loader::after {
+
+  &,
+  &::before,
+  &::after {
     /* @note Les pixels donnent un rendus plus précis quelque soit l'échelle. */
     border: 5px solid var(--color);
     border-top-color: transparent;
     border-bottom-color: transparent;
     border-radius: 50%;
-  } .loader::before,
-  .loader::after {
+  }
+
+  &::before,
+  &::after {
     content: '';
     position: absolute;
-  } .loader::before {
+  }
+
+  &::before {
     /* @note Les pixels donnent un rendus plus précis quelque soit l'échelle. */
     inset: 1px;
     /* @note Multiplicateur arbitraire. */
     animation: anim-loader calc(var(--frame)*4.7) ease infinite;
-  } .loader::after {
+  }
+
+  &::after {
     /* @note Les pixels donnent un rendus plus précis quelque soit l'échelle. */
     inset: 7px;
     /* @note Multiplicateur arbitraire. */
     animation: anim-loader calc(var(--frame)*1.51) ease infinite;
-  } @keyframes anim-loader {
+  }
+} @keyframes anim-loader {
   from {
     transform: rotate(0deg);
   }
@@ -3229,7 +3892,8 @@ select {
   position: relative;
   /* @note Pas de hauteur minimum, celle-ci doit être gérée en fonction de la boite. */
   /* min-height: 7.5em */
-} .ribbon-content > [class*='ribbon'] {
+
+  & > [class*='ribbon'] {
     --color: currentcolor;
     --bg-color: var(--colorG33);
     position: absolute;
@@ -3242,15 +3906,14 @@ select {
     text-align: center;
     text-decoration: none;
     color: var(--color);
-    -webkit-user-select: none;
-       -moz-user-select: none;
-            user-select: none;
-  } .ribbon-content > [class*='ribbon']::before,
-    .ribbon-content > [class*='ribbon']::after {
+    user-select: none;
+
+    &::before,
+    &::after {
       content: '';
       position: absolute;
       inset: 0;
-      -webkit-clip-path: polygon(
+      clip-path: polygon(
         2em 0,
         8em 0,
         10em 2em,
@@ -3260,62 +3923,75 @@ select {
         0 2.5em,
         0 2em
       );
-              clip-path: polygon(
-        2em 0,
-        8em 0,
-        10em 2em,
-        10em 2.5em,
-        9.5em 2em,
-        0.5em 2em,
-        0 2.5em,
-        0 2em
-      );
-    } .ribbon-content > [class*='ribbon']::before {
+    }
+
+    &::before {
       top: 0.1em;
       height: 1.8em;
       border: 2px dotted var(--colorA2);
       border-inline: none;
-    } .ribbon-content > [class*='ribbon']::after {
+    }
+
+    &::after {
       z-index: -1;
       background-color: var(--bg-color);
       border-bottom: 0.5em solid var(--bg-color);
       transition: background-color 0.2s ease-in-out;
-    } .ribbon-content > [class*='ribbon-top'] {
+    }
+  }
+
+  & > [class*='ribbon-top'] {
     filter: drop-shadow(0 0.5em 0.5em var(--colorAB1));
-  } .ribbon-content > [class*='ribbon-top']::after {
+
+    &::after {
       background-image: linear-gradient(
         to top,
         var(--colorAB3),
         var(--colorAB2) 1.25em
       );
-    } .ribbon-content > [class*='ribbon-bottom'] {
+    }
+  }
+
+  & > [class*='ribbon-bottom'] {
     filter: drop-shadow(0 -0.5rem 0.5rem var(--colorAB1));
-  } .ribbon-content > [class*='ribbon-bottom']::after {
+
+    &::after {
       background-image: linear-gradient(
         to top,
         var(--colorAB2),
         var(--colorAB3) 1.25em
       );
-    } .ribbon-content > .ribbon-top-left {
+    }
+  }
+
+  & > .ribbon-top-left {
     top: 0;
     left: 0;
     /* Alternative possible mais positionnement plus difficile à comprendre car tient compte de la direction imposée par rotate. */
     /* transform rotate(-45deg) translate(-2.65em, -.7em) */
     /* @note L'ordre des valeurs est importante. */
     transform: translate(-2.35em, 1.4em) rotate(-45deg);
-  } .ribbon-content > .ribbon-top-right {
+  }
+
+  & > .ribbon-top-right {
     top: 0;
     right: 0;
     transform: translate(2.35em, 1.4em) rotate(45deg);
-  } .ribbon-content > .ribbon-bottom-left {
+  }
+
+  & > .ribbon-bottom-left {
     bottom: 0;
     left: 0;
     transform: translate(-2.35em, -1.4em) rotate(225deg);
-  } .ribbon-content > .ribbon-bottom-right {
+  }
+
+  & > .ribbon-bottom-right {
     bottom: 0;
     right: 0;
     transform: translate(2.35em, -1.4em) rotate(135deg);
-  } .ribbon-content > a[class*='ribbon'] {
+  }
+
+  & > a[class*='ribbon'] {
     transition: color 0.2s ease-in-out;
   
     /*
@@ -3323,13 +3999,20 @@ select {
       border-color: rgba(0, 0, 0, .3);
     }
     */
-  } .ribbon-content > a[class*='ribbon']::after {
+  
+    &::after {
       background-color: var(--color2);
-    } .ribbon-content > a[class*='ribbon']:where(:focus, :hover, :active) {
+    }
+  
+    &:where(:focus, :hover, :active) {
       color: var(--colorG18);
-    } .ribbon-content > a[class*='ribbon']:where(:focus, :hover, :active)::after {
+  
+      &::after {
         background-color: var(--color5);
-      } .forum {
+      }
+    }
+  }
+} .forum {
   all: unset;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -3343,84 +4026,120 @@ select {
   border-radius: var(--r1);
   box-shadow: var(--shadow1);
   gap: 0 1em;
-} @media (width < 35.01em) { .topic-item {
+
+  @media (width < 35.01em) {
     grid-template-columns: minmax(0, 1fr) 2em;
     grid-template-areas: 'ttt ttt' 'uuu aaa';
-}
-  } @media (width > 35.01em) { .topic-item {
+  }
+
+  @media (width > 35.01em) {
     grid-template-columns: 4em minmax(0, 1fr);
     grid-template-areas: 'aaa ttt' 'aaa uuu';
-}
-  } .topic-item .topic-link {
+  }
+
+  & .topic-link {
     /* @note Permet à tout l'élément d'être cliquable (simulation d'imbrication des liens) */
     position: absolute;
     inset: 0;
     z-index: 1;
-  } .topic-item .topic-link:where(:hover, :active) + * h2 a {
+
+    &:where(:hover, :active) + * h2 a {
       /* @note Pas de focus car tabindex='-1' */
       /* color: var(--colorW); */
       text-decoration: underline;
-    } .topic-item > * a {
+    }
+  }
+
+  & > * a {
     /* @note Rétablit la possibilité de cliquer les liens de base en les faisant passer au dessus. */
     position: relative;
     z-index: 3;
     text-decoration: none;
-  } .topic-item > :nth-child(2),
-  .topic-item > :nth-child(3) {
+  }
+
+  & > :nth-child(2),
+  & > :nth-child(3) {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
     gap: 0 1em;
-  } .topic-item :where(p, ul, li) {
+  }
+
+  & :where(p, ul, li) {
     all: unset;
-  } .topic-item > :nth-child(2) {
+  }
+
+  & > :nth-child(2) {
     grid-area: ttt;
-  } .topic-item > :nth-child(2) div {
+  }
+
+  & > :nth-child(2) div {
     flex-shrink: 0;
-  } .topic-item > :nth-child(3) {
+  }
+
+  & > :nth-child(3) {
     flex-wrap: wrap;
-  } .topic-item > :nth-child(3) p {
+
+    & p {
       justify-content: start;
       margin-block: 0.25em 1em;
-    } .topic-item > :nth-child(3) ul {
+    }
+
+    & ul {
       display: flex;
       flex-wrap: wrap;
       gap: calc(var(--gap)/2) calc(var(--gap)/2);
       font-size: 0.8em;
       margin-block-end: 1em;
-    } .topic-item > :nth-child(3) ul li {
+
+      & li {
         margin-block-end: 0.5em;
-      } .topic-item > :nth-child(3) ul > :last-child {
+      }
+
+      & > :last-child {
         margin-inline-end: 0;
-      } .topic-item > :nth-child(3) ul a {
+      }
+
+      & a {
         padding: 0.25em 0.5em 0.25em 1.25em;
         white-space: nowrap;
         background-color: var(--colorG15);
-        -webkit-clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
-                clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
-      } .topic-item h2 {
+        clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
+      }
+    }
+  }
+
+  & h2 {
     all: unset;
     margin-block: 1.25em 0;
     font-weight: bold;
     /* font-size: 1em; */
     text-wrap: balance;
-  } .topic-item h2 a {
+    & a {
       color: var(--colorT);
-    } .topic-item h2 a:where(:focus, :hover, :active) {
+    }
+
+    & a:where(:focus, :hover, :active) {
       text-decoration: underline;
-    } .topic-item.topic-solved > :nth-child(2) svg:first-child {
+    }
+  }
+
+  &.topic-solved > :nth-child(2) svg:first-child {
     color: var(--colorS4);
-  } .avatars {
+  }
+} .avatars {
   grid-area: aaa;
   position: relative;
   margin: auto;
-} @media (width < 35.01em) { .avatars {
+
+  @media (width < 35.01em) {
     /* @note Valeur obtenue de manière un peu empirique, liée à la propriété font-size définie ci après. */
     margin-block-end: 2em;
     font-size: 0.5em;
-}
-  } .avatars,
-  .avatars > * {
+  }
+
+  &,
+  & > * {
     width: 3.5em;
     height: 3.5em;
     background-image: var(--img, '');
@@ -3428,15 +4147,24 @@ select {
     background-size: cover;
     border-radius: 50%;
     border: 0.2em solid var(--colorG27);
-  } .avatars > * {
+  }
+
+  & > * {
     position: absolute;
-  } .avatars > :nth-child(1) {
+  }
+
+  & > :nth-child(1) {
     transform: translate(1.2em, 1em) scale(0.5);
-  } .avatars > :nth-child(2) {
+  }
+
+  & > :nth-child(2) {
     transform: translate(1.2em, 0.2em) scale(0.5);
-  } .avatars > :nth-child(3) {
+  }
+
+  & > :nth-child(3) {
     transform: translate(1.2em, -0.6em) scale(0.5);
-  } html,
+  }
+} html,
 .nav,
 .cmd-nav,
 .cmd-nav:not(:focus, :hover, .active) svg,
@@ -3498,66 +4226,93 @@ html {
 }
 */ [class*='demo-items'] {
   --itemHeight: 2em;
-} [class*='demo-items'] > * {
+
+  & > * {
     box-sizing: border-box;
     padding: 1em;
     background-color: var(--colorG27);
     box-shadow: var(--shadow1);
-  } [class*='demo-items'] > * code {
+  }
+
+  & > * code {
     margin-left: 0.2em;
     background-color: var(--colorAB2);
-  } .demo-items-empty > * {
+  }
+} .demo-items-empty > * {
   min-height: var(--itemHeight);
 } .demo-item {
   box-sizing: border-box;
   padding: 1em;
   background-color: var(--colorG27);
   box-shadow: var(--shadow1);
-} .demo-item.ribbon-content {
+
+  &.ribbon-content {
     /* @note Si ribbon, alors une hauteur minimum doit être présente sur les éléments parents vides. */
     min-height: 7.5em;
-  } .demo-items-color {
+  }
+} .demo-items-color {
   color: var(--colorG18);
-} .demo-items-color > :nth-child(1n) {
+    & > :nth-child(1n) {
       background-color: hsl(15, 100%, 50%);
-    } .demo-items-color > :nth-child(2n) {
+    }
+    & > :nth-child(2n) {
       background-color: hsl(22, 100%, 50%);
-    } .demo-items-color > :nth-child(3n) {
+    }
+    & > :nth-child(3n) {
       background-color: hsl(29, 100%, 50%);
-    } .demo-items-color > :nth-child(4n) {
+    }
+    & > :nth-child(4n) {
       background-color: hsl(36, 100%, 50%);
-    } .demo-items-color > :nth-child(5n) {
+    }
+    & > :nth-child(5n) {
       background-color: hsl(43, 100%, 50%);
-    } .demo-items-color > :nth-child(6n) {
+    }
+    & > :nth-child(6n) {
       background-color: hsl(50, 100%, 50%);
-    } .demo-items-color > :nth-child(7n) {
+    }
+    & > :nth-child(7n) {
       background-color: hsl(57, 100%, 50%);
-    } .demo-items-color > :nth-child(8n) {
+    }
+    & > :nth-child(8n) {
       background-color: hsl(64, 100%, 50%);
-    } .demo-items-color > :nth-child(9n) {
+    }
+    & > :nth-child(9n) {
       background-color: hsl(71, 100%, 50%);
-    } .demo-items-color > :nth-child(10n) {
+    }
+    & > :nth-child(10n) {
       background-color: hsl(78, 100%, 50%);
-    } .demo-items-color > :nth-child(11n) {
+    }
+    & > :nth-child(11n) {
       background-color: hsl(85, 100%, 50%);
-    } .demo-items-color > :nth-child(12n) {
+    }
+    & > :nth-child(12n) {
       background-color: hsl(92, 100%, 50%);
-    } .demo-items-color > :nth-child(13n) {
+    }
+    & > :nth-child(13n) {
       background-color: hsl(99, 100%, 50%);
-    } .demo-items-color > :nth-child(14n) {
+    }
+    & > :nth-child(14n) {
       background-color: hsl(106, 100%, 50%);
-    } .demo-items-color > :nth-child(15n) {
+    }
+    & > :nth-child(15n) {
       background-color: hsl(113, 100%, 50%);
-    } .demo-items-color code {
+    }
+
+  & code {
     background-color: var(--colorG27);
-  } .demo-counter > * {
+  }
+} .demo-counter > * {
   counter-increment: div;
-} .demo-counter > *::before {
+
+  &::before {
     content: counter(div) '.';
     display: inline;
-  } .demo-counter > * :first-child {
+  }
+
+  & :first-child {
     display: inline;
-  } .type-components .box2 {
+  }
+} .type-components .box2 {
   scroll-margin-block-start: 1em;
 } @media (width < 50.01em) {
   .type-components .box2 {
@@ -3591,21 +4346,27 @@ html {
   .type-components .box2 > .ribbon-top-right {
     transform: translate(2.85em, 0.9em) rotate(45deg) !important;
   }
-} .demo-icons ruby {
+} .demo-icons {
+  & ruby {
     padding: 1em 0 0.5em;
     background-color: var(--color1);
     border-radius: var(--r2);
     transition: all 0.3s ease-in-out;
-  } .demo-icons ruby:hover {
+    &:hover {
       background-color: var(--color2);
-    } .demo-icons ruby:hover * {
+      & * {
         color: var(--colorW);
-      } .demo-icons svg {
+      }
+    }
+  }
+  & svg {
     font-size: 2em;
-  } .demo-icons rt {
+  }
+  & rt {
     font-size: 0.8em;
     color: var(--colorG38);
-  } /*
+  }
+} /*
 body::after {
   content: 'XS';
   position: fixed;
@@ -3659,9 +4420,11 @@ body::after {
   visibility: hidden;
 } a[aria-disabled='true'] { /* @todo En expérimentation. */
   cursor: not-allowed;
-} a[aria-disabled='true']:active {
+
+  &:active {
     pointer-events: none;
-  } .sr-only {
+  }
+} .sr-only {
   /* @note Caché visuellement mais disponible pour les lecteurs d'écran. */
   /* @see https://github.com/h5bp/html5-boilerplate/blob/master/dist/css/style.css */  
   position: absolute;
@@ -3685,9 +4448,7 @@ body::after {
   position: relative;
 }
 */ .protected {
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
+  user-select: none;
 } .onaline {
   /* @note Texte sur une ligne sans dépassement. */
   overflow: hidden;

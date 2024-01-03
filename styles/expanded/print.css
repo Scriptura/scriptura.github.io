@@ -155,37 +155,37 @@
 } html {
   /* @bugfix Prevent adjustments of font size after orientation changes @affected iOS. */
   -webkit-text-size-adjust: 100%;
+  /* -webkit-tap-highlight-color: transparent */
   /* Change the default tap highlight to be completely transparent. @affected iOS. */
   color: var(--colorT);
   background-color: var(--color1);
   font-family: var(--font-list1);
-  /* @bugfix Correct the line height @affected All browsers. */
-  line-height: 1.5;
-  scroll-behavior: smooth;
-  /* -webkit-tap-highlight-color: transparent */
   /**
    * Sur les verrous CSS @see https://hugogiraudel.com/2020/05/18/using-calc-to-figure-out-optimal-line-height/
    * Outil en ligne @see https://modern-fluid-typography.vercel.app
    * Le site étant entièrement scalable dans son ensemble, il n'y a pas d'utilisation de vérrou CSS en raison de ses effets de bords sur certains éléments (typographie, pre > code, ribbons...).
   /* font-size: clamp(1em, .7vw + .1em, 1.125em); */
-} @media (prefers-reduced-motion: reduce) { html {
+  /* @bugfix Correct the line height @affected All browsers. */
+  line-height: 1.5;
+  scroll-behavior: smooth;
+
+  @media (prefers-reduced-motion: reduce) {
     /* Désactivation du défilement fluide si réduction des animations dans les préférences utilisateur du navigateur @see https://developer.mozilla.org/fr/docs/Web/CSS/scroll-behavior#Accessibilité */
     scroll-behavior: auto;
-}
-  } ::-moz-selection {
-  color: var(--colorW);
-  background-color: var(--colorAS2);
+  }
 } ::selection {
   color: var(--colorW);
   background-color: var(--colorAS2);
 } a {
   color: var(--colorT2);
   text-underline-offset: 10%;
-} a:where(:focus, :hover, :active) {
+
+  &:where(:focus, :hover, :active) {
     color: var(--colorW);
     text-decoration: none;
     outline: none;
-  } p {
+  }
+} p {
   margin-block: 0.75em;
 } hr {
   /* @bugfix Show the overflow @affected Edge and IE. */
@@ -220,10 +220,11 @@ h6,
 } :where(.h2, .h3, .h4, .h5, .h6) {
   /* @note Important à redéfinir pour les classes aposées sur d'autres éléments que des titres, comme <legend> ou <label> par exemple. */
   margin-block: 0.83em;
-} fieldset > legend:where(.h2, .h3, .h4, .h5, .h6) {
+  fieldset > legend& {
     /* @bugfix @affected Chrome @note Si pas de correctif la marge passe en dessous du fieldset conteneur. */
     padding-block-start: 0.83em;
-  } h1,
+  }
+} h1,
 .h1 {
   margin-block: clamp(0.83em, 5vw, 0.67em); /* 0.83em */
   font-size: clamp(2em, 5vw, 2.5em); /* 2.5em */
@@ -254,8 +255,7 @@ h6,
   /* @bugfix Add the correct text decoration @affected Chrome, Edge, IE, Opera, and Safari. */
   text-decoration: underline;
   /* @bugfix Idem */
-  -webkit-text-decoration: underline dotted;
-          text-decoration: underline dotted;
+  text-decoration: underline dotted;
 } b,
 strong {
   /* @bugfix Add the correct font weight @affected Chrome, Edge, and Safari. */
@@ -292,37 +292,55 @@ sup {
 } details {
   /* @note Tentative de reproduire avec les marges l'espacement des items d'une liste. */
   display: block;
-} details:first-child {
+
+  &:first-child {
     margin-block-start: 0.75em;
-  } details:last-child {
+  }
+
+  &:last-child {
     margin-block-end: 0.75em;
-  } :not(.accordion) > details details {
+  }
+
+  :not(.accordion) > & details {
     margin: 0 0 0 2em;
-  } :not(.accordion) > details details:first-child {
+
+    &:first-child {
       margin-block-start: 0;
-    } :not(.accordion) > details details:last-child {
+    }
+
+    &:last-child {
       margin-block-end: 0;
-    } summary {
+    }
+  }
+} summary {
   /* @bugfix Add the correct display @affected All browsers. */
   display: list-item;
   list-style: none;
   cursor: pointer;
-} summary:focus-visible,
-  summary:hover {
+
+  &:focus-visible,
+  &:hover {
     outline: none;
     color: var(--colorW);
     text-decoration: underline;
-  } summary:focus-visible::before, summary:hover::before {
+
+    &::before {
       color: var(--colorW);
-    } summary::before {
+    }
+  }
+
+  &::before {
     /* @note Nous n'utilisons pas ::marker car le rendu diffère sur mobiles, ceci nous permet aussi de personnaliser la puce. @affected Chrome mobile. */
     content: '➤';
     display: inline-block;
     margin-inline-end: 0.5em;
     color: var(--color2);
-  } details[open] > summary::before {
+  }
+
+  details[open] > &::before {
     transform: rotate(90deg);
-  } /*
+  }
+} /*
 template {
   display: none; /* @bugfix Add the correct display @affected IE 10+.
 }
@@ -338,9 +356,11 @@ template {
 } ruby {
   display: grid;
   gap: 0.5em;
-} ruby * {
+
+  & * {
     margin: auto;
-  } ::marker {
+  }
+} ::marker {
   color: var(--color2);
 } .main-heading {
   /* @note Alias de overflow-wrap @see https://developer.mozilla.org/fr/docs/Web/CSS/overflow-wrap */
@@ -358,7 +378,8 @@ template {
   line-height: 1;
   /* letter-spacing: 0.5em; */
   background-image: none;
-} hr[data-hr]::after, .decorative-hr hr::after {
+
+  &::after {
     content: attr(data-hr);
     display: block;
     width: 100%;
@@ -366,7 +387,8 @@ template {
     font-size: 2em;
     text-align: center;
     color: var(--colorA2);
-  } .decorative-hr hr::after {
+  }
+} .decorative-hr hr::after {
   content: '✻ ✻ ✻';
 } .blockquote blockquote {
   position: relative;
@@ -374,45 +396,61 @@ template {
   padding-inline-start: 2em;
   background: repeating-linear-gradient(-45deg, transparent 0 5px, var(--colorA1) 5px 10px) no-repeat;
   background-size: 0.5em 100%;
-} .blockquote blockquote::before,
-  .blockquote blockquote::after {
+
+  &::before,
+  &::after {
     position: absolute;
     left: -0.1em;
     line-height: 0.5;
     font-size: 3rem;
     color: var(--color2);
     font-family: var(--font-list2);
-  } .blockquote blockquote::before {
+  }
+
+  &::before {
     content: '\00AB'; /* '\201D' */
     top: -0.1em;
-  } .blockquote blockquote::after {
+  }
+
+  &::after {
     content: '\00BB'; /* '\201C' */
     bottom: 0;
-  } .blockquote blockquote footer {
+  }
+
+  & footer {
     margin-block: 0.75em;
     /* text-align: right; */
-  } .blockquote blockquote footer::before {
+  }
+
+  & footer::before {
     content: '\2014 \00A0';
-  } .blockquote blockquote footer::after {
+  }
+
+  & footer::after {
     content: '.';
-  } /* @note Grec ancien (grc), grec moderne ('el'). */ :lang(he) {
+  }
+} /* @note Grec ancien (grc), grec moderne ('el'). */ :lang(he) {
   direction: rtl;
   /* font-family: $font-list; */
 } .verse {
   color: var(--color2);
-} .links p a:not([href^='#'])::after {
+} .links p a {
+  &:not([href^='#'])::after {
     /* @note Liens internes, sauf pour les ancres. */
     content: ' ↩';
-  } /* Liens externes */ .links p a[href*='//']::after
+  }
+  /* Liens externes */
+  &[href*='//']::after
   {
     content: ' ↗';
-  } .justify {
-  -webkit-hyphens: auto;
-          hyphens: auto;
-} @media (width > 35.01em) { .justify {
+  }
+} .justify {
+  hyphens: auto;
+
+  @media (width > 35.01em) {
     text-align: justify;
-}
-  } /* @import 'layout'; */ /* @note Utiliser .grid2 pour avoir deux colonnes, etc., au-delà de .grid4 utiliser .grid-auto (qui par défaut aura 5 colonnes max pour la largeur prévue de notre site). */ /* @note Avec `minmax` la grille ne sera pas tributaire de son contenu en responsive @see https://css-tricks.com/equal-width-columns-in-css-grid-are-kinda-weird/ */ :has(> [class^='grid']),
+  }
+} /* @import 'layout'; */ /* @note Utiliser .grid2 pour avoir deux colonnes, etc., au-delà de .grid4 utiliser .grid-auto (qui par défaut aura 5 colonnes max pour la largeur prévue de notre site). */ /* @note Avec `minmax` la grille ne sera pas tributaire de son contenu en responsive @see https://css-tricks.com/equal-width-columns-in-css-grid-are-kinda-weird/ */ :has(> [class^='grid']),
 .parent-grid {
   /* @note ".parent-grid" est un fallback pour le sélecteur :has(), ajout de la classe via JS. */
   container: grid/inline-size;
@@ -421,28 +459,40 @@ template {
   display: grid;
   grid-auto-flow: dense;
   grid-template-columns: repeat(var(--n, 1), minmax(0, 1fr));
+
+  &.row-defines {
+    /* @note Permet aux spans de la propriété grid-row de se caler sur les lignes. Intéressant mais pas souhaitable d'emblée en production, d'où cette classe. */
+    grid-auto-rows: minmax(0, 1fr);
+  }
+
+  &.gap {
+    gap: var(--gap);
+  }
+
+  &.gap-block {
+    /* @note padding et non margin, car ne doit pas pouvoir fusionner avec les marges de l'élément suivant. */
+    padding-block: var(--gap);
+  }
+
+  &.gap-top {
+    /* @note Idem. */
+    padding-block-start: var(--gap);
+  }
+
+  &.gap-bottom {
+    /* @note Idem. */
+    padding-block-end: var(--gap);
+  }
+
+  &.gap-vertical {
+    gap: 0 var(--gap);
+  }
   /*
   &.masonry {
     grid-template-rows: masonry; /* @note Implémentation future en CSS @todo À surveiller.
   }
   */
-} .row-defines[class^='grid'] {
-    /* @note Permet aux spans de la propriété grid-row de se caler sur les lignes. Intéressant mais pas souhaitable d'emblée en production, d'où cette classe. */
-    grid-auto-rows: minmax(0, 1fr);
-  } .gap[class^='grid'] {
-    gap: var(--gap);
-  } .gap-block[class^='grid'] {
-    /* @note padding et non margin, car ne doit pas pouvoir fusionner avec les marges de l'élément suivant. */
-    padding-block: var(--gap);
-  } .gap-top[class^='grid'] {
-    /* @note Idem. */
-    padding-block-start: var(--gap);
-  } .gap-bottom[class^='grid'] {
-    /* @note Idem. */
-    padding-block-end: var(--gap);
-  } .gap-vertical[class^='grid'] {
-    gap: 0 var(--gap);
-  } .grid-auto,
+} .grid-auto,
 .grid-auto-min {
   /* @note Ne pas définir la variable au-dessus de sa valeur par défaut afin d'éviter des dépassement sur les écrans de petites définitions. Préférer alors les grilles prédéfinies. */
   grid-template-columns: repeat(auto-fit, minmax(var(--size-grid, 15em), 1fr));
@@ -566,15 +616,23 @@ template {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-} .flex.gap {
+
+  &.gap {
     gap: var(--gap);
-  } .flex.gap-top {
+  }
+
+  &.gap-top {
     margin-block-start: var(--gap);
-  } .flex.gap-bottom {
+  }
+
+  &.gap-bottom {
     margin-block-end: var(--gap);
-  } .flex .item-push {
+  }
+
+  & .item-push {
     margin-inline-start: auto;
-  } .order {
+  }
+} .order {
   /* @note Valeur négative car l'utilisation de cette classe est souvent utilisée pour une monté des éléments frères plutôt qu'une descente. */
   order: var(--o, -1);
 } @container grid (width < 35.01em) {
@@ -629,86 +687,85 @@ template {
   }
 }
 */ /* @bug @affected Chrome @note Nombreux bugs : éléments html ou effets d'ombre tronqués s'ils dépassent des colonnes, drop-shadow utilisé sur des éléments internes aux colonnes créé des artefacts. */ [class^='column'] {
-  -moz-column-gap: 0;
-       column-gap: 0;
+  column-gap: 0;
   position: relative;
-} [class^='column'] > * {
+
+  & > * {
     display: inline-block;
     width: 100%;
     /* @note Évite aux items enfants de column d'être éventuellement coupés en deux. @see https://stackoverflow.com/questions/7785374 */
-    -moz-column-break-inside: avoid;
-         break-inside: avoid-column;
+    break-inside: avoid-column;
     /* @note Alias de overflow-wrap @see https://developer.mozilla.org/fr/docs/Web/CSS/overflow-wrap */
     word-wrap: break-word;
-  } .gap[class^='column'] {
-    -moz-column-gap: var(--gap);
-         column-gap: var(--gap);
+  }
+
+  &.gap {
+    column-gap: var(--gap);
     /* @note À l'inverse de grid layout, le module columns a besoin des marges pour bien s'implémenter. */
     margin-block-end: calc(var(--gap)*-1);
-  } .gap[class^='column'] > * {
+
+    & > * {
       margin-block-end: var(--gap);
-    } .gap-top[class^='column'] {
+    }
+  }
+
+  &.gap-top {
     margin-block-start: var(--gap);
-  } .gap-bottom[class^='column'] {
+  }
+
+  &.gap-bottom {
     margin-block-end: 0;
-  } .gap-vertical[class^='column'] {
+  }
+
+  &.gap-vertical {
     gap: 0 var(--gap);
     /* column-gap: var(--gap); */
-  } @media (width < 35.01em) {
+  }
+} @media (width < 35.01em) {
   .sizeXS-column2 {
-    -moz-column-count: 2;
-         column-count: 2;
+    column-count: 2;
   }
 } @media (width > 35.01em) {
   .column2,
   .column3,
   .column4,
   .s-column2 {
-    -moz-column-count: 2;
-         column-count: 2;
+    column-count: 2;
   }
 
   .column5,
   .column6 {
-    -moz-column-count: 3;
-         column-count: 3;
+    column-count: 3;
   }
 } @media (width > 50.01em) {
   .column3,
   .column4 {
-    -moz-column-count: 3;
-         column-count: 3;
+    column-count: 3;
   }
 
   .column5,
   .column6 {
-    -moz-column-count: 4;
-         column-count: 4;
+    column-count: 4;
   }
 
   .m-column2 {
-    -moz-column-count: 2;
-         column-count: 2;
+    column-count: 2;
   }
 } @media (width > 92.01em) {
   .column4 {
-    -moz-column-count: 4;
-         column-count: 4;
+    column-count: 4;
   }
 
   .column5 {
-    -moz-column-count: 5;
-         column-count: 5;
+    column-count: 5;
   }
 
   .column6 {
-    -moz-column-count: 6;
-         column-count: 6;
+    column-count: 6;
   }
 
   .l-column3 {
-    -moz-column-count: 3;
-         column-count: 3;
+    column-count: 3;
   }
 } /* @import 'navigation'; */ /* @import 'breadcrumb'; */ /* @import 'alert'; */ ul,
 ol {
@@ -719,66 +776,83 @@ ol {
   list-style-type: square;
 } ol ol {
   list-style-type: lower-latin;
-} ol ol ol {
+
+  & ol {
     list-style-type: lower-greek;
-  } .list-gap {
+  }
+} .list-gap {
   display: grid;
   gap: 0.75em; /* @note Écart calé sur les paragraphes. */
 } .list-stripe,
 .list-stripe-links {
+  /* @note Ne pas utiliser : ne travaille pas de concert avec la classe `.grid`. */
   /* all: unset; */
   margin: 0;
   padding-inline-start: 0;
-  /* @note Ne pas utiliser : ne travaille pas de concert avec la classe `.grid`. */
-} .list-stripe li, .list-stripe-links li {
+
+  & li {
     display: block;
     border-radius: var(--r2);
-  } .list-stripe > *, .list-stripe-links > * {
+  }
+
+  & > * {
     padding: 0.5em 1em;
     background-color: var(--colorG27);
     box-shadow: var(--shadow6);
-  } .list-stripe-links a {
+  }
+} .list-stripe-links {
+  & a {
     display: block;
     color: var(--colorT);
     text-decoration: none;
-  } .list-stripe-links li:focus-within,
-  .list-stripe-links li:hover {
+  }
+
+  & li:focus-within,
+  & li:hover {
     background-color: var(--color2);
     outline: none;
     animation: anim-list 0.05s ease-in-out;
-  } .list-straight,
+  }
+} .list-straight,
 .list-rounded {
   margin: 0;
   padding-inline-start: 0;
-} .list-straight li, .list-rounded li {
+
+  & li {
     display: grid;
     grid-template-columns: 3em minmax(0, 1fr);
-  } .list-straight li:focus-within,
-    .list-rounded li:focus-within,
-    .list-straight li:hover,
-    .list-rounded li:hover {
+
+    &:focus-within,
+    &:hover {
       animation: anim-list 0.05s ease-in-out;
-    } .list-straight li:where(:focus-within, :hover, :active) svg, .list-rounded li:where(:focus-within, :hover, :active) svg, .list-straight li:focus-within::before, .list-rounded li:focus-within::before, .list-straight li:hover::before, .list-rounded li:hover::before, .list-straight li:active::before, .list-rounded li:active::before {
+    }
+
+    &:where(:focus-within, :hover, :active) svg,
+    &:focus-within::before,
+    &:hover::before,
+    &:active::before {
       color: var(--colorW);
       background-color: var(--color5);
-    } .list-straight li::before,
-  .list-rounded li::before,
-  .list-straight svg,
-  .list-rounded svg,
-  .list-straight a,
-  .list-rounded a {
+    }
+  }
+
+  & li::before,
+  & svg,
+  & a {
     box-shadow: var(--shadow6);
     transition: color, background-color 0.3s ease-in-out;
-  } .list-straight li::before,
-  .list-rounded li::before,
-  .list-straight svg,
-  .list-rounded svg {
+  }
+
+  & li::before,
+  & svg {
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--colorT);
     background-color: var(--color2);
-  } .list-straight a, .list-rounded a {
+  }
+
+  & a {
     display: flex;
     align-items: center;
     width: 100%;
@@ -786,70 +860,85 @@ ol {
     padding: 0.5em 1em;
     background-color: var(--colorG27);
     text-decoration: none;
-  } .list-straight a:where(:focus, :hover, :active), .list-rounded a:where(:focus, :hover, :active) {
+
+    &:where(:focus, :hover, :active) {
       /* color: var(--colorW); */
       background-color: var(--color2);
       /* text-decoration: none; */
-    } .list-straight li {
+    }
+  }
+} .list-straight {
+  & li {
     box-shadow: var(--shadow6);
-  } .list-straight li::before,
-  .list-straight svg {
+  }
+  & li::before,
+  & svg {
     width: 3em;
     border-radius: var(--r3) 0 0 var(--r3);
-    -webkit-clip-path: polygon(
+    clip-path: polygon(
       0% 0%,
       calc(100% - 1em) 0,
       100% 50%,
       calc(100% - 1em) 100%,
       0% 100%
     );
-            clip-path: polygon(
-      0% 0%,
-      calc(100% - 1em) 0,
-      100% 50%,
-      calc(100% - 1em) 100%,
-      0% 100%
-    );
-  } .list-straight li::before {
+  }
+
+  & li::before {
     padding-inline-end: 0.7em;
-  } .list-straight svg {
+  }
+
+  & svg {
     min-height: 100%;
     /* @note Détermine en creux la taille de l'icône. */
     padding-inline: 0.7em 1.1em;
-  } .list-straight a {
+  }
+
+  & a {
     position: relative;
     right: 0.5em;
     width: calc(100% + 0.5em);
     padding-inline-start: 1.5em;
     border-radius: 0 var(--r3) var(--r3) 0;
-    -webkit-clip-path: polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%);
-            clip-path: polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%);
-  } .list-rounded li:focus-within svg,
-  .list-rounded li:hover svg,
-  .list-rounded li:focus-within::before,
-  .list-rounded li:hover::before {
+    clip-path: polygon(100% 0, 100% 100%, 0% 100%, 1em 50%, 0% 0%);
+  }
+} .list-rounded {
+  & li:focus-within svg,
+  & li:hover svg,
+  & li:focus-within::before,
+  & li:hover::before {
     transform: rotate(360deg);
-  } .list-rounded li::before,
-  .list-rounded svg {
+  }
+
+  & li::before,
+  & svg {
     width: 2.5em;
     height: 2.5em;
     /* @note Pour centrer la "puce" si contenu de l'item trop important. @todo Résultat visuel à évaluer. */
     margin: auto 0;
     transition: transform 0.3s ease-in-out;
-  } .list-rounded li::before {
+  }
+
+  & li::before {
     border-radius: 50%;
-  } .list-rounded svg {
+  }
+
+  & svg {
     position: relative;
     padding-inline: 0.7em;
-    -webkit-clip-path: circle(50%);
-            clip-path: circle(50%);
-  } .list-rounded a {
+    clip-path: circle(50%);
+  }
+
+  & a {
     border-radius: 1.25em;
-  } ol:where(.list-straight, .list-rounded) li {
+  }
+} ol:where(.list-straight, .list-rounded) li {
   counter-increment: li;
-} ol:where(.list-straight, .list-rounded) li::before {
+
+  &::before {
     content: counter(li);
-  } [class^='grid'][class*='list-'] {
+  }
+} [class^='grid'][class*='list-'] {
   gap: var(--gap);
 } [start] > .chorus {
   /* @note Pour les refrains. Pour la cohérence de la liste les numéros doivent être définis avec l'attribut `start="0" afin de commencer par "1".` */
@@ -875,21 +964,18 @@ ol {
 } img {
   /* @note Évite un décalage possible de l'élément suivant. */
   vertical-align: middle;
+  /* @bugfix @todo Depuis l'introduction des attributs 'srcset' et 'sizes' la largeur ne doit plus dépendre de l'image par défaut. */
   /* width: 100%; */
   max-width: 100%;
   height: auto;
   border-style: none;
   /* @note N'a pas pour vocation ici de "protéger" l'image, mais d'éviter la surbrillance non attendue suite à une sélection involontaire. */
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
-  /* @bugfix @todo Depuis l'introduction des attributs 'srcset' et 'sizes' la largeur ne doit plus dépendre de l'image par défaut. */
-} img:-webkit-full-screen {
+  user-select: none;
+
+  &:fullscreen {
     object-fit: contain;
-  } img:fullscreen {
-    -o-object-fit: contain;
-       object-fit: contain;
-  } figure {
+  }
+} figure {
   /* @bugfix @affected All browers. */
   margin: 0;
 } [class*='figure-image'] {
@@ -898,13 +984,13 @@ ol {
   color: var(--colorT);
   background-color: var(--colorG27);
   box-shadow: var(--shadow5);
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
-} [class*='figure-image'] figcaption {
+  user-select: none;
+
+  & figcaption {
     padding-block-start: 0.5em;
     text-align: center;
-  } [class*='-thumbnail'] {
+  }
+} [class*='-thumbnail'] {
   /* @note Important à appliquer pour le responsive si le width n'est pas définit préalablement. */
   width: 100%;
   max-width: calc(50% - var(--gap)/2);
@@ -933,17 +1019,18 @@ ol {
   z-index: 1;
   cursor: zoom-in;
   transition: 0.15s transform;
-} .js [class*='-focus']:where(:focus-within, :hover) {
+  &:where(:focus-within, :hover) {
     box-shadow: 0.5em 0.5em 2em var(--colorAB3);
     transform: scale(1.01);
-  } @media (hover: hover) and (pointer: fine) {
+  }
+} @media (hover: hover) and (pointer: fine) {
   [class*='-focus']:focus-within {
     background-color: var(--color5);
-  }
 
-    [class*='-focus']:focus-within button {
+    & button {
       color: var(--color5);
     }
+  }
 } [class*='-focus'] button,
 .picture-area button {
   all: unset;
@@ -952,10 +1039,12 @@ ol {
   /* @affected Firefox @note La propriété !important est obligatoire pour que ce navigateur prenne en compte la règle. */
   outline: none !important;
   cursor: zoom-in;
-} [class*='-focus'] button svg, .picture-area button svg {
+
+  & svg {
     width: 100%;
     height: 100%;
-  } [class*='-focus'] button {
+  }
+} [class*='-focus'] button {
   top: 1em;
   right: 1em;
   width: 1.2em;
@@ -971,38 +1060,51 @@ ol {
   justify-content: center;
   background-color: var(--colorG13);
   cursor: zoom-out;
-} .picture-area img {
+
+  & img {
     all: unset;
     max-width: 100%;
     max-height: 100vh;
     /* @note Pour les images dotées d'un canal alpha. */
     background-color: var(--colorB);
-  } .picture-area button {
+  }
+
+  & button {
     bottom: 1em;
     right: 1em;
     width: 2em;
     height: 2em;
     color: var(--colorG60);
     cursor: zoom-out;
-  } .picture-area button:where(:focus-within, :hover, :active) {
+
+    &:where(:focus-within, :hover, :active) {
       color: var(--color5);
-    } .picture-area button.fullscreen-button {
+    }
+
+    &.fullscreen-button {
       transform: translateX(-3em);
       cursor: zoom-in;
-    } .freeze {
+    }
+  }
+} .freeze {
   overflow: clip;
-} .mosaic figure {
+} .mosaic {
+  & figure {
     padding: 0.2em;
-  } .mosaic img {
+  }
+
+  & img {
     aspect-ratio: 1;
-    -o-object-fit: cover;
-       object-fit: cover;
-  } .mosaic button {
+    object-fit: cover;
+  }
+
+  & button {
     top: 0.5em;
     right: 0.5em;
     width: 1em;
     height: 1em;
-  } /* @import 'mediaPlayer'; */ /* @import 'map'; */ /* @import 'card'; */ code,
+  }
+} /* @import 'mediaPlayer'; */ /* @import 'map'; */ /* @import 'card'; */ code,
 kbd,
 samp {
   font-family: monospace, monospace;
@@ -1022,20 +1124,31 @@ samp {
   border-radius: 0.3em;
   box-shadow: 0 0 2rem var(--colorAB3);
   line-height: 1.25em;
-} .pre:where(:focus, :active) {
+
+  &:where(:focus, :active) {
     outline: 0.1em solid var(--color2);
-  } .pre code {
+  }
+
+  & code {
     white-space: pre;
     color: var(--colorT);
     transition: color 0.5s ease-in-out;
-  } .pre code:focus-within {
+
+    &:focus-within {
       color: var(--colorW);
-    } .pre code:empty::before {
+    }
+
+    &:empty::before {
       content: '> ';
-    } .pre code:empty::after {
+    }
+
+    &:empty::after {
       content: '_';
       animation: anim-blink-empty 1s steps(2, start) infinite;
-    } .pre div {
+    }
+  }
+
+  & div {
     position: absolute;
     top: 1em;
     right: 1em;
@@ -1043,12 +1156,16 @@ samp {
     font-size: 1em;
     color: var(--colorT2);
     gap: 0.5em;
-  } .pre svg {
+  }
+
+  & svg {
     display: block;
     width: 1em;
     height: 1em;
     fill: currentcolor;
-  } .pre button {
+  }
+
+  & button {
     position: absolute;
     bottom: 1.1em;
     right: 1em;
@@ -1056,10 +1173,13 @@ samp {
     border: none;
     color: var(--colorT2);
     background-color: transparent;
-  } .pre button:where(:focus, :hover, :active) {
+
+    &:where(:focus, :hover, :active) {
       color: var(--color5);
       outline: none;
-    } .copy-offset + div {
+    }
+  }
+} .copy-offset + div {
   right: 2.5em;
 } @keyframes anim-blink-empty {
   50% {
@@ -1075,7 +1195,8 @@ samp {
   box-shadow: var(--shadow1);
   /* @note Evite un conflit avec les margins et padding des éléments enfants. Mais pose des problèmes avec les pseudo-éléments. */
   /* overflow hidden */
-} [class^='message'][class*='highlight'] {
+
+  &[class*='highlight'] {
     --icon-size: 2.5em;
     display: grid;
     grid-template-columns: var(--icon-size) minmax(0, 1fr);
@@ -1083,15 +1204,17 @@ samp {
     align-items: center;
     min-height: 5em;
     padding-inline: 1em;
-  } [class^='message'][class*='highlight'] > .icon {
+
+    & > .icon {
       width: var(--icon-size);
       height: var(--icon-size);
       padding: 25%;
       fill: var(--bg-color);
       background-color: currentcolor;
-      -webkit-clip-path: circle(50%);
-              clip-path: circle(50%);
-    } .message-info {
+      clip-path: circle(50%);
+    }
+  }
+} .message-info {
   --bg-color: var(--color6);
 } .message-success {
   --bg-color: var(--color4);
@@ -1111,28 +1234,42 @@ samp {
   font-weight: normal;
   word-break: normal;
   text-align: left;
-} [class^='table'] th {
+
+  & th {
     font-weight: normal;
-  } [class^='table'] th,
-  [class^='table'] td {
+  }
+
+  & th,
+  & td {
     vertical-align: top;
     padding: 0.5em 1em;
     box-shadow: inset 0 0 1px var(--colorG13);
-  } [class^='table'] thead th {
+  }
+
+  & thead th {
     position: sticky;
     top: 0;
     z-index: 1;
     background-color: var(--color2);
-  } [class^='table'] tfoot,
-  [class^='table'] tbody th {
+  }
+
+  & tfoot,
+  & tbody th {
     background-color: var(--colorG18);
-  } [class^='table'] tbody tr:nth-child(odd) {
+  }
+
+  & tbody tr:nth-child(odd) {
     background-color: var(--colorG27);
-  } [class^='table'] tbody tr:nth-child(even) {
+  }
+
+  & tbody tr:nth-child(even) {
     background-color: var(--color1);
-  } [class^='table'] tbody :empty::after {
+  }
+
+  & tbody :empty::after {
     content: '/';
-  } @container (35em > width) {
+  }
+} @container (35em > width) {
   [role='region'][aria-labelledby][tabindex]:has(.table-responsive) {
     all: unset;
   }
@@ -1141,153 +1278,197 @@ samp {
     margin-block-start: -0.5em;
     border-collapse: separate;
     border-spacing: 0 0.5em;
-  }
 
-    .table-responsive thead,
-    .table-responsive tfoot {
+    & thead,
+    & tfoot {
       display: none;
     }
 
-    .table-responsive td {
+    & td {
       display: block;
     }
 
-    .table-responsive td:last-child {
+    & td:last-child {
       padding-block-end: 1em;
     }
 
-    .table-responsive td {
+    & td {
       box-shadow: none;
     }
 
-    .table-responsive tr > :first-child {
+    & tr > :first-child {
       padding-block-start: 1em;
     }
 
-    .table-responsive tfoot :empty {
+    & tfoot :empty {
       display: none;
     }
 
-    .table-responsive tbody tr {
+    & tbody tr {
       background-color: var(--colorG27) !important;
       box-shadow: var(--shadow5);
-    }
 
-      .table-responsive tbody tr > * {
+      & > * {
         padding: 0 1em;
       }
+    }
 
-    .table-responsive tbody th::before,
-    .table-responsive tbody td::before {
+    & tbody th::before,
+    & tbody td::before {
       content: attr(data-thead) ' ';
       color: var(--colorT2);
     }
 
-    .table-responsive tbody :empty::after {
+    & tbody :empty::after {
       content: '...';
     }
+  }
 } /* @import 'form'; */ /* @import 'input'; */ /* @import 'checkbox'; */ /* @import 'range'; */ /* @import 'button'; */ /* @import 'accordion'; */ /* @import 'tab'; */ /* @import 'scrollTop'; */ .footer {
   padding: 0 1em;
   color: var(--colorT2);
   background-color: var(--colorG15);
   /* @todo En test... */
   box-shadow: 0.5rem 0.5rem 1rem hsla(0, 0%, 0%, 0.15);
-} .footer a {
+
+  & a {
     /* font-variant: small-caps; */
     color: var(--colorT);
     text-decoration: none;
-  } .footer a:where(:focus, :hover, :active) {
+
+    &:where(:focus, :hover, :active) {
       text-decoration: underline;
-    } .footer .wrap {
+    }
+  }
+
+  & .wrap {
     display: flex;
     max-width: 92em;
     margin: 0 auto;
-  } @media (width < 35.01em) { .footer .wrap {
+
+    @media (width < 35.01em) {
       flex-direction: column;
       align-items: center;
       text-align: center;
       line-height: 1;
       padding: 1em;
-  }
-    } @media (width > 35.01em) { .footer .wrap {
+    }
+
+    @media (width > 35.01em) {
       justify-content: space-between;
       align-items: center;
-  }
-    } .footer .wrap > :first-child {
+    }
+
+    & > :first-child {
       display: flex;
       align-items: center;
-    } .footer .logo {
+    }
+  }
+
+  & .logo {
     margin-inline-end: 1em;
-  } .footer .logo,
-    .footer .logo svg {
+
+    &,
+    & svg {
       width: 2em;
       height: 2em;
-    } .footer .wrap > :nth-child(2) {
+    }
+  }
+
+  & .wrap > :nth-child(2) {
     text-align: center;
-  } .article {
+  }
+} .article {
   display: grid;
   grid-template-columns: minmax(0, 60em) minmax(0, 1fr);
   gap: var(--gap) 0;
-} .article > header {
+
+  & > header {
     grid-column: span 2;
-  } .article h1 {
-    /* @note Nombre magique qui compense le gap entre header et .wrapper @todo À revoir. */
-    margin-block-end: 0.44em;
-  } .article > :where(.wrapper, article, form) {
-    grid-column: 1;
-    max-width: 55em;
-  } @media (width > 35.01em) { .article > :where(.wrapper, article, form) {
-      border-radius: var(--r1);
-      box-shadow: var(--shadow3);
-  }
-    } @media (35.01em < width < 50.01em) { .article > :where(.wrapper, article, form) {
-      padding: 2.5em 4em;
-  }
-    } @media (width > 50.01em) { .article > :where(.wrapper, article, form) {
-      padding: 4em 6em;
   }
 
-      .article > :where(.wrapper, article, form):nth-child(odd) {
+  & h1 {
+    /* @note Nombre magique qui compense le gap entre header et .wrapper @todo À revoir. */
+    margin-block-end: 0.44em;
+  }
+
+  & > :where(.wrapper, article, form) {
+    grid-column: 1;
+    max-width: 55em;
+
+    @media (width > 35.01em) {
+      border-radius: var(--r1);
+      box-shadow: var(--shadow3);
+    }
+
+    @media (35.01em < width < 50.01em) {
+      padding: 2.5em 4em;
+    }
+
+    @media (width > 50.01em) {
+      padding: 4em 6em;
+
+      &:nth-child(odd) {
         /* @note Limitation à 2 rangées car impression visuelle d'un désordre à partir de 3 rangées. */
         margin-inline-start: auto;
       }
-    } .article .sub-header,
-  .article article header {
+    }
+  }
+
+  & .sub-header,
+  & article header {
     display: grid;
     grid-template-columns: 3.5em minmax(0, 1fr);
     grid-template-areas: 'aa tt' 'aa uu';
-  } .article article header {
+  }
+
+  & article header {
     position: relative;
     margin-block-end: 1em;
     padding-block-end: 1em;
     border-bottom: 0.1em solid var(--colorG27);
-  } .article .sub-header {
-    margin-block: 2em 1em;
-  } .article article {
-    position: relative;
-  } @media (width < 35.01em) { .article article {
-      padding-block: var(--gap);
   }
-    } .article form {
+
+  & .sub-header {
+    margin-block: 2em 1em;
+  }
+
+  & article {
+    position: relative;
+    
+    @media (width < 35.01em) {
+      padding-block: var(--gap);
+    }
+  }
+
+  & form {
     width: 100%;
-  } .article .avatar {
+  }
+
+  & .avatar {
     grid-area: aa;
     width: 3em;
     aspect-ratio: 1;
     background: var(--colorG13) var(--img, '');
     background-size: cover;
     border-radius: 50%;
-  } .article address {
+  }
+
+  & address {
     grid-area: tt;
     font-style: normal;
     font-weight: bold;
-    font-feature-settings: "smcp";
     font-variant: small-caps;
-  } .article address a {
+
+    & a {
       text-decoration: none;
-    } .article time {
+    }
+  }
+
+  & time {
     grid-area: uu;
-  } .article .keywords {
+  }
+
+  & .keywords {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
@@ -1295,43 +1476,59 @@ samp {
     margin-block: 0.75em 0;
     padding-inline-start: 0;
     font-size: 0.8em;
-  } .article .keywords > :last-child {
+
+    & > :last-child {
       margin-inline-end: 0;
-    } .article .keywords li {
+    }
+
+    & li {
       margin-block-end: 0.75em;
-    } .article .keywords a {
+    }
+
+    & a {
       padding: 0.25em 0.5em 0.25em 1.25em;
       text-decoration: none;
       white-space: nowrap;
       background-color: var(--colorG15);
-      -webkit-clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
-              clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
-    } .article .anchor {
+      clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
+    }
+  }
+
+  & .anchor {
     /* @note Ancre placée sur les commentaires. */
     position: absolute;
     right: 0;
     bottom: 1em;
     color: var(--colorG38);
     text-decoration: none;
-  } .article .anchor:where(:focus, :hover, :active) {
+
+    &:where(:focus, :hover, :active) {
       color: var(--colorW);
-    } .article > footer {
+    }
+  }
+
+  & > footer {
     grid-column: 1;
     display: flex;
     justify-content: flex-end;
     gap: var(--gap);
     max-width: 55em;
-  } @media (35.01em < width < 50.01em) { .article > footer {
+
+    @media (35.01em < width < 50.01em) {
       padding-inline: 4em;
-  }
-    } @media (width > 50.01em) { .article > footer {
+    }
+
+    @media (width > 50.01em) {
       padding-inline: 6em;
+    }
   }
-    } @media (width < 35.01em) {
-    .article .wrapper {
+
+  @media (width < 35.01em) {
+    & .wrapper {
       margin-block-start: calc(var(--gap)*-1);
     }
-  } @media (width > 35.01em) {
+  }
+} @media (width > 35.01em) {
   .boxx {
     padding: 4em 6em;
     border-radius: var(--r1);
@@ -1364,7 +1561,8 @@ samp {
   position: relative;
   /* @note Pas de hauteur minimum, celle-ci doit être gérée en fonction de la boite. */
   /* min-height: 7.5em */
-} .ribbon-content > [class*='ribbon'] {
+
+  & > [class*='ribbon'] {
     --color: currentcolor;
     --bg-color: var(--colorG33);
     position: absolute;
@@ -1377,15 +1575,14 @@ samp {
     text-align: center;
     text-decoration: none;
     color: var(--color);
-    -webkit-user-select: none;
-       -moz-user-select: none;
-            user-select: none;
-  } .ribbon-content > [class*='ribbon']::before,
-    .ribbon-content > [class*='ribbon']::after {
+    user-select: none;
+
+    &::before,
+    &::after {
       content: '';
       position: absolute;
       inset: 0;
-      -webkit-clip-path: polygon(
+      clip-path: polygon(
         2em 0,
         8em 0,
         10em 2em,
@@ -1395,62 +1592,75 @@ samp {
         0 2.5em,
         0 2em
       );
-              clip-path: polygon(
-        2em 0,
-        8em 0,
-        10em 2em,
-        10em 2.5em,
-        9.5em 2em,
-        0.5em 2em,
-        0 2.5em,
-        0 2em
-      );
-    } .ribbon-content > [class*='ribbon']::before {
+    }
+
+    &::before {
       top: 0.1em;
       height: 1.8em;
       border: 2px dotted var(--colorA2);
       border-inline: none;
-    } .ribbon-content > [class*='ribbon']::after {
+    }
+
+    &::after {
       z-index: -1;
       background-color: var(--bg-color);
       border-bottom: 0.5em solid var(--bg-color);
       transition: background-color 0.2s ease-in-out;
-    } .ribbon-content > [class*='ribbon-top'] {
+    }
+  }
+
+  & > [class*='ribbon-top'] {
     filter: drop-shadow(0 0.5em 0.5em var(--colorAB1));
-  } .ribbon-content > [class*='ribbon-top']::after {
+
+    &::after {
       background-image: linear-gradient(
         to top,
         var(--colorAB3),
         var(--colorAB2) 1.25em
       );
-    } .ribbon-content > [class*='ribbon-bottom'] {
+    }
+  }
+
+  & > [class*='ribbon-bottom'] {
     filter: drop-shadow(0 -0.5rem 0.5rem var(--colorAB1));
-  } .ribbon-content > [class*='ribbon-bottom']::after {
+
+    &::after {
       background-image: linear-gradient(
         to top,
         var(--colorAB2),
         var(--colorAB3) 1.25em
       );
-    } .ribbon-content > .ribbon-top-left {
+    }
+  }
+
+  & > .ribbon-top-left {
     top: 0;
     left: 0;
     /* Alternative possible mais positionnement plus difficile à comprendre car tient compte de la direction imposée par rotate. */
     /* transform rotate(-45deg) translate(-2.65em, -.7em) */
     /* @note L'ordre des valeurs est importante. */
     transform: translate(-2.35em, 1.4em) rotate(-45deg);
-  } .ribbon-content > .ribbon-top-right {
+  }
+
+  & > .ribbon-top-right {
     top: 0;
     right: 0;
     transform: translate(2.35em, 1.4em) rotate(45deg);
-  } .ribbon-content > .ribbon-bottom-left {
+  }
+
+  & > .ribbon-bottom-left {
     bottom: 0;
     left: 0;
     transform: translate(-2.35em, -1.4em) rotate(225deg);
-  } .ribbon-content > .ribbon-bottom-right {
+  }
+
+  & > .ribbon-bottom-right {
     bottom: 0;
     right: 0;
     transform: translate(2.35em, -1.4em) rotate(135deg);
-  } .ribbon-content > a[class*='ribbon'] {
+  }
+
+  & > a[class*='ribbon'] {
     transition: color 0.2s ease-in-out;
   
     /*
@@ -1458,13 +1668,20 @@ samp {
       border-color: rgba(0, 0, 0, .3);
     }
     */
-  } .ribbon-content > a[class*='ribbon']::after {
+  
+    &::after {
       background-color: var(--color2);
-    } .ribbon-content > a[class*='ribbon']:where(:focus, :hover, :active) {
+    }
+  
+    &:where(:focus, :hover, :active) {
       color: var(--colorG18);
-    } .ribbon-content > a[class*='ribbon']:where(:focus, :hover, :active)::after {
+  
+      &::after {
         background-color: var(--color5);
-      } /* @import 'forum'; */ /* @import 'skin'; */ /* @import 'demo'; */ /* @note Les helpers s'appliquent à la fin dans le but d'écraser des styles tels que font-size. */ .hidden,
+      }
+    }
+  }
+} /* @import 'forum'; */ /* @import 'skin'; */ /* @import 'demo'; */ /* @note Les helpers s'appliquent à la fin dans le but d'écraser des styles tels que font-size. */ .hidden,
 [hidden] {
   display: none !important;
 } @container grid (width < 35.01em) {
@@ -1488,9 +1705,11 @@ samp {
   visibility: hidden;
 } a[aria-disabled='true'] { /* @todo En expérimentation. */
   cursor: not-allowed;
-} a[aria-disabled='true']:active {
+
+  &:active {
     pointer-events: none;
-  } .sr-only {
+  }
+} .sr-only {
   /* @note Caché visuellement mais disponible pour les lecteurs d'écran. */
   /* @see https://github.com/h5bp/html5-boilerplate/blob/master/dist/css/style.css */  
   position: absolute;
@@ -1514,9 +1733,7 @@ samp {
   position: relative;
 }
 */ .protected {
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
+  user-select: none;
 } .onaline {
   /* @note Texte sur une ligne sans dépassement. */
   overflow: hidden;
@@ -1649,16 +1866,16 @@ pre div,
   display: block; /* @affected Firefox */
 } .footer {
   width: 100vw;
-} .footer > * {
+  & > * {
     flex-direction: column;
-  } /* @note Harmonisation entre navigateurs. */ pre,
+  }
+} /* @note Harmonisation entre navigateurs. */ pre,
 blockquote,
 tr,
 img,
 figure,
 [class*=figure] {
-  -moz-column-break-inside: avoid;
-       break-inside: avoid;
+  break-inside: avoid;
 } p,
 h2,
 h3 {
@@ -1666,8 +1883,7 @@ h3 {
   widows: 3;
 } h2,
 h3 {
-  -moz-column-break-after: avoid;
-       break-after: avoid;
+  break-after: avoid;
 } a,
 h1 span {
   color: tomato !important;
@@ -1690,8 +1906,7 @@ h1 span {
 } .avatar,
 .avatars,
 .keywords {
-  -webkit-print-color-adjust: exact !important;
-          print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
 }
 
 /*# sourceMappingURL=print.css.map */
