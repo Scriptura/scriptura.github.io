@@ -151,7 +151,7 @@
     /* color: var(--colorT2); */
     text-decoration: none;
 
-    &:where(:focus, :hover, :active) {
+    &:where(:focus, :hover, .active) {
       /* color: var(--colorW); */
       background-color: var(--color2);
 
