@@ -352,11 +352,14 @@ const mainMenu = (() => {
     subNav = document.querySelector('.sub-nav'),
     content = document.querySelectorAll('body > :not(.nav')
 
+  button.ariaExpanded = 'false'
+  subNav.ariaHidden = 'true'
+
   button.addEventListener('click', () => {
     document.documentElement.classList.toggle('active')
     document.body.classList.toggle('active')
-    button.classList.toggle('active')
-    subNav.classList.toggle('active')
+    button.ariaExpanded = button.ariaExpanded === 'true' ? 'false' : 'true'
+    subNav.ariaHidden = subNav.ariaHidden === 'true' ? 'false' : 'true'
     content.forEach(e => (e.hasAttribute('inert') ? e.removeAttribute('inert') : e.setAttribute('inert', '')))
   })
 })()

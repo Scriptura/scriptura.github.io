@@ -1051,22 +1051,22 @@ body {
       /* transition-property: x, y, width, height, transform; */
     }
 
-    &:not(:focus, :hover, .active) {
+    &:not(:focus, :hover, [aria-expanded='true']) {
       & svg {
         border-radius: 50%;
         background-color: var(--color2);
       }
 
       & rect {
-        x: 450px;
-        width: 100px;
-        height: 100px;
+        x: 45px;
+        width: 10px;
       }
     }
 
-    &.active svg {
+    &[aria-expanded='true'] svg {
       & :nth-child(1) {
-        transform: translate(-177px, 177px) rotate(45deg);
+        y: 47px;
+        transform: rotate(45deg);
       }
 
       & :nth-child(2) {
@@ -1074,7 +1074,8 @@ body {
       }
 
       & :nth-child(3) {
-        transform: translate(-177px, -177px) rotate(-45deg);
+        y: 47px;
+        transform: rotate(-45deg);
       }
     }
   }

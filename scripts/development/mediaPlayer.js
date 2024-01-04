@@ -144,10 +144,7 @@ const mediaPlayer = () => {
       extendMenu = player.querySelector('.media-extend-menu')
     media.readyState >= 1
       ? (output.value = secondsToTime(media.duration))
-      : media.addEventListener(
-          'loadedmetadata',
-          () => (output.value = secondsToTime(media.duration)),
-        )
+      : media.addEventListener('loadedmetadata', () => (output.value = secondsToTime(media.duration)))
     ;['loadeddata', 'loadedmetadata', 'click', 'play'].forEach(event => {
       media.addEventListener(event, () => {
         if (media.duration === Infinity) {
@@ -171,8 +168,7 @@ const mediaPlayer = () => {
     }
   }
 
-  const buttonState = (status, button) =>
-    status ? button.classList.add('active') : button.classList.remove('active')
+  const buttonState = (status, button) => (status ? button.classList.add('active') : button.classList.remove('active'))
 
   const togglePlayPause = media => (media.paused ? media.play() : media.pause())
 
@@ -243,45 +239,25 @@ const mediaPlayer = () => {
 
   const getNextMedia = (media, mediaRelationship) => {
     if (mediaRelationship) {
-      const relatedMedias =
-        mediaRelationship.querySelectorAll(HTMLMediaElement) || ''
-      return (
-        relatedMedias[[...relatedMedias].indexOf(media) + 1] ||
-        relatedMedias[0] ||
-        ''
-      )
+      const relatedMedias = mediaRelationship.querySelectorAll(HTMLMediaElement) || ''
+      return relatedMedias[[...relatedMedias].indexOf(media) + 1] || relatedMedias[0] || ''
     }
   }
 
   const getNextNextMedia = (media, mediaRelationship) => {
     if (mediaRelationship) {
-      const relatedMedias =
-        mediaRelationship.querySelectorAll(HTMLMediaElement) || ''
-      return (
-        relatedMedias[[...relatedMedias].indexOf(media) + 2] ||
-        relatedMedias[0] ||
-        ''
-      )
+      const relatedMedias = mediaRelationship.querySelectorAll(HTMLMediaElement) || ''
+      return relatedMedias[[...relatedMedias].indexOf(media) + 2] || relatedMedias[0] || ''
     }
   }
 
-  const nextMediaActive = (
-    media,
-    nextMedia,
-    nextNextMedia,
-    mediaRelationship,
-  ) => {
+  const nextMediaActive = (media, nextMedia, nextNextMedia, mediaRelationship) => {
     media = nextMedia
 
     if (media.error) {
       // Si erreur, passage au media suivant
       console.log(media.error.message)
-      return nextMediaActive(
-        media,
-        getNextMedia(media, mediaRelationship),
-        getNextNextMedia(media, mediaRelationship),
-        mediaRelationship,
-      )
+      return nextMediaActive(media, getNextMedia(media, mediaRelationship), getNextNextMedia(media, mediaRelationship), mediaRelationship)
     }
 
     //media.currentTime = 0 // @note Désactivée : un utilisateur peut ainsi caler la plage suivante selon sa préférence personnelle.
@@ -296,9 +272,7 @@ const mediaPlayer = () => {
     currentTime(media, currentTimeOutput, progressBar)
     buttonState(!media.paused, playPauseButton)
     buttonState(media.paused && media.currentTime === 0, stopButton)
-    media.paused && media.currentTime === 0
-      ? (stopButton.disabled = true)
-      : (stopButton.disabled = false)
+    media.paused && media.currentTime === 0 ? (stopButton.disabled = true) : (stopButton.disabled = false)
   }
 
   const controls = media => {
@@ -309,11 +283,7 @@ const mediaPlayer = () => {
       tracks = media.textTracks,
       playPauseButton = player.querySelector('.media-play-pause'),
       playbackRateOutput = player.querySelector('.media-playback-rate'),
-      playbackRateChangeLenght = playbackRateChange(
-        media,
-        playbackRateOutput,
-        count0,
-      ),
+      playbackRateChangeLenght = playbackRateChange(media, playbackRateOutput, count0),
       subtitleLangageOutput = player.querySelector('.media-subtitle-langage'),
       //time = player.querySelector('.media-time'),
       currentTimeOutput = player.querySelector('.media-current-time'),
@@ -324,9 +294,7 @@ const mediaPlayer = () => {
       fullscreenButton = player.querySelector('.media-fullscreen'),
       menuButton = player.querySelector('.media-menu'),
       nextReadingButton = player.querySelector('.media-next-reading'),
-      pictureInPictureButton = player.querySelector(
-        '.media-picture-in-picture',
-      ),
+      pictureInPictureButton = player.querySelector('.media-picture-in-picture'),
       slowMotionButton = player.querySelector('.media-slow-motion'),
       leapRewindButton = player.querySelector('.media-leap-rewind'),
       leapForwardButton = player.querySelector('.media-leap-forward'),
@@ -342,10 +310,8 @@ const mediaPlayer = () => {
     // Remove Controls :
     // @note Le code est plus simple et robuste si l'on se contente de supprimer des boutons déjà présents dans le template du player plutôt que de les ajouter (cibler leur place dans le DOM qui peut changer au cours du développement, rattacher les fonctionnalités au DOM...)
 
-    if (media.tagName === 'AUDIO' || !document.fullscreenEnabled)
-      fullscreenButton.remove()
-    if (media.tagName === 'AUDIO' || !document.pictureInPictureEnabled)
-      pictureInPictureButton.remove()
+    if (media.tagName === 'AUDIO' || !document.fullscreenEnabled) fullscreenButton.remove()
+    if (media.tagName === 'AUDIO' || !document.pictureInPictureEnabled) pictureInPictureButton.remove()
     if (!media.textTracks[0]) subtitlesButton.remove()
     if (!mediaRelationship) nextReadingButton.remove()
 
@@ -361,10 +327,7 @@ const mediaPlayer = () => {
 
     if (mediaRelationship)
       media.addEventListener('canplay', () =>
-        buttonState(
-          mediaRelationship.dataset.nextReading === 'true',
-          media.nextElementSibling.querySelector('.media-next-reading'),
-        ),
+        buttonState(mediaRelationship.dataset.nextReading === 'true', media.nextElementSibling.querySelector('.media-next-reading')),
       )
 
       // Contrôle via les événements :
@@ -378,10 +341,7 @@ const mediaPlayer = () => {
         media.onprogress = () =>
           progressBar.style.setProperty(
             '--position-buffer',
-            `${Math.floor(
-              (media.buffered.end(media.buffered.length - 1) / media.duration) *
-                100,
-            )}%`,
+            `${Math.floor((media.buffered.end(media.buffered.length - 1) / media.duration) * 100)}%`,
           ) // @note Un nombre entier suffit.
       })
     })
@@ -408,9 +368,7 @@ const mediaPlayer = () => {
         buttonState(media.muted || media.volume === 0, muteButton)
         buttonState(media.paused && media.currentTime === 0, stopButton)
         buttonState(media.loop, replayButton)
-        media.paused && media.currentTime === 0
-          ? (stopButton.disabled = true)
-          : (stopButton.disabled = false)
+        media.paused && media.currentTime === 0 ? (stopButton.disabled = true) : (stopButton.disabled = false)
         // @note Variable CSS pilotée par JS ; permet de reprendre l'animation là où elle s'est arrêtée :
         //media.paused && playPauseButton.style.setProperty('--play-state', running === 'running' ? 'paused' : 'running')
       })
@@ -420,23 +378,12 @@ const mediaPlayer = () => {
       media.currentTime = 0 // @note Permet de réinitialiser la lecture, mais le fait de s'abstenir de réinitialiser permet de mieux repérer les fichiers déjà lus.
       buttonState(!media.paused, playPauseButton)
       buttonState(media.paused && media.currentTime === 0, stopButton)
-      if (
-        mediaRelationship &&
-        mediaRelationship.dataset.nextReading === 'true' &&
-        media.play
-      )
+      if (mediaRelationship && mediaRelationship.dataset.nextReading === 'true' && media.play)
         nextMediaActive(media, nextMedia, nextNextMedia, mediaRelationship) // @note Si media appartenant à un groupe, lecture du media suivant (n+1).
-      if (
-        mediaRelationship &&
-        mediaRelationship.dataset.nextReading &&
-        nextMedia
-      )
-        nextNextMedia.preload = 'auto' // @note Si media appartenant à un groupe, indiquation au navigateur de la possibilité de charger le media n+2 @todo En test.
+      if (mediaRelationship && mediaRelationship.dataset.nextReading && nextMedia) nextNextMedia.preload = 'auto' // @note Si media appartenant à un groupe, indiquation au navigateur de la possibilité de charger le media n+2 @todo En test.
     })
 
-    media.addEventListener('pause', () =>
-      buttonState(!media.paused, playPauseButton),
-    )
+    media.addEventListener('pause', () => buttonState(!media.paused, playPauseButton))
 
     // Contrôle via les boutons :
 
@@ -444,12 +391,7 @@ const mediaPlayer = () => {
       togglePlayPause(media)
       currentTime(media, currentTimeOutput, progressBar)
       menu(player, false)
-      if (
-        mediaRelationship &&
-        mediaRelationship.dataset.nextReading &&
-        nextMedia
-      )
-        nextMedia.preload = 'auto' // @note Si media d'un groupe, on indique au navigateur la possibilité de charger le media suivant @todo En test.
+      if (mediaRelationship && mediaRelationship.dataset.nextReading && nextMedia) nextMedia.preload = 'auto' // @note Si media d'un groupe, on indique au navigateur la possibilité de charger le media suivant @todo En test.
     })
 
     muteButton.addEventListener('click', () => mute(media)) //if (!media.muted && media.volume === 0) media.volume = .5
@@ -494,10 +436,7 @@ const mediaPlayer = () => {
       mediaRelationship.querySelectorAll(HTMLMediaElement).forEach(media => {
         // @note Il peut s'agir de n'importe lequel des medias du groupe en relation.
         if (mediaRelationship.dataset.nextReading === 'true') media.loop = false
-        buttonState(
-          mediaRelationship.dataset.nextReading === 'true',
-          media.nextElementSibling.querySelector('.media-next-reading'),
-        )
+        buttonState(mediaRelationship.dataset.nextReading === 'true', media.nextElementSibling.querySelector('.media-next-reading'))
       })
     })
 
@@ -528,12 +467,9 @@ const mediaPlayer = () => {
       }
     }
 
-    if (media.tagName === 'VIDEO' && document.fullscreenEnabled)
-      fullscreenButton.addEventListener('click', () => fullscreen(media))
+    if (media.tagName === 'VIDEO' && document.fullscreenEnabled) fullscreenButton.addEventListener('click', () => fullscreen(media))
 
-    document.addEventListener('fullscreenchange', () =>
-      fullscreenButton.classList.toggle('active'),
-    ) // @note Pour le fun, car l'état du bouton ne se voit pas... sauf peut-être sur des configurations multi écran.
+    document.addEventListener('fullscreenchange', () => fullscreenButton.classList.toggle('active')) // @note Pour le fun, car l'état du bouton ne se voit pas... sauf peut-être sur des configurations multi écran.
 
     pictureInPictureButton.addEventListener('click', () => {
       togglePictureInPicture(media)
@@ -581,9 +517,7 @@ const mediaPlayer = () => {
       'error',
       () => {
         player.setAttribute('inert', '')
-        player
-          .querySelectorAll('button, input')
-          .forEach(e => (e.disabled = true)) // @note Pour les anciens navigateurs.
+        player.querySelectorAll('button, input').forEach(e => (e.disabled = true)) // @note Pour les anciens navigateurs.
         media.classList.add('error')
         player.classList.add('error')
 
