@@ -123,7 +123,7 @@ const getStyles = (() => {
 // @section     Polyfills
 // @description Permettent de compenser un manque de support CSS dans certains navigateurs
 // -----------------------------------------------------------------------------
-
+/*
 // @note Fallback pour CSS Container Queries et grid layout @affected Firefox en particulier, et les navigateurs moins récents.
 // @see https://css-tricks.com/a-new-container-query-polyfill-that-just-works/
 // @note Conditional JS : plus performant que de passer par la détection d'une classe dans le HTML comme pour les autres scripts.
@@ -135,7 +135,7 @@ if (!supportContainerQueries || !supportMediaQueriesRangeContext || isFirefox) {
   getStyle('/styles/gridFallback.css', 'screen')
   document.querySelectorAll('[class^=grid]').forEach(grid => grid.parentElement.classList.add('parent-grid')) // @affected Firefox =< v108 @note Compense le non support de :has() sur les grilles.
 }
-
+*/
 // -----------------------------------------------------------------------------
 // @section     Utilities
 // @description Utilitaires consommables pour les autres fonctions

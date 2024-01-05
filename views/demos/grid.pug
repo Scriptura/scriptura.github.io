@@ -4,10 +4,12 @@
       svg.icon(role='img' focusable='false')
         use(href='/sprites/util.svg#info')
       div
-        p À titre expérimental, les grilles du framework utilisent les modules CSS Grid Layout, Container Queries et les opérateurs logiques (Media Queries Level 4).
-        p En raison du support limité de @container, 
-          a(href='https://caniuse.com/mdn-css_properties_container') y compris pour des navigateurs récents
-          | , un polyfill JS/CSS faisant appel à une feuille de style plus classique (mais toujours avec grid layout) est prévu pour palier à cette situation provisoire.
+        p À titre expérimental nos grilles utilisent les modules CSS Grid Layout, Container Queries et les opérateurs mathématiques de comparaison (Media Queries Level 4).
+        ul
+          li
+            a(href='https://caniuse.com/mdn-css_properties_container') Support de @container
+          li
+            a(href='https://caniuse.com/css-media-range-syntax') Support de Media Queries: Range Syntax
   figure.center
     svg.size.decorative-svg(role='img' focusable='false' style='--size: 30em;--size-height: 10em')
       use(href='/sprites/silos/39r.svg#1')

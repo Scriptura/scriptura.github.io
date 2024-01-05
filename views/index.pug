@@ -22,9 +22,9 @@ block main
             | Présentation
           div
             h2.h4 Un mot sur l'outil
-            p Scriptura est un framework front-end ayant pour but de simplifier la mise en page. Ici, pas d'ajout supperflu de balises html dans les pages web dans le but de soutenir un script ou un effet visuel, la priorité est donnée au contenu, le code html reste propre et respecte la logique du flux des données. L'idée est de partir d'éléments html correctement structurés et de leur ajouter une classe, ou de les entourer d'un élément parent comportant une classe. La partie du document ainsi ciblée sera transformée en menu onglets ou accordéon, ou encore autre chose selon les besoins.
-            p Les choix techniques impliquent une limitation de la rétrocompatibilité aux navigateurs récents, un parti pris permettant l'utilisation des dernières technologies du web sans compromis.
-            p Ce site regroupe des modèles de démonstration pour le framework, il est destiné à servir avant tout... à son auteur&nbsp;!
+            p Scriptura est un framework front-end à destination du web. Mais n'allez pas chercher un support quelquonque&nbsp;: l'ensemble de son code base est avant tout un immense terrain de jeu pour son concepteur&nbsp;! Les choix techniques impliquent une limitation de la rétrocompatibilité aux navigateurs récents, un parti pris permettant l'utilisation des dernières technologies du web sans compromis.
+            p Un autre paradygme important du framework est la volonté de simplifier la mise en page. Ici, pas d'ajout superflu de balises HTML dans le but de soutenir un script ou un effet visuel, la priorité est donnée au contenu, le code HTML reste propre en respectant la logique du flux des données et en s'appuyant le plus possible sur les éléments HTML natifs. L'idée est donc de partir d'éléments HTML correctement structurés et de leur ajouter une classe, ou de les entourer d'un élément parent comportant une classe. La partie du document ainsi ciblée sera transformée en menu onglets ou accordéon, ou encore autre chose selon les besoins.
+            p Ce site n'est pas vraiment une documentation explicite du framework, il a plutôt vocation à présenter les patterns disponibles à travers leur fonctionnement en situation réelle. Il est destiné à servir avant tout... à son auteur.
         details
           summary
             svg.icon-inline.xs-hidden(role='img' focusable='false')
@@ -34,7 +34,8 @@ block main
             - const date = new Date().toISOString().split('T')
             - const version = date[0].replace(/-/g, '.') + '.' + Math.round(date[1].split('.')[0].replace(/:/g, '') / 500)
             h2.h4 Version du framework
-            ul.links
+            p Il n'y a jamais vraiment de version majeure, le soucis de rétrocompatibilité n'est pas porté&nbsp;: le site évolue constament, dans toutes les directions. L'ensemble du framework est un immense prototype.
+            ul
               li Draft version&nbsp;: #{version} (
                 a(href='//github.com/Scriptura/scriptura.github.io') Github
                 | )

@@ -1,7 +1,7 @@
 html,
 .nav,
 .cmd-nav,
-.cmd-nav:not(:focus, :hover, .active) svg,
+.cmd-nav:not(:focus, :hover, [aria-expanded='true']) svg,
 .sub-nav li > *,
 .sub-nav .current::after,
 .breadcrumb li > *,

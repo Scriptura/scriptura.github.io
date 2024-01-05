@@ -58,6 +58,12 @@
   }
 }
 
+@keyframes anim-logo {
+  30% {
+    transform: rotate(-30deg);
+  }
+}
+
 .sub-nav {
   grid-area: subnav;
   box-shadow: 0.5rem 0.5rem 0.5rem var(--colorAB2);
@@ -65,6 +71,8 @@
   width: 100%;
   margin: 0;
   padding: 0;
+  /* @todo En test pour les performances. */
+  transform: translateZ(0);
 
   & .current {
     background-color: var(--color2);
@@ -141,6 +149,9 @@
       @media (width > $sizeNav) {
         line-height: 2.5;
       }
+      &.current {
+        color: var(--colorW);
+      }
     }
   }
 
@@ -207,7 +218,7 @@
     cursor: pointer;
     background-color: var(--colorG15);
 
-    &:where(:focus, :hover, .active) {
+    &:where(:focus, :hover, [aria-expanded='true']) {
       background-color: var(--color2);
     }
 
@@ -220,8 +231,10 @@
     & rect {
       transform-origin: center;
       fill: var(--colorT);
-      transition: 0.2s all ease-in-out;
-      /* transition-property: x, y, width, height, transform; */
+      @media (prefers-reduced-motion: no-preference) {
+        transition: 0.2s all ease-in-out; /* cubic-bezier(.55,-0.65,0,2.32); */
+        /* transition-property: x, y, width, height, transform; */
+      }
     }
 
     &:not(:focus, :hover, [aria-expanded='true']) {
@@ -243,7 +256,8 @@
       }
 
       & :nth-child(2) {
-        transform: rotate(-45deg);
+        opacity: 0;
+        /* transform: rotate(-45deg); */
       }
 
       & :nth-child(3) {
@@ -251,11 +265,5 @@
         transform: rotate(-45deg);
       }
     }
-  }
-}
-
-@keyframes anim-logo {
-  30% {
-    transform: rotate(-30deg);
   }
 }
