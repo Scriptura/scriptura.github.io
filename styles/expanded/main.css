@@ -1,6 +1,7 @@
-@charset "utf-8"; /* Les guillemets doubles évitents une erreur au validateur du W3C. @see https://validator.w3.org/ */ /* @note Doublage des variables Sass par les variables CSS natives impliquées dans les médias queries. @todo en attendant un support total d'usage pour les variables natives. */ /* @subsection Breakpoints */ /* @bugfix Nécessité de préciser deux chiffres après la virgule pour éviter un arrondissement de la valeur par les navigateurs. */ /* @note L'idée étant d'avoir une précision au-délà du pixel, nous évitant ainsi de devoir utiliser les opérateur logiques CSS4 de type "<=". @todo En test...*/ /* @note Attention, il s'agit d'un nombre magique qui tente d'anticiper la taille minimale nécessaire au menu en desktop. @todo À remplacer par une solution plus fiable à l'avenir, mais qui ne serait peut-être alors pas mobile first... */ /* @subsection Layout & Grid */ /* @note La fonction calc() n'est pas implémentée pour les media queries, ou alors partiellement (unité de même type). @see https://stackoverflow.com/questions/23667208 @todo À réévaluer dans le temps... */ :root {
-  --gap: 1em; /* Gouttière, largeur entre deux modules (en unité em/rem) */
-  --wrap: 92em; /* Largeur maximale du contenu (+ prise en compte du padding interne) */
+@charset "utf-8"; /* Les guillemets doubles évitents une erreur au validateur du W3C. @see https://validator.w3.org/ */ /* @note Doublage des variables Sass par les variables CSS natives impliquées dans les médias queries. @todo en attendant un support total d'usage pour les variables natives. */ /* @subsection Breakpoints */ /* @bugfix Nécessité de préciser deux chiffres après la virgule pour éviter un arrondissement de la valeur par les navigateurs. */ /* @note L'idée étant d'avoir une précision au-délà du pixel, nous évitant ainsi de devoir utiliser les opérateur logiques CSS4 de type inclusifs (exemple : `<=`). @todo En test...*/ /* @note La fonction calc() n'est pas implémentée pour les media queries, ou alors partiellement (unité de même type). @see https://stackoverflow.com/questions/23667208 @todo À réévaluer dans le temps... */ /* @note Attention, il s'agit d'une valeur empirique qui tente d'anticiper la taille minimale nécessaire au menu en desktop. @todo À remplacer par une solution plus fiable à l'avenir, mais qui ne serait peut-être alors pas mobile first et pourrait poser des problèmes de reflow... */ :root {
+  --size-nav: 90.01em; /* @note Variable CSS utilisée en JavaScript. */
+  --gap: 1em; /* Gouttière, largeur entre deux modules */
+  --wrap: 92em; /* calc(90em + var(--gap) * 2)*/ /* Largeur maximale du contenu (+ prise en compte du padding interne) */
 
   /* @subsection  Web fonts */
   /* @note Le chargement des polices via @font-face est fortement recommandé pour ne pas dépendre de l'environnement de l'utilisateur. Ce qui permet d'avoir la maitrise du design du site. Les CDNs sont un mal à proscrire également. */
@@ -531,8 +532,8 @@ body {
   */
 } .grid-auto,
 .grid-auto-min {
-  /* @note Ne pas définir la variable au-dessus de sa valeur par défaut afin d'éviter des dépassement sur les écrans de petites définitions. Préférer alors les grilles prédéfinies. */
-  grid-template-columns: repeat(auto-fit, minmax(var(--size-grid, 15em), 1fr));
+  /* @note Ne pas définir la variable au-dessus de sa valeur par défaut afin d'éviter des dépassement sur les écrans de petites définitions. Préférer alors les grilles prédéfinies. @todo min() en test pour éviter justement ce problème. */
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--size-grid, 15em), 100%), 1fr));
 } .grid-auto-min {
   /* @note Valeur réduite évitant de définir trop fréquement la variable de .grid-auto via du style en ligne. */
   --size-grid: 10em;
@@ -1662,7 +1663,8 @@ video {
       background-color: var(--colorG38);
     }
 
-    &.active {
+    &.active,
+    &:active {
       background-color: var(--color2);
     }
   }
@@ -3010,7 +3012,7 @@ h2.legend {
   &:has(:disabled) + label {
     cursor: default;
   }
-} [class^='range'] {
+} /* Les mixins suivantes sont utilisées pour des sélecteurs propriétaires à des navigateurs et qui ne peuvent être regroupés entre eux sans bugs. */ [class^='range'] {
   --color: var(--color2);
   --percent: 0;
   display: grid;
@@ -3026,12 +3028,7 @@ h2.legend {
     width: 100%;
     height: 0.3em;
     max-width: 100%;
-    background: linear-gradient(
-        90deg,
-        var(--color) 0,
-        var(--color) var(--percent),
-        transparent var(--percent)
-      ),
+    background: linear-gradient(90deg, var(--color) 0, var(--color) var(--percent), transparent var(--percent)),
       linear-gradient(
         to top,
         var(--colorA005) 0,
@@ -3058,13 +3055,7 @@ h2.legend {
 
         &::after {
           background: var(--colorG18)
-            repeating-linear-gradient(
-              -90deg,
-              var(--colorA1) 0 3px,
-              var(--colorA1) 0,
-              transparent 0,
-              transparent 6px
-            );
+            repeating-linear-gradient(-90deg, var(--colorA1) 0 3px, var(--colorA1) 0, transparent 0, transparent 6px);
         }
       }
     }
@@ -3120,8 +3111,6 @@ h2.legend {
     }
   }
 
-  /* Les déclarations propriétaires suivantes ne sont pas factorisables. */
-
   & ::-webkit-slider-thumb {
     -webkit-appearance: none;
   pointer-events: auto;
@@ -3132,18 +3121,17 @@ h2.legend {
   border-radius: 50%;
   box-shadow: var(--shadow2);
   }
-  
+
   & :focus-visible::-webkit-slider-thumb {
   background-color: var(--color5);
   border-color: var(--color5);
   }
-  
+
   & input:disabled::-webkit-slider-thumb {
-  background: var(--colorG18)
-    repeating-linear-gradient(-45deg, transparent 0 3px, var(--color1) 3px 6px);
+  background: var(--colorG18) repeating-linear-gradient(-45deg, transparent 0 3px, var(--color1) 3px 6px);
   border-color: var(--colorG33);
   }
-  
+
   & ::-moz-range-thumb {
     box-sizing: border-box;
     border: none;
@@ -3155,15 +3143,14 @@ h2.legend {
   border-radius: 50%;
   box-shadow: var(--shadow2);
   }
-  
+
   & :focus-visible::-moz-range-thumb {
   background-color: var(--color5);
   border-color: var(--color5);
   }
-  
+
   & input:disabled::-moz-range-thumb {
-  background: var(--colorG18)
-    repeating-linear-gradient(-45deg, transparent 0 3px, var(--color1) 3px 6px);
+  background: var(--colorG18) repeating-linear-gradient(-45deg, transparent 0 3px, var(--color1) 3px 6px);
   border-color: var(--colorG33);
   }
 } .range-multithumb {
@@ -3783,9 +3770,9 @@ h2.legend {
 .calendar-gold {
   background-color: hsl(51, 100%, 50%);
 }
-*/ /* @note Impossible d'animer la couleur de la barre avec une animation classique sur background-position. @see https://codepen.io/olivier-c/pen/vYvEjmb */ /* Solution de contournement. @see https://codepen.io/olivier-c/pen/poqvVqw */ /* @see https://www.w3docs.com/snippets/css/how-to-animate-the-background-of-the-progress-bar.html */ /* @see https://www.w3docs.com/tools/code-editor/18675 */ .progress {
+*/ /* @note Impossible d'animer la couleur de la barre avec une animation classique sur background-position. @see https://codepen.io/olivier-c/pen/vYvEjmb */ /* Solution de contournement. @see https://codepen.io/olivier-c/pen/poqvVqw */ /* @see https://www.w3docs.com/snippets/css/how-to-animate-the-background-of-the-progress-bar.html */ /* @see https://www.w3docs.com/tools/code-editor/18675 */ /* La mixins suivante est utilisée pour des sélecteurs propriétaires à des navigateurs et qui ne peuvent être regroupés entre eux sans bugs. */ .progress {
   --color: var(--color2);
-  /* @todo La déclaration suivante ne semble plus nécessaire si définition de l'élement, à évaluer. */
+  /* @todo La déclaration suivante ne semble plus nécessaire si définition de l'élément, à évaluer. */
   /* appearance: none; */
   width: 100%;
   height: 1em;
@@ -3805,23 +3792,23 @@ h2.legend {
   }
 
   &::-webkit-progress-value {
-    min-width: 1em;
-    background-color: var(--color);
-    background-image: repeating-linear-gradient(-45deg, transparent 0 0.5rem, var(--colorA2) 0.5rem 1rem);
-    background-size: calc(1rem/cos(45deg)) 100%, 100% 800%;
-    background-position: inherit;
-    box-shadow: inset 0 2px 9px var(--colorA3), inset 0 -2px 6px var(--colorAB4);
-    border-radius: 0.5em;
+  min-width: 1em;
+  background-color: var(--color);
+  background-image: repeating-linear-gradient(-45deg, transparent 0 0.5rem, var(--colorA2) 0.5rem 1rem);
+  background-size: calc(1rem/cos(45deg)) 100%, 100% 800%;
+  background-position: inherit;
+  box-shadow: inset 0 2px 9px var(--colorA3), inset 0 -2px 6px var(--colorAB4);
+  border-radius: 0.5em;
   }
 
   &::-moz-progress-bar {
-    min-width: 1em;
-    background-color: var(--color);
-    background-image: repeating-linear-gradient(-45deg, transparent 0 0.5rem, var(--colorA2) 0.5rem 1rem);
-    background-size: calc(1rem/cos(45deg)) 100%, 100% 800%;
-    background-position: inherit;
-    box-shadow: inset 0 2px 9px var(--colorA3), inset 0 -2px 6px var(--colorAB4);
-    border-radius: 0.5em;
+  min-width: 1em;
+  background-color: var(--color);
+  background-image: repeating-linear-gradient(-45deg, transparent 0 0.5rem, var(--colorA2) 0.5rem 1rem);
+  background-size: calc(1rem/cos(45deg)) 100%, 100% 800%;
+  background-position: inherit;
+  box-shadow: inset 0 2px 9px var(--colorA3), inset 0 -2px 6px var(--colorAB4);
+  border-radius: 0.5em;
   }
 } @keyframes anim-progress {
   0% {

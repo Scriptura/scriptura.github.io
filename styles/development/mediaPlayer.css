@@ -142,7 +142,8 @@ video {
       background-color: var(--colorG38);
     }
 
-    &.active {
+    &.active,
+    &:active {
       background-color: var(--color2);
     }
   }

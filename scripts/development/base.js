@@ -318,30 +318,6 @@ const scrollToTop = (() => {
   item.addEventListener('click', scroll, false)
 })()
 
-/*
-// Solution avec algorythme :
-// @see https://stackoverflow.com/questions/15935318/smooth-scroll-to-top/55926067
-// @note Script avec un effet sympa mais en conflit avec la règle CSS scroll-behavior:smooth, celle-ci doit donc être désactivée pour la durée du script.
-
-const c = document.documentElement.scrollTop || document.body.scrollTop,
-      html = document.documentElement,
-      sb = window.getComputedStyle(html,null).getPropertyValue('scroll-behavior')
-if (sb != 'auto') html.style.scrollBehavior = 'auto' // 4
-if (c > 0) {
-  window.requestAnimationFrame(scroll)
-  window.scrollTo(0, c - c / 8)
-}
-if (sb != 'auto') html.style.scrollBehavior = ''
-
-// L'effet behavior:smooth pourrait simplement être défini ainsi en JS (sans conflit avec CSS mais second choix pour l'animation) :
-
-//window.scrollTo({top: 0, behavior: 'smooth'})
-
-// Solution avec une définition scroll-behavior:smooth dans le CSS :
-
-window.scrollTo({top: 0})
-*/
-
 // -----------------------------------------------------------------------------
 // @section     Navigation
 // @description Menu principal
@@ -350,7 +326,9 @@ window.scrollTo({top: 0})
 const mainMenu = (() => {
   const button = document.querySelector('.cmd-nav'),
     subNav = document.querySelector('.sub-nav'),
-    content = document.querySelectorAll('body > :not(.nav')
+    content = document.querySelectorAll('body > :not(.nav'),
+    sizeNav = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--size-nav')),
+    htmlFontSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('font-size'))
 
   button.ariaExpanded = 'false'
   subNav.ariaHidden = 'true'
@@ -361,6 +339,26 @@ const mainMenu = (() => {
     button.ariaExpanded = button.ariaExpanded === 'true' ? 'false' : 'true'
     subNav.ariaHidden = subNav.ariaHidden === 'true' ? 'false' : 'true'
     content.forEach(e => (e.hasAttribute('inert') ? e.removeAttribute('inert') : e.setAttribute('inert', '')))
+  })
+
+  const clearMenu = () => {
+    const windowWidth = window.innerWidth / htmlFontSize
+    if (windowWidth > sizeNav) {
+      document.documentElement.classList.remove('active')
+      document.body.classList.remove('active')
+      button.ariaExpanded = 'false'
+      subNav.ariaHidden = 'true'
+      content.forEach(e => e.removeAttribute('inert'))
+    }
+  }
+
+  window.addEventListener('resize', () => {
+    // @note Si le menu déroulant est ouvert, mais que la fenêtre est redimentionnée au-delà de la navigation prévue pour cette version du menu, alors suppression des états prévus pour la version "menu déroulant".
+    let resizeTimeout
+    clearTimeout(resizeTimeout)
+    resizeTimeout = setTimeout(() => {
+      clearMenu()
+    }, 200) // Limitation du nombre de calculs @see https://stackoverflow.com/questions/5836779/
   })
 })()
 

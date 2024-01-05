@@ -1,3 +1,5 @@
+/* Les mixins suivantes sont utilisées pour des sélecteurs propriétaires à des navigateurs et qui ne peuvent être regroupés entre eux sans bugs. */
+
 @mixin range-block-thumb {
   pointer-events: auto;
   width: 2.3em;
@@ -14,8 +16,7 @@
 }
 
 @mixin range-block-thumb-disabled {
-  background: var(--colorG18)
-    repeating-linear-gradient(-45deg, transparent 0 3px, var(--color1) 3px 6px);
+  background: var(--colorG18) repeating-linear-gradient(-45deg, transparent 0 3px, var(--color1) 3px 6px);
   border-color: var(--colorG33);
 }
 
@@ -35,12 +36,7 @@
     width: 100%;
     height: 0.3em;
     max-width: 100%;
-    background: linear-gradient(
-        90deg,
-        var(--color) 0,
-        var(--color) var(--percent),
-        transparent var(--percent)
-      ),
+    background: linear-gradient(90deg, var(--color) 0, var(--color) var(--percent), transparent var(--percent)),
       linear-gradient(
         to top,
         var(--colorA005) 0,
@@ -67,13 +63,7 @@
 
         &::after {
           background: var(--colorG18)
-            repeating-linear-gradient(
-              -90deg,
-              var(--colorA1) 0 3px,
-              var(--colorA1) 0,
-              transparent 0,
-              transparent 6px
-            );
+            repeating-linear-gradient(-90deg, var(--colorA1) 0 3px, var(--colorA1) 0, transparent 0, transparent 6px);
         }
       }
     }
@@ -129,31 +119,29 @@
     }
   }
 
-  /* Les déclarations propriétaires suivantes ne sont pas factorisables. */
-
   & ::-webkit-slider-thumb {
     -webkit-appearance: none;
     @include range-block-thumb;
   }
-  
+
   & :focus-visible::-webkit-slider-thumb {
     @include range-block-thumb-visible;
   }
-  
+
   & input:disabled::-webkit-slider-thumb {
     @include range-block-thumb-disabled;
   }
-  
+
   & ::-moz-range-thumb {
     box-sizing: border-box;
     border: none;
     @include range-block-thumb;
   }
-  
+
   & :focus-visible::-moz-range-thumb {
     @include range-block-thumb-visible;
   }
-  
+
   & input:disabled::-moz-range-thumb {
     @include range-block-thumb-disabled;
   }

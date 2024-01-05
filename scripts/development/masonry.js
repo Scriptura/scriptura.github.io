@@ -6,21 +6,14 @@ class VGrid {
   // @bugfix @affected Chrome @see https://github.com/rachelandrew/gridbugs/issues/28 @note Une limitation à 999 lignes semble avoir été corrigée, nous avons testé avec 600 items sans bugs.
 
   constructor(container) {
-    this.grid =
-      container instanceof HTMLElement
-        ? container
-        : document.querySelector(container) // Initialise la grille et les éléments enfants.
+    this.grid = container instanceof HTMLElement ? container : document.querySelector(container) // Initialise la grille et les éléments enfants.
     this.gridItems = [].slice.call(this.grid.children) // Récupère tous les enfants directs.
   }
 
   resizeGridItem(item) {
     const rowHeight = 1 // précision de la grille, ici la plus grande précision possible.
-    const rowGap = parseInt(
-      window.getComputedStyle(this.grid).getPropertyValue('grid-row-gap')
-    ) // Récupère les propriétés d'espacement des lignes de la grille, afin que nous puissions l'ajouter aux enfants pour ajouter de l'espace supplémentaire afin d'éviter le débordement de contenu.
-    const rowSpan = Math.ceil(
-      (item.clientHeight + rowGap) / (rowHeight + rowGap)
-    ) // clientheight représente la hauteur du conteneur avec le contenu. Nous le divisons par la ligne Height+row Gap pour calculer le nombre de lignes dont il a besoin.
+    const rowGap = parseInt(window.getComputedStyle(this.grid).getPropertyValue('grid-row-gap')) // Récupère les propriétés d'espacement des lignes de la grille, afin que nous puissions l'ajouter aux enfants pour ajouter de l'espace supplémentaire afin d'éviter le débordement de contenu.
+    const rowSpan = Math.ceil((item.clientHeight + rowGap) / (rowHeight + rowGap)) // clientheight représente la hauteur du conteneur avec le contenu. Nous le divisons par la ligne Height+row Gap pour calculer le nombre de lignes dont il a besoin.
     item.style.gridRowEnd = 'span ' + rowSpan // Définit la propriété CSS span numRow pour cet enfant avec celle calculée.
   }
 
@@ -58,9 +51,5 @@ for (const masonry of document.querySelectorAll('.masonry')) {
     }, 200) // Limitation du nombre de calculs @see https://stackoverflow.com/questions/5836779/
   })
 
-  document
-    .querySelectorAll('.accordion')
-    .forEach(e =>
-      e.addEventListener('transitionend', () => grid.resizeAllGridItems())
-    ) // Composants dont l'action nécessite un recalcul de la grille.
+  document.querySelectorAll('.accordion').forEach(e => e.addEventListener('transitionend', () => grid.resizeAllGridItems())) // Composants dont l'action nécessite un recalcul de la grille.
 }

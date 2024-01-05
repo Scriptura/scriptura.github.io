@@ -1,6 +1,7 @@
-@charset "utf-8"; /* Les guillemets doubles évitents une erreur au validateur du W3C. @see https:/* validator.w3.org/ */ /* @note Doublage des variables Sass par les variables CSS natives impliquées dans les médias queries. @todo en attendant un support total d'usage pour les variables natives. */ /* @subsection Breakpoints */ /* @bugfix Nécessité de préciser deux chiffres après la virgule pour éviter un arrondissement de la valeur par les navigateurs. */ /* @note L'idée étant d'avoir une précision au-délà du pixel, nous évitant ainsi de devoir utiliser les opérateur logiques CSS4 de type "<=". @todo En test...*/ /* @note Attention, il s'agit d'un nombre magique qui tente d'anticiper la taille minimale nécessaire au menu en desktop. @todo À remplacer par une solution plus fiable à l'avenir, mais qui ne serait peut-être alors pas mobile first... */ /* @subsection Layout & Grid */ /* @note La fonction calc() n'est pas implémentée pour les media queries, ou alors partiellement (unité de même type). @see https://stackoverflow.com/questions/23667208 @todo À réévaluer dans le temps... */ :root {
-  --gap: 1em; /* Gouttière, largeur entre deux modules (en unité em/rem) */
-  --wrap: 92em; /* Largeur maximale du contenu (+ prise en compte du padding interne) */
+@charset "utf-8"; /* Les guillemets doubles évitents une erreur au validateur du W3C. @see https:/* validator.w3.org/ */ /* @note Doublage des variables Sass par les variables CSS natives impliquées dans les médias queries. @todo en attendant un support total d'usage pour les variables natives. */ /* @subsection Breakpoints */ /* @bugfix Nécessité de préciser deux chiffres après la virgule pour éviter un arrondissement de la valeur par les navigateurs. */ /* @note L'idée étant d'avoir une précision au-délà du pixel, nous évitant ainsi de devoir utiliser les opérateur logiques CSS4 de type inclusifs (exemple : `<=`). @todo En test...*/ /* @note La fonction calc() n'est pas implémentée pour les media queries, ou alors partiellement (unité de même type). @see https://stackoverflow.com/questions/23667208 @todo À réévaluer dans le temps... */ /* @note Attention, il s'agit d'une valeur empirique qui tente d'anticiper la taille minimale nécessaire au menu en desktop. @todo À remplacer par une solution plus fiable à l'avenir, mais qui ne serait peut-être alors pas mobile first et pourrait poser des problèmes de reflow... */ :root {
+  --size-nav: 90.01em; /* @note Variable CSS utilisée en JavaScript. */
+  --gap: 1em; /* Gouttière, largeur entre deux modules */
+  --wrap: 92em; /* calc(90em + var(--gap) * 2)*/ /* Largeur maximale du contenu (+ prise en compte du padding interne) */
 
   /* @subsection  Web fonts */
   /* @note Le chargement des polices via @font-face est fortement recommandé pour ne pas dépendre de l'environnement de l'utilisateur. Ce qui permet d'avoir la maitrise du design du site. Les CDNs sont un mal à proscrire également. */
@@ -494,8 +495,8 @@ template {
   */
 } .grid-auto,
 .grid-auto-min {
-  /* @note Ne pas définir la variable au-dessus de sa valeur par défaut afin d'éviter des dépassement sur les écrans de petites définitions. Préférer alors les grilles prédéfinies. */
-  grid-template-columns: repeat(auto-fit, minmax(var(--size-grid, 15em), 1fr));
+  /* @note Ne pas définir la variable au-dessus de sa valeur par défaut afin d'éviter des dépassement sur les écrans de petites définitions. Préférer alors les grilles prédéfinies. @todo min() en test pour éviter justement ce problème. */
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--size-grid, 15em), 100%), 1fr));
 } .grid-auto-min {
   /* @note Valeur réduite évitant de définir trop fréquement la variable de .grid-auto via du style en ligne. */
   --size-grid: 10em;
