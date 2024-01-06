@@ -919,7 +919,10 @@ body {
       /* transform: rotate(90deg); */
       /* @todo En test pour les performances. */
       transform: rotate(90deg) translateZ(0);
-      transition: transform 0.4s ease-in-out;
+
+      @media (prefers-reduced-motion: no-preference) {
+        transition: transform 0.4s ease-in-out;
+      }
 
       .active & {
         /* @note L'utilisation des pourcentages provoque un effet de bord avec overflow:clip sur le body ; à éviter. Valeur au-delà de 100vw afin de cacher les ombres des boîtes. */
@@ -1058,7 +1061,7 @@ body {
       transform-origin: center;
       fill: var(--colorT);
       @media (prefers-reduced-motion: no-preference) {
-        transition: all 0.2s ease-in-out; /* cubic-bezier(.55,-0.65,0,2.32); */
+        transition: all 0.2s ease-in-out; /* cubic-bezier(0.55, -0.65, 0, 2.32); */
       }
     }
 
@@ -1532,14 +1535,18 @@ ol {
     color: var(--colorG60);
     cursor: zoom-out;
 
+    /*
     &:where(:focus-within, :hover, :active) {
       color: var(--color5);
     }
+    */
 
+    /*
     &.fullscreen-button {
       transform: translateX(-3em);
       cursor: zoom-in;
     }
+    */
   }
 } .freeze {
   overflow: clip;

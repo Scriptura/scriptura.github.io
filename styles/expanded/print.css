@@ -1078,14 +1078,18 @@ ol {
     color: var(--colorG60);
     cursor: zoom-out;
 
+    /*
     &:where(:focus-within, :hover, :active) {
       color: var(--color5);
     }
+    */
 
+    /*
     &.fullscreen-button {
       transform: translateX(-3em);
       cursor: zoom-in;
     }
+    */
   }
 } .freeze {
   overflow: clip;
