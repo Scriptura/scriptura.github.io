@@ -14,10 +14,11 @@ $sizeXL: 120.01em;
 $sizeXXL: 140.01em;
 /* @note Attention, il s'agit d'une valeur empirique qui tente d'anticiper la taille minimale nécessaire au menu en desktop. @todo À remplacer par une solution plus fiable à l'avenir, mais qui ne serait peut-être alors pas mobile first et pourrait poser des problèmes de reflow... */
 $sizeNav: 90.01em;
+$gap: 1em;
 
 :root {
   --size-nav: $sizeNav; /* @note Variable CSS utilisée en JavaScript. */
-  --gap: 1em; /* Gouttière, largeur entre deux modules */
+  --gap: $gap; /* Gouttière, largeur entre deux modules */
   --wrap: 92em; /* calc(90em + var(--gap) * 2)*/ /* Largeur maximale du contenu (+ prise en compte du padding interne) */
 
   /* @subsection  Web fonts */

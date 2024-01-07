@@ -2,7 +2,7 @@ form(action='./')
   .grid3.m-grid2.gap.gap-bottom.masonry
     fieldset
       legend.h2 Text inputs
-      .grid.gap(style='--n:1')
+      .grid.gap
         .input
           label(for='input-text') Type text
           input#input-text(type='text' name='input-text' placeholder='John Smith' required='required' autocomplete='off')
@@ -21,7 +21,7 @@ form(action='./')
           input#input-text0(type='text' name='input-text0' placeholder=':disabled' required='' disabled='')
     fieldset
       legend.h2 Various inputs
-      .grid.gap(style='--n:1')
+      .grid.gap
         .input
           label(for='input-email') Type email
           input#input-email(type='email' name='input-email' placeholder='pseudo@email.com' required='required' pattern='^[a-z0-9._-]{3,50}@[a-z0-9._-]{2,}\.[a-z]{2,4}').validation-email
@@ -58,7 +58,7 @@ form(action='./')
           input#input-test(type='text' name='input-test' placeholder='requis')
     fieldset
       legend.h2 Dates & times inputs
-      .grid.gap(style='--n:1')
+      .grid.gap
         .input
           label(for='input-date') Type date
           input#input-date(type='date' name='input-date')
@@ -77,7 +77,6 @@ form(action='./')
           .input
             label(for='input-datetime-local') Type datetime-local
             input#input-datetime-local(type='datetime-local' name='input-datetime-local' value='2021-07-17T04:49' min='2017-07-17T00:00' max='2022-07-17T00:00')
-        .grid-auto-min.gap
           .input
             label(for='input-week') Type week
             input#input-week(type='week' name='input-week')
@@ -86,7 +85,7 @@ form(action='./')
             input#input-month(type='month' name='input-month' value='2021-08')
     fieldset
       legend.h2 Selects
-      .grid.gap(style='--n:1')
+      .grid.gap
         .input
           label(for='select-pays') Type select 
             code .input label + select

@@ -62,7 +62,7 @@ form(method='get' action='./').grid4.s-grid1.m-grid2.l-grid3.gap.gap-bottom
   fieldset
     p
       code [role=switch data-a data-b]
-    .grid.gap(style='--n:1')
+    .grid.gap
       .flex.gap
         input#test301(type='checkbox' role='switch' data-a='no' data-b='yes' checked)
         label(for='test301') Option n°1
@@ -78,7 +78,7 @@ form(method='get' action='./').grid4.s-grid1.m-grid2.l-grid3.gap.gap-bottom
   fieldset
     p
       code .switch-custom [type=checkbox]
-    .grid.gap(style='--n:1')
+    .grid.gap
       .flex.gap
         .switch-custom
           input#test1000(type='checkbox' role='switch' checked)
@@ -118,7 +118,7 @@ form(method='get' action='./').grid4.s-grid1.m-grid2.l-grid3.gap.gap-bottom
   fieldset
     p
       code .switch-custom [type=radio]
-    .grid.gap(style='--n:1')
+    .grid.gap
       .flex.gap
         .switch-custom
           input#test1004(type='radio' role='switch' name='test34' checked)
@@ -158,7 +158,7 @@ form(method='get' action='./').grid4.s-grid1.m-grid2.l-grid3.gap.gap-bottom
   fieldset
     p
       code .switch-custom .dual-state
-    .grid.gap(style='--n:1')
+    .grid.gap
       .flex.gap
         .switch-custom
           input#test1008.dual-state(type='checkbox' role='switch' name='test100' checked)

@@ -496,54 +496,36 @@ template {
 } .grid-auto,
 .grid-auto-min {
   /* @note Ne pas définir la variable au-dessus de sa valeur par défaut afin d'éviter des dépassement sur les écrans de petites définitions. Préférer alors les grilles prédéfinies. @todo min() en test pour éviter justement ce problème. */
-  grid-template-columns: repeat(auto-fit, minmax(min(var(--size-grid, 15em), 100%), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--size-column, 20em), 100%), 1fr));
 } .grid-auto-min {
   /* @note Valeur réduite évitant de définir trop fréquement la variable de .grid-auto via du style en ligne. */
-  --size-grid: 10em;
+  --size-column: 10em;
 } @media (width < 35.01em) {
   .xs-grid-auto {
     /* @todo Valeur arbitraire à redéfinir. */
-    grid-template-columns: repeat(auto-fit, minmax(var(--xs-size-grid, 11em), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(var(--xs-size-column, 11em), 1fr));
   }
-} @container grid (35em < width) {
+} @container grid (35.01em < width) {
   .grid2,
   .grid3,
   .grid4 {
-    --n: 2;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
+} @container grid (50.01em < width) {
+  .grid3,
+  .grid4 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+} @container grid (70.01em < width) {
+  .grid4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+} @container grid (35.01em < width) {
+  /* @todo En attendant avec impatience le support de "grid-column: span minmax(1, 2)" */
   .c2,
   .c3,
   .c4 {
     grid-column: span 2;
-  }
-} @container grid (50em < width) {
-  .grid3,
-  .grid4 {
-    --n: 3;
-  }
-
-  .c3,
-  .c4 {
-    grid-column: span 3;
-  }
-} @container grid (70em < width) {
-  .grid4 {
-    --n: 4;
-  }
-
-  .c4 {
-    grid-column: span 4;
-  }
-} .r2 {
-  grid-row: span 2;
-} .r3 {
-  grid-row: span 3;
-} .r4 {
-  grid-row: span 4;
-} @container grid (35em < width) {
-  :root .xs-grid2 {
-    --n: 2;
   }
 
   .xs-c1 {
@@ -553,15 +535,16 @@ template {
   .xs-c2 {
     grid-column: span 2;
   }
-} @container grid (35em < width < 50em) {
-  :root .s-grid1 {
-    --n: 1;
+} @container grid (50.01em < width) {
+  .c3,
+  .c4 {
+    grid-column: span 3;
   }
-
-  :root .s-grid2 {
-    --n: 2;
+} @container grid (70.01em < width) {
+  .c4 {
+    grid-column: span 4;
   }
-
+} @container grid (35.01em < width < 50.01em) {
   .s-c1 {
     grid-column: span 1;
   }
@@ -569,23 +552,7 @@ template {
   .s-c2 {
     grid-column: span 2;
   }
-} @container grid (50em < width < 70em) {
-  :root .m-grid1 {
-    --n: 1;
-  }
-
-  :root .m-grid2 {
-    --n: 2;
-  }
-
-  :root .m-grid3 {
-    --n: 3;
-  }
-
-  :root .m-grid4 {
-    --n: 4;
-  }
-
+} @container grid (50.01em < width < 70.01em) {
   .m-c1 {
     grid-column: span 1;
   }
@@ -593,25 +560,59 @@ template {
   .m-c2 {
     grid-column: span 2;
   }
-} @container grid (70em < width < 92em) {
+} .r2 {
+  grid-row: span 2;
+} .r3 {
+  grid-row: span 3;
+} .r4 {
+  grid-row: span 4;
+} @container grid (35.01em < width) {
+  :root .xs-grid2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+} @container grid (35.01em < width < 50.01em) {
+  :root .s-grid1 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+
+  :root .s-grid2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+} @container grid (50.01em < width < 70.01em) {
+  :root .m-grid1 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+
+  :root .m-grid2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  :root .m-grid3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  :root .m-grid4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+} @container grid (70.01em < width < 92.01em) {
   :root .l-grid1 {
-    --n: 1;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
   }
 
   :root .l-grid2 {
-    --n: 2;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   :root .l-grid3 {
-    --n: 3;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   :root .l-grid4 {
-    --n: 4;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
-} @container grid (92em < width) {
+} @container grid (92.01em < width) {
   :root .xl-grid2 {
-    --n: 2;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 } .flex {
   display: flex;
