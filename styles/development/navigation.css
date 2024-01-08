@@ -239,7 +239,7 @@
       }
     }
 
-    &[aria-expanded='true'] { /* :where(:focus, :hover, [aria-expanded='true']) */
+    &:where(:hover, [aria-expanded='true']) { /* :where(:focus, :hover, [aria-expanded='true']) */
       background-color: var(--color2);
 
       & svg {
@@ -255,7 +255,7 @@
 
     @media (hover: hover) and (pointer: fine) {
       /* @note Doublon du code précédent car bug d'affichage sur les smartphones. Ce code ne sert donc que pour les desktops. @todo En test... */
-      &:where(:focus-visible, :hover) {
+      &:focus-visible {
         background-color: var(--color2);
   
         & svg {
