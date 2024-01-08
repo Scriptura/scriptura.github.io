@@ -533,10 +533,10 @@ body {
 } .grid-auto,
 .grid-auto-min {
   /* @note Ne pas définir la variable au-dessus de sa valeur par défaut afin d'éviter des dépassement sur les écrans de petites définitions. Préférer alors les grilles prédéfinies. @todo min() en test pour éviter justement ce problème. */
-  grid-template-columns: repeat(auto-fit, minmax(min(var(--size-column, 20em), 100%), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--size-grid, 20em), 100%), 1fr));
 } .grid-auto-min {
   /* @note Valeur réduite évitant de définir trop fréquement la variable de .grid-auto via du style en ligne. */
-  --size-column: 10em;
+  --size-grid: 10em;
 } @media (width < 35.01em) {
   .xs-grid-auto {
     /* @todo Valeur arbitraire à redéfinir. */
@@ -1049,28 +1049,52 @@ body {
     background-color: var(--colorG15);
     transition: background-color 0.3s;
 
+    & svg {
+      width: 100%;
+      height: 100%;
+      background-color: var(--color2);
+      border-radius: 50%;
+    }
+
     & rect {
+      x: 45px;
+      width: 10px;
       transform-origin: center;
       fill: var(--colorT);
       @media (prefers-reduced-motion: no-preference) {
-        transition: all 0.2s cubic-bezier(0.55, -0.65, 0, 2.32); /* cubic-bezier(0.55, -0.65, 0, 2.32); */
+        transition: all 0.2s ease-in-out; /* cubic-bezier(0.55, -0.65, 0, 2.32); */
       }
     }
 
-    &:not(:focus, :hover, [aria-expanded='true']) {
+    &:where(:hover, [aria-expanded='true']) {
+      background-color: var(--color2);
+
       & svg {
-        border-radius: 50%;
-        background-color: var(--color2);
+        border-radius: inherit;
+        background-color: transparent;
       }
 
       & rect {
-        x: 45px;
-        width: 10px;
+        x: inherit;
+        width: inherit;
       }
     }
 
-    &:where(:focus, :hover, [aria-expanded='true']) {
-      background-color: var(--color2);
+    @media (hover: hover) and (pointer: fine) {
+      /* @note Doublon du code précédent car bug d'affichage sur les smartphones. Ce code ne sert donc que pour les desktops. @todo En test... */
+      &:where(:focus, :hover) {
+        background-color: var(--color2);
+
+        & svg {
+          border-radius: inherit;
+          background-color: transparent;
+        }
+
+        & rect {
+          x: inherit;
+          width: inherit;
+        }
+      }
     }
 
     &[aria-expanded='true'] svg {
@@ -1080,6 +1104,7 @@ body {
       }
 
       & :nth-child(2) {
+        /* opacity: 0; */
         transform: rotate(-45deg);
       }
 

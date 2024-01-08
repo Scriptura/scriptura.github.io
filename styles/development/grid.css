@@ -50,12 +50,12 @@
 .grid-auto,
 .grid-auto-min {
   /* @note Ne pas définir la variable au-dessus de sa valeur par défaut afin d'éviter des dépassement sur les écrans de petites définitions. Préférer alors les grilles prédéfinies. @todo min() en test pour éviter justement ce problème. */
-  grid-template-columns: repeat(auto-fit, minmax(min(var(--size-column, 20em), 100%), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--size-grid, 20em), 100%), 1fr));
 }
 
 .grid-auto-min {
   /* @note Valeur réduite évitant de définir trop fréquement la variable de .grid-auto via du style en ligne. */
-  --size-column: 10em;
+  --size-grid: 10em;
 }
 
 @media (width < $sizeXS) {
