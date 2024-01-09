@@ -336,7 +336,7 @@ const mainMenu = (() => {
 
   button.addEventListener('click', e => {
     toggleNavigation()
-    e.preventDefault()
+    //e.preventDefault()
   })
 
   const clearMenu = () => {
