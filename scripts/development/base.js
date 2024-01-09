@@ -321,20 +321,16 @@ const mainMenu = (() => {
     subNav = document.querySelector('.sub-nav'),
     content = document.querySelectorAll('body > :not(.nav'),
     sizeNav = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--size-nav')),
-    htmlFontSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('font-size')),
-    windowWidthInitial = window.innerWidth / htmlFontSize
+    htmlFontSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('font-size'))
 
   button.ariaExpanded = 'false'
   subNav.ariaHidden = 'true'
-
-  if (windowWidthInitial < sizeNav) subNav.setAttribute('inert', '')
 
   const toggleNavigation = () => {
     document.documentElement.classList.toggle('active')
     document.body.classList.toggle('active')
     button.ariaExpanded = button.ariaExpanded === 'true' ? 'false' : 'true'
     subNav.ariaHidden = subNav.ariaHidden === 'true' ? 'false' : 'true'
-    subNav.hasAttribute('inert') ? subNav.removeAttribute('inert') : subNav.setAttribute('inert', '')
     content.forEach(e => (e.hasAttribute('inert') ? e.removeAttribute('inert') : e.setAttribute('inert', '')))
   }
 

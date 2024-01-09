@@ -1055,7 +1055,7 @@ body {
       }
     }
 
-    &:not(:focus, :hover, :active, [aria-expanded='true']) {
+    &:not(:focus, :hover, [aria-expanded='true']) {
       & svg {
         border-radius: 50%;
         background-color: var(--color2);
@@ -1067,7 +1067,7 @@ body {
       }
     }
 
-    &:where(:focus, :hover, :active) {
+    &:where(:focus, :hover) {
       background-color: var(--color2);
     }
 
