@@ -5,22 +5,15 @@
 // @description Détecte les supports et ajoute des classes dans le tag html
 // -----------------------------------------------------------------------------
 
-// @documentation Performance pour les selecteurs @see https://jsbench.me/d7kbm759bb/1
 // jsDetect :
-document.documentElement.classList.replace('no-js', 'js')
+// document.documentElement.classList.replace('no-js', 'js') // @note Remplacé par la solution full CSS "@media (scripting: none)"
 
 // printDetect :
 if (!window.print) document.documentElement.classList.add('no-print') // @see Firefox Android a perdu sa fonction d'impression...
 
+// touchDetect
 // @see https://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript
 // @deprecated Script remplacé par règle CSS @media (hover hover) and (pointer fine)
-/*
-const touchDetect = (() => {
-  const html = document.documentElement,
-        touch = 'ontouchstart' in window || navigator.msMaxTouchPoints // @todo Condition à réévaluer
-  touch ? html.classList.add('touch') : html.classList.add('no-touch')
-})()
-*/
 
 // -----------------------------------------------------------------------------
 // @section     Service Worker
@@ -370,13 +363,13 @@ const mainMenu = (() => {
 // @note Les propriétés applicables au pseudo-élément ::first-letter varient d'un navigateur à l'autre ; la solution retenue est un wrapper en javascript 'span.dropcap' sur la première lettre.
 // @note Ajout d'une class .dropcap sur le premier caractère du premier paragraphe enfant d'un élément comportant '.add-dropcap'.
 // @todo À convertir côté backend dans un helper.
-
+/*
 const addDropCap = (() => {
   document
     .querySelectorAll('.add-drop-cap > p:first-child')
     .forEach(e => (e.innerHTML = e.innerHTML.replace(/^(\w)/, '<span class="drop-cap">$1</span>')))
 })()
-
+*/
 // -----------------------------------------------------------------------------
 // @section     Postponed footnotes
 // @description Report des notes de bas de page au côté du texte

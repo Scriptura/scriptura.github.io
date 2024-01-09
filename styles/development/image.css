@@ -60,12 +60,10 @@ figure {
   /* @note Important à appliquer pour le responsive si le width n'est pas définit préalablement. */
   width: 100%;
   max-width: calc(50% - var(--gap) / 2);
-}
 
-@media (width < $sizeS) {
-  [class*='-thumbnail'] {
-    max-width: 20em;
-    margin-inline: auto;
+  @media (width < $sizeS) {
+      max-width: 20em;
+      margin-inline: auto;
   }
 }
 
@@ -85,18 +83,19 @@ figure {
   }
 }
 
-.js [class*='-focus'] {
-  position: relative;
-  /* @note Évite un conflit avec d'autres éléments HTML positionnés en relatifs dans la mise en page, tel que les ancres line-mark. */
-  z-index: 1;
-  cursor: zoom-in;
-  transition: 0.15s transform;
-  &:where(:focus-within, :hover) {
-    box-shadow: 0.5em 0.5em 2em var(--colorAB3);
-    transform: scale(1.01);
+@media (scripting: enabled) {
+  [class*='-focus'] {
+    position: relative;
+    /* @note Évite un conflit avec d'autres éléments HTML positionnés en relatifs dans la mise en page, tel que les ancres line-mark. */
+    z-index: 1;
+    cursor: zoom-in;
+    transition: 0.15s transform;
+    &:where(:focus-within, :hover) {
+      box-shadow: 0.5em 0.5em 2em var(--colorAB3);
+      transform: scale(1.01);
+    }
   }
 }
-
 @media (hover: hover) and (pointer: fine) {
   [class*='-focus']:focus-within {
     background-color: var(--color5);

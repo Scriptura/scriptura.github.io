@@ -32,7 +32,8 @@
   visibility: hidden;
 }
 
-a[aria-disabled='true'] { /* @todo En expérimentation. */
+a[aria-disabled='true'] {
+  /* @todo En expérimentation. */
   cursor: not-allowed;
 
   &:active {
@@ -42,7 +43,7 @@ a[aria-disabled='true'] { /* @todo En expérimentation. */
 
 .sr-only {
   /* @note Caché visuellement mais disponible pour les lecteurs d'écran. */
-  /* @see https://github.com/h5bp/html5-boilerplate/blob/master/dist/css/style.css */  
+  /* @see https://github.com/h5bp/html5-boilerplate/blob/master/dist/css/style.css */
   position: absolute;
   /* @note Plus propre à l'inspection des éléments que `clip-path: inset(50%)` */
   transform: scale(0);
@@ -111,7 +112,7 @@ a[aria-disabled='true'] { /* @todo En expérimentation. */
 
 @for $i from 90 to 180 by 90 {
   .rotate$(i) {
-    transform: rotate($(i)deg);
+    transform: rotate($(i) deg);
   }
 }
 
@@ -137,7 +138,7 @@ a[aria-disabled='true'] { /* @todo En expérimentation. */
 
 @each $scale in 300, 250, 200, 175, 160, 150, 140, 130, 120, 115, 110, 105, 95, 90, 85, 80, 75, 70, 60, 50, 40, 30 {
   .scale$(scale) {
-    font-size: $(scale)%;
+    font-size: $(scale) %;
   }
 }
 
@@ -155,17 +156,22 @@ a[aria-disabled='true'] { /* @todo En expérimentation. */
   animation: anim-blink 1.2s infinite;
 }
 
-.no-overscroll {
-  overscroll-behavior-x: none;
-}
-
-.no-print .cmd-print {
-  display: none;
-}
-
 @keyframes anim-blink {
   50% {
     display: none;
     filter: invert(1);
+  }
+}
+
+/*
+.no-overscroll {
+  overscroll-behavior-x: none;
+}
+*/
+
+@media (-moz-touch-enabled) {
+  /* @note Spécifique à Firefox Android qui a perdu son impression... */
+  .cmd-print {
+    display: none;
   }
 }

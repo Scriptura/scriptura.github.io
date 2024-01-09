@@ -4,6 +4,8 @@ body {
   overflow-x: clip;
   /* @note Alternative plus fiable sur mobile que `min-height:100vh` sur le body. */
   height: 100%;
+  /* @note Pas d'effet associé sur les zones de défilement environnantes et on empêche le comportement normal de se produire sur l'élément lorsqu'on dépasse de la zone de défilement. */
+  /* overscroll-behavior-x: none; */
 }
 
 body {

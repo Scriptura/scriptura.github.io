@@ -457,6 +457,8 @@ body {
   overflow-x: clip;
   /* @note Alternative plus fiable sur mobile que `min-height:100vh` sur le body. */
   height: 100%;
+  /* @note Pas d'effet associé sur les zones de défilement environnantes et on empêche le comportement normal de se produire sur l'élément lorsqu'on dépasse de la zone de défilement. */
+  /* overscroll-behavior-x: none; */
 } body {
   display: grid;
   grid-template-rows: repeat(3, auto) 1fr;
@@ -1035,11 +1037,7 @@ body {
   all: unset;
   grid-area: cmd;
 
-  .no-js & {
-    display: none;
-  }
-
-  @media (width > 90.01em) {
+  @media (scripting: none), (width > 90.01em) {
     display: none;
   }
 
@@ -1457,10 +1455,10 @@ ol {
   /* @note Important à appliquer pour le responsive si le width n'est pas définit préalablement. */
   width: 100%;
   max-width: calc(50% - var(--gap)/2);
-} @media (width < 50.01em) {
-  [class*='-thumbnail'] {
-    max-width: 20em;
-    margin-inline: auto;
+
+  @media (width < 50.01em) {
+      max-width: 20em;
+      margin-inline: auto;
   }
 } @media (width > 50.01em) {
   [class*='-alignleft'] {
@@ -1476,15 +1474,17 @@ ol {
   :where([class*='-alignleft'], [class*='-alignright']) ~ :where(h2, h3, hr, aside) {
     clear: both;
   }
-} .js [class*='-focus'] {
-  position: relative;
-  /* @note Évite un conflit avec d'autres éléments HTML positionnés en relatifs dans la mise en page, tel que les ancres line-mark. */
-  z-index: 1;
-  cursor: zoom-in;
-  transition: 0.15s transform;
-  &:where(:focus-within, :hover) {
-    box-shadow: 0.5em 0.5em 2em var(--colorAB3);
-    transform: scale(1.01);
+} @media (scripting: enabled) {
+  [class*='-focus'] {
+    position: relative;
+    /* @note Évite un conflit avec d'autres éléments HTML positionnés en relatifs dans la mise en page, tel que les ancres line-mark. */
+    z-index: 1;
+    cursor: zoom-in;
+    transition: 0.15s transform;
+    &:where(:focus-within, :hover) {
+      box-shadow: 0.5em 0.5em 2em var(--colorAB3);
+      transform: scale(1.01);
+    }
   }
 } @media (hover: hover) and (pointer: fine) {
   [class*='-focus']:focus-within {
@@ -3721,8 +3721,7 @@ h2.legend {
     border-radius: var(--r1);
     box-shadow: var(--shadow3);
   }
-} /* @note Les propriétés applicables au sélecteur ::first-letter varient d'un navigateur à l'autre ; la solution retenue pour l'instant est un wrapper en javascript 'span.dropcap' sur la première lettre. */ .drop-cap,
-.no-js .add-drop-cap > p:first-child::first-letter {
+} /* @note Les propriétés applicables au sélecteur ::first-letter varient d'un navigateur à l'autre ; la solution retenue pour l'instant est un wrapper en javascript 'span.dropcap' sur la première lettre. */ .add-drop-cap > p:first-child::first-letter {
   float: left;
   margin-inline-end: 0.2em;
   /* @todo Valeur spécifique à la font utilisée, à évaluer. */
@@ -3737,6 +3736,10 @@ h2.legend {
   transform: translateY(0.05em);
   /* clip-path: polygon(0 .1em, .1em .1em, .1em 0, calc(100% - .1em) 0, calc(100% - .1em) .1em, 100% .1em, 100% calc(100% - .1em), calc(100% - .1em) calc(100% - .1em), calc(100% - .1em) 100%, .1em 100%, .1em calc(100% - .1em), 0 calc(100% - .1em)); */
   /* clip-path: polygon(0 0, 40% 0, 40% 10%, 60% 10%, 60% 0, 100% 0, 100% 40%, 90% 40%, 90% 60%, 100% 60%, 100% 100%, 60% 100%, 60% 90%, 40% 90%, 40% 100%, 0 100%, 0 60%, 10% 60%, 10% 40%, 0 40%); */
+  @supports (-moz-appearance:none) {
+    margin-block-start: 0.05em;
+    padding: 0.33em 0.2em 0.35em;
+  }
 } @media (width < 50.01em) {
   .line-mark {
     /* @note Un match media javascript peutconditionner le script, mais cette solution est moins modulable et surtout moins robuste que la solution CSS. */
@@ -4445,7 +4448,8 @@ body::after {
 } .invisible {
   /* @note Cacher l'élément en laissant son emplacement @affected Lecteurs d'écran inclus. */
   visibility: hidden;
-} a[aria-disabled='true'] { /* @todo En expérimentation. */
+} a[aria-disabled='true'] {
+  /* @todo En expérimentation. */
   cursor: not-allowed;
 
   &:active {
@@ -4453,7 +4457,7 @@ body::after {
   }
 } .sr-only {
   /* @note Caché visuellement mais disponible pour les lecteurs d'écran. */
-  /* @see https://github.com/h5bp/html5-boilerplate/blob/master/dist/css/style.css */  
+  /* @see https://github.com/h5bp/html5-boilerplate/blob/master/dist/css/style.css */
   position: absolute;
   /* @note Plus propre à l'inspection des éléments que `clip-path: inset(50%)` */
   transform: scale(0);
@@ -4503,9 +4507,9 @@ body::after {
     place-items: center;
   }
 } .rotate90 {
-    transform: rotate(90deg);
+    transform: rotate(90 deg);
   } .rotate180 {
-    transform: rotate(180deg);
+    transform: rotate(180 deg);
   } .reverse {
   transform: scaleX(-1);
 } .size {
@@ -4521,49 +4525,49 @@ body::after {
   --size-width: var(--size);
   width: calc(var(--size)*0.8);
 } .scale300 {
-    font-size: 300%;
+    font-size: 300 %;
   } .scale250 {
-    font-size: 250%;
+    font-size: 250 %;
   } .scale200 {
-    font-size: 200%;
+    font-size: 200 %;
   } .scale175 {
-    font-size: 175%;
+    font-size: 175 %;
   } .scale160 {
-    font-size: 160%;
+    font-size: 160 %;
   } .scale150 {
-    font-size: 150%;
+    font-size: 150 %;
   } .scale140 {
-    font-size: 140%;
+    font-size: 140 %;
   } .scale130 {
-    font-size: 130%;
+    font-size: 130 %;
   } .scale120 {
-    font-size: 120%;
+    font-size: 120 %;
   } .scale115 {
-    font-size: 115%;
+    font-size: 115 %;
   } .scale110 {
-    font-size: 110%;
+    font-size: 110 %;
   } .scale105 {
-    font-size: 105%;
+    font-size: 105 %;
   } .scale95 {
-    font-size: 95%;
+    font-size: 95 %;
   } .scale90 {
-    font-size: 90%;
+    font-size: 90 %;
   } .scale85 {
-    font-size: 85%;
+    font-size: 85 %;
   } .scale80 {
-    font-size: 80%;
+    font-size: 80 %;
   } .scale75 {
-    font-size: 75%;
+    font-size: 75 %;
   } .scale70 {
-    font-size: 70%;
+    font-size: 70 %;
   } .scale60 {
-    font-size: 60%;
+    font-size: 60 %;
   } .scale50 {
-    font-size: 50%;
+    font-size: 50 %;
   } .scale40 {
-    font-size: 40%;
+    font-size: 40 %;
   } .scale30 {
-    font-size: 30%;
+    font-size: 30 %;
   } .rescale {
   font-size: 1rem;
 } @container grid (35em > width) {
@@ -4572,14 +4576,19 @@ body::after {
   }
 } .blink {
   animation: anim-blink 1.2s infinite;
-} .no-overscroll {
-  overscroll-behavior-x: none;
-} .no-print .cmd-print {
-  display: none;
 } @keyframes anim-blink {
   50% {
     display: none;
     filter: invert(1);
+  }
+} /*
+.no-overscroll {
+  overscroll-behavior-x: none;
+}
+*/ @media (-moz-touch-enabled) {
+  /* @note Spécifique à Firefox Android qui a perdu son impression... */
+  .cmd-print {
+    display: none;
   }
 } /* @note Les helpers s'appliquent à la fin dans le but d'écraser des styles tels que font-size. */
 

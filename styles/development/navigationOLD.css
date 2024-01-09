@@ -208,11 +208,7 @@
   all: unset;
   grid-area: cmd;
 
-  .no-js & {
-    display: none;
-  }
-
-  @media (width > $sizeNav) {
+  @media (scripting: none), (width > $sizeNav) {
     display: none;
   }
 
