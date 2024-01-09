@@ -1,6 +1,7 @@
 /* @note Les propriétés applicables au sélecteur ::first-letter varient d'un navigateur à l'autre ; la solution retenue pour l'instant est un wrapper en javascript 'span.dropcap' sur la première lettre. */
 
 .add-drop-cap > p:first-child::first-letter {
+  /* @todo Fallback ":first-child::first-letter" pour Firefox, en attendant ":initial-letter" déjà disponible sous Chrome/Edge/Safari. @see https://caniuse.com/css-initial-letter */
   float: left;
   margin-inline-end: 0.2em;
   /* @todo Valeur spécifique à la font utilisée, à évaluer si changement de font. */
@@ -13,6 +14,7 @@
   color: var(--color2);
   background-color: var(--colorA005);
   transform: translateY(0.05em);
+  /* print-color-adjust: exact; */
   @supports (-moz-appearance:none) {
     margin-block-start: 0.05em;
     padding: 0.32em 0.2em 0.32em;
