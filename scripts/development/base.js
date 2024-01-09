@@ -326,23 +326,22 @@ const mainMenu = (() => {
   button.ariaExpanded = 'false'
   subNav.ariaHidden = 'true'
 
-  button.addEventListener('click', () => {
+  const toggleNavigation = () => {
     document.documentElement.classList.toggle('active')
     document.body.classList.toggle('active')
     button.ariaExpanded = button.ariaExpanded === 'true' ? 'false' : 'true'
     subNav.ariaHidden = subNav.ariaHidden === 'true' ? 'false' : 'true'
     content.forEach(e => (e.hasAttribute('inert') ? e.removeAttribute('inert') : e.setAttribute('inert', '')))
+  }
+
+  button.addEventListener('click', e => {
+    toggleNavigation()
+    e.preventDefault()
   })
 
   const clearMenu = () => {
     const windowWidth = window.innerWidth / htmlFontSize
-    if (windowWidth > sizeNav) {
-      document.documentElement.classList.remove('active')
-      document.body.classList.remove('active')
-      button.ariaExpanded = 'false'
-      subNav.ariaHidden = 'true'
-      content.forEach(e => e.removeAttribute('inert'))
-    }
+    if (windowWidth > sizeNav && button.ariaExpanded === 'true') toggleNavigation()
   }
 
   window.addEventListener('resize', () => {
