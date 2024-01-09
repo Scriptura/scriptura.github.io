@@ -48,8 +48,11 @@
     }
   }
 
-  & > * > summary::before {
-    all: unset;
+  & > * > summary {
+    &,
+    &:before {
+      all: unset;
+    }
   }
 
   & .accordion-summary::after {
