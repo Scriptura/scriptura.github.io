@@ -168,10 +168,3 @@ a[aria-disabled='true'] {
   overscroll-behavior-x: none;
 }
 */
-
-@media (-moz-touch-enabled) {
-  /* @note Spécifique à Firefox Android qui a perdu son impression... */
-  .cmd-print {
-    display: none;
-  }
-}

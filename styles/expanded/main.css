@@ -3735,7 +3735,7 @@ h2.legend {
   color: var(--color2);
   background-color: var(--colorA005);
   transform: translateY(0.05em);
-  print-color-adjust: exact;
+  /* print-color-adjust: exact; */
   @supports (-moz-appearance:none) {
     margin-block-start: 0.05em;
     padding: 0.32em 0.2em 0.32em;
@@ -4585,11 +4585,6 @@ body::after {
 .no-overscroll {
   overscroll-behavior-x: none;
 }
-*/ @media (-moz-touch-enabled) {
-  /* @note Spécifique à Firefox Android qui a perdu son impression... */
-  .cmd-print {
-    display: none;
-  }
-} /* @note Les helpers s'appliquent à la fin dans le but d'écraser des styles tels que font-size. */
+*/ /* @note Les helpers s'appliquent à la fin dans le but d'écraser des styles tels que font-size. */
 
 /*# sourceMappingURL=main.css.map */

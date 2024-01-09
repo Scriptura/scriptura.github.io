@@ -1556,7 +1556,7 @@ samp {
   color: var(--color2);
   background-color: var(--colorA005);
   transform: translateY(0.05em);
-  print-color-adjust: exact;
+  /* print-color-adjust: exact; */
   @supports (-moz-appearance:none) {
     margin-block-start: 0.05em;
     padding: 0.32em 0.2em 0.32em;
@@ -1851,12 +1851,7 @@ samp {
 .no-overscroll {
   overscroll-behavior-x: none;
 }
-*/ @media (-moz-touch-enabled) {
-  /* @note Spécifique à Firefox Android qui a perdu son impression... */
-  .cmd-print {
-    display: none;
-  }
-} body > :not(main, footer),
+*/ body > :not(main, footer),
 form,
 fieldset,
 /* input, */
@@ -1883,6 +1878,7 @@ pre div,
   display: block; /* @affected Firefox */
 } .footer {
   width: 100vw;
+  box-shadow: none;
   & > * {
     flex-direction: column;
   }
