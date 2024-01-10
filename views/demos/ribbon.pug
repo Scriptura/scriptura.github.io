@@ -44,14 +44,14 @@ hr(data-hr='✻ ✻ ✻')
 hr(data-hr='✻ ✻ ✻')
 .grid2.gap
   .demo-item.ribbon-content.center(style='min-height:12em')
-    .ribbon-top-left.scale150 Top left
-    .ribbon-bottom-right.scale150
+    .ribbon-top-left.scale(style='--scale:150%') Top left
+    .ribbon-bottom-right.scale(style='--scale:150%')
       .rotate180.rescale Bottom right
     div
       p
-        code .ribbon-top-left.scale150
+        code .ribbon-top-left.scale(style='--scale:150%')
       p
-        code .ribbon-bottom-right.scale150 .rotate180.rescale
+        code .ribbon-bottom-right.scale(style='--scale:150%') .rotate180.rescale
   .demo-item.ribbon-content.center
     div
       p

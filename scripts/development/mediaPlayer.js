@@ -521,7 +521,6 @@ const mediaPlayer = () => {
         media.classList.add('error')
         player.classList.add('error')
 
-        console.error(media.error.message)
         time.innerHTML = 'Erreur de lecture'
 
         media.poster = ''

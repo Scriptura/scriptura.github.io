@@ -32,35 +32,33 @@ form(method='get' action='./').grid-auto.gap.gap-bottom
   fieldset
     p
       code [type=checkbox role=switch]
-    .grid.gap
-      .flex.gap.scale50(style='gap: 2em')
-        input#test201(type='checkbox' role='switch' checked)
-        label.rescale(for='test201') Option n°1
-      .flex.gap.scale50(style='gap: 2em')
-        input#test202(type='checkbox' role='switch')
-        label.rescale(for='test202') Option n°2
-      .flex.gap.scale50(style='gap: 2em')
-        input#test203(type='checkbox' role='switch')
-        label.rescale(for='test203') Option n°3
-      .flex.gap.scale50(style='gap: 2em')
-        input#test204(type='checkbox' role='switch' disabled)
-        label.rescale(for='test204') Option n°4 (disabled)
+    .flex.gap.scale(style='gap:2em;--scale:50%')
+      input#test201(type='checkbox' role='switch' checked)
+      label.rescale(for='test201') Option n°1
+    .flex.gap.scale(style='gap:2em;--scale:50%')
+      input#test202(type='checkbox' role='switch')
+      label.rescale(for='test202') Option n°2
+    .flex.gap.scale(style='gap:2em;--scale:50%')
+      input#test203(type='checkbox' role='switch')
+      label.rescale(for='test203') Option n°3
+    .flex.gap.scale(style='gap:2em;--scale:50%')
+      input#test204(type='checkbox' role='switch' disabled)
+      label.rescale(for='test204') Option n°4 (disabled)
   fieldset
     p
       code [type=radio role=switch]
-    .grid.gap
-      .flex.gap.scale50(style='gap: 2em')
-        input#test401(type='radio' role='switch' name='test500' checked)
-        label.rescale(for='test401') Option n°1
-      .flex.gap.scale50(style='gap: 2em')
-        input#test402(type='radio' role='switch' name='test500')
-        label.rescale(for='test402') Option n°2
-      .flex.gap.scale50(style='gap: 2em')
-        input#test403(type='radio' role='switch' name='test500')
-        label.rescale(for='test403') Option n°3
-      .flex.gap.scale50(style='gap: 2em')
-        input#test404(type='radio' role='switch' name='test500' disabled)
-        label.rescale(for='test404') Option n°4 (disabled)
+    .flex.gap.scale(style='gap:2em;--scale:50%')
+      input#test401(type='radio' role='switch' name='test500' checked)
+      label.rescale(for='test401') Option n°1
+    .flex.gap.scale(style='gap:2em;--scale:50%')
+      input#test402(type='radio' role='switch' name='test500')
+      label.rescale(for='test402') Option n°2
+    .flex.gap.scale(style='gap:2em;--scale:50%')
+      input#test403(type='radio' role='switch' name='test500')
+      label.rescale(for='test403') Option n°3
+    .flex.gap.scale(style='gap:2em;--scale:50%')
+      input#test404(type='radio' role='switch' name='test500' disabled)
+      label.rescale(for='test404') Option n°4 (disabled)
   fieldset
     p
       code [role=switch data-a data-b]

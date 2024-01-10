@@ -1,70 +1,52 @@
 .column3.gap-vertical
   div
     p
-      code .scale70
-    p.scale70 Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+      code .scale(style='--scale:70%')
+    p.scale(style='--scale:70%') Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
   div
     p
-      code .scale75
-    p.scale75 Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+      code .scale(style='--scale:75%')
+    p.scale(style='--scale:75%') Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
   div
     p
-      code .scale80
-    p.scale80 Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+      code .scale(style='--scale:80%')
+    p.scale(style='--scale:80%') Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
   div
     p
-      code .scale90
-    p.scale90 Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+      code .scale(style='--scale:90%')
+    p.scale(style='--scale:90%') Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
   div
     p
-      code .scale95
-    p.scale95 Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+      code .scale(style='--scale:95%')
+    p.scale(style='--scale:95%') Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
   div
     p
       code no scale
     p Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
   div
     p
-      code .scale105
-    p.scale105 Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+      code .scale(style='--scale:105%')
+    p.scale(style='--scale:105%') Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
   div
     p
-      code .scale110
-    p.scale110 Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+      code .scale(style='--scale:110%')
+    p.scale(style='--scale:110%') Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
   div
     p
-      code .scale115
-    p.scale115 Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+      code .scale(style='--scale:115%')
+    p.scale(style='--scale:115%') Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
   div
     p
-      code .scale120
-    p.scale120 Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+      code .scale(style='--scale:120%')
+    p.scale(style='--scale:120%') Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
   div
     p
-      code .scale50 .rescale
-    p.scale50 Consetetur sadipscing elitr, 
+      code .scale(style='--scale:50%') .rescale
+    p.scale(style='--scale:50%') Consetetur sadipscing elitr, 
       span.rescale sed diam nonumy
       |  eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
 hr(data-hr='✻ ✻ ✻')
-div
-  .demo-item.ribbon-content.center(style='min-height:22em')
-    .ribbon-top-left Top left
-    .ribbon-top-right.scale120 Top right
-    .ribbon-bottom-right.scale150
-      .rotate180 Bottom right
-    .ribbon-bottom-left.scale200
-      .rotate180.rescale Bottom left
-    div
-      p
-        code .ribbon-top-left (Origin)
-      p
-        code .ribbon-top-right.scale120
-      p
-        code .ribbon-bottom-right.scale150 .rotate180
-      p
-        code .ribbon-bottom-left.scale200 .rotate180.rescale
-hr(data-hr='✻ ✻ ✻')
-.grid4.gap
+.grid-auto.gap
   div
     p
       code .round-button
@@ -74,22 +56,21 @@ hr(data-hr='✻ ✻ ✻')
           use(href='/sprites/util.svg#checkmark')
   div
     p
-      code .round-button.scale120
+      code .round-button.scale(style='--scale:160%')
     .center
-      button(type='button' aria-label='Submit').round-button.scale120
+      button.round-button.scale(type='button' aria-label='Submit' style='--scale:160%')
         svg.icon(role='img' focusable='false')
           use(href='/sprites/util.svg#checkmark')
   div
     p
-      code .round-button.scale160
+      code .round-button.scale(style='--scale:200%')
     .center
-      button(type='button' aria-label='Submit').round-button.scale160
+      button.round-button.scale(type='button' aria-label='Submit' style='--scale:200%')
         svg.icon(role='img' focusable='false')
           use(href='/sprites/util.svg#checkmark')
-  div
-    p
-      code .round-button.scale200
-    .center
-      button(type='button' aria-label='Submit').round-button.scale200
-        svg.icon(role='img' focusable='false')
-          use(href='/sprites/util.svg#checkmark')
+hr(data-hr='✻ ✻ ✻')
+p
+  code .xs-scale.s-scale.m-scale.l-scale
+figure.xs-center
+  svg.size.xs-scale.s-scale.m-scale.l-scale.decorative-svg(role='img' focusable='false' style='--size-width:30em;--size-height:30em;--xs-scale:50%;--s-scale:75%;--m-scale:100%;--l-scale:120%')
+    use(href='/sprites/various/MonogrammeTULivreDeKellsTEST.svg#1')

@@ -34,7 +34,7 @@
 
 a[aria-disabled='true'] {
   /* @todo En expérimentation. */
-  cursor: not-allowed;
+  cursor: default; /* not-allowed */
 
   &:active {
     pointer-events: none;
@@ -96,23 +96,22 @@ a[aria-disabled='true'] {
   */
 }
 
-@container grid (35em > width) {
+@container grid (width < $sizeXS) {
+  .xs-center {
+    display: grid;
+    place-items: center;
+  }
+
   span.xs-br {
     /* @note un 'br' volontairement non sémantique à destination des petites définitions d'écran, à placer sur un span englobant un espace. */
     display: block;
   }
 }
 
-@container grid (35em > width) {
-  .xs-center {
-    display: grid;
-    place-items: center;
-  }
-}
-
 @for $i from 90 to 180 by 90 {
   .rotate$(i) {
-    transform: rotate($(i) deg);
+    /* prettier-ignore */
+    transform: rotate($(i)deg);
   }
 }
 
@@ -136,9 +135,31 @@ a[aria-disabled='true'] {
   width: calc(var(--size) * 0.8);
 }
 
-@each $scale in 300, 250, 200, 175, 160, 150, 140, 130, 120, 115, 110, 105, 95, 90, 85, 80, 75, 70, 60, 50, 40, 30 {
-  .scale$(scale) {
-    font-size: $(scale) %;
+.scale {
+  font-size: var(--scale, 100%);
+}
+
+@container grid (width < $sizeXS) {
+  .xs-scale {
+    font-size: var(--xs-scale, 100%);
+  }
+}
+
+@container grid ($sizeXS < width) {
+  .s-scale {
+    font-size: var(--s-scale, 100%);
+  }
+}
+
+@container grid ($sizeS < width) {
+  .m-scale {
+    font-size: var(--m-scale, 100%);
+  }
+}
+
+@container grid ($sizeM < width) {
+  .l-scale {
+    font-size: var(--l-scale, 100%);
   }
 }
 
@@ -146,11 +167,11 @@ a[aria-disabled='true'] {
   font-size: 1rem;
 }
 
-@container grid (35em > width) {
-  .xs-scale {
-    font-size: var(--xs-scale, 80%);
-  }
+/*
+.no-overscroll {
+  overscroll-behavior-x: none;
 }
+*/
 
 .blink {
   animation: anim-blink 1.2s infinite;
@@ -163,8 +184,20 @@ a[aria-disabled='true'] {
   }
 }
 
-/*
-.no-overscroll {
-  overscroll-behavior-x: none;
+@keyframes anim-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
-*/
+
+@keyframes anim-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

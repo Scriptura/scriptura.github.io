@@ -7,19 +7,19 @@
       .loader
   div
     p
-      code .loader.scale120
+      code .loader.scale(style='--scale:120%')
     br
     .center
-      .loader.scale120
+      .loader.scale(style='--scale:120%')
   div
     p
       code (style='--frame:5s')
     br
     .center
-      .loader(style='--frame:5s').scale120
+      .loader.scale(style='--frame:5s;--scale:120%')
   div
     p
       code (style='--color:#d2b48c')
     br
     .center
-      .loader(style='--frame:10s;--color:#d2b48c').scale120
+      .loader.scale(style='--frame:10s;--color:#d2b48c;--scale:120%')
