@@ -226,7 +226,7 @@
       }
     }
 
-    &:not(:focus, :hover, [aria-expanded='true']) {
+    &:not(:focus-visible, :hover, [aria-expanded='true']) {
       & svg {
         border-radius: 50%;
         background-color: var(--color2);
@@ -238,7 +238,7 @@
       }
     }
 
-    &:where(:focus, :hover) {
+    &:where(:focus-visible, :hover) {
       background-color: var(--color2);
     }
 
