@@ -1,0 +1,17 @@
+extends ../patternLayout
+
+block variables
+  - const documentType = 'sprite2'
+  - const pageType = 'component'
+  -
+    const data = {
+      _name: 'SVG Sprite Sheets Using CSS Custom Properties <span>.&nbsp;Documentation</span>',
+      _title: 'SVG Sprite Sheets Using CSS Custom Properties . Scriptura',
+      _description: 'SVG Sprite Sheets Using CSS Custom Properties.'
+    }
+
+block main
+  article
+    header(role='banner')
+      h1.main-heading!= data._name
+    include ../demos/sprite2

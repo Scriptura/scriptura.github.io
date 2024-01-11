@@ -1,0 +1,37 @@
+.grid-auto.gap
+  div
+    p
+      code Original SVG
+    figure
+      svg.size.decorative-svg(role='img' focusable='false')
+        use(href='/sprites/tiLion.svg#1')
+  div
+    p
+      code With modified CSS variables
+    figure
+      svg#tilion.size.decorative-svg(role='img' focusable='false')
+        use(href='/sprites/tiLionVar.svg#1')
+    br
+    pre.pre
+      code.language-css(data-code='CSS' translate='no').
+        #tilion {
+          --color-svg1: chocolate;
+          --color-svg2: darkred;
+          --color-svg3: darkorange;
+          --color-svg4: peachpuff;
+          --color-svg5: peru;
+          --color-svg6: black;
+          --color-svg7: SaddleBrown;
+          --color-svg8: sienna;
+        }
+style.
+  #tilion {
+    --color-svg1: chocolate;
+    --color-svg2: darkred;
+    --color-svg3: darkorange;
+    --color-svg4: peachpuff;
+    --color-svg5: peru;
+    --color-svg6: black;
+    --color-svg7: SaddleBrown;
+    --color-svg8: sienna;
+  }
