@@ -1,5 +1,7 @@
 -
-  const codeStyles = `#tilion {
+  const codeBlock0 = `<path d="" fill="#784421"/>`
+  const codeBlock1 = `<path d="" fill="var(--color-svg7, #784421)"/>`
+  const codeBlock2 = `#tilion {
     --color-svg1: chocolate;
     --color-svg2: darkred;
     --color-svg3: darkorange;
@@ -9,8 +11,6 @@
     --color-svg7: saddlebrown;
     --color-svg8: sienna;
   }`
-  const codeStyles0 = `<path d="" fill="#784421"/>`
-  const codeStyles1 = `<path d="" fill="var(--color-svg7, #784421)"/>`
 style= codeStyles
 .grid-auto.gap
   div
@@ -21,7 +21,7 @@ style= codeStyles
         use(href='/sprites/tiLion.svg#1')
     br
     pre.pre
-      code.language-css(data-code='HTML' translate='no')= codeStyles0
+      code.language-css(data-code='SVG' translate='no')= codeBlock0
   div
     p
       code With CSS variables
@@ -30,13 +30,13 @@ style= codeStyles
         use(href='/sprites/tiLionVar.svg#1')
     br
     pre.pre
-      code.language-css(data-code='HTML' translate='no')= codeStyles1
+      code.language-css(data-code='SVG' translate='no')= codeBlock1
   div
     p
-      code With CSS variables modified
+      code With modified CSS variables
     figure
       svg#tilion.size.decorative-svg(role='img' focusable='false')
         use(href='/sprites/tiLionVar.svg#1')
     br
     pre.pre
-      code.language-css(data-code='CSS' translate='no')= codeStyles
+      code.language-css(data-code='CSS' translate='no')= codeBlock2
