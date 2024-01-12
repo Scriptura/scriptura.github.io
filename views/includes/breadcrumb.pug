@@ -8,6 +8,9 @@ ol.breadcrumb(aria-label='Breadcrumb')
   else if pageType === 'template'
     li
       a(href='/page/templates.html') Templates
+  else if pageType === 'sandbox'
+    li
+      a(href='/page/sandboxes.html') Sandboxes
   li
     //- @note L'attribut aria-current='page' n'est pas obligatoire pour l'accessibilité. Donc, sppression du lien pour la page courante car sa desactivation via CSS (pointer-events:none) peut toujours être contournée par le focus.
     //- a(href=data._url.path aria-current='page' aria-disabled='true')!= data._name

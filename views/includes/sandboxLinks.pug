@@ -1,0 +1,14 @@
+mixin list(icon, name, slug)
+  li
+    svg.icon(role='img' focusable='false')
+      use(href='/sprites/util.svg#' + icon)
+    a(href='/page/' + slug + '.html') #{name}
+
+block templateLink
+  +list('video-play', 'Le Donjon de Naheulbeuk', 'audioShare')
+  +list('video-play', 'Les Mystérieuses Cités d\'Or', 'audioShare2')
+  +list('video-play', 'Chants chrétiens', 'audioShare3')
+  +list('quill', 'Hymnes & Cantiques', 'articles3')
+  +list('paint-roller', 'Sprites', 'sprite')
+  +list('paint-roller', 'SVG Sprite using CSS Custom Properties', 'sprite2')
+  +list('video-play', 'Local Media Player', 'localMediaPlayer')

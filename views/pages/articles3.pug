@@ -2,7 +2,7 @@ extends ../patternLayout
 
 block variables
   - const documentType = 'audioShare2'
-  - const pageType = 'template'
+  - const pageType = 'sandbox'
   -
     const data = {
       _name: 'Hymnes & Cantiques',
@@ -14,7 +14,7 @@ block main
   article
     header(role='banner')
       h1.main-heading!= data._name
-    .grid3.s-grid1.m-grid2.l-grid2.gap.masonry
+    .grid2.s-grid1.m-grid1.gap.masonry
       .accordion
         details
           summary Source de la lumière

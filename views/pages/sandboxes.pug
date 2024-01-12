@@ -1,0 +1,22 @@
+extends ../patternLayout
+
+block variables
+  - const documentType = 'sandboxes'
+  -
+    const data = {
+      _name: 'Sandboxes <span>.&nbsp;Index</span>',
+      _title: 'Sandboxes . Scriptura',
+      _description: 'Bacs à sables pour des tests'
+    }
+
+block main
+  article
+    header(role='banner')
+      h1.main-heading!= data._name
+    .grid3.gap
+      .c2
+        ul.grid2.list-straight
+          include ../includes/sandboxLinks
+      figure.center
+        svg.size.decorative-svg.scale(role='img' focusable='false' style='--scale:70%')
+          use(href='/sprites/various/ClefDeLAbimeMonochrome.svg#1')
