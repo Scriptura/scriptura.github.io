@@ -39,12 +39,8 @@ html {
   background-color: #393939;
   font-family: 'Noto Sans', sans-serif;
   line-height: 1.5;
-  scroll-behavior: smooth;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
+  @media (prefers-reduced-motion: no-preference) {
+    scroll-behavior: smooth;
   }
 }</code></pre></div><div><pre class="pre"><code class="language-js" data-code="JS" translate="no">// a comment...
 const startPage = (() => {

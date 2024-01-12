@@ -33,11 +33,9 @@ html {
   /* font-size: clamp(1em, .7vw + .1em, 1.125em); */
   /* @bugfix Correct the line height @affected All browsers. */
   line-height: 1.5;
-  scroll-behavior: smooth;
 
-  @media (prefers-reduced-motion: reduce) {
-    /* Désactivation du défilement fluide si réduction des animations dans les préférences utilisateur du navigateur @see https://developer.mozilla.org/fr/docs/Web/CSS/scroll-behavior#Accessibilité */
-    scroll-behavior: auto;
+  @media (prefers-reduced-motion: no-preference) {
+    scroll-behavior: smooth;
   }
 }
 

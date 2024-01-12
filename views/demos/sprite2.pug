@@ -9,6 +9,9 @@
     --color-svg7: saddlebrown;
     --color-svg8: sienna;
   }`
+  const codeStyles0 = `<path d="" fill="#784421"/>`
+  const codeStyles1 = `<path d="" fill="var(--color-svg7, #784421)"/>`
+style= codeStyles
 .grid-auto.gap
   div
     p
@@ -16,13 +19,24 @@
     figure
       svg.size.decorative-svg(role='img' focusable='false')
         use(href='/sprites/tiLion.svg#1')
+    br
+    pre.pre
+      code.language-css(data-code='HTML' translate='no')= codeStyles0
   div
     p
       code With CSS variables
+    figure
+      svg.size.decorative-svg(role='img' focusable='false')
+        use(href='/sprites/tiLionVar.svg#1')
+    br
+    pre.pre
+      code.language-css(data-code='HTML' translate='no')= codeStyles1
+  div
+    p
+      code With CSS variables modified
     figure
       svg#tilion.size.decorative-svg(role='img' focusable='false')
         use(href='/sprites/tiLionVar.svg#1')
     br
     pre.pre
       code.language-css(data-code='CSS' translate='no')= codeStyles
-style= codeStyles
