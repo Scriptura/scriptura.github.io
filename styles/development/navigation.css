@@ -236,7 +236,7 @@
     }
 
     &[aria-expanded='true'] {
-      background-color: var(--color2);
+      /* background-color: var(--color2); */
 
       & svg {
         border-radius: inherit;

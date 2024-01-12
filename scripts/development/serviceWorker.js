@@ -2,7 +2,7 @@
 // @note Ce code s'exécute dans son propre worker ou thread :
 
 const addResourcesToCache = async resources => {
-  const cache = await caches.open('v7')
+  const cache = await caches.open('v8')
   await cache.addAll(resources)
 }
 
