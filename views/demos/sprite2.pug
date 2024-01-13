@@ -2,14 +2,19 @@
   const codeBlock0 = `<path d="" fill="#784421"/>`
   const codeBlock1 = `<path d="" fill="var(--color-svg7, #784421)"/>`
   const codeBlock2 = `#tilion {
-    --color-svg1: chocolate;
-    --color-svg2: darkred;
-    --color-svg3: darkorange;
-    --color-svg4: peachpuff;
-    --color-svg5: peru;
-    --color-svg6: black;
-    --color-svg7: saddlebrown;
-    --color-svg8: sienna;
+    --color-svg2: crimson;
+    animation: anim-tilion 10s infinite;
+  }
+  @keyframes anim-tilion {
+    25% {
+      --color-svg2: deeppink;
+    }
+    50% {
+      --color-svg2: mediumslateblue;
+    }
+    75% {
+      --color-svg2: seagreen;
+    }
   }`
 style= codeBlock2
 .grid-auto.gap
