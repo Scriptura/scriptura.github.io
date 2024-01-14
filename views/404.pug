@@ -19,9 +19,12 @@ block main
   article
     header(role='banner')
       h1.main-heading!= data._name
-    figure.xs-center
+    //-figure.xs-center
       svg.size.xs-scale.decorative-svg(role='img' focusable='false' style='--size-width:30em;--size-height:30em;--xs-scale:75%')
         use(href='/sprites/various/MonogrammeTULivreDeKellsTEST.svg#1')
+    figure.xs-center
+      svg.size.xs-scale(role='img' focusable='false' style='--size-width:50em;--size-height:50em;--xs-scale:75%')
+        use(href='/sprites/various/LindisfarneChiRihoColor.svg#1')
     hr
     //-include includes/componentLinks
     h2.sr-only Voici quelques suggestions alternatives&nbsp;:
