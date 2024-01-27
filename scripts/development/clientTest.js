@@ -3,7 +3,7 @@
 const clientTest = () => {
   const el = document.querySelector('.client-test')
 
-  const os = (function (agent) {
+  const os = ((agent) => {
     switch (true) {
       case agent.indexOf('Win') != -1:
         return 'Windows'
@@ -20,7 +20,7 @@ const clientTest = () => {
     }
   })(navigator.userAgent)
 
-  const browserName = ((agent) => {
+  const browserName = (agent => {
     switch (true) {
       case agent.indexOf('edge') > -1:
         return 'MS Edge'
@@ -50,12 +50,13 @@ const clientTest = () => {
   //}
 
   //window.onresize = () => reportWindowSize()
-
-  el.innerHTML = `<li>Système d'exploitation&nbsp;: ${os}</i>`
-  el.innerHTML += `<li>Profondeur de l'écran&nbsp;: ${screen.pixelDepth} bits</i>`
-  el.innerHTML += `<li>Définition écran&nbsp;: ${screen.width}px x ${screen.height}px</i>`
-  el.innerHTML += `<li>Fenêtre de navigation&nbsp;: ${windowWidth}px x ${windowHeight}px</i>`
-  el.innerHTML += `<li>Navigateur&nbsp;: ${browserName}</i>`
+  if (el) {
+    el.innerHTML = `<li>Système d'exploitation&nbsp;: ${os}</i>`
+    el.innerHTML += `<li>Profondeur de l'écran&nbsp;: ${screen.pixelDepth} bits</i>`
+    el.innerHTML += `<li>Définition écran&nbsp;: ${screen.width}px x ${screen.height}px</i>`
+    el.innerHTML += `<li>Fenêtre de navigation&nbsp;: ${windowWidth}px x ${windowHeight}px</i>`
+    el.innerHTML += `<li>Navigateur&nbsp;: ${browserName}</i>`
+  }
 }
 
 window.addEventListener('load', () => clientTest())
@@ -67,3 +68,4 @@ window.addEventListener('resize', () => {
     clientTest()
   }, 200) // Limitation du nombre de calculs @see https://stackoverflow.com/questions/5836779/
 })
+

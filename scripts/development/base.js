@@ -54,7 +54,7 @@ const getScript = (url, hook = 'footer') =>
     script.src = url
     script.async = 1
     script.onerror = reject
-    script.onload = script.onreadystatechange = () => {
+    script.onload = script.onreadystatechange = function() {
       const loadState = this.readyState
       if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
       script.onload = script.onreadystatechange = null
@@ -324,7 +324,7 @@ const mainMenu = (() => {
     htmlFontSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('font-size'))
 
   button.ariaExpanded = 'false'
-  subNav.ariaHidden = 'true'
+  subNav.ariaHidden = 'false'
 
   const toggleNavigation = () => {
     document.documentElement.classList.toggle('active')
