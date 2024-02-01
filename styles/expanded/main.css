@@ -488,12 +488,12 @@ body {
 } [tabindex='-1']:focus:not(:focus-visible) {
   /* Future-proof rule: in browsers that support :focus-visible, suppress the focus outline on elements that programmatically receive focus but wouldn't normally show a visible focus outline. In general, this would mean that the outline is only applied if the interaction that led to the element receiving programmatic focus was a keyboard interaction, or the browser has somehow determined that the user is primarily a keyboard user and/or wants focus outlines to always be presented. @see https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible @see https://developer.paciellogroup.com/blog/2018/03/focus-visible-and-backwards-compatibility/ */
   outline: 0 !important;
-} /* @note Utiliser .grid2 pour avoir deux colonnes, etc., au-delà de .grid4 utiliser .grid-auto (qui par défaut aura 5 colonnes max pour la largeur prévue de notre site). */ /* @note Avec `minmax` la grille ne sera pas tributaire de son contenu en responsive @see https://css-tricks.com/equal-width-columns-in-css-grid-are-kinda-weird/ */ :has(> [class^='grid']),
-.parent-grid {
-  /* @note ".parent-grid" est un fallback pour le sélecteur :has(), ajout de la classe via JS. */
-  container: grid/inline-size;
-  width: 100%; /* @note Important si le conteneur n'a pas de largeur définie par défaut. */
-} [class^='grid'] {
+} /* @note Utiliser .grid2 pour avoir deux colonnes, etc., au-delà de .grid4 utiliser .grid-auto (qui par défaut aura 5 colonnes max pour la largeur prévue de notre site). */ /* @note Avec `minmax` la grille ne sera pas tributaire de son contenu en responsive @see https://css-tricks.com/equal-width-columns-in-css-grid-are-kinda-weird/ */ [class^='grid'] {
+  :has(> &) {
+    container: grid/inline-size;
+    width: 100%; /* @note Important si le conteneur n'a pas de largeur définie par défaut. */
+  }
+  
   display: grid;
   grid-auto-flow: dense;
   grid-template-columns: repeat(var(--n, 1), minmax(0, 1fr));
@@ -1049,7 +1049,7 @@ body {
       transform-origin: center;
       fill: var(--colorT);
       @media (prefers-reduced-motion: no-preference) {
-        transition: all 0.2s cubic-bezier(0.55, -0.65, 0, 2.32); /* cubic-bezier(0.55, -0.65, 0, 2.32); */
+        transition: all 0.2s cubic-bezier(0.55, -0.65, 0, 2.32); /* ease-in-out */
       }
     }
 

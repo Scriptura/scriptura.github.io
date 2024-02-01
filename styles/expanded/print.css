@@ -449,12 +449,12 @@ template {
   @media (width > 35.01em) {
     text-align: justify;
   }
-} /* @import 'layout'; */ /* @note Utiliser .grid2 pour avoir deux colonnes, etc., au-delà de .grid4 utiliser .grid-auto (qui par défaut aura 5 colonnes max pour la largeur prévue de notre site). */ /* @note Avec `minmax` la grille ne sera pas tributaire de son contenu en responsive @see https://css-tricks.com/equal-width-columns-in-css-grid-are-kinda-weird/ */ :has(> [class^='grid']),
-.parent-grid {
-  /* @note ".parent-grid" est un fallback pour le sélecteur :has(), ajout de la classe via JS. */
-  container: grid/inline-size;
-  width: 100%; /* @note Important si le conteneur n'a pas de largeur définie par défaut. */
-} [class^='grid'] {
+} /* @import 'layout'; */ /* @note Utiliser .grid2 pour avoir deux colonnes, etc., au-delà de .grid4 utiliser .grid-auto (qui par défaut aura 5 colonnes max pour la largeur prévue de notre site). */ /* @note Avec `minmax` la grille ne sera pas tributaire de son contenu en responsive @see https://css-tricks.com/equal-width-columns-in-css-grid-are-kinda-weird/ */ [class^='grid'] {
+  :has(> &) {
+    container: grid/inline-size;
+    width: 100%; /* @note Important si le conteneur n'a pas de largeur définie par défaut. */
+  }
+  
   display: grid;
   grid-auto-flow: dense;
   grid-template-columns: repeat(var(--n, 1), minmax(0, 1fr));
