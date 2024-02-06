@@ -13,13 +13,6 @@ npm-debug.log
 # pnpm
 .pnpm-debug.log*
 
-# Yarn
-.yarn/
-yarn.lock
-yarn-debug.log
-yarn-error.log
-# yarn.lock # versioning des packages
-
 # Debian/Ubuntu (Gnome)
 .goutputstream*
 
@@ -43,3 +36,4 @@ tmp/
 *.log
 *.tmp
 .cache
+
