@@ -31,12 +31,10 @@ block main
               use(href='/sprites/util.svg#code')
             | Version
           div
-            - const date = new Date().toISOString().split('T')
-            - const version = date[0].replace(/-/g, '.') + '.' + Math.round(date[1].split('.')[0].replace(/:/g, '') / 500)
             h2.h4 Version du framework
             p Il n'y a jamais vraiment de version majeure, le soucis de rétrocompatibilité n'est pas porté&nbsp;: le site évolue constament, dans toutes les directions. L'ensemble du framework est un immense prototype.
             ul
-              li Draft version&nbsp;: #{version} (
+              li Version&nbsp;: #{process.env.npm_package_version} (
                 a(href='//github.com/Scriptura/scriptura.github.io') Github
                 | )
         details
