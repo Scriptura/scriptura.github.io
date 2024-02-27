@@ -1,4 +1,5 @@
 .map {
+  position: relative;
   width: 100%;
   /* @bugfix @affected Old browsers. */
   min-width: 100%;
@@ -24,8 +25,6 @@
 }
 
 .map-vintage {
-  position: relative;
-
   & .leaflet-layer {
     filter: sepia(0.5);
   }

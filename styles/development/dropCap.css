@@ -3,10 +3,23 @@
 .add-drop-cap > p:first-child::first-letter {
   /* @todo Fallback ":first-child::first-letter" pour Firefox, en attendant ":initial-letter" déjà disponible sous Chrome/Edge/Safari. @see https://caniuse.com/css-initial-letter */
   float: left;
+  margin-bottom: -.2em;
+  padding: 0 .2em 0 0;
+  line-height: .85;
+  font-size: 3.5em;
+  font-weight: bold;
+  font-family: var(--font-list2);
+  color: var(--color2);
+  transform: translateY(0.5em);
+}
+
+/*
+.add-drop-cap > p:first-child::first-letter {
+  /* @todo Fallback ":first-child::first-letter" pour Firefox, en attendant ":initial-letter" déjà disponible sous Chrome/Edge/Safari. @see https://caniuse.com/css-initial-letter
+  float: left;
   margin-inline-end: 0.2em;
-  /* @todo Valeur spécifique à la font utilisée, à évaluer si changement de font. */
+  /* @todo Valeur spécifique à la font utilisée, à évaluer si changement de font.
   padding: 0.28em 0.2em 0.12em;
-  /* @affected Chrome. */
   line-height: 1;
   font-size: 3em;
   font-weight: bold;
@@ -14,9 +27,10 @@
   color: var(--color2);
   background-color: var(--colorA005);
   transform: translateY(0.05em);
-  /* print-color-adjust: exact; */
+  /* print-color-adjust: exact;
   @supports (-moz-appearance:none) {
     margin-block-start: 0.05em;
     padding: 0.32em 0.2em 0.32em;
   }
 }
+*/

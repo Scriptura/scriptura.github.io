@@ -90,6 +90,7 @@ h6,
 .h5,
 .h6 {
   font-family: var(--font-list2);
+  text-align: start; /* @note Permet d'écraser le placement en justifié si besoin car conflit de cette dernière définition avec "text-wrap: balance". @todo À évaluer. */
   text-wrap: balance;
 }
 

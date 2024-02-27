@@ -10,6 +10,7 @@
   display: grid;
   grid-auto-flow: dense;
   grid-template-columns: repeat(var(--n, 1), minmax(0, 1fr));
+  width: 100%; /* @note Supplée un contenu insuffisant pour remplir l'espace @todo En test... */
 
   &.row-defines {
     /* @note Permet aux spans de la propriété grid-row de se caler sur les lignes. Intéressant mais pas souhaitable d'emblée en production, d'où cette classe. */
@@ -56,7 +57,7 @@
   --size-grid: 10em;
 }
 
-@media (width < $sizeXS) {
+@container grid (width < $sizeXS) {
   .xs-grid-auto {
     /* @todo Valeur arbitraire à redéfinir. */
     grid-template-columns: repeat(auto-fit, minmax(var(--xs-size-column, 11em), 1fr));

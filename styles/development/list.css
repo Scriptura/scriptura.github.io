@@ -98,6 +98,7 @@ ol ol {
   }
 
   & a {
+    /* @note Flexbox posera problème si le contenu est ponctué de balises HTML, ce qui ne devrait pas être le cas */
     display: flex;
     align-items: center;
     width: 100%;

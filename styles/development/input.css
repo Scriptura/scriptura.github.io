@@ -40,46 +40,19 @@
     }
   }
 
-  & input[type='date'],
-  & input[type='datetime-local'],
-  & input[type='week'],
-  & input[type='month'] {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/></svg>");
-  }
-
-  & input[type='date']:focus,
-  & input[type='datetime-local']:focus,
-  & input[type='week']:focus,
-  & input[type='month']:focus,
-  & input[type='date']:hover,
-  & input[type='datetime-local']:hover,
-  & input[type='week']:hover,
-  & input[type='month']:hover {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/></svg>");
-  }
-
   & input[type='month'] {
     text-transform: capitalize;
-  }
-
-  & input[type='time'] {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'/><path d='M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z'></path></svg>");
-  }
-
-  & input[type='time']:focus,
-  & input[type='time']:hover {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'/><path d='M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z'></path></svg>");
   }
 
   & input[type='file'] {
     padding-inline-end: 3em;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z'></path></svg>");
-  }
-
-  & input[type='file']:focus,
-  & input[type='file']:hover,
-  & input[type='file']:active {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z'></path></svg>");
+    
+    &:focus,
+    &:hover,
+    &:active {
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M18,15v3H6v-3H4v3c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2v-3H18z M7,9l1.41,1.41L11,7.83V16h2V7.83l2.59,2.58L17,9l-5-5L7,9z'></path></svg>");
+    }
   }
 
   & select:not([multiple]) {
@@ -87,15 +60,15 @@
     background-size: 1.5em 1.5em;
     background-repeat: no-repeat;
     background-position: calc(100% - 0.4em) 50%;
-  }
 
-  & select:not([multiple]):focus,
-  & select:not([multiple]):hover {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z'/></svg>");
-  }
-
-  & select:not([multiple]):active {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z'/></svg>");
+    &:focus,
+    &:hover {
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z'/></svg>");
+    }
+  
+    &:active {
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z'/></svg>");
+    }
   }
 
   & select[multiple] {
@@ -119,22 +92,19 @@
     outline: none;
   }
 
-  &.disabled label {
+  &:has([disabled]) label,
+  & > input[disabled] {
     color: var(--colorG60);
   }
 
-  &.disabled input {
+  & > input[disabled] {
     background: var(--colorG18) repeating-linear-gradient(-45deg, transparent 0 5px, var(--color1) 5px 10px);
     background-size: 100% 100%;
-    cursor: default;
   }
 
   & .invalid {
     /* @note Révision de l'emplacement de l'astérisque si champ obligatoire. */
     background-position: right 0.7em center;
-  }
-
-  & .invalid {
     animation: anim-invalid-input 2s ease-in-out infinite !important;
   }
 
@@ -144,20 +114,20 @@
 
   &:has([type='color'] + output) {
     position: relative;
-  }
 
-  &:has([type='color'] + output) output {
-    /* @note Les sélecteur :has() n'est pas encore supporté de manière large. @affected Firefox < v108. */
-    position: absolute;
-    left: 0.5em;
-    bottom: 0.6em;
-    margin: 2px;
-    padding: 0.2em 0.5em;
-    /* @bugfix Déclaration double, solution de contournement pour certains navigateurs qui ont tendance à réduire la taille des polices monospaces. @affected Chrome. @see https://stackoverflow.com/questions/38781089/font-family-monospace-monospace */
-    font-family: monospace, monospace;
-    color: var(--colorW);
-    background-color: var(--colorAB5);
-    pointer-events: none;
+    & output {
+      /* @note Les sélecteur :has() n'est pas encore supporté de manière large. @affected Firefox < v108. */
+      position: absolute;
+      left: 0.5em;
+      bottom: 0.6em;
+      margin: 2px;
+      padding: 0.2em 0.5em;
+      /* @bugfix Déclaration double, solution de contournement pour certains navigateurs qui ont tendance à réduire la taille des polices monospaces. @affected Chrome. @see https://stackoverflow.com/questions/38781089/font-family-monospace-monospace */
+      font-family: monospace, monospace;
+      color: var(--colorW);
+      background-color: var(--colorAB5);
+      pointer-events: none;
+    }
   }
 }
 

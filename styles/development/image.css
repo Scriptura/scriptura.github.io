@@ -81,6 +81,11 @@ figure {
   :where([class*='-alignleft'], [class*='-alignright']) ~ :where(h2, h3, hr, aside) {
     clear: both;
   }
+
+  :where([class*='-alignleft'], [class*='-alignright']) + hr {
+    /* @todo Solution temporaire à réévaluer */
+    padding-block-start: 2em;
+  }
 }
 
 @media (scripting: enabled) {

@@ -47,12 +47,10 @@ input {
   /* border-radius: 0; /* @affected Chrome 62+/OS X. */
 }
 
-/*
-button[disabled],
-html input[disabled] {
-  cursor: default
+button:disabled,
+html input:disabled {
+  cursor: default;
 }
-*/
 
 button,
 select {
@@ -185,8 +183,6 @@ select {
   input[type='datetime-local'],
   input[type='week'],
   input[type='month'] {
-    /* @note Évite la superposition de la fonction clear et du datepicker. */
-    padding-inline-end: 3em !important;
     cursor: pointer;
   }
 }
@@ -206,8 +202,13 @@ select {
 }
 
 ::-webkit-calendar-picker-indicator {
-  opacity: 0;
+  /* opacity: 0; */
+  font-size: 1.4em;
+  filter: brightness(0.5);
   cursor: pointer;
+  &:hover {
+    filter: brightness(0.7) sepia(100%);
+  }
 }
 
 /*

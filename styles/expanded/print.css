@@ -215,6 +215,7 @@ h6,
 .h5,
 .h6 {
   font-family: var(--font-list2);
+  text-align: start; /* @note Permet d'écraser le placement en justifié si besoin car conflit de cette dernière définition avec "text-wrap: balance". @todo À évaluer. */
   text-wrap: balance;
 } :where(.h2, .h3, .h4, .h5, .h6) {
   /* @note Important à redéfinir pour les classes aposées sur d'autres éléments que des titres, comme <legend> ou <label> par exemple. */
@@ -458,6 +459,7 @@ template {
   display: grid;
   grid-auto-flow: dense;
   grid-template-columns: repeat(var(--n, 1), minmax(0, 1fr));
+  width: 100%; /* @note Supplée un contenu insuffisant pour remplir l'espace @todo En test... */
 
   &.row-defines {
     /* @note Permet aux spans de la propriété grid-row de se caler sur les lignes. Intéressant mais pas souhaitable d'emblée en production, d'où cette classe. */
@@ -498,7 +500,7 @@ template {
 } .grid-auto-min {
   /* @note Valeur réduite évitant de définir trop fréquement la variable de .grid-auto via du style en ligne. */
   --size-grid: 10em;
-} @media (width < 35.01em) {
+} @container grid (width < 35.01em) {
   .xs-grid-auto {
     /* @todo Valeur arbitraire à redéfinir. */
     grid-template-columns: repeat(auto-fit, minmax(var(--xs-size-column, 11em), 1fr));
@@ -853,6 +855,7 @@ ol {
   }
 
   & a {
+    /* @note Flexbox posera problème si le contenu est ponctué de balises HTML, ce qui ne devrait pas être le cas */
     display: flex;
     align-items: center;
     width: 100%;
@@ -1012,6 +1015,11 @@ ol {
 
   :where([class*='-alignleft'], [class*='-alignright']) ~ :where(h2, h3, hr, aside) {
     clear: both;
+  }
+
+  :where([class*='-alignleft'], [class*='-alignright']) + hr {
+    /* @todo Solution temporaire à réévaluer */
+    padding-block-start: 2em;
   }
 } @media (scripting: enabled) {
   [class*='-focus'] {
@@ -1543,10 +1551,21 @@ samp {
 } /* @note Les propriétés applicables au sélecteur ::first-letter varient d'un navigateur à l'autre ; la solution retenue pour l'instant est un wrapper en javascript 'span.dropcap' sur la première lettre. */ .add-drop-cap > p:first-child::first-letter {
   /* @todo Fallback ":first-child::first-letter" pour Firefox, en attendant ":initial-letter" déjà disponible sous Chrome/Edge/Safari. @see https://caniuse.com/css-initial-letter */
   float: left;
+  margin-bottom: -.2em;
+  padding: 0 .2em 0 0;
+  line-height: .85;
+  font-size: 3.5em;
+  font-weight: bold;
+  font-family: var(--font-list2);
+  color: var(--color2);
+  transform: translateY(0.5em);
+} /*
+.add-drop-cap > p:first-child::first-letter {
+  /* @todo Fallback ":first-child::first-letter" pour Firefox, en attendant ":initial-letter" déjà disponible sous Chrome/Edge/Safari. @see https://caniuse.com/css-initial-letter
+  float: left;
   margin-inline-end: 0.2em;
-  /* @todo Valeur spécifique à la font utilisée, à évaluer si changement de font. */
+  /* @todo Valeur spécifique à la font utilisée, à évaluer si changement de font.
   padding: 0.28em 0.2em 0.12em;
-  /* @affected Chrome. */
   line-height: 1;
   font-size: 3em;
   font-weight: bold;
@@ -1554,12 +1573,13 @@ samp {
   color: var(--color2);
   background-color: var(--colorA005);
   transform: translateY(0.05em);
-  /* print-color-adjust: exact; */
+  /* print-color-adjust: exact;
   @supports (-moz-appearance:none) {
     margin-block-start: 0.05em;
     padding: 0.32em 0.2em 0.32em;
   }
-} /* @import 'lineMark'; */ /* @import 'calendar'; */ /* @import 'progress'; */ /* @import 'loader'; */ pie-chart {
+}
+*/ /* @import 'lineMark'; */ /* @import 'calendar'; */ /* @import 'progress'; */ /* @import 'loader'; */ pie-chart {
   --pie-chart-color-label: var(--color1);
   filter: drop-shadow(var(--shadow4));
 } bar-chart {
