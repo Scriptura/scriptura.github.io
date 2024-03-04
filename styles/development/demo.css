@@ -120,6 +120,7 @@
   }
   & rt {
     font-size: 0.8em;
+    text-align: center;
     color: var(--colorG38);
   }
 }
