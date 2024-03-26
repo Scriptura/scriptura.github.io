@@ -1,6 +1,6 @@
 {
   "name": "scriptura",
-  "version": "0.1",
+  "version": "0.0.1",
   "type": "module",
   "description": "Un framework HTML/CSS/JS généré avec Pug, PostCSS et JavaScript.",
   "main": "index.js",

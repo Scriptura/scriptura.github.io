@@ -69,6 +69,8 @@ const getScriptRequests = (() => {
   if (document.querySelector('.map')) getScript('/libraries/leaflet/leaflet.js')
   if (
     document.querySelector('[class*=validation]') ||
+    document.querySelector('[class*=assistance]') ||
+    document.querySelector('[class*=character-counter]') ||
     document.querySelector('[class*=-focus]') ||
     document.querySelector('[class*=accordion]') ||
     document.querySelector('.pre') ||
@@ -280,9 +282,6 @@ const colorInput = (() => {
 // @description Défilement vers le haut
 // -----------------------------------------------------------------------------
 
-// 1. @see http://jsfiddle.net/smc8ofgg/
-// 2. Scrool sur la demi-hauteur d'une fenêtre avant apparition de la flèche.
-
 const scrollToTop = (() => {
   const footer = document.querySelector('.footer'),
     button = document.createElement('button')
@@ -294,17 +293,13 @@ const scrollToTop = (() => {
   const item = document.querySelector('.scroll-top')
   item.classList.add('hide')
   const position = () => {
-    // 1
-    const yy = window.innerHeight / 2 // 2
+    const yy = window.innerHeight / 2 // @note Scroll sur la demi-hauteur d'une fenêtre avant apparition de la flèche.
     let y = window.scrollY
     if (y > yy) item.classList.remove('hide')
     else item.classList.add('hide')
   }
   window.addEventListener('scroll', position)
-  const scroll = () => {
-    // 3
-    window.scrollTo({ top: 0 })
-  }
+  const scroll = () => window.scrollTo({ top: 0 })
   item.addEventListener('click', scroll, false)
 })()
 
@@ -430,30 +425,3 @@ window.matchMedia('(display-mode: standalone)').addEventListener('change', e => 
 })
 console.log('DISPLAY_MODE_CHANGED', displayMode)
 */
-
-// -----------------------------------------------------------------------------
-// @section     Username format
-// @description Formatage du nom de l'utilisateur
-// -----------------------------------------------------------------------------
-
-// @note Cette opération, déjà effectuée côté backend, est opérée aussi côté client pour permettre à l'utilisateur d'avoir un retour avant validation du formulaire.
-
-const formattedUsername = (() => {
-  const username = document.getElementsByName('username')[0]
-
-  function usernameFormat(username) {
-    return (username.value = username.value
-      .replace(/^\p{CWU}/u, char => char.toLocaleUpperCase()) // Première lettre majuscule
-      .replace(/\s+/g, '__') // Remplacement des espaces par un "jeton"
-      .replace(/__\p{CWU}/gu, char => char.toLocaleUpperCase()) // Majuscule derière les jetons
-      .replace(/__/g, '') // Suppression des jetons, ce qui conduit à un résultat pascal case
-      .normalize('NFD')
-      .replace(/\p{Diacritic}/gu, '') // Suppression des accentuations
-      .replace(/[^a-z0-9\-\.]/gi, '') // Supprimer tous les caractères hormis les minuscules, majuscules, chiffres, points, et tirets hauts.
-      .trim())
-  }
-
-  if (window.location.pathname === '/register' && username) {
-    username.addEventListener('change', () => usernameFormat(username))
-  }
-})()

@@ -337,12 +337,13 @@ const mediaPlayer = () => {
       // @see https://stackoverflow.com/questions/25651719
     ;['loadeddata', 'progress'].forEach(event => {
       media.addEventListener(event, () => {
-        // @note 'media.onprogress' évite une erreur de lecture si execution avant l'événement 'loadeddata'.
-        media.onprogress = () =>
+        // Si mise en mémoire tampon disponible alors accès à la mise en mémoire tampon :
+        if (media.buffered.length > 0) {
           progressBar.style.setProperty(
             '--position-buffer',
             `${Math.floor((media.buffered.end(media.buffered.length - 1) / media.duration) * 100)}%`,
           ) // @note Un nombre entier suffit.
+        }
       })
     })
 

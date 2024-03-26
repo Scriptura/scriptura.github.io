@@ -419,7 +419,7 @@ template {
 
   & footer {
     margin-block: 0.75em;
-    /* text-align: right; */
+    /* text-align: end; */
   }
 
   & footer::before {
@@ -446,6 +446,10 @@ template {
   }
 } .justify {
   hyphens: auto;
+
+  & li {
+    text-align: start;
+  }
 
   @media (width > 35.01em) {
     text-align: justify;
@@ -989,37 +993,54 @@ ol {
   box-shadow: var(--shadow5);
   user-select: none;
 
+  &[class*='-thumbnail'] {
+    /* @note Important à appliquer pour le responsive si le width n'est pas définit préalablement. */
+    width: 100%;
+    max-width: calc(50% - var(--gap)/2);
+
+    @media (width < 50.01em) {
+      max-width: 20em;
+      margin-inline: auto;
+    }
+  }
+
+  &[class*='-rounded'] {
+    border-radius: 50%;
+
+    &[class*='-focus'] button {
+      display: none;
+    }
+
+    & img {
+      object-fit: cover;
+      aspect-ratio: 1/1;
+      border-radius: 50%;
+    }
+  }
+
+  @media (width > 50.01em) {
+    &[class*='-alignleft'] {
+      float: left;
+      margin-inline-end: var(--gap);
+    }
+
+    &[class*='-alignright'] {
+      float: right;
+      margin-inline-start: var(--gap);
+    }
+
+    &:where([class*='-alignleft'], [class*='-alignright']) ~ :where(h2, h3, hr, aside) {
+      clear: both;
+    }
+
+    &:where([class*='-alignleft'], [class*='-alignright']) + hr {
+      /* @todo Solution temporaire à réévaluer */
+      padding-block-start: 2em;
+    }
+  }
   & figcaption {
     padding-block-start: 0.5em;
     text-align: center;
-  }
-} [class*='-thumbnail'] {
-  /* @note Important à appliquer pour le responsive si le width n'est pas définit préalablement. */
-  width: 100%;
-  max-width: calc(50% - var(--gap)/2);
-
-  @media (width < 50.01em) {
-      max-width: 20em;
-      margin-inline: auto;
-  }
-} @media (width > 50.01em) {
-  [class*='-alignleft'] {
-    float: left;
-    margin-inline-end: var(--gap);
-  }
-
-  [class*='-alignright'] {
-    float: right;
-    margin-inline-start: var(--gap);
-  }
-
-  :where([class*='-alignleft'], [class*='-alignright']) ~ :where(h2, h3, hr, aside) {
-    clear: both;
-  }
-
-  :where([class*='-alignleft'], [class*='-alignright']) + hr {
-    /* @todo Solution temporaire à réévaluer */
-    padding-block-start: 2em;
   }
 } @media (scripting: enabled) {
   [class*='-focus'] {
@@ -1100,8 +1121,6 @@ ol {
     }
     */
   }
-} .freeze {
-  overflow: clip;
 } .mosaic {
   & figure {
     padding: 0.2em;
@@ -1247,7 +1266,7 @@ samp {
   border-collapse: collapse;
   font-weight: normal;
   word-break: normal;
-  text-align: left;
+  text-align: start;
 
   & th {
     font-weight: normal;
@@ -1855,6 +1874,8 @@ samp {
   to {
     opacity: 0;
   }
+} .freeze {
+  overflow: clip;
 } body > :not(main, footer),
 form,
 fieldset,

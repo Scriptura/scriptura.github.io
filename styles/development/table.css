@@ -13,7 +13,7 @@
   border-collapse: collapse;
   font-weight: normal;
   word-break: normal;
-  text-align: left;
+  text-align: start;
 
   & th {
     font-weight: normal;

@@ -67,7 +67,7 @@ hr[data-hr],
 
   & footer {
     margin-block: 0.75em;
-    /* text-align: right; */
+    /* text-align: end; */
   }
 
   & footer::before {
@@ -104,6 +104,10 @@ hr[data-hr],
 
 .justify {
   hyphens: auto;
+
+  & li {
+    text-align: start;
+  }
 
   @media (width > $sizeXS) {
     text-align: justify;

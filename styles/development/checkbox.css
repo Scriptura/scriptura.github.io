@@ -13,13 +13,12 @@
   cursor: pointer;
 
   &:disabled {
-    background: var(--colorG18)
-      repeating-linear-gradient(
-        -45deg,
-        transparent 0 2px,
-        var(--colorG33) 2px 4px
-      );
+    background: var(--colorG18) repeating-linear-gradient(-45deg, transparent 0 2px, var(--colorG33) 2px 4px);
     cursor: default;
+
+    &::before {
+      background-color: var(--colorG45);
+    }
 
     & + label {
       cursor: default;
@@ -36,6 +35,10 @@
   &:focus-visible {
     /* @note "!important" est nécessaire pour les boutons radio, sinon le focus ne surclasse pas la bordure définie plus haut. */
     border-color: var(--color5) !important;
+  }
+
+  &:not(:checked) + label {
+    color: var(--colorG45);
   }
 }
 
@@ -102,13 +105,7 @@ input[type='radio']:not([role='switch']) {
   }
 
   &:disabled {
-    background-image: repeating-linear-gradient(
-      -45deg,
-      var(--colorA1) 0 3px,
-      var(--colorG18) 0,
-      transparent 0,
-      transparent 6px
-    );
+    background-image: repeating-linear-gradient(-45deg, var(--colorA1) 0 3px, var(--colorG18) 0, transparent 0, transparent 6px);
     cursor: default;
 
     &::before {

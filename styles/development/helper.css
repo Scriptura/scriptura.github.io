@@ -201,3 +201,7 @@ a[aria-disabled='true'] {
     opacity: 0;
   }
 }
+
+.freeze {
+  overflow: clip;
+}

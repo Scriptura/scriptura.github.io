@@ -423,7 +423,7 @@ video {
     padding: 0.5em 1em;
     overflow: hidden;
     white-space: nowrap;
-    text-align: right;
+    text-align: end;
     text-overflow: ellipsis;
     text-shadow: 0 0 0.2em var(--colorAB8);
   }

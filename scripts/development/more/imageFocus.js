@@ -31,7 +31,7 @@ const imageFocus = (() => {
   const addFocusButton = item => {
     const button = document.createElement('button')
     injectSvgSprite(button, 'maximize')
-    button.ariaLabel = 'agrandir' // 'enlarge'
+    button.ariaLabel = 'enlarge'
     item.appendChild(button)
   }
 
@@ -41,7 +41,7 @@ const imageFocus = (() => {
     //const fullscreenButton = document.createElement('button')
     injectSvgSprite(shrinkButton, 'minimize')
     shrinkButton.classList.add('shrink-button')
-    shrinkButton.ariaLabel = 'rétrécir' // 'shrink'
+    shrinkButton.ariaLabel = 'shrink'
     el.appendChild(shrinkButton)
     shrinkButton.focus()
     /*
