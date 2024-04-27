@@ -105,7 +105,6 @@
 .demo-icons {
   & ruby {
     padding: 1em 0 0.5em;
-    text-align: center;
     background-color: var(--color1);
     border-radius: var(--r2);
     transition: all 0.3s ease-in-out;
@@ -121,6 +120,7 @@
   }
   & rt {
     font-size: 0.8em;
+    text-align: center;
     color: var(--colorG38);
   }
 }
