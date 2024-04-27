@@ -425,3 +425,11 @@ window.matchMedia('(display-mode: standalone)').addEventListener('change', e => 
 })
 console.log('DISPLAY_MODE_CHANGED', displayMode)
 */
+
+// -----------------------------------------------------------------------------
+// @section     Go Back
+// @description Retour à la page précédente de l'historique de navigation
+// -----------------------------------------------------------------------------
+
+const goBack = () => window.history.back()
+document.querySelectorAll('.go-back').forEach(e => e.addEventListener('click', goBack))

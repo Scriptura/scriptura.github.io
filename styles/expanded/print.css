@@ -1,5 +1,5 @@
 @charset "utf-8"; /* Les guillemets doubles évitents une erreur au validateur du W3C. @see https:/* validator.w3.org/ */ /* @note Doublage des variables Sass par les variables CSS natives impliquées dans les médias queries. @todo en attendant un support total d'usage pour les variables natives. */ /* @subsection Breakpoints */ /* @bugfix Nécessité de préciser deux chiffres après la virgule pour éviter un arrondissement de la valeur par les navigateurs. */ /* @note L'idée étant d'avoir une précision au-délà du pixel, nous évitant ainsi de devoir utiliser les opérateur logiques CSS4 de type inclusifs (exemple : `<=`). @todo En test...*/ /* @note La fonction calc() n'est pas implémentée pour les media queries, ou alors partiellement (unité de même type). @see https://stackoverflow.com/questions/23667208 @todo À réévaluer dans le temps... */ /* @note Attention, il s'agit d'une valeur empirique qui tente d'anticiper la taille minimale nécessaire au menu en desktop. @todo À remplacer par une solution plus fiable à l'avenir, mais qui ne serait peut-être alors pas mobile first et pourrait poser des problèmes de reflow... */ :root {
-  --size-nav: 90.01em; /* @note Variable CSS utilisée en JavaScript. */
+  --size-nav: 70.01em; /* @note Variable CSS utilisée en JavaScript. */
   --gap: 1em; /* Gouttière, largeur entre deux modules */
   --wrap: 92em; /* calc(90em + var(--gap) * 2)*/ /* Largeur maximale du contenu (+ prise en compte du padding interne) */
 
@@ -635,7 +635,11 @@ template {
     margin-block-end: var(--gap);
   }
 
-  & .item-push {
+  &.items-push {
+    justify-content: flex-end;
+  }
+
+  & .push {
     margin-inline-start: auto;
   }
 } .order {
@@ -1428,7 +1432,16 @@ samp {
     grid-column: 1;
     max-width: 55em;
 
-    @media (width > 35.01em) {
+    @media (50.01em < width) {
+      &:nth-child(odd) {
+        /* @note Limitation à 2 rangées car impression visuelle d'un désordre à partir de 3 rangées. */
+        margin-inline-start: auto;
+      }
+    }
+  }
+
+  & > :where(.wrapper, article) {
+    @media (35.01em < width) {
       border-radius: var(--r1);
       box-shadow: var(--shadow3);
     }
@@ -1437,13 +1450,8 @@ samp {
       padding: 2.5em 4em;
     }
 
-    @media (width > 50.01em) {
+    @media (50.01em < width) {
       padding: 4em 6em;
-
-      &:nth-child(odd) {
-        /* @note Limitation à 2 rangées car impression visuelle d'un désordre à partir de 3 rangées. */
-        margin-inline-start: auto;
-      }
     }
   }
 
@@ -1467,6 +1475,7 @@ samp {
 
   & article {
     position: relative;
+    width: 100%;
     
     @media (width < 35.01em) {
       padding-block: var(--gap);
@@ -1501,7 +1510,7 @@ samp {
     grid-area: uu;
   }
 
-  & .keywords {
+  & .tags {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
@@ -1522,7 +1531,7 @@ samp {
       padding: 0.25em 0.5em 0.25em 1.25em;
       text-decoration: none;
       white-space: nowrap;
-      background-color: var(--colorG15);
+      background-color: var(--colorG27);
       clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
     }
   }
@@ -1551,7 +1560,7 @@ samp {
       padding-inline: 4em;
     }
 
-    @media (width > 50.01em) {
+    @media (50.01em < width) {
       padding-inline: 6em;
     }
   }
@@ -1939,11 +1948,11 @@ h1 span {
   margin-block-start: var(--gap);
   padding: 0 !important; /* @affected Firefox */
   box-shadow: none !important; /* @affected Firefox */
-} .keywords a {
+} .tags a {
   background: #efefef !important;
 } .avatar,
 .avatars,
-.keywords {
+.tags {
   print-color-adjust: exact !important;
 }
 

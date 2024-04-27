@@ -104,10 +104,6 @@
     &:not([rows]) {
       min-height: 9.75em;
     }
-    &.autosize {
-      overflow: hidden;
-      /* resize: none; */
-    }
   }
 
   & input:not([type='button']):focus,
@@ -154,6 +150,35 @@
       pointer-events: none;
     }
   }
+}
+
+.input-group {
+  display: flex;
+  align-items: stretch;
+
+  & > :first-child {
+    overflow: hidden;
+    width: fit-content;
+    padding-inline: 1em 0.5em;
+    line-height: 3em;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    background-color: var(--color6);
+    border-radius: var(--r2) 0 0 var(--r2);
+    @container grid ($sizeXS < width) {
+      flex-shrink: 0;
+    }
+  }
+
+  & > input {
+    padding-inline-start: 0.5em !important;
+    border-radius: 0 var(--r2) var(--r2) 0;
+  }
+}
+
+.autosize {
+  overflow: hidden;
+  field-sizing: content; /* @note Impacte la hauteur des champs par défaut */
 }
 
 legend.h2,

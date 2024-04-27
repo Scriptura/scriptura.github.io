@@ -1,5 +1,5 @@
 @charset "utf-8"; /* Les guillemets doubles évitents une erreur au validateur du W3C. @see https://validator.w3.org/ */ /* @note Doublage des variables Sass par les variables CSS natives impliquées dans les médias queries. @todo en attendant un support total d'usage pour les variables natives. */ /* @subsection Breakpoints */ /* @bugfix Nécessité de préciser deux chiffres après la virgule pour éviter un arrondissement de la valeur par les navigateurs. */ /* @note L'idée étant d'avoir une précision au-délà du pixel, nous évitant ainsi de devoir utiliser les opérateur logiques CSS4 de type inclusifs (exemple : `<=`). @todo En test...*/ /* @note La fonction calc() n'est pas implémentée pour les media queries, ou alors partiellement (unité de même type). @see https://stackoverflow.com/questions/23667208 @todo À réévaluer dans le temps... */ /* @note Attention, il s'agit d'une valeur empirique qui tente d'anticiper la taille minimale nécessaire au menu en desktop. @todo À remplacer par une solution plus fiable à l'avenir, mais qui ne serait peut-être alors pas mobile first et pourrait poser des problèmes de reflow... */ :root {
-  --size-nav: 90.01em; /* @note Variable CSS utilisée en JavaScript. */
+  --size-nav: 70.01em; /* @note Variable CSS utilisée en JavaScript. */
   --gap: 1em; /* Gouttière, largeur entre deux modules */
   --wrap: 92em; /* calc(90em + var(--gap) * 2)*/ /* Largeur maximale du contenu (+ prise en compte du padding interne) */
 
@@ -674,7 +674,11 @@ body {
     margin-block-end: var(--gap);
   }
 
-  & .item-push {
+  &.items-push {
+    justify-content: flex-end;
+  }
+
+  & .push {
     margin-inline-start: auto;
   }
 } .order {
@@ -820,13 +824,13 @@ body {
   user-select: none;
   background-color: var(--colorG15);
 
-  @media (width < 90.01em) {
+  @media (width < 70.01em) {
     grid-template-rows: 3em;
     grid-template-columns: 3em minmax(0, 1fr) 3em;
     grid-template-areas: 'logo breadcrumb cmd';
   }
 
-  @media (width > 90.01em) {
+  @media (width > 70.01em) {
     grid-template-rows: repeat(2, 2.5em);
     grid-template-columns: 5em minmax(0, 1fr);
     grid-template-areas: 'logo subnav' 'logo breadcrumb';
@@ -883,7 +887,7 @@ body {
   & .current {
     background-color: var(--color2);
 
-    @media (width > 90.01em) {
+    @media (width > 70.01em) {
       position: relative;
       /* @note La valeur doit être suffisante pour passer au-dessus des items de ".breadcrumb." */
       z-index: 10;
@@ -901,13 +905,13 @@ body {
     }
   }
 
-  @media (width > 90.01em) {
+  @media (width > 70.01em) {
     & > :last-child {
       margin-inline-start: auto;
     }
   }
 
-  @media (width < 90.01em) {
+  @media (width < 70.01em) {
     position: absolute;
     z-index: 800;
     top: 3em;
@@ -919,7 +923,7 @@ body {
 
   & li {
     list-style: none;
-    @media (width < 90.01em) {
+    @media (width < 70.01em) {
       flex: 1;
       flex-basis: 50%;
       background-color: var(--colorG15);
@@ -977,7 +981,7 @@ body {
       flex-basis: 33%;
     }
 
-    @media (50.01em < width < 90.01em) {
+    @media (50.01em < width < 70.01em) {
       flex-basis: 25%;
     }
 
@@ -985,10 +989,10 @@ body {
       display: block;
       padding: 0 1em;
       box-shadow: inset 0.5rem 0.5rem 0.5rem var(--colorAB2);
-      @media (width < 90.01em) {
+      @media (width < 70.01em) {
         line-height: 3;
       }
-      @media (width > 90.01em) {
+      @media (width > 70.01em) {
         line-height: 2.5;
       }
       &.current {
@@ -1013,7 +1017,7 @@ body {
       }
     }
   }
-} @media (width < 90.01em) {
+} @media (width < 70.01em) {
   :where(html, body).active {
     overflow: clip;
   }
@@ -1031,7 +1035,7 @@ body {
       filter: blur(2px) grayscale(1);
     }
   }
-} @media (width > 90.01em) {
+} @media (width > 70.01em) {
   @keyframes anim-jump {
     30% {
       transform: translateY(-0.3em);
@@ -1041,11 +1045,11 @@ body {
   all: unset;
   grid-area: cmd;
 
-  @media (scripting: none), (width > 90.01em) {
+  @media (scripting: none), (width > 70.01em) {
     display: none;
   }
 
-  @media (width < 90.01em) {
+  @media (width < 70.01em) {
     padding: 0.5em;
     background-color: var(--colorG15);
     transition: background-color 0.3s;
@@ -1151,7 +1155,7 @@ body {
     }
   }
 
-  @media (width < 90.01em) {
+  @media (width < 70.01em) {
     & li > * {
       line-height: 3;
       padding: 0 2.25em;
@@ -2124,29 +2128,34 @@ video {
     transform: translate(0, 0);
   }
 } .card {
-  & h2,
-  & p {
+  & div {
     margin: 0;
-    padding: 2rem;
     background-color: var(--colorG27);
     box-shadow: var(--shadow3);
   }
 
-  & h2 {
-    margin-block-end: 0;
+  & > :first-child {
+    padding: .5em 2em;
     text-align: center;
     /* @note Unités fixes en raison de la nature différentes des éléments. */
-    border-radius: 0.5rem 0.5rem 2px 2px;
+    border-radius: 0.5em 0.5em 2px 2px;
 
     & span {
       color: var(--color2);
     }
   }
 
-  & p {
-    margin-block-start: 0;
+  & > :last-child {
+    padding: 2em;
     /* @note Unités fixes en raison de la nature différentes des éléments. */
-    border-radius: 2px 2px 0.5rem 0.5rem;
+    border-radius: 2px 2px 0.5em 0.5em;
+  }
+
+  & p {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
   }
   
   & svg {
@@ -2720,10 +2729,6 @@ select {
     &:not([rows]) {
       min-height: 9.75em;
     }
-    &.autosize {
-      overflow: hidden;
-      /* resize: none; */
-    }
   }
 
   & input:not([type='button']):focus,
@@ -2770,6 +2775,31 @@ select {
       pointer-events: none;
     }
   }
+} .input-group {
+  display: flex;
+  align-items: stretch;
+
+  & > :first-child {
+    overflow: hidden;
+    width: fit-content;
+    padding-inline: 1em 0.5em;
+    line-height: 3em;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    background-color: var(--color6);
+    border-radius: var(--r2) 0 0 var(--r2);
+    @container grid (35.01em < width) {
+      flex-shrink: 0;
+    }
+  }
+
+  & > input {
+    padding-inline-start: 0.5em !important;
+    border-radius: 0 var(--r2) var(--r2) 0;
+  }
+} .autosize {
+  overflow: hidden;
+  field-sizing: content; /* @note Impacte la hauteur des champs par défaut */
 } legend.h2,
 h2.legend {
   /* @note personnalisation de l'élément, optimisé pour un `.h2` @todo À évaluer dans le temps. */
@@ -3577,7 +3607,16 @@ h2.legend {
     grid-column: 1;
     max-width: 55em;
 
-    @media (width > 35.01em) {
+    @media (50.01em < width) {
+      &:nth-child(odd) {
+        /* @note Limitation à 2 rangées car impression visuelle d'un désordre à partir de 3 rangées. */
+        margin-inline-start: auto;
+      }
+    }
+  }
+
+  & > :where(.wrapper, article) {
+    @media (35.01em < width) {
       border-radius: var(--r1);
       box-shadow: var(--shadow3);
     }
@@ -3586,13 +3625,8 @@ h2.legend {
       padding: 2.5em 4em;
     }
 
-    @media (width > 50.01em) {
+    @media (50.01em < width) {
       padding: 4em 6em;
-
-      &:nth-child(odd) {
-        /* @note Limitation à 2 rangées car impression visuelle d'un désordre à partir de 3 rangées. */
-        margin-inline-start: auto;
-      }
     }
   }
 
@@ -3616,6 +3650,7 @@ h2.legend {
 
   & article {
     position: relative;
+    width: 100%;
     
     @media (width < 35.01em) {
       padding-block: var(--gap);
@@ -3650,7 +3685,7 @@ h2.legend {
     grid-area: uu;
   }
 
-  & .keywords {
+  & .tags {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
@@ -3671,7 +3706,7 @@ h2.legend {
       padding: 0.25em 0.5em 0.25em 1.25em;
       text-decoration: none;
       white-space: nowrap;
-      background-color: var(--colorG15);
+      background-color: var(--colorG27);
       clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
     }
   }
@@ -3700,7 +3735,7 @@ h2.legend {
       padding-inline: 4em;
     }
 
-    @media (width > 50.01em) {
+    @media (50.01em < width) {
       padding-inline: 6em;
     }
   }
@@ -4210,8 +4245,7 @@ h2.legend {
 .breadcrumb li > *,
 .alert .wrap,
 .footer,
-.card h2,
-.card p,
+.card > div,
 .card svg,
 [class^='message'],
 [class^='message']::before,
@@ -4221,6 +4255,7 @@ h2.legend {
 .list-rounded li > *,
 .list-rounded li::before,
 [class*='figure-image'],
+.input-group > :first-child,
 .button,
 .round-button,
 .search button,
@@ -4241,7 +4276,7 @@ h2.legend {
 .media-extend-menu,
 .media-extend-menu button,
 .progress-bar div,
-.article .keywords a,
+.article .tags a,
 .topic-item,
 [class*='demo-items'] > *,
 .demo-item {
@@ -4386,11 +4421,12 @@ html {
 } .demo-icons {
   & ruby {
     padding: 1em 0 0.5em;
+    text-align: center;
     background-color: var(--color1);
     border-radius: var(--r2);
     transition: all 0.3s ease-in-out;
     &:hover {
-      background-color: var(--color2);
+      background-color: var(--color5);
       & * {
         color: var(--colorW);
       }

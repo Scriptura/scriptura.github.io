@@ -222,7 +222,11 @@
     margin-block-end: var(--gap);
   }
 
-  & .item-push {
+  &.items-push {
+    justify-content: flex-end;
+  }
+
+  & .push {
     margin-inline-start: auto;
   }
 }

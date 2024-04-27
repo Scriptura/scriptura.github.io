@@ -105,11 +105,12 @@
 .demo-icons {
   & ruby {
     padding: 1em 0 0.5em;
+    text-align: center;
     background-color: var(--color1);
     border-radius: var(--r2);
     transition: all 0.3s ease-in-out;
     &:hover {
-      background-color: var(--color2);
+      background-color: var(--color5);
       & * {
         color: var(--colorW);
       }

@@ -49,7 +49,7 @@ const formattedUsername = (() => {
  * Compteur de caractères d un input/textarea
  * @param {NodeList} input Liste d'objets de champs de formulaire
  */
-;function characterCounter(input) {
+function characterCounter(input) {
   const output = input.parentElement.querySelector('output')
   const maxLength = input.getAttribute('maxlength')
   const increment = () => {
@@ -68,7 +68,7 @@ document.querySelectorAll('.character-counter').forEach(input => characterCounte
  * Décompteur de caractères
  * @param {NodeList} input Liste d'objets de champs de formulaire
  */
- function characterCounterDecremental(input) {
+function characterCounterDecremental(input) {
   const output = input.parentElement.querySelector('output')
   const maxLength = input.getAttribute('maxlength') // Maximum number of characters allowed
   output.textContent = maxLength
@@ -86,6 +86,7 @@ document.querySelectorAll('.character-counter-decremental').forEach(input => cha
 /**
  * Ajuste la hauteur du champ par rapport au contenu
  * @param {NodeList} input Liste d'objets textarea
+ * @todo Bientôt obsolète avec l'avènement de la règle CSS `field-sizing: content`.
  */
 function textareaAutosize(input) {
   const adjustHeight = () => {
@@ -99,3 +100,22 @@ function textareaAutosize(input) {
 }
 
 document.querySelectorAll('textarea.autosize').forEach(textarea => textareaAutosize(textarea))
+
+/**
+ * Gère la suppression d'un article en affichant une boîte de dialogue de confirmation.
+ * @param {HTMLElement} button - Le bouton de suppression de l'article.
+ */
+function deleteArticle(button) {
+  button.addEventListener('click', function (event) {
+    // Empêcher la soumission du formulaire par défaut pour éviter une suppression involontaire
+    event.preventDefault()
+    const confirmation = confirm(`Êtes-vous sûr de vouloir supprimer cet article ?`)
+    if (confirmation) {
+      button.closest('form').submit()
+    } else {
+      console.log(`Suppression annulée !`)
+    }
+  })
+}
+
+document.querySelectorAll('.assistance-delete').forEach(button => deleteArticle(button))

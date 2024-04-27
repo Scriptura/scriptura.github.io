@@ -6,8 +6,8 @@ const lineMarks = elements => {
   const els = document.querySelectorAll(elements)
   const lineMarksAdd = el => {
     const a = document.createElement('a')
-    a.id = 'mark' + i
-    a.setAttribute('href', '#mark' + i)
+    a.id = 'mark-' + i
+    a.setAttribute('href', '#mark-' + i)
     const text = document.createTextNode(i)
     a.appendChild(text)
     a.classList.add('line-mark')
