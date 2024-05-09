@@ -15,9 +15,12 @@
   & > :where(.wrapper, article, form) {
     grid-column: 1;
     max-width: 55em;
+  }
+
+  & > :where(article, form) {
 
     @media ($sizeS < width) {
-      &:nth-child(odd) {
+      &:nth-child(even) {
         /* @note Limitation à 2 rangées car impression visuelle d'un désordre à partir de 3 rangées. */
         margin-inline-start: auto;
       }
