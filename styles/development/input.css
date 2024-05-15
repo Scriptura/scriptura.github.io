@@ -10,9 +10,9 @@
     width: 100%;
     color: currentcolor;
     /* @bugfix @affected Chrome @note Le !important supplante le style par défaut des préremplissages. */
-    background-color: var(--colorG15) !important; /* --colorG18 */
+    background-color: var(--colorG18) !important; /* --colorG15 */
     /* @note Permet d'anticiper le comportement des bordures colorées de '.invalid' en évitant des rattrapages en padding aléatoires selon le type d'input. */
-    border: var(--border1); /* --colorG27 */
+    border: var(--border1);
     border-radius: 0.3em;
     /* @bugfix @affected Chrome @note Le !important supplante le style par défaut des préremplissages. */
     box-shadow: inset 0 0.2em 0.5em var(--colorAB2) !important;
@@ -239,7 +239,7 @@ h2.legend {
     padding: 0.4em 1em;
     color: currentcolor;
     background-color: var(--colorG15); /* --colorG18 */
-    border: var(--border1); /* --colorG27 */
+    border: var(--border1);
     border-right: none;
     border-radius: 1.5em 0 0 1.5em;
     box-shadow: inset 0 0.2em 0.5em var(--colorAB2);

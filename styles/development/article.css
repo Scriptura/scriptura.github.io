@@ -17,8 +17,7 @@
     max-width: 55em;
   }
 
-  & > :where(article, form) {
-
+  & > :where(.comment, form) {
     @media ($sizeS < width) {
       &:nth-child(even) {
         /* @note Limitation à 2 rangées car impression visuelle d'un désordre à partir de 3 rangées. */
@@ -27,7 +26,7 @@
     }
   }
 
-  & > :where(.wrapper, article) {
+  & > :where(.wrapper, .comment) {
     @media ($sizeXS < width) {
       border-radius: var(--r1);
       box-shadow: var(--shadow3);
@@ -38,18 +37,18 @@
     }
 
     @media ($sizeS < width) {
-      padding: 4em 6em;
+      padding: 4em 6em 2.5em;
     }
   }
 
   & .sub-header,
-  & article header {
+  & .comment header {
     display: grid;
     grid-template-columns: 3.5em minmax(0, 1fr);
     grid-template-areas: 'aa tt' 'aa uu';
   }
 
-  & article header {
+  & .comment header {
     position: relative;
     margin-block-end: 1em;
     padding-block-end: 1em;
@@ -60,16 +59,28 @@
     margin-block: 2em 1em;
   }
 
-  & article {
+  & .comment {
     position: relative;
     width: 100%;
-    
+
     @media (width < $sizeXS) {
       padding-block: var(--gap);
     }
-  }
 
-  & form {
+    & footer {
+      & :where(a, button) {
+        all: unset;
+        color: var(--colorG38);
+        cursor: pointer;
+        margin-block-start: 1em;
+
+        &:where(:focus, :hover, :active) {
+          color: var(--colorW);
+        }
+      }
+    }
+  }
+  & > form {
     width: 100%;
   }
 

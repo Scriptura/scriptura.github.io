@@ -13,7 +13,7 @@ $sizeL: 92.01em;
 $sizeXL: 120.01em;
 $sizeXXL: 140.01em;
 /* @note Attention, il s'agit d'une valeur empirique qui tente d'anticiper la taille minimale nécessaire au menu en desktop. @todo À remplacer par une solution plus fiable à l'avenir, mais qui ne serait peut-être alors pas mobile first et pourrait poser des problèmes de reflow... */
-$sizeNav: 90.01em;
+$sizeNav: 70.01em;
 $gap: 1em;
 
 :root {
@@ -123,7 +123,7 @@ $gap: 1em;
   */
 
   /* @subsection Borders */
-  --border1: 0.2em solid transparent;
+  --border1: 1px solid var(--colorG27); /* --colorG27 */
 
   /* @subsection Shadows */
   /* @note Seules les ombres de référence - et donc redontantes - sont placées ici, les autres sont directement intégrées à leur propriété. */

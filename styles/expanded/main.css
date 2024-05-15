@@ -1,5 +1,5 @@
 @charset "utf-8"; /* Les guillemets doubles évitents une erreur au validateur du W3C. @see https://validator.w3.org/ */ /* @note Doublage des variables Sass par les variables CSS natives impliquées dans les médias queries. @todo en attendant un support total d'usage pour les variables natives. */ /* @subsection Breakpoints */ /* @bugfix Nécessité de préciser deux chiffres après la virgule pour éviter un arrondissement de la valeur par les navigateurs. */ /* @note L'idée étant d'avoir une précision au-délà du pixel, nous évitant ainsi de devoir utiliser les opérateur logiques CSS4 de type inclusifs (exemple : `<=`). @todo En test...*/ /* @note La fonction calc() n'est pas implémentée pour les media queries, ou alors partiellement (unité de même type). @see https://stackoverflow.com/questions/23667208 @todo À réévaluer dans le temps... */ /* @note Attention, il s'agit d'une valeur empirique qui tente d'anticiper la taille minimale nécessaire au menu en desktop. @todo À remplacer par une solution plus fiable à l'avenir, mais qui ne serait peut-être alors pas mobile first et pourrait poser des problèmes de reflow... */ :root {
-  --size-nav: 90.01em; /* @note Variable CSS utilisée en JavaScript. */
+  --size-nav: 70.01em; /* @note Variable CSS utilisée en JavaScript. */
   --gap: 1em; /* Gouttière, largeur entre deux modules */
   --wrap: 92em; /* calc(90em + var(--gap) * 2)*/ /* Largeur maximale du contenu (+ prise en compte du padding interne) */
 
@@ -105,7 +105,7 @@
   */
 
   /* @subsection Borders */
-  --border1: 0.2em solid transparent;
+  --border1: 1px solid var(--colorG27); /* --colorG27 */
 
   /* @subsection Shadows */
   /* @note Seules les ombres de référence - et donc redontantes - sont placées ici, les autres sont directement intégrées à leur propriété. */
@@ -243,6 +243,10 @@ h6,
 } h6,
 .h6 {
   font-size: 1em;
+} hgroup {
+  & h1 {
+    margin-block-end: 0;
+  }
 } pre {
   margin: 0;
   /* @bugfix Correct the inheritance and scaling of font size @affected All browsers. */
@@ -824,13 +828,13 @@ body {
   user-select: none;
   background-color: var(--colorG15);
 
-  @media (width < 90.01em) {
+  @media (width < 70.01em) {
     grid-template-rows: 3em;
     grid-template-columns: 3em minmax(0, 1fr) 3em;
     grid-template-areas: 'logo breadcrumb cmd';
   }
 
-  @media (width > 90.01em) {
+  @media (width > 70.01em) {
     grid-template-rows: repeat(2, 2.5em);
     grid-template-columns: 5em minmax(0, 1fr);
     grid-template-areas: 'logo subnav' 'logo breadcrumb';
@@ -887,7 +891,7 @@ body {
   & .current {
     background-color: var(--color2);
 
-    @media (width > 90.01em) {
+    @media (width > 70.01em) {
       position: relative;
       /* @note La valeur doit être suffisante pour passer au-dessus des items de ".breadcrumb." */
       z-index: 10;
@@ -905,13 +909,13 @@ body {
     }
   }
 
-  @media (width > 90.01em) {
+  @media (width > 70.01em) {
     & > :last-child {
       margin-inline-start: auto;
     }
   }
 
-  @media (width < 90.01em) {
+  @media (width < 70.01em) {
     position: absolute;
     z-index: 800;
     top: 3em;
@@ -923,7 +927,7 @@ body {
 
   & li {
     list-style: none;
-    @media (width < 90.01em) {
+    @media (width < 70.01em) {
       flex: 1;
       flex-basis: 50%;
       background-color: var(--colorG15);
@@ -981,23 +985,24 @@ body {
       flex-basis: 33%;
     }
 
-    @media (50.01em < width < 90.01em) {
+    @media (50.01em < width < 70.01em) {
       flex-basis: 25%;
     }
 
     & > * {
       display: block;
-      overflow: hidden;
       white-space: nowrap;
-      text-overflow: ellipsis;
       padding: 0 1em;
       box-shadow: inset 0.5rem 0.5rem 0.5rem var(--colorAB2);
-      @media (width < 90.01em) {
+
+      @media (width < 70.01em) {
         line-height: 3;
       }
-      @media (width > 90.01em) {
+
+      @media (width > 70.01em) {
         line-height: 2.5;
       }
+
       &.current {
         color: var(--colorW);
       }
@@ -1005,6 +1010,9 @@ body {
   }
 
   & a {
+    overflow: hidden;
+    /* white-space: nowrap; */
+    text-overflow: ellipsis;
     /* color: var(--colorT2); */
     text-decoration: none;
 
@@ -1017,10 +1025,11 @@ body {
       }
     }
   }
-} @media (width < 90.01em) {
+} @media (width < 70.01em) {
   :where(html, body).active {
     overflow: clip;
   }
+
   body.active {
     &::before {
       content: '';
@@ -1029,13 +1038,14 @@ body {
       inset: 0;
       background-color: var(--colorAB7);
     }
+
     & :where(main, footer, aside) {
       user-select: none;
       pointer-events: none;
       filter: blur(2px) grayscale(1);
     }
   }
-} @media (width > 90.01em) {
+} @media (width > 70.01em) {
   @keyframes anim-jump {
     30% {
       transform: translateY(-0.3em);
@@ -1045,11 +1055,11 @@ body {
   all: unset;
   grid-area: cmd;
 
-  @media (scripting: none), (width > 90.01em) {
+  @media (scripting: none), (width > 70.01em) {
     display: none;
   }
 
-  @media (width < 90.01em) {
+  @media (width < 70.01em) {
     padding: 0.5em;
     background-color: var(--colorG15);
     transition: background-color 0.3s;
@@ -1155,7 +1165,7 @@ body {
     }
   }
 
-  @media (width < 90.01em) {
+  @media (width < 70.01em) {
     & li > * {
       line-height: 3;
       padding: 0 2.25em;
@@ -2128,7 +2138,7 @@ video {
     transform: translate(0, 0);
   }
 } .card {
-  & div {
+  & > :not([class^='ribbon']) {
     margin: 0;
     background-color: var(--colorG27);
     box-shadow: var(--shadow3);
@@ -2145,7 +2155,7 @@ video {
     }
   }
 
-  & > :last-child {
+  & > :nth-child(3) {
     padding: 2em;
     /* @note Unités fixes en raison de la nature différentes des éléments. */
     border-radius: 2px 2px 0.5em 0.5em;
@@ -2635,9 +2645,9 @@ select {
     width: 100%;
     color: currentcolor;
     /* @bugfix @affected Chrome @note Le !important supplante le style par défaut des préremplissages. */
-    background-color: var(--colorG15) !important; /* --colorG18 */
+    background-color: var(--colorG18) !important; /* --colorG15 */
     /* @note Permet d'anticiper le comportement des bordures colorées de '.invalid' en évitant des rattrapages en padding aléatoires selon le type d'input. */
-    border: var(--border1); /* --colorG27 */
+    border: var(--border1);
     border-radius: 0.3em;
     /* @bugfix @affected Chrome @note Le !important supplante le style par défaut des préremplissages. */
     box-shadow: inset 0 0.2em 0.5em var(--colorAB2) !important;
@@ -2852,7 +2862,7 @@ h2.legend {
     padding: 0.4em 1em;
     color: currentcolor;
     background-color: var(--colorG15); /* --colorG18 */
-    border: var(--border1); /* --colorG27 */
+    border: var(--border1);
     border-right: none;
     border-radius: 1.5em 0 0 1.5em;
     box-shadow: inset 0 0.2em 0.5em var(--colorAB2);
@@ -3608,8 +3618,7 @@ h2.legend {
     max-width: 55em;
   }
 
-  & > :where(article, form) {
-
+  & > :where(.comment, form) {
     @media (50.01em < width) {
       &:nth-child(even) {
         /* @note Limitation à 2 rangées car impression visuelle d'un désordre à partir de 3 rangées. */
@@ -3618,7 +3627,7 @@ h2.legend {
     }
   }
 
-  & > :where(.wrapper, article) {
+  & > :where(.wrapper, .comment) {
     @media (35.01em < width) {
       border-radius: var(--r1);
       box-shadow: var(--shadow3);
@@ -3629,18 +3638,18 @@ h2.legend {
     }
 
     @media (50.01em < width) {
-      padding: 4em 6em;
+      padding: 4em 6em 2.5em;
     }
   }
 
   & .sub-header,
-  & article header {
+  & .comment header {
     display: grid;
     grid-template-columns: 3.5em minmax(0, 1fr);
     grid-template-areas: 'aa tt' 'aa uu';
   }
 
-  & article header {
+  & .comment header {
     position: relative;
     margin-block-end: 1em;
     padding-block-end: 1em;
@@ -3651,16 +3660,28 @@ h2.legend {
     margin-block: 2em 1em;
   }
 
-  & article {
+  & .comment {
     position: relative;
     width: 100%;
-    
+
     @media (width < 35.01em) {
       padding-block: var(--gap);
     }
-  }
 
-  & form {
+    & footer {
+      & :where(a, button) {
+        all: unset;
+        color: var(--colorG38);
+        cursor: pointer;
+        margin-block-start: 1em;
+
+        &:where(:focus, :hover, :active) {
+          color: var(--colorW);
+        }
+      }
+    }
+  }
+  & > form {
     width: 100%;
   }
 
@@ -4248,7 +4269,7 @@ h2.legend {
 .breadcrumb li > *,
 .alert .wrap,
 .footer,
-.card > div,
+.card > div:not([class^='ribbon']),
 .card svg,
 [class^='message'],
 [class^='message']::before,

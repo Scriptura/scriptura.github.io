@@ -1,5 +1,5 @@
 .card {
-  & div {
+  & > :not([class^='ribbon']) {
     margin: 0;
     background-color: var(--colorG27);
     box-shadow: var(--shadow3);
@@ -16,7 +16,7 @@
     }
   }
 
-  & > :last-child {
+  & > :nth-child(3) {
     padding: 2em;
     /* @note Unités fixes en raison de la nature différentes des éléments. */
     border-radius: 2px 2px 0.5em 0.5em;

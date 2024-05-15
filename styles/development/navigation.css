@@ -144,17 +144,18 @@
 
     & > * {
       display: block;
-      overflow: hidden;
       white-space: nowrap;
-      text-overflow: ellipsis;
       padding: 0 1em;
       box-shadow: inset 0.5rem 0.5rem 0.5rem var(--colorAB2);
+
       @media (width < $sizeNav) {
         line-height: 3;
       }
+
       @media (width > $sizeNav) {
         line-height: 2.5;
       }
+
       &.current {
         color: var(--colorW);
       }
@@ -162,6 +163,9 @@
   }
 
   & a {
+    overflow: hidden;
+    /* white-space: nowrap; */
+    text-overflow: ellipsis;
     /* color: var(--colorT2); */
     text-decoration: none;
 
@@ -180,6 +184,7 @@
   :where(html, body).active {
     overflow: clip;
   }
+
   body.active {
     &::before {
       content: '';
@@ -188,6 +193,7 @@
       inset: 0;
       background-color: var(--colorAB7);
     }
+
     & :where(main, footer, aside) {
       user-select: none;
       pointer-events: none;

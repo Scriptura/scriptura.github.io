@@ -1,0 +1,35 @@
+extends ../patternLayout
+
+block variables
+  - const documentType = 'messeInfoApi'
+  - const pageType = 'template'
+  -
+    const data = {
+      _name: 'MesseInfo API <span>.&nbsp;Documentation</span>',
+      _title: 'MesseInfo API . Scriptura',
+      _description: 'MesseInfo API, documentation.'
+    }
+
+block main
+  article
+    header(role='banner')
+      h1.main-heading!= data._name
+      pre.pre
+        code#messe-info
+  script.
+    (async function() {
+        try {
+            const response = await fetch('https://api.aelf.org/v1/informations/2024-01-01/france');
+            if (!response.ok) {
+                throw new Error('La requête n\'a pas réussi : ' + response.status);
+            }
+            const data = await response.json();
+            console.log(data); // Affiche les données JSON dans la console du navigateur
+
+            // Manipulez les données JSON ici, par exemple :
+            const el = document.querySelector('#messe-info');
+            el.textContent = JSON.stringify(data); // Affiche les données JSON dans l'élément HTML
+        } catch (error) {
+            console.error('Erreur lors de la récupération des données :', error);
+        }
+    })();

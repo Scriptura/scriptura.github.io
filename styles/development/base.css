@@ -134,6 +134,12 @@ h6,
   font-size: 1em;
 }
 
+hgroup {
+  & h1 {
+    margin-block-end: 0;
+  }
+}
+
 pre {
   margin: 0;
   /* @bugfix Correct the inheritance and scaling of font size @affected All browsers. */

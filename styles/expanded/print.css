@@ -1,5 +1,5 @@
 @charset "utf-8"; /* Les guillemets doubles évitents une erreur au validateur du W3C. @see https:/* validator.w3.org/ */ /* @note Doublage des variables Sass par les variables CSS natives impliquées dans les médias queries. @todo en attendant un support total d'usage pour les variables natives. */ /* @subsection Breakpoints */ /* @bugfix Nécessité de préciser deux chiffres après la virgule pour éviter un arrondissement de la valeur par les navigateurs. */ /* @note L'idée étant d'avoir une précision au-délà du pixel, nous évitant ainsi de devoir utiliser les opérateur logiques CSS4 de type inclusifs (exemple : `<=`). @todo En test...*/ /* @note La fonction calc() n'est pas implémentée pour les media queries, ou alors partiellement (unité de même type). @see https://stackoverflow.com/questions/23667208 @todo À réévaluer dans le temps... */ /* @note Attention, il s'agit d'une valeur empirique qui tente d'anticiper la taille minimale nécessaire au menu en desktop. @todo À remplacer par une solution plus fiable à l'avenir, mais qui ne serait peut-être alors pas mobile first et pourrait poser des problèmes de reflow... */ :root {
-  --size-nav: 90.01em; /* @note Variable CSS utilisée en JavaScript. */
+  --size-nav: 70.01em; /* @note Variable CSS utilisée en JavaScript. */
   --gap: 1em; /* Gouttière, largeur entre deux modules */
   --wrap: 92em; /* calc(90em + var(--gap) * 2)*/ /* Largeur maximale du contenu (+ prise en compte du padding interne) */
 
@@ -105,7 +105,7 @@
   */
 
   /* @subsection Borders */
-  --border1: 0.2em solid transparent;
+  --border1: 1px solid var(--colorG27); /* --colorG27 */
 
   /* @subsection Shadows */
   /* @note Seules les ombres de référence - et donc redontantes - sont placées ici, les autres sont directement intégrées à leur propriété. */
@@ -243,6 +243,10 @@ h6,
 } h6,
 .h6 {
   font-size: 1em;
+} hgroup {
+  & h1 {
+    margin-block-end: 0;
+  }
 } pre {
   margin: 0;
   /* @bugfix Correct the inheritance and scaling of font size @affected All browsers. */
@@ -1433,8 +1437,7 @@ samp {
     max-width: 55em;
   }
 
-  & > :where(article, form) {
-
+  & > :where(.comment, form) {
     @media (50.01em < width) {
       &:nth-child(even) {
         /* @note Limitation à 2 rangées car impression visuelle d'un désordre à partir de 3 rangées. */
@@ -1443,7 +1446,7 @@ samp {
     }
   }
 
-  & > :where(.wrapper, article) {
+  & > :where(.wrapper, .comment) {
     @media (35.01em < width) {
       border-radius: var(--r1);
       box-shadow: var(--shadow3);
@@ -1454,18 +1457,18 @@ samp {
     }
 
     @media (50.01em < width) {
-      padding: 4em 6em;
+      padding: 4em 6em 2.5em;
     }
   }
 
   & .sub-header,
-  & article header {
+  & .comment header {
     display: grid;
     grid-template-columns: 3.5em minmax(0, 1fr);
     grid-template-areas: 'aa tt' 'aa uu';
   }
 
-  & article header {
+  & .comment header {
     position: relative;
     margin-block-end: 1em;
     padding-block-end: 1em;
@@ -1476,16 +1479,28 @@ samp {
     margin-block: 2em 1em;
   }
 
-  & article {
+  & .comment {
     position: relative;
     width: 100%;
-    
+
     @media (width < 35.01em) {
       padding-block: var(--gap);
     }
-  }
 
-  & form {
+    & footer {
+      & :where(a, button) {
+        all: unset;
+        color: var(--colorG38);
+        cursor: pointer;
+        margin-block-start: 1em;
+
+        &:where(:focus, :hover, :active) {
+          color: var(--colorW);
+        }
+      }
+    }
+  }
+  & > form {
     width: 100%;
   }
 
