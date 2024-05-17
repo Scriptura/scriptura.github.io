@@ -109,7 +109,7 @@ function deleteArticle(button) {
   button.addEventListener('click', function (event) {
     // Empêcher la soumission du formulaire par défaut pour éviter une suppression involontaire
     event.preventDefault()
-    const confirmation = confirm(`Êtes-vous sûr de vouloir supprimer cet article ?`)
+    const confirmation = confirm(`Confirmer la suppression ?`)
     if (confirmation) {
       button.closest('form').submit()
     } else {

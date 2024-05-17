@@ -3667,19 +3667,6 @@ h2.legend {
     @media (width < 35.01em) {
       padding-block: var(--gap);
     }
-
-    & footer {
-      & :where(a, button) {
-        all: unset;
-        color: var(--colorG38);
-        cursor: pointer;
-        margin-block-start: 1em;
-
-        &:where(:focus, :hover, :active) {
-          color: var(--colorW);
-        }
-      }
-    }
   }
   & > form {
     width: 100%;
