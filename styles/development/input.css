@@ -223,6 +223,55 @@ h2.legend {
   }
 }
 
+@media (scripting: none) {
+  .input-add-terms {
+    display: none;
+  }
+}
+
+@media (scripting: enabled) {
+  .input-terms {
+    display: none;
+  }
+
+  .term-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    margin-block-end: var(--gap);
+    padding: 0.5em;
+    min-height: calc(3.5em + 2px); /* @todo Hauteur à revoir... */
+    border: var(--border2);
+    border-radius: var(--r2);
+
+    .term {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+      background-color: var(--colorG27);
+      padding: 0.5em 1em;
+      border-radius: 2em;
+
+      &:focus-within {
+        background-color: var(--color5);
+
+        & button {
+          outline: none;
+        }
+      }
+
+      & button {
+        all: unset;
+        cursor: pointer;
+      }
+    }
+
+    .new-term {
+      background-color: var(--color6);
+    }
+  }
+}
+
 .search form {
   display: flex;
   width: 100%;

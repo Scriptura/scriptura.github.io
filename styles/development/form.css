@@ -211,6 +211,10 @@ select {
   }
 }
 
+[list]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+}
+
 /*
 ::-webkit-inner-spin-button {
   display: none;
@@ -247,11 +251,11 @@ select {
 ::placeholder {
   color: var(--colorG60);
 }
-
+/* @note Ce n'est pas une bonne idée à l'usage @todo A supprimer plus tard avec un peu de pratique sans cette règle.
 :focus::placeholder {
   color: transparent;
 }
-
+*/
 .invalid + [class*='message'] {
   position: relative;
 }

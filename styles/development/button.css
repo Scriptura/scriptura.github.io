@@ -109,7 +109,7 @@
   display: grid;
   place-items: center;
   color: var(--color);
-  border: 0.15em dotted var(--color);
+  border: var(--border-width, 0.15em) dotted var(--color);
   border-radius: 50%;
   box-shadow: var(--shadow3);
   cursor: pointer;

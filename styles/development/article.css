@@ -31,6 +31,24 @@
       border-radius: var(--r1);
       box-shadow: var(--shadow3);
     }
+  }
+
+  & > .wrapper {
+
+    @media (width < $sizeXS) {
+      padding-block-start: 1em;
+    }
+
+    @media ($sizeXS < width < $sizeS) {
+      padding: 4em;
+    }
+
+    @media ($sizeS < width) {
+      padding: 4em 6em;
+    }
+  }
+
+  & > .comment {
 
     @media ($sizeXS < width < $sizeS) {
       padding: 2.5em 4em;
@@ -96,28 +114,36 @@
   }
 
   & .tags {
-    list-style: none;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5em 0.5em;
-    margin-block: 0.75em 0;
+    gap: 0.5em;
+    margin-block: -.5em 0; /* @note La valeur top négative compense la valeur top des items. */
     padding-inline-start: 0;
-    font-size: 0.8em;
+    font-size: 0.9em;
 
     & > :last-child {
       margin-inline-end: 0;
     }
 
     & li {
-      margin-block-end: 0.75em;
+      display: flex;
+      margin-block-start: 0.5em;
     }
 
     & a {
-      padding: 0.25em 0.5em 0.25em 1.25em;
+      align-items: center;
+      padding: 0.25em 0.75em 0.25em 1.25em;
       text-decoration: none;
       white-space: nowrap;
-      background-color: var(--colorG27);
+      color: var(--colorT);
+      background-color: var(--colorG33);
       clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
+      transition: background-color .3s;
+
+      &:where(:focus, :hover, :active) {
+        color: var(--colorW);
+        background-color: var(--color2);
+      }
     }
   }
 

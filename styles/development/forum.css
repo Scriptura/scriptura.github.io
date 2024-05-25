@@ -89,10 +89,16 @@
       }
 
       & a {
-        padding: 0.25em 0.5em 0.25em 1.25em;
+        padding: 0.25em 0.75em 0.25em 1.25em;
         white-space: nowrap;
-        background-color: var(--colorG15);
+        color: var(--colorT);
+        background-color: var(--colorG33);
         clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
+
+        &:where(:focus, :hover, :active) {
+          color: var(--colorW);
+          background-color: var(--color2);
+        }
       }
     }
   }

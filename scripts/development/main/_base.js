@@ -67,21 +67,22 @@ const getScript = (url, hook = 'footer') =>
 const getScriptRequests = (() => {
   if (document.querySelector('[class*=language-]')) getScript('/libraries/prism/prism.js')
   if (document.querySelector('.map')) getScript('/libraries/leaflet/leaflet.js')
-  if (
-    document.querySelector('[class*=validation]') ||
-    document.querySelector('[class*=assistance]') ||
-    document.querySelector('[class*=character-counter]') ||
-    document.querySelector('[class*=-focus]') ||
-    document.querySelector('[class*=accordion]') ||
-    document.querySelector('.pre') ||
-    document.querySelector('[class^=range]') ||
-    document.querySelector('.add-line-marks') ||
-    document.querySelector('.video-youtube') ||
-    document.querySelector('.client-test') ||
-    document.querySelector('.map') ||
-    document.querySelector('[class*=language-]')
-  )
-    getScript('/scripts/more.js')
+  const selectors = [
+    '[class*=validation]',
+    '[class*=assistance]',
+    '[class*=character-counter]',
+    '[class*=-focus]',
+    '[class*=accordion]',
+    '.pre',
+    '[class^=range]',
+    '.add-line-marks',
+    '.video-youtube',
+    '.client-test',
+    '.map',
+    '[class*=language-]',
+    '.input-add-terms',
+  ]
+  if (selectors.some(selector => document.querySelector(selector))) getScript('/scripts/more.js')
 })()
 
 // -----------------------------------------------------------------------------

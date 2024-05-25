@@ -104,8 +104,11 @@
   --colorS52: hsl(39, 100%, 35%);
   */
 
+  --bg: url('data:image/png;base64,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');
+
   /* @subsection Borders */
   --border1: 1px solid var(--colorG27); /* --colorG27 */
+  --border2: 1px dashed var(--colorA15);
 
   /* @subsection Shadows */
   /* @note Seules les ombres de référence - et donc redontantes - sont placées ici, les autres sont directement intégrées à leur propriété. */
@@ -2590,6 +2593,8 @@ select {
   &:hover {
     filter: brightness(0.7) sepia(100%);
   }
+} [list]::-webkit-calendar-picker-indicator {
+  opacity: 0;
 } /*
 ::-webkit-inner-spin-button {
   display: none;
@@ -2619,9 +2624,11 @@ select {
   transition-delay: 1000000s;
 } ::placeholder {
   color: var(--colorG60);
-} :focus::placeholder {
+} /* @note Ce n'est pas une bonne idée à l'usage @todo A supprimer plus tard avec un peu de pratique sans cette règle.
+:focus::placeholder {
   color: transparent;
-} .invalid + [class*='message'] {
+}
+*/ .invalid + [class*='message'] {
   position: relative;
 } .invalid + [class*='message']::before {
   content: '';
@@ -2844,6 +2851,51 @@ h2.legend {
     & svg {
       width: 100%;
       height: 100%;
+    }
+  }
+} @media (scripting: none) {
+  .input-add-terms {
+    display: none;
+  }
+} @media (scripting: enabled) {
+  .input-terms {
+    display: none;
+  }
+
+  .term-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    margin-block-end: var(--gap);
+    padding: 0.5em;
+    min-height: calc(3.5em + 2px); /* @todo Hauteur à revoir... */
+    border: var(--border2);
+    border-radius: var(--r2);
+
+    .term {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+      background-color: var(--colorG27);
+      padding: 0.5em 1em;
+      border-radius: 2em;
+
+      &:focus-within {
+        background-color: var(--color5);
+
+        & button {
+          outline: none;
+        }
+      }
+
+      & button {
+        all: unset;
+        cursor: pointer;
+      }
+    }
+
+    .new-term {
+      background-color: var(--color6);
     }
   }
 } .search form {
@@ -3346,7 +3398,7 @@ h2.legend {
   display: grid;
   place-items: center;
   color: var(--color);
-  border: 0.15em dotted var(--color);
+  border: var(--border-width, 0.15em) dotted var(--color);
   border-radius: 50%;
   box-shadow: var(--shadow3);
   cursor: pointer;
@@ -3465,7 +3517,7 @@ h2.legend {
       text-decoration: none;
       color: inherit;
       background-color: var(--colorG27);
-      border: 1px dashed var(--colorA15);
+      border: var(--border2);
       border-radius: 0.5em 0.5em 0 0;
       box-shadow: 0 -1rem 1rem var(--colorAB005);
       /* filter: drop-shadow(0 -.5rem .5rem rgba(0, 0, 0, .1)); */
@@ -3501,7 +3553,7 @@ h2.legend {
     top: -1px;
     /* @note Idem. */
     padding: calc(0.5em + 1px) 1em 0.5em;
-    border: 1px dashed var(--colorA15);
+    border: var(--border2);
     box-shadow: var(--shadow8);
 
     &[aria-hidden='false'] {
@@ -3632,6 +3684,24 @@ h2.legend {
       border-radius: var(--r1);
       box-shadow: var(--shadow3);
     }
+  }
+
+  & > .wrapper {
+
+    @media (width < 35.01em) {
+      padding-block-start: 1em;
+    }
+
+    @media (35.01em < width < 50.01em) {
+      padding: 4em;
+    }
+
+    @media (50.01em < width) {
+      padding: 4em 6em;
+    }
+  }
+
+  & > .comment {
 
     @media (35.01em < width < 50.01em) {
       padding: 2.5em 4em;
@@ -3697,28 +3767,36 @@ h2.legend {
   }
 
   & .tags {
-    list-style: none;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5em 0.5em;
-    margin-block: 0.75em 0;
+    gap: 0.5em;
+    margin-block: -.5em 0; /* @note La valeur top négative compense la valeur top des items. */
     padding-inline-start: 0;
-    font-size: 0.8em;
+    font-size: 0.9em;
 
     & > :last-child {
       margin-inline-end: 0;
     }
 
     & li {
-      margin-block-end: 0.75em;
+      display: flex;
+      margin-block-start: 0.5em;
     }
 
     & a {
-      padding: 0.25em 0.5em 0.25em 1.25em;
+      align-items: center;
+      padding: 0.25em 0.75em 0.25em 1.25em;
       text-decoration: none;
       white-space: nowrap;
-      background-color: var(--colorG27);
+      color: var(--colorT);
+      background-color: var(--colorG33);
       clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
+      transition: background-color .3s;
+
+      &:where(:focus, :hover, :active) {
+        color: var(--colorW);
+        background-color: var(--color2);
+      }
     }
   }
 
@@ -4184,10 +4262,16 @@ h2.legend {
       }
 
       & a {
-        padding: 0.25em 0.5em 0.25em 1.25em;
+        padding: 0.25em 0.75em 0.25em 1.25em;
         white-space: nowrap;
-        background-color: var(--colorG15);
+        color: var(--colorT);
+        background-color: var(--colorG33);
         clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
+
+        &:where(:focus, :hover, :active) {
+          color: var(--colorW);
+          background-color: var(--color2);
+        }
       }
     }
   }
@@ -4267,6 +4351,7 @@ h2.legend {
 .list-rounded li::before,
 [class*='figure-image'],
 .input-group > :first-child,
+.term,
 .button,
 .round-button,
 .search button,
@@ -4292,8 +4377,8 @@ h2.legend {
 [class*='demo-items'] > *,
 .demo-item {
   /* @note PNG moins lourd que WebP pour l'encodage en base64. */
-  background-image: url('data:image/png;base64,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');
-  /* @note Taile en px par défaut, ce paramètre ne doit pas être scalable. */
+  background-image: var(--bg);
+  /* @note Taille en px par défaut, ce paramètre ne doit pas être scalable. */
   background-size: 58px 61px;
   /* @note Propriété nécéssaire pour les éléments avec clip-path. */
   background-repeat: repeat;
