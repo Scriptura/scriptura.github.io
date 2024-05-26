@@ -138,7 +138,7 @@ $gap: 1em;
   --shadow5: 0 0 2rem hsla(0, 0%, 0%, 0.2);
   --shadow6: 0.5rem 0.5rem 2rem hsla(0, 0%, 0%, 0.1);
   --shadow7: 0.5rem 0.5rem 2rem hsla(0, 0%, 0%, 0.25);
-  --shadow8: 0 1rem 1rem hsla(0, 0%, 0%, 0.1); /* .accordion
+  --shadow8: 0 1rem 1rem hsla(0, 0%, 0%, 0.1); /* .accordion & tabs
   //--shadow9: 0 0 0 1000em #222; /* Ombre spécifique pour remplacer éventuellement le background-color d'un élément parent. */
 
   /* @subsection Rounds */

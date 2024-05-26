@@ -136,7 +136,7 @@
       text-decoration: none;
       white-space: nowrap;
       color: var(--colorT);
-      background-color: var(--colorG33);
+      background-color: var(--colorG27); /* --colorG33 */
       clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
       transition: background-color .3s;
 

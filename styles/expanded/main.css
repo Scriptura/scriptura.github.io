@@ -120,7 +120,7 @@
   --shadow5: 0 0 2rem hsla(0, 0%, 0%, 0.2);
   --shadow6: 0.5rem 0.5rem 2rem hsla(0, 0%, 0%, 0.1);
   --shadow7: 0.5rem 0.5rem 2rem hsla(0, 0%, 0%, 0.25);
-  --shadow8: 0 1rem 1rem hsla(0, 0%, 0%, 0.1); /* .accordion
+  --shadow8: 0 1rem 1rem hsla(0, 0%, 0%, 0.1); /* .accordion & tabs
   //--shadow9: 0 0 0 1000em #222; /* Ombre spécifique pour remplacer éventuellement le background-color d'un élément parent. */
 
   /* @subsection Rounds */
@@ -3789,7 +3789,7 @@ h2.legend {
       text-decoration: none;
       white-space: nowrap;
       color: var(--colorT);
-      background-color: var(--colorG33);
+      background-color: var(--colorG27); /* --colorG33 */
       clip-path: polygon(0.75em 0, 100% 0, 100% 100%, 0.75em 100%, 0 50%);
       transition: background-color .3s;
 
