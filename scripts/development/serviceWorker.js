@@ -13,6 +13,7 @@ self.addEventListener('install', event => {
       '/styles/main.css',
       '/styles/print.css',
       '/scripts/main.js',
+      '/scripts/more.js',
       '/fonts/notoSans-Regular.woff2',
       '/fonts/notoSerif-Regular.woff2',
       '/sprites/util.svg',

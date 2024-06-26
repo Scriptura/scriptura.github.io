@@ -1,5 +1,5 @@
 @charset "utf-8"; /* Les guillemets doubles évitents une erreur au validateur du W3C. @see https://validator.w3.org/ */ /* @note Doublage des variables Sass par les variables CSS natives impliquées dans les médias queries. @todo en attendant un support total d'usage pour les variables natives. */ /* @subsection Breakpoints */ /* @bugfix Nécessité de préciser deux chiffres après la virgule pour éviter un arrondissement de la valeur par les navigateurs. */ /* @note L'idée étant d'avoir une précision au-délà du pixel, nous évitant ainsi de devoir utiliser les opérateur logiques CSS4 de type inclusifs (exemple : `<=`). @todo En test...*/ /* @note La fonction calc() n'est pas implémentée pour les media queries, ou alors partiellement (unité de même type). @see https://stackoverflow.com/questions/23667208 @todo À réévaluer dans le temps... */ /* @note Attention, il s'agit d'une valeur empirique qui tente d'anticiper la taille minimale nécessaire au menu en desktop. @todo À remplacer par une solution plus fiable à l'avenir, mais qui ne serait peut-être alors pas mobile first et pourrait poser des problèmes de reflow... */ :root {
-  --size-nav: 70.01em; /* @note Variable CSS utilisée en JavaScript. */
+  --size-nav: 90.01em; /* @note Variable CSS utilisée en JavaScript. */
   --gap: 1em; /* Gouttière, largeur entre deux modules */
   --wrap: 92em; /* calc(90em + var(--gap) * 2)*/ /* Largeur maximale du contenu (+ prise en compte du padding interne) */
 
@@ -480,7 +480,7 @@ body {
     '. m .'
     'a a a'
     'f f f';
-    /* @bugfix Suppression des marges @affected All browser. */
+  /* @bugfix Suppression des marges @affected All browser. */
   margin: 0;
 } main {
   grid-area: m;
@@ -743,6 +743,10 @@ body {
   }
 }
 */ /* @bug @affected Chrome @note Nombreux bugs : éléments html ou effets d'ombre tronqués s'ils dépassent des colonnes, drop-shadow utilisé sur des éléments internes aux colonnes créé des artefacts. */ [class^='column'] {
+  :has(> &) {
+    container: column/inline-size;
+    width: 100%; /* @note Important si le conteneur n'a pas de largeur définie par défaut. */
+  }
   column-gap: 0;
   position: relative;
 
@@ -777,11 +781,11 @@ body {
     gap: 0 var(--gap);
     /* column-gap: var(--gap); */
   }
-} @media (width < 35.01em) {
+} @container column (35.01em > width) {
   .sizeXS-column2 {
     column-count: 2;
   }
-} @media (width > 35.01em) {
+} @container column (width > 35.01em) {
   .column2,
   .column3,
   .column4,
@@ -793,7 +797,7 @@ body {
   .column6 {
     column-count: 3;
   }
-} @media (width > 50.01em) {
+} @container column (width > 50.01em) {
   .column3,
   .column4 {
     column-count: 3;
@@ -807,7 +811,7 @@ body {
   .m-column2 {
     column-count: 2;
   }
-} @media (width > 92.01em) {
+} @container column (width > 70.01em) {
   .column4 {
     column-count: 4;
   }
@@ -823,6 +827,23 @@ body {
   .l-column3 {
     column-count: 3;
   }
+} .column-fix {
+  --column-width: 22.25em; /* = 356px, donc 4 colonnes pour les 92em quand wrap au max. */
+  max-width: var(--column-width);
+  column-count: 1;
+  margin-inline: auto;
+  @media (48.5em < width) { /* @note +3em comprend les 2 gaps plus l'épaisseur estimée de la barre de scroll vertical. */
+    max-width: calc(var(--column-width)*2 + var(--gap));
+    column-count: 2;
+  }
+  @media (71.75em < width) {
+    max-width: calc(var(--column-width)*3 + var(--gap)*2);
+    column-count: 3;
+  }
+  @media (95em < width) {
+    max-width: calc(var(--column-width)*4 + var(--gap)*3);
+    column-count: 4;
+  }
 } .nav {
   position: relative;
   /* @note Permet de passer au-dessus du pseudo élément de body (ce dernier faisant un effet d'ombrage sur le contenu en version mobile) et aussi de certains éléments définis par des sources externes (comme les Maps Leaflet). */
@@ -831,13 +852,13 @@ body {
   user-select: none;
   background-color: var(--colorG15);
 
-  @media (width < 70.01em) {
+  @media (width < 90.01em) {
     grid-template-rows: 3em;
     grid-template-columns: 3em minmax(0, 1fr) 3em;
     grid-template-areas: 'logo breadcrumb cmd';
   }
 
-  @media (width > 70.01em) {
+  @media (width > 90.01em) {
     grid-template-rows: repeat(2, 2.5em);
     grid-template-columns: 5em minmax(0, 1fr);
     grid-template-areas: 'logo subnav' 'logo breadcrumb';
@@ -894,7 +915,7 @@ body {
   & .current {
     background-color: var(--color2);
 
-    @media (width > 70.01em) {
+    @media (width > 90.01em) {
       position: relative;
       /* @note La valeur doit être suffisante pour passer au-dessus des items de ".breadcrumb." */
       z-index: 10;
@@ -912,13 +933,13 @@ body {
     }
   }
 
-  @media (width > 70.01em) {
+  @media (width > 90.01em) {
     & > :last-child {
       margin-inline-start: auto;
     }
   }
 
-  @media (width < 70.01em) {
+  @media (width < 90.01em) {
     position: absolute;
     z-index: 800;
     top: 3em;
@@ -930,7 +951,7 @@ body {
 
   & li {
     list-style: none;
-    @media (width < 70.01em) {
+    @media (width < 90.01em) {
       flex: 1;
       flex-basis: 50%;
       background-color: var(--colorG15);
@@ -988,7 +1009,7 @@ body {
       flex-basis: 33%;
     }
 
-    @media (50.01em < width < 70.01em) {
+    @media (50.01em < width < 90.01em) {
       flex-basis: 25%;
     }
 
@@ -998,11 +1019,11 @@ body {
       padding: 0 1em;
       box-shadow: inset 0.5rem 0.5rem 0.5rem var(--colorAB2);
 
-      @media (width < 70.01em) {
+      @media (width < 90.01em) {
         line-height: 3;
       }
 
-      @media (width > 70.01em) {
+      @media (width > 90.01em) {
         line-height: 2.5;
       }
 
@@ -1028,7 +1049,7 @@ body {
       }
     }
   }
-} @media (width < 70.01em) {
+} @media (width < 90.01em) {
   :where(html, body).active {
     overflow: clip;
   }
@@ -1048,7 +1069,7 @@ body {
       filter: blur(2px) grayscale(1);
     }
   }
-} @media (width > 70.01em) {
+} @media (width > 90.01em) {
   @keyframes anim-jump {
     30% {
       transform: translateY(-0.3em);
@@ -1058,11 +1079,11 @@ body {
   all: unset;
   grid-area: cmd;
 
-  @media (scripting: none), (width > 70.01em) {
+  @media (scripting: none), (width > 90.01em) {
     display: none;
   }
 
-  @media (width < 70.01em) {
+  @media (width < 90.01em) {
     padding: 0.5em;
     background-color: var(--colorG15);
     transition: background-color 0.3s;
@@ -1168,7 +1189,7 @@ body {
     }
   }
 
-  @media (width < 70.01em) {
+  @media (width < 90.01em) {
     & li > * {
       line-height: 3;
       padding: 0 2.25em;
@@ -1587,6 +1608,31 @@ ol {
     right: 0.5em;
     width: 1em;
     height: 1em;
+  }
+} .preview-container {
+  display: grid;
+  background-color: #222;
+  &[data-input-id='input-file'] { /* @todo A supprimer si l'on change la manière d'afficher l'image dans `/media-editor/:id` */
+    cursor: pointer;
+  }
+  &,
+  & img {
+    width: 100%;
+    aspect-ratio: 1/1;
+  }
+  & figure {
+    display: contents;
+  }
+  & img {
+    place-self: center;
+    object-fit: contain;
+  }
+  @media (width < 50.01em) {
+    &,
+    & img {
+      max-width: 20em;
+      margin-inline: auto;
+    }
   }
 } audio,
 video,
@@ -2141,6 +2187,91 @@ video {
     transform: translate(0, 0);
   }
 } .card {
+  & > * {
+    padding: 1.5em;
+    background-color: var(--colorG27);
+    /*
+    background-image: var(--card-bg, '');
+    background-size: cover;
+    background-position: center;
+    */
+    border-radius: 0.5em;
+    box-shadow: var(--shadow3);
+  }
+
+  & > :first-child {
+    text-align: center;
+    text-wrap: pretty;
+  }
+
+  & > :last-child {
+    background-color: var(--colorG33);
+  }
+
+  & :where(h1, h2) {
+    position: relative;
+    font-size: 2em;
+    text-align: center;
+    margin-block-end: 1em;
+    padding-block-end: 1em;
+    & a {
+      text-decoration: none;
+    }
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      display: grid;
+      width: 100%;
+      height: .1em;
+    }
+  }
+
+  & h1 {
+    &::before {
+      background-image: linear-gradient(to top, var(--colorG33) 50%, var(--colorG15) 50%);
+    }
+
+    &::after {
+      background-image: linear-gradient(to left, var(--colorG22) 0%, transparent 50%, var(--colorG22) 100%);
+    }
+  }
+
+  & h2 {
+    &::before {
+      background-image: linear-gradient(to top, var(--colorG38) 50%, var(--colorG18) 50%);
+    }
+
+    &::after {
+      background-image: linear-gradient(to left, var(--colorG27) 0%, transparent 50%, var(--colorG27) 100%);
+    }
+  }
+
+  /*
+  & h1 {
+    &::before {
+      background-image: linear-gradient(to top, var(--colorG27) 50%, var(--colorG15) 50%);
+    }
+
+    &::after {
+      background-image: linear-gradient(to left, var(--colorG22) 0%, transparent 40%, transparent 60%, var(--colorG22) 100%);
+    }
+  }
+
+  & h2 {
+    &::before {
+      background-image: linear-gradient(to top, var(--colorG33) 50%, var(--colorG18) 50%);
+    }
+
+    &::after {
+      background-image: linear-gradient(to left, var(--colorG27) 0%, transparent 40%, transparent 60%, var(--colorG27) 100%);
+    }
+  }
+  */
+} /*
+.card {
   & > :not([class^='ribbon']) {
     margin: 0;
     background-color: var(--colorG27);
@@ -2150,7 +2281,7 @@ video {
   & > :first-child {
     padding: .5em 2em;
     text-align: center;
-    /* @note Unités fixes en raison de la nature différentes des éléments. */
+    /* @note Unités fixes en raison de la nature différentes des éléments.
     border-radius: 0.5em 0.5em 2px 2px;
 
     & span {
@@ -2160,7 +2291,7 @@ video {
 
   & > :nth-child(3) {
     padding: 2em;
-    /* @note Unités fixes en raison de la nature différentes des éléments. */
+    /* @note Unités fixes en raison de la nature différentes des éléments.
     border-radius: 2px 2px 0.5em 0.5em;
   }
 
@@ -2187,7 +2318,8 @@ video {
     color: var(--colorW);
     background-color: var(--color2);
   }
-} .user-def {
+}
+*/ .user-def {
   display: grid;
   grid-template-columns: 3.5em minmax(0, 1fr);
   grid-template-areas: 'aa tt' 'aa uu';
@@ -2214,6 +2346,64 @@ video {
 
   & time {
     grid-area: uu;
+  }
+} .flip {
+  display: grid;
+  perspective: 60em;
+  transform-style: preserve-3d; /* @note Utile pour les éléments enfants */
+  outline: none;
+
+  & > * {
+    grid-area: 1/-1; /* @note Évite un position absolute, les 2 éléments enfants de .flip s'adaptent donc l'un à l'autre, selon le contenu le plus conséquent des 2. */
+    backface-visibility: hidden;
+    transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition-duration: var(--flip-duration, 3s);
+    transition-property: transform, opacity;
+    cursor: pointer;
+  }
+
+  & > :last-child {
+    transform: rotateY(-180deg);
+  }
+
+  &.active {
+    & > * {
+      transition-duration: 1s;
+    }
+
+    & > :first-child {
+      transform: rotateY(180deg);
+    }
+
+    & > :last-child {
+      transform: rotateY(0deg);
+    }
+  }
+  /*
+  @media (scripting: enabled) {
+    &:focus,
+    &:active {
+      & > * {
+        outline: 1px solid var(--color2);
+      }
+    }
+  }
+  */
+  @media (scripting: none) {
+    &:focus,
+    &:active {
+      & > * {
+        transition-duration: 1s;
+      }
+
+      & > :first-child {
+        transform: rotateY(180deg);
+      }
+
+      & > :last-child {
+        transform: rotateY(0deg);
+      }
+    }
   }
 } code,
 kbd,
@@ -2611,7 +2801,7 @@ select {
   &:hover {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(39, 100%, 50%)'><path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/></svg>");
   }
-  
+
   [type='time']& {
     transform: translateX(-1.4em);
   }
@@ -2624,11 +2814,9 @@ select {
   transition-delay: 1000000s;
 } ::placeholder {
   color: var(--colorG60);
-} /* @note Ce n'est pas une bonne idée à l'usage @todo A supprimer plus tard avec un peu de pratique sans cette règle.
-:focus::placeholder {
-  color: transparent;
-}
-*/ .invalid + [class*='message'] {
+} :focus::placeholder {
+  opacity: 0.5;
+} .invalid + [class*='message'] {
   position: relative;
 } .invalid + [class*='message']::before {
   content: '';
@@ -2954,7 +3142,7 @@ h2.legend {
   height: 1.2em;
   vertical-align: text-top;
   box-sizing: border-box;
-  background-color: var(--colorG15);
+  background-color: var(--colorG18);
   border: 0.15em solid var(--color1);
   outline: none;
   box-shadow: inset 0 0.1em 0.3em var(--colorAB3);
@@ -3770,7 +3958,7 @@ h2.legend {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5em;
-    margin-block: -.5em 0; /* @note La valeur top négative compense la valeur top des items. */
+    margin-block: 0;
     padding-inline-start: 0;
     font-size: 0.9em;
 
@@ -3780,7 +3968,6 @@ h2.legend {
 
     & li {
       display: flex;
-      margin-block-start: 0.5em;
     }
 
     & a {
@@ -4340,8 +4527,7 @@ h2.legend {
 .breadcrumb li > *,
 .alert .wrap,
 .footer,
-.card > div:not([class^='ribbon']),
-.card svg,
+.card > *,
 [class^='message'],
 [class^='message']::before,
 [class*='list-stripe'] > :not([class*='-links']),

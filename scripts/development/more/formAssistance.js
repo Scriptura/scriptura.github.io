@@ -10,12 +10,13 @@ const formattedUsername = (() => {
   function usernameFormat(username) {
     return (username.value = username.value
       .replace(/^\p{CWU}/u, char => char.toLocaleUpperCase()) // Première lettre majuscule
-      .replace(/\s+/g, '__') // Remplacement des espaces par un "jeton"
-      .replace(/__\p{CWU}/gu, char => char.toLocaleUpperCase()) // Majuscule derière les jetons
-      .replace(/__/g, '') // Suppression des jetons, ce qui conduit à un résultat pascal case
-      .normalize('NFD')
-      .replace(/\p{Diacritic}/gu, '') // Suppression des accentuations
-      .replace(/[^a-z0-9\-\.]/gi, '') // Supprimer tous les caractères hormis les minuscules, majuscules, chiffres, points, et tirets hauts.
+      //.replace(/\s+/g, '__') // Remplacement des espaces par un "jeton"
+      //.replace(/__\p{CWU}/gu, char => char.toLocaleUpperCase()) // Majuscule derière les jetons
+      //.replace(/__/g, '') // Suppression des jetons, ce qui conduit à un résultat pascal case
+      .replace(/\s+/g, ' ')
+      //.normalize('NFD')
+      //.replace(/\p{Diacritic}/gu, '') // Suppression des accentuations
+      //.replace(/[^a-z0-9\-\.\s]/gi, '') // Supprimer tous les caractères hormis les minuscules, majuscules, chiffres, points, et tirets hauts.
       .trim())
   }
 
@@ -26,7 +27,7 @@ const formattedUsername = (() => {
  * Assistance dans la création d'un slug efficace pour l'URL d'un article.
  */
 ;(function createSlug() {
-  const inputName = document.querySelector('#input-name.assistance-slug')
+  const inputName = document.querySelector('#input-name.assistance-slug, #input-username.assistance-slug')
   const inputSlug = document.querySelector('#input-slug.assistance-slug')
 
   function slugFormat(inputName, inputSlug) {

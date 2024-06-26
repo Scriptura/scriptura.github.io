@@ -19,7 +19,7 @@ body {
     '. m .'
     'a a a'
     'f f f';
-    /* @bugfix Suppression des marges @affected All browser. */
+  /* @bugfix Suppression des marges @affected All browser. */
   margin: 0;
 }
 

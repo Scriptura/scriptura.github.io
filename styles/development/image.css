@@ -206,3 +206,30 @@ figure {
     height: 1em;
   }
 }
+
+.preview-container {
+  display: grid;
+  background-color: #222;
+  &[data-input-id='input-file'] { /* @todo A supprimer si l'on change la manière d'afficher l'image dans `/media-editor/:id` */
+    cursor: pointer;
+  }
+  &,
+  & img {
+    width: 100%;
+    aspect-ratio: 1/1;
+  }
+  & figure {
+    display: contents;
+  }
+  & img {
+    place-self: center;
+    object-fit: contain;
+  }
+  @media (width < $sizeS) {
+    &,
+    & img {
+      max-width: 20em;
+      margin-inline: auto;
+    }
+  }
+}

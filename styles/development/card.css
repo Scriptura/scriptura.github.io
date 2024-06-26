@@ -1,4 +1,91 @@
 .card {
+  & > * {
+    padding: 1.5em;
+    background-color: var(--colorG27);
+    /*
+    background-image: var(--card-bg, '');
+    background-size: cover;
+    background-position: center;
+    */
+    border-radius: 0.5em;
+    box-shadow: var(--shadow3);
+  }
+
+  & > :first-child {
+    text-align: center;
+    text-wrap: pretty;
+  }
+
+  & > :last-child {
+    background-color: var(--colorG33);
+  }
+
+  & :where(h1, h2) {
+    position: relative;
+    font-size: 2em;
+    text-align: center;
+    margin-block-end: 1em;
+    padding-block-end: 1em;
+    & a {
+      text-decoration: none;
+    }
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      display: grid;
+      width: 100%;
+      height: .1em;
+    }
+  }
+
+  & h1 {
+    &::before {
+      background-image: linear-gradient(to top, var(--colorG33) 50%, var(--colorG15) 50%);
+    }
+
+    &::after {
+      background-image: linear-gradient(to left, var(--colorG22) 0%, transparent 50%, var(--colorG22) 100%);
+    }
+  }
+
+  & h2 {
+    &::before {
+      background-image: linear-gradient(to top, var(--colorG38) 50%, var(--colorG18) 50%);
+    }
+
+    &::after {
+      background-image: linear-gradient(to left, var(--colorG27) 0%, transparent 50%, var(--colorG27) 100%);
+    }
+  }
+
+  /*
+  & h1 {
+    &::before {
+      background-image: linear-gradient(to top, var(--colorG27) 50%, var(--colorG15) 50%);
+    }
+
+    &::after {
+      background-image: linear-gradient(to left, var(--colorG22) 0%, transparent 40%, transparent 60%, var(--colorG22) 100%);
+    }
+  }
+
+  & h2 {
+    &::before {
+      background-image: linear-gradient(to top, var(--colorG33) 50%, var(--colorG18) 50%);
+    }
+
+    &::after {
+      background-image: linear-gradient(to left, var(--colorG27) 0%, transparent 40%, transparent 60%, var(--colorG27) 100%);
+    }
+  }
+  */
+}
+
+/*
+.card {
   & > :not([class^='ribbon']) {
     margin: 0;
     background-color: var(--colorG27);
@@ -8,7 +95,7 @@
   & > :first-child {
     padding: .5em 2em;
     text-align: center;
-    /* @note Unités fixes en raison de la nature différentes des éléments. */
+    /* @note Unités fixes en raison de la nature différentes des éléments.
     border-radius: 0.5em 0.5em 2px 2px;
 
     & span {
@@ -18,7 +105,7 @@
 
   & > :nth-child(3) {
     padding: 2em;
-    /* @note Unités fixes en raison de la nature différentes des éléments. */
+    /* @note Unités fixes en raison de la nature différentes des éléments.
     border-radius: 2px 2px 0.5em 0.5em;
   }
 
@@ -46,6 +133,7 @@
     background-color: var(--color2);
   }
 }
+*/
 
 .user-def {
   display: grid;

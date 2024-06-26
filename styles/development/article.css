@@ -117,7 +117,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.5em;
-    margin-block: -.5em 0; /* @note La valeur top négative compense la valeur top des items. */
+    margin-block: 0;
     padding-inline-start: 0;
     font-size: 0.9em;
 
@@ -127,7 +127,6 @@
 
     & li {
       display: flex;
-      margin-block-start: 0.5em;
     }
 
     & a {

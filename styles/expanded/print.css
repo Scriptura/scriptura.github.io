@@ -1,5 +1,5 @@
 @charset "utf-8"; /* Les guillemets doubles évitents une erreur au validateur du W3C. @see https:/* validator.w3.org/ */ /* @note Doublage des variables Sass par les variables CSS natives impliquées dans les médias queries. @todo en attendant un support total d'usage pour les variables natives. */ /* @subsection Breakpoints */ /* @bugfix Nécessité de préciser deux chiffres après la virgule pour éviter un arrondissement de la valeur par les navigateurs. */ /* @note L'idée étant d'avoir une précision au-délà du pixel, nous évitant ainsi de devoir utiliser les opérateur logiques CSS4 de type inclusifs (exemple : `<=`). @todo En test...*/ /* @note La fonction calc() n'est pas implémentée pour les media queries, ou alors partiellement (unité de même type). @see https://stackoverflow.com/questions/23667208 @todo À réévaluer dans le temps... */ /* @note Attention, il s'agit d'une valeur empirique qui tente d'anticiper la taille minimale nécessaire au menu en desktop. @todo À remplacer par une solution plus fiable à l'avenir, mais qui ne serait peut-être alors pas mobile first et pourrait poser des problèmes de reflow... */ :root {
-  --size-nav: 70.01em; /* @note Variable CSS utilisée en JavaScript. */
+  --size-nav: 90.01em; /* @note Variable CSS utilisée en JavaScript. */
   --gap: 1em; /* Gouttière, largeur entre deux modules */
   --wrap: 92em; /* calc(90em + var(--gap) * 2)*/ /* Largeur maximale du contenu (+ prise en compte du padding interne) */
 
@@ -704,6 +704,10 @@ template {
   }
 }
 */ /* @bug @affected Chrome @note Nombreux bugs : éléments html ou effets d'ombre tronqués s'ils dépassent des colonnes, drop-shadow utilisé sur des éléments internes aux colonnes créé des artefacts. */ [class^='column'] {
+  :has(> &) {
+    container: column/inline-size;
+    width: 100%; /* @note Important si le conteneur n'a pas de largeur définie par défaut. */
+  }
   column-gap: 0;
   position: relative;
 
@@ -738,11 +742,11 @@ template {
     gap: 0 var(--gap);
     /* column-gap: var(--gap); */
   }
-} @media (width < 35.01em) {
+} @container column (35.01em > width) {
   .sizeXS-column2 {
     column-count: 2;
   }
-} @media (width > 35.01em) {
+} @container column (width > 35.01em) {
   .column2,
   .column3,
   .column4,
@@ -754,7 +758,7 @@ template {
   .column6 {
     column-count: 3;
   }
-} @media (width > 50.01em) {
+} @container column (width > 50.01em) {
   .column3,
   .column4 {
     column-count: 3;
@@ -768,7 +772,7 @@ template {
   .m-column2 {
     column-count: 2;
   }
-} @media (width > 92.01em) {
+} @container column (width > 70.01em) {
   .column4 {
     column-count: 4;
   }
@@ -783,6 +787,23 @@ template {
 
   .l-column3 {
     column-count: 3;
+  }
+} .column-fix {
+  --column-width: 22.25em; /* = 356px, donc 4 colonnes pour les 92em quand wrap au max. */
+  max-width: var(--column-width);
+  column-count: 1;
+  margin-inline: auto;
+  @media (48.5em < width) { /* @note +3em comprend les 2 gaps plus l'épaisseur estimée de la barre de scroll vertical. */
+    max-width: calc(var(--column-width)*2 + var(--gap));
+    column-count: 2;
+  }
+  @media (71.75em < width) {
+    max-width: calc(var(--column-width)*3 + var(--gap)*2);
+    column-count: 3;
+  }
+  @media (95em < width) {
+    max-width: calc(var(--column-width)*4 + var(--gap)*3);
+    column-count: 4;
   }
 } /* @import 'navigation'; */ /* @import 'breadcrumb'; */ /* @import 'alert'; */ ul,
 ol {
@@ -1148,7 +1169,32 @@ ol {
     width: 1em;
     height: 1em;
   }
-} /* @import 'mediaPlayer'; */ /* @import 'map'; */ /* @import 'card'; */ code,
+} .preview-container {
+  display: grid;
+  background-color: #222;
+  &[data-input-id='input-file'] { /* @todo A supprimer si l'on change la manière d'afficher l'image dans `/media-editor/:id` */
+    cursor: pointer;
+  }
+  &,
+  & img {
+    width: 100%;
+    aspect-ratio: 1/1;
+  }
+  & figure {
+    display: contents;
+  }
+  & img {
+    place-self: center;
+    object-fit: contain;
+  }
+  @media (width < 50.01em) {
+    &,
+    & img {
+      max-width: 20em;
+      margin-inline: auto;
+    }
+  }
+} /* @import 'mediaPlayer'; */ /* @import 'map'; */ /* @import 'card'; */ /* @import 'flip'; */ code,
 kbd,
 samp {
   font-family: monospace, monospace;
@@ -1540,7 +1586,7 @@ samp {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5em;
-    margin-block: -.5em 0; /* @note La valeur top négative compense la valeur top des items. */
+    margin-block: 0;
     padding-inline-start: 0;
     font-size: 0.9em;
 
@@ -1550,7 +1596,6 @@ samp {
 
     & li {
       display: flex;
-      margin-block-start: 0.5em;
     }
 
     & a {

@@ -72,6 +72,7 @@ const getScriptRequests = (() => {
     '[class*=assistance]',
     '[class*=character-counter]',
     '[class*=-focus]',
+    '.preview-container',
     '[class*=accordion]',
     '.pre',
     '[class^=range]',
@@ -81,6 +82,7 @@ const getScriptRequests = (() => {
     '.map',
     '[class*=language-]',
     '.input-add-terms',
+    '.flip',
   ]
   if (selectors.some(selector => document.querySelector(selector))) getScript('/scripts/more.js')
 })()
