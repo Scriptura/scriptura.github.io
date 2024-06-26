@@ -5,8 +5,9 @@ let autoFlipTimeout, autoUnflipTimeout
 let isAutoFlipping = true // Variable de contrôle
 
 /**
- * Retourne automatiquement la première carte flip après 2 secondes
- * et la remet à son état initial après une autre seconde.
+ * Script de démonstration permettant à l'utilisateur de comprendre qu'une action 
+ * est possible sur la carte. Retourne automatiquement la première carte après n seconde 
+ * et la remet à son état initial après n seconde.
  */
 const autoFlipFirstCard = () => {
   if (flipList.length > 0) {
@@ -21,12 +22,14 @@ const autoFlipFirstCard = () => {
 }
 
 /**
- * Incrémente le nombre de vues de la page et stocke cette valeur en localStorage.
- * Si la page a été vue moins de 3 fois, lance le processus autoFlipFirstCard.
+ * Gère l'événement de vue de page en mettant à jour le compteur de vues dans 
+ * le stockage local et en retournant automatiquement la première carte si le 
+ * compteur de vues est inférieur à n.
+ *
+ * @note Le compteur de vues est unique pour toutes les pages.
  */
- const handlePageView = () => {
-  const slug = window.location.pathname
-  const pageViewed = 'pageViewed' // @note Un unique compteur pour toutes les pages.
+const handlePageView = () => {
+  const pageViewed = 'demoFlipCard' // @note Un unique compteur pour toutes les pages.
    
   let views = parseInt(localStorage.getItem(pageViewed)) || 0
   views++
