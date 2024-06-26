@@ -102,7 +102,11 @@ hr[data-hr],
   }
 }
 
-.justify {
+.text-center {
+  text-align: center;
+}
+
+.text-justify {
   hyphens: auto;
 
   & li {
