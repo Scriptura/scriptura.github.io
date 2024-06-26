@@ -2391,7 +2391,6 @@ video {
     }
   }
   */
-  @media (scripting: none) {
     &:focus,
     &:active {
       & > * {
@@ -2406,7 +2405,6 @@ video {
         transform: rotateY(0deg);
       }
     }
-  }
 } code,
 kbd,
 samp {

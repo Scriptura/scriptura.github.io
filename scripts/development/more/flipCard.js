@@ -68,4 +68,9 @@ flipList.forEach(flip => {
       flip.classList.add('active')
     }
   })
+
+  // Enlever la classe .active lorsqu'un élément prend le focus
+  flip.addEventListener('focus', () => {
+    flip.classList.remove('active')
+  })
 })
