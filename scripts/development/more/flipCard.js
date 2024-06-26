@@ -15,12 +15,29 @@ const autoFlipFirstCard = () => {
       autoUnflipTimeout = setTimeout(() => {
         flipList[0].classList.remove('active')
         isAutoFlipping = false // Processus automatique terminé
-      }, 2000)
-    }, 2000)
+      }, 1500)
+    }, 1000)
   }
 }
 
-autoFlipFirstCard()
+/**
+ * Incrémente le nombre de vues de la page et stocke cette valeur en localStorage.
+ * Si la page a été vue moins de 3 fois, lance le processus autoFlipFirstCard.
+ */
+ const handlePageView = () => {
+  const slug = window.location.pathname
+  const pageViewed = 'pageViewed' // @note Un unique compteur pour toutes les pages.
+   
+  let views = parseInt(localStorage.getItem(pageViewed)) || 0
+  views++
+  localStorage.setItem(pageViewed, views)
+
+  if (views < 4) {
+    autoFlipFirstCard()
+  }
+}
+
+handlePageView()
 
 /**
  * Ajoute un gestionnaire d'événements à chaque élément avec la classe 'flip'.
