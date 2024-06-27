@@ -30,16 +30,7 @@
       transform: rotateY(0deg);
     }
   }
-  /*
-  @media (scripting: enabled) {
-    &:focus,
-    &:active {
-      & > * {
-        outline: 1px solid var(--color2);
-      }
-    }
-  }
-  */
+  @media (scripting: none) {
     &:focus,
     &:active {
       & > * {
@@ -54,4 +45,5 @@
         transform: rotateY(0deg);
       }
     }
+  }
 }
