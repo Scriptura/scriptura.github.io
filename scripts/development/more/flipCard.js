@@ -5,8 +5,8 @@ let autoFlipTimeout, autoUnflipTimeout
 let isAutoFlipping = true // Variable de contrôle
 
 /**
- * Script de démonstration permettant à l'utilisateur de comprendre qu'une action 
- * est possible sur la carte. Retourne automatiquement la première carte après n seconde 
+ * Script de démonstration permettant à l'utilisateur de comprendre qu'une action
+ * est possible sur la carte. Retourne automatiquement la première carte après n seconde
  * et la remet à son état initial après n seconde.
  */
 const autoFlipFirstCard = () => {
@@ -22,15 +22,15 @@ const autoFlipFirstCard = () => {
 }
 
 /**
- * Gère l'événement de vue de page en mettant à jour le compteur de vues dans 
- * le stockage local et en retournant automatiquement la première carte si le 
+ * Gère l'événement de vue de page en mettant à jour le compteur de vues dans
+ * le stockage local et en retournant automatiquement la première carte si le
  * compteur de vues est inférieur à n.
  *
  * @note Le compteur de vues est unique pour toutes les pages.
  */
 const handlePageView = () => {
-  const pageViewed = 'demoFlipCard' // @note Un unique compteur pour toutes les pages.
-   
+  const pageViewed = 'demoCounterFlipCards' // @note Un unique compteur pour toutes les pages.
+
   let views = parseInt(localStorage.getItem(pageViewed)) || 0
   views++
   localStorage.setItem(pageViewed, views)
@@ -50,6 +50,7 @@ handlePageView()
  * @param {NodeList} flipList Liste des éléments auxquels ajouter des gestionnaires d'événements.
  */
 flipList.forEach(flip => {
+  flip.removeAttribute('tabindex')
   flip.addEventListener('click', () => {
     // Annuler le processus automatique si l'utilisateur clique sur la première carte flip
     if (flip === flipList[0] && isAutoFlipping) {
@@ -72,8 +73,7 @@ flipList.forEach(flip => {
     }
   })
 
-  // Enlever la classe .active lorsqu'un élément prend le focus
-  flip.addEventListener('focus', () => {
+  flip.addEventListener('focusin', () => {
     flip.classList.remove('active')
   })
 })

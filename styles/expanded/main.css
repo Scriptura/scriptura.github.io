@@ -2352,14 +2352,14 @@ video {
 } .flip {
   display: grid;
   perspective: 60em;
-  transform-style: preserve-3d; /* @note Utile pour les éléments enfants */
+  transform-style: preserve-3d; /* Utile pour les éléments enfants */
   outline: none;
 
   & > * {
-    grid-area: 1/-1; /* @note Évite un position absolute, les 2 éléments enfants de .flip s'adaptent donc l'un à l'autre, selon le contenu le plus conséquent des 2. */
+    grid-area: 1/-1; /* Évite un position absolute, les 2 éléments enfants de .flip s'adaptent donc l'un à l'autre, selon le contenu le plus conséquent des 2. */
     backface-visibility: hidden;
     transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    transition-duration: var(--flip-duration, 3s);
+    transition-duration: var(--flip-transition-duration, 3s);
     transition-property: transform, opacity;
     cursor: pointer;
   }
@@ -2368,9 +2368,11 @@ video {
     transform: rotateY(-180deg);
   }
 
+  &:focus-within,
+  &:active,
   &.active {
     & > * {
-      transition-duration: 1s;
+      --flip-transition-duration: 1s;
     }
 
     & > :first-child {
@@ -2379,22 +2381,6 @@ video {
 
     & > :last-child {
       transform: rotateY(0deg);
-    }
-  }
-  @media (scripting: none) {
-    &:focus,
-    &:active {
-      & > * {
-        transition-duration: 1s;
-      }
-
-      & > :first-child {
-        transform: rotateY(180deg);
-      }
-
-      & > :last-child {
-        transform: rotateY(0deg);
-      }
     }
   }
 } code,

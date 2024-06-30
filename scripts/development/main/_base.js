@@ -61,7 +61,7 @@ const getScript = (url, hook = 'footer') =>
     }
     if (hook === 'footer') document.body.appendChild(script)
     else if (hook === 'head') document.head.appendChild(script)
-    else console.error("Error: le choix de l'élement html pour getScript() n'est pas correct.")
+    else console.error(`Error: le choix de l'élement html pour getScript() n'est pas correct.`)
   })
 
 const getScriptRequests = (() => {
@@ -436,3 +436,91 @@ console.log('DISPLAY_MODE_CHANGED', displayMode)
 
 const goBack = () => window.history.back()
 document.querySelectorAll('.go-back').forEach(e => e.addEventListener('click', goBack))
+
+// -----------------------------------------------------------------------------
+// @section     Image Fallback
+// @description Fallback pour les images
+// -----------------------------------------------------------------------------
+
+/**
+ * Initialise le mécanisme de fallback pour les images et les sources d'images.
+ * Remplace les images et les sources d'images qui échouent à se charger par une image par défaut (SVG).
+ *
+ * Fonctionnement :
+ * - Pour chaque élément <img>, un gestionnaire d'événement 'error' est ajouté.
+ * - Si une image échoue à se charger, elle est remplacée par l'image par défaut.
+ * - Pour chaque élément <source> dans un <picture> parent, un gestionnaire d'événement 'error' est ajouté.
+ * - Si une source échoue à se charger, elle est remplacée par l'image par défaut.
+ */
+/* Solution fonctionnelle mais non utilisée en raison de problème de performance (-7 points sous Lighthouse)
+function initializeImageFallback() {
+  const defaultImageURL = '/medias/icons/utilDest/xmark.svg'
+  const urlCache = new Map()
+
+  function testImageURL(url) {
+    return new Promise(resolve => {
+      if (urlCache.has(url)) {
+        resolve(urlCache.get(url))
+        return
+      }
+
+      const img = new Image()
+      img.onload = () => {
+        urlCache.set(url, true)
+        resolve(true)
+      }
+      img.onerror = () => {
+        urlCache.set(url, false)
+        resolve(false)
+      }
+      img.src = url
+    })
+  }
+
+  async function replaceSourceWithDefault(sourceElement) {
+    const srcset = sourceElement.srcset
+    const urls = srcset.split(',').map(src => src.trim().split(' ')[0])
+    for (const url of urls) {
+      const isValid = await testImageURL(url)
+      if (!isValid) {
+        sourceElement.srcset = defaultImageURL
+        break
+      }
+    }
+  }
+
+  async function replaceImageWithDefault(event) {
+    const imgElement = event.target
+    imgElement.src = defaultImageURL
+
+    if (!imgElement.hasAttribute('width')) {
+      imgElement.setAttribute('width', '1000')
+    }
+    if (!imgElement.hasAttribute('height')) {
+      imgElement.setAttribute('height', '1000')
+    }
+
+    const pictureElement = imgElement.closest('picture')
+    if (pictureElement) {
+      const sources = pictureElement.querySelectorAll('source')
+      for (const source of sources) {
+        await replaceSourceWithDefault(source)
+      }
+    }
+  }
+
+  const images = document.querySelectorAll('img')
+
+  images.forEach(image => {
+    image.addEventListener('error', replaceImageWithDefault)
+
+    testImageURL(image.src).then(isValid => {
+      if (!isValid) {
+        replaceImageWithDefault({ target: image })
+      }
+    })
+  })
+}
+
+window.addEventListener('load', initializeImageFallback)
+*/
