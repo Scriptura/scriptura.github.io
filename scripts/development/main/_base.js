@@ -83,6 +83,8 @@ const getScriptRequests = (() => {
     '[class*=language-]',
     '.input-add-terms',
     '.flip',
+    '.sprite-to-inline',
+    '.svg-animation'
   ]
   if (selectors.some(selector => document.querySelector(selector))) getScript('/scripts/more.js')
 })()

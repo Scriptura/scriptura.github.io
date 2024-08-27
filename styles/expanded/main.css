@@ -1,5 +1,5 @@
 @charset "utf-8"; /* Les guillemets doubles évitents une erreur au validateur du W3C. @see https://validator.w3.org/ */ /* @note Doublage des variables Sass par les variables CSS natives impliquées dans les médias queries. @todo en attendant un support total d'usage pour les variables natives. */ /* @subsection Breakpoints */ /* @bugfix Nécessité de préciser deux chiffres après la virgule pour éviter un arrondissement de la valeur par les navigateurs. */ /* @note L'idée étant d'avoir une précision au-délà du pixel, nous évitant ainsi de devoir utiliser les opérateur logiques CSS4 de type inclusifs (exemple : `<=`). @todo En test...*/ /* @note La fonction calc() n'est pas implémentée pour les media queries, ou alors partiellement (unité de même type). @see https://stackoverflow.com/questions/23667208 @todo À réévaluer dans le temps... */ /* @note Attention, il s'agit d'une valeur empirique qui tente d'anticiper la taille minimale nécessaire au menu en desktop. @todo À remplacer par une solution plus fiable à l'avenir, mais qui ne serait peut-être alors pas mobile first et pourrait poser des problèmes de reflow... */ :root {
-  --size-nav: 90.01em; /* @note Variable CSS utilisée en JavaScript. */
+  --size-nav: 97.01em; /* @note Variable CSS utilisée en JavaScript. */
   --gap: 1em; /* Gouttière, largeur entre deux modules */
   --wrap: 92em; /* calc(90em + var(--gap) * 2)*/ /* Largeur maximale du contenu (+ prise en compte du padding interne) */
 
@@ -854,13 +854,13 @@ body {
   user-select: none;
   background-color: var(--colorG15);
 
-  @media (width < 90.01em) {
+  @media (width < 97.01em) {
     grid-template-rows: 3em;
     grid-template-columns: 3em minmax(0, 1fr) 3em;
     grid-template-areas: 'logo breadcrumb cmd';
   }
 
-  @media (width > 90.01em) {
+  @media (width > 97.01em) {
     grid-template-rows: repeat(2, 2.5em);
     grid-template-columns: 5em minmax(0, 1fr);
     grid-template-areas: 'logo subnav' 'logo breadcrumb';
@@ -917,7 +917,7 @@ body {
   & .current {
     background-color: var(--color2);
 
-    @media (width > 90.01em) {
+    @media (width > 97.01em) {
       position: relative;
       /* @note La valeur doit être suffisante pour passer au-dessus des items de ".breadcrumb." */
       z-index: 10;
@@ -935,13 +935,13 @@ body {
     }
   }
 
-  @media (width > 90.01em) {
+  @media (width > 97.01em) {
     & > :last-child {
       margin-inline-start: auto;
     }
   }
 
-  @media (width < 90.01em) {
+  @media (width < 97.01em) {
     position: absolute;
     z-index: 800;
     top: 3em;
@@ -953,7 +953,7 @@ body {
 
   & li {
     list-style: none;
-    @media (width < 90.01em) {
+    @media (width < 97.01em) {
       flex: 1;
       flex-basis: 50%;
       background-color: var(--colorG15);
@@ -1011,7 +1011,7 @@ body {
       flex-basis: 33%;
     }
 
-    @media (50.01em < width < 90.01em) {
+    @media (50.01em < width < 97.01em) {
       flex-basis: 25%;
     }
 
@@ -1021,11 +1021,11 @@ body {
       padding: 0 1em;
       box-shadow: inset 0.5rem 0.5rem 0.5rem var(--colorAB2);
 
-      @media (width < 90.01em) {
+      @media (width < 97.01em) {
         line-height: 3;
       }
 
-      @media (width > 90.01em) {
+      @media (width > 97.01em) {
         line-height: 2.5;
       }
 
@@ -1051,7 +1051,7 @@ body {
       }
     }
   }
-} @media (width < 90.01em) {
+} @media (width < 97.01em) {
   :where(html, body).active {
     overflow: clip;
   }
@@ -1071,7 +1071,7 @@ body {
       filter: blur(2px) grayscale(1);
     }
   }
-} @media (width > 90.01em) {
+} @media (width > 97.01em) {
   @keyframes anim-jump {
     30% {
       transform: translateY(-0.3em);
@@ -1081,11 +1081,11 @@ body {
   all: unset;
   grid-area: cmd;
 
-  @media (scripting: none), (width > 90.01em) {
+  @media (scripting: none), (width > 97.01em) {
     display: none;
   }
 
-  @media (width < 90.01em) {
+  @media (width < 97.01em) {
     padding: 0.5em;
     background-color: var(--colorG15);
     transition: background-color 0.3s;
@@ -1191,7 +1191,7 @@ body {
     }
   }
 
-  @media (width < 90.01em) {
+  @media (width < 97.01em) {
     & li > * {
       line-height: 3;
       padding: 0 2.25em;
@@ -1596,13 +1596,29 @@ ol {
     */
   }
 } .mosaic {
+  & a {
+    &:where(:focus, :hover, :active) figure {
+      background-color: var(--colorW);
+    }
+  }
+
   & figure {
     padding: 0.2em;
+    transition: background-color 0.2s ease-in-out;
+
+    &:has([src$='.svg']) {
+      padding: 1em;
+    }
   }
 
   & img {
-    aspect-ratio: 1;
+    width: 100%;
+    aspect-ratio: 1/1;
     object-fit: cover;
+
+    &[src$='.svg'] {
+      object-fit: contain;
+    }
   }
 
   & button {
@@ -1614,26 +1630,55 @@ ol {
 } .preview-container {
   display: grid;
   background-color: #222;
-  &[data-input-id='input-file'] { /* @todo A supprimer si l'on change la manière d'afficher l'image dans `/media-editor/:id` */
+
+  &:has([src$='.svg']) {
+    padding: 2em;
+  }
+
+  &[data-input-id='input-file'] {
+    /* @todo A supprimer si l'on change la manière d'afficher l'image dans `/media-editor/:id` */
     cursor: pointer;
   }
+
   &,
   & img {
     width: 100%;
     aspect-ratio: 1/1;
   }
+
   & figure {
     display: contents;
   }
+
   & img {
     place-self: center;
     object-fit: contain;
   }
+
   @media (width < 50.01em) {
     &,
     & img {
       max-width: 20em;
       margin-inline: auto;
+    }
+  }
+} @media (prefers-reduced-motion: no-preference) {
+  .svg-animation.active {
+    & :where(path, circle, ellipse, line, polygon, polyline, rect, text, textPath, tref, tspan) {
+      stroke-width: 1;
+      fill: transparent;
+      stroke: var(--colorG38);
+      animation: anim-svg var(--anim-svg, 10s) cubic-bezier(0.5, 0, 1, 0) forwards;
+    }
+  }
+
+  @keyframes anim-svg {
+    80% {
+      stroke-dashoffset: 0;
+      stroke: var(--colorG38);
+    }
+    to {
+      stroke: var(--colorT2);
     }
   }
 } audio,
@@ -2188,7 +2233,62 @@ video {
   100% {
     transform: translate(0, 0);
   }
-} .card {
+} .card:not(.flip) {
+  & {
+    padding: 1.5em;
+    background-color: var(--colorG27);
+    /*
+    background-image: var(--card-bg, '');
+    background-size: cover;
+    background-position: center;
+    */
+    border-radius: 0.5em;
+    box-shadow: var(--shadow3);
+    text-align: center;
+    text-wrap: pretty;
+  }
+
+  & :where(h1, h2) {
+    position: relative;
+    font-size: 2em;
+    text-align: center;
+    margin-block-end: 1em;
+    padding-block-end: 1em;
+    & a {
+      text-decoration: none;
+    }
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      display: grid;
+      width: 100%;
+      height: .1em;
+    }
+  }
+
+  & h1 {
+    &::before {
+      background-image: linear-gradient(to top, var(--colorG33) 50%, var(--colorG15) 50%);
+    }
+
+    &::after {
+      background-image: linear-gradient(to left, var(--colorG22) 0%, transparent 50%, var(--colorG22) 100%);
+    }
+  }
+
+  & h2 {
+    &::before {
+      background-image: linear-gradient(to top, var(--colorG38) 50%, var(--colorG18) 50%);
+    }
+
+    &::after {
+      background-image: linear-gradient(to left, var(--colorG27) 0%, transparent 50%, var(--colorG27) 100%);
+    }
+  }
+} .flip.card {
   & > * {
     padding: 1.5em;
     background-color: var(--colorG27);
@@ -2251,13 +2351,38 @@ video {
     }
   }
 } .user-def {
+  --avatar-size: 3.5em;
   display: grid;
-  grid-template-columns: 3.5em minmax(0, 1fr);
+  grid-template-columns: var(--avatar-size) minmax(0, 1fr);
   grid-template-areas: 'aa tt' 'aa uu';
+  column-gap: calc(var(--avatar-size)/6);
+  align-items: center;
+
+  &.encard {
+    padding: .2em;
+    background-color: var(--colorG27);
+    border-radius : var(--avatar-size);
+  }
+
+  /*
+  & a {
+    text-decoration: none;
+  }
+  */
+
+  & > :first-child {
+    grid-area: tt;
+    font-style: normal;
+  }
+
+  & > :nth-child(2) {
+    grid-area: uu;
+    all: unset;
+  }
 
   & .avatar {
     grid-area: aa;
-    width: 3em;
+    width: var(--avatar-size);
     aspect-ratio: 1;
     background: var(--colorG13) var(--img, '');
     background-size: cover;
@@ -2265,18 +2390,8 @@ video {
   }
 
   & address {
-    grid-area: tt;
-    font-style: normal;
     font-weight: bold;
     font-variant: small-caps;
-
-    & a {
-      text-decoration: none;
-    }
-  }
-
-  & time {
-    grid-area: uu;
   }
 } .flip {
   display: grid;
@@ -4434,7 +4549,8 @@ h2.legend {
 .breadcrumb li > *,
 .alert .wrap,
 .footer,
-.card > *,
+.flip.card > *,
+.card:not(.flip),
 [class^='message'],
 [class^='message']::before,
 [class*='list-stripe'] > :not([class*='-links']),
@@ -4442,6 +4558,7 @@ h2.legend {
 .list-straight li::before,
 .list-rounded li > *,
 .list-rounded li::before,
+.encard,
 [class*='figure-image'],
 .input-group > :first-child,
 .term,

@@ -2,7 +2,7 @@
   <symbol id="0" viewBox="0 0 50 50">
     <circle cx="25" cy="25" r="16" fill="currentColor" stroke="currentColor" stroke-width="3"/>
   </symbol>
-  <symbol id="1" viewBox="0 0 50 50">
+  <symbol id="a" viewBox="0 0 50 50">
     <circle stroke-width="3" stroke="currentColor" fill="none" r="16" cy="25" cx="25"/><path stroke-width="0" fill="currentColor" d="m25,9a16,16 0 0 0 0,32l0,-1.5a18,18 0 0 0 0,-29l0,-1.5z"/>
   </symbol>
   <symbol id="2" viewBox="0 0 50 50">

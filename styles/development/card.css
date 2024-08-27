@@ -1,4 +1,61 @@
-.card {
+.card:not(.flip) {
+  & {
+    padding: 1.5em;
+    background-color: var(--colorG27);
+    /*
+    background-image: var(--card-bg, '');
+    background-size: cover;
+    background-position: center;
+    */
+    border-radius: 0.5em;
+    box-shadow: var(--shadow3);
+    text-align: center;
+    text-wrap: pretty;
+  }
+
+  & :where(h1, h2) {
+    position: relative;
+    font-size: 2em;
+    text-align: center;
+    margin-block-end: 1em;
+    padding-block-end: 1em;
+    & a {
+      text-decoration: none;
+    }
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      display: grid;
+      width: 100%;
+      height: .1em;
+    }
+  }
+
+  & h1 {
+    &::before {
+      background-image: linear-gradient(to top, var(--colorG33) 50%, var(--colorG15) 50%);
+    }
+
+    &::after {
+      background-image: linear-gradient(to left, var(--colorG22) 0%, transparent 50%, var(--colorG22) 100%);
+    }
+  }
+
+  & h2 {
+    &::before {
+      background-image: linear-gradient(to top, var(--colorG38) 50%, var(--colorG18) 50%);
+    }
+
+    &::after {
+      background-image: linear-gradient(to left, var(--colorG27) 0%, transparent 50%, var(--colorG27) 100%);
+    }
+  }
+}
+
+.flip.card {
   & > * {
     padding: 1.5em;
     background-color: var(--colorG27);
@@ -63,13 +120,38 @@
 }
 
 .user-def {
+  --avatar-size: 3.5em;
   display: grid;
-  grid-template-columns: 3.5em minmax(0, 1fr);
+  grid-template-columns: var(--avatar-size) minmax(0, 1fr);
   grid-template-areas: 'aa tt' 'aa uu';
+  column-gap: calc(var(--avatar-size) / 6);
+  align-items: center;
+
+  &.encard {
+    padding: .2em;
+    background-color: var(--colorG27);
+    border-radius : var(--avatar-size);
+  }
+
+  /*
+  & a {
+    text-decoration: none;
+  }
+  */
+
+  & > :first-child {
+    grid-area: tt;
+    font-style: normal;
+  }
+
+  & > :nth-child(2) {
+    grid-area: uu;
+    all: unset;
+  }
 
   & .avatar {
     grid-area: aa;
-    width: 3em;
+    width: var(--avatar-size);
     aspect-ratio: 1;
     background: var(--colorG13) var(--img, '');
     background-size: cover;
@@ -77,17 +159,7 @@
   }
 
   & address {
-    grid-area: tt;
-    font-style: normal;
     font-weight: bold;
     font-variant: small-caps;
-
-    & a {
-      text-decoration: none;
-    }
-  }
-
-  & time {
-    grid-area: uu;
   }
 }

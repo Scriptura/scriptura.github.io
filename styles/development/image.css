@@ -190,13 +190,29 @@ figure {
 }
 
 .mosaic {
+  & a {
+    &:where(:focus, :hover, :active) figure {
+      background-color: var(--colorW);
+    }
+  }
+
   & figure {
     padding: 0.2em;
+    transition: background-color 0.2s ease-in-out;
+
+    &:has([src$='.svg']) {
+      padding: 1em;
+    }
   }
 
   & img {
-    aspect-ratio: 1;
+    width: 100%;
+    aspect-ratio: 1/1;
     object-fit: cover;
+
+    &[src$='.svg'] {
+      object-fit: contain;
+    }
   }
 
   & button {
@@ -210,26 +226,57 @@ figure {
 .preview-container {
   display: grid;
   background-color: #222;
-  &[data-input-id='input-file'] { /* @todo A supprimer si l'on change la manière d'afficher l'image dans `/media-editor/:id` */
+
+  &:has([src$='.svg']) {
+    padding: 2em;
+  }
+
+  &[data-input-id='input-file'] {
+    /* @todo A supprimer si l'on change la manière d'afficher l'image dans `/media-editor/:id` */
     cursor: pointer;
   }
+
   &,
   & img {
     width: 100%;
     aspect-ratio: 1/1;
   }
+
   & figure {
     display: contents;
   }
+
   & img {
     place-self: center;
     object-fit: contain;
   }
+
   @media (width < $sizeS) {
     &,
     & img {
       max-width: 20em;
       margin-inline: auto;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .svg-animation.active {
+    & :where(path, circle, ellipse, line, polygon, polyline, rect, text, textPath, tref, tspan) {
+      stroke-width: 1;
+      fill: transparent;
+      stroke: var(--colorG38);
+      animation: anim-svg var(--anim-svg, 10s) cubic-bezier(0.5, 0, 1, 0) forwards;
+    }
+  }
+
+  @keyframes anim-svg {
+    80% {
+      stroke-dashoffset: 0;
+      stroke: var(--colorG38);
+    }
+    to {
+      stroke: var(--colorT2);
     }
   }
 }

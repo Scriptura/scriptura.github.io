@@ -1,5 +1,5 @@
 @charset "utf-8"; /* Les guillemets doubles évitents une erreur au validateur du W3C. @see https:/* validator.w3.org/ */ /* @note Doublage des variables Sass par les variables CSS natives impliquées dans les médias queries. @todo en attendant un support total d'usage pour les variables natives. */ /* @subsection Breakpoints */ /* @bugfix Nécessité de préciser deux chiffres après la virgule pour éviter un arrondissement de la valeur par les navigateurs. */ /* @note L'idée étant d'avoir une précision au-délà du pixel, nous évitant ainsi de devoir utiliser les opérateur logiques CSS4 de type inclusifs (exemple : `<=`). @todo En test...*/ /* @note La fonction calc() n'est pas implémentée pour les media queries, ou alors partiellement (unité de même type). @see https://stackoverflow.com/questions/23667208 @todo À réévaluer dans le temps... */ /* @note Attention, il s'agit d'une valeur empirique qui tente d'anticiper la taille minimale nécessaire au menu en desktop. @todo À remplacer par une solution plus fiable à l'avenir, mais qui ne serait peut-être alors pas mobile first et pourrait poser des problèmes de reflow... */ :root {
-  --size-nav: 90.01em; /* @note Variable CSS utilisée en JavaScript. */
+  --size-nav: 97.01em; /* @note Variable CSS utilisée en JavaScript. */
   --gap: 1em; /* Gouttière, largeur entre deux modules */
   --wrap: 92em; /* calc(90em + var(--gap) * 2)*/ /* Largeur maximale du contenu (+ prise en compte du padding interne) */
 
@@ -1156,13 +1156,29 @@ ol {
     */
   }
 } .mosaic {
+  & a {
+    &:where(:focus, :hover, :active) figure {
+      background-color: var(--colorW);
+    }
+  }
+
   & figure {
     padding: 0.2em;
+    transition: background-color 0.2s ease-in-out;
+
+    &:has([src$='.svg']) {
+      padding: 1em;
+    }
   }
 
   & img {
-    aspect-ratio: 1;
+    width: 100%;
+    aspect-ratio: 1/1;
     object-fit: cover;
+
+    &[src$='.svg'] {
+      object-fit: contain;
+    }
   }
 
   & button {
@@ -1174,26 +1190,55 @@ ol {
 } .preview-container {
   display: grid;
   background-color: #222;
-  &[data-input-id='input-file'] { /* @todo A supprimer si l'on change la manière d'afficher l'image dans `/media-editor/:id` */
+
+  &:has([src$='.svg']) {
+    padding: 2em;
+  }
+
+  &[data-input-id='input-file'] {
+    /* @todo A supprimer si l'on change la manière d'afficher l'image dans `/media-editor/:id` */
     cursor: pointer;
   }
+
   &,
   & img {
     width: 100%;
     aspect-ratio: 1/1;
   }
+
   & figure {
     display: contents;
   }
+
   & img {
     place-self: center;
     object-fit: contain;
   }
+
   @media (width < 50.01em) {
     &,
     & img {
       max-width: 20em;
       margin-inline: auto;
+    }
+  }
+} @media (prefers-reduced-motion: no-preference) {
+  .svg-animation.active {
+    & :where(path, circle, ellipse, line, polygon, polyline, rect, text, textPath, tref, tspan) {
+      stroke-width: 1;
+      fill: transparent;
+      stroke: var(--colorG38);
+      animation: anim-svg var(--anim-svg, 10s) cubic-bezier(0.5, 0, 1, 0) forwards;
+    }
+  }
+
+  @keyframes anim-svg {
+    80% {
+      stroke-dashoffset: 0;
+      stroke: var(--colorG38);
+    }
+    to {
+      stroke: var(--colorT2);
     }
   }
 } /* @import 'mediaPlayer'; */ /* @import 'map'; */ /* @import 'card'; */ /* @import 'flip'; */ code,
