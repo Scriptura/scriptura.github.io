@@ -20,11 +20,8 @@ block main
     header(role='banner')
       h1.main-heading!= data._name
     figure.xs-center
-      svg.size.xs-scale.decorative-svg(role='img' focusable='false' style='--size-width:30em;--size-height:30em;--xs-scale:75%')
-        use(href='/sprites/various/MonogrammeTULivreDeKellsTEST.svg#1')
-    //-figure.xs-center
-      svg.size.xs-scale(role='img' focusable='false' style='--size-width:50em;--size-height:50em;--xs-scale:75%')
-        use(href='/sprites/various/LindisfarneChiRihoColor.svg#1')
+      svg.size.xs-scale.decorative-svg.sprite-to-inline.svg-animation.invisible(role='img' focusable='false' style='--size:35em;--xs-scale:75%')
+        use(href='/sprites/various/MonogrammeTULivreDeKellsTEST.svg#a')
     hr
     //-include includes/componentLinks
     h2.sr-only Voici quelques suggestions alternatives&nbsp;:
@@ -36,5 +33,3 @@ block main
       +list('paint-roller', 'SVG sprite using CSS variables', 'sprite2')
       +list('hammer', 'Sandboxes', 'sandboxes')
       +list('hammer', 'MesseInfo API', 'messeInfoApi')
-
-      

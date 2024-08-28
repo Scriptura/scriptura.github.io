@@ -14,7 +14,7 @@ block main
   article
     header(role='banner')
       h1.main-heading!= data._name
-    h2 Divers
+    h2.sr-only Divers
     .grid2.s-grid1.m-grid1.gap.gap-bottom.media-relationship(data-next-reading='true')
       figure.figure-media
         figcaption J'espère en silence - Dei Amoris Cantores
@@ -44,7 +44,6 @@ block main
         figcaption J'ai vu des fleuves d'eau vive - Emmanuel Music
         audio.media(controls)
           source(src='/medias/audios/ChantsChretiens/J-ai-vu-des-fleuves-d-eau-vive.mp3')
-    hr
     h2 Hymne acathiste
     .grid2.s-grid1.m-grid1.gap.media-relationship(data-next-reading='true')
       figure.figure-media
