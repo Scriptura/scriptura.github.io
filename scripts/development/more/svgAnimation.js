@@ -48,7 +48,7 @@ function restoreSvgAttributes(initialAttributesList) {
 // Fonction pour gérer les classes CSS des éléments SVG
 function manageSvgClasses(svg, action) {
   if (action === 'activate') {
-    svg.classList.remove('invisible')
+    svg.classList.remove('invisible-if-animation')
     svg.classList.add('active')
   } else if (action === 'deactivate') {
     svg.classList.remove('active')
