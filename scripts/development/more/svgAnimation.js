@@ -1,16 +1,15 @@
 // Fonction pour initialiser l'IntersectionObserver et commencer l'observation des SVG
 function initSvgObserver() {
-  const animatedSvgs = document.querySelectorAll('svg.svg-animation') // Déclaration locale
+  const animatedSvgs = document.querySelectorAll('svg.svg-animation')
 
   if (!animatedSvgs.length) return
 
   const observerOptions = {
-    // Déclaration locale pour éviter la redéclaration de `options`
     root: null,
     rootMargin: '0px',
     threshold: 0.5,
   }
-  const observer = new IntersectionObserver(handleSvgVisibility, observerOptions) // Déclaration locale
+  const observer = new IntersectionObserver(handleSvgVisibility, observerOptions)
 
   animatedSvgs.forEach(svg => observer.observe(svg))
   checkInitialVisibility(animatedSvgs, observer)

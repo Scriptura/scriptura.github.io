@@ -266,16 +266,16 @@ figure {
       stroke-width: 1;
       fill: transparent;
       stroke: var(--colorG38);
-      animation: anim-svg var(--anim-svg, 10s) cubic-bezier(0.5, 0, 1, 0) forwards;
+      animation: anim-svg var(--anim-svg, 5s) cubic-bezier(0.5, 0, 1, 0) forwards;
     }
   }
 
   @keyframes anim-svg {
-    80% {
-      stroke-dashoffset: 0;
+    90% {
       stroke: var(--colorG38);
     }
     to {
+      stroke-dashoffset: 0;
       stroke: var(--colorT2);
     }
   }

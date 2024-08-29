@@ -4,9 +4,9 @@ block variables
   - const documentType = '404'
   -
     const data = {
-      _name: 'Erreur 404 <span>.&nbsp;page non trouvée</span>',
-      _title: 'Erreur 404,page non trouvée',
-      _description: 'La page demandée n\'a pas été trouvée.'
+      _name: `Erreur 404 <span>.&nbsp;page non trouvée</span>`,
+      _title: `Erreur 404, page non trouvée`,
+      _description: `La page demandée n'a pas été trouvée.`
     }
 
 mixin list(icon, name, slug)
@@ -19,9 +19,20 @@ block main
   article
     header(role='banner')
       h1.main-heading!= data._name
-    figure.xs-center
-      svg.size.xs-scale.decorative-svg.sprite-to-inline.svg-animation.invisible(role='img' focusable='false' style='--size:35em;--xs-scale:75%')
-        use(href='/sprites/various/MonogrammeTULivreDeKellsTEST.svg#a')
+    .grid2.s-grid1.gap
+      figure.xs-center
+        svg.size.xs-scale.decorative-svg.sprite-to-inline.svg-animation.invisible(role='img' focusable='false' style='--size:35em;--xs-scale:75%')
+          use(href='/sprites/silos/195v.svg#a')
+      //-figure.xs-center
+        svg.size.xs-scale.decorative-svg.sprite-to-inline.svg-animation.invisible(role='img' focusable='false' style='--size:35em;--xs-scale:75%')
+          use(href='/sprites/various/MonogrammeTULivreDeKellsTEST.svg#a')
+      .center
+        .grid
+          .message-highlight
+                svg.icon(role='img' focusable='false')
+                  use(href='/sprites/util.svg#info')
+                div
+                  p La page que vous avez demandé n'existe pas ou a été supprimée.
     hr
     //-include includes/componentLinks
     h2.sr-only Voici quelques suggestions alternatives&nbsp;:
