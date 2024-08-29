@@ -133,9 +133,9 @@
     code hr(data-hr='★ ★ ★')
   hr(data-hr='★ ★ ★')
 hr(data-hr='✻ ✻ ✻')
-h2 Rendering test for a print
-.grid2.gap
+.grid2.s-grid1.gap
   div
+    h2 Rendering test for a print
     p
       code .cmd-print
     button.round-button.scale.cmd-print(type='button' aria-label='Print Stylesheet' style='--scale:120%')
@@ -144,9 +144,13 @@ h2 Rendering test for a print
     br
     .message-highlight
       svg.icon(role='img' focusable='false')
-        use(href='/sprites/util.svg#link')
+        use(href='/sprites/util.svg#paperclip')
       div
         p
           | Pour un test plus proche d'un site en production nous vous invitons à tester l'impression 
           a(href='/page/article.html') à partir de notre aticle de démonstration
           | .
+  .center
+    figure
+      svg.size.xs-scale.decorative-svg.sprite-to-inline.svg-animation.invisible(role='img' focusable='false' style='--size:25em;--xs-scale:75%')
+        use(href='/sprites/various/MonogrammeTULivreDeKellsTEST.svg#a')

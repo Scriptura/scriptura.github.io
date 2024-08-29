@@ -989,6 +989,7 @@ ol {
     transform: scale(1.03) translateZ(0);
   }
 } svg {
+  display: block; /* @note display: inline par défaut */
   max-width: 100%;
   fill: currentcolor;
 } .decorative-svg {

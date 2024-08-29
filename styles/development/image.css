@@ -1,4 +1,5 @@
 svg {
+  display: block; /* @note display: inline par défaut */
   max-width: 100%;
   fill: currentcolor;
 }
