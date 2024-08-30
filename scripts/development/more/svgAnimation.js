@@ -1,5 +1,13 @@
 // Fonction pour initialiser l'IntersectionObserver et commencer l'observation des SVG
 function initSvgObserver() {
+  // Vérifier si l'utilisateur n'a pas de préférence pour réduire les animations
+  const prefersNormalMotion = window.matchMedia('(prefers-reduced-motion: no-preference)').matches
+
+  if (!prefersNormalMotion) {
+    console.log("Les animations sont désactivées car l'utilisateur préfère réduire les animations.")
+    return // Ne pas lancer les animations
+  }
+
   const animatedSvgs = document.querySelectorAll('svg.svg-animation')
 
   if (!animatedSvgs.length) return
