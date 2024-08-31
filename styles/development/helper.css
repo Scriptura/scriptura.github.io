@@ -32,12 +32,6 @@
   visibility: hidden;
 }
 
-@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
-  .invisible-if-animation {
-    visibility: hidden;
-  }
-}
-
 a[aria-disabled='true'] {
   /* @todo En expérimentation. */
   cursor: default; /* not-allowed */

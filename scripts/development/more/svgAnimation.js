@@ -1,4 +1,7 @@
-// Fonction pour initialiser l'IntersectionObserver et commencer l'observation des SVG
+/**
+ * Initialise l'IntersectionObserver pour observer les SVG animés sur la page.
+ * Si l'utilisateur a activé la réduction des animations dans ses préférences, les animations ne seront pas déclenchées.
+ */
 function initSvgObserver() {
   // Vérifier si l'utilisateur n'a pas de préférence pour réduire les animations
   const prefersNormalMotion = window.matchMedia('(prefers-reduced-motion: no-preference)').matches
@@ -23,6 +26,12 @@ function initSvgObserver() {
   checkInitialVisibility(animatedSvgs, observer)
 }
 
+/**
+ * Définit les attributs d'animation des éléments <path> d'un SVG.
+ * 
+ * @param {SVGPathElement} path - Un élément <path> du SVG.
+ * @returns {Object} - Un objet contenant le chemin d'origine et ses attributs initiaux.
+ */
 function setSvgAnimationAttributes(path) {
   const initialAttributes = {
     strokeDasharray: path.getAttribute('stroke-dasharray'),
@@ -42,7 +51,11 @@ function setSvgAnimationAttributes(path) {
   return { path, ...initialAttributes }
 }
 
-// Fonction pour restaurer les attributs SVG après l'animation
+/**
+ * Restaure les attributs des éléments <path> après l'animation.
+ * 
+ * @param {Array<Object>} initialAttributesList - Liste des objets contenant les éléments <path> et leurs attributs initiaux.
+ */
 function restoreSvgAttributes(initialAttributesList) {
   initialAttributesList.forEach(({ path, strokeDasharray, strokeDashoffset, fill, stroke, strokeWidth }) => {
     strokeDasharray !== null ? path.setAttribute('stroke-dasharray', strokeDasharray) : path.removeAttribute('stroke-dasharray')
@@ -53,7 +66,12 @@ function restoreSvgAttributes(initialAttributesList) {
   })
 }
 
-// Fonction pour gérer les classes CSS des éléments SVG
+/**
+ * Gère les classes CSS d'un élément SVG pour activer ou désactiver l'animation.
+ * 
+ * @param {SVGElement} svg - L'élément SVG à manipuler.
+ * @param {string} action - L'action à effectuer ('activate' pour activer l'animation, 'deactivate' pour la désactiver).
+ */
 function manageSvgClasses(svg, action) {
   if (action === 'activate') {
     svg.classList.remove('invisible-if-animation')
@@ -63,7 +81,13 @@ function manageSvgClasses(svg, action) {
   }
 }
 
-// Fonction principale de gestion de la visibilité des SVG
+/**
+ * Fonction principale pour gérer la visibilité des SVG et déclencher les animations.
+ * Appelée par l'IntersectionObserver lorsque les éléments SVG deviennent visibles ou invisibles.
+ * 
+ * @param {IntersectionObserverEntry[]} entries - Les entrées de l'observateur contenant les éléments SVG.
+ * @param {IntersectionObserver} observer - L'instance de l'IntersectionObserver utilisée pour observer les SVG.
+ */
 async function handleSvgVisibility(entries, observer) {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
@@ -88,7 +112,12 @@ async function handleSvgVisibility(entries, observer) {
   })
 }
 
-// Fonction pour vérifier les SVGs déjà visibles au chargement
+/**
+ * Vérifie la visibilité initiale des SVG au chargement de la page et déclenche l'animation si nécessaire.
+ * 
+ * @param {NodeListOf<SVGElement>} animatedSvgs - Liste des SVGs à observer.
+ * @param {IntersectionObserver} observer - L'instance de l'IntersectionObserver utilisée pour observer les SVG.
+ */
 function checkInitialVisibility(animatedSvgs, observer) {
   animatedSvgs.forEach(svg => {
     const rect = svg.getBoundingClientRect()

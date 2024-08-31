@@ -1,5 +1,6 @@
 /**
  * Remplace un élément <use> SVG par le contenu inline du symbole SVG référencé.
+ * Ce script n'a de raison d'être que pour permettre l'animation du SVG.
  *
  * Cette fonction recherche des éléments <use> avec la classe 'sprite-to-inline',
  * récupère le fichier SVG correspondant, extrait le symbole avec l'ID spécifié,
@@ -14,6 +15,11 @@
  * @throws {Error} Lance une erreur si le fichier SVG ne peut pas être chargé ou parsé.
  */
 async function svgSpriteToInline() {
+  // Vérifier si l'utilisateur n'a pas de préférence pour réduire les animations
+  const prefersNormalMotion = window.matchMedia('(prefers-reduced-motion: no-preference)').matches
+
+  if (!prefersNormalMotion) return
+
   const svgUseElements = document.querySelectorAll('.sprite-to-inline use')
 
   for (const svgUseElement of svgUseElements) {
