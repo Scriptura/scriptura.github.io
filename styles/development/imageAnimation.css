@@ -1,9 +1,8 @@
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
-  /* @note Animation sur des SVGs. */
   .invisible-if-animation {
     visibility: hidden;
   }
-  
+
   .svg-animation.active {
     & :where(path, circle, ellipse, line, polygon, polyline, rect, text, textPath, tref, tspan) {
       stroke-width: 1;

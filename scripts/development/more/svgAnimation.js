@@ -3,12 +3,11 @@
  * Si l'utilisateur a activé la réduction des animations dans ses préférences, les animations ne seront pas déclenchées.
  */
 function initSvgObserver() {
-  // Vérifier si l'utilisateur n'a pas de préférence pour réduire les animations
   const prefersNormalMotion = window.matchMedia('(prefers-reduced-motion: no-preference)').matches
 
   if (!prefersNormalMotion) {
     console.log("Les animations sont désactivées car l'utilisateur préfère réduire les animations.")
-    return // Ne pas lancer les animations
+    return
   }
 
   const animatedSvgs = document.querySelectorAll('svg.svg-animation')
@@ -36,17 +35,17 @@ function setSvgAnimationAttributes(path) {
   const initialAttributes = {
     strokeDasharray: path.getAttribute('stroke-dasharray'),
     strokeDashoffset: path.getAttribute('stroke-dashoffset'),
-    fill: path.getAttribute('fill'),
-    stroke: path.getAttribute('stroke'),
-    strokeWidth: path.getAttribute('stroke-width'),
+    //fill: path.getAttribute('fill'),
+    //stroke: path.getAttribute('stroke'),
+    //strokeWidth: path.getAttribute('stroke-width'),
   }
 
   const pathLength = path.getTotalLength()
   path.setAttribute('stroke-dasharray', pathLength)
   path.setAttribute('stroke-dashoffset', pathLength)
-  path.setAttribute('fill', 'transparent')
-  path.setAttribute('stroke', 'orange')
-  path.setAttribute('stroke-width', '1')
+  //path.setAttribute('fill', 'transparent')
+  //path.setAttribute('stroke', 'orange')
+  //path.setAttribute('stroke-width', '1')
 
   return { path, ...initialAttributes }
 }
@@ -60,9 +59,9 @@ function restoreSvgAttributes(initialAttributesList) {
   initialAttributesList.forEach(({ path, strokeDasharray, strokeDashoffset, fill, stroke, strokeWidth }) => {
     strokeDasharray !== null ? path.setAttribute('stroke-dasharray', strokeDasharray) : path.removeAttribute('stroke-dasharray')
     strokeDashoffset !== null ? path.setAttribute('stroke-dashoffset', strokeDashoffset) : path.removeAttribute('stroke-dashoffset')
-    fill !== null ? path.setAttribute('fill', fill) : path.removeAttribute('fill')
-    stroke !== null ? path.setAttribute('stroke', stroke) : path.removeAttribute('stroke')
-    strokeWidth !== null ? path.setAttribute('stroke-width', strokeWidth) : path.removeAttribute('stroke-width')
+    //fill !== null ? path.setAttribute('fill', fill) : path.removeAttribute('fill')
+    //stroke !== null ? path.setAttribute('stroke', stroke) : path.removeAttribute('stroke')
+    //strokeWidth !== null ? path.setAttribute('stroke-width', strokeWidth) : path.removeAttribute('stroke-width')
   })
 }
 
