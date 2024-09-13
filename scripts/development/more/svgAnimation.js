@@ -35,17 +35,11 @@ function setSvgAnimationAttributes(path) {
   const initialAttributes = {
     strokeDasharray: path.getAttribute('stroke-dasharray'),
     strokeDashoffset: path.getAttribute('stroke-dashoffset'),
-    //fill: path.getAttribute('fill'),
-    //stroke: path.getAttribute('stroke'),
-    //strokeWidth: path.getAttribute('stroke-width'),
   }
 
-  const pathLength = path.getTotalLength()
+  const pathLength = path.getTotalLength() // Math.round(path.getTotalLength())
   path.setAttribute('stroke-dasharray', pathLength)
   path.setAttribute('stroke-dashoffset', pathLength)
-  //path.setAttribute('fill', 'transparent')
-  //path.setAttribute('stroke', 'orange')
-  //path.setAttribute('stroke-width', '1')
 
   return { path, ...initialAttributes }
 }
@@ -59,9 +53,6 @@ function restoreSvgAttributes(initialAttributesList) {
   initialAttributesList.forEach(({ path, strokeDasharray, strokeDashoffset, fill, stroke, strokeWidth }) => {
     strokeDasharray !== null ? path.setAttribute('stroke-dasharray', strokeDasharray) : path.removeAttribute('stroke-dasharray')
     strokeDashoffset !== null ? path.setAttribute('stroke-dashoffset', strokeDashoffset) : path.removeAttribute('stroke-dashoffset')
-    //fill !== null ? path.setAttribute('fill', fill) : path.removeAttribute('fill')
-    //stroke !== null ? path.setAttribute('stroke', stroke) : path.removeAttribute('stroke')
-    //strokeWidth !== null ? path.setAttribute('stroke-width', strokeWidth) : path.removeAttribute('stroke-width')
   })
 }
 
