@@ -20,18 +20,31 @@ const startPage = (() => {
 })()
 
 /**
- * Fonction qui vérifie si une tuile du serveur de tuiles est disponible.
- * @param {string} url - URL du serveur de tuiles.
+ * Fonction qui vérifie la disponibilité d'une tuile sur un serveur de tuiles spécifique avec une stratégie de retry.
+ * @param {string} urlTemplate - Modèle d'URL du serveur de tuiles avec des sous-domaines {s}.
+ * @param {Array<string>} subdomains - Liste des sous-domaines à tester (e.g. ['a', 'b', 'c']).
+ * @param {number} retries - Nombre de tentatives par sous-domaine.
+ * @param {number} delay - Délai entre chaque tentative en millisecondes.
  * @returns {Promise<boolean>} - Résout true si la tuile est disponible, false sinon.
  */
-const checkTileServer = async url => {
-  const tileUrl = url.replace('{z}', '0').replace('{x}', '0').replace('{y}', '0') // Test de la tuile (0,0,0)
-  try {
-    const response = await fetch(tileUrl, { method: 'GET' })
-    return response.ok // Si la réponse est ok (code 2xx), le serveur est disponible
-  } catch (error) {
-    return false // Si une erreur survient, le serveur est considéré comme indisponible
+const checkTileServerWithSubdomainsAndRetry = async (urlTemplate, subdomains = ['a', 'b', 'c'], retries = 3, delay = 1000) => {
+  for (const subdomain of subdomains) {
+    const tileUrl = urlTemplate.replace('{s}', subdomain).replace('{z}', '16').replace('{x}', '33440').replace('{y}', '23491') // Test d'une tuile existante
+
+    for (let attempt = 1; attempt <= retries; attempt++) {
+      try {
+        const response = await fetch(tileUrl, { method: 'GET' })
+        if (response.ok) {
+          return true // Si la réponse est ok (code 2xx), le serveur est disponible
+        }
+      } catch (error) {
+        // Erreur de requête, continuer à essayer
+      }
+      // Attendre avant de réessayer
+      await new Promise(resolve => setTimeout(resolve, delay))
+    }
   }
+  return false // Si toutes les tentatives échouent, le serveur est considéré comme indisponible
 }
 
 const maps = async () => {
@@ -45,11 +58,11 @@ const maps = async () => {
       P = JSON.parse(el.dataset.places),
       markers = []
 
-    // URL du serveur de tuiles à tester
+    // URL du serveur de tuiles à tester (avec sous-domaines pour OSM France)
     let tileServer = el.dataset.tileserver || titleServerDefault
 
-    // Test de disponibilité du serveur de tuiles personnalisé
-    const isTileServerAvailable = await checkTileServer(tileServer)
+    // Test de disponibilité du serveur de tuiles personnalisé avec retry (et sous-domaines)
+    const isTileServerAvailable = await checkTileServerWithSubdomainsAndRetry(tileServer)
 
     // Si le serveur de tuiles personnalisé n'est pas disponible, on passe au serveur par défaut
     if (!isTileServerAvailable) {
@@ -66,6 +79,7 @@ const maps = async () => {
 
     // Gestion de l'erreur de tuiles (fallback vers serveur par défaut si une tuile échoue)
     tileLayer.on('tileerror', () => {
+      console.error('Erreur de tuile. Basculement vers le serveur par défaut.')
       L.tileLayer(titleServerDefault).addTo(map)
     })
 
