@@ -7,15 +7,34 @@ const mapsIdAdd = (() => {
   })
 })()
 
-// @note Permet une animation unique en CSS pour les marqueurs au lancement de la page.
+// @note Permet une animation unique en CSS pour les marqueurs lorsque la carte est visible par l'utilisateur.
 const startPage = (() => {
-  const html = document.documentElement,
-    c = 'start-map'
-  html.classList.add(c)
-  window.addEventListener('load', function () {
-    setTimeout(() => {
-      html.classList.remove(c)
-    }, 1500)
+  const c = 'start-map'
+
+  // Sélectionner toutes les cartes avec la classe .map.
+  const mapElements = document.querySelectorAll('.map')
+
+  // Création de l'observer pour chaque carte.
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+        const map = entry.target
+        map.classList.add(c)
+
+        // Lancer l'animation et retirer la classe après 1,5 seconde.
+        setTimeout(() => {
+          map.classList.remove(c)
+        }, 1500)
+
+        // On arrête d'observer la carte une fois l'animation déclenchée.
+        observer.unobserve(map)
+      }
+    })
+  }, { threshold: [0.5] }) // Les cartes doivent être visibles à 50%.
+
+  // Observer chaque carte.
+  mapElements.forEach(map => {
+    observer.observe(map)
   })
 })()
 
