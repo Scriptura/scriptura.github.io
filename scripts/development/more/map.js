@@ -53,17 +53,20 @@ const checkTileServerWithSubdomainsAndRetry = async (urlTemplate, subdomains = [
     for (let attempt = 1; attempt <= retries; attempt++) {
       try {
         const response = await fetch(tileUrl, { method: 'GET' })
+        //console.log(response) => retournera un JSON, avec notamment l'état du serveur (200, etc) et l'URL d'une tuile à tester.
         if (response.ok) {
-          return true // Si la réponse est ok (code 2xx), le serveur est disponible
+          console.log(`Map : chargement des tuiles.`)
+          return true
         }
       } catch (error) {
-        // Erreur de requête, continuer à essayer
+        console.error(`Map : échec du chargement des tuiles ; une nouvelle tentative de chargement va débuter...`)
       }
       // Attendre avant de réessayer
       await new Promise(resolve => setTimeout(resolve, delay))
     }
   }
-  return false // Si toutes les tentatives échouent, le serveur est considéré comme indisponible
+  console.error(`Map : serveur de tuiles indisponible.`)
+  return false
 }
 
 const maps = async () => {

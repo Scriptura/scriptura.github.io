@@ -20,14 +20,25 @@ if (!window.print) document.documentElement.classList.add('no-print') // @see Fi
 // @description Expérience hors ligne pour application web progressive (PWA)
 // -----------------------------------------------------------------------------
 
-const registerServiceWorker = async () => {
-  // @see https://developer.mozilla.org/fr/docs/Web/API/Service_Worker_API/Using_Service_Workers
+/**
+ * Enregistre un Service Worker pour l'application si le navigateur le supporte.
+ * @see https://developer.mozilla.org/fr/docs/Web/API/Service_Worker_API/Using_Service_Workers
+ * @async
+ * @function
+ * @returns {Promise<void>} Une promesse qui se résout lorsque l'enregistrement du Service Worker est terminé.
+ */
+async function registerServiceWorker() {
   if ('serviceWorker' in navigator) {
     try {
       const registration = await navigator.serviceWorker.register('/sw.js')
-      if (registration.installing) console.log('Installation du service worker en cours')
-      else if (registration.waiting) console.log('Service worker installé')
-      else if (registration.active) console.log('Service worker actif')
+
+      if (registration.installing) {
+        console.log('Installation du service worker en cours')
+      } else if (registration.waiting) {
+        console.log('Service worker installé')
+      } else if (registration.active) {
+        console.log('Service worker actif')
+      }
     } catch (error) {
       console.error(`L'enregistrement du service worker a échoué : ${error}`)
     }
@@ -84,37 +95,54 @@ const getScriptRequests = (() => {
     '.input-add-terms',
     '.flip',
     '.sprite-to-inline',
-    '.svg-animation'
+    '.svg-animation',
   ]
   if (selectors.some(selector => document.querySelector(selector))) getScript('/scripts/more.js')
 })()
 
 // -----------------------------------------------------------------------------
-// @section     Get Styles
+// @section     Load Styles
 // @description Appel de styles
 // -----------------------------------------------------------------------------
 
 /**
- * @param {string} url : une url de script
- * @param {string} media : le media pour lequel les styles sont destinés, par défaut : 'all'
+ * Fonction permettant d'ajouter un fichier CSS au document
+ *
+ * @param {string} url - L'URL du fichier CSS à charger
+ * @param {string} [media='all'] - Le média pour lequel les styles sont destinés (par défaut : 'all')
+ * @returns {Promise<string>} - Une promesse qui est résolue lorsque le fichier CSS est chargé avec succès
  */
-
-const getStyle = (url, media = 'all') =>
-  new Promise((resolve, reject) => {
-    // @see https://stackoverflow.com/questions/16839698#61903296
+function loadStyle(url, media = 'all') {
+  return new Promise((resolve, reject) => {
     const link = document.createElement('link')
     link.rel = 'stylesheet'
     link.href = url
     link.media = media
+    link.onload = () => resolve(url)
+    link.onerror = () => reject(new Error(`Failed to load ${url}`))
     //document.head.appendChild(link)
     const target = document.querySelector('[rel=stylesheet]')
     document.head.insertBefore(link, target.nextSibling)
   })
+}
 
-const getStyles = (() => {
-  if (document.querySelector('pre > code[class*=language]')) getStyle('/styles/prism.css', 'screen')
-  if (document.querySelector('[class*=map]')) getStyle('/libraries/leaflet/leaflet.css', 'screen, print')
-})()
+/**
+ * Fonction pour charger conditionnellement les styles nécessaires à la page
+ */
+async function loadConditionalStyles() {
+  try {
+    if (document.querySelector('pre > code[class*=language]')) {
+      await loadStyle('/styles/prism.css', 'screen')
+    }
+    if (document.querySelector('[class*=map]')) {
+      await loadStyle('/libraries/leaflet/leaflet.css', 'screen, print')
+    }
+  } catch (error) {
+    console.error('Erreur de chargement des styles:', error)
+  }
+}
+
+loadConditionalStyles()
 
 // -----------------------------------------------------------------------------
 // @section     Polyfills
@@ -134,36 +162,49 @@ if (!supportContainerQueries || !supportMediaQueriesRangeContext || isFirefox) {
 }
 */
 // -----------------------------------------------------------------------------
-// @section     Utilities
-// @description Utilitaires consommables pour les autres fonctions
+// @section     Fades
+// @description Apparition/disparition progressive
 // -----------------------------------------------------------------------------
 
-// @documentation Performance pour le script @see https://jsbench.me/trkbm71304/
-//const siblings = el => {
-//  for (const sibling of el.parentElement.children) if (sibling !== el) sibling.classList.add('color')
-//}
+/**
+ * Fait disparaître progressivement un élément en modifiant son opacité sur une durée spécifiée.
+ *
+ * @param {HTMLElement} el - L'élément à faire disparaître.
+ * @param {number} duration - La durée de l'animation en millisecondes.
+ */
+function fadeOut(el, duration) {
+  el.style.opacity = 1
 
-const fadeOut = (el, duration) => {
-  el.style.opacity = 1(function fade() {
+  const fade = () => {
     if ((el.style.opacity -= 30 / duration) < 0) {
       el.style.opacity = 0 // reset derrière la décrémentation
       el.style.display = 'none'
     } else {
-      requestAnimationFrame(fade)
+      window.requestAnimationFrame(fade)
     }
-  })()
+  }
+  fade()
 }
 
-const fadeIn = (el, duration) => {
+/**
+ * Fait apparaître progressivement un élément en modifiant son opacité sur une durée spécifiée.
+ *
+ * @param {HTMLElement} el - L'élément à faire apparaître.
+ * @param {number} duration - La durée de l'animation en millisecondes.
+ */
+function fadeIn(el, duration) {
   el.style.opacity = 0
-  el.style.display = 'block'(function fade() {
+  el.style.display = 'block'
+
+  const fade = () => {
     let op = parseFloat(el.style.opacity)
     if (!((op += 30 / duration) > 1)) {
       el.style.opacity = op
-      requestAnimationFrame(fade)
+      window.requestAnimationFrame(fade)
     }
     if (op > 0.99) el.style.opacity = 1 // reset derrière l'incrémentation
-  })()
+  }
+  fade()
 }
 
 // -----------------------------------------------------------------------------
@@ -171,11 +212,14 @@ const fadeIn = (el, duration) => {
 // @description Injection de spites SVG
 // -----------------------------------------------------------------------------
 
-// @params :
-// - `targetElement` : élément cible
-// - `spriteId` : nom du sprite
-// - `svgFile` : nom du fichier de sprite (`utils.svg` par défaut)
-const injectSvgSprite = (targetElement, spriteId, svgFile) => {
+/**
+ * Injecte un sprite SVG dans un élément cible.
+ *
+ * @param {HTMLElement} targetElement - L'élément dans lequel le sprite SVG sera injecté.
+ * @param {string} spriteId - L'identifiant du sprite à injecter.
+ * @param {string} [svgFile='util'] - Le nom du fichier de sprite (par défaut 'util' si non fourni).
+ */
+function injectSvgSprite(targetElement, spriteId, svgFile) {
   const path = '/sprites/' // Chemin des fichiers de sprites SVG
   svgFile = svgFile || 'util'
   const icon = `<svg role="img" focusable="false"><use href="${path + svgFile}.svg#${spriteId}"></use></svg>`
@@ -187,20 +231,42 @@ const injectSvgSprite = (targetElement, spriteId, svgFile) => {
 // @description Gestion des liens externes au site
 // -----------------------------------------------------------------------------
 
-// @note Par défaut tous les liens externes conduisent à l'ouverture d'un nouvel onglet, sauf les liens internes
+/**
+ * Ouvre tous les liens externes dans un nouvel onglet, sauf les liens internes.
+ * @note Par défaut, tous les liens externes conduisent à l'ouverture d'un nouvel onglet, sauf les liens internes.
+ */
+function openExternalLinksInNewTab() {
+  const links = document.querySelectorAll('a')
 
-const externalLinks = (() => {
-  document.querySelectorAll('a').forEach(a => {
-    if (a.hostname !== window.location.hostname) a.setAttribute('target', '_blank')
-  })
-})()
+  for (const link of links) {
+    if (link.hostname !== window.location.hostname) {
+      link.setAttribute('target', '_blank')
+    }
+  }
+}
+
+openExternalLinksInNewTab()
 
 // -----------------------------------------------------------------------------
 // @section     Cmd Print
 // @description Commande pour l'impression
 // -----------------------------------------------------------------------------
 
-for (const print of document.querySelectorAll('.cmd-print')) print.onclick = () => window.print()
+/**
+ * Ajoute un gestionnaire d'événement 'click' sur tous les éléments avec la classe '.cmd-print'
+ * pour déclencher l'impression de la fenêtre.
+ */
+function addPrintEventListener() {
+  const printButtons = document.querySelectorAll('.cmd-print')
+
+  for (const printButton of printButtons) {
+    printButton.onclick = function () {
+      window.print()
+    }
+  }
+}
+
+addPrintEventListener()
 
 // -----------------------------------------------------------------------------
 // @section     GDPR / gprd
