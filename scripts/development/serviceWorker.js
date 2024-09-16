@@ -1,19 +1,10 @@
 // @documentation @see https://developer.mozilla.org/fr/docs/Web/API/Service_Worker_API/Using_Service_Workers
-// @note Ce code s'exécute dans son propre worker ou thread :
 
-/**
- * Ajoute les ressources spécifiées au cache
- * @param {Array<string>} resources - Les URLs des ressources à mettre en cache
- * @returns {Promise<void>}
- */
-async function addResourcesToCache(resources) {
-  const cache = await caches.open('v10')
+const addResourcesToCache = async resources => {
+  const cache = await caches.open('v14')
   await cache.addAll(resources)
 }
 
-/**
- * Gestion de l'événement d'installation du Service Worker
- */
 self.addEventListener('install', event => {
   event.waitUntil(
     addResourcesToCache([
@@ -31,58 +22,136 @@ self.addEventListener('install', event => {
   )
 })
 
-/**
- * Met en cache une réponse pour une requête spécifique
- * @param {Request} request - La requête à mettre en cache
- * @param {Response} response - La réponse à mettre en cache
- * @returns {Promise<void>}
- */
-async function putInCache(request, response) {
-  const cache = await caches.open('v1') // Utilise le même cache que lors de l'installation
-  await cache.put(request, response) // Met la réponse en cache pour la requête
-}
+/*
+const putInCache = async (request, response) => {
+  const cache = await caches.open('v4');
+  await cache.put(request, response);
+};
 
-/**
- * Stratégie de mise en cache "cache first"
- * @param {Request} request - La requête à traiter
- * @param {string} fallbackUrl - URL de secours à utiliser en cas d'échec de la récupération
- * @returns {Promise<Response>} La réponse à fournir au navigateur
- */
-async function cacheFirst({ request, fallbackUrl }) {
-  // Tente de récupérer la réponse depuis le cache
-  const responseFromCache = await caches.match(request)
+const cacheFirst = async ({ request, preloadResponsePromise, fallbackUrl }) => {
+  // Pour commencer on essaie d'obtenir la ressource depuis le cache
+  const responseFromCache = await caches.match(request);
   if (responseFromCache) {
-    return responseFromCache
+    return responseFromCache;
   }
 
-  // Si la réponse n'est pas dans le cache, tente de la récupérer depuis le réseau
+  // Ensuite, on tente de l'obtenir du réseau
   try {
-    const responseFromNetwork = await fetch(request)
-    // Clone la réponse pour mettre une copie en cache et renvoyer l'originale
-    await putInCache(request, responseFromNetwork.clone())
-    return responseFromNetwork
+    const responseFromNetwork = await fetch(request);
+    // Une réponse ne peut être utilisée qu'une fois
+    // On la clone pour en mettre une copie en cache
+    // et servir l'originale au navigateur
+    putInCache(request, responseFromNetwork.clone());
+    return responseFromNetwork;
   } catch (error) {
-    // Si la récupération depuis le réseau échoue, utilise l'URL de secours si disponible
-    const fallbackResponse = await caches.match(fallbackUrl)
+    const fallbackResponse = await caches.match(fallbackUrl);
     if (fallbackResponse) {
-      return fallbackResponse
+      return fallbackResponse;
     }
-    // En cas d'absence de réponse de secours, retourne une réponse d'erreur générique
+    // Quand il n'y a même pas de contenu par défaut associé
+    // on doit tout de même renvoyer un objet Response
     return new Response("Une erreur réseau s'est produite", {
       status: 408,
-      headers: { 'Content-Type': 'text/plain' },
-    })
+      headers: { "Content-Type": "text/plain" },
+    });
   }
-}
+};
 
-/**
- * Gestion de l'événement de récupération des requêtes
- */
-self.addEventListener('fetch', event => {
+self.addEventListener('fetch', (event) => {
   event.respondWith(
     cacheFirst({
       request: event.request,
-      fallbackUrl: '/medias/images/demo/test-original.webp', // URL de secours à utiliser en cas d'échec
+      fallbackUrl: '/medias/images/demo/test-original.webp',
     }),
+  );
+});
+*/
+
+//////////////////// NOUVELLE SOLUTION, GÉNIALE POUR LE CACHE, MAIS PROVOQUE DES ERREURS 408 AUX POSTS : ////////////////////////
+
+/*
+// Fonction pour ajouter des ressources au cache
+async function addResourcesToCache(resources) {
+  const cache = await caches.open('v11')
+  await cache.addAll(resources)
+}
+
+// Fonction pour vérifier si une ressource est corrompue
+async function isCorrupted(response) {
+  if (!response || !response.ok) return true
+
+  try {
+    // Par exemple, on vérifie si la taille de la vidéo dépasse un certain seuil.
+    const clonedResponse = response.clone()
+    const contentLength = clonedResponse.headers.get('Content-Length')
+
+    // Si la taille du fichier est petite, il peut être corrompu (par exemple < 100 octets)
+    if (contentLength && parseInt(contentLength, 10) < 100) {
+      return true
+    }
+
+    return false
+  } catch (error) {
+    // Si une erreur survient durant la vérification, considérer comme corrompu
+    return true
+  }
+}
+
+// Fonction pour mettre une ressource en cache
+async function putInCache(request, response) {
+  const cache = await caches.open('v11')
+  await cache.put(request, response)
+}
+
+// Fonction pour gérer le cache avec fallback réseau
+async function cacheThenNetwork(request) {
+  const cache = await caches.open('v11')
+  const cachedResponse = await cache.match(request)
+
+  // Vérification de l'intégrité du fichier
+  if (cachedResponse && !(await isCorrupted(cachedResponse))) {
+    return cachedResponse
+  }
+
+  // Si le fichier est corrompu ou absent, on tente de le récupérer depuis le réseau
+  try {
+    const networkResponse = await fetch(request)
+
+    // Si la réponse réseau est valide, la mettre en cache
+    if (networkResponse && networkResponse.ok) {
+      putInCache(request, networkResponse.clone())
+      return networkResponse
+    }
+
+    // Si la réponse réseau n'est pas valide, retourner l'ancienne (corrompue) si possible
+    return cachedResponse || new Response('Ressource non disponible et fichier corrompu.', { status: 408 })
+  } catch (error) {
+    // Si la récupération réseau échoue, retourner le cache même corrompu si possible
+    return cachedResponse || new Response('Ressource non disponible hors ligne.', { status: 408 })
+  }
+}
+
+// Mise en cache initiale des ressources lors de l'installation du Service Worker
+self.addEventListener('install', event => {
+  event.waitUntil(
+    addResourcesToCache([
+      '/',
+      '/styles/main.css',
+      '/styles/print.css',
+      '/scripts/main.js',
+      '/scripts/more.js',
+      '/fonts/notoSans-Regular.woff2',
+      '/fonts/notoSerif-Regular.woff2',
+      '/sprites/util.svg',
+      '/sprites/player.svg',
+      '/medias/images/logo/logo.svg',
+      // Ajoutez d'autres fichiers si nécessaire
+    ]),
   )
 })
+
+// Gestion des requêtes via le Service Worker
+self.addEventListener('fetch', event => {
+  event.respondWith(cacheThenNetwork(event.request))
+})
+*/

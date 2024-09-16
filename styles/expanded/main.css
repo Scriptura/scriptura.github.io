@@ -3794,10 +3794,6 @@ h2.legend {
   border: none;
   outline: none;
 
-  &.hide {
-    display: none;
-  }
-
   & svg {
     height: 2em;
     width: 2em;
@@ -3806,7 +3802,7 @@ h2.legend {
   }
 
   &:focus-within svg {
-    fill: var(--color5);
+    fill: var(--colorW);
   }
 
   &:where(:hover, :active) svg {
@@ -4811,11 +4807,9 @@ body::after {
   }
 } .sr-only {
   /* @note Caché visuellement mais disponible pour les lecteurs d'écran. */
-  /* @see https://github.com/h5bp/html5-boilerplate/blob/master/dist/css/style.css */
   position: absolute;
-  /* @note Plus propre à l'inspection des éléments que `clip-path: inset(50%)` */
   transform: scale(0);
-} /*
+} /* @see https://github.com/h5bp/html5-boilerplate/blob/master/dist/css/style.css
 .sr-only {
   position: absolute;
   overflow: hidden;
@@ -4911,21 +4905,35 @@ body::after {
     display: none;
     filter: invert(1);
   }
-} @keyframes anim-fade-in {
+} .fade-in {
+  visibility: visible;
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 1s ease-in;
+} .fade-out {
+  visibility: hidden;
+  opacity: 0;
+  transform: scale(0);
+  transition: opacity 1s ease-out, visibility 0s 1s ease-out, transform 0s 1s ease-out;
+} /*
+@keyframes anim-fade-in {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
   }
-} @keyframes anim-fade-out {
+}
+
+@keyframes anim-fade-out {
   from {
     opacity: 1;
   }
   to {
     opacity: 0;
   }
-} .freeze {
+}
+*/ .freeze {
   overflow: clip;
 } /* @note Les helpers s'appliquent à la fin dans le but d'écraser des styles tels que font-size. */
 

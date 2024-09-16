@@ -9,7 +9,7 @@
 // document.documentElement.classList.replace('no-js', 'js') // @note Remplacé par la solution full CSS "@media (scripting: none)"
 
 // printDetect :
-if (!window.print) document.documentElement.classList.add('no-print') // @see Firefox Android a perdu sa fonction d'impression...
+window.print || document.documentElement.classList.add('no-print') // @see Firefox Android a perdu sa fonction d'impression...
 
 // touchDetect
 // @see https://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript
@@ -72,7 +72,7 @@ const getScript = (url, hook = 'footer') =>
     }
     if (hook === 'footer') document.body.appendChild(script)
     else if (hook === 'head') document.head.appendChild(script)
-    else console.error(`Error: le choix de l'élement html pour getScript() n'est pas correct.`)
+    else console.error(`Error: le choix de l'élement HTML pour getScript() n'est pas correct.`)
   })
 
 const getScriptRequests = (() => {
@@ -161,51 +161,6 @@ if (!supportContainerQueries || !supportMediaQueriesRangeContext || isFirefox) {
   document.querySelectorAll('[class^=grid]').forEach(grid => grid.parentElement.classList.add('parent-grid')) // @affected Firefox =< v108 @note Compense le non support de :has() sur les grilles.
 }
 */
-// -----------------------------------------------------------------------------
-// @section     Fades
-// @description Apparition/disparition progressive
-// -----------------------------------------------------------------------------
-
-/**
- * Fait disparaître progressivement un élément en modifiant son opacité sur une durée spécifiée.
- *
- * @param {HTMLElement} el - L'élément à faire disparaître.
- * @param {number} duration - La durée de l'animation en millisecondes.
- */
-function fadeOut(el, duration) {
-  el.style.opacity = 1
-
-  const fade = () => {
-    if ((el.style.opacity -= 30 / duration) < 0) {
-      el.style.opacity = 0 // reset derrière la décrémentation
-      el.style.display = 'none'
-    } else {
-      window.requestAnimationFrame(fade)
-    }
-  }
-  fade()
-}
-
-/**
- * Fait apparaître progressivement un élément en modifiant son opacité sur une durée spécifiée.
- *
- * @param {HTMLElement} el - L'élément à faire apparaître.
- * @param {number} duration - La durée de l'animation en millisecondes.
- */
-function fadeIn(el, duration) {
-  el.style.opacity = 0
-  el.style.display = 'block'
-
-  const fade = () => {
-    let op = parseFloat(el.style.opacity)
-    if (!((op += 30 / duration) > 1)) {
-      el.style.opacity = op
-      window.requestAnimationFrame(fade)
-    }
-    if (op > 0.99) el.style.opacity = 1 // reset derrière l'incrémentation
-  }
-  fade()
-}
 
 // -----------------------------------------------------------------------------
 // @section     Sprites SVG
@@ -353,26 +308,41 @@ const colorInput = (() => {
 // @description Défilement vers le haut
 // -----------------------------------------------------------------------------
 
-const scrollToTop = (() => {
-  const footer = document.querySelector('.footer'),
-    button = document.createElement('button')
+function scrollToTop() {
+  const footer = document.querySelector('.footer')
+  const button = document.createElement('button')
+
   button.type = 'button'
   button.classList.add('scroll-top')
   button.setAttribute('aria-label', 'Scroll to top')
   injectSvgSprite(button, 'arrow-up')
   footer.appendChild(button)
+
   const item = document.querySelector('.scroll-top')
-  item.classList.add('hide')
-  const position = () => {
+  item.classList.add('fade-out')
+
+  function position() {
     const yy = window.innerHeight / 2 // @note Scroll sur la demi-hauteur d'une fenêtre avant apparition de la flèche.
     let y = window.scrollY
-    if (y > yy) item.classList.remove('hide')
-    else item.classList.add('hide')
+    if (y > yy) {
+      item.classList.remove('fade-out')
+      item.classList.add('fade-in')
+    } else {
+      item.classList.add('fade-out')
+      item.classList.remove('fade-in')
+    }
   }
+
   window.addEventListener('scroll', position)
-  const scroll = () => window.scrollTo({ top: 0 })
+
+  function scroll() {
+    window.scrollTo({ top: 0 })
+  }
+
   item.addEventListener('click', scroll, false)
-})()
+}
+
+scrollToTop()
 
 // -----------------------------------------------------------------------------
 // @section     Navigation
@@ -418,48 +388,13 @@ const mainMenu = (() => {
 })()
 
 // -----------------------------------------------------------------------------
-// @section     Drop cap
-// @description Création de lettrines
-// -----------------------------------------------------------------------------
-
-// @note Les propriétés applicables au pseudo-élément ::first-letter varient d'un navigateur à l'autre ; la solution retenue est un wrapper en javascript 'span.dropcap' sur la première lettre.
-// @note Ajout d'une class .dropcap sur le premier caractère du premier paragraphe enfant d'un élément comportant '.add-dropcap'.
-// @todo À convertir côté backend dans un helper.
-/*
-const addDropCap = (() => {
-  document
-    .querySelectorAll('.add-drop-cap > p:first-child')
-    .forEach(e => (e.innerHTML = e.innerHTML.replace(/^(\w)/, '<span class="drop-cap">$1</span>')))
-})()
-*/
-// -----------------------------------------------------------------------------
-// @section     Postponed footnotes
-// @description Report des notes de bas de page au côté du texte
-// -----------------------------------------------------------------------------
-/*
-const footnotes = (() => {
-  const notes = document.querySelectorAll('.footnotes > *')
-  let id = 1
-  for (const note of notes) {
-    const a = document.querySelector('#r' + id)
-    const clone = note.cloneNode(true)
-    clone.classList.add('note')
-    a.appendChild(clone)
-    //a.insertAdjacentHTML('afterEnd', clone)
-    id++
-  }
-})()
-*/
-
-// -----------------------------------------------------------------------------
 // @section     Horizontal progress bar
 // @description Barre de progression horizontale
 // -----------------------------------------------------------------------------
-/*
-// @note Intéressant techniquement, mais pas forcément oportun sur le site car fait double emploi avec la barre verticale.
-// @note Notre script est une version améliorée du lien suivant.
-// @see https://nouvelle-techno.fr/articles/creer-une-barre-de-progression-horizontale-en-haut-de-page
 
+// @note Solution intéressante techniquement mais pas forcément opportune sur le site car fait double emploi avec la barre verticale.
+// @see https://nouvelle-techno.fr/articles/creer-une-barre-de-progression-horizontale-en-haut-de-page
+/*
 window.onload = () => {
   const el = document.createElement('div')
   el.id = 'progress-page'
@@ -502,8 +437,15 @@ console.log('DISPLAY_MODE_CHANGED', displayMode)
 // @description Retour à la page précédente de l'historique de navigation
 // -----------------------------------------------------------------------------
 
-const goBack = () => window.history.back()
-document.querySelectorAll('.go-back').forEach(e => e.addEventListener('click', goBack))
+function goBack() {
+  window.history.back()
+}
+
+const goBackElements = document.querySelectorAll('.go-back')
+
+for (const element of goBackElements) {
+  element.addEventListener('click', goBack)
+}
 
 // -----------------------------------------------------------------------------
 // @section     Image Fallback
