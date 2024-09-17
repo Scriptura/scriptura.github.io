@@ -16,6 +16,67 @@ window.print || document.documentElement.classList.add('no-print') // @see Firef
 // @deprecated Script remplacé par règle CSS @media (hover hover) and (pointer fine)
 
 // -----------------------------------------------------------------------------
+// @section     Online Status
+// @description En ligne ou hors ligne
+// -----------------------------------------------------------------------------
+
+// Fonction pour vérifier si l'utilisateur est en ligne ou hors ligne
+function updateOnlineStatus() {
+  const htmlTag = document.documentElement // Sélectionne la balise <html>
+  
+  // Ajoute ou supprime la classe "offline" selon l'état de la connexion
+  if (navigator.onLine) {
+    console.log('online')
+    htmlTag.classList.remove('offline')
+  } else {
+    console.log('offline')
+    htmlTag.classList.add('offline')
+  }
+}
+
+// Écoute les événements 'online' et 'offline'
+window.addEventListener('online', updateOnlineStatus)
+window.addEventListener('offline', updateOnlineStatus)
+
+// Vérification initiale au chargement de la page
+updateOnlineStatus()
+
+// -----------------------------------------------------------------------------
+// @section     Service Unavailable
+// @description Test de l'indisponibilité du service
+// -----------------------------------------------------------------------------
+/*
+const serviceUnavailableClass = 'service-unavailable'
+
+const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://'
+const host = window.location.hostname || '127.0.0.1'
+const port = window.location.port || 7001
+
+const wsUrl = `${protocol}${host}:${port}`
+const socket = new WebSocket(wsUrl)
+
+console.log(wsUrl)
+
+socket.onopen = () => {
+  console.log('WebSocket connection established')
+  document.documentElement.classList.remove(serviceUnavailableClass)
+}
+
+socket.onmessage = event => {
+  console.log('Message from server:', event.data)
+}
+
+socket.onclose = () => {
+  console.log('WebSocket connection closed')
+  document.documentElement.classList.add(serviceUnavailableClass)
+}
+
+socket.onerror = error => {
+  console.error('WebSocket error:', error)
+  document.documentElement.classList.add(serviceUnavailableClass)
+}
+*/
+// -----------------------------------------------------------------------------
 // @section     Service Worker
 // @description Expérience hors ligne pour application web progressive (PWA)
 // -----------------------------------------------------------------------------

@@ -902,6 +902,10 @@ body {
       animation: anim-logo 0.5s ease-in-out;
     }
   }
+} .service-unavailable .logo-nav {
+  background-color: var(--color4);
+} .offline .logo-nav {
+  background-color: var(--color6);
 } @keyframes anim-logo {
   30% {
     transform: rotate(-30deg);
