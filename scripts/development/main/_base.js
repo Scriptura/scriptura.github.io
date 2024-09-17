@@ -163,6 +163,28 @@ if (!supportContainerQueries || !supportMediaQueriesRangeContext || isFirefox) {
 */
 
 // -----------------------------------------------------------------------------
+// @section     Preload Images
+// @description Précharge les images ayant l'attribut loading="lazy"
+// -----------------------------------------------------------------------------
+
+/**
+ * Précharge les images ayant l'attribut loading="lazy"
+ * en les téléchargeant après le chargement complet de la page.
+ * Cela permet d'améliorer les performances lors d'une navigation ultérieure.
+ * Notamment pour l'utilisation du cache avec un Service Worker.
+ */
+ function preloadImages() {
+  const images = document.querySelectorAll('img[loading="lazy"]')
+
+  images.forEach(img => {
+    const preloadedImage = new Image()
+    preloadedImage.src = img.src
+  })
+}
+
+window.addEventListener('load', preloadImages)
+
+// -----------------------------------------------------------------------------
 // @section     Sprites SVG
 // @description Injection de spites SVG
 // -----------------------------------------------------------------------------
