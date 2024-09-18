@@ -45,37 +45,21 @@ updateOnlineStatus()
 // @section     Service Unavailable
 // @description Test de l'indisponibilité du service
 // -----------------------------------------------------------------------------
-/*
-const serviceUnavailableClass = 'service-unavailable'
 
-const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://'
-const host = window.location.hostname || '127.0.0.1'
-const port = window.location.port || 7001
-
-const wsUrl = `${protocol}${host}:${port}`
-const socket = new WebSocket(wsUrl)
-
-console.log(wsUrl)
-
-socket.onopen = () => {
-  console.log('WebSocket connection established')
-  document.documentElement.classList.remove(serviceUnavailableClass)
+// Fonction pour ajouter la classe 'service-unavailable' à l'élément HTML
+function addServiceUnavailableClass() {
+  document.documentElement.classList.add('service-unavailable')
 }
 
-socket.onmessage = event => {
-  console.log('Message from server:', event.data)
+// Ecouter les messages envoyés par le Service Worker
+if (navigator.serviceWorker) {
+  navigator.serviceWorker.addEventListener('message', event => {
+    if (event.data && event.data.action === 'service-unavailable') {
+      addServiceUnavailableClass()
+    }
+  })
 }
 
-socket.onclose = () => {
-  console.log('WebSocket connection closed')
-  document.documentElement.classList.add(serviceUnavailableClass)
-}
-
-socket.onerror = error => {
-  console.error('WebSocket error:', error)
-  document.documentElement.classList.add(serviceUnavailableClass)
-}
-*/
 // -----------------------------------------------------------------------------
 // @section     Service Worker
 // @description Expérience hors ligne pour application web progressive (PWA)
