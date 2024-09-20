@@ -55,6 +55,7 @@ function addServiceUnavailableClass() {
 if (navigator.serviceWorker) {
   navigator.serviceWorker.addEventListener('message', event => {
     if (event.data && event.data.action === 'service-unavailable') {
+      console.log('Service unavailable (test)')
       addServiceUnavailableClass()
     }
   })
