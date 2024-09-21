@@ -1,4 +1,4 @@
-const CACHE_NAME = 'v42.6'
+const CACHE_NAME = 'v43'
 const MEDIA_CACHE_NAME = `media-${CACHE_NAME}`
 const OFFLINE_URL = '/offline.html'
 
@@ -30,6 +30,14 @@ async function addResourcesToCache(resources) {
 // Fonction pour mettre en cache une réponse réseau
 async function putInCache(request, response, cacheName = CACHE_NAME) {
   try {
+    // Vérifier les statuts cachables
+    const cachableStatuses = [200, 203, 204, 301, 302, 304, 307, 308]
+    
+    if (!cachableStatuses.includes(response.status)) {
+      console.warn(`Réponse avec statut ${response.status} non mise en cache pour ${request.url}`)
+      return
+    }
+
     const cache = await caches.open(cacheName)
     await cache.put(request, response)
   } catch (error) {
