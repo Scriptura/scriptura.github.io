@@ -1,0 +1,44 @@
+//- ATTENTION : cette page est un cas particulier qui demande à être compilé directement en HTML.
+//- Pour cela utilisez la commande : `pnpm html` (cf. le fichier package.json pour la commande de build).
+
+extends patternLayout
+
+block variables
+  - const documentType = '404'
+  -
+    const data = {
+      name: `Problème réseau <span>.&nbsp;Page offline</span>`,
+      title: `Problème réseau . Page offline`,
+      description: `Le réseau n'est pas disponible.`
+    }
+
+mixin list(icon, name, slug)
+  li
+    svg.icon(role='img' focusable='false')
+      use(href='/sprites/util.svg#' + icon)
+    a(href=`/${slug}`)= name
+
+block main
+  article
+    header(role='banner')
+      h1.main-heading!= data.name
+    .grid2.s-grid1.gap
+      //-figure.xs-center
+        svg.size.xs-scale.decorative-svg.sprite-to-inline.svg-animation.invisible-if-animation(role='img' focusable='false' style='--size:35em;--xs-scale:75%')
+          use(href='/sprites/silos/195v.svg#a')
+      figure.xs-center
+        svg.size.xs-scale.decorative-svg.sprite-to-inline.svg-animation.invisible-if-animation(role='img' focusable='false' style='--size:35em;--xs-scale:75%')
+          use(href='/sprites/various/MonogrammeTULivreDeKellsTEST.svg#a')
+      .center
+        .grid
+          .message-highlight
+                svg.icon(role='img' focusable='false')
+                  use(href='/sprites/util.svg#info')
+                div
+                  p Il semble que vous n'ayez pas de connexion Internet ou que le serveur soit indisponible.
+                  p Veuillez recharger la page lorsque vous serez connecté.
+    hr
+    button.go-back.button
+      svg.icon-inline.reverse(role='img' focusable='false')
+        use(href='/sprites/util.svg#arrow-right2')
+      | Retour à la page précédente
