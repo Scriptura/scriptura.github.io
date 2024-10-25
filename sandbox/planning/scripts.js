@@ -33,85 +33,60 @@ registerServiceWorker()
 // @section over
 // -----------------------------------------------------------------------------
 
-const schedule = [
-  'J',
-  'J',
-  'S',
-  'J',
-  'J',
-  'R',
-  'R',
-  'S',
-  'S',
-  'J',
-  'M',
-  'F',
-  'R',
-  'R',
-  'S',
-  'S',
-  'M',
-  'M',
-  'R',
-  'S',
-  'S',
-  'J',
-  'M',
-  'R',
-  'R',
-  'T',
-  'M',
-  'M',
-  'M',
-  'R',
-  'J',
-  'S',
-  'S',
-  'R',
-  'R',
-  'J',
-  'J',
-  'S',
-  'J',
-  'M',
-  'R',
-  'R',
-  'S',
-  'S',
-  'J',
-  'J',
-  'M',
-  'R',
-  'R',
-  'F',
-  'S',
-  'S',
-  'J',
-  'J',
-  'R',
-  'R',
-  'M',
-  'M',
-  'M',
-  'R',
-  'S',
-  'S',
-  'S',
-  'T',
-  'R',
-  'R',
-  'S',
-  'J',
-  'M',
-  'M',
-  'R',
-  'J',
-  'J',
-  'S',
-  'S',
-  'R',
-  'R',
+// prettier-ignore
+const rotationPatternIDE = [
+  'J', 'J', 'S', 'J', 'J', 'R', 'R',
+  'S', 'S', 'J', 'M', 'F', 'R', 'R',
+  'S', 'S', 'M', 'M', 'R', 'S', 'S',
+  'J', 'M', 'R', 'R', 'T', 'M', 'M',
+  'M', 'R', 'J', 'S', 'S', 'R', 'R',
+  'J', 'J', 'S', 'J', 'M', 'R', 'R',
+  'S', 'S', 'J', 'J', 'M', 'R', 'R',
+  'F', 'S', 'S', 'J', 'J', 'R', 'R',
+  'M', 'M', 'M', 'R', 'S', 'S', 'S',
+  'T', 'R', 'R', 'S', 'J', 'M', 'M',
+  'R', 'J', 'J', 'S', 'S', 'R', 'R',
 ]
+
+// prettier-ignore
+const rotationPatternNightIDE = [
+  'N', 'N', 'R', 'R', 'N', 'N', 'N',
+  'R', 'R', 'N', 'N', 'R', 'R', 'R',
+]
+
+// prettier-ignore
+const rotationPatternASH = [
+  'M', 'M', 'M', 'M', 'R', 'S', 'S',
+  'S', 'S', 'R', 'R', 'M', 'M', 'M',
+  'M', 'R', 'S', 'S', 'S', 'R', 'R',
+  'T', 'M', 'M', 'M', 'M', 'R', 'R',
+]
+
+// Fonction pour obtenir le modèle sélectionné
+function getSelectedPattern() {
+  const selectedPattern = document.getElementById('pattern-select').value
+
+  if (selectedPattern === 'NightIDE') {
+    return rotationPatternNightIDE
+  }
+
+  if (selectedPattern === 'ASH') {
+    return rotationPatternASH
+  }
+
+  return rotationPatternIDE
+}
+
+document.getElementById('start-date').addEventListener('change', function () {
+  const selectedDate = new Date(this.value)
+  const day = selectedDate.getDay()
+
+  // Vérifier si le jour sélectionné n'est pas un lundi
+  if (day !== 1) {
+    alert('Veuillez sélectionner un lundi.')
+    this.value = '' // Réinitialiser le champ
+  }
+})
 
 function generateSchedule() {
   const startDateInput = document.getElementById('start-date').value
@@ -120,6 +95,7 @@ function generateSchedule() {
     return
   }
 
+  const selectedPattern = getSelectedPattern() // Obtenir le modèle sélectionné
   const startDate = new Date(startDateInput)
   startDate.setDate(startDate.getDate() - 1) // Ramener d'un jour en avance
   const calendarDiv = document.getElementById('calendar')
@@ -130,6 +106,7 @@ function generateSchedule() {
   for (let monthIndex = 0; monthIndex < 36; monthIndex++) {
     const monthDiv = document.createElement('div')
     const monthTable = document.createElement('table')
+    monthTable.classList.add('table') // Ajouter la classe "table"
 
     const headerRow = document.createElement('tr')
     daysOfWeek.forEach(day => {
@@ -157,13 +134,13 @@ function generateSchedule() {
     for (let day = 1; day <= daysInMonth; day++) {
       const currentDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day)
       const daysSinceStart = Math.floor((currentDate - startDate) / (1000 * 60 * 60 * 24))
-      const scheduleIndex = daysSinceStart >= 0 ? daysSinceStart % schedule.length : null
+      const rotationIndex = daysSinceStart >= 0 ? daysSinceStart % selectedPattern.length : null
 
       const dayCell = document.createElement('td')
       dayCell.setAttribute('data-day', day) // Ajouter l'attribut data-day
 
-      if (scheduleIndex !== null && schedule[scheduleIndex]) {
-        const scheduleLetter = schedule[scheduleIndex]
+      if (rotationIndex !== null && selectedPattern[rotationIndex]) {
+        const scheduleLetter = selectedPattern[rotationIndex]
         dayCell.textContent = scheduleLetter
 
         const className = getClassFromSchedule(scheduleLetter)
@@ -220,6 +197,8 @@ function getClassFromSchedule(scheduleLetter) {
       return 'event-extra-rest'
     case 'F':
       return 'event-holiday'
+    case 'N':
+      return 'event-night' // Classe pour les nuits
     default:
       return null
   }

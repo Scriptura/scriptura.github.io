@@ -1,0 +1,43 @@
+{
+  "name": "Au fil de l'O",
+  "short_name": "Au fil de l'O",
+  "description": "App pour l'UA0",
+  "start_url": "/sandbox/planning/",
+  "scope": "/sandbox/planning/",
+  "id": "/sandbox/planning/",
+  "display": "standalone",
+  "theme_color": "#2994ff",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/favicons/logoAny.svg",
+      "sizes": "150x150",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicons/logo128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/favicons/logo192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/favicons/logo384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/favicons/logo512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

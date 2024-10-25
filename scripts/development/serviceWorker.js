@@ -1,4 +1,4 @@
-const CACHE_NAME = 'v45'
+const CACHE_NAME = 'v45.1'
 const MEDIA_CACHE_NAME = `media-${CACHE_NAME}`
 const OFFLINE_URL = '/offline.html'
 
@@ -54,7 +54,7 @@ async function notifyServiceUnavailable() {
 async function networkFirst({ request }) {
   // Ignorer les requêtes provenant de '/sandbox/'
   if (request.url.includes('/sandbox/')) {
-    return fetch(request)
+    return
   }
 
   try {

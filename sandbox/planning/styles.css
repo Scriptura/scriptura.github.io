@@ -45,20 +45,20 @@ footer {
   justify-content: center;
 }
 
+header > .wrap,
+footer > .wrap,
 article > :not(header, footer) {
-  margin: 1em;
+  padding-inline: 1em;
 }
 
-header > .wrap,
-footer > .wrap {
-  padding-inline: 1em;
+header {
+  color: hsl(0, 0%, 100%);
+  background-color: hsl(210, 100%, 58%);
 }
 
 hgroup {
   padding-block: 1em;
   font-weight: bold;
-  color: hsl(0, 0%, 100%);
-  background-color: hsl(210, 100%, 58%);
 }
 
 hgroup h1 {
@@ -82,20 +82,21 @@ pre {
   }
 }
 
-.message-info {
+/* .message-info {
   color: #777;
-}
+} */
 
 .form-control {
   display: block;
   width: 100%;
   max-width: 30em;
-  padding: 0.375em 0.75em;
+  height: 3em;
+  padding-inline: 0.5em;
   font-size: 1rem;
   line-height: 1.5;
   color: #495057;
   background-color: #fff;
-  border: 1px solid #ced4da;
+  border: 1px solid hsl(210, 14%, 83%);
   border-radius: 0.25em;
   margin-bottom: 1em;
 }
@@ -133,24 +134,24 @@ pre {
   gap: 1em;
 }
 
-table {
+.table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 1.5em;
 }
 
-th,
-td {
+.table th,
+.table td {
   padding: 0.5em;
   height: 2.5em;
   text-align: center;
 }
 
-td {
+.table td {
   position: relative;
 }
 
-td::before {
+.table td::before {
   content: attr(data-day);
   position: absolute;
   bottom: 0.2em;
@@ -159,35 +160,44 @@ td::before {
   color: #777;
 }
 
-th {
-  background-color: #f4f4f4;
+.table th {
+  background-color: hsl(0, 0%, 96%);
   font-weight: bold;
 }
 
-caption {
+.table caption {
   caption-side: top;
   text-align: center;
   font-weight: bold;
   margin-bottom: 0.2em;
 }
 
-td.event-day {
-  background-color: #d0f0fd;
+.table .event-day {
+  background-color: hsl(197, 92%, 90%);
 }
-td.event-evening {
-  background-color: #fde2d0;
+
+.table .event-evening {
+  background-color: hsl(24, 92%, 90%);
 }
-td.event-morning {
-  background-color: #d9ffd0;
+
+.table .event-morning {
+  background-color: hsl(109, 100%, 91%);
 }
-td.event-rest {
-  background-color: #f4f4f4;
+
+.table .event-rest {
+  background-color: hsl(0, 0%, 96%);
 }
-td.event-extra-rest {
-  background-color: #f4f4f4;
+
+.table .event-extra-rest {
+  background-color: hsl(0, 0%, 96%);
 }
-td.event-holiday {
-  background-color: #f4f4f4;
+
+.table .event-holiday {
+  background-color: hsl(0, 0%, 96%);
+}
+
+.table .event-night {
+  background-color: hsl(25, 100%, 88%);
 }
 
 .cmd-print {
@@ -196,6 +206,10 @@ td.event-holiday {
 
 .cmd-print.ready {
   display: inline-block;
+}
+
+.item-push {
+  margin-inline-start: auto;
 }
 
 @media print {
