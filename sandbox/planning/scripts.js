@@ -1,3 +1,38 @@
+// -----------------------------------------------------------------------------
+// @section     Service Worker
+// -----------------------------------------------------------------------------
+
+/**
+ * Enregistre un Service Worker pour l'application si le navigateur le supporte.
+ * @see https://developer.mozilla.org/fr/docs/Web/API/Service_Worker_API/Using_Service_Workers
+ * @async
+ * @function
+ * @returns {Promise<void>} Une promesse qui se résout lorsque l'enregistrement du Service Worker est terminé.
+ */
+async function registerServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    try {
+      const registration = await navigator.serviceWorker.register('/sandbox/planning/serviceWorker.js')
+
+      if (registration.installing) {
+        console.log('Installation du service worker en cours')
+      } else if (registration.waiting) {
+        console.log('Service worker installé')
+      } else if (registration.active) {
+        console.log('Service worker actif')
+      }
+    } catch (error) {
+      console.error(`L'enregistrement du service worker a échoué : ${error}`)
+    }
+  }
+}
+
+registerServiceWorker()
+
+// -----------------------------------------------------------------------------
+// @section over
+// -----------------------------------------------------------------------------
+
 const schedule = [
   'J',
   'J',
