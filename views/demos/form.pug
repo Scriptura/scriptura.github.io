@@ -1,5 +1,5 @@
 form(action='./')
-  .grid3.m-grid2.gap.gap-bottom.masonry
+  .l-column3.column2.gap.gap-bottom
     fieldset
       legend.h2 Text inputs
       .grid.gap
@@ -120,9 +120,23 @@ form(action='./')
     fieldset
       legend.h2 Textareas
       .input
-        label(for='textarea-message') Textarea 
+        label(for='textarea-message')
           code .input label + textarea
         textarea#textarea-message(name='textarea-message' placeholder='Bonjour monsieur...' required)
+      br
+      .input
+        label(for='textarea-message')
+          code textarea.character-counter
+        textarea#textarea-message.character-counter(name='textarea-message' placeholder='Bonjour monsieur...' required)
+        p
+          output
+        br
+      .input
+        label(for='textarea-message')
+          code textarea.character-counter(maxlength='200')
+        textarea#textarea-message.character-counter(name='textarea-message' maxlength='200' placeholder='Bonjour monsieur...' required)
+        p
+          output
 .grid3.m-grid2.gap
   div
     h2.legend Search

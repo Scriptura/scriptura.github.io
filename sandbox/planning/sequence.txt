@@ -1,0 +1,13 @@
+
+J, J, S, J, J, R, R,
+S, S, J, M, F, R, R,
+S, S, M, M, R, S, S,
+J, M, R, R, T, M, M,
+M, R, J, S, S, R, R,
+J, J, S, J, M, R, R,
+S, S, J, J, M, R, R,
+F, S, S, J, J, R, R,
+M, M, M, R, S, S, S,
+T, R, R, S, J, M, M,
+R, J, J, S, S, R, R,
+

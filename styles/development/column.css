@@ -42,7 +42,7 @@
 }
 
 @container grid ($sizeXS > width) {
-  .sizeXS-column2 {
+  .XS-column2 {
     column-count: 2;
   }
 }

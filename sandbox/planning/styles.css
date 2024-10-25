@@ -1,0 +1,219 @@
+@font-face {
+  font-family: 'Noto Sans';
+  src: url('../../fonts/notoSans-Regular.woff2') format('woff2'), url('../../fonts/notoSans-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Noto Serif';
+  src: url('../../fonts/notoSerif-Regular.woff2') format('woff2'), url('../../fonts/notoSerif-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  min-height: 100vh;
+  font-family: 'Noto Sans', sans-serif;
+  margin: 0;
+  background-color: #fff;
+}
+
+/*
+main {
+  max-width: 90em;
+  margin: auto;
+}
+*/
+
+footer {
+  color: #fff;
+  background-color: hsl(0, 0%, 20%);
+}
+
+.wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 90em);
+  justify-content: center;
+}
+
+article > :not(header, footer) {
+  margin: 1em;
+}
+
+header > .wrap,
+footer > .wrap {
+  padding-inline: 1em;
+}
+
+hgroup {
+  padding-block: 1em;
+  font-weight: bold;
+  color: hsl(0, 0%, 100%);
+  background-color: hsl(210, 100%, 58%);
+}
+
+hgroup h1 {
+  margin-block-end: 0.25em;
+  font-size: 2em;
+}
+
+hgroup p {
+  margin-block-start: 0;
+  font-size: 1.5em;
+}
+
+pre {
+  font-family: monospace, monospace;
+}
+
+@media (max-width: 32em) {
+  .pre {
+    margin-inline: auto;
+    font-size: 80%;
+  }
+}
+
+.message-info {
+  color: #777;
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  max-width: 30em;
+  padding: 0.375em 0.75em;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-radius: 0.25em;
+  margin-bottom: 1em;
+}
+
+::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+}
+
+.button {
+  display: inline-block;
+  font-weight: 400;
+  color: #fff;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  background-color: hsl(216, 98%, 52%);
+  border: 1px solid hsl(216, 98%, 52%);
+  padding: 0.75em;
+  font-size: 1em;
+  border-radius: 0.25em;
+  cursor: pointer;
+  margin-bottom: 1.5em;
+}
+
+.button:hover,
+.button:active {
+  border: 1px solid hsl(216, 100%, 73%);
+  background-color: hsl(216, 100%, 73%);
+  cursor: pointer;
+}
+
+.grid-auto {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--size-grid, 22em), 100%), 1fr));
+  gap: 1em;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5em;
+}
+
+th,
+td {
+  padding: 0.5em;
+  height: 2.5em;
+  text-align: center;
+}
+
+td {
+  position: relative;
+}
+
+td::before {
+  content: attr(data-day);
+  position: absolute;
+  bottom: 0.2em;
+  right: 0.5em;
+  font-size: 0.7em;
+  color: #777;
+}
+
+th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+caption {
+  caption-side: top;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 0.2em;
+}
+
+td.event-day {
+  background-color: #d0f0fd;
+}
+td.event-evening {
+  background-color: #fde2d0;
+}
+td.event-morning {
+  background-color: #d9ffd0;
+}
+td.event-rest {
+  background-color: #f4f4f4;
+}
+td.event-extra-rest {
+  background-color: #f4f4f4;
+}
+td.event-holiday {
+  background-color: #f4f4f4;
+}
+
+.cmd-print {
+  display: none;
+}
+
+.cmd-print.ready {
+  display: inline-block;
+}
+
+@media print {
+  .grid-auto {
+    --size-grid: 15em;
+  }
+
+  .grid-auto > * {
+    font-size: 75%;
+  }
+
+  table {
+    page-break-inside: avoid;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .no-print {
+    display: none;
+  }
+}

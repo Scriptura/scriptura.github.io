@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Mon planning à l'UA0</title>
+    <meta name="description" content="Un framework front-end permettant de créer des applications web." />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#fff" />
+    <link rel="manifest" href="/manifest.webmanifest" crossorigin="use-credentials" />
+    <link rel="shortcut icon" href="/favicons/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg" />
+    <link rel="icon" type="image/png" href="/favicons/favicon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png" />
+    <link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#5bbad5" />
+    <link rel="stylesheet" href="/sandbox/planning/styles.css" media="all" />
+    <link rel="preload" href="/fonts/notoSans-Regular.woff2" as="font" type="font/woff2" crossorigin="" />
+    <link rel="preload" href="/fonts/notoSerif-Regular.woff2" as="font" type="font/woff2" crossorigin="" />
+  </head>
+  <body>
+    <main>
+      <article>
+        <header>
+          <hgroup class="wrap no-print">
+            <h1>Mon planning à l'UA0</h1>
+            <p>Anticiper mes postes sur la durée</p>
+          </hgroup>
+        </header>
+        <div>
+          <div class="wrap no-print">
+            <div>
+              <p class="message-info">
+                <em>Cher collègue,</em>
+                <br />
+                <br />
+                <em>À l'UA0 un cyle en horraires postés se déroule sur 11 semaines ; appellons cela une séquence.</em>
+                <br />
+                <em>Nous partirons du principe que la première semaine d'une séquence débute par&nbsp;:</em> <strong>J-J-S-J-J-R-R</strong>
+              </p>
+              <br />
+              <label for="start-date" class="form-label"
+                >Définir la date du premier jour de l'une de mes séquences (toujours un lundi)&nbsp;:</label
+              >
+              <input type="date" id="start-date" class="form-control" required />
+              <button class="button" onclick="generateSchedule()">Générer mon planning</button>
+              <button class="button cmd-print">Imprimer</button>
+            </div>
+          </div>
+          <div class="wrap">
+            <div class="grid-auto" id="calendar">
+              <pre class="pre">
+   __:.__
+  (_:..'"=        T'imagines ?
+   ::/ o o\      Si on avait notre planning
+  ;'-'   (_)     pour les trois      .
+  '-._  ;-'        prochaines    _'._|\/:
+  .:;  ;            années !      '- '   /_
+ :.. ; ;,                \       _/,    "_<
+:.|..| ;:                 \__   '._____  _)
+:.|.'| ||                            _/ /
+:.|..| :'                           `;--:
+'.|..|:':       _               _ _ :|_\:
+.. _:|__| '.\.''..' ) ___________ ( )_):|_|:
+:....::''::/  | : :|''| "/ /_=_=_=_=_=/ :_[__')
+''''      '-''-'-'.__)-'
+    </pre
+              >
+            </div>
+          </div>
+        </div>
+      </article>
+    </main>
+    <footer>
+      <div class="wrap">
+        <pre>
+`\/'
+(00)-_-_-_-_-_-----
+ ˜˜</pre
+        >
+      </div>
+    </footer>
+    <script src="/sandbox/planning/scripts.js" async></script>
+  </body>
+</html>

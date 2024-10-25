@@ -114,8 +114,6 @@ const mediaPlayer = () => {
   </div>
   `
 
-  //const minmax = (number, min, max) => Math.min(Math.max(Number(number), min), max)
-
   const addPlayer = media => {
     media.insertAdjacentHTML('afterend', playerTemplate)
     mediaDuration(media)
@@ -468,6 +466,7 @@ const mediaPlayer = () => {
       buttonState(media.playbackRate !== 1, slowMotionButton) // @note Toujours placé après la fonction playbackRateChange()
       if (media.playbackRate !== 1) playbackRateOutput.classList.add('active') // @note Une fois activé on laisse l'affichage, même si retour à la valeur d'origine.
     })
+
     //fastRewindButton.addEventListener('click', () => fastRewind(media))
 
     //fastForwardButton.addEventListener('click', () => fastForward(media))
@@ -505,17 +504,8 @@ const mediaPlayer = () => {
         player.querySelectorAll('button, input').forEach(e => (e.disabled = true)) // @note Pour les anciens navigateurs.
         media.classList.add('error')
         player.classList.add('error')
-
         time.innerHTML = 'Erreur de lecture'
-
         media.poster = ''
-
-        /*
-      const div = document.createElement('div')
-      div.classList.add('video-error')
-      div.innerHTML = `<svg class="icon scale250" role="img" focusable="false"><use href="/sprites/util.svg#space-invader"></use></svg>`
-      if (media.tagName === 'VIDEO') media.insertAdjacentElement('beforeend', div)
-      */
       },
       true,
     )

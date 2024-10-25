@@ -1,20 +1,13 @@
-const CACHE_NAME = 'v42.18'
+const CACHE_NAME = 'v1'
 const MEDIA_CACHE_NAME = `media-${CACHE_NAME}`
 const OFFLINE_URL = '/offline.html'
 
 const resourcesToCache = [
-  '/',
-  '/styles/main.css',
-  '/styles/print.css',
-  '/scripts/main.js',
-  '/scripts/more.js',
+  '/sandbox/planning/',
+  '/sandbox/planning/styles.css',
+  '/sandbox/planning/scripts.js',
   '/fonts/notoSans-Regular.woff2',
   '/fonts/notoSerif-Regular.woff2',
-  '/sprites/util.svg',
-  '/sprites/player.svg',
-  '/medias/images/logo/logo.svg',
-  '/sprites/silos/195v.svg#a',
-  '/sprites/various/MonogrammeTULivreDeKellsTEST.svg#a',
   OFFLINE_URL,
 ]
 
