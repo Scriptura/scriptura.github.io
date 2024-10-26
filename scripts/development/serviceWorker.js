@@ -1,4 +1,4 @@
-const CACHE_NAME = 'v45.1'
+const CACHE_NAME = 'v46'
 const MEDIA_CACHE_NAME = `media-${CACHE_NAME}`
 const OFFLINE_URL = '/offline.html'
 
@@ -54,7 +54,7 @@ async function notifyServiceUnavailable() {
 async function networkFirst({ request }) {
   // Ignorer les requêtes provenant de '/sandbox/'
   if (request.url.includes('/sandbox/')) {
-    return
+    return fetch(request) // Pour toutes les requêtes interceptées dans un Service Worker, il est essentiel de retourner un objet Response à travers event.respondWith(), sinon des erreurs peuvent survenir si le navigateur attend une réponse mais n'en reçoit pas.
   }
 
   try {

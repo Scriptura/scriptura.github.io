@@ -2,8 +2,8 @@
 <html lang="fr">
   <head>
     <meta charset="utf-8" />
-    <title>Au fil de l'O</title>
-    <meta name="description" content="Un framework front-end permettant de créer des applications web." />
+    <title>Mon planning à l'UA0</title>
+    <meta name="description" content="Anticiper mes horraires postés dans le temps" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#fff" />
     <link rel="manifest" href="/sandbox/planning/manifest.webmanifest" crossorigin="use-credentials" />
@@ -21,27 +21,30 @@
       <article>
         <header>
           <hgroup class="wrap no-print">
-            <h1>Au fil de l'O</h1>
-            <p>Mon planning à l'UA0</p>
+            <h1>Mon planning à l'UA0</h1>
+            <p>Anticiper mes postes sur la durée</p>
           </hgroup>
         </header>
         <div>
           <div class="wrap no-print">
             <div>
-              <br>
+              <div class="message-highlight">
+                <div class="icon">!</div>
+                <div>
+                  <p>Première semaine de mon roulement&nbsp;:</p>
+                  <ul>
+                    <li>IDE en journée&nbsp;: <strong>J-J-S-J-J-R-R</strong></li>
+                    <li>IDE de nuit&nbsp;: <strong>N-N-R-R-N-N-N</strong></li>
+                    <li>ASH&nbsp;: <strong>M-M-M-M-R-S-S</strong></li>
+                  </ul>
+                </div>
+              </div>
               <label for="pattern-select">Sélectionner ma fonction&nbsp;:</label>
               <select id="pattern-select" class="form-control">
                 <option value="IDE" selected>Infirmier en journée</option>
                 <option value="NightIDE">Infirmier de nuit</option>
                 <option value="ASH">Agent des Services Hospitaliers</option>
               </select>
-              <p class="message-info">Début de mon roulement&nbsp;:</p>
-                <ul>
-                  <li>IDE en journée&nbsp;: <strong>J-J-S-J-J-R-R</strong></li>
-                  <li>IDE  de nuit&nbsp;: <strong>N-N-R-R-N-N-N</strong></li>
-                  <li>ASH&nbsp;: <strong>M-M-M-M-R-S-S</strong></li>
-                </ul>
-              <br>
               <label for="start-date" class="form-label">Définir un lundi sur lequel débute mon roulement&nbsp;:</label
               >
               <input type="date" id="start-date" class="form-control" required />
@@ -76,7 +79,7 @@
     </main>
     <footer class="no-print">
       <div class="wrap">
-        <pre class="item-push">
+        <pre class="pre item-push">
 `\/'
 (00)-_-_-_-_-_-----
  ˜˜</pre

@@ -27,13 +27,6 @@ body {
   background-color: #fff;
 }
 
-/*
-main {
-  max-width: 90em;
-  margin: auto;
-}
-*/
-
 footer {
   color: #fff;
   background-color: hsl(0, 0%, 20%);
@@ -76,15 +69,51 @@ pre {
 }
 
 @media (max-width: 32em) {
-  .pre {
+  main .pre {
     margin-inline: auto;
     font-size: 80%;
   }
 }
 
-/* .message-info {
-  color: #777;
-} */
+footer .pre {
+  margin-block: .5em 0;
+}
+
+:root {
+  --icon-size: 2.5em;
+}
+
+.message-highlight {
+  display: grid;
+  grid-template-columns: var(--icon-size) minmax(0, 1fr);
+  gap: 1em;
+  align-items: center;
+  min-height: 5em;
+  margin-block: 1em;
+  padding: 0.5em 1em;
+  color: currentcolor;;
+  background-color: hsl(0, 0%, 96%);
+  border-radius: .5em;
+}
+
+.message-highlight .icon {
+  font-weight: bold;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  line-height: var(--icon-size);
+  text-align: center;
+  color: #fff;
+  background-color: hsl(210, 100%, 58%);
+  border-radius: 50%;
+}
+
+.message-highlight p {
+  margin-block: 0;
+}
+
+.message-highlight ul {
+  margin-block: 0;
+}
 
 .form-control {
   display: block;
