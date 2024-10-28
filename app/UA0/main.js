@@ -8,7 +8,7 @@
 async function registerServiceWorker() {
   if ('serviceWorker' in navigator) {
     try {
-      const registration = await navigator.serviceWorker.register('/sandbox/UA0/serviceWorker.js')
+      const registration = await navigator.serviceWorker.register('/app/UA0/serviceWorker.js')
 
       if (registration.installing) {
         console.log('Installation du service worker en cours')

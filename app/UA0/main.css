@@ -72,7 +72,6 @@ header {
 }
 
 hgroup {
-  /* padding-block: 1em; */
   font-weight: bold;
 }
 
@@ -172,7 +171,6 @@ footer .pre {
   font-size: 1em;
   border-radius: 0.25em;
   cursor: pointer;
-  margin-bottom: 1.5em;
 }
 
 .button:hover,
@@ -186,6 +184,10 @@ footer .pre {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 1.5em;
+}
+
+.grid-auto:has(.table) {
+  margin-block-start: 1.5em;
 }
 
 .table th,
