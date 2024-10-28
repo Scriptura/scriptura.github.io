@@ -1,11 +1,11 @@
-const CACHE_NAME = 'v9'
+const CACHE_NAME = 'v11'
 const MEDIA_CACHE_NAME = `media-${CACHE_NAME}`
 const OFFLINE_URL = '/sandbox/UA0/index.html'
 
 const resourcesToCache = [
   '/sandbox/UA0/',
-  '/sandbox/UA0/styles.css',
-  '/sandbox/UA0/scripts.js',
+  '/sandbox/UA0/main.css',
+  '/sandbox/UA0/main.js',
   '/fonts/notoSans-Regular.woff2',
   '/fonts/notoSerif-Regular.woff2',
   OFFLINE_URL,
