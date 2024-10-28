@@ -1,11 +1,11 @@
-const CACHE_NAME = 'v8.3'
+const CACHE_NAME = 'v8.4'
 const MEDIA_CACHE_NAME = `media-${CACHE_NAME}`
-const OFFLINE_URL = '/offline.html'
+const OFFLINE_URL = '/index.html'
 
 const resourcesToCache = [
-  '/sandbox/planning/',
-  '/sandbox/planning/styles.css',
-  '/sandbox/planning/scripts.js',
+  '/sandbox/UA0/',
+  '/sandbox/UA0/styles.css',
+  '/sandbox/UA0/scripts.js',
   '/fonts/notoSans-Regular.woff2',
   '/fonts/notoSerif-Regular.woff2',
   OFFLINE_URL,
