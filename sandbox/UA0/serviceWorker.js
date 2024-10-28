@@ -1,6 +1,6 @@
-const CACHE_NAME = 'v8.4'
+const CACHE_NAME = 'v9'
 const MEDIA_CACHE_NAME = `media-${CACHE_NAME}`
-const OFFLINE_URL = '/index.html'
+const OFFLINE_URL = '/sandbox/UA0/index.html'
 
 const resourcesToCache = [
   '/sandbox/UA0/',
