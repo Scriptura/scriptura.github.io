@@ -25,7 +25,7 @@ async function registerServiceWorker() {
 
 registerServiceWorker()
 
-// Script pour le planning
+// Script pour le planning :
 
 // prettier-ignore
 const rotationPatternIDE = [
@@ -71,6 +71,12 @@ function getSelectedPattern() {
   return rotationPatternIDE
 }
 
+// Enregistrement dans localStorage au changement du champ pattern-select
+document.getElementById('pattern-select').addEventListener('change', function () {
+  localStorage.setItem('pattern-select', this.value)
+})
+
+// Enregistrement dans localStorage au changement du champ start-date
 document.getElementById('start-date').addEventListener('change', function () {
   const selectedDate = new Date(this.value)
   const day = selectedDate.getDay()
@@ -79,8 +85,24 @@ document.getElementById('start-date').addEventListener('change', function () {
   if (day !== 1) {
     alert('Veuillez sélectionner un lundi.')
     this.value = '' // Réinitialiser le champ
+  } else {
+    localStorage.setItem('start-date', this.value)
   }
 })
+
+// Récupération des valeurs au chargement complet de la page
+window.onload = () => {
+  const savedPattern = localStorage.getItem('pattern-select')
+  const savedStartDate = localStorage.getItem('start-date')
+
+  if (savedPattern) {
+    document.getElementById('pattern-select').value = savedPattern
+  }
+
+  if (savedStartDate) {
+    document.getElementById('start-date').value = savedStartDate
+  }
+}
 
 function generateSchedule() {
   const startDateInput = document.getElementById('start-date').value
@@ -89,18 +111,22 @@ function generateSchedule() {
     return
   }
 
-  const selectedPattern = getSelectedPattern() // Obtenir le modèle sélectionné
+  const selectedPattern = getSelectedPattern()
   const startDate = new Date(startDateInput)
-  startDate.setDate(startDate.getDate() - 1) // Ramener d'un jour en avance
+  startDate.setDate(startDate.getDate() - 1) // Ajuster d'un jour en avance
   const calendarDiv = document.getElementById('calendar')
-  calendarDiv.innerHTML = '' // Vider le calendrier précédent
+  calendarDiv.innerHTML = ''
 
   const daysOfWeek = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']
+
+  // Calculer la date de début d'affichage
+  const displayStartDate = new Date()
+  displayStartDate.setDate(1) // Fixer au premier jour du mois courant
 
   for (let monthIndex = 0; monthIndex < 36; monthIndex++) {
     const monthDiv = document.createElement('div')
     const monthTable = document.createElement('table')
-    monthTable.classList.add('table') // Ajouter la classe "table"
+    monthTable.classList.add('table')
 
     const headerRow = document.createElement('tr')
     daysOfWeek.forEach(day => {
@@ -110,8 +136,8 @@ function generateSchedule() {
     })
     monthTable.appendChild(headerRow)
 
-    const currentMonth = new Date(startDate)
-    currentMonth.setMonth(startDate.getMonth() + monthIndex)
+    const currentMonth = new Date(displayStartDate)
+    currentMonth.setMonth(displayStartDate.getMonth() + monthIndex)
 
     const firstDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1)
     const lastDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0)
@@ -128,10 +154,10 @@ function generateSchedule() {
     for (let day = 1; day <= daysInMonth; day++) {
       const currentDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day)
       const daysSinceStart = Math.floor((currentDate - startDate) / (1000 * 60 * 60 * 24))
-      const rotationIndex = daysSinceStart >= 0 ? daysSinceStart % selectedPattern.length : null
+      const rotationIndex = daysSinceStart >= 0 ? daysSinceStart % selectedPattern.length : (selectedPattern.length + daysSinceStart % selectedPattern.length) % selectedPattern.length
 
       const dayCell = document.createElement('td')
-      dayCell.setAttribute('data-day', day) // Ajouter l'attribut data-day
+      dayCell.setAttribute('data-day', day)
 
       if (rotationIndex !== null && selectedPattern[rotationIndex]) {
         const scheduleLetter = selectedPattern[rotationIndex]
@@ -192,7 +218,7 @@ function getClassFromSchedule(scheduleLetter) {
     case 'F':
       return 'event-holiday'
     case 'N':
-      return 'event-night' // Classe pour les nuits
+      return 'event-night'
     default:
       return null
   }

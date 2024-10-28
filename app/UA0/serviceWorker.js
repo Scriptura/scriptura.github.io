@@ -1,13 +1,15 @@
-const CACHE_NAME = 'v13'
+const CACHE_NAME = 'v17'
 const MEDIA_CACHE_NAME = `media-${CACHE_NAME}`
-const OFFLINE_URL = '/app/UA0/index.html'
+const ROOT_PATH = `/app/UA0/`
+const OFFLINE_URL = `${ROOT_PATH}index.html`
 
 const resourcesToCache = [
-  '/app/UA0/',
-  '/app/UA0/main.css',
-  '/app/UA0/main.js',
-  '/app/UA0/fonts/notoSans-Regular.woff2',
-  '/app/UA0/fonts/notoSerif-Regular.woff2',
+  `${ROOT_PATH}`,
+  `${ROOT_PATH}styles/main.css`,
+  `${ROOT_PATH}scripts/main.js`,
+  `${ROOT_PATH}fonts/notoSans-Regular.woff2`,
+  `${ROOT_PATH}fonts/notoSerif-Regular.woff2`,
+  `${ROOT_PATH}images/logo.svg`,
   OFFLINE_URL,
 ]
 

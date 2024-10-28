@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'Noto Sans';
-  src: url('../../fonts/notoSans-Regular.woff2') format('woff2'), url('../../fonts/notoSans-Regular.woff') format('woff');
+  src: url('../fonts/notoSans-Regular.woff2') format('woff2'), url('../fonts/notoSans-Regular.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -8,7 +8,7 @@
 
 @font-face {
   font-family: 'Noto Serif';
-  src: url('../../fonts/notoSerif-Regular.woff2') format('woff2'), url('../../fonts/notoSerif-Regular.woff') format('woff');
+  src: url('../fonts/notoSerif-Regular.woff2') format('woff2'), url('../fonts/notoSerif-Regular.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -95,8 +95,9 @@ pre {
   }
 }
 
-footer .pre {
-  margin-block: 0.5em 0;
+footer .logo {
+  height: 3em;
+  filter: invert(.5);
 }
 
 :root {
