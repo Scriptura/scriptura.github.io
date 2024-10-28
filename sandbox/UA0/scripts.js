@@ -1,7 +1,3 @@
-// -----------------------------------------------------------------------------
-// @section     Service Worker
-// -----------------------------------------------------------------------------
-
 /**
  * Enregistre un Service Worker pour l'application si le navigateur le supporte.
  * @see https://developer.mozilla.org/fr/docs/Web/API/Service_Worker_API/Using_Service_Workers
@@ -29,9 +25,7 @@ async function registerServiceWorker() {
 
 registerServiceWorker()
 
-// -----------------------------------------------------------------------------
-// @section over
-// -----------------------------------------------------------------------------
+// Script pour le planning
 
 // prettier-ignore
 const rotationPatternIDE = [
