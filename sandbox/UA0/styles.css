@@ -110,14 +110,13 @@ footer .pre {
   gap: 1em;
   align-items: center;
   min-height: 5em;
-  padding: 0.5em 1em;
+  padding: 1em;
   color: currentcolor;
   background-color: hsl(209, 100%, 95%);
   border-radius: 0.5em;
 }
 
 .message-highlight .icon {
-  font-weight: bold;
   width: var(--icon-size);
   height: var(--icon-size);
   line-height: var(--icon-size);
@@ -125,6 +124,13 @@ footer .pre {
   color: #fff;
   background-color: hsl(210, 100%, 58%);
   border-radius: 50%;
+}
+
+.message-highlight .icon span {
+  font-family: serif;
+  font-weight: bold;
+  font-style: italic;
+  font-size: 1.9em;
 }
 
 .message-highlight p {
