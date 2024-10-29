@@ -2,6 +2,7 @@
   --primary-color: hsl(210, 100%, 58%);
   --background: #fff;
   --surface: hsl(24, 92%, 90%);
+  --icon-size: 2.5em;
 }
 
 @font-face {
@@ -100,23 +101,13 @@ hgroup p {
   font-size: 1.8em;
 }
 
-pre {
-  font-family: monospace, monospace;
-}
-
-@media (max-width: 32em) {
-  main .pre {
-    font-size: 80%;
-  }
-}
-
 footer .logo {
   height: 3em;
   filter: brightness(0) invert(1);
 }
 
-:root {
-  --icon-size: 2.5em;
+img {
+  max-width: 100%;
 }
 
 .message-highlight {

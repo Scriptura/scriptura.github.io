@@ -123,7 +123,7 @@ function generateSchedule() {
   const displayStartDate = new Date()
   displayStartDate.setDate(1) // Fixer au premier jour du mois courant
 
-  for (let monthIndex = 0; monthIndex < 36; monthIndex++) {
+  for (let monthIndex = 0; monthIndex < 24; monthIndex++) {
     const monthDiv = document.createElement('div')
     const monthTable = document.createElement('table')
     monthTable.classList.add('table')
