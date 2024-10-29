@@ -143,10 +143,8 @@ footer .logo {
 }
 
 .message-highlight .icon span {
-  font-family: serif;
-  font-weight: bold;
-  font-style: italic;
   font-size: 1.75em;
+  line-height: 1.5;
 }
 
 .message-highlight p {
