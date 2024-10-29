@@ -1,10 +1,33 @@
+/* Variables CSS globales */
 :root {
-  --primary-color: hsl(210, 100%, 58%);
-  --background: #fff;
-  --surface: hsl(24, 92%, 90%);
+  /* Couleurs */
+  --color-primary: hsl(210, 100%, 58%);
+  --color-primary-light: hsl(216, 100%, 73%);
+  --color-primary-dark: hsl(216, 98%, 52%);
+  --color-background: #fff;
+  --color-text: hsl(210, 9%, 31%);
+  --color-surface: hsl(24, 92%, 90%);
+
+  /* Couleurs des événements */
+  --color-event-day: hsl(197, 92%, 90%);
+  --color-event-evening: hsl(24, 92%, 90%);
+  --color-event-morning: hsl(109, 100%, 91%);
+  --color-event-night: hsl(25, 100%, 88%);
+  --color-event-rest: hsl(0, 0%, 96%);
+
+  /* Tailles */
   --icon-size: 2.5em;
+  --grid-item-min-width: 22em;
+  --border-radius: 0.25em;
+
+  /* Espacements */
+  --spacing-xs: 0.2em;
+  --spacing-sm: 0.5em;
+  --spacing-md: 1em;
+  --spacing-lg: 1.5em;
 }
 
+/* Police de caractères */
 @font-face {
   font-family: 'Noto Sans';
   src: url('../fonts/notoSans-Regular.woff2') format('woff2'), url('../fonts/notoSans-Regular.woff') format('woff');
@@ -29,26 +52,9 @@
   font-display: swap;
 }
 
+/* Reset et styles de base */
 * {
   box-sizing: border-box;
-}
-
-.grid-auto {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(var(--size-grid, 22em), 100%), 1fr));
-  gap: 1em;
-}
-
-@media (max-width: 50.01em) {
-  .location-info {
-    order: -1;
-  }
-}
-
-@media (min-width: 50.01em) {
-  .location-info {
-    margin-block-start: 1.5em;
-  }
 }
 
 body {
@@ -57,33 +63,40 @@ body {
   min-height: 100vh;
   font-family: 'Noto Sans', sans-serif;
   margin: 0;
-  background-color: var(--background);
+  background-color: var(--color-background);
 }
 
-footer {
-  color: var(--background);
-  background-color: var(--primary-color);
+img {
+  max-width: 100%;
 }
 
+/* Layout */
 .wrap {
   display: grid;
   grid-template-columns: minmax(0, 90em);
   justify-content: center;
 }
 
+.grid-auto {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--grid-item-min-width), 100%), 1fr));
+  gap: var(--spacing-md);
+}
+
+/* En-tête */
+header {
+  color: var(--color-background);
+  background-color: var(--color-primary);
+}
+
 header > .wrap,
 footer > .wrap,
 article .main-content {
-  padding-inline: 1em;
+  padding-inline: var(--spacing-md);
 }
 
 .main-content {
-  margin-block-start: 1em;
-}
-
-header {
-  color: hsl(0, 0%, 100%);
-  background-color: var(--primary-color);
+  margin-block-start: var(--spacing-md);
 }
 
 hgroup {
@@ -97,8 +110,14 @@ hgroup h1 {
 }
 
 hgroup p {
-  margin-block: 0 1em;
+  margin-block: 0 var(--spacing-md);
   font-size: 1.8em;
+}
+
+/* Pied de page */
+footer {
+  color: var(--color-background);
+  background-color: var(--color-primary);
 }
 
 footer .logo {
@@ -106,20 +125,17 @@ footer .logo {
   filter: brightness(0) invert(1);
 }
 
-img {
-  max-width: 100%;
-}
-
+/* Composants */
 .message-highlight {
   display: grid;
   grid-template-columns: var(--icon-size) minmax(0, 1fr);
-  gap: 1em;
+  gap: var(--spacing-md);
   align-items: center;
   min-height: 5em;
-  padding: 1em;
+  padding: var(--spacing-md);
   color: currentcolor;
   background-color: hsl(211, 100%, 93%);
-  border-radius: 0.5em;
+  border-radius: var(--border-radius);
 }
 
 .message-highlight .icon {
@@ -128,8 +144,8 @@ img {
   line-height: var(--icon-size);
   font-family: 'Oleo Script Swash Caps';
   text-align: center;
-  color: var(--background);
-  background-color: var(--primary-color);
+  color: var(--color-background);
+  background-color: var(--color-primary);
   border-radius: 50%;
 }
 
@@ -146,57 +162,54 @@ img {
   margin-block: 0;
 }
 
+/* Formulaires */
 .form-control {
   display: block;
   width: 100%;
   height: 3em;
-  padding-inline: 0.5em;
+  padding-inline: var(--spacing-sm);
   font-size: 1rem;
   line-height: 1.5;
-  /* color: hsl(210, 9%, 31%); */
-  background-color: var(--background);
-  border: 2px solid hsl(210, 100%, 73%);
-  border-radius: 0.25em;
-  margin-bottom: 1em;
-}
-
-::-webkit-calendar-picker-indicator {
-  cursor: pointer;
+  background-color: var(--color-background);
+  border: 2px solid var(--color-primary-light);
+  border-radius: var(--border-radius);
+  margin-bottom: var(--spacing-md);
 }
 
 .button {
   display: block;
   font-weight: 400;
-  color: var(--background);
+  color: var(--color-background);
   text-align: center;
-  background-color: hsl(216, 98%, 52%);
-  border: 1px solid hsl(216, 98%, 52%);
+  background-color: var(--color-primary-dark);
+  border: 1px solid var(--color-primary-dark);
   padding: 0.75em;
   font-size: 1em;
-  border-radius: 0.25em;
+  border-radius: var(--border-radius);
   user-select: none;
   cursor: pointer;
 }
 
 .button:hover,
 .button:active {
-  border: 1px solid hsl(216, 100%, 73%);
-  background-color: hsl(216, 100%, 73%);
+  border-color: var(--color-primary-light);
+  background-color: var(--color-primary-light);
 }
 
+/* Tableaux */
 .table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 1.5em;
+  margin-bottom: var(--spacing-lg);
 }
 
 .grid-auto:has(.table) {
-  margin-block-start: 1.5em;
+  margin-block-start: var(--spacing-lg);
 }
 
 .table th,
 .table td {
-  padding: 0.5em;
+  padding: var(--spacing-sm);
   height: 2.5em;
   text-align: center;
 }
@@ -208,14 +221,14 @@ img {
 .table td::before {
   content: attr(data-day);
   position: absolute;
-  bottom: 0.2em;
-  right: 0.5em;
+  bottom: var(--spacing-xs);
+  right: var(--spacing-sm);
   font-size: 0.7em;
   color: #777;
 }
 
 .table th {
-  background-color: hsl(0, 0%, 96%);
+  background-color: var(--color-event-rest);
   font-weight: bold;
 }
 
@@ -223,37 +236,44 @@ img {
   caption-side: top;
   text-align: center;
   font-weight: bold;
-  margin-bottom: 0.2em;
+  margin-bottom: var(--spacing-xs);
 }
 
+/* États des événements */
 .table .event-day {
-  background-color: hsl(197, 92%, 90%);
+  background-color: var(--color-event-day);
 }
-
 .table .event-evening {
-  background-color: hsl(24, 92%, 90%);
+  background-color: var(--color-event-evening);
 }
-
 .table .event-morning {
-  background-color: hsl(109, 100%, 91%);
+  background-color: var(--color-event-morning);
 }
-
-.table .event-rest {
-  background-color: hsl(0, 0%, 96%);
-}
-
-.table .event-extra-rest {
-  background-color: hsl(0, 0%, 96%);
-}
-
-.table .event-holiday {
-  background-color: hsl(0, 0%, 96%);
-}
-
 .table .event-night {
-  background-color: hsl(25, 100%, 88%);
+  background-color: var(--color-event-night);
+}
+.table .event-rest,
+.table .event-extra-rest,
+.table .event-holiday {
+  background-color: var(--color-event-rest);
 }
 
+/* Utilitaires */
+.flex {
+  display: flex;
+}
+.gap {
+  gap: var(--spacing-md);
+}
+.item-push {
+  margin-inline-start: auto;
+}
+.center {
+  display: grid;
+  place-items: center;
+}
+
+/* Impression */
 .cmd-print {
   display: none;
 }
@@ -262,26 +282,9 @@ img {
   display: inline-block;
 }
 
-.flex {
-  display: flex;
-}
-
-.gap {
-  gap: 1em;
-}
-
-.item-push {
-  margin-inline-start: auto;
-}
-
-.center {
-  display: grid;
-  place-items: center;
-}
-
 @media print {
   .grid-auto {
-    --size-grid: 15em;
+    --grid-item-min-width: 15em;
   }
 
   .grid-auto > * {
@@ -296,5 +299,33 @@ img {
 
   .no-print {
     display: none;
+  }
+}
+
+/* Media Queries */
+@media (max-width: 50.01em) {
+  .location-info {
+    order: -1;
+  }
+  .presentation-image {
+    padding-inline: 3em;
+  }
+}
+
+@media (min-width: 50.01em) {
+  .location-info {
+    margin-block-start: var(--spacing-lg);
+  }
+}
+
+@media (max-width: 50.01em) {
+  .presentation-image {
+    padding-inline: 3em;
+  }
+}
+
+@media (min-height: 60.01em) {
+  .presentation-image {
+    margin-block-start: 3em;
   }
 }
