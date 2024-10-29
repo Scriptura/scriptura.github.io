@@ -14,6 +14,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Oleo Script Swash Caps';
+  src: url('../fonts/OleoScriptSwashCaps-Regular.woff2') format('woff2'), url('../fonts/OleoScriptSwashCaps-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -47,7 +55,7 @@ body {
 
 footer {
   color: #fff;
-  background-color: hsl(0, 0%, 20%);
+  background-color: hsl(210, 100%, 58%);
 }
 
 .wrap {
@@ -72,17 +80,18 @@ header {
 }
 
 hgroup {
-  font-weight: bold;
+  font-family: 'Oleo Script Swash Caps';
+  text-align: center;
 }
 
 hgroup h1 {
   margin-block-end: 0.25em;
-  font-size: 2em;
+  font-size: 3em;
 }
 
 hgroup p {
   margin-block-start: 0;
-  font-size: 1.5em;
+  font-size: 2em;
 }
 
 pre {
@@ -97,7 +106,7 @@ pre {
 
 footer .logo {
   height: 3em;
-  filter: invert(.5);
+  filter: brightness(0) invert(1);
 }
 
 :root {
@@ -160,11 +169,10 @@ footer .logo {
 }
 
 .button {
-  display: inline-block;
+  display: block;
   font-weight: 400;
   color: #fff;
   text-align: center;
-  vertical-align: middle;
   user-select: none;
   background-color: hsl(216, 98%, 52%);
   border: 1px solid hsl(216, 98%, 52%);
@@ -259,13 +267,21 @@ footer .logo {
   display: inline-block;
 }
 
-.center {
-  display: grid;
-  place-items: center;
+.flex {
+  display: flex;
+}
+
+.gap {
+  gap: 1em;
 }
 
 .item-push {
   margin-inline-start: auto;
+}
+
+.center {
+  display: grid;
+  place-items: center;
 }
 
 @media print {

@@ -6,21 +6,9 @@
   "scope": "/app/UA0/",
   "id": "UA0",
   "display": "standalone",
-  "theme_color": "#2994ff",
+  "theme_color": "#ffffff",
   "background_color": "#2994ff",
   "icons": [
-    {
-      "src": "/app/UA0/favicons/favicon.svg",
-      "sizes": "150x150",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    },
-    {
-      "src": "/app/UA0/favicons/favicon96.png",
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
     {
       "src": "/app/UA0/favicons/favicon192.png",
       "sizes": "192x192",

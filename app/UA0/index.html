@@ -11,7 +11,7 @@
     <link rel="icon" type="image/svg+xml" href="/app/UA0/favicons/favicon.svg" />
     <link rel="icon" type="image/png" href="/app/UA0/favicons/favicon.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/app/UA0/favicons/apple-touch-icon.png" />
-    <!-- <link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#2994ff" /> -->
+    <meta name="apple-mobile-web-app-title" content="UA0" />
     <link rel="stylesheet" href="/app/UA0/styles/main.css" media="all" />
     <link rel="preload" href="/app/UA0/fonts/notoSans-Regular.woff2" as="font" type="font/woff2" crossorigin="" />
     <link rel="preload" href="/app/UA0/fonts/notoSerif-Regular.woff2" as="font" type="font/woff2" crossorigin="" />
@@ -21,7 +21,7 @@
       <article>
         <header>
           <hgroup class="wrap no-print">
-            <h1>Mon planning à l'UA0</h1>
+            <h1>Mon Planning</h1>
             <p>Anticiper mes postes sur la durée</p>
           </hgroup>
         </header>
@@ -38,8 +38,10 @@
                 <label for="start-date" class="form-label">Définir un lundi sur lequel débute mon roulement&nbsp;:</label
                 >
                 <input type="date" id="start-date" class="form-control" required />
-                <button class="button" onclick="generateSchedule()">Générer mon planning</button>
-                <button class="button cmd-print">Imprimer</button>
+                <div class="flex gap">
+                  <button class="button" onclick="generateSchedule()">Générer mon planning</button>
+                  <button class="button cmd-print">Imprimer</button>
+                </div>
               </div>
               <div class="location-info">
                 <div class="message-highlight">
