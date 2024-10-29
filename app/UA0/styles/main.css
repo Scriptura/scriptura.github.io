@@ -1,3 +1,9 @@
+:root {
+  --primary-color: hsl(210, 100%, 58%);
+  --background: #fff;
+  --surface: hsl(24, 92%, 90%);
+}
+
 @font-face {
   font-family: 'Noto Sans';
   src: url('../fonts/notoSans-Regular.woff2') format('woff2'), url('../fonts/notoSans-Regular.woff') format('woff');
@@ -50,12 +56,12 @@ body {
   min-height: 100vh;
   font-family: 'Noto Sans', sans-serif;
   margin: 0;
-  background-color: #fff;
+  background-color: var(--background);
 }
 
 footer {
-  color: #fff;
-  background-color: hsl(210, 100%, 58%);
+  color: var(--background);
+  background-color: var(--primary-color);
 }
 
 .wrap {
@@ -76,7 +82,7 @@ article .main-content {
 
 header {
   color: hsl(0, 0%, 100%);
-  background-color: hsl(210, 100%, 58%);
+  background-color: var(--primary-color);
 }
 
 hgroup {
@@ -90,7 +96,7 @@ hgroup h1 {
 }
 
 hgroup p {
-  margin-block: 0 0.75em;
+  margin-block: 0 1em;
   font-size: 1.8em;
 }
 
@@ -121,7 +127,7 @@ footer .logo {
   min-height: 5em;
   padding: 1em;
   color: currentcolor;
-  background-color: hsl(209, 100%, 95%);
+  background-color: hsl(211, 100%, 93%);
   border-radius: 0.5em;
 }
 
@@ -129,9 +135,10 @@ footer .logo {
   width: var(--icon-size);
   height: var(--icon-size);
   line-height: var(--icon-size);
+  font-family: 'Oleo Script Swash Caps';
   text-align: center;
-  color: #fff;
-  background-color: hsl(210, 100%, 58%);
+  color: var(--background);
+  background-color: var(--primary-color);
   border-radius: 50%;
 }
 
@@ -158,7 +165,7 @@ footer .logo {
   font-size: 1rem;
   line-height: 1.5;
   /* color: hsl(210, 9%, 31%); */
-  background-color: #fff;
+  background-color: var(--background);
   border: 2px solid hsl(210, 100%, 73%);
   border-radius: 0.25em;
   margin-bottom: 1em;
@@ -171,14 +178,14 @@ footer .logo {
 .button {
   display: block;
   font-weight: 400;
-  color: #fff;
+  color: var(--background);
   text-align: center;
-  user-select: none;
   background-color: hsl(216, 98%, 52%);
   border: 1px solid hsl(216, 98%, 52%);
   padding: 0.75em;
   font-size: 1em;
   border-radius: 0.25em;
+  user-select: none;
   cursor: pointer;
 }
 
@@ -186,7 +193,6 @@ footer .logo {
 .button:active {
   border: 1px solid hsl(216, 100%, 73%);
   background-color: hsl(216, 100%, 73%);
-  cursor: pointer;
 }
 
 .table {
