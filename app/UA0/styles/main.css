@@ -99,10 +99,6 @@ img {
   }
 }
 
-.gap {
-  gap: var(--spacing-md);
-}
-
 /* En-tête */
 header {
   color: var(--color-background);
@@ -136,18 +132,25 @@ hgroup p {
 }
 
 /* Pied de page */
-footer {
-  padding-block: 0.5em;
+.footer {
+  align-items: center;
+  font-family: 'Oleo Script Swash Caps';
+  font-style: italic;
   color: var(--color-background);
   background-color: var(--color-primary);
 }
 
-footer .logo {
+.footer .flex.gap {
+  gap: .5em;
+}
+
+.footer p {
+  font-size: 1.2em;
+  line-height: 1;
+}
+
+.footer .logo {
   height: 3em;
-  /*
-  background-color: hsl(0, 0%, 100%);
-  border-radius: 50%;
-  */
   filter: brightness(0) invert(1);
 }
 
@@ -360,6 +363,10 @@ select {
 
 .gap {
   gap: var(--spacing-md);
+}
+
+.flex.items-push {
+  justify-content: flex-end;
 }
 
 .item-push {
