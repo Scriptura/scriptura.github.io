@@ -31,7 +31,7 @@ registerServiceWorker()
 const rotationPatternIDE = [
   'J', 'J', 'S', 'J', 'J', 'R', 'R',
   'S', 'S', 'J', 'M', 'F', 'R', 'R',
-  'S', 'S', 'M', 'M', 'R', 'S', 'S',
+  'S', 'J', 'M', 'M', 'R', 'S', 'S',
   'J', 'M', 'R', 'R', 'T', 'M', 'M',
   'M', 'R', 'J', 'S', 'S', 'R', 'R',
   'J', 'J', 'S', 'J', 'M', 'R', 'R',

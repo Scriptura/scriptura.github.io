@@ -6,16 +6,16 @@
     <meta name="description" content="Anticiper mes horraires postés dans le temps" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#2994ff" />
-    <link rel="manifest" href="/app/UA0/site.webmanifest" crossorigin="use-credentials" />
-    <link rel="shortcut icon" href="/app/UA0/favicons/favicon.ico" />
-    <link rel="icon" type="image/svg+xml" href="/app/UA0/favicons/favicon.svg" />
-    <link rel="icon" type="image/png" href="/app/UA0/favicons/favicon.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/app/UA0/favicons/apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-title" content="UA0" />
-    <link rel="stylesheet" href="/app/UA0/styles/main.css" media="all" />
-    <link rel="preload" href="/app/UA0/fonts/notoSans-Regular.woff2" as="font" type="font/woff2" crossorigin="" />
-    <link rel="preload" href="/app/UA0/fonts/notoSerif-Regular.woff2" as="font" type="font/woff2" crossorigin="" />
-    <link rel="preload" href="/app/UA0/fonts/OleoScriptSwashCaps-Regular.woff2" as="font" type="font/woff2" crossorigin="" />
+    <link rel="manifest" href="./site.webmanifest" crossorigin="use-credentials" />
+    <link rel="shortcut icon" href="./favicons/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="./favicons/favicon.svg" />
+    <link rel="icon" type="image/png" href="./favicons/favicon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./favicons/apple-touch-icon.png" />
+    <!-- <meta name="apple-mobile-web-app-title" content="UA0" /> De toute façon les PWA ne sont pas compatibles avec Apple pour l'instant... -->
+    <link rel="stylesheet" href="./styles/main.css" media="all" />
+    <link rel="preload" href="./fonts/notoSans-Regular.woff2" as="font" type="font/woff2" crossorigin="" />
+    <link rel="preload" href="./fonts/notoSerif-Regular.woff2" as="font" type="font/woff2" crossorigin="" />
+    <link rel="preload" href="./fonts/OleoScriptSwashCaps-Regular.woff2" as="font" type="font/woff2" crossorigin="" />
   </head>
   <body>
     <main>
@@ -28,17 +28,21 @@
         </header>
         <div class="main-content">
           <div class="wrap no-print">
-            <div class="grid-auto">
+            <div class="grid2 gap">
               <div>
                 <label for="pattern-select">Ma fonction&nbsp;:</label>
-                <select id="pattern-select" class="form-control">
-                  <option value="IDE" selected>Infirmier en journée</option>
-                  <!-- <option value="NightIDE">Infirmier de nuit</option> -->
-                  <option value="ASH">Agent des Services Hospitaliers</option>
-                </select>
+                <div class="form-control">
+                  <select id="pattern-select">
+                    <option value="IDE" selected>Infirmier en journée</option>
+                    <!-- <option value="NightIDE">Infirmier de nuit</option> -->
+                    <option value="ASH">Agent des Services Hospitaliers</option>
+                  </select>
+                </div>
                 <label for="start-date" class="form-label">Un lundi sur lequel débute mon roulement&nbsp;:</label
                 >
-                <input type="date" id="start-date" class="form-control" required />
+                <div class="form-control">
+                  <input type="date" id="start-date" required />
+                </div>
                 <div class="flex gap">
                   <button class="button" onclick="generateSchedule()">Générer mon planning</button>
                   <button class="button cmd-print">Imprimer</button>
@@ -62,8 +66,8 @@
             </div>
           </div>
           <div class="wrap">
-            <div class="grid-auto" id="calendar">
-                <img src="/app/UA0/images/CalvinAndHobbes.jpg" alt="Calvin et Hobbes" class="presentation-image">
+            <div class="grid-auto gap" id="calendar">
+                <img src="./images/CalvinAndHobbes.jpg" alt="Calvin et Hobbes" class="presentation-image">
             </div>
           </div>
         </div>
@@ -71,9 +75,9 @@
     </main>
     <footer class="no-print">
       <div class="wrap">
-        <img src="/app/UA0/images/logo.svg" alt="logo" class="logo item-push">
+        <img src="./images/logo.svg" alt="logo" class="logo item-push">
       </div>
     </footer>
-    <script src="/app/UA0/scripts/main.js" async></script>
+    <script src="./scripts/main.js" async></script>
   </body>
 </html>

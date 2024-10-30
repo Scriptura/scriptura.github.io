@@ -18,7 +18,7 @@
   /* Tailles */
   --icon-size: 2.5em;
   --grid-item-min-width: 22em;
-  --border-radius: 0.25em;
+  --border-radius: 0.3em;
 
   /* Espacements */
   --spacing-xs: 0.2em;
@@ -74,6 +74,7 @@ img {
 
 .presentation-image {
   max-height: 40svh;
+  padding-inline-end: 5em;
 }
 
 /* Layout */
@@ -86,6 +87,19 @@ img {
 .grid-auto {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(var(--grid-item-min-width), 100%), 1fr));
+}
+
+.grid2 {
+  display: grid;
+}
+
+@media (min-width: 50.01em) {
+  .grid2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.gap {
   gap: var(--spacing-md);
 }
 
@@ -123,12 +137,17 @@ hgroup p {
 
 /* Pied de page */
 footer {
+  padding-block: 0.5em;
   color: var(--color-background);
   background-color: var(--color-primary);
 }
 
 footer .logo {
   height: 3em;
+  /*
+  background-color: hsl(0, 0%, 100%);
+  border-radius: 50%;
+  */
   filter: brightness(0) invert(1);
 }
 
@@ -170,17 +189,80 @@ footer .logo {
 }
 
 /* Formulaires */
+label {
+  color: var(--color-primary-dark);
+}
+
+select {
+  cursor: pointer;
+}
+
 .form-control {
+  position: relative;
   display: block;
   width: 100%;
   height: 3em;
+  margin-block-end: var(--spacing-md);
   padding-inline: var(--spacing-sm);
-  font-size: 1rem;
   line-height: 1.5;
   background-color: var(--color-background);
-  border: 2px solid var(--color-primary-light);
+  border: 2px solid var(--color-primary);
   border-radius: var(--border-radius);
-  margin-bottom: var(--spacing-md);
+}
+
+.form-control::after {
+  content: '';
+  position: absolute;
+  width: calc(3em - 4px);
+  height: calc(3em - 4px);
+  right: 0;
+  top: 0;
+  background-color: #fff;
+  background-size: 1.5em 1.5em;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  pointer-events: none;
+}
+
+.form-control:has(select)::after {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' height='24px' width='24px' viewBox='0 -960 960 960' fill='hsl(210, 100%, 58%)'><path d='M480-120 300-300l58-58 122 122 122-122 58 58-180 180ZM358-598l-58-58 180-180 180 180-58 58-122-122-122 122Z'/></svg>");
+}
+
+.form-control:has(select):where(:focus,:hover,:active) {
+  color: orange;
+}
+
+.form-control:has(select):where(:focus,:hover,:active)::after {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' height='24px' width='24px' viewBox='0 -960 960 960' fill='orange'><path d='M480-120 300-300l58-58 122 122 122-122 58 58-180 180ZM358-598l-58-58 180-180 180 180-58 58-122-122-122 122Z'/></svg>");
+}
+
+.form-control:has([type='date'])::after {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(210, 100%, 58%)'><path d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/></svg>");
+}
+
+.form-control:has([type='date']):where(:focus,:hover,:active) {
+  color: orange;
+}
+
+.form-control:has([type='date']):where(:focus,:hover,:active)::after {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='orange'><path d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/></svg>");
+}
+
+.form-control:has(> :where(:focus, :hover, :active)) {
+  border-color: orange;
+}
+
+.form-control > * {
+  width: 100%;
+  height: 3em;
+  font-size: 1rem; /* Unité rem obligatoire pour le datepicker. */
+  /* color: var(--color-primary-dark); */
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.form-control > :where(:focus, :hover, :active) {
+  outline: none;
 }
 
 ::-webkit-calendar-picker-indicator {
@@ -190,20 +272,19 @@ footer .logo {
 .button {
   display: block;
   font-weight: 400;
-  color: var(--color-background);
-  text-align: center;
-  background-color: var(--color-primary-dark);
-  border: 1px solid var(--color-primary-dark);
   padding: 0.75em;
   font-size: 1em;
+  text-align: center;
+  color: var(--color-background);
+  background-color: var(--color-primary-dark);
+  border: 1px solid var(--color-primary-dark);
   border-radius: var(--border-radius);
   cursor: pointer;
 }
 
-.button:hover,
-.button:active {
-  border-color: var(--color-primary-light);
-  background-color: var(--color-primary-light);
+.button:where(:focus, :hover, :active) {
+  background-color: orange;
+  border-color: orange;
 }
 
 /* Tableaux */
@@ -319,21 +400,11 @@ footer .logo {
   .location-info {
     order: -1;
   }
-  
-  .presentation-image {
-    padding-inline: 3em;
-  }
 }
 
 @media (min-width: 50.01em) {
   .location-info {
     margin-block-start: var(--spacing-lg);
-  }
-}
-
-@media (max-width: 50.01em) {
-  .presentation-image {
-    padding-inline: 3em;
   }
 }
 
