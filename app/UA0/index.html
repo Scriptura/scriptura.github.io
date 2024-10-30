@@ -11,7 +11,7 @@
     <link rel="icon" type="image/svg+xml" href="./favicons/favicon.svg" />
     <link rel="icon" type="image/png" href="./favicons/favicon.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="./favicons/apple-touch-icon.png" />
-    <!-- <meta name="apple-mobile-web-app-title" content="UA0" /> De toute façon les PWA ne sont pas compatibles avec Apple pour l'instant... -->
+    <meta name="apple-mobile-web-app-title" content="Au fil de l'O" />
     <link rel="stylesheet" href="./styles/main.css" media="all" />
     <link rel="preload" href="./fonts/notoSans-Regular.woff2" as="font" type="font/woff2" crossorigin="" />
     <link rel="preload" href="./fonts/notoSerif-Regular.woff2" as="font" type="font/woff2" crossorigin="" />
@@ -33,13 +33,11 @@
                 <label for="pattern-select">Ma fonction&nbsp;:</label>
                 <div class="form-control">
                   <select id="pattern-select">
-                    <option value="IDE" selected>Infirmier en journée</option>
-                    <!-- <option value="NightIDE">Infirmier de nuit</option> -->
+                    <option value="IDE" selected>Infirmier</option>
                     <option value="ASH">Agent des Services Hospitaliers</option>
                   </select>
                 </div>
-                <label for="start-date" class="form-label">Un lundi sur lequel débute mon roulement&nbsp;:</label
-                >
+                <label for="start-date" class="form-label">Un lundi sur lequel débute mon roulement&nbsp;:</label>
                 <div class="form-control">
                   <input type="date" id="start-date" required />
                 </div>
@@ -55,11 +53,8 @@
                   </div>
                   <div>
                     <p>Première semaine de mon roulement&nbsp;:</p>
-                    <ul>
-                      <li>si IDE en journée&nbsp;: <strong>J-J-S-J-J-R-R</strong></li>
-                      <!-- <li>si IDE de nuit&nbsp;: <strong>N-N-R-R-N-N-N</strong></li> -->
-                      <li>si ASH&nbsp;: <strong>M-M-M-M-R-S-S</strong></li>
-                    </ul>
+                    <p>Je suis IDE en journée&nbsp;: <strong>J-J-S-J-J-R-R</strong></p>
+                    <p>Je suis ASH&nbsp;: <strong>M-M-M-M-R-S-S</strong></p>
                   </div>
                 </div>
               </div>
@@ -67,7 +62,7 @@
           </div>
           <div class="wrap">
             <div class="grid-auto gap" id="calendar">
-                <img src="./images/CalvinAndHobbes.jpg" alt="Calvin et Hobbes" class="presentation-image">
+              <img src="./images/CalvinAndHobbes.jpg" alt="Calvin et Hobbes" class="presentation-image" />
             </div>
           </div>
         </div>
@@ -76,7 +71,7 @@
     <footer class="footer no-print">
       <div class="wrap flex gap items-push">
         <p>Au fil de l'O</p>
-        <img src="./images/logo.svg" alt="logo" class="logo">
+        <img src="./images/logo.svg" alt="logo" class="logo" />
       </div>
     </footer>
     <script src="./scripts/main.js" async></script>

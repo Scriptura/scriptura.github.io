@@ -150,6 +150,7 @@ hgroup p {
 }
 
 .footer .logo {
+  margin-block-start: .1em;
   height: 3em;
   filter: brightness(0) invert(1);
 }
@@ -184,10 +185,6 @@ hgroup p {
 }
 
 .message-highlight p {
-  margin-block: 0;
-}
-
-.message-highlight ul {
   margin-block: 0;
 }
 
