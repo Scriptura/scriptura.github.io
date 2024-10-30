@@ -320,6 +320,7 @@ footer .logo {
 
 @media (max-width: 50.01em) {
   .presentation-image {
+    margin-block-start: 1em;
     padding-inline: 3em;
   }
 }
