@@ -55,6 +55,7 @@
 /* Reset et styles de base */
 * {
   box-sizing: border-box;
+  user-select: none; /* La spécification ne prévoie pas que cette propriété soit héritée, bien que les navigateurs webkit le fasse. Cette règle n'a de sens que pour une application web. */
 }
 
 body {
@@ -68,6 +69,11 @@ body {
 
 img {
   max-width: 100%;
+  pointer-events: none;
+}
+
+.presentation-image {
+  max-height: 40svh;
 }
 
 /* Layout */
@@ -102,6 +108,7 @@ article .main-content {
 hgroup {
   font-family: 'Oleo Script Swash Caps';
   text-align: center;
+  text-wrap: balance;
 }
 
 hgroup h1 {
@@ -176,6 +183,10 @@ footer .logo {
   margin-bottom: var(--spacing-md);
 }
 
+::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+}
+
 .button {
   display: block;
   font-weight: 400;
@@ -186,7 +197,6 @@ footer .logo {
   padding: 0.75em;
   font-size: 1em;
   border-radius: var(--border-radius);
-  user-select: none;
   cursor: pointer;
 }
 
@@ -243,15 +253,19 @@ footer .logo {
 .table .event-day {
   background-color: var(--color-event-day);
 }
+
 .table .event-evening {
   background-color: var(--color-event-evening);
 }
+
 .table .event-morning {
   background-color: var(--color-event-morning);
 }
+
 .table .event-night {
   background-color: var(--color-event-night);
 }
+
 .table .event-rest,
 .table .event-extra-rest,
 .table .event-holiday {
@@ -262,15 +276,13 @@ footer .logo {
 .flex {
   display: flex;
 }
+
 .gap {
   gap: var(--spacing-md);
 }
+
 .item-push {
   margin-inline-start: auto;
-}
-.center {
-  display: grid;
-  place-items: center;
 }
 
 /* Impression */
@@ -307,6 +319,7 @@ footer .logo {
   .location-info {
     order: -1;
   }
+  
   .presentation-image {
     padding-inline: 3em;
   }
@@ -320,13 +333,24 @@ footer .logo {
 
 @media (max-width: 50.01em) {
   .presentation-image {
-    margin-block-start: 1em;
     padding-inline: 3em;
+  }
+}
+
+@media (min-height: 52.01em) {
+  .presentation-image {
+    margin-block-start: 1.5em;
+  }
+}
+
+@media (min-height: 55.01em) {
+  .presentation-image {
+    margin-block-start: 3em;
   }
 }
 
 @media (min-height: 60.01em) {
   .presentation-image {
-    margin-block-start: 3em;
+    margin-block-start: 5em;
   }
 }
