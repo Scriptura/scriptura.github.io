@@ -13,7 +13,7 @@
       "src": "/app/UA0/favicons/favicon.svg",
       "sizes": "300x300",
       "type": "image/svg+xml",
-      "purpose": "maskable"
+      "purpose": "any"
     },
     {
       "src": "/app/UA0/favicons/favicon192.png",
