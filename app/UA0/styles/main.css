@@ -403,7 +403,7 @@ select {
 
 @media (min-height: 55.01em) {
   .presentation-image {
-    margin-block-start: 3em;
+    margin-block-start: 5em;
   }
 }
 
