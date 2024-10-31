@@ -162,31 +162,10 @@ hgroup p {
 
 /* Composants */
 .message-highlight {
-  display: grid;
-  grid-template-columns: var(--icon-size) minmax(0, 1fr);
-  gap: var(--spacing-md);
-  align-items: center;
-  min-height: 5em;
   padding: var(--spacing-md);
-  color: currentcolor;
-  background-color: hsl(211, 100%, 93%);
+  color: #fff;
+  background-color: var(--color-primary-dark);
   border-radius: var(--border-radius);
-}
-
-.message-highlight .icon {
-  width: var(--icon-size);
-  height: var(--icon-size);
-  line-height: var(--icon-size);
-  font-family: 'Oleo Script Swash Caps';
-  text-align: center;
-  color: var(--color-background);
-  background-color: var(--color-primary);
-  border-radius: 50%;
-}
-
-.message-highlight .icon span {
-  font-size: 1.75em;
-  line-height: 1.5;
 }
 
 .message-highlight p {
