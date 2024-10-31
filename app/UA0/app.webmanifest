@@ -6,7 +6,7 @@
   "scope": "/app/UA0/",
   "id": "UA0",
   "display": "standalone",
-  "theme_color": "#ffffff",
+  "theme_color": "#2994ff",
   "background_color": "#2994ff",
   "icons": [
     {
