@@ -10,28 +10,28 @@
   "background_color": "#2994ff",
   "icons": [
     {
-      "src": "/app/UA0/favicons/favicon.svg",
-      "sizes": "300x300",
+      "src": "/app/UA0/favicons/faviconAny.svg",
+      "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "/app/UA0/favicons/favicon192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     },
     {
       "src": "/app/UA0/favicons/favicon512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     },
     {
       "src": "/app/UA0/favicons/favicon1024.png",
       "sizes": "1024x1024",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     }
   ]
 }
