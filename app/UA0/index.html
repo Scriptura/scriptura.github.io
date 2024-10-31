@@ -28,45 +28,54 @@
         </header>
         <div class="main-content">
           <div class="wrap no-print">
-            <div class="grid2 gap">
-              <div>
-                <label for="pattern-select">Ma fonction&nbsp;:</label>
-                <div class="form-control">
-                  <select id="pattern-select">
-                    <option value="IDE" selected>Infirmier</option>
-                    <option value="ASH">Agent des Services Hospitaliers</option>
-                  </select>
+            <div class="grid2">
+              <div class="grid gap">
+                <div>
+                  <label for="pattern-select">Ma fonction&nbsp;:</label>
+                  <div class="form-control">
+                    <select id="pattern-select">
+                      <option value="IDE" selected>Infirmier</option>
+                      <option value="ASH">Agent des Services Hospitaliers</option>
+                    </select>
+                  </div>
                 </div>
-                <label for="start-date" class="form-label">Définition de mon roulement&nbsp;:</label>
-                <div class="form-control">
-                  <input type="date" id="start-date" required />
+                <div>
+                  <label for="start-date" class="form-label">Définition de mon roulement&nbsp;:</label>
+                  <div class="form-control">
+                    <input type="date" id="start-date" required />
+                  </div>
+                  <details class="location-info">
+                    <summary><em>Quel est le début de mon roulement&nbsp;?</em></summary>
+                    <div class="message-highlight">
+                      <div>
+                        <details>
+                          <summary>Pour les IDE</summary>
+                          <p>
+                            À l'UA0, le roulement IDE de jour s’étend sur 11 semaines. Nous partons du principe que la première semaine
+                            d'une séquence commence un lundi avec le roulement suivant&nbsp;: <strong>J-J-S-J-J-R-R</strong>.
+                          </p>
+                        </details>
+                        <details>
+                          <summary>Pour les ASH</summary>
+                          <p>
+                            À l'UA0, le roulement ASH s'étend sur 4 semaines. Nous partons du principe que la première semaine d'une
+                            séquence commence un lundi avec le roulement suivant&nbsp;: <strong>M-M-M-M-R-S-S</strong>.
+                          </p>
+                        </details>
+                        <p>Attention à ne pas confondre les semaines entre elles&nbsp;! Le roulement commence toujours un <strong>lundi</strong>.</p>
+                        <p>
+                          Quel que soit le moment où le roulement est défini, le planning sera toujours généré à partir du premier jour du
+                          mois en cours.
+                        </p>
+                      </div>
+                    </div>
+                  </details>
                 </div>
                 <div class="flex gap">
                   <button class="button" onclick="generateSchedule()">Générer mon planning</button>
                   <button class="button cmd-print">Imprimer</button>
                 </div>
               </div>
-              <details class="location-info">
-                <summary>Comment ça marche&nbsp;?</summary>
-                <div class="message-highlight">
-                  <div>
-                    <p>Cher collègue,</p>
-                    <p>L'application permet de calculer le planning de travail pour les deux années à venir. Pour cela, la fonction et le point de départ du roulement doivent être définis, obligatoirement un lundi. Ces informations seront ensuite enregistrées sur le smartphone pour les consultations ultérieures. En cas d'erreur de saisie, il reste toujours possible de les corriger.</pp>
-                    <p>Cliquez ici pour savoir les détails des roulements&nbsp;:</p>
-                    <details>
-                      <summary>Pour les IDE</summary>
-                      À l'UA0, le roulement IDE de jour s’étend sur 11 semaines. Nous partons du principe que la première semaine d'une séquence commence un lundi avec le roulement suivant&nbsp;: <strong>J-J-S-J-J-R-R</strong>
-                    </details>
-                    <details>
-                      <summary>Pour les ASH</summary>
-                      À l'UA0, le roulement ASH s'étend sur 4 semaines. Nous partons du principe que la première semaine d'une séquence commence un lundi avec le roulement suivant&nbsp;: <strong>M-M-M-M-R-S-S</strong>
-                    </details>
-                    <p>Attention à ne pas confondre les semaines entre elles&nbsp;!</p>
-                    <p>Quel que soit le moment où le roulement est défini, le planning sera toujours généré à partir du premier jour du mois en cours.</p>
-                    <p>Bonne visite&nbsp;!</p>
-                  </div>
-                </div>
-              </details>
             </div>
           </div>
           <div class="wrap">
