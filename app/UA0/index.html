@@ -41,23 +41,36 @@
                 <div class="form-control">
                   <input type="date" id="start-date" required />
                 </div>
-                <div class="flex gap">
-                  <button class="button" onclick="generateSchedule()">Générer mon planning</button>
-                  <button class="button cmd-print">Imprimer</button>
-                </div>
               </div>
-              <div class="location-info">
+              <details class="location-info">
+                <summary><strong>Comment ça marche&nbsp;?</strong></summary>
                 <div class="message-highlight">
                   <div class="icon">
                     <span>i</span>
                   </div>
                   <div>
-                    <p>Première semaine de mon roulement&nbsp;:</p>
-                    <p>Je suis IDE en journée&nbsp;: <strong>J-J-S-J-J-R-R</strong></p>
-                    <p>Je suis ASH&nbsp;: <strong>M-M-M-M-R-S-S</strong></p>
+                    <p>
+                      L'application permet de calculer le planning de travail pour les deux années à venir. Pour cela, la fonction et le point de départ du roulement doivent être définis&nbsp;; ces informations seront ensuite enregistrées sur le smartphone pour les consultations ultérieures. En cas d'erreur de saisie, il reste toujours possible de les corriger.
+                    </p>
+                    <details>
+                      <summary>Je suis IDE</summary>
+                      À l'UA0, le roulement IDE de jour s’étend sur 11 semaines. Nous partons du principe que la première semaine d'une séquence commence un lundi avec le roulement suivant&nbsp;: <strong>J-J-S-J-J-R-R</strong>
+                    </details>
+
+                    <details>
+                      <summary>Je suis ASH</summary>
+                      À l'UA0, le roulement ASH s'étend sur 4 semaines. Nous partons du principe que la première semaine d'une séquence commence un lundi avec le roulement suivant&nbsp;: <strong>M-M-M-M-R-S-S</strong>
+                    </details>
+                    <p>Attention à ne pas confondre les semaines entre elles&nbsp;!</p>
+                    <p>Le roulement doit obligatoirement être défini un <strong>lundi</strong>. Quel que soit le moment où le roulement est défini, le planning sera toujours généré à partir du premier jour du mois en cours.</p>
+                    <p>Bonne visite&nbsp;!</p>
                   </div>
                 </div>
-              </div>
+              </details>
+            </div>
+            <div class="flex gap">
+              <button class="button" onclick="generateSchedule()">Générer mon planning</button>
+              <button class="button cmd-print">Imprimer</button>
             </div>
           </div>
           <div class="wrap">
