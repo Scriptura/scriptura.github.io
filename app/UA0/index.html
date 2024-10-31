@@ -37,9 +37,13 @@
                     <option value="ASH">Agent des Services Hospitaliers</option>
                   </select>
                 </div>
-                <label for="start-date" class="form-label">Un lundi sur lequel débute mon roulement&nbsp;:</label>
+                <label for="start-date" class="form-label">Définition de mon roulement&nbsp;:</label>
                 <div class="form-control">
                   <input type="date" id="start-date" required />
+                </div>
+                <div class="flex gap">
+                  <button class="button" onclick="generateSchedule()">Générer mon planning</button>
+                  <button class="button cmd-print">Imprimer</button>
                 </div>
               </div>
               <details class="location-info">
@@ -49,28 +53,22 @@
                     <span>i</span>
                   </div>
                   <div>
-                    <p>
-                      L'application permet de calculer le planning de travail pour les deux années à venir. Pour cela, la fonction et le point de départ du roulement doivent être définis&nbsp;; ces informations seront ensuite enregistrées sur le smartphone pour les consultations ultérieures. En cas d'erreur de saisie, il reste toujours possible de les corriger.
-                    </p>
+                    <p>Cher collègue,</p>
+                    <p>L'application permet de calculer le planning de travail pour les deux années à venir. Pour cela, la fonction et le point de départ du roulement doivent être définis, obligatoirement un <strong>lundi</strong>, ces informations seront ensuite enregistrées sur le smartphone pour les consultations ultérieures. En cas d'erreur de saisie, il reste toujours possible de les corriger.</p>
                     <details>
                       <summary>Je suis IDE</summary>
                       À l'UA0, le roulement IDE de jour s’étend sur 11 semaines. Nous partons du principe que la première semaine d'une séquence commence un lundi avec le roulement suivant&nbsp;: <strong>J-J-S-J-J-R-R</strong>
                     </details>
-
                     <details>
                       <summary>Je suis ASH</summary>
                       À l'UA0, le roulement ASH s'étend sur 4 semaines. Nous partons du principe que la première semaine d'une séquence commence un lundi avec le roulement suivant&nbsp;: <strong>M-M-M-M-R-S-S</strong>
                     </details>
                     <p>Attention à ne pas confondre les semaines entre elles&nbsp;!</p>
-                    <p>Le roulement doit obligatoirement être défini un <strong>lundi</strong>. Quel que soit le moment où le roulement est défini, le planning sera toujours généré à partir du premier jour du mois en cours.</p>
+                    <p>Quel que soit le moment où le roulement est défini, le planning sera toujours généré à partir du premier jour du mois en cours.</p>
                     <p>Bonne visite&nbsp;!</p>
                   </div>
                 </div>
               </details>
-            </div>
-            <div class="flex gap">
-              <button class="button" onclick="generateSchedule()">Générer mon planning</button>
-              <button class="button cmd-print">Imprimer</button>
             </div>
           </div>
           <div class="wrap">

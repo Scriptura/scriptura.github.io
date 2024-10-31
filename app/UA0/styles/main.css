@@ -58,10 +58,15 @@
   user-select: none; /* La spécification ne prévoie pas que cette propriété soit héritée, bien que les navigateurs webkit le fasse. Cette règle n'a de sens que pour une application web. */
 }
 
+html,
+body {
+  height: 100%;
+}
+
 body {
   display: grid;
   grid-template-rows: 1fr auto;
-  min-height: 100vh;
+  min-height: 100svh;
   font-family: 'Noto Sans', sans-serif;
   margin: 0;
   background-color: var(--color-background);
