@@ -168,6 +168,12 @@ hgroup p {
   font-size: 1.8em;
 }
 
+.location-info,
+.location-info summary {
+  /* display: inline-block; */
+  cursor: pointer;
+}
+
 .location-info > summary {
   color: var(--color-primary-dark);
 }
