@@ -44,43 +44,46 @@
                   <div class="form-control">
                     <input type="date" id="start-date" required />
                   </div>
-                  <details class="location-info">
-                    <summary><em>Quel est le début de mon roulement&nbsp;?</em></summary>
-                    <div class="message-highlight">
-                      <div>
-                        <details>
-                          <summary>Pour les IDE</summary>
-                          <p>
-                            À l'UA0, le roulement IDE de jour s’étend sur 11 semaines. Nous partons du principe que la première semaine
-                            d'une séquence commence un lundi avec le roulement suivant&nbsp;: <strong>J-J-S-J-J-R-R</strong>.
-                          </p>
-                        </details>
-                        <details>
-                          <summary>Pour les ASH</summary>
-                          <p>
-                            À l'UA0, le roulement ASH s'étend sur 4 semaines. Nous partons du principe que la première semaine d'une
-                            séquence commence un lundi avec le roulement suivant&nbsp;: <strong>M-M-M-M-R-S-S</strong>.
-                          </p>
-                        </details>
-                        <p>
-                          Attention à ne pas confondre les semaines entre elles&nbsp;! Le roulement commence toujours un
-                          <strong>lundi</strong>.
-                        </p>
-                        <p>
-                          Quel que soit le moment où le roulement est défini, le planning sera toujours généré à partir du premier jour du
-                          mois en cours.
-                        </p>
-                      </div>
-                    </div>
-                  </details>
-                  <details class="location-info">
-                    <summary><em>Personnalier mon roulement</em></summary>
-                    <div>
-                      <label for="pattern-custom">Roulement personnalisé (on part du principe que vous savez ce que vous faites&nbsp;!)&nbsp;:</label>
-                      <textarea name="pattern-custom" id="pattern-custom" class="autosize"></textarea>
-                    </div>
-                  </details>
                 </div>
+                <details class="location-info">
+                  <summary><em>Quel est le début de mon roulement&nbsp;?</em></summary>
+                  <div class="message-highlight">
+                    <div>
+                      <details>
+                        <summary>Pour les IDE</summary>
+                        <p>
+                          À l'UA0, le roulement IDE de jour s’étend sur 11 semaines. Nous partons du principe que la première semaine d'une
+                          séquence commence un lundi avec le roulement suivant&nbsp;: <strong>J-J-S-J-J-R-R</strong>.
+                        </p>
+                      </details>
+                      <details>
+                        <summary>Pour les ASH</summary>
+                        <p>
+                          À l'UA0, le roulement ASH s'étend sur 4 semaines. Nous partons du principe que la première semaine d'une séquence
+                          commence un lundi avec le roulement suivant&nbsp;: <strong>M-M-M-M-R-S-S</strong>.
+                        </p>
+                      </details>
+                      <p>
+                        Attention à ne pas confondre les semaines entre elles&nbsp;! Le roulement commence toujours un
+                        <strong>lundi</strong>.
+                      </p>
+                      <p>
+                        Quel que soit le moment où le roulement est défini, le planning sera toujours généré à partir du premier jour du
+                        mois en cours.
+                      </p>
+                    </div>
+                  </div>
+                </details>
+                <details class="location-info">
+                  <summary><em>Personnalier mon roulement</em></summary>
+                  <div class="message-highlight">
+                    <p>On part du principe que vous savez ce que vous faites&nbsp;! Sinon laissez tel quel.</p>
+                  </div>
+                  <div>
+                    <label for="pattern-custom">Roulement à personnaliser&nbsp;:</label>
+                    <textarea name="pattern-custom" id="pattern-custom" class="autosize"></textarea>
+                  </div>
+                </details>
                 <div class="flex gap">
                   <button class="button" onclick="generateSchedule()">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
