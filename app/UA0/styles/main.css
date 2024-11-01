@@ -52,6 +52,26 @@
   font-display: swap;
 }
 
+::-webkit-scrollbar {
+  /* @affected Chrome, Edge, and Safari. */
+  /* @note Ne doit pas être scalable. */
+  width: 10px; /* @todo En test. */
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-primary-light);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-primary);
+}
+
+* {
+  /* @affected Firefox @todo Standard futur ? */
+  scrollbar-color: var(--color-primary) var(--color-primary-light);
+}
+
+
 /* Reset et styles de base */
 * {
   box-sizing: border-box;
@@ -79,6 +99,7 @@ img {
 
 .presentation-image {
   max-height: 40svh;
+  margin: auto auto 1em 0;
   padding-inline-end: 5em;
 }
 
@@ -116,7 +137,18 @@ article .main-content {
   padding-inline: var(--spacing-md);
 }
 
+main {
+  display: grid;
+}
+
+main > article {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
 .main-content {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   margin-block-start: var(--spacing-md);
 }
 
@@ -382,24 +414,5 @@ select {
 
   .no-print {
     display: none;
-  }
-}
-
-/* Media Queries */
-@media (min-height: 52.01em) {
-  .presentation-image {
-    margin-block-start: 1.5em;
-  }
-}
-
-@media (min-height: 55.01em) {
-  .presentation-image {
-    margin-block-start: 5em;
-  }
-}
-
-@media (min-height: 60.01em) {
-  .presentation-image {
-    margin-block-start: 7em;
   }
 }
