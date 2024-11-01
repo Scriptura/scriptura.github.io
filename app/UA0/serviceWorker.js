@@ -1,4 +1,4 @@
-const CACHE_NAME = 'v30'
+const CACHE_NAME = 'v31'
 const MEDIA_CACHE_NAME = `media-${CACHE_NAME}`
 const ROOT_PATH = `/app/UA0/`
 const OFFLINE_URL = `${ROOT_PATH}index.html`
@@ -11,6 +11,7 @@ const resourcesToCache = [
   `${ROOT_PATH}fonts/notoSerif-Regular.woff2`,
   `${ROOT_PATH}fonts/OleoScriptSwashCaps-Regular.woff2`,
   `${ROOT_PATH}images/logo.svg`,
+  `${ROOT_PATH}images/CalvinAndHobbes.jpg`,
   OFFLINE_URL,
 ]
 
