@@ -78,6 +78,22 @@
   user-select: none; /* La spécification ne prévoie pas que cette propriété soit héritée, bien que les navigateurs webkit le fasse. Cette règle n'a de sens que pour une application web. */
 }
 
+button,
+input,
+optgroup,
+select,
+textarea {
+  /* @bugfix Change the font styles @affected All browsers. */
+  font-family: inherit;
+  /* @bugfix Change the font styles @affected All browsers. */
+  font-size: 100%;
+  /* @bugfix Change the font styles @affected All browsers. */
+  line-height: 1.15;
+  /* @bugfix Remove the margin @affected Firefox and Safari. */
+  margin: 0;
+}
+
+
 html,
 body {
   height: 100%;
@@ -225,13 +241,21 @@ select {
   cursor: pointer;
 }
 
+textarea,
+.form-control {
+  /* @note inline-block par défaut. */
+  display: block;
+  min-height: 3em;
+  background-color: var(--color-background);
+  border: 2px solid var(--color-primary);
+  resize: vertical;
+}
+
 .form-control {
   position: relative;
   display: block;
   width: 100%;
-  height: 3em;
   line-height: 1.5;
-  background-color: var(--color-background);
   border: 2px solid var(--color-primary);
   border-radius: var(--border-radius);
 }
@@ -274,22 +298,23 @@ select {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='orange'><path d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/></svg>");
 }
 
-.form-control:has(> :where(:focus, :hover, :active)) {
-  border-color: orange;
-}
-
+textarea,
 .form-control > * {
   width: 100%;
   height: 3em;
   padding-inline: var(--spacing-sm);
-  font-size: 1rem; /* Unité rem obligatoire pour le datepicker. */
-  /* color: var(--color-primary-dark); */
-  background-color: transparent;
-  border-color: transparent;
 }
 
-.form-control > :where(:focus, :hover, :active) {
+textarea:where(:focus, :hover, :active),
+.form-control > :where(:focus, :hover, :active),
+.form-control:has(> :where(:focus, :hover, :active)) {
+  border-color: orange;
   outline: none;
+}
+
+.form-control > * {
+  background-color: transparent;
+  border-color: transparent;
 }
 
 ::-webkit-calendar-picker-indicator {
@@ -297,8 +322,12 @@ select {
 }
 
 .button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
   font-weight: 400;
-  padding: 0.75em;
+  padding: 0.75em 1em;
   font-size: 1em;
   text-align: center;
   vertical-align: center;
@@ -307,12 +336,6 @@ select {
   border: 1px solid var(--color-primary-dark);
   border-radius: var(--border-radius);
   cursor: pointer;
-
-  /* Nouvelles propriétés pour l'alignement */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5em; /* Espace entre l'icône et le texte */
 }
 
 .button:where(:focus, :hover, :active) {
