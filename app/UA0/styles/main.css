@@ -118,12 +118,12 @@ img {
 
 .presentation-image {
   max-height: 40svh;
-  padding: 2em 4em 2em 0;
+  padding: 2em 10em 2em 0;
   place-self: end start;
 }
 
 /* Layout */
-.wrap {
+.wrapper {
   display: grid;
   grid-template-columns: minmax(0, 90em);
   justify-content: center;
@@ -150,8 +150,8 @@ header {
   background-color: var(--color-primary);
 }
 
-header > .wrap,
-footer > .wrap,
+header > .wrapper,
+footer > .wrapper,
 article .main-content {
   padding-inline: var(--spacing-md);
 }
@@ -323,11 +323,12 @@ textarea:where(:focus, :hover, :active),
 
 .button {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
   gap: 0.5em;
   font-weight: 400;
-  padding: 0.75em;
+  padding: 0.75em 1em;
   font-size: 1em;
   text-align: center;
   vertical-align: center;
@@ -412,6 +413,10 @@ textarea:where(:focus, :hover, :active),
 /* Utilitaires */
 .flex {
   display: flex;
+}
+
+.wrap {
+  flex-wrap: wrap;
 }
 
 .gap {
