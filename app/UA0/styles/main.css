@@ -99,7 +99,7 @@ img {
 
 .presentation-image {
   max-height: 40svh;
-  margin-block: 1em 2em;
+  padding: 2em 7em 2em 0;
   place-self: end start;
 }
 
