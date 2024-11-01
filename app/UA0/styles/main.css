@@ -243,7 +243,6 @@ select {
 
 .pattern-custom,
 .form-control {
-  /* @note inline-block par défaut. */
   display: block;
   min-height: 3em;
   background-color: var(--color-background);
@@ -251,13 +250,13 @@ select {
   resize: vertical;
 }
 
-.pattern-custom {
+textarea.pattern-custom {
+  padding: 1em;
   font-family: monospace, monospace;
 }
 
 .form-control {
   position: relative;
-  display: block;
   width: 100%;
   line-height: 1.5;
   border: 2px solid var(--color-primary);
