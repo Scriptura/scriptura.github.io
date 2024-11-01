@@ -93,6 +93,9 @@ body {
 }
 
 img {
+  display: block;
+  width: auto; /* Pour garder le ratio naturel */
+  height: auto; /* Pour garder le ratio naturel */
   max-width: 100%;
   pointer-events: none;
 }
