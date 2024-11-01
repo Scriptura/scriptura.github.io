@@ -187,13 +187,13 @@ hgroup p {
   font-size: 1.8em;
 }
 
-.location-info,
-.location-info summary {
+.details,
+.details summary {
   /* display: inline-block; */
   cursor: pointer;
 }
 
-.location-info > summary {
+.details > summary {
   color: var(--color-primary-dark);
 }
 

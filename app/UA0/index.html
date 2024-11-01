@@ -41,13 +41,13 @@
                   </div>
                 </div>
                 <div>
-                  <label for="start-date" class="form-label">Définition de mon roulement&nbsp;:</label>
+                  <label for="start-date" class="form-label">Début de mon roulement&nbsp;:</label>
                   <div class="form-control">
                     <input type="date" id="start-date" required />
                   </div>
                 </div>
-                <details class="location-info">
-                  <summary><em>Quel est le début de mon roulement&nbsp;?</em></summary>
+                <details class="details">
+                  <summary><em>Quand débuter mon roulement&nbsp;?</em></summary>
                   <div class="message-highlight">
                     <div>
                       <details>
@@ -75,14 +75,17 @@
                     </div>
                   </div>
                 </details>
-                <details class="location-info">
+                <details class="details">
                   <summary><em>Personnalier mon roulement</em></summary>
                   <div class="message-highlight">
-                    <p>Ne modifiez ce champ que si vous savez ce que vous faites.</p>
-                  </div>
-                  <div>
-                    <label for="pattern-custom">Roulement à modifier&nbsp;:</label>
-                    <textarea name="pattern-custom" id="pattern-custom" class="autosize pattern-custom"></textarea>
+                    <p>
+                      Utile pour les personnes à 80% ou 50%, cette personnalisation permet de modifier les trames de base, on peut même en
+                      créer de toutes nouvelles. Les jours (J), soirs (S), matins (M), repos (R), etc, seront séparés par des virgules.
+                    </p>
+                    <div>
+                      <label for="pattern-custom">Roulement à modifier&nbsp;:</label>
+                      <textarea name="pattern-custom" id="pattern-custom" class="autosize pattern-custom"></textarea>
+                    </div>
                   </div>
                 </details>
                 <div class="flex wrap gap">
