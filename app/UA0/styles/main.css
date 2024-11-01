@@ -99,8 +99,8 @@ img {
 
 .presentation-image {
   max-height: 40svh;
-  margin: auto auto 1em 0;
-  padding-inline-end: 5em;
+  margin-block: 1em 2em;
+  place-self: end start;
 }
 
 /* Layout */
