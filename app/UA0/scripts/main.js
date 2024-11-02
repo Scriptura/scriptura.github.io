@@ -50,7 +50,9 @@ function textareaAutosize(input) {
   input.addEventListener('input', adjustHeight)
   input.addEventListener('focus', adjustHeight)
   targetForTextarea.addEventListener('change', adjustHeight)
-  targetForTextarea.addEventListener('blur', adjustHeight)
+  targetForTextarea.addEventListener('change', () => {
+    setTimeout(adjustHeight, 200) // un petit hack pour les mobiles...
+  })
 }
 
 document.querySelectorAll('textarea.autosize').forEach(textarea => textareaAutosize(textarea))
