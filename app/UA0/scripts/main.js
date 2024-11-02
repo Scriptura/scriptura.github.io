@@ -42,7 +42,6 @@ function textareaAutosize(input) {
 
   const adjustHeight = () => {
     input.style.height = 'auto'
-    //input.setAttribute('rows', Math.ceil(textarea.scrollHeight / 32))
     input.style.height = `${input.scrollHeight}px`
   }
   window.addEventListener('load', adjustHeight)
@@ -50,9 +49,10 @@ function textareaAutosize(input) {
   input.addEventListener('input', adjustHeight)
   input.addEventListener('focus', adjustHeight)
   targetForTextarea.forEach(textarea => {
-    textarea.addEventListener('click', adjustHeight)
+    textarea.addEventListener('change', adjustHeight)
     textarea.addEventListener('click', () => {
-      setTimeout(adjustHeight, 200) // un petit hack pour les mobiles...
+      adjustHeight()
+      setTimeout(adjustHeight, 1000) // un petit hack pour les mobiles...
     })
   })
 }
