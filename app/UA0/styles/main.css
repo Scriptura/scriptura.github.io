@@ -12,7 +12,7 @@
   --color-event-day: hsl(197, 92%, 90%);
   --color-event-evening: hsl(24, 92%, 90%);
   --color-event-morning: hsl(109, 100%, 91%);
-  --color-event-night: hsl(25, 100%, 88%);
+  --color-event-night: hsl(0, 86%, 91%);
   --color-event-rest: hsl(0, 0%, 96%);
 
   /* Tailles */
