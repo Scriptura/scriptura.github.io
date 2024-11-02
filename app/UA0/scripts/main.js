@@ -37,22 +37,22 @@ registerServiceWorker()
 })()
 
 // Ajuste la hauteur du champ par rapport au contenu
-function textareaAutosize(input) {
-  const targetForTextarea = document.querySelectorAll('.target-for-textarea')
+function textareaAutosize(textarea) {
+  const targetForTextareas = document.querySelectorAll('.target-for-textarea')
 
   const adjustHeight = () => {
-    input.style.height = 'auto'
-    input.style.height = `${input.scrollHeight}px`
+    textarea.style.height = 'auto'
+    textarea.style.height = `${input.scrollHeight}px`
   }
   window.addEventListener('load', adjustHeight)
   window.addEventListener('resize', adjustHeight)
-  input.addEventListener('input', adjustHeight)
-  input.addEventListener('focus', adjustHeight)
-  targetForTextarea.forEach(textarea => {
-    textarea.addEventListener('change', adjustHeight)
-    textarea.addEventListener('click', () => {
+  textarea.addEventListener('input', adjustHeight)
+  textarea.addEventListener('focus', adjustHeight)
+  targetForTextareas.forEach(target => {
+    target.addEventListener('change', adjustHeight)
+    target.addEventListener('click', () => {
       adjustHeight()
-      setTimeout(adjustHeight, 1000) // un petit hack pour les mobiles...
+      setTimeout(adjustHeight, 100) // un petit hack pour les mobiles...
     })
   })
 }
