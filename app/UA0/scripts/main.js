@@ -42,7 +42,7 @@ function textareaAutosize(textarea) {
 
   const adjustHeight = () => {
     textarea.style.height = 'auto'
-    textarea.style.height = `${input.scrollHeight}px`
+    textarea.style.height = `${textarea.scrollHeight}px`
   }
   window.addEventListener('load', adjustHeight)
   window.addEventListener('resize', adjustHeight)

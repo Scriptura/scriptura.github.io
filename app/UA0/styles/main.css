@@ -1,63 +1,33 @@
 /* Variables CSS globales */
 :root {
-  /* Système de couleurs */
-  --color-white: #fff;
-  --color-black: #000;
-  --color-gray-100: hsl(0, 0%, 96%);
-  --color-gray-500: hsl(0, 0%, 64%);
-  --color-gray-700: #777;
-
-  /* Couleurs thématiques */
+  /* Couleurs */
   --color-primary: hsl(210, 100%, 58%);
   --color-primary-light: hsl(216, 100%, 73%);
   --color-primary-dark: hsl(216, 98%, 52%);
-  --color-accent: orange;
-
-  /* Couleurs sémantiques */
-  --color-background: var(--color-white);
+  --color-background: #fff;
   --color-text: hsl(210, 9%, 31%);
   --color-surface: hsl(24, 92%, 90%);
 
   /* Couleurs des événements */
-  --color-event-base: var(--color-gray-100);
   --color-event-day: hsl(197, 92%, 90%);
   --color-event-evening: hsl(24, 92%, 90%);
   --color-event-morning: hsl(109, 100%, 91%);
   --color-event-night: hsl(0, 86%, 91%);
+  --color-event-rest: hsl(0, 0%, 96%);
 
-  /* Système d'espacement */
+  /* Tailles */
+  --icon-size: 2.5em;
+  --grid-item-min-width: 22em;
+  --border-radius: 0.3em;
+
+  /* Espacements */
   --spacing-xs: 0.2em;
   --spacing-sm: 0.5em;
   --spacing-md: 1em;
   --spacing-lg: 1.5em;
-  --spacing-xl: 2em;
-  --spacing-2xl: 3em;
-
-  /* Système de bordures */
-  --border-radius: 0.3em;
-  --border-width: 2px;
-  --border-color: var(--color-primary);
-
-  /* Dimensions */
-  --icon-size: 2.5em;
-  --grid-item-min-width: 22em;
-  --form-control-height: 3em;
-  --logo-height: 3em;
-
-  /* Typography */
-  --font-family-sans: 'Noto Sans', sans-serif;
-  --font-family-serif: 'Noto Serif', serif;
-  --font-family-display: 'Oleo Script Swash Caps', cursive;
-  --font-family-mono: monospace, monospace;
-
-  /* Z-index */
-  --z-index-dropdown: 100;
-  --z-index-sticky: 200;
-  --z-index-fixed: 300;
-  --z-index-modal: 400;
 }
 
-/* Polices de caractères */
+/* Police de caractères */
 @font-face {
   font-family: 'Noto Sans';
   src: url('../fonts/notoSans-Regular.woff2') format('woff2'), url('../fonts/notoSans-Regular.woff') format('woff');
@@ -82,69 +52,82 @@
   font-display: swap;
 }
 
+::-webkit-scrollbar {
+  /* @affected Chrome, Edge, and Safari. */
+  /* @note Ne doit pas être scalable. */
+  width: 10px; /* @todo En test. */
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-primary-light);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-primary);
+}
+
+* {
+  /* @affected Firefox @todo Standard futur ? */
+  scrollbar-color: var(--color-primary) var(--color-primary-light);
+}
+
 /* Reset et styles de base */
 * {
   box-sizing: border-box;
-  user-select: none;
+  user-select: none; /* La spécification ne prévoie pas que cette propriété soit héritée, bien que les navigateurs webkit le fasse. Cette règle n'a de sens que pour une application web. */
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  /* @bugfix Change the font styles @affected All browsers. */
+  font-family: inherit;
+  /* @bugfix Change the font styles @affected All browsers. */
+  font-size: 100%;
+  /* @bugfix Change the font styles @affected All browsers. */
+  line-height: 1.15;
+  /* @bugfix Remove the margin @affected Firefox and Safari. */
+  margin: 0;
 }
 
 html,
 body {
   height: 100%;
-  margin: 0;
 }
 
 body {
   display: grid;
   grid-template-rows: 1fr auto;
   min-height: 100svh;
-  font-family: var(--font-family-sans);
+  font-family: 'Noto Sans', sans-serif;
+  margin: 0;
   background-color: var(--color-background);
 }
 
-/* Styles de base des éléments */
-button,
-input,
-optgroup,
-select,
-textarea {
-  font-family: inherit;
-  font-size: 100%;
-  line-height: 1.15;
-  margin: 0;
-}
-
-select {
-  cursor: pointer;
-}
-
-summary {
-  cursor: pointer;
-}
-
-.details > summary {
-  color: var(--color-primary-dark);
-}
-
 :not(pre) > code {
-  padding: var(--spacing-xs) var(--spacing-sm);
-  font-family: var(--font-family-mono);
+  padding: 0.2em 0.5em;
+  font-family: monospace, monospace;
   background-color: hsla(0, 0%, 64%, 0.2);
-  border-radius: var(--border-radius);
+  border-radius: 0.3em;
 }
 
-/* Images */
+.button svg {
+  fill: currentColor;
+}
+
 img {
   display: block;
-  width: auto; /* évite une déformation de l'image dans notre contexte */
-  height: auto;
+  width: auto; /* Pour garder le ratio naturel */
+  height: auto; /* Pour garder le ratio naturel */
   max-width: 100%;
   pointer-events: none;
 }
 
 .presentation-image {
   max-height: 40svh;
-  padding: var(--spacing-xl) 10em var(--spacing-xl) 0;
+  padding: 2em 10em 2em 0;
   place-self: end start;
 }
 
@@ -164,19 +147,14 @@ img {
   grid-template-columns: repeat(auto-fit, minmax(min(var(--grid-item-min-width), 100%), 1fr));
 }
 
-.grid-auto:has(.table) {
-  margin-block-start: var(--spacing-lg);
-}
-
 @media (min-width: 45.01em) {
   .grid2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-/* Composants Header et Footer */
-header,
-.footer {
+/* En-tête */
+header {
   color: var(--color-background);
   background-color: var(--color-primary);
 }
@@ -187,30 +165,6 @@ article .main-content {
   padding-inline: var(--spacing-md);
 }
 
-/* Composant Footer */
-.footer {
-  display: flex;
-  align-items: center;
-  font-family: var(--font-family-display);
-  font-style: italic;
-}
-
-.footer .flex.gap {
-  gap: 0.5em;
-}
-
-.footer p {
-  font-size: 1.2em;
-  line-height: 1;
-}
-
-.footer .logo {
-  margin-block-start: 0.1em;
-  height: var(--logo-height);
-  filter: brightness(0) invert(1);
-}
-
-/* Composant Main */
 main {
   display: grid;
 }
@@ -226,9 +180,8 @@ main > article {
   margin-block-start: var(--spacing-md);
 }
 
-/* Composant Heading Group */
 hgroup {
-  font-family: var(--font-family-display);
+  font-family: 'Oleo Script Swash Caps';
   text-align: center;
   text-wrap: balance;
 }
@@ -243,7 +196,39 @@ hgroup p {
   font-size: 1.8em;
 }
 
-/* Message Highlight */
+summary {
+  cursor: pointer;
+}
+
+.details > summary {
+  color: var(--color-primary-dark);
+}
+
+/* Pied de page */
+.footer {
+  align-items: center;
+  font-family: 'Oleo Script Swash Caps';
+  font-style: italic;
+  color: var(--color-background);
+  background-color: var(--color-primary);
+}
+
+.footer .flex.gap {
+  gap: 0.5em;
+}
+
+.footer p {
+  font-size: 1.2em;
+  line-height: 1;
+}
+
+.footer .logo {
+  margin-block-start: 0.1em;
+  height: 3em;
+  filter: brightness(0) invert(1);
+}
+
+/* Composants */
 .message-highlight {
   padding: var(--spacing-md);
   background-color: var(--color-event-evening);
@@ -254,92 +239,110 @@ hgroup p {
   margin-block: 0.2em;
 }
 
-/* Composants Formulaires */
+/* Formulaires */
 label {
   color: var(--color-primary-dark);
 }
 
+select {
+  cursor: pointer;
+}
+
+.custom-pattern,
 .form-control {
-  position: relative;
-  width: 100%;
-  height: var(--form-control-height);
-  line-height: var(--form-control-height);
-  border: var(--border-width) solid var(--border-color);
-  border-radius: var(--border-radius);
-  background-color: var(--color-background);
-}
-
-.form-control > * {
-  width: 100%;
-  height: var(--form-control-height);
-  padding-inline: var(--spacing-sm);
-  background-color: transparent;
-  border-color: transparent;
-}
-
-.form-control::after {
-  content: '';
-  position: absolute;
-  width: calc(var(--form-control-height) - 4px);
-  height: calc(var(--form-control-height) - 4px);
-  right: 0;
-  top: 0;
-  background-color: var(--color-background);
-  background-size: 1.5em 1.5em;
-  background-repeat: no-repeat;
-  background-position: 50% 50%;
-  pointer-events: none;
-}
-
-.custom-pattern {
   display: block;
   background-color: var(--color-background);
-  border: var(--border-width) solid var(--border-color);
+  border: 2px solid var(--color-primary);
   resize: vertical;
 }
 
 textarea.custom-pattern {
   min-height: 3em;
   padding: 1em;
-  font-family: var(--font-family-mono);
+  font-family: monospace, monospace;
 }
 
-/* États des contrôles de formulaire */
+.form-control {
+  position: relative;
+  width: 100%;
+  height: 3em;
+  line-height: 3em;
+  border: 2px solid var(--color-primary);
+  border-radius: var(--border-radius);
+}
+
+.form-control::after {
+  content: '';
+  position: absolute;
+  width: calc(3em - 4px);
+  height: calc(3em - 4px);
+  right: 0;
+  top: 0;
+  background-color: #fff;
+  background-size: 1.5em 1.5em;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  pointer-events: none;
+}
+
 .form-control:has(select)::after {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' height='24px' width='24px' viewBox='0 -960 960 960' fill='hsl(210, 100%, 58%)'><path d='M480-120 300-300l58-58 122 122 122-122 58 58-180 180ZM358-598l-58-58 180-180 180 180-58 58-122-122-122 122Z'/></svg>");
+}
+
+.form-control:has(select):where(:focus, :hover, :active) {
+  color: orange;
+}
+
+.form-control:has(select):where(:focus, :hover, :active)::after {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' height='24px' width='24px' viewBox='0 -960 960 960' fill='orange'><path d='M480-120 300-300l58-58 122 122 122-122 58 58-180 180ZM358-598l-58-58 180-180 180 180-58 58-122-122-122 122Z'/></svg>");
 }
 
 .form-control:has([type='date'])::after {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(210, 100%, 58%)'><path d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/></svg>");
 }
 
+.form-control:has([type='date']):where(:focus, :hover, :active) {
+  color: orange;
+}
+
+.form-control:has([type='date']):where(:focus, :hover, :active)::after {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='orange'><path d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/></svg>");
+}
+
+.custom-pattern,
+.form-control > * {
+  width: 100%;
+  height: 3em;
+  padding-inline: var(--spacing-sm);
+}
+
+.custom-pattern:where(:focus, :hover, :active),
+.form-control > :where(:focus, :hover, :active),
+.form-control:has(> :where(:focus, :hover, :active)) {
+  border-color: orange;
+  outline: none;
+}
+
+.form-control > * {
+  background-color: transparent;
+  border-color: transparent;
+}
+
 ::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
 
-/* États de survol et focus */
-.custom-pattern:where(:focus, :hover, :active),
-.form-control > :where(:focus, :hover, :active),
-.form-control:has(> :where(:focus, :hover, :active)) {
-  border-color: var(--color-accent);
-  outline: none;
-}
-
-.form-control:has(select):where(:focus, :hover, :active),
-.form-control:has([type='date']):where(:focus, :hover, :active) {
-  color: var(--color-accent);
-}
-
-/* Composant Button */
 .button {
   display: flex;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-sm);
+  gap: 0.5em;
+  font-weight: 400;
   padding: 0.75em 1em;
   font-size: 1em;
-  font-weight: 400;
+  text-align: center;
+  vertical-align: center;
   color: var(--color-background);
   background-color: var(--color-primary-dark);
   border: 1px solid var(--color-primary-dark);
@@ -348,19 +351,19 @@ textarea.custom-pattern {
 }
 
 .button:where(:focus, :hover, :active) {
-  background-color: var(--color-accent);
-  border-color: var(--color-accent);
+  background-color: orange;
+  border-color: orange;
 }
 
-.button svg {
-  fill: currentColor;
-}
-
-/* Composant Table */
+/* Tableaux */
 .table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: var(--spacing-lg);
+}
+
+.grid-auto:has(.table) {
+  margin-block-start: var(--spacing-lg);
 }
 
 .table th,
@@ -380,11 +383,11 @@ textarea.custom-pattern {
   bottom: var(--spacing-xs);
   right: var(--spacing-sm);
   font-size: 0.7em;
-  color: var(--color-gray-700);
+  color: #777;
 }
 
 .table th {
-  background-color: var(--color-event-base);
+  background-color: var(--color-event-rest);
   font-weight: bold;
 }
 
@@ -396,8 +399,13 @@ textarea.custom-pattern {
 }
 
 /* États des événements */
+/*
+.table .event-rest,
+.table .event-extra-rest,
+.table .event-holiday,
+*/
 [data-day] {
-  background-color: var(--color-event-base);
+  background-color: var(--color-event-rest);
 }
 
 .table .event-day {
@@ -414,23 +422,6 @@ textarea.custom-pattern {
 
 .table .event-night {
   background-color: var(--color-event-night);
-}
-
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--color-primary-light);
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: var(--color-primary);
-}
-
-* {
-  scrollbar-color: var(--color-primary) var(--color-primary-light);
 }
 
 /* Utilitaires */
@@ -463,7 +454,7 @@ textarea.custom-pattern {
   field-sizing: content;
 }
 
-/* Classes d'impression */
+/* Impression */
 .cmd-print {
   display: none;
 }
@@ -472,7 +463,6 @@ textarea.custom-pattern {
   display: inherit;
 }
 
-/* Media Queries */
 @media print {
   .grid-auto {
     --grid-item-min-width: 15em;
