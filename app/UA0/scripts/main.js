@@ -38,7 +38,7 @@ registerServiceWorker()
 
 // Ajuste la hauteur du champ par rapport au contenu
 function textareaAutosize(input) {
-  const targetForTextarea = document.querySelector('.target-for-textarea')
+  const targetForTextarea = document.querySelectorAll('.target-for-textarea')
 
   const adjustHeight = () => {
     input.style.height = 'auto'
@@ -49,9 +49,11 @@ function textareaAutosize(input) {
   window.addEventListener('resize', adjustHeight)
   input.addEventListener('input', adjustHeight)
   input.addEventListener('focus', adjustHeight)
-  targetForTextarea.addEventListener('change', adjustHeight)
-  targetForTextarea.addEventListener('change', () => {
-    setTimeout(adjustHeight, 200) // un petit hack pour les mobiles...
+  targetForTextarea.forEach(textarea => {
+    textarea.addEventListener('click', adjustHeight)
+    textarea.addEventListener('click', () => {
+      setTimeout(adjustHeight, 200) // un petit hack pour les mobiles...
+    })
   })
 }
 

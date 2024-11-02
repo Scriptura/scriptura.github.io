@@ -71,7 +71,6 @@
   scrollbar-color: var(--color-primary) var(--color-primary-light);
 }
 
-
 /* Reset et styles de base */
 * {
   box-sizing: border-box;
@@ -108,7 +107,7 @@ body {
 }
 
 :not(pre) > code {
-  padding: .2em .5em;
+  padding: 0.2em 0.5em;
   font-family: monospace, monospace;
   background-color: hsla(0, 0%, 64%, 0.2);
   border-radius: 0.3em;
@@ -258,7 +257,7 @@ select {
 }
 
 textarea.custom-pattern {
-  min-height: 5em;
+  min-height: 3em;
   padding: 1em;
   font-family: monospace, monospace;
 }
@@ -448,6 +447,11 @@ textarea.custom-pattern {
 
 .item-push {
   margin-inline-start: auto;
+}
+
+.autosize {
+  overflow: hidden;
+  field-sizing: content;
 }
 
 /* Impression */
