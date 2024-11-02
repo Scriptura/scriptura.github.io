@@ -52,7 +52,7 @@ function textareaAutosize(textarea) {
     target.addEventListener('change', adjustHeight)
     target.addEventListener('click', () => {
       adjustHeight()
-      setTimeout(adjustHeight, 100) // un petit hack pour les mobiles...
+      setTimeout(adjustHeight, 1) // un petit hack pour les mobiles...
     })
   })
 }
