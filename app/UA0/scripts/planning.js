@@ -1,5 +1,5 @@
 // prettier-ignore
-const rotationPatternIDE = [
+const rotationIDEPattern = [
   'J', 'J', 'S', 'J', 'J', 'R', 'R',
   'S', 'S', 'J', 'M', 'F', 'R', 'R',
   'S', 'J', 'M', 'M', 'R', 'S', 'S',
@@ -14,13 +14,13 @@ const rotationPatternIDE = [
 ];
 
 // prettier-ignore
-const rotationPatternNightIDE = [
+const rotationNightIDEPattern = [
   'N', 'N', 'R', 'R', 'N', 'N', 'N',
   'R', 'R', 'N', 'N', 'R', 'R', 'R',
 ];
 
 // prettier-ignore
-const rotationPatternASH = [
+const rotationASHPattern = [
   'M', 'M', 'M', 'M', 'R', 'S', 'S',
   'S', 'S', 'R', 'R', 'M', 'M', 'M',
   'M', 'R', 'S', 'S', 'S', 'R', 'R',
@@ -28,7 +28,7 @@ const rotationPatternASH = [
 ];
 
 // Initialisation du pattern personnalisé
-let rotationPatternCustom = []
+let rotationCustomPattern = []
 
 // Fonction pour formater le pattern pour l'affichage (groupes de 7 avec retours à la ligne)
 function formatPatternForDisplay(pattern) {
@@ -76,27 +76,27 @@ function validatePattern(pattern) {
 function getInitialPattern(patternType) {
   switch (patternType) {
     case 'NightIDE':
-      return rotationPatternNightIDE
+      return rotationNightIDEPattern
     case 'ASH':
-      return rotationPatternASH
+      return rotationASHPattern
     case 'CUSTOM':
-      if (rotationPatternCustom.length > 0) {
-        return rotationPatternCustom
+      if (rotationCustomPattern.length > 0) {
+        return rotationCustomPattern
       }
-      const savedCustomPattern = localStorage.getItem('rotation-pattern-custom')
+      const savedCustomPattern = localStorage.getItem('rotation-custom-pattern')
       if (savedCustomPattern) {
-        rotationPatternCustom = JSON.parse(savedCustomPattern)
-        return rotationPatternCustom
+        rotationCustomPattern = JSON.parse(savedCustomPattern)
+        return rotationCustomPattern
       }
-      return rotationPatternIDE
+      return rotationIDEPattern
     default:
-      return rotationPatternIDE
+      return rotationIDEPattern
   }
 }
 
 // Fonction pour mettre à jour le textarea avec le pattern sélectionné
 function updatePatternTextarea(pattern) {
-  const textarea = document.getElementById('pattern-custom')
+  const textarea = document.getElementById('custom-pattern')
   textarea.value = formatPatternForDisplay(pattern)
 }
 
@@ -107,7 +107,7 @@ function stringToPattern(str) {
 
 // Modification de la fonction getSelectedPattern pour utiliser le textarea
 function getSelectedPattern() {
-  const customPattern = document.getElementById('pattern-custom').value
+  const customPattern = document.getElementById('custom-pattern').value
   return stringToPattern(customPattern)
 }
 
@@ -119,22 +119,21 @@ document.getElementById('pattern-select').addEventListener('change', function ()
 })
 
 // Écouteur d'événement pour la sauvegarde du pattern personnalisé
-document.getElementById('pattern-custom').addEventListener('blur', function () {
-  const cleanedValue = cleanPatternInput(this.value)
+document.querySelector('.save-custom-pattern').addEventListener('click', function () {
+  const patternInput = document.getElementById('custom-pattern')
+  const cleanedValue = cleanPatternInput(patternInput.value)
+  
   if (validatePattern(cleanedValue)) {
-    this.value = formatPatternForDisplay(cleanedValue)
-    const selectElement = document.getElementById('pattern-select')
-    if (selectElement.value === 'CUSTOM') {
-      rotationPatternCustom = stringToPattern(cleanedValue)
-      localStorage.setItem('rotation-pattern-custom', JSON.stringify(rotationPatternCustom))
-    }
+    patternInput.value = formatPatternForDisplay(cleanedValue)
+    rotationCustomPattern = stringToPattern(cleanedValue)
+    localStorage.setItem('rotation-custom-pattern', JSON.stringify(rotationCustomPattern))
   } else {
-    const selectElement = document.getElementById('pattern-select')
-    if (selectElement.value === 'CUSTOM' && rotationPatternCustom.length > 0) {
-      this.value = formatPatternForDisplay(rotationPatternCustom)
+    if (rotationCustomPattern.length > 0) {
+      patternInput.value = formatPatternForDisplay(rotationCustomPattern)
     } else {
+      const selectElement = document.getElementById('pattern-select')
       const initialPattern = getInitialPattern(selectElement.value)
-      this.value = formatPatternForDisplay(initialPattern)
+      patternInput.value = formatPatternForDisplay(initialPattern)
     }
   }
 })
@@ -154,9 +153,9 @@ document.getElementById('start-date').addEventListener('change', function () {
 
 // Chargement initial
 window.onload = () => {
-  const savedCustomPattern = localStorage.getItem('rotation-pattern-custom')
+  const savedCustomPattern = localStorage.getItem('rotation-custom-pattern')
   if (savedCustomPattern) {
-    rotationPatternCustom = JSON.parse(savedCustomPattern)
+    rotationCustomPattern = JSON.parse(savedCustomPattern)
   }
 
   const savedPattern = localStorage.getItem('pattern-select')
@@ -294,3 +293,7 @@ function getClassFromSchedule(scheduleLetter) {
       return null
   }
 }
+
+document.querySelector('.generate-schedule').addEventListener('click', () => {
+  generateSchedule()
+})

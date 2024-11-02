@@ -79,18 +79,25 @@
                   <summary><em>Personnalier mon roulement</em></summary>
                   <div class="message-highlight">
                     <p>
-                      Utile pour les personnes à 80% ou 50%, cette personnalisation permet de modifier les trames de base, on peut même en
-                      créer de toutes nouvelles. Les jours (J), soirs (S), matins (M), repos (R), etc, seront séparés par des virgules.
+                      Cette personnalisation permet de modifier un roulement, on peut même en
+                      créer un nouveau. Les jours (J), soirs (S), matins (M), repos (R), etc, seront séparés par des virgules.
+                    </p>
+                    <p>Par la suite faire&nbsp; <code>Ma fonction > Roulement personnalisé</code> pour récupérer ce roulement.</p>
                     </p>
                     <div>
-                      <label for="pattern-custom">Roulement à personnaliser&nbsp;:</label>
-                      <textarea name="pattern-custom" id="pattern-custom" class="autosize pattern-custom"></textarea>
+                      <div class="gap-block">
+                        <label for="custom-pattern">Roulement à personnaliser&nbsp;:</label>
+                        <textarea name="custom-pattern" id="custom-pattern" class="autosize custom-pattern"></textarea>
+                      </div>
+                      <div class="flex items-push">
+                        <button class="button save-custom-pattern"><svg height="24px" viewBox="0 -960 960 960" width="24px"><path d="M438-226 296-368l58-58 84 84 168-168 58 58-226 226ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Z"/></svg> Enregistrer</button>
+                      </div>
                     </div>
                   </div>
                 </details>
                 <div class="flex wrap gap">
-                  <button class="button" onclick="generateSchedule()">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
+                  <button class="button generate-schedule">
+                    <svg height="24px" viewBox="0 -960 960 960" width="24px">
                       <path
                         d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v240h-80v-80H200v400h280v80H200ZM760 0q-73 0-127.5-45.5T564-160h62q13 44 49.5 72T760-60q58 0 99-41t41-99q0-58-41-99t-99-41q-29 0-54 10.5T662-300h58v60H560v-160h60v57q27-26 63-41.5t77-15.5q83 0 141.5 58.5T960-200q0 83-58.5 141.5T760 0ZM200-640h560v-80H200v80Zm0 0v-80 80Z"
                       />
@@ -98,7 +105,7 @@
                     Générer le planning
                   </button>
                   <button class="button cmd-print">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
+                    <svg height="24px" viewBox="0 -960 960 960" width="24px">
                       <path
                         d="M640-640v-120H320v120h-80v-200h480v200h-80Zm-480 80h640-640Zm560 100q17 0 28.5-11.5T760-500q0-17-11.5-28.5T720-540q-17 0-28.5 11.5T680-500q0 17 11.5 28.5T720-460Zm-80 260v-160H320v160h320Zm80 80H240v-160H80v-240q0-51 35-85.5t85-34.5h560q51 0 85.5 34.5T880-520v240H720v160Zm80-240v-160q0-17-11.5-28.5T760-560H200q-17 0-28.5 11.5T160-520v160h80v-80h480v80h80Z"
                       />

@@ -93,7 +93,6 @@ textarea {
   margin: 0;
 }
 
-
 html,
 body {
   height: 100%;
@@ -106,6 +105,17 @@ body {
   font-family: 'Noto Sans', sans-serif;
   margin: 0;
   background-color: var(--color-background);
+}
+
+:not(pre) > code {
+  padding: .2em .5em;
+  font-family: monospace, monospace;
+  background-color: hsla(0, 0%, 64%, 0.2);
+  border-radius: 0.3em;
+}
+
+.button svg {
+  fill: currentColor;
 }
 
 img {
@@ -187,9 +197,7 @@ hgroup p {
   font-size: 1.8em;
 }
 
-.details,
-.details summary {
-  /* display: inline-block; */
+summary {
   cursor: pointer;
 }
 
@@ -241,7 +249,7 @@ select {
   cursor: pointer;
 }
 
-.pattern-custom,
+.custom-pattern,
 .form-control {
   display: block;
   min-height: 3em;
@@ -250,7 +258,7 @@ select {
   resize: vertical;
 }
 
-textarea.pattern-custom {
+textarea.custom-pattern {
   padding: 1em;
   font-family: monospace, monospace;
 }
@@ -301,14 +309,14 @@ textarea.pattern-custom {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='orange'><path d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/></svg>");
 }
 
-.pattern-custom,
+.custom-pattern,
 .form-control > * {
   width: 100%;
   height: 3em;
   padding-inline: var(--spacing-sm);
 }
 
-.pattern-custom:where(:focus, :hover, :active),
+.custom-pattern:where(:focus, :hover, :active),
 .form-control > :where(:focus, :hover, :active),
 .form-control:has(> :where(:focus, :hover, :active)) {
   border-color: orange;
@@ -427,6 +435,10 @@ textarea.pattern-custom {
 
 .gap {
   gap: var(--spacing-md);
+}
+
+.gap-block {
+  margin-block: 1em;
 }
 
 .flex.items-push {
