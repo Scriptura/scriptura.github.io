@@ -49,7 +49,8 @@ function textareaAutosize(input) {
   window.addEventListener('resize', adjustHeight)
   input.addEventListener('input', adjustHeight)
   input.addEventListener('focus', adjustHeight)
-  targetForTextarea.addEventListener('click', adjustHeight)
+  targetForTextarea.addEventListener('change', adjustHeight)
+  targetForTextarea.addEventListener('blur', adjustHeight)
 }
 
 document.querySelectorAll('textarea.autosize').forEach(textarea => textareaAutosize(textarea))
