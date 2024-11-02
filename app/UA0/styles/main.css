@@ -252,13 +252,13 @@ select {
 .custom-pattern,
 .form-control {
   display: block;
-  min-height: 3em;
   background-color: var(--color-background);
   border: 2px solid var(--color-primary);
   resize: vertical;
 }
 
 textarea.custom-pattern {
+  min-height: 5em;
   padding: 1em;
   font-family: monospace, monospace;
 }
@@ -266,7 +266,8 @@ textarea.custom-pattern {
 .form-control {
   position: relative;
   width: 100%;
-  line-height: 1.5;
+  height: 3em;
+  line-height: 3em;
   border: 2px solid var(--color-primary);
   border-radius: var(--border-radius);
 }
