@@ -1,10 +1,20 @@
 /* Variables CSS globales */
 :root {
-  /* Couleurs */
+  /* Système de couleurs */
+  --color-white: #fff;
+  --color-black: #000;
+  --color-gray-100: hsl(0, 0%, 96%);
+  --color-gray-500: hsl(0, 0%, 64%);
+  --color-gray-600: #777;
+
+  /* Couleurs principales */
   --color-primary: hsl(210, 100%, 58%);
   --color-primary-light: hsl(216, 100%, 73%);
   --color-primary-dark: hsl(216, 98%, 52%);
-  --color-background: #fff;
+  --color-accent: orange;
+
+  /* Couleurs sémantiques */
+  --color-background: var(--color-white);
   --color-text: hsl(210, 9%, 31%);
   --color-surface: hsl(24, 92%, 90%);
 
@@ -13,18 +23,33 @@
   --color-event-evening: hsl(24, 92%, 90%);
   --color-event-morning: hsl(109, 100%, 91%);
   --color-event-night: hsl(0, 86%, 91%);
-  --color-event-rest: hsl(0, 0%, 96%);
+  --color-event-rest: var(--color-gray-100);
 
-  /* Tailles */
-  --icon-size: 2.5em;
-  --grid-item-min-width: 22em;
-  --border-radius: 0.3em;
-
-  /* Espacements */
+  /* Système d'espacement */
   --spacing-xs: 0.2em;
   --spacing-sm: 0.5em;
   --spacing-md: 1em;
   --spacing-lg: 1.5em;
+  --spacing-xl: 2em;
+  --spacing-2xl: 3em;
+
+  /* Système de layout */
+  --icon-size: 2.5em;
+  --grid-item-min-width: 22em;
+  --grid-item-min-width-print: 15em;
+
+  /* Système de bordures */
+  --border-radius: 0.3em;
+  --border-width: 2px;
+
+  /* Tailles de composants */
+  --form-control-height: 3em;
+  --form-icon-size: 1.5em;
+  --scrollbar-width: 10px;
+
+  /* Z-index */
+  --z-index-default: 1;
+  --z-index-overlay: 10;
 }
 
 /* Police de caractères */
@@ -53,9 +78,7 @@
 }
 
 ::-webkit-scrollbar {
-  /* @affected Chrome, Edge, and Safari. */
-  /* @note Ne doit pas être scalable. */
-  width: 10px; /* @todo En test. */
+  width: var(--scrollbar-width);
 }
 
 ::-webkit-scrollbar-track {
@@ -67,14 +90,13 @@
 }
 
 * {
-  /* @affected Firefox @todo Standard futur ? */
   scrollbar-color: var(--color-primary) var(--color-primary-light);
 }
 
 /* Reset et styles de base */
 * {
   box-sizing: border-box;
-  user-select: none; /* La spécification ne prévoie pas que cette propriété soit héritée, bien que les navigateurs webkit le fasse. Cette règle n'a de sens que pour une application web. */
+  user-select: none;
 }
 
 button,
@@ -107,10 +129,10 @@ body {
 }
 
 :not(pre) > code {
-  padding: 0.2em 0.5em;
+  padding: var(--spacing-xs) var(--spacing-sm);
   font-family: monospace, monospace;
   background-color: hsla(0, 0%, 64%, 0.2);
-  border-radius: 0.3em;
+  border-radius: var(--border-radius);
 }
 
 .button svg {
@@ -127,7 +149,7 @@ img {
 
 .presentation-image {
   max-height: 40svh;
-  padding: 2em 10em 2em 0;
+  padding: var(--spacing-xl) 10em var(--spacing-xl) 0;
   place-self: end start;
 }
 
@@ -214,7 +236,7 @@ summary {
 }
 
 .footer .flex.gap {
-  gap: 0.5em;
+  gap: var(--spacing-sm);
 }
 
 .footer p {
@@ -224,7 +246,7 @@ summary {
 
 .footer .logo {
   margin-block-start: 0.1em;
-  height: 3em;
+  height: var(--spacing-2xl);
   filter: brightness(0) invert(1);
 }
 
@@ -236,7 +258,7 @@ summary {
 }
 
 .message-highlight p {
-  margin-block: 0.2em;
+  margin-block: var(--spacing-xs);
 }
 
 /* Formulaires */
@@ -252,34 +274,34 @@ select {
 .form-control {
   display: block;
   background-color: var(--color-background);
-  border: 2px solid var(--color-primary);
+  border: var(--border-width) solid var(--color-primary);
   resize: vertical;
 }
 
 textarea.custom-pattern {
-  min-height: 3em;
-  padding: 1em;
+  min-height: var(--spacing-2xl);
+  padding: var(--spacing-md);
   font-family: monospace, monospace;
 }
 
 .form-control {
   position: relative;
   width: 100%;
-  height: 3em;
-  line-height: 3em;
-  border: 2px solid var(--color-primary);
+  height: var(--form-control-height);
+  line-height: var(--form-control-height);
+  border: var(--border-width) solid var(--color-primary);
   border-radius: var(--border-radius);
 }
 
 .form-control::after {
   content: '';
   position: absolute;
-  width: calc(3em - 4px);
-  height: calc(3em - 4px);
+  width: calc(var(--form-control-height) - 4px);
+  height: calc(var(--form-control-height) - 4px);
   right: 0;
   top: 0;
-  background-color: #fff;
-  background-size: 1.5em 1.5em;
+  background-color: var(--color-white);
+  background-size: var(--form-icon-size) var(--form-icon-size);
   background-repeat: no-repeat;
   background-position: 50% 50%;
   pointer-events: none;
@@ -290,7 +312,7 @@ textarea.custom-pattern {
 }
 
 .form-control:has(select):where(:focus, :hover, :active) {
-  color: orange;
+  color: var(--color-accent);
 }
 
 .form-control:has(select):where(:focus, :hover, :active)::after {
@@ -302,7 +324,7 @@ textarea.custom-pattern {
 }
 
 .form-control:has([type='date']):where(:focus, :hover, :active) {
-  color: orange;
+  color: var(--color-accent);
 }
 
 .form-control:has([type='date']):where(:focus, :hover, :active)::after {
@@ -312,14 +334,14 @@ textarea.custom-pattern {
 .custom-pattern,
 .form-control > * {
   width: 100%;
-  height: 3em;
+  height: var(--form-control-height);
   padding-inline: var(--spacing-sm);
 }
 
 .custom-pattern:where(:focus, :hover, :active),
 .form-control > :where(:focus, :hover, :active),
 .form-control:has(> :where(:focus, :hover, :active)) {
-  border-color: orange;
+  border-color: var(--color-accent);
   outline: none;
 }
 
@@ -337,7 +359,7 @@ textarea.custom-pattern {
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  gap: 0.5em;
+  gap: var(--spacing-sm);
   font-weight: 400;
   padding: 0.75em 1em;
   font-size: 1em;
@@ -351,8 +373,8 @@ textarea.custom-pattern {
 }
 
 .button:where(:focus, :hover, :active) {
-  background-color: orange;
-  border-color: orange;
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
 }
 
 /* Tableaux */
@@ -383,7 +405,7 @@ textarea.custom-pattern {
   bottom: var(--spacing-xs);
   right: var(--spacing-sm);
   font-size: 0.7em;
-  color: #777;
+  color: var(--color-gray-600);
 }
 
 .table th {
