@@ -3,6 +3,16 @@
   <head>
     <meta charset="utf-8" />
     <title>Login</title>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const button = document.querySelector('body > form > button')
+
+        button.addEventListener('click', event => {
+          event.preventDefault() // Empêche la soumission du formulaire
+          window.location.href = 'https://scriptura.github.io/app/test/offers.html'
+        })
+      })
+    </script>
   </head>
   <body>
     <form novalidate="" class="tss-ywe10h-form">
@@ -223,10 +233,5 @@
         ><button id="axeptio_btn_acceptAll" aria-label="OK pour moi" class="ButtonGroup__BtnStyle-sc-1v453hz-0 irrPnS">OK pour moi</button>
       </div>
     </div>
-    <script>
-      document.querySelector('body > form > button').addEventListener('click', () => {
-        window.location.href = 'https://scriptura.github.io/app/test/offers.html'
-      })
-    </script>
   </body>
 </html>

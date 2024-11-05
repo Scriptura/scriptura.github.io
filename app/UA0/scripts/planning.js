@@ -122,7 +122,7 @@ document.getElementById('pattern-select').addEventListener('change', function ()
 document.querySelector('.save-custom-pattern').addEventListener('click', function () {
   const patternInput = document.getElementById('custom-pattern')
   const cleanedValue = cleanPatternInput(patternInput.value)
-  
+
   if (validatePattern(cleanedValue)) {
     patternInput.value = formatPatternForDisplay(cleanedValue)
     rotationCustomPattern = stringToPattern(cleanedValue)
@@ -196,6 +196,13 @@ function generateSchedule() {
     const monthTable = document.createElement('table')
     monthTable.classList.add('table')
 
+    // Ajouter l'ID basé sur le mois et l'année, avec un préfixe pour éviter un début par un chiffre
+    const currentMonth = new Date(displayStartDate)
+    currentMonth.setMonth(displayStartDate.getMonth() + monthIndex)
+
+    const monthYearId = `month-${currentMonth.getMonth() + 1}-${currentMonth.getFullYear()}`
+    monthTable.id = monthYearId
+
     const headerRow = document.createElement('tr')
     daysOfWeek.forEach(day => {
       const th = document.createElement('th')
@@ -203,9 +210,6 @@ function generateSchedule() {
       headerRow.appendChild(th)
     })
     monthTable.appendChild(headerRow)
-
-    const currentMonth = new Date(displayStartDate)
-    currentMonth.setMonth(displayStartDate.getMonth() + monthIndex)
 
     const firstDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1)
     const lastDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0)
