@@ -272,8 +272,11 @@ function generateSchedule() {
     calendarDiv.appendChild(monthDiv)
   }
 
-  const printButton = document.querySelector('.cmd-print')
-  printButton.classList.add('ready')
+  const buttons = document.querySelectorAll('button.no-ready')
+  buttons.forEach(button => {
+    button.classList.remove('no-ready')
+    button.classList.add('ready')
+  })
 }
 
 // Fonction pour obtenir la classe en fonction de la lettre du planning
@@ -293,6 +296,8 @@ function getClassFromSchedule(scheduleLetter) {
       return 'event-holiday'
     case 'N':
       return 'event-night'
+    case 'C':
+      return 'event-leave'
     default:
       return null
   }

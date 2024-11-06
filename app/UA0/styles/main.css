@@ -20,6 +20,9 @@
 
   /* Couleurs des événements */
   --color-event-day: hsl(197, 92%, 90%);
+  --color-event-leave: hsl(47, 95%, 83%);
+  --color-event-extra-rest: hsl(47, 95%, 83%);
+  --color-event-holiday: hsl(47, 95%, 83%);
   --color-event-evening: hsl(24, 92%, 90%);
   --color-event-morning: hsl(109, 100%, 91%);
   --color-event-night: hsl(0, 86%, 91%);
@@ -133,10 +136,6 @@ body {
   font-family: monospace, monospace;
   background-color: hsla(0, 0%, 64%, 0.2);
   border-radius: var(--border-radius);
-}
-
-.button svg {
-  fill: currentColor;
 }
 
 img {
@@ -372,9 +371,18 @@ textarea.custom-pattern {
   cursor: pointer;
 }
 
+.reset {
+  background-color: hsl(354, 70%, 54%);
+  border-color: hsl(354, 70%, 54%);
+}
+
 .button:where(:focus, :hover, :active) {
   background-color: var(--color-accent);
   border-color: var(--color-accent);
+}
+
+.button svg {
+  fill: currentColor;
 }
 
 /* Tableaux */
@@ -423,11 +431,17 @@ textarea.custom-pattern {
 /* États des événements */
 /*
 .table .event-rest,
-.table .event-extra-rest,
-.table .event-holiday,
 */
 [data-day] {
   background-color: var(--color-event-rest);
+}
+
+.table .event-extra-rest {
+  background-color: var(--color-event-extra-rest);
+}
+
+.table .event-holiday {
+  background-color: var(--color-event-holiday);
 }
 
 .table .event-day {
@@ -444,6 +458,10 @@ textarea.custom-pattern {
 
 .table .event-night {
   background-color: var(--color-event-night);
+}
+
+.table .event-leave {
+  background-color: var(--color-event-leave);
 }
 
 /* Utilitaires */
@@ -476,12 +494,15 @@ textarea.custom-pattern {
   field-sizing: content;
 }
 
-/* Impression */
-.cmd-print {
+.hidden {
   display: none;
 }
 
-.cmd-print.ready {
+.no-ready {
+  display: none;
+}
+
+.ready {
   display: inherit;
 }
 

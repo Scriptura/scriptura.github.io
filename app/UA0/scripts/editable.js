@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   const editableButton = document.querySelector('.contenteditable')
+  const spanText = editableButton.querySelector('span')
 
   editableButton.addEventListener('click', () => {
     console.log('Bouton éditer cliqué') // Ajoutez ceci pour tester
@@ -20,13 +21,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     isEditingEnabled = !isEditingEnabled
+
+    // Sélection des deux <span> dans le bouton
+    const [editText, disableEditText] = editableButton.querySelectorAll('span')
+  
     if (isEditingEnabled) {
       enableEditing()
-      editableButton.textContent = 'Désactiver édition'
+      editText.classList.add('hidden')
+      disableEditText.classList.remove('hidden')
       editableButton.classList.add('active')
     } else {
       disableEditing()
-      editableButton.textContent = 'Éditer'
+      editText.classList.remove('hidden')
+      disableEditText.classList.add('hidden')
       editableButton.classList.remove('active')
     }
   })
@@ -67,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
       let value = cell.textContent.trim().toUpperCase()
       if (value) {
         // Valider que c'est une lettre valide
-        const validLetters = ['J', 'S', 'M', 'R', 'T', 'F', 'N']
+        const validLetters = ['J', 'S', 'M', 'R', 'T', 'F', 'N', 'C']
         if (!validLetters.includes(value)) {
           cell.textContent = ''
           return
