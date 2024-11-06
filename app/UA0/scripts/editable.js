@@ -87,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Supprimer les anciennes classes
             cell.className = ''
             cell.classList.add(className)
+            cell.classList.add('modified')
           }
         }
       }

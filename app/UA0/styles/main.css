@@ -407,6 +407,11 @@ textarea.custom-pattern {
   position: relative;
 }
 
+.table td:focus {
+  background-color: pink;
+  outline: none;
+}
+
 .table td::before {
   content: attr(data-day);
   position: absolute;
@@ -437,11 +442,11 @@ textarea.custom-pattern {
 }
 
 .table .event-extra-rest {
-  background-color: var(--color-event-extra-rest);
+  background-color: #ccc;
 }
 
 .table .event-holiday {
-  background-color: var(--color-event-holiday);
+  background-color: #ccc;
 }
 
 .table .event-day {
@@ -461,7 +466,11 @@ textarea.custom-pattern {
 }
 
 .table .event-leave {
-  background-color: var(--color-event-leave);
+  background-color: #ccc;
+}
+
+.table .modified {
+  background-image: repeating-linear-gradient(-45deg, transparent 0 5px, hsla(0, 100%, 73%, .2) 5px 10px);
 }
 
 /* Utilitaires */
