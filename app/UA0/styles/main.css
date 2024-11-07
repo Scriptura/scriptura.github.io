@@ -26,6 +26,7 @@
   --color-event-evening: hsl(24, 92%, 90%);
   --color-event-morning: hsl(109, 100%, 91%);
   --color-event-night: hsl(0, 86%, 91%);
+  --color-event-overtime: hsl(47, 95%, 83%);
   --color-event-rest: var(--color-gray-100);
 
   /* Système d'espacement */
@@ -467,6 +468,10 @@ textarea.custom-pattern {
 
 .table .event-leave {
   background-color: #ccc;
+}
+
+.table .event-overtime {
+  background-color: var(--color-event-overtime);
 }
 
 .table .modified {

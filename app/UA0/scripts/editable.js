@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Sélection des deux <span> dans le bouton
     const [editText, disableEditText] = editableButton.querySelectorAll('span')
-  
+
     if (isEditingEnabled) {
       enableEditing()
       editText.classList.add('hidden')
@@ -71,20 +71,26 @@ document.addEventListener('DOMContentLoaded', () => {
       const cell = e.target.closest('td[data-day]')
       if (!cell) return
 
-      let value = cell.textContent.trim().toUpperCase()
+      // Récupérer et formater la valeur
+      let value = cell.textContent.trim()
+      // Convertir directement en majuscule pour simplifier la validation
+      value = value.toUpperCase()
+
       if (value) {
         // Valider que c'est une lettre valide
-        const validLetters = ['J', 'S', 'M', 'R', 'T', 'F', 'N', 'C']
+        const validLetters = ['J', 'S', 'M', 'R', 'T', 'F', 'N', 'C', 'H']
         if (!validLetters.includes(value)) {
           cell.textContent = ''
           return
         }
 
-        // Mettre à jour la classe CSS en utilisant la fonction de planning.js
+        // Mettre à jour le contenu de la cellule avec la valeur formatée
+        cell.textContent = value
+
+        // Mettre à jour la classe CSS
         if (typeof getClassFromSchedule === 'function') {
           const className = getClassFromSchedule(value)
           if (className) {
-            // Supprimer les anciennes classes
             cell.className = ''
             cell.classList.add(className)
             cell.classList.add('modified')

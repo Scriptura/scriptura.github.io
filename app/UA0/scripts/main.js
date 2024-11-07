@@ -67,7 +67,7 @@ function setupResetButton() {
 
       if (confirmation) {
         localStorage.clear()
-        alert('Toutes les données ont été effacées.')
+        //alert('Toutes les données ont été effacées.')
         console.log(`Le localStorage a été réinitialisé.`)
         location.reload()
         console.log(`Rechargement de la page.`)

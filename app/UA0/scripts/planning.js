@@ -298,6 +298,8 @@ function getClassFromSchedule(scheduleLetter) {
       return 'event-night'
     case 'C':
       return 'event-leave'
+    case 'H':
+      return 'event-overtime'
     default:
       return null
   }
