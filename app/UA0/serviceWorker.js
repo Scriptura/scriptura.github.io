@@ -1,4 +1,4 @@
-const CACHE_NAME = 'v42'
+const CACHE_NAME = 'v46'
 const MEDIA_CACHE_NAME = `media-${CACHE_NAME}`
 const ROOT_PATH = `/app/UA0/`
 const OFFLINE_URL = `${ROOT_PATH}index.html`
@@ -8,7 +8,6 @@ const resourcesToCache = [
   `${ROOT_PATH}styles/main.css`,
   `${ROOT_PATH}scripts/main.js`,
   `${ROOT_PATH}scripts/planning.js`,
-  `${ROOT_PATH}scripts/editable.js`,
   `${ROOT_PATH}fonts/notoSans-Regular.woff2`,
   `${ROOT_PATH}fonts/notoSerif-Regular.woff2`,
   `${ROOT_PATH}fonts/OleoScriptSwashCaps-Regular.woff2`,

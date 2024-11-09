@@ -102,7 +102,7 @@
                   </div>
                 </details>
                 <div class="flex wrap gap">
-                  <button class="button generate-schedule">
+                  <button class="button generate-schedule visibility visible">
                     <svg height="24px" viewBox="0 -960 960 960" width="24px">
                       <path
                         d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v240h-80v-80H200v400h280v80H200ZM760 0q-73 0-127.5-45.5T564-160h62q13 44 49.5 72T760-60q58 0 99-41t41-99q0-58-41-99t-99-41q-29 0-54 10.5T662-300h58v60H560v-160h60v57q27-26 63-41.5t77-15.5q83 0 141.5 58.5T960-200q0 83-58.5 141.5T760 0ZM200-640h560v-80H200v80Zm0 0v-80 80Z"
@@ -110,20 +110,20 @@
                     </svg>
                     Générer le planning
                   </button>
-                  <button class="button reset">
+                  <button class="button reset visibility hidden">
                     <svg height="24px" viewBox="0 -960 960 960" width="24px">
                       <path d="m388-212-56-56 92-92-92-92 56-56 92 92 92-92 56 56-92 92 92 92-56 56-92-92-92 92ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Z"/>
                     </svg>
-                    Réinitialiser
+                    Réinitialiser tout
                   </button>
-                  <button class="button contenteditable no-ready">
+                  <button class="button contenteditable visibility hidden">
                     <svg height="24px" viewBox="0 -960 960 960" width="24px">
                       <path d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v200h-80v-40H200v400h280v80H200Zm0-560h560v-80H200v80Zm0 0v-80 80ZM560-80v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q8 9 12.5 20t4.5 22q0 11-4 22.5T903-300L683-80H560Zm300-263-37-37 37 37ZM620-140h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z"/>
                     </svg>
                     <span>Éditer</span>
                     <span class="hidden">Désactiver l'édition</span>
                   </button>
-                  <button class="button cmd-print no-ready">
+                  <button class="button cmd-print visibility hidden">
                     <svg height="24px" viewBox="0 -960 960 960" width="24px">
                       <path
                         d="M640-640v-120H320v120h-80v-200h480v200h-80Zm-480 80h640-640Zm560 100q17 0 28.5-11.5T760-500q0-17-11.5-28.5T720-540q-17 0-28.5 11.5T680-500q0 17 11.5 28.5T720-460Zm-80 260v-160H320v160h320Zm80 80H240v-160H80v-240q0-51 35-85.5t85-34.5h560q51 0 85.5 34.5T880-520v240H720v160Zm80-240v-160q0-17-11.5-28.5T760-560H200q-17 0-28.5 11.5T160-520v160h80v-80h480v80h80Z"
@@ -151,6 +151,5 @@
     </footer>
     <script src="./scripts/main.js" defer></script>
     <script src="./scripts/planning.js" defer></script>
-    <script src="./scripts/editable.js" defer></script>
   </body>
 </html>

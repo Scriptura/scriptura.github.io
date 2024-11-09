@@ -26,8 +26,11 @@
   --color-event-evening: hsl(24, 92%, 90%);
   --color-event-morning: hsl(109, 100%, 91%);
   --color-event-night: hsl(0, 86%, 91%);
-  --color-event-overtime: hsl(47, 95%, 83%);
+  --color-event-overtime: hsl(0, 100%, 91%);
   --color-event-rest: var(--color-gray-100);
+  --color-event-stop: hsl(310, 100%, 91%);
+  --color-event-union: hsl(60, 100%, 88%);
+  --color-event-strike: hsl(47, 95%, 83%);
 
   /* Système d'espacement */
   --spacing-xs: 0.2em;
@@ -474,6 +477,18 @@ textarea.custom-pattern {
   background-color: var(--color-event-overtime);
 }
 
+.table .event-stop {
+  background-color: var(--color-event-stop);
+}
+
+.table .event-strike {
+ background-color: var(--color-event-strike);
+}
+
+.table .event-union {
+  background-color: var(--color-event-union);
+}
+
 .table .modified {
   background-image: repeating-linear-gradient(-45deg, transparent 0 5px, hsla(0, 100%, 73%, .2) 5px 10px);
 }
@@ -510,14 +525,6 @@ textarea.custom-pattern {
 
 .hidden {
   display: none;
-}
-
-.no-ready {
-  display: none;
-}
-
-.ready {
-  display: inherit;
 }
 
 @media print {

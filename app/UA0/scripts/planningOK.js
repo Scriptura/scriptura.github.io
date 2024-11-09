@@ -2,30 +2,30 @@
 
 // prettier-ignore
 const RotationPatterns = {
-    IDE: [
-      'J', 'J', 'S', 'J', 'J', 'R', 'R',
-      'S', 'S', 'J', 'M', 'F', 'R', 'R',
-      'S', 'J', 'M', 'M', 'R', 'S', 'S',
-      'J', 'M', 'R', 'R', 'T', 'M', 'M',
-      'M', 'R', 'J', 'S', 'S', 'R', 'R',
-      'J', 'J', 'S', 'J', 'M', 'R', 'R',
-      'S', 'S', 'J', 'J', 'M', 'R', 'R',
-      'F', 'S', 'S', 'J', 'J', 'R', 'R',
-      'M', 'M', 'M', 'R', 'S', 'S', 'S',
-      'T', 'R', 'R', 'S', 'J', 'M', 'M',
-      'R', 'J', 'J', 'S', 'S', 'R', 'R',
-    ],
-    NightIDE: [
-      'N', 'N', 'R', 'R', 'N', 'N', 'N',
-      'R', 'R', 'N', 'N', 'R', 'R', 'R',
-    ],
-    ASH: [
-      'M', 'M', 'M', 'M', 'R', 'S', 'S',
-      'S', 'S', 'R', 'R', 'M', 'M', 'M',
-      'M', 'R', 'S', 'S', 'S', 'R', 'R',
-      'T', 'M', 'M', 'M', 'M', 'R', 'R',
-    ],
-  }
+  IDE: [
+    'J', 'J', 'S', 'J', 'J', 'R', 'R',
+    'S', 'S', 'J', 'M', 'F', 'R', 'R',
+    'S', 'J', 'M', 'M', 'R', 'S', 'S',
+    'J', 'M', 'R', 'R', 'T', 'M', 'M',
+    'M', 'R', 'J', 'S', 'S', 'R', 'R',
+    'J', 'J', 'S', 'J', 'M', 'R', 'R',
+    'S', 'S', 'J', 'J', 'M', 'R', 'R',
+    'F', 'S', 'S', 'J', 'J', 'R', 'R',
+    'M', 'M', 'M', 'R', 'S', 'S', 'S',
+    'T', 'R', 'R', 'S', 'J', 'M', 'M',
+    'R', 'J', 'J', 'S', 'S', 'R', 'R',
+  ],
+  NightIDE: [
+    'N', 'N', 'R', 'R', 'N', 'N', 'N',
+    'R', 'R', 'N', 'N', 'R', 'R', 'R',
+  ],
+  ASH: [
+    'M', 'M', 'M', 'M', 'R', 'S', 'S',
+    'S', 'S', 'R', 'R', 'M', 'M', 'M',
+    'M', 'R', 'S', 'S', 'S', 'R', 'R',
+    'T', 'M', 'M', 'M', 'M', 'R', 'R',
+  ],
+}
 
 // Gestionnaire de patterns personnalisés
 const CustomPatternManager = {
@@ -134,10 +134,10 @@ const CalendarManager = {
       this.generateMonthTable(displayStartDate, monthIndex, startDate, selectedPattern, daysOfWeek, calendarDiv)
     }
 
-    const buttons = document.querySelectorAll('button.visibility')
+    const buttons = document.querySelectorAll('button.no-ready')
     buttons.forEach(button => {
-      button.classList.toggle('visible')
-      button.classList.toggle('hidden')
+      button.classList.remove('no-ready')
+      button.classList.add('ready')
     })
   },
 
@@ -475,12 +475,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Attendre que le planning soit généré avant de charger les données sauvegardées
     setTimeout(() => StorageManager.loadSchedule(calendarDiv), 100)
   })
-
-  if (localStorage.getItem('scheduleData')) {
-    CalendarManager.generateSchedule(localStorage.getItem('scheduleData'), getSelectedPattern())
-    // Attendre que le planning soit généré avant de charger les données sauvegardées
-    setTimeout(() => StorageManager.loadSchedule(calendarDiv), 100)
-  }
 
   // Chargement initial
   function initialize() {
