@@ -108,6 +108,7 @@ const ScheduleClassManager = {
       A: 'event-stop',
       G: 'event-strike',
       D: 'event-union',
+      O: 'event-other',
     }
     return classMap[scheduleLetter] || null
   },
@@ -128,10 +129,27 @@ const CalendarManager = {
 
     const daysOfWeek = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']
     const displayStartDate = new Date()
+    displayStartDate.setMonth(0) // Commence en janvier
     displayStartDate.setDate(1)
 
+    // Obtenir le mois courant pour la comparaison
+    const currentDate = new Date()
+    const currentMonth = currentDate.getMonth()
+    const currentYear = currentDate.getFullYear()
+
     for (let monthIndex = 0; monthIndex < 24; monthIndex++) {
-      this.generateMonthTable(displayStartDate, monthIndex, startDate, selectedPattern, daysOfWeek, calendarDiv)
+      const monthDate = new Date(displayStartDate)
+      monthDate.setMonth(displayStartDate.getMonth() + monthIndex)
+
+      // Vérifier si c'est le mois courant
+      const isCurrentMonth = monthDate.getMonth() === currentMonth && monthDate.getFullYear() === currentYear
+
+      this.generateMonthTable(displayStartDate, monthIndex, startDate, selectedPattern, daysOfWeek, calendarDiv, isCurrentMonth)
+    }
+
+    // Sauvegarder le planning dès sa génération
+    if (localStorage.getItem('scheduleData') === null) {
+      StorageManager.saveSchedule(calendarDiv)
     }
 
     const buttons = document.querySelectorAll('button.visibility')
@@ -141,10 +159,15 @@ const CalendarManager = {
     })
   },
 
-  generateMonthTable(displayStartDate, monthIndex, startDate, selectedPattern, daysOfWeek, calendarDiv) {
+  generateMonthTable(displayStartDate, monthIndex, startDate, selectedPattern, daysOfWeek, calendarDiv, isCurrentMonth) {
     const monthDiv = document.createElement('div')
     const monthTable = document.createElement('table')
     monthTable.classList.add('table')
+
+    // Ajouter la classe 'current' si c'est le mois courant
+    if (isCurrentMonth) {
+      monthTable.classList.add('current')
+    }
 
     const currentMonth = new Date(displayStartDate)
     currentMonth.setMonth(displayStartDate.getMonth() + monthIndex)
@@ -178,19 +201,18 @@ const CalendarManager = {
 
     let row = document.createElement('tr')
 
-    // Add empty cells for days before the first of the month
+    // Ajouter des cellules vides pour les jours précédant le premier du mois
     for (let i = 0; i < firstWeekday; i++) {
       row.appendChild(document.createElement('td'))
     }
 
-    // Fill in the days of the month
+    // Remplir les jours du mois
     for (let day = 1; day <= daysInMonth; day++) {
       const currentDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day)
       const daysSinceStart = Math.floor((currentDate - startDate) / (1000 * 60 * 60 * 24))
-      const rotationIndex =
-        daysSinceStart >= 0
-          ? daysSinceStart % selectedPattern.length
-          : (selectedPattern.length + (daysSinceStart % selectedPattern.length)) % selectedPattern.length
+
+      // Calcul du bon index de rotation
+      const rotationIndex = ((daysSinceStart % selectedPattern.length) + selectedPattern.length) % selectedPattern.length
 
       const dayCell = this.createDayCell(day, rotationIndex, selectedPattern)
       row.appendChild(dayCell)
@@ -201,7 +223,7 @@ const CalendarManager = {
       }
     }
 
-    // Fill remaining cells in the last week
+    // Remplir les cellules restantes de la dernière semaine
     while (row.children.length < 7) {
       row.appendChild(document.createElement('td'))
     }
@@ -211,6 +233,7 @@ const CalendarManager = {
   createDayCell(day, rotationIndex, selectedPattern) {
     const dayCell = document.createElement('td')
     dayCell.setAttribute('data-day', day)
+    dayCell.setAttribute('tabindex', '0')
 
     if (rotationIndex !== null && selectedPattern[rotationIndex]) {
       const scheduleLetter = selectedPattern[rotationIndex]
@@ -294,7 +317,7 @@ const EditManager = {
   toggleEditing(calendarDiv, editableButton) {
     const tables = document.querySelectorAll('table[id^="month-"]')
     if (!tables.length) {
-      alert("Veuillez d'abord générer le planning.")
+      alert(`Veuillez d'abord générer le planning.`)
       return
     }
 
@@ -337,6 +360,18 @@ const EditManager = {
     if (cell) {
       cell.setAttribute('contenteditable', 'true')
       cell.focus()
+
+      // Créer un Range pour sélectionner tout le contenu de la cellule ; @note cell.select() ne fonctionne pas correctement dans ce cas de figure.
+      const range = document.createRange()
+      range.selectNodeContents(cell)
+
+      // Obtenir la sélection actuelle et appliquer le range
+      const selection = window.getSelection()
+      selection.removeAllRanges()
+      selection.addRange(range)
+
+      // Sauvegarder la valeur initiale
+      cell.dataset.initialValue = cell.textContent.trim().toUpperCase()
     }
   },
 
@@ -349,6 +384,8 @@ const EditManager = {
     const value = cell.textContent.trim().toUpperCase()
     if (value.length > 1) {
       cell.textContent = value.charAt(0)
+    } else {
+      cell.textContent = value // Assure que la cellule affiche toujours en majuscules
     }
   },
 
@@ -358,24 +395,28 @@ const EditManager = {
     const cell = e.target.closest('td[data-day]')
     if (!cell) return
 
-    let value = cell.textContent.trim().toUpperCase()
+    const newValue = cell.textContent.trim().toUpperCase()
+    const initialValue = cell.dataset.initialValue
 
-    if (value) {
-      const validLetters = ['M', 'J', 'S', 'N', 'H', 'R', 'T', 'F', 'C', 'A', 'G', 'D']
-      if (!validLetters.includes(value)) {
+    if (newValue && newValue !== initialValue) {
+      // Comparaison des valeurs formatées
+      const validLetters = ['M', 'J', 'S', 'N', 'H', 'R', 'T', 'F', 'C', 'A', 'G', 'D', 'O']
+      if (!validLetters.includes(newValue)) {
         cell.textContent = ''
         return
       }
 
-      cell.textContent = value
-      const className = ScheduleClassManager.getClass(value)
+      cell.textContent = newValue // Assure l'affichage en majuscules
+      const className = ScheduleClassManager.getClass(newValue)
       if (className) {
         cell.className = ''
         cell.classList.add(className)
         cell.classList.add('modified')
+        cell.removeAttribute('contenteditable')
       }
     }
 
+    delete cell.dataset.initialValue // Nettoyage de la valeur initiale
     StorageManager.saveSchedule(calendarDiv)
   },
 }
@@ -383,12 +424,12 @@ const EditManager = {
 // Initialisation et gestionnaires d'événements
 document.addEventListener('DOMContentLoaded', () => {
   const calendarDiv = document.getElementById('calendar')
-  const editableButton = document.querySelector('.contenteditable')
+  const editableButton = document.getElementById('contenteditable')
   const patternSelect = document.getElementById('pattern-select')
   const startDateInput = document.getElementById('start-date')
-  const generateButton = document.querySelector('.generate-schedule')
-  const saveCustomPatternButton = document.querySelector('.save-custom-pattern')
   const customPatternTextarea = document.getElementById('custom-pattern')
+  const saveCustomPatternButton = document.getElementById('save-custom-pattern')
+  const generateButton = document.getElementById('generate-schedule')
 
   // Fonction pour obtenir le pattern initial selon la sélection
   function getInitialPattern(patternType) {
@@ -472,17 +513,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Gestionnaire d'événement pour la génération du planning
   generateButton.addEventListener('click', () => {
     CalendarManager.generateSchedule(startDateInput.value, getSelectedPattern())
-    // Attendre que le planning soit généré avant de charger les données sauvegardées
+    // Le planning est déjà sauvegardé dans generateSchedule,
+    // on charge juste les modifications précédentes
     setTimeout(() => StorageManager.loadSchedule(calendarDiv), 100)
   })
 
-  if (localStorage.getItem('scheduleData')) {
-    CalendarManager.generateSchedule(localStorage.getItem('scheduleData'), getSelectedPattern())
-    // Attendre que le planning soit généré avant de charger les données sauvegardées
-    setTimeout(() => StorageManager.loadSchedule(calendarDiv), 100)
-  }
-
-  // Chargement initial
   function initialize() {
     // Charger le pattern personnalisé
     CustomPatternManager.load()
@@ -497,6 +532,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (savedStartDate) {
       startDateInput.value = savedStartDate
+      // Générer automatiquement le calendrier si on a une date de début
+      CalendarManager.generateSchedule(savedStartDate, getSelectedPattern())
+      // Charger les modifications sauvegardées
+      setTimeout(() => StorageManager.loadSchedule(calendarDiv), 100)
     }
 
     // Initialiser le textarea avec le pattern initial
@@ -507,3 +546,25 @@ document.addEventListener('DOMContentLoaded', () => {
   // Lancer l'initialisation
   initialize()
 })
+
+
+
+function setupResetButton() {
+  const resetButton = document.getElementById('reset')
+
+  if (resetButton) {
+    resetButton.addEventListener('click', () => {
+      const confirmation = window.confirm('Êtes-vous sûr de vouloir effacer toutes vos données sauvegardées ? Cette action est irréversible.')
+
+      if (confirmation) {
+        localStorage.clear()
+        //alert('Toutes les données ont été effacées.')
+        console.log(`Le localStorage a été réinitialisé.`)
+        location.reload()
+        console.log(`Rechargement de la page.`)
+      }
+    })
+  }
+}
+
+document.addEventListener('DOMContentLoaded', setupResetButton)

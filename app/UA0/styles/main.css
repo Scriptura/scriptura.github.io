@@ -31,6 +31,7 @@
   --color-event-stop: hsl(310, 100%, 91%);
   --color-event-union: hsl(60, 100%, 88%);
   --color-event-strike: hsl(47, 95%, 83%);
+  --color-event-other: hsl(60, 100%, 88%);
 
   /* Système d'espacement */
   --spacing-xs: 0.2em;
@@ -201,24 +202,19 @@ main > article {
 
 .main-content {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr);
   margin-block-start: var(--spacing-md);
 }
 
-hgroup {
+header {
   font-family: 'Oleo Script Swash Caps';
   text-align: center;
   text-wrap: balance;
 }
 
-hgroup h1 {
-  margin-block: 0.5em 0;
+header h1 {
+  margin-block: 0.5em;
   font-size: 3em;
-}
-
-hgroup p {
-  margin-block: 0 var(--spacing-md);
-  font-size: 1.8em;
 }
 
 summary {
@@ -375,9 +371,9 @@ textarea.custom-pattern {
   cursor: pointer;
 }
 
-.reset {
-  background-color: hsl(354, 70%, 54%);
-  border-color: hsl(354, 70%, 54%);
+.warning {
+  background-color: hsl(354, 100%, 70%);
+  border-color: hsl(354, 100%, 70%);
 }
 
 .button:where(:focus, :hover, :active) {
@@ -389,11 +385,27 @@ textarea.custom-pattern {
   fill: currentColor;
 }
 
+.stats {
+  margin-block-start: 1em;
+  padding: 0.5em 1em;
+  background-color: hsl(350, 100%, 93%);
+}
+
+.stats:has(output:empty) {
+  display: none;
+}
+
 /* Tableaux */
 .table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: var(--spacing-lg);
+}
+
+@media screen {
+  .table.current {
+    box-shadow: 0 0 0 5px pink;
+  }
 }
 
 .grid-auto:has(.table) {
@@ -411,9 +423,15 @@ textarea.custom-pattern {
   position: relative;
 }
 
-.table td:focus {
+@media screen {
+  .table td[data-day]:where(:focus, :hover, :active) {
+    box-shadow: inset 0 0 0 5px pink;
+    outline: none;
+  }
+}
+
+.table td[contenteditable='true'] {
   background-color: pink;
-  outline: none;
 }
 
 .table td::before {
@@ -482,15 +500,21 @@ textarea.custom-pattern {
 }
 
 .table .event-strike {
- background-color: var(--color-event-strike);
+  background-color: var(--color-event-strike);
 }
 
 .table .event-union {
   background-color: var(--color-event-union);
 }
 
-.table .modified {
-  background-image: repeating-linear-gradient(-45deg, transparent 0 5px, hsla(0, 100%, 73%, .2) 5px 10px);
+.table .event-other {
+  background-color: var(--color-event-other);
+}
+
+@media screen {
+  .table .modified {
+    background-image: repeating-linear-gradient(-45deg, transparent 0 5px, hsla(0, 100%, 73%, 0.2) 5px 10px);
+  }
 }
 
 /* Utilitaires */

@@ -57,23 +57,3 @@ function textareaAutosize(textarea) {
   })
 }
 document.querySelectorAll('textarea.autosize').forEach(textarea => textareaAutosize(textarea))
-
-function setupResetButton() {
-  const resetButton = document.querySelector('.reset')
-
-  if (resetButton) {
-    resetButton.addEventListener('click', () => {
-      const confirmation = window.confirm('Êtes-vous sûr de vouloir effacer toutes vos données sauvegardées ? Cette action est irréversible.')
-
-      if (confirmation) {
-        localStorage.clear()
-        //alert('Toutes les données ont été effacées.')
-        console.log(`Le localStorage a été réinitialisé.`)
-        location.reload()
-        console.log(`Rechargement de la page.`)
-      }
-    })
-  }
-}
-
-document.addEventListener('DOMContentLoaded', setupResetButton)
