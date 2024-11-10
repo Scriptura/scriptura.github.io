@@ -388,7 +388,7 @@ textarea.custom-pattern {
 .stats {
   margin-block-start: 1em;
   padding: 0.5em 1em;
-  background-color: hsl(350, 100%, 93%);
+  background-color: var(--color-gray-100);
 }
 
 .stats:has(output:empty) {

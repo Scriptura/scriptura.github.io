@@ -32,7 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Parcourir chaque mois et chaque jour pour compter les lettres
     for (const month in currentYearData) {
       for (const day in currentYearData[month]) {
-        const letter = currentYearData[month][day]
+        // Récupérer la deuxième valeur [1] si elle existe, sinon prendre la première [0]
+        const dayData = currentYearData[month][day]
+        const letter = dayData[1] !== undefined ? dayData[1] : dayData[0]
+
         if (letterStats[letter]) {
           letterStats[letter]++
         } else {
@@ -49,8 +52,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const scheduleData = JSON.parse(localStorage.getItem('scheduleData'))
     if (scheduleData) {
       const stats = calculateLetterStats(scheduleData)
+      
+      // Convertir les statistiques en une chaîne de texte formatée
+      const formattedStats = Object.entries(stats)
+        .map(([letter, count]) => `${count} ${letter}`)
+        .join(', ')
+  
       const output = document.getElementById('stats')
-      output.textContent = JSON.stringify(stats, null, 2)
+      output.innerHTML = formattedStats
     }
   }
 

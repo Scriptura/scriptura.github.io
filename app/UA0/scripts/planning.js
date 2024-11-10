@@ -94,24 +94,47 @@ const CustomPatternManager = {
 
 // Gestionnaire de classes CSS pour les types de journée
 const ScheduleClassManager = {
+  // Mise en cache des classes CSS avec Set pour éviter les recalculs
+  validClasses: new Set([
+    'event-day',
+    'event-evening',
+    'event-morning',
+    'event-rest',
+    'event-extra-rest',
+    'event-holiday',
+    'event-night',
+    'event-leave',
+    'event-overtime',
+    'event-stop',
+    'event-strike',
+    'event-union',
+    'event-other'
+  ]),
+
+  // Cache de correspondance entre lettres et classes
+  classMap: new Map([
+    ['J', 'event-day'],
+    ['S', 'event-evening'],
+    ['M', 'event-morning'],
+    ['R', 'event-rest'],
+    ['T', 'event-extra-rest'],
+    ['F', 'event-holiday'],
+    ['N', 'event-night'],
+    ['C', 'event-leave'],
+    ['H', 'event-overtime'],
+    ['A', 'event-stop'],
+    ['G', 'event-strike'],
+    ['D', 'event-union'],
+    ['O', 'event-other']
+  ]),
+
   getClass(scheduleLetter) {
-    const classMap = {
-      J: 'event-day',
-      S: 'event-evening',
-      M: 'event-morning',
-      R: 'event-rest',
-      T: 'event-extra-rest',
-      F: 'event-holiday',
-      N: 'event-night',
-      C: 'event-leave',
-      H: 'event-overtime',
-      A: 'event-stop',
-      G: 'event-strike',
-      D: 'event-union',
-      O: 'event-other',
-    }
-    return classMap[scheduleLetter] || null
+    return this.classMap.get(scheduleLetter) || null
   },
+
+  isValidClass(className) {
+    return this.validClasses.has(className)
+  }
 }
 
 // Gestionnaire du calendrier
@@ -239,6 +262,9 @@ const CalendarManager = {
       const scheduleLetter = selectedPattern[rotationIndex]
       dayCell.textContent = scheduleLetter
 
+      // Stocke la valeur originale
+      dayCell.setAttribute('data-original-value', scheduleLetter)
+
       const className = ScheduleClassManager.getClass(scheduleLetter)
       if (className) {
         dayCell.classList.add(className)
@@ -271,11 +297,19 @@ const StorageManager = {
       cells.forEach(cell => {
         const day = cell.getAttribute('data-day')
         const value = cell.textContent.trim()
+        const originalValue = cell.getAttribute('data-original-value') || value
+
         if (value) {
           if (!scheduleData[monthId]) {
             scheduleData[monthId] = {}
           }
-          scheduleData[monthId][day] = value
+
+          // On stocke toujours les deux valeurs, que la cellule soit modifiée ou non
+          if (value !== originalValue) {
+            scheduleData[monthId][day] = [originalValue, value]
+          } else {
+            scheduleData[monthId][day] = [value, value]
+          }
         }
       })
     })
@@ -292,11 +326,17 @@ const StorageManager = {
         const table = document.getElementById(monthId)
         if (!table) return
 
-        Object.entries(monthData).forEach(([day, value]) => {
+        Object.entries(monthData).forEach(([day, values]) => {
           const cell = table.querySelector(`td[data-day="${day}"]`)
           if (cell) {
-            cell.textContent = value
-            const className = ScheduleClassManager.getClass(value)
+            // Stocke la valeur originale comme attribut data
+            cell.setAttribute('data-original-value', values[0])
+
+            // Utilise la valeur modifiée si elle existe, sinon la valeur originale
+            const displayValue = values[1] || values[0]
+            cell.textContent = displayValue
+
+            const className = ScheduleClassManager.getClass(displayValue)
             if (className) {
               cell.className = ''
               cell.classList.add(className)
@@ -381,6 +421,8 @@ const EditManager = {
     const cell = e.target.closest('td[data-day]')
     if (!cell) return
 
+    cell.removeAttribute('contenteditable')
+
     const value = cell.textContent.trim().toUpperCase()
     if (value.length > 1) {
       cell.textContent = value.charAt(0)
@@ -396,17 +438,16 @@ const EditManager = {
     if (!cell) return
 
     const newValue = cell.textContent.trim().toUpperCase()
-    const initialValue = cell.dataset.initialValue
+    const originalValue = cell.getAttribute('data-original-value') || newValue
 
-    if (newValue && newValue !== initialValue) {
-      // Comparaison des valeurs formatées
+    if (newValue && newValue !== originalValue) {
       const validLetters = ['M', 'J', 'S', 'N', 'H', 'R', 'T', 'F', 'C', 'A', 'G', 'D', 'O']
       if (!validLetters.includes(newValue)) {
-        cell.textContent = ''
+        cell.textContent = originalValue
         return
       }
 
-      cell.textContent = newValue // Assure l'affichage en majuscules
+      cell.textContent = newValue
       const className = ScheduleClassManager.getClass(newValue)
       if (className) {
         cell.className = ''
@@ -416,7 +457,16 @@ const EditManager = {
       }
     }
 
-    delete cell.dataset.initialValue // Nettoyage de la valeur initiale
+    StorageManager.saveSchedule(calendarDiv)
+  },
+
+  disableEditing(calendarDiv) {
+    const cells = calendarDiv.querySelectorAll('td[data-day]')
+    cells.forEach(cell => {
+      cell.removeAttribute('contenteditable')
+      cell.style.cursor = ''
+      //cell.classList.remove('modified')
+    })
     StorageManager.saveSchedule(calendarDiv)
   },
 }
@@ -513,9 +563,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Gestionnaire d'événement pour la génération du planning
   generateButton.addEventListener('click', () => {
     CalendarManager.generateSchedule(startDateInput.value, getSelectedPattern())
-    // Le planning est déjà sauvegardé dans generateSchedule,
-    // on charge juste les modifications précédentes
-    setTimeout(() => StorageManager.loadSchedule(calendarDiv), 100)
+    StorageManager.loadSchedule(calendarDiv)
   })
 
   function initialize() {
@@ -535,7 +583,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Générer automatiquement le calendrier si on a une date de début
       CalendarManager.generateSchedule(savedStartDate, getSelectedPattern())
       // Charger les modifications sauvegardées
-      setTimeout(() => StorageManager.loadSchedule(calendarDiv), 100)
+      StorageManager.loadSchedule(calendarDiv)
     }
 
     // Initialiser le textarea avec le pattern initial
@@ -543,18 +591,17 @@ document.addEventListener('DOMContentLoaded', () => {
     updatePatternTextarea(initialPattern)
   }
 
-  // Lancer l'initialisation
   initialize()
 })
-
-
 
 function setupResetButton() {
   const resetButton = document.getElementById('reset')
 
   if (resetButton) {
     resetButton.addEventListener('click', () => {
-      const confirmation = window.confirm('Êtes-vous sûr de vouloir effacer toutes vos données sauvegardées ? Cette action est irréversible.')
+      const confirmation = window.confirm(
+        'Êtes-vous sûr de vouloir effacer toutes vos données sauvegardées ? Cette action est irréversible.',
+      )
 
       if (confirmation) {
         localStorage.clear()
