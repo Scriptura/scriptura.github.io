@@ -57,3 +57,42 @@ function textareaAutosize(textarea) {
   })
 }
 document.querySelectorAll('textarea.autosize').forEach(textarea => textareaAutosize(textarea))
+
+
+
+// Fonction pour définir l'état 'disabled' des éléments en fonction de la persistance
+function updateDisabledState() {
+  const isScheduleDataSet = localStorage.getItem('scheduleData') !== null
+  document.querySelector('select#pattern-select').disabled = isScheduleDataSet
+  document.querySelector('input#start-date').disabled = isScheduleDataSet
+}
+
+// Initialisation de l'état des éléments au chargement de la page
+document.addEventListener('DOMContentLoaded', () => {
+  updateDisabledState()
+})
+
+// Écouteur de clic pour le bouton #generate-schedule
+document.querySelector('#generate-schedule').addEventListener('click', () => {
+  const startDateInput = document.querySelector('input#start-date')
+
+  // Vérifie si 'input#start-date' est renseigné, sinon, annule le script
+  if (!startDateInput.value) {
+    console.warn("L'input #start-date doit être renseigné avant de générer le calendrier.")
+    return
+  }
+
+  // Désactivation des éléments sans modifier localStorage.scheduleData
+  document.querySelector('select#pattern-select').disabled = true
+  startDateInput.disabled = true
+})
+
+// Écouteur de clic pour le bouton #reset
+document.querySelector('#reset').addEventListener('click', () => {
+  // Réactivation des éléments si scheduleData n'est pas présent
+  if (!localStorage.getItem('scheduleData')) {
+    document.querySelector('select#pattern-select').disabled = false
+    document.querySelector('input#start-date').disabled = false
+  }
+})
+

@@ -55,8 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
       
       // Convertir les statistiques en une chaîne de texte formatée
       const formattedStats = Object.entries(stats)
-        .map(([letter, count]) => `${count} ${letter}`)
-        .join(', ')
+        .map(([letter, count]) => `<div class="stats-item"><span class="stats-letter">${letter}</span> <span class="stats-graph" style="width:${count * .1}em"></span> <span class="stats-count">${count}</span></div>`)
+        .join('')
   
       const output = document.getElementById('stats')
       output.innerHTML = formattedStats

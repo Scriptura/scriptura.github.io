@@ -108,7 +108,7 @@ const ScheduleClassManager = {
     'event-stop',
     'event-strike',
     'event-union',
-    'event-other'
+    'event-other',
   ]),
 
   // Cache de correspondance entre lettres et classes
@@ -125,7 +125,7 @@ const ScheduleClassManager = {
     ['A', 'event-stop'],
     ['G', 'event-strike'],
     ['D', 'event-union'],
-    ['O', 'event-other']
+    ['O', 'event-other'],
   ]),
 
   getClass(scheduleLetter) {
@@ -134,11 +134,16 @@ const ScheduleClassManager = {
 
   isValidClass(className) {
     return this.validClasses.has(className)
-  }
+  },
 }
 
 // Gestionnaire du calendrier
 const CalendarManager = {
+  /**
+   * Génère un planning sur 24 mois à partir d'une date de début
+   * @param {string} startDateInput - Date de début au format YYYY-MM-DD
+   * @param {Array<string>} selectedPattern - Motif de rotation des horaires
+   */
   generateSchedule(startDateInput, selectedPattern) {
     if (!startDateInput) {
       alert('Veuillez entrer une date de début.')
@@ -150,44 +155,58 @@ const CalendarManager = {
     const calendarDiv = document.getElementById('calendar')
     calendarDiv.innerHTML = ''
 
+    // Création du DocumentFragment pour optimiser les performances
+    const fragment = document.createDocumentFragment()
+
     const daysOfWeek = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']
     const displayStartDate = new Date()
-    displayStartDate.setMonth(0) // Commence en janvier
+    displayStartDate.setMonth(0)
     displayStartDate.setDate(1)
 
-    // Obtenir le mois courant pour la comparaison
     const currentDate = new Date()
     const currentMonth = currentDate.getMonth()
     const currentYear = currentDate.getFullYear()
 
+    // Génération des 24 mois dans le fragment
     for (let monthIndex = 0; monthIndex < 24; monthIndex++) {
       const monthDate = new Date(displayStartDate)
       monthDate.setMonth(displayStartDate.getMonth() + monthIndex)
 
-      // Vérifier si c'est le mois courant
       const isCurrentMonth = monthDate.getMonth() === currentMonth && monthDate.getFullYear() === currentYear
 
-      this.generateMonthTable(displayStartDate, monthIndex, startDate, selectedPattern, daysOfWeek, calendarDiv, isCurrentMonth)
+      this.generateMonthTable(displayStartDate, monthIndex, startDate, selectedPattern, daysOfWeek, fragment, isCurrentMonth)
     }
 
-    // Sauvegarder le planning dès sa génération
-    if (localStorage.getItem('scheduleData') === null) {
+    // Ajout unique du fragment au DOM
+    calendarDiv.appendChild(fragment)
+
+    // Sauvegarde du planning
+    if (!localStorage.getItem('scheduleData')) {
       StorageManager.saveSchedule(calendarDiv)
     }
 
-    const buttons = document.querySelectorAll('button.visibility')
-    buttons.forEach(button => {
-      button.classList.toggle('visible')
-      button.classList.toggle('hidden')
+    // Mise à jour des boutons de visibilité
+    document.querySelectorAll('.visibility').forEach(el => {
+      el.classList.toggle('visible')
+      el.classList.toggle('hidden')
     })
   },
 
-  generateMonthTable(displayStartDate, monthIndex, startDate, selectedPattern, daysOfWeek, calendarDiv, isCurrentMonth) {
+  /**
+   * Génère le tableau HTML pour un mois spécifique
+   * @param {Date} displayStartDate - Date de début d'affichage
+   * @param {number} monthIndex - Index du mois (0-23)
+   * @param {Date} startDate - Date de début du planning
+   * @param {Array<string>} selectedPattern - Motif de rotation
+   * @param {Array<string>} daysOfWeek - Jours de la semaine
+   * @param {DocumentFragment} fragment - Fragment conteneur
+   * @param {boolean} isCurrentMonth - Indique si c'est le mois courant
+   */
+  generateMonthTable(displayStartDate, monthIndex, startDate, selectedPattern, daysOfWeek, fragment, isCurrentMonth) {
     const monthDiv = document.createElement('div')
     const monthTable = document.createElement('table')
     monthTable.classList.add('table')
 
-    // Ajouter la classe 'current' si c'est le mois courant
     if (isCurrentMonth) {
       monthTable.classList.add('current')
     }
@@ -195,74 +214,96 @@ const CalendarManager = {
     const currentMonth = new Date(displayStartDate)
     currentMonth.setMonth(displayStartDate.getMonth() + monthIndex)
 
-    const monthYearId = `month-${currentMonth.getMonth() + 1}-${currentMonth.getFullYear()}`
-    monthTable.id = monthYearId
+    monthTable.id = `month-${currentMonth.getMonth() + 1}-${currentMonth.getFullYear()}`
 
-    this.addTableHeader(monthTable, daysOfWeek)
-    this.fillMonthTable(monthTable, currentMonth, startDate, selectedPattern)
+    // Création d'un fragment pour les éléments de la table
+    const tableFragment = document.createDocumentFragment()
+
+    this.addTableHeader(tableFragment, daysOfWeek)
+    this.fillMonthTable(tableFragment, currentMonth, startDate, selectedPattern)
     this.addTableCaption(monthTable, currentMonth)
 
+    // Ajout du contenu au tableau
+    monthTable.appendChild(tableFragment)
     monthDiv.appendChild(monthTable)
-    calendarDiv.appendChild(monthDiv)
+    fragment.appendChild(monthDiv)
   },
 
-  addTableHeader(table, daysOfWeek) {
+  /**
+   * Ajoute l'en-tête du tableau avec les jours de la semaine
+   * @param {DocumentFragment} fragment - Fragment conteneur
+   * @param {Array<string>} daysOfWeek - Jours de la semaine
+   */
+  addTableHeader(fragment, daysOfWeek) {
     const headerRow = document.createElement('tr')
     daysOfWeek.forEach(day => {
       const th = document.createElement('th')
       th.textContent = day
       headerRow.appendChild(th)
     })
-    table.appendChild(headerRow)
+    fragment.appendChild(headerRow)
   },
 
-  fillMonthTable(table, currentMonth, startDate, selectedPattern) {
+  /**
+   * Remplit le tableau avec les jours du mois
+   * @param {DocumentFragment} fragment - Fragment conteneur
+   * @param {Date} currentMonth - Mois courant
+   * @param {Date} startDate - Date de début du planning
+   * @param {Array<string>} selectedPattern - Motif de rotation
+   */
+  fillMonthTable(fragment, currentMonth, startDate, selectedPattern) {
     const firstDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1)
     const lastDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0)
     const firstWeekday = (firstDay.getDay() + 6) % 7
     const daysInMonth = lastDay.getDate()
 
+    // Création d'un fragment pour les lignes de la table
+    const rowsFragment = document.createDocumentFragment()
     let row = document.createElement('tr')
 
-    // Ajouter des cellules vides pour les jours précédant le premier du mois
+    // Cellules vides début de mois
     for (let i = 0; i < firstWeekday; i++) {
       row.appendChild(document.createElement('td'))
     }
 
-    // Remplir les jours du mois
+    // Remplissage des jours
     for (let day = 1; day <= daysInMonth; day++) {
       const currentDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day)
       const daysSinceStart = Math.floor((currentDate - startDate) / (1000 * 60 * 60 * 24))
-
-      // Calcul du bon index de rotation
       const rotationIndex = ((daysSinceStart % selectedPattern.length) + selectedPattern.length) % selectedPattern.length
 
       const dayCell = this.createDayCell(day, rotationIndex, selectedPattern)
       row.appendChild(dayCell)
 
       if ((firstWeekday + day) % 7 === 0) {
-        table.appendChild(row)
+        rowsFragment.appendChild(row)
         row = document.createElement('tr')
       }
     }
 
-    // Remplir les cellules restantes de la dernière semaine
+    // Cellules vides fin de mois
     while (row.children.length < 7) {
       row.appendChild(document.createElement('td'))
     }
-    table.appendChild(row)
+    rowsFragment.appendChild(row)
+    fragment.appendChild(rowsFragment)
   },
 
+  /**
+   * Crée une cellule pour un jour spécifique
+   * @param {number} day - Jour du mois
+   * @param {number} rotationIndex - Index dans le motif de rotation
+   * @param {Array<string>} selectedPattern - Motif de rotation
+   * @returns {HTMLTableCellElement} Cellule du jour
+   */
   createDayCell(day, rotationIndex, selectedPattern) {
     const dayCell = document.createElement('td')
     dayCell.setAttribute('data-day', day)
-    dayCell.setAttribute('tabindex', '0')
+    //dayCell.setAttribute('tabindex', '0')
 
     if (rotationIndex !== null && selectedPattern[rotationIndex]) {
       const scheduleLetter = selectedPattern[rotationIndex]
       dayCell.textContent = scheduleLetter
-
-      // Stocke la valeur originale
       dayCell.setAttribute('data-original-value', scheduleLetter)
 
       const className = ScheduleClassManager.getClass(scheduleLetter)
@@ -274,6 +315,11 @@ const CalendarManager = {
     return dayCell
   },
 
+  /**
+   * Ajoute la légende du tableau avec le mois et l'année
+   * @param {HTMLTableElement} table - Table du mois
+   * @param {Date} currentMonth - Mois courant
+   */
   addTableCaption(table, currentMonth) {
     const caption = document.createElement('caption')
     caption.textContent = currentMonth
@@ -381,6 +427,7 @@ const EditManager = {
     const cells = calendarDiv.querySelectorAll('td[data-day]')
     cells.forEach(cell => {
       cell.style.cursor = 'pointer'
+      cell.setAttribute('tabindex', '0')
     })
   },
 
@@ -389,6 +436,7 @@ const EditManager = {
     cells.forEach(cell => {
       cell.removeAttribute('contenteditable')
       cell.style.cursor = ''
+      cell.removeAttribute('tabindex')
     })
     StorageManager.saveSchedule(calendarDiv)
   },
@@ -422,6 +470,7 @@ const EditManager = {
     if (!cell) return
 
     cell.removeAttribute('contenteditable')
+    cell.removeAttribute('tabindex')
 
     const value = cell.textContent.trim().toUpperCase()
     if (value.length > 1) {
