@@ -156,7 +156,7 @@ img {
 }
 
 .presentation-image {
-  max-height: 40svh;
+  max-height: 50svh;
   padding: var(--spacing-xl) 10em var(--spacing-xl) 0;
   place-self: end start;
 }
@@ -206,9 +206,16 @@ main > article {
 
 .main-content {
   display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
   margin-block-start: var(--spacing-xl);
 }
+
+/* .main-content,
+.main-content > * > .tabs,
+.tab-panel:first-child {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+} */
 
 header {
   font-family: 'Oleo Script Swash Caps';
@@ -390,14 +397,22 @@ textarea.custom-pattern {
   cursor: pointer;
 }
 
+@media (max-width: 45.01em) {
+  .xs-button-full .button {
+    width: 100%;
+  }
+}
+
 .warning {
   background-color: hsl(354, 100%, 70%);
   border-color: hsl(354, 100%, 70%);
 }
 
 .button:where(:focus, :hover, :active) {
-  background-color: var(--color-accent);
-  border-color: var(--color-accent);
+  @media (hover: hover) and (pointer: fine) {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
 }
 
 .button svg {
@@ -601,9 +616,9 @@ textarea.custom-pattern {
 
 /* tabs */
 .tabs {
-  --colorAB005: hsla(0, 0%, 0%, 0.05);
-  --colorA15: hsla(0, 0%, 100%, 0.15);
+  --color-tabs-box-shadow: hsla(0, 0%, 0%, 0.05);
 }
+
 .tabs .tab-list {
   display: flex;
   padding: 0;
@@ -625,17 +640,25 @@ textarea.custom-pattern {
   text-decoration: none;
   color: inherit;
   background-color: var(--color-gray-100);
-  border: var(--border2);
+  border: none;
   border-radius: 0.5em 0.5em 0 0;
-  box-shadow: 0 -1rem 1rem var(--colorAB005);
+  box-shadow: 0 -1rem 1rem var(--color-tabs-box-shadow);
   cursor: pointer;
   transition: 0.2s box-shadow ease-in-out;
+}
+
+.tabs .tab-list button svg {
+  display: inline-block;
+  vertical-align: sub;
+  height: 1.2em;
+  aspect-ratio: 1;
+  fill: currentColor;
 }
 
 .tabs:where(:focus-visible, :hover) {
   @media (hover: hover) and (pointer: fine) {
     outline: none;
-    box-shadow: inset 0 -0.3em var(--color2), 0 -1rem 1rem var(--colorAB005);
+    box-shadow: inset 0 -0.3em var(--color2), 0 -1rem 1rem var(--color-tabs-box-shadow);
   }
 }
 
@@ -672,10 +695,6 @@ textarea.custom-pattern {
     --grid-item-min-width: 15em;
   }
 
-  .grid-auto > * {
-    font-size: 50%;
-  }
-
   table {
     page-break-inside: avoid;
     -webkit-print-color-adjust: exact;
@@ -686,4 +705,18 @@ textarea.custom-pattern {
   .tab-list {
     display: none !important;
   }
+
+  #calendar > * {
+    font-size: 65%;
+  }
 }
+
+/* .table.current {
+  --size: 9em;
+  --thickness: 0.7em;
+  --color: #00f;
+  background-image: linear-gradient(to right, var(--color) var(--thickness), transparent var(--thickness)), linear-gradient(to left, var(--color) var(--thickness), transparent var(--thickness)), linear-gradient(to bottom, var(--color) var(--thickness), transparent var(--thickness)), linear-gradient(to top, var(--color) var(--thickness), transparent var(--thickness));
+  background-position: 0 100%, 100% 0, 100% 0, 0 100%;
+  background-repeat: no-repeat;
+  background-size: var(--size) var(--size);
+} */

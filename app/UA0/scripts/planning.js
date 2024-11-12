@@ -620,6 +620,7 @@ document.addEventListener('DOMContentLoaded', () => {
   generateButton.addEventListener('click', () => {
     CalendarManager.generateSchedule(startDateInput.value, getSelectedPattern())
     StorageManager.loadSchedule(calendarDiv)
+    alert(`Le planning a bien été créé.`)
   })
 
   if (resetButton) {
