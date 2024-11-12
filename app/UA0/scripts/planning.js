@@ -2,30 +2,30 @@
 
 // prettier-ignore
 const RotationPatterns = {
-    IDE: [
-      'J', 'J', 'S', 'J', 'J', 'R', 'R',
-      'S', 'S', 'J', 'M', 'F', 'R', 'R',
-      'S', 'J', 'M', 'M', 'R', 'S', 'S',
-      'J', 'M', 'R', 'R', 'T', 'M', 'M',
-      'M', 'R', 'J', 'S', 'S', 'R', 'R',
-      'J', 'J', 'S', 'J', 'M', 'R', 'R',
-      'S', 'S', 'J', 'J', 'M', 'R', 'R',
-      'F', 'S', 'S', 'J', 'J', 'R', 'R',
-      'M', 'M', 'M', 'R', 'S', 'S', 'S',
-      'T', 'R', 'R', 'S', 'J', 'M', 'M',
-      'R', 'J', 'J', 'S', 'S', 'R', 'R',
-    ],
-    NightIDE: [
-      'N', 'N', 'R', 'R', 'N', 'N', 'N',
-      'R', 'R', 'N', 'N', 'R', 'R', 'R',
-    ],
-    ASH: [
-      'M', 'M', 'M', 'M', 'R', 'S', 'S',
-      'S', 'S', 'R', 'R', 'M', 'M', 'M',
-      'M', 'R', 'S', 'S', 'S', 'R', 'R',
-      'T', 'M', 'M', 'M', 'M', 'R', 'R',
-    ],
-  }
+  IDE: [
+    'J', 'J', 'S', 'J', 'J', 'R', 'R',
+    'S', 'S', 'J', 'M', 'F', 'R', 'R',
+    'S', 'J', 'M', 'M', 'R', 'S', 'S',
+    'J', 'M', 'R', 'R', 'T', 'M', 'M',
+    'M', 'R', 'J', 'S', 'S', 'R', 'R',
+    'J', 'J', 'S', 'J', 'M', 'R', 'R',
+    'S', 'S', 'J', 'J', 'M', 'R', 'R',
+    'F', 'S', 'S', 'J', 'J', 'R', 'R',
+    'M', 'M', 'M', 'R', 'S', 'S', 'S',
+    'T', 'R', 'R', 'S', 'J', 'M', 'M',
+    'R', 'J', 'J', 'S', 'S', 'R', 'R',
+  ],
+  NightIDE: [
+    'N', 'N', 'R', 'R', 'N', 'N', 'N',
+    'R', 'R', 'N', 'N', 'R', 'R', 'R',
+  ],
+  ASH: [
+    'M', 'M', 'M', 'M', 'R', 'S', 'S',
+    'S', 'S', 'R', 'R', 'M', 'M', 'M',
+    'M', 'R', 'S', 'S', 'S', 'R', 'R',
+    'T', 'M', 'M', 'M', 'M', 'R', 'R',
+  ],
+}
 
 // Gestionnaire de patterns personnalisés
 const CustomPatternManager = {
@@ -299,7 +299,6 @@ const CalendarManager = {
   createDayCell(day, rotationIndex, selectedPattern) {
     const dayCell = document.createElement('td')
     dayCell.setAttribute('data-day', day)
-    //dayCell.setAttribute('tabindex', '0')
 
     if (rotationIndex !== null && selectedPattern[rotationIndex]) {
       const scheduleLetter = selectedPattern[rotationIndex]
@@ -342,8 +341,8 @@ const StorageManager = {
 
       cells.forEach(cell => {
         const day = cell.getAttribute('data-day')
-        const value = cell.textContent.trim()
-        const originalValue = cell.getAttribute('data-original-value') || value
+        const value = cell.textContent.trim().toUpperCase() // @note ajout de .toUpperCase()
+        const originalValue = cell.getAttribute('data-original-value') // `|| value` => @todo pourquoi value ?
 
         if (value) {
           if (!scheduleData[monthId]) {
@@ -387,6 +386,9 @@ const StorageManager = {
               cell.className = ''
               cell.classList.add(className)
             }
+            if (displayValue !== values[0]) {
+              cell.classList.add('modified')
+            }
           }
         })
       })
@@ -428,15 +430,16 @@ const EditManager = {
     cells.forEach(cell => {
       cell.style.cursor = 'pointer'
       cell.setAttribute('tabindex', '0')
+      cell.setAttribute('contenteditable', 'true') // si omis, alors pas de possibilité de changement avec la navigation au clavier
     })
   },
 
   disableEditing(calendarDiv) {
     const cells = calendarDiv.querySelectorAll('td[data-day]')
     cells.forEach(cell => {
-      cell.removeAttribute('contenteditable')
       cell.style.cursor = ''
       cell.removeAttribute('tabindex')
+      cell.removeAttribute('contenteditable')
     })
     StorageManager.saveSchedule(calendarDiv)
   },
@@ -446,7 +449,7 @@ const EditManager = {
 
     const cell = e.target.closest('td[data-day]')
     if (cell) {
-      cell.setAttribute('contenteditable', 'true')
+      //cell.setAttribute('contenteditable', 'true')
       cell.focus()
 
       // Créer un Range pour sélectionner tout le contenu de la cellule ; @note cell.select() ne fonctionne pas correctement dans ce cas de figure.
@@ -469,14 +472,18 @@ const EditManager = {
     const cell = e.target.closest('td[data-day]')
     if (!cell) return
 
-    cell.removeAttribute('contenteditable')
-    cell.removeAttribute('tabindex')
+    //cell.removeAttribute('contenteditable')
+    //cell.removeAttribute('tabindex')
 
     const value = cell.textContent.trim().toUpperCase()
     if (value.length > 1) {
       cell.textContent = value.charAt(0)
     } else {
       cell.textContent = value // Assure que la cellule affiche toujours en majuscules
+    }
+
+    if (value !== cell.getAttribute('data-original-value')) {
+      cell.classList.add('modified')
     }
   },
 
@@ -487,12 +494,13 @@ const EditManager = {
     if (!cell) return
 
     const newValue = cell.textContent.trim().toUpperCase()
-    const originalValue = cell.getAttribute('data-original-value') || newValue
+    const initialValue = cell.dataset.initialValue
 
-    if (newValue && newValue !== originalValue) {
+    if (newValue && newValue !== initialValue) {
       const validLetters = ['M', 'J', 'S', 'N', 'H', 'R', 'T', 'F', 'C', 'A', 'G', 'D', 'O']
+
       if (!validLetters.includes(newValue)) {
-        cell.textContent = originalValue
+        cell.textContent = initialValue
         return
       }
 
@@ -501,11 +509,16 @@ const EditManager = {
       if (className) {
         cell.className = ''
         cell.classList.add(className)
-        cell.classList.add('modified')
-        cell.removeAttribute('contenteditable')
       }
+
+
+      if (newValue !== cell.getAttribute('data-original-value')) {
+        cell.classList.add('modified-spot')
+      }
+
     }
 
+    delete cell.dataset.initialValue // Nettoyage de la valeur initiale
     StorageManager.saveSchedule(calendarDiv)
   },
 
@@ -514,7 +527,6 @@ const EditManager = {
     cells.forEach(cell => {
       cell.removeAttribute('contenteditable')
       cell.style.cursor = ''
-      //cell.classList.remove('modified')
     })
     StorageManager.saveSchedule(calendarDiv)
   },
@@ -529,6 +541,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const customPatternTextarea = document.getElementById('custom-pattern')
   const saveCustomPatternButton = document.getElementById('save-custom-pattern')
   const generateButton = document.getElementById('generate-schedule')
+  const resetButton = document.getElementById('reset')
 
   // Fonction pour obtenir le pattern initial selon la sélection
   function getInitialPattern(patternType) {
@@ -554,32 +567,35 @@ document.addEventListener('DOMContentLoaded', () => {
     return CustomPatternManager.stringToPattern(customPatternTextarea.value)
   }
 
-  // Gestionnaires d'événements pour le bouton d'édition
-  editableButton.addEventListener('click', () => {
-    EditManager.toggleEditing(calendarDiv, editableButton)
-  })
+  if (editableButton) {
+    editableButton.addEventListener('click', () => {
+      EditManager.toggleEditing(calendarDiv, editableButton)
+    })
+  }
 
-  calendarDiv.addEventListener('click', e => {
-    EditManager.handleCellClick(e, calendarDiv)
-  })
+  if (calendarDiv) {
+    calendarDiv.addEventListener('click', e => {
+      EditManager.handleCellClick(e, calendarDiv)
+    })
 
-  calendarDiv.addEventListener('input', e => {
-    EditManager.handleCellInput(e, calendarDiv)
-  })
+    calendarDiv.addEventListener('input', e => {
+      EditManager.handleCellInput(e, calendarDiv)
+    })
 
-  calendarDiv.addEventListener(
-    'blur',
-    e => {
-      EditManager.handleCellBlur(e, calendarDiv)
-    },
-    true,
-  )
+    calendarDiv.addEventListener(
+      'blur',
+      e => {
+        EditManager.handleCellBlur(e, calendarDiv)
+      },
+      true,
+    )
+  }
 
   // Gestionnaire d'événement pour le changement de pattern
   patternSelect.addEventListener('change', function () {
     const initialPattern = getInitialPattern(this.value)
     updatePatternTextarea(initialPattern)
-    localStorage.setItem('pattern-select', this.value)
+    localStorage.setItem('patternSelect', this.value)
   })
 
   // Gestionnaire d'événement pour la sauvegarde du pattern personnalisé
@@ -605,7 +621,7 @@ document.addEventListener('DOMContentLoaded', () => {
       alert('Veuillez sélectionner un lundi.')
       this.value = ''
     } else {
-      localStorage.setItem('start-date', this.value)
+      localStorage.setItem('startDate', this.value)
     }
   })
 
@@ -615,13 +631,28 @@ document.addEventListener('DOMContentLoaded', () => {
     StorageManager.loadSchedule(calendarDiv)
   })
 
+  if (resetButton) {
+    resetButton.addEventListener('click', () => {
+      const confirmation = window.confirm(
+        'Êtes-vous sûr de vouloir effacer toutes vos données sauvegardées ? Cette action est irréversible.',
+      )
+
+      if (confirmation) {
+        localStorage.clear()
+        console.log(`Le localStorage a été réinitialisé.`)
+        location.reload()
+        console.log(`Rechargement de la page.`)
+      }
+    })
+  }
+
   function initialize() {
     // Charger le pattern personnalisé
     CustomPatternManager.load()
 
     // Charger les préférences sauvegardées
-    const savedPattern = localStorage.getItem('pattern-select')
-    const savedStartDate = localStorage.getItem('start-date')
+    const savedPattern = localStorage.getItem('patternSelect')
+    const savedStartDate = localStorage.getItem('startDate')
 
     if (savedPattern) {
       patternSelect.value = savedPattern
@@ -642,25 +673,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initialize()
 })
-
-function setupResetButton() {
-  const resetButton = document.getElementById('reset')
-
-  if (resetButton) {
-    resetButton.addEventListener('click', () => {
-      const confirmation = window.confirm(
-        'Êtes-vous sûr de vouloir effacer toutes vos données sauvegardées ? Cette action est irréversible.',
-      )
-
-      if (confirmation) {
-        localStorage.clear()
-        //alert('Toutes les données ont été effacées.')
-        console.log(`Le localStorage a été réinitialisé.`)
-        location.reload()
-        console.log(`Rechargement de la page.`)
-      }
-    })
-  }
-}
-
-document.addEventListener('DOMContentLoaded', setupResetButton)
