@@ -521,15 +521,6 @@ const EditManager = {
     delete cell.dataset.initialValue // Nettoyage de la valeur initiale
     StorageManager.saveSchedule(calendarDiv)
   },
-
-  disableEditing(calendarDiv) {
-    const cells = calendarDiv.querySelectorAll('td[data-day]')
-    cells.forEach(cell => {
-      cell.removeAttribute('contenteditable')
-      cell.style.cursor = ''
-    })
-    StorageManager.saveSchedule(calendarDiv)
-  },
 }
 
 // Initialisation et gestionnaires d'événements
