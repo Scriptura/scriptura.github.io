@@ -214,7 +214,12 @@ const CalendarManager = {
     const currentMonth = new Date(displayStartDate)
     currentMonth.setMonth(displayStartDate.getMonth() + monthIndex)
 
-    monthTable.id = `month-${currentMonth.getMonth() + 1}-${currentMonth.getFullYear()}`
+    const month = currentMonth.getMonth() + 1
+    const year = currentMonth.getFullYear()
+    monthTable.id = `month-${month}-${year}`
+
+    // Attribut data pour stocker le format YYYY-MM utilisé en interne
+    monthTable.setAttribute('data-month-id', `${year}-${month}`)
 
     // Création d'un fragment pour les éléments de la table
     const tableFragment = document.createDocumentFragment()
@@ -336,7 +341,7 @@ const StorageManager = {
     const tables = calendarDiv.querySelectorAll('table[id^="month-"]')
 
     tables.forEach(table => {
-      const monthId = table.id
+      const monthId = table.getAttribute('data-month-id')
       const cells = table.querySelectorAll('td[data-day]')
 
       cells.forEach(cell => {
@@ -368,16 +373,17 @@ const StorageManager = {
       if (!savedData) return
 
       Object.entries(savedData).forEach(([monthId, monthData]) => {
-        const table = document.getElementById(monthId)
+        // Conversion du format YYYY-MM en month-MM-YYYY pour trouver la table
+        let [year, month] = monthId.split('-')
+        const tableId = `month-${month}-${year}`
+
+        const table = document.getElementById(tableId)
         if (!table) return
 
         Object.entries(monthData).forEach(([day, values]) => {
           const cell = table.querySelector(`td[data-day="${day}"]`)
           if (cell) {
-            // Stocke la valeur originale comme attribut data
             cell.setAttribute('data-original-value', values[0])
-
-            // Utilise la valeur modifiée si elle existe, sinon la valeur originale
             const displayValue = values[1] || values[0]
             cell.textContent = displayValue
 
@@ -511,11 +517,9 @@ const EditManager = {
         cell.classList.add(className)
       }
 
-
       if (newValue !== cell.getAttribute('data-original-value')) {
         cell.classList.add('modified-spot')
       }
-
     }
 
     delete cell.dataset.initialValue // Nettoyage de la valeur initiale

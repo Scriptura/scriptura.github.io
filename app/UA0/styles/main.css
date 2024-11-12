@@ -20,7 +20,7 @@
 
   /* Couleurs des événements */
   --color-event-day: hsl(197, 92%, 90%);
-  --color-event-leave: hsl(47, 95%, 83%);
+  --color-event-leave: hsl(27, 100%, 80%);
   --color-event-extra-rest: hsl(47, 95%, 83%);
   --color-event-holiday: hsl(47, 95%, 83%);
   --color-event-evening: hsl(24, 92%, 90%);
@@ -184,7 +184,8 @@ img {
 }
 
 /* En-tête */
-header {
+.header {
+  padding-block: 1.5em;
   color: var(--color-background);
   background-color: var(--color-primary);
 }
@@ -207,7 +208,7 @@ main > article {
 .main-content {
   display: grid;
   grid-template-rows: minmax(0, 1fr);
-  margin-block-start: var(--spacing-xl);
+  margin-block: -2.5em 1em;
 }
 
 /* .main-content,
@@ -386,14 +387,14 @@ textarea.custom-pattern {
   justify-content: center;
   gap: var(--spacing-sm);
   font-weight: 400;
-  padding: 0.75em 1em;
+  padding: 0.6em 1em;
   font-size: 1em;
   text-align: center;
   vertical-align: center;
   color: var(--color-background);
   background-color: var(--color-primary-dark);
   border: 1px solid var(--color-primary-dark);
-  border-radius: var(--border-radius);
+  border-radius: 3em;
   cursor: pointer;
 }
 
@@ -457,7 +458,6 @@ textarea.custom-pattern {
 .table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: var(--spacing-lg);
 }
 
 @media screen {
@@ -488,22 +488,24 @@ textarea.custom-pattern {
   }
 }
 
-.table td::before {
-  content: attr(data-day);
+.table td::before,
+.table td::after {
   position: absolute;
-  bottom: var(--spacing-xs);
-  right: var(--spacing-sm);
+  line-height: 1;
   font-size: 0.7em;
   color: var(--color-gray-600);
 }
 
+.table td::before {
+  content: attr(data-day);
+  bottom: .4em;
+  right: .4em;
+}
+
 .table td:where(.modified, .modified-spot)::after {
   content: attr(data-original-value);
-  position: absolute;
-  top: var(--spacing-xs);
-  left: var(--spacing-sm);
-  font-size: 0.7em;
-  color: var(--color-gray-600);
+  top: .4em;
+  left: .4em;
 }
 
 .table th {
@@ -527,11 +529,11 @@ textarea.custom-pattern {
 }
 
 .table .event-extra-rest {
-  background-color: #ccc;
+  background-color: var(--color-event-holiday);
 }
 
 .table .event-holiday {
-  background-color: #ccc;
+  background-color: var(--color-event-extra-rest);
 }
 
 .table .event-day {
@@ -551,7 +553,7 @@ textarea.custom-pattern {
 }
 
 .table .event-leave {
-  background-color: #ccc;
+  background-color: var(--color-event-leave);
 }
 
 .table .event-overtime {
@@ -673,7 +675,8 @@ textarea.custom-pattern {
 }
 
 .tabs .tab-list [aria-selected='false'] {
-  user-select: none;
+  color: #777;
+  /* user-select: none; */
 }
 
 .tabs .tab-panel {
@@ -710,13 +713,3 @@ textarea.custom-pattern {
     font-size: 65%;
   }
 }
-
-/* .table.current {
-  --size: 9em;
-  --thickness: 0.7em;
-  --color: #00f;
-  background-image: linear-gradient(to right, var(--color) var(--thickness), transparent var(--thickness)), linear-gradient(to left, var(--color) var(--thickness), transparent var(--thickness)), linear-gradient(to bottom, var(--color) var(--thickness), transparent var(--thickness)), linear-gradient(to top, var(--color) var(--thickness), transparent var(--thickness));
-  background-position: 0 100%, 100% 0, 100% 0, 0 100%;
-  background-repeat: no-repeat;
-  background-size: var(--size) var(--size);
-} */
