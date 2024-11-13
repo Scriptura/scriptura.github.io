@@ -1,8 +1,5 @@
 'use strict'
 
-// @see https://grafikart.fr/tutoriels/graph-pie-camembert-1965
-// @see https://grafikart.fr/demo/JS/PieChart/index.html
-
 /**
  * Renvoie un élément HTML depuis une chaine
  * @param {string} str
@@ -16,11 +13,6 @@ function easeOutExpo(x) {
   return x === 1 ? 1 : 1 - Math.pow(2, -10 * x)
 }
 
-/**
- * Représente un point
- * @property {number} x
- * @property {number} y
- */
 class Point {
   constructor(x, y) {
     this.x = x
@@ -36,64 +28,131 @@ class Point {
   }
 }
 
-/**
- * @property {number[]} data
- * @property {SVGPathElement[]} paths
- * @property {SVGLineElement[]} lines
- * @property {HTMLDivElement[]} labels
- */
 class PieChart extends HTMLElement {
   constructor() {
     super()
-    const shadow = this.attachShadow({ mode: 'open' })
+    this.shadow = this.attachShadow({ mode: 'open' })
+    this.shadow.innerHTML = `
+      <style>
+        :host {
+          display: block;
+          position: relative;
+        }
+        svg {
+          width: 100%;
+          height: 100%;
+        }
+        path {
+          cursor: pointer;
+          transition: filter .3s;
+        }
+        path:hover,
+        path.active {
+          filter: invert(1);
+        }
+        #labels-container {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+        }
+        .chart-label {
+          position: absolute;
+          padding: .2em .5em;
+          white-space: nowrap;
+          transform: translate(-50%, -50%);
+          background-color: var(--pie-chart-background-color-label, #fff);
+          color: var(--pie-chart-color-label, #000);
+          border-radius: 3px;
+          opacity: 0;
+          transition: opacity 0.5s ease;
+          pointer-events: none;
+        }
+        .chart-label.visible {
+          opacity: 1;
+        }
+      </style>
+      <svg viewBox="-1 -1 2 2">
+        <g mask="url(#graphMask)"></g>
+        <mask id="graphMask">
+          <rect fill="white" x="-1" y="-1" width="2" height="2"/>
+          <circle r="0.7" fill="black"/>
+        </mask>
+      </svg>
+      <div id="labels-container"></div>
+    `
+  }
 
-    // On prépare les paramètres
-    const labels = this.getAttribute('labels')?.split(';') ?? []
-    const donut = this.getAttribute('donut') ?? '0.7'
-    const colors = this.getAttribute('colors')?.split(';') ?? [
-      'hsl(9, 100%, 64%)',
-      'hsl(29, 100%, 64%)',
-      'hsl(49, 100%, 64%)',
-      'hsl(69, 100%, 64%)',
-      'hsl(89, 100%, 64%)',
-      'hsl(109, 100%, 64%)',
-      'hsl(129, 100%, 64%)',
-      'hsl(149, 100%, 64%)',
-      'hsl(169, 100%, 64%)',
-      'hsl(189, 100%, 64%)',
-    ]
-    this.data = this.getAttribute('data')
-      .split(';')
-      .map((v) => parseFloat(v))
-    const gap = this.getAttribute('gap') ?? '0.04'
+  static get observedAttributes() {
+    return ['data']
+  }
 
-    // On génère la structure du DOM nécessaire pour la suite
-    const svg = strToDom(`<svg viewBox="-1 -1 2 2">
-          <g mask="url(#graphMask)"></g>
-          <mask id="graphMask">
-              <rect fill="white" x="-1" y="-1" width="2" height="2"/>
-              <circle r="${donut}" fill="black"/>
-          </mask>
-      </svg>`)
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'data' && oldValue !== newValue) {
+      this.initializeChart()
+      this.startAnimation()
+    }
+  }
+
+  connectedCallback() {
+    this.initializeChart()
+    this.startAnimation()
+  }
+
+  parseChartData() {
+    try {
+      const defaultColors = [
+        'hsl(210, 100%, 50%)',
+        'hsl(210, 100%, 55%)',
+        'hsl(210, 100%, 60%)',
+        'hsl(210, 100%, 65%)',
+        'hsl(210, 100%, 70%)',
+      ]
+
+      const rawData = JSON.parse(this.getAttribute('data') || '[]')
+      return rawData.map((item, index) => ({
+        value: parseFloat(item.value) || 0,
+        label: item.label || `Section ${index + 1}`,
+        color: item.color || defaultColors[index % defaultColors.length],
+      }))
+    } catch (e) {
+      console.error('Invalid data format:', e)
+      return []
+    }
+  }
+
+  initializeChart() {
+    this.chartData = this.parseChartData()
+    const svg = this.shadow.querySelector('svg')
     const pathGroup = svg.querySelector('g')
     const maskGroup = svg.querySelector('mask')
-    this.paths = this.data.map((_, k) => {
-      const color = colors[k % colors.length].trim() //colors[k % (colors.length - 1)] // Le code de Grafikart est sensé compensé une couleur manquante, mais bug si pas de séparateur final dans l'attribut "colors".
-      const path = document.createElementNS(
-        'http://www.w3.org/2000/svg',
-        'path'
-      )
-      path.setAttribute('fill', color)
-      pathGroup.appendChild(path)
+    const labelsContainer = this.shadow.getElementById('labels-container')
+    const donut = this.getAttribute('donut') ?? '0.7'
+    const gap = this.getAttribute('gap') ?? '0.04'
+
+    // Nettoyage des éléments existants
+    pathGroup.innerHTML = ''
+    maskGroup.innerHTML = `
+      <rect fill="white" x="-1" y="-1" width="2" height="2"/>
+      <circle r="${donut}" fill="black"/>
+    `
+    labelsContainer.innerHTML = ''
+
+    // Création des chemins
+    this.paths = this.chartData.map((item, k) => {
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+      path.setAttribute('fill', item.color)
       path.addEventListener('mouseover', () => this.handlePathHover(k))
       path.addEventListener('mouseout', () => this.handlePathOut(k))
+      pathGroup.appendChild(path)
       return path
     })
-    this.lines = this.data.map(() => {
-      const line = document.createElementNS(
-        'http://www.w3.org/2000/svg',
-        'line'
-      )
+
+    // Création des lignes
+    this.lines = this.chartData.map(() => {
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line')
       line.setAttribute('stroke', '#000')
       line.setAttribute('stroke-width', gap)
       line.setAttribute('x1', '0')
@@ -101,127 +160,83 @@ class PieChart extends HTMLElement {
       maskGroup.appendChild(line)
       return line
     })
-    this.labels = labels.map((label, id) => {
-      const div = document.createElement('div')
-      div.id = 'label' + id
-      div.innerText = label
-      div.setAttribute('tabindex', '0')
-      shadow.appendChild(div)
-      return div
+
+    // Création des labels
+    this.labels = this.chartData.map((item, index) => {
+      const label = document.createElement('div')
+      label.id = `label${index}`
+      label.className = 'chart-label'
+      label.textContent = item.label
+      label.setAttribute('tabindex', '0')
+      labelsContainer.appendChild(label)
+      return label
     })
-    const style = document.createElement('style')
-    style.innerHTML = `
-:host {
-  display: block;
-  position: relative;
-}
-svg {
-  width: 100%;
-  height: 100%;
-}
-path {
-  cursor: pointer;
-  transition: filter .3s;
-}
-path:hover,
-path.active {
-  filter: invert(1);
-}
-div {
-  position: absolute;
-  top: 0;
-  left: 0;
-  padding: .2em .5em;
-  white-space: nowrap;
-  transform: translate(-50%, -50%);
-  background-color: var(--pie-chart-color-label, #222);
-  opacity: 0;
-  transition: opacity .3s;
-  pointer-events: none;
-}
-div:focus,
-div:active,
-div.active {
-  opacity: 1;
-  outline: none;
-}
-`
-    shadow.appendChild(style)
-    shadow.appendChild(svg)
   }
 
-  connectedCallback() {
+  startAnimation() {
     const now = Date.now()
     const duration = 1000
     const draw = () => {
       const t = (Date.now() - now) / duration
-      this.draw(1)
       if (t < 1) {
         this.draw(easeOutExpo(t))
         window.requestAnimationFrame(draw)
       } else {
         this.draw(1)
+        this.labels.forEach(label => label.classList.add('visible'))
       }
     }
     window.requestAnimationFrame(draw)
   }
 
-  /**
-   * Dessine le graphique
-   * @param {number} progress
-   */
   draw(progress = 1) {
-    const total = this.data.reduce((acc, v) => acc + v, 0)
-    const patch = 0.0000001 // L'ajout d'un correcteur évite à un path de ne jamais correspondre parfaitement à 100% de la totalité du graphique (s'il est seul dans le graphique par exemple) ce qui évite sa "disparition".
+    const total = this.chartData.reduce((acc, item) => acc + item.value, 0)
+    const patch = 0.0000001
     let angle = Math.PI / -2
     let start = new Point(0, -1)
-    for (let k = 0; k < this.data.length; k++) {
+
+    for (let k = 0; k < this.chartData.length; k++) {
       this.lines[k].setAttribute('x2', start.x)
       this.lines[k].setAttribute('y2', start.y)
-      const ratio = (this.data[k] / total) * progress
+      const ratio = (this.chartData[k].value / total) * progress
+
       if (progress === 1) {
         this.positionLabel(this.labels[k], angle + ratio * Math.PI)
       }
+
       angle += ratio * 2 * Math.PI - patch
       const end = Point.fromAngle(angle)
       const largeFlag = ratio > 0.5 ? '1' : '0'
-      this.paths[k].setAttribute(
-        'd',
-        `M 0 0 L ${start.toSvgPath()} A 1 1 0 ${largeFlag} 1 ${end.toSvgPath()} L 0 0`
-      )
+      this.paths[k].setAttribute('d', `M 0 0 L ${start.toSvgPath()} A 1 1 0 ${largeFlag} 1 ${end.toSvgPath()} L 0 0`)
       start = end
     }
   }
 
-  /**
-   * Gère l'effet lorsque l'on survol une section du graph
-   * @param {number} k Index de l'élément survolé
-   */
   handlePathHover(k) {
     this.dispatchEvent(new CustomEvent('sectionhover', { detail: k }))
     this.labels[k]?.classList.add('active')
   }
 
-  /**
-   * Gère l'effet lorsque l'on quitte la section du graph
-   * @param {number} k Index de l'élément survolé
-   */
   handlePathOut(k) {
     this.labels[k]?.classList.remove('active')
   }
 
-  /**
-   * Positionne le label en fonction de l'angle
-   * @param {HTMLDivElement|undefined} label
-   * @param {number} angle
-   */
   positionLabel(label, angle) {
-    if (!label || !angle) {
-      return
-    }
+    if (!label || angle === undefined) return
+  
+    const offsetFactor = 0.5
     const point = Point.fromAngle(angle)
-    label.style.setProperty('top', `${(point.y * 0.5 + 0.5) * 100}%`)
-    label.style.setProperty('left', `${(point.x * 0.5 + 0.5) * 100}%`)
+  
+    // Calcul des positions pour éloigner du centre
+    let topPosition = (point.y * offsetFactor + 0.5) * 100
+    let leftPosition = (point.x * offsetFactor + 0.5) * 100
+  
+    // Limites de position pour rester dans le SVG (0% à 100%)
+    topPosition = Math.min(100, Math.max(0, topPosition))
+    leftPosition = Math.min(100, Math.max(0, leftPosition))
+  
+    label.style.top = `${topPosition}%`
+    label.style.left = `${leftPosition}%`
   }
 }
 

@@ -185,9 +185,15 @@ img {
 
 /* En-tête */
 .header {
-  padding-block: 1.5em;
+  padding-block-end: 1em;
   color: var(--color-background);
   background-color: var(--color-primary);
+}
+
+@media (max-width: 45.01em) {
+  .header {
+    padding-block-end: 2em;
+  }
 }
 
 header > .wrapper,
@@ -420,10 +426,6 @@ textarea.custom-pattern {
   fill: currentColor;
 }
 
-.stats {
-  overflow: hidden;
-}
-
 .stats p {
   margin: 0;
 }
@@ -452,6 +454,12 @@ textarea.custom-pattern {
 
 .stats-count {
   color: var(--color-primary-dark);
+}
+
+pie-chart {
+  max-width: 30em;
+  margin-inline: auto;
+  --pie-chart-background-color-label: hsla(0, 0%, 100%, 1);
 }
 
 /* Tableaux */
@@ -498,14 +506,14 @@ textarea.custom-pattern {
 
 .table td::before {
   content: attr(data-day);
-  bottom: .4em;
-  right: .4em;
+  bottom: 0.4em;
+  right: 0.4em;
 }
 
 .table td:where(.modified, .modified-spot)::after {
   content: attr(data-original-value);
-  top: .4em;
-  left: .4em;
+  top: 0.4em;
+  left: 0.4em;
 }
 
 .table th {
