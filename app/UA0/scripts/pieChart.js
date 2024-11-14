@@ -48,7 +48,7 @@ class PieChart extends HTMLElement {
         }
         path:hover,
         path.active {
-          filter: invert(1);
+          filter: brightness(0.9) saturate(200%);
         }
         #labels-container {
           position: absolute;
@@ -144,8 +144,7 @@ class PieChart extends HTMLElement {
     this.paths = this.chartData.map((item, k) => {
       console.log(item)
       const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-      path.setAttribute('style', `fill:var(--pie-chart-color-item-${item.label.replace(/ /, '').toLowerCase()})`)
-      path.setAttribute('fill', item.color)
+      path.setAttribute('fill', `var(--pie-chart-color-item-${item.label.replace(/ /, '').toLowerCase()}, ${item.color})`)
       path.addEventListener('mouseover', () => this.handlePathHover(k))
       path.addEventListener('mouseout', () => this.handlePathOut(k))
       pathGroup.appendChild(path)

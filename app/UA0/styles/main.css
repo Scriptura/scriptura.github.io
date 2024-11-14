@@ -458,9 +458,9 @@ textarea.custom-pattern {
 
 pie-chart {
   --pie-chart-background-color-label: hsla(0, 0%, 100%, 1);
-  --pie-chart-color-item-r: var(--color-event-holiday);
+  --pie-chart-color-item-r: var(--color-event-rest);
   --pie-chart-color-item-t: var(--color-event-extra-rest);
-  --pie-chart-color-item-f: var(--color-event-other);
+  --pie-chart-color-item-f: var(--color-event-rest);
   --pie-chart-color-item-j: var(--color-event-day);
   --pie-chart-color-item-m: var(--color-event-evening);
   --pie-chart-color-item-s: var(--color-event-morning);
@@ -474,26 +474,6 @@ pie-chart {
   max-width: 30em;
   margin-inline: 2em;
 }
-
-pie-chart path {
-  filter: saturate(300%) brightness(0.9);
-}
-
-/*
-  --color-event-day: hsl(197, 92%, 90%);
-  --color-event-leave: hsl(27, 100%, 80%);
-  --color-event-extra-rest: hsl(47, 95%, 83%);
-  --color-event-holiday: hsl(47, 95%, 83%);
-  --color-event-evening: hsl(24, 92%, 90%);
-  --color-event-morning: hsl(109, 100%, 91%);
-  --color-event-night: hsl(0, 86%, 91%);
-  --color-event-overtime: hsl(0, 100%, 91%);
-  --color-event-rest: var(--color-gray-100);
-  --color-event-stop: hsl(310, 100%, 91%);
-  --color-event-union: hsl(60, 100%, 88%);
-  --color-event-strike: hsl(47, 95%, 83%);
-  --color-event-other: hsl(60, 100%, 88%);
-*/
 
 /* Tableaux */
 .table {
