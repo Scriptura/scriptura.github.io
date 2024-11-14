@@ -458,7 +458,7 @@ textarea.custom-pattern {
 
 pie-chart {
   max-width: 30em;
-  margin-inline: auto;
+  margin-inline: 2em;
   --pie-chart-background-color-label: hsla(0, 0%, 100%, 1);
 }
 
