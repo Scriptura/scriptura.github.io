@@ -56,7 +56,7 @@ function updateLetterStats() {
     const formattedStats = Object.entries(stats)
       .map(
         ([letter, count]) =>
-          `{"value": ${count}, "label": "${letter} ${count}"}`,
+          `{"value": ${count}, "label": "${letter}"}`,
       )
       .join(',')
 

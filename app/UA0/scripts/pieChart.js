@@ -105,10 +105,10 @@ class PieChart extends HTMLElement {
     try {
       const defaultColors = [
         'hsl(210, 100%, 50%)',
-        'hsl(210, 100%, 55%)',
         'hsl(210, 100%, 60%)',
-        'hsl(210, 100%, 65%)',
         'hsl(210, 100%, 70%)',
+        'hsl(210, 100%, 80%)',
+        'hsl(210, 100%, 90%)',
       ]
 
       const rawData = JSON.parse(this.getAttribute('data') || '[]')
@@ -142,7 +142,9 @@ class PieChart extends HTMLElement {
 
     // Création des chemins
     this.paths = this.chartData.map((item, k) => {
+      console.log(item)
       const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+      path.setAttribute('style', `fill:var(--pie-chart-color-item-${item.label.replace(/ /, '').toLowerCase()})`)
       path.setAttribute('fill', item.color)
       path.addEventListener('mouseover', () => this.handlePathHover(k))
       path.addEventListener('mouseout', () => this.handlePathOut(k))
@@ -166,7 +168,7 @@ class PieChart extends HTMLElement {
       const label = document.createElement('div')
       label.id = `label${index}`
       label.className = 'chart-label'
-      label.textContent = item.label
+      label.textContent = `${item.label} ${item.value}`
       label.setAttribute('tabindex', '0')
       labelsContainer.appendChild(label)
       return label
