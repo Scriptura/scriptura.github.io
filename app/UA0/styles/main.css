@@ -191,20 +191,19 @@ img {
   background-color: var(--color-primary);
 }
 
-@media (max-width: 45.01em) {
-  .header {
-    padding-block-end: 2em;
-  }
+.header h1 {
+  margin-block: 1em 1.3em;
+  font-size: 2.5em;
 }
 
-.header h1 {
-  margin-block: .75em;
-  font-size: 2.5em;
+@media (max-width: 45.01em) {
+  .header h1 {
+    text-align: center;
+  }
 }
 
 @media (min-width: 45.01em) {
   .header h1 {
-    margin-block: 1em;
     font-size: 3em;
   }
 }
@@ -230,8 +229,9 @@ main > article {
   margin-block: -2.5em 1em;
 }
 
-:where(h1, h2, h3, h4) {
+.main-content :where(h1, h2, h3, h4) {
   text-wrap: balance;
+  /* color: var(--color-gray-500); */
 }
 
 summary {
@@ -246,7 +246,6 @@ summary {
 .footer {
   align-items: center;
   font-family: 'Oleo Script Swash Caps';
-  font-style: italic;
   color: var(--color-background);
   background-color: var(--color-primary);
 }
