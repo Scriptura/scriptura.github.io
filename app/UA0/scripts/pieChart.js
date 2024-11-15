@@ -142,7 +142,6 @@ class PieChart extends HTMLElement {
 
     // Création des chemins
     this.paths = this.chartData.map((item, k) => {
-      console.log(item)
       const path = document.createElementNS('http://www.w3.org/2000/svg', 'path')
       path.setAttribute('fill', `var(--pie-chart-color-item-${item.label.replace(/ /, '').toLowerCase()}, ${item.color})`)
       path.addEventListener('mouseover', () => this.handlePathHover(k))

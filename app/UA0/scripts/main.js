@@ -65,6 +65,7 @@ function updateDisabledState() {
   const isScheduleDataSet = localStorage.getItem('scheduleData') !== null
   document.querySelector('select#pattern-select').disabled = isScheduleDataSet
   document.querySelector('input#start-date').disabled = isScheduleDataSet
+  document.querySelector('#generate-schedule').disabled = isScheduleDataSet
 }
 
 // Initialisation de l'état des éléments au chargement de la page
@@ -73,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 // Écouteur de clic pour le bouton #generate-schedule
-document.querySelector('#generate-schedule').addEventListener('click', () => {
+document.querySelector('#generate-schedule').addEventListener('click', e => {
   const startDateInput = document.querySelector('input#start-date')
 
   // Vérifie si 'input#start-date' est renseigné, sinon, annule le script
@@ -82,12 +83,11 @@ document.querySelector('#generate-schedule').addEventListener('click', () => {
     return
   }
 
-  // Désactivation des éléments sans modifier localStorage.scheduleData
+  document.querySelector('#generate-schedule').disabled = true
   document.querySelector('select#pattern-select').disabled = true
   startDateInput.disabled = true
 })
 
-// Écouteur de clic pour le bouton #reset
 document.querySelector('#reset').addEventListener('click', () => {
   // Réactivation des éléments si scheduleData n'est pas présent
   if (!localStorage.getItem('scheduleData')) {

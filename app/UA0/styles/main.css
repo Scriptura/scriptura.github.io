@@ -19,15 +19,15 @@
   --color-surface: hsl(24, 92%, 90%);
 
   /* Couleurs des événements */
-  --color-event-day: hsl(197, 92%, 90%);
-  --color-event-leave: hsl(27, 100%, 80%);
-  --color-event-extra-rest: hsl(47, 95%, 83%);
-  --color-event-holiday: hsl(47, 95%, 83%);
-  --color-event-evening: hsl(24, 92%, 90%);
   --color-event-morning: hsl(109, 100%, 91%);
+  --color-event-day: hsl(197, 92%, 90%);
+  --color-event-evening: hsl(24, 92%, 90%);
+  --color-event-rest: var(--color-gray-100);
+  --color-event-extra-rest: hsl(60, 100%, 88%);
+  --color-event-leave: hsl(60, 100%, 88%); /* hsl(27, 100%, 80%) */
+  --color-event-holiday: hsl(60, 100%, 88%);
   --color-event-night: hsl(0, 86%, 91%);
   --color-event-overtime: hsl(0, 100%, 91%);
-  --color-event-rest: var(--color-gray-100);
   --color-event-stop: hsl(310, 100%, 91%);
   --color-event-union: hsl(60, 100%, 88%);
   --color-event-strike: hsl(47, 95%, 83%);
@@ -157,7 +157,7 @@ img {
 
 .presentation-image {
   max-height: 50svh;
-  padding: var(--spacing-xl) 10em var(--spacing-xl) 0;
+  padding: var(--spacing-xl) 5em var(--spacing-xl) 0;
   place-self: end start;
 }
 
@@ -186,6 +186,8 @@ img {
 /* En-tête */
 .header {
   padding-block-end: 1em;
+  font-family: 'Oleo Script Swash Caps';
+  /* text-wrap: balance; */
   color: var(--color-background);
   background-color: var(--color-primary);
 }
@@ -193,6 +195,20 @@ img {
 @media (max-width: 45.01em) {
   .header {
     padding-block-end: 2em;
+  }
+}
+
+@media (max-width: 45.01em) {
+  .header h1 {
+    margin-block: 1em;
+    font-size: 2em;
+  }
+}
+
+@media (min-width: 45.01em) {
+  .header h1 {
+    margin-block: 1.1em;
+    font-size: 3em;
   }
 }
 
@@ -224,24 +240,13 @@ main > article {
   grid-template-rows: minmax(0, 1fr);
 } */
 
-header {
-  font-family: 'Oleo Script Swash Caps';
-  text-align: center;
-  text-wrap: balance;
-}
-
-header h1 {
-  margin-block: 1em;
-  font-size: 3em;
-}
-
 summary {
   cursor: pointer;
 }
 
-.details > summary {
+/* .details > summary {
   color: var(--color-primary-dark);
-}
+} */
 
 /* Pied de page */
 .footer {
@@ -279,9 +284,9 @@ summary {
 }
 
 /* Formulaires */
-label {
+/* label {
   color: var(--color-primary-dark);
-}
+} */
 
 select {
   cursor: pointer;
@@ -351,6 +356,7 @@ textarea.custom-pattern {
 .form-control:has(> [disabled]),
 .form-control:has(> [disabled])::after {
   background-color: var(--color-gray-100);
+  background-image: repeating-linear-gradient(-45deg, transparent 0 5px, hsla(0, 0%, 0%, 0.05) 5px 10px);
   cursor: not-allowed;
 }
 
@@ -410,20 +416,34 @@ textarea.custom-pattern {
   }
 }
 
-.warning {
-  background-color: hsl(354, 100%, 70%);
-  border-color: hsl(354, 100%, 70%);
-}
-
-.button:where(:focus, :hover, :active) {
-  @media (hover: hover) and (pointer: fine) {
+@media (hover: hover) and (pointer: fine) {
+  .button:where(:focus, :hover, :active) {
     background-color: var(--color-accent);
     border-color: var(--color-accent);
   }
 }
 
+.button[disabled] {
+  background-image: repeating-linear-gradient(-45deg, transparent 0 5px, hsla(0, 0%, 0%, 0.2) 5px 10px);
+  cursor: not-allowed;
+}
+
+.button.warning {
+  background-color: hsl(354, 100%, 70%);
+  border-color: hsl(354, 100%, 70%);
+}
+
 .button svg {
   fill: currentColor;
+}
+
+.list {
+  padding-inline-start: var(--list-start, 2.5em);
+  list-style-type: square;
+}
+
+.list li::marker {
+  color: hsl(354, 100%, 70%);
 }
 
 .stats p {
@@ -460,13 +480,13 @@ pie-chart {
   --pie-chart-background-color-label: hsla(0, 0%, 100%, 1);
   --pie-chart-color-item-r: var(--color-event-rest);
   --pie-chart-color-item-t: var(--color-event-extra-rest);
-  --pie-chart-color-item-f: var(--color-event-rest);
+  --pie-chart-color-item-f: var(--color-event-holiday);
   --pie-chart-color-item-j: var(--color-event-day);
-  --pie-chart-color-item-m: var(--color-event-evening);
-  --pie-chart-color-item-s: var(--color-event-morning);
+  --pie-chart-color-item-m: var(--color-event-morning);
+  --pie-chart-color-item-s: var(--color-event-evening);
   --pie-chart-color-item-n: var(--color-event-night);
+  --pie-chart-color-item-h: var(--color-event-overtime);
   --pie-chart-color-item-c: var(--color-event-leave);
-  --pie-chart-color-item-o: var(--color-event-overtime);
   --pie-chart-color-item-a: var(--color-event-stop);
   --pie-chart-color-item-r: var(--color-event-strike);
   --pie-chart-color-item-d: var(--color-event-union);
@@ -550,11 +570,11 @@ pie-chart {
 }
 
 .table .event-extra-rest {
-  background-color: var(--color-event-holiday);
+  background-color: var(--color-event-extra-rest);
 }
 
 .table .event-holiday {
-  background-color: var(--color-event-extra-rest);
+  background-color: var(--color-event-holiday);
 }
 
 .table .event-day {
@@ -640,10 +660,13 @@ pie-chart {
 /* tabs */
 .tabs {
   --color-tabs-box-shadow: hsla(0, 0%, 0%, 0.05);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
 }
 
 .tabs .tab-list {
   display: flex;
+  /* justify-content: flex-end; */
   padding: 0;
 }
 
@@ -706,6 +729,11 @@ pie-chart {
 
 .tabs .tab-panel[aria-hidden='false'] {
   display: block;
+}
+
+.tabs .tab-panel.grid-full-row[aria-hidden='false'] {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
 }
 
 .tabs .tab-panel[aria-hidden='true'] {
