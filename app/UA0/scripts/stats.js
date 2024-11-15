@@ -46,6 +46,36 @@ function calculateLetterStats(scheduleData) {
   return letterStats
 }
 
+/**
+ * Réorganise les données pour intercaler les grandes et petites valeurs.
+ * @param {Object} stats - Objet contenant les statistiques à trier.
+ * @returns {Array} Tableau réorganisé pour éviter que les petites valeurs se suivent.
+ */
+function rearrangeStats(stats) {
+  // Convertit les stats en un tableau d'entrées et les trie par valeur décroissante
+  const sortedEntries = Object.entries(stats).sort((a, b) => b[1] - a[1])
+
+  // Divise les entrées en deux groupes : hautes et basses valeurs
+  const mid = Math.ceil(sortedEntries.length / 2)
+  const highValues = sortedEntries.slice(0, mid) // Grandes valeurs
+  const lowValues = sortedEntries.slice(mid) // Petites valeurs
+
+  const result = []
+  const maxLength = Math.max(highValues.length, lowValues.length)
+
+  // Intercale les groupes sans doublons
+  for (let i = 0; i < maxLength; i++) {
+    if (i < highValues.length) {
+      result.push(highValues[i])
+    }
+    if (i < lowValues.length) {
+      result.push(lowValues[i])
+    }
+  }
+
+  return result
+}
+
 // Fonction pour mettre à jour l'affichage des statistiques dans le <output>
 function updateLetterStats() {
   const scheduleData = JSON.parse(localStorage.getItem('scheduleData'))
@@ -53,15 +83,11 @@ function updateLetterStats() {
     const stats = calculateLetterStats(scheduleData)
 
     // Convertir les statistiques en une chaîne de texte formatée
-    const formattedStats = Object.entries(stats)
-      .map(
-        ([letter, count]) =>
-          `{"value": ${count}, "label": "${letter}"}`,
-      )
-      .join(',')
+    const rearrangedStats = rearrangeStats(stats)
+    const formattedStats = rearrangedStats.map(([letter, count]) => `{"value": ${count}, "label": "${letter}"}`).join(',')
 
     const output = document.getElementById('stats')
-    output.innerHTML = `<pie-chart data='[${formattedStats}]'></pie-chart>`
+    output.innerHTML = `<pie-chart data='[${formattedStats}]' gap="0" donut="0.7"></pie-chart>`
   }
 }
 

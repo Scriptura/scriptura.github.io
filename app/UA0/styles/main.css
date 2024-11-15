@@ -5,7 +5,7 @@
   --color-black: #000;
   --color-gray-100: hsl(0, 0%, 96%);
   --color-gray-500: hsl(0, 0%, 64%);
-  --color-gray-600: #777;
+  --color-gray-600: hsl(0, 0%, 47%);
 
   /* Couleurs principales */
   --color-primary: hsl(210, 100%, 58%);
@@ -58,6 +58,8 @@
   /* Z-index */
   --z-index-default: 1;
   --z-index-overlay: 10;
+
+  --shadow-button: 0 0.5rem 2rem hsla(0, 0%, 0%, 0.2);
 }
 
 /* Police de caractères */
@@ -183,6 +185,10 @@ img {
   }
 }
 
+.gap-top {
+  padding-block-start: 1em;
+}
+
 /* En-tête */
 .header {
   padding-block-end: 1em;
@@ -230,8 +236,12 @@ main > article {
 }
 
 .main-content :where(h1, h2, h3, h4) {
+  font-family: 'Oleo Script Swash Caps';
+  font-weight: normal;
+  font-size: 200%;
+  margin-block: 0.5em 1em;
   text-wrap: balance;
-  /* color: var(--color-gray-500); */
+  color: hsl(0, 0%, 47%);
 }
 
 summary {
@@ -288,8 +298,8 @@ select {
 .custom-pattern,
 .form-control {
   display: block;
-  background-color: var(--color-background);
-  border: var(--border-width) solid var(--color-primary);
+  background-color: var(--color-gray-100);
+  border: var(--border-width) solid hsl(0, 0%, 90%);
   resize: vertical;
 }
 
@@ -304,7 +314,6 @@ textarea.custom-pattern {
   width: 100%;
   height: var(--form-control-height);
   line-height: var(--form-control-height);
-  border: var(--border-width) solid var(--color-primary);
   border-radius: var(--border-radius);
 }
 
@@ -315,7 +324,7 @@ textarea.custom-pattern {
   height: calc(var(--form-control-height) - 4px);
   right: 0;
   top: 0;
-  background-color: var(--color-white);
+  background-color: var(--color-gray-100);
   background-size: var(--form-icon-size) var(--form-icon-size);
   background-repeat: no-repeat;
   background-position: 50% 50%;
@@ -323,7 +332,7 @@ textarea.custom-pattern {
 }
 
 .form-control:has(select)::after {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' height='24px' width='24px' viewBox='0 -960 960 960' fill='hsl(210, 100%, 58%)'><path d='M480-120 300-300l58-58 122 122 122-122 58 58-180 180ZM358-598l-58-58 180-180 180 180-58 58-122-122-122 122Z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' height='24px' width='24px' viewBox='0 -960 960 960' fill='hsl(0, 0%, 47%)'><path d='M480-120 300-300l58-58 122 122 122-122 58 58-180 180ZM358-598l-58-58 180-180 180 180-58 58-122-122-122 122Z'/></svg>");
 }
 
 .form-control:has(select):where(:focus, :hover, :active) {
@@ -335,7 +344,7 @@ textarea.custom-pattern {
 }
 
 .form-control:has([type='date'])::after {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(210, 100%, 58%)'><path d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/></svg>");
 }
 
 .form-control:has([type='date']):where(:focus, :hover, :active) {
@@ -400,19 +409,25 @@ textarea.custom-pattern {
   background-color: var(--color-primary);
   border: 1px solid var(--color-primary);
   border-radius: 3em;
+  box-shadow: var(--shadow-button);
+  transition: all 0.2s linear;
+  transition-property: translate, box-shadow;
   cursor: pointer;
+}
+
+.button:not([disabled]):where(:focus-visible, :hover) {
+  transform: translateY(-0.1rem);
+}
+
+.button:active {
+  box-shadow: inset 0 0 0.1em hsla(0, 0%, 0%, 0.7);
+  /* @note En em car dépend de la taille du bouton. */
+  transform: translateY(0.05em);
 }
 
 @media (max-width: 45.01em) {
   .xs-button-full .button {
     width: 100%;
-  }
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .button:where(:focus, :hover, :active) {
-    background-color: var(--color-accent);
-    border-color: var(--color-accent);
   }
 }
 
@@ -430,43 +445,22 @@ textarea.custom-pattern {
   fill: currentColor;
 }
 
-.list {
+.stats-list {
   padding-inline-start: var(--list-start, 2.5em);
-  list-style-type: square;
+  list-style-type: none;
+  padding: 0;
 }
 
-.list li::marker {
-  color: hsl(354, 100%, 70%);
-}
-
-.stats p {
-  margin: 0;
-}
-
-.stats:has(output:empty) {
-  display: none;
-}
-
-.stats-item {
+.stats-list li {
   display: flex;
   gap: 0.5em;
-  align-items: center;
 }
 
-.stats-letter {
+.stats-list li span {
   min-width: 1em;
   text-align: center;
-  color: #000;
-}
-
-.stats-graph {
-  height: 10px;
-  font-size: 200%;
-  background-color: var(--color-primary-light);
-}
-
-.stats-count {
-  color: var(--color-primary-dark);
+  font-weight: bold;
+  color: hsl(354, 100%, 70%);
 }
 
 pie-chart {
@@ -481,7 +475,7 @@ pie-chart {
   --pie-chart-color-item-h: var(--color-event-overtime);
   --pie-chart-color-item-c: var(--color-event-leave);
   --pie-chart-color-item-a: var(--color-event-stop);
-  --pie-chart-color-item-r: var(--color-event-strike);
+  --pie-chart-color-item-g: var(--color-event-strike);
   --pie-chart-color-item-d: var(--color-event-union);
   --pie-chart-color-item-o: var(--color-event-other);
   max-width: 30em;
@@ -516,7 +510,7 @@ pie-chart {
 }
 
 @media screen {
-  .table td[data-day][tabindex]:where(:focus, :hover, :active) {
+  .table td[data-day][tabindex='0']:where(:focus, :hover, :active) {
     box-shadow: inset 0 0 0 5px pink;
     outline: none;
   }
@@ -713,26 +707,32 @@ pie-chart {
 }
 
 .tabs .tab-list [aria-selected='false'] {
-  color: #777;
+  color: hsl(0, 0%, 47%);
   /* user-select: none; */
 }
 
 .tabs .tab-panel {
-  padding-block-start: 2em;
+  padding-block-start: 1em;
 }
 
 .tabs .tab-panel[aria-hidden='false'] {
   display: block;
 }
 
-.tabs .tab-panel.grid-full-row[aria-hidden='false'] {
+.tabs .tab-panel.grid-full-row[aria-hidden='false']:has(:not(.presentation-image)) {
   display: grid;
-  grid-template-rows: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  /* overflow: hidden; */
 }
 
 .tabs .tab-panel[aria-hidden='true'] {
   display: none;
 }
+
+/* #calendar {
+  max-height: calc(100svh - 20.5em);
+  overflow-y: scroll;
+} */
 
 /* print */
 

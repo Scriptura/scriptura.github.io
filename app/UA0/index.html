@@ -34,7 +34,8 @@
                   Planning
                 </summary>
                 <div class="grid-full-row">
-                  <div class="flex gap items-push no-print visibility hidden">
+                  <h2 class="hidden">Visualisation des postes sur 24 mois</h2>
+                  <div class="flex gap items-push no-print visibility hidden gap-top">
                     <button id="contenteditable" class="button">
                       <svg height="24px" viewBox="0 -960 960 960" width="24px">
                         <path d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v200h-80v-40H200v400h280v80H200Zm0-560h560v-80H200v80Zm0 0v-80 80ZM560-80v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q8 9 12.5 20t4.5 22q0 11-4 22.5T903-300L683-80H560Zm300-263-37-37 37 37ZM620-140h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z"/>
@@ -62,27 +63,27 @@
                   Statistiques
                 </summary>
                 <div>
-                  <div class="grid2 gap">
+                  <h2>Statistiques pour l'année en cours</h2>
+                  <div class="grid2 gap gap-top">
                     <div class="stats">
-                      <h2 class="visibility hidden">Statistiques pour l'année en cours</h2>
-                      <br class="visibility hidden">
                       <div id="stats"><div class="message-highlight"><p>Vous devez configurer un planning pour voir des statistiques.</p></div></div>
                     </div>
                     <div>
-                      <ul class="list">
-                        <li>M : matin</li>
-                        <li>S : soir</li>
-                        <li>J : jour</li>
-                        <li>N : nuit</li>
-                        <li>H : heures supplémentaires</li>
-                        <li>R : Repos</li>
-                        <li>T : réduction du temps de travail</li>
-                        <li>F : ferié</li>
-                        <li>C : congé</li>
-                        <li>A : arrêt travail ou maladie</li>
-                        <li>G : grève</li>
-                        <li>D : décharge syndicale</li>
-                        <li>O : Autre</li>
+                      <h3>Glossaire</h3>
+                      <ul class="stats-list">
+                        <li><span>M</span> matin</li>
+                        <li><span>S</span> soir</li>
+                        <li><span>J</span> jour</li>
+                        <li><span>N</span> nuit</li>
+                        <li><span>H</span> heures supplémentaires</li>
+                        <li><span>R</span> repos</li>
+                        <li><span>T</span> réduction du temps de travail</li>
+                        <li><span>F</span> ferié</li>
+                        <li><span>C</span> congé annuel</li>
+                        <li><span>A</span> arrêt travail ou maladie</li>
+                        <li><span>G</span> grève</li>
+                        <li><span>D</span> décharge syndicale</li>
+                        <li><span>O</span> autre</li>
                       </ul>
                     </div>
                   </div>
@@ -94,7 +95,8 @@
                   Configuration
                 </summary>
                 <div>
-                  <div class="grid2 gap">
+                  <h2>Configuration de base du planning</h2>
+                  <div class="grid2 gap gap-top">
                     <div class="grid gap">
                       <div>
                         <label for="pattern-select">Ma fonction&nbsp;:</label>
@@ -183,8 +185,10 @@
                           Réinitialiser tout
                         </button>
                       </div>
+                    </div>
+                    <div>
                       <div class="message-highlight visibility hidden">
-                        <p>Le planning a bien été créé.</pp>
+                        <p><strong>Le planning a bien été créé.</strong></p>
                         <p>Vous pouvez le réinitialiser à tout moment à partir de cet onglet.</p>
                         <p>Vous pouvez changer des postes directement sur le planning en appuyant préalablement sur le bouton "Éditer".</p>
                       </div>

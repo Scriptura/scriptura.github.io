@@ -407,6 +407,7 @@ const StorageManager = {
 // Gestionnaire d'édition du calendrier
 const EditManager = {
   isEditingEnabled: false,
+  editableCells: [], // Cache des cellules modifiables
 
   toggleEditing(calendarDiv, editableButton) {
     const tables = document.querySelectorAll('table[id^="month-"]')
@@ -432,21 +433,21 @@ const EditManager = {
   },
 
   enableEditing(calendarDiv) {
-    const cells = calendarDiv.querySelectorAll('td[data-day]')
-    cells.forEach(cell => {
+    this.editableCells = Array.from(calendarDiv.querySelectorAll('td[data-day]'))
+    this.editableCells.forEach(cell => {
       cell.style.cursor = 'pointer'
       cell.setAttribute('tabindex', '0')
-      cell.setAttribute('contenteditable', 'true') // si omis, alors pas de possibilité de changement avec la navigation au clavier
+      cell.setAttribute('contenteditable', 'true')
     })
   },
 
   disableEditing(calendarDiv) {
-    const cells = calendarDiv.querySelectorAll('td[data-day]')
-    cells.forEach(cell => {
+    this.editableCells.forEach(cell => {
       cell.style.cursor = ''
       cell.removeAttribute('tabindex')
       cell.removeAttribute('contenteditable')
     })
+    this.editableCells = [] // Réinitialisation du cache
     StorageManager.saveSchedule(calendarDiv)
   },
 
