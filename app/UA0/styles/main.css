@@ -187,7 +187,6 @@ img {
 .header {
   padding-block-end: 1em;
   font-family: 'Oleo Script Swash Caps';
-  /* text-wrap: balance; */
   color: var(--color-background);
   background-color: var(--color-primary);
 }
@@ -198,18 +197,9 @@ img {
   }
 }
 
-@media (max-width: 45.01em) {
-  .header h1 {
-    margin-block: 1em;
-    font-size: 2em;
-  }
-}
-
-@media (min-width: 45.01em) {
-  .header h1 {
-    margin-block: 1.1em;
-    font-size: 3em;
-  }
+.header h1 {
+  margin-block: 1em;
+  font-size: 3em;
 }
 
 header > .wrapper,
@@ -233,12 +223,9 @@ main > article {
   margin-block: -2.5em 1em;
 }
 
-/* .main-content,
-.main-content > * > .tabs,
-.tab-panel:first-child {
-  display: grid;
-  grid-template-rows: minmax(0, 1fr);
-} */
+:where(h1, h2, h3, h4) {
+  text-wrap: balance;
+}
 
 summary {
   cursor: pointer;
