@@ -661,6 +661,7 @@ pie-chart {
 .tabs {
   --color-tabs-box-shadow: hsla(0, 0%, 0%, 0.05);
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr);
 }
 
