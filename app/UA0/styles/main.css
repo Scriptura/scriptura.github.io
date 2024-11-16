@@ -236,10 +236,8 @@ main > article {
 }
 
 .main-content :where(h1, h2, h3, h4) {
-  font-family: 'Oleo Script Swash Caps';
   font-weight: normal;
-  font-size: 200%;
-  margin-block: 0.5em 1em;
+  margin-block: 1em;
   text-wrap: balance;
   color: hsl(0, 0%, 47%);
 }
@@ -448,6 +446,7 @@ textarea.custom-pattern {
 .stats-list {
   padding-inline-start: var(--list-start, 2.5em);
   list-style-type: none;
+  margin: 0;
   padding: 0;
 }
 
@@ -460,7 +459,6 @@ textarea.custom-pattern {
   min-width: 1em;
   text-align: center;
   font-weight: bold;
-  color: hsl(354, 100%, 70%);
 }
 
 pie-chart {
@@ -488,11 +486,11 @@ pie-chart {
   border-collapse: collapse;
 }
 
-@media screen {
+/* @media screen {
   .table.current {
     box-shadow: 0 0 0 5px pink;
   }
-}
+} */
 
 .grid-auto:has(.table) {
   margin-block-start: var(--spacing-lg);
@@ -721,7 +719,7 @@ pie-chart {
 
 .tabs .tab-panel.grid-full-row[aria-hidden='false']:has(:not(.presentation-image)) {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  /* grid-template-rows: auto minmax(0, 1fr); */
   /* overflow: hidden; */
 }
 

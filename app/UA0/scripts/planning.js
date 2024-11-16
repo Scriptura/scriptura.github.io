@@ -207,31 +207,44 @@ const CalendarManager = {
     const monthTable = document.createElement('table')
     monthTable.classList.add('table')
 
+    const currentDate = new Date()
+    const currentMonth = currentDate.getMonth()
+    const currentYear = currentDate.getFullYear()
+
+    const monthDate = new Date(displayStartDate)
+    monthDate.setMonth(displayStartDate.getMonth() + monthIndex)
+
+    const tableMonth = monthDate.getMonth()
+    const tableYear = monthDate.getFullYear()
+
     if (isCurrentMonth) {
       monthTable.classList.add('current')
+    } else if (tableYear < currentYear || (tableYear === currentYear && tableMonth < currentMonth)) {
+      monthTable.classList.add('past')
+    } else {
+      monthTable.classList.add('future')
     }
 
-    const currentMonth = new Date(displayStartDate)
-    currentMonth.setMonth(displayStartDate.getMonth() + monthIndex)
-
-    const month = currentMonth.getMonth() + 1
-    const year = currentMonth.getFullYear()
-    monthTable.id = `month-${month}-${year}`
+    monthTable.id = `month-${tableMonth + 1}-${tableYear}`
 
     // Attribut data pour stocker le format YYYY-MM utilisé en interne
-    monthTable.setAttribute('data-month-id', `${year}-${month}`)
+    monthTable.setAttribute('data-month-id', `${tableYear}-${tableMonth + 1}`)
 
     // Création d'un fragment pour les éléments de la table
     const tableFragment = document.createDocumentFragment()
 
     this.addTableHeader(tableFragment, daysOfWeek)
-    this.fillMonthTable(tableFragment, currentMonth, startDate, selectedPattern)
-    this.addTableCaption(monthTable, currentMonth)
+    this.fillMonthTable(tableFragment, monthDate, startDate, selectedPattern)
+    this.addTableCaption(monthTable, monthDate)
 
     // Ajout du contenu au tableau
     monthTable.appendChild(tableFragment)
     monthDiv.appendChild(monthTable)
     fragment.appendChild(monthDiv)
+
+    if (tableYear < currentYear || (tableYear === currentYear && tableMonth < currentMonth)) {
+      monthTable.parentNode.classList.add('hidden')
+    }
   },
 
   /**
@@ -432,6 +445,24 @@ const EditManager = {
     }
   },
 
+  toggleHistory(historyButton) {
+    const tables = document.querySelectorAll('.table.past')
+    const tableContainers = document.querySelectorAll(':has(>.table.past)')
+    const [historyText, disableHistoryText] = historyButton.querySelectorAll('span')
+
+    if (!tables.length) {
+      alert(`Veuillez d'abord générer le planning.`)
+      return
+    }
+
+    tableContainers.forEach(tableContainer => {
+      tableContainer.classList.toggle('hidden')
+    })
+    historyButton.classList.toggle('active')
+    historyText.classList.toggle('hidden')
+    disableHistoryText.classList.toggle('hidden')
+  },
+
   enableEditing(calendarDiv) {
     this.editableCells = Array.from(calendarDiv.querySelectorAll('td[data-day]'))
     this.editableCells.forEach(cell => {
@@ -532,6 +563,7 @@ const EditManager = {
 document.addEventListener('DOMContentLoaded', () => {
   const calendarDiv = document.getElementById('calendar')
   const editableButton = document.getElementById('contenteditable')
+  const historyButton = document.getElementById('history')
   const patternSelect = document.getElementById('pattern-select')
   const startDateInput = document.getElementById('start-date')
   const customPatternTextarea = document.getElementById('custom-pattern')
@@ -566,6 +598,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if (editableButton) {
     editableButton.addEventListener('click', () => {
       EditManager.toggleEditing(calendarDiv, editableButton)
+    })
+  }
+
+  if (historyButton) {
+    historyButton.addEventListener('click', () => {
+      EditManager.toggleHistory(historyButton)
     })
   }
 
