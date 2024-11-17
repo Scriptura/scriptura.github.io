@@ -28,6 +28,8 @@
   --color-event-holiday: hsl(60, 100%, 88%);
   --color-event-night: hsl(0, 86%, 91%);
   --color-event-overtime: hsl(0, 100%, 91%);
+  --color-event-formation: hsl(323, 100%, 91%);
+  --color-event-stop: hsl(310, 100%, 91%);
   --color-event-stop: hsl(310, 100%, 91%);
   --color-event-union: hsl(60, 100%, 88%);
   --color-event-strike: hsl(47, 95%, 83%);
@@ -60,6 +62,27 @@
   --z-index-overlay: 10;
 
   --shadow-button: 0 0.5rem 2rem hsla(0, 0%, 0%, 0.2);
+}
+
+pie-chart {
+  --pie-chart-background-color-label: hsla(0, 0%, 100%, 1);
+  --pie-chart-color-item-r: var(--color-event-rest);
+  --pie-chart-color-item-t: var(--color-event-extra-rest);
+  --pie-chart-color-item-f: var(--color-event-holiday);
+  --pie-chart-color-item-m: var(--color-event-morning);
+  --pie-chart-color-item-j: var(--color-event-day);
+  --pie-chart-color-item-s: var(--color-event-evening);
+  --pie-chart-color-item-n: var(--color-event-night);
+  --pie-chart-color-item-h: var(--color-event-overtime);
+  --pie-chart-color-item-c: var(--color-event-leave);
+  --pie-chart-color-item-i: var(--color-event-formation);
+  --pie-chart-color-item-a: var(--color-event-stop);
+  --pie-chart-color-item-g: var(--color-event-strike);
+  --pie-chart-color-item-d: var(--color-event-union);
+  --pie-chart-color-item-e: var(--color-event-other);
+  --pie-chart-color-item-o: var(--color-event-other);
+  max-width: 30em;
+  margin-inline: 2em;
 }
 
 /* Police de caractères */
@@ -111,6 +134,7 @@
 
 html {
   line-height: 1.5em;
+  scroll-behavior: smooth;
 }
 
 html,
@@ -461,25 +485,6 @@ textarea.custom-pattern {
   font-weight: bold;
 }
 
-pie-chart {
-  --pie-chart-background-color-label: hsla(0, 0%, 100%, 1);
-  --pie-chart-color-item-r: var(--color-event-rest);
-  --pie-chart-color-item-t: var(--color-event-extra-rest);
-  --pie-chart-color-item-f: var(--color-event-holiday);
-  --pie-chart-color-item-j: var(--color-event-day);
-  --pie-chart-color-item-m: var(--color-event-morning);
-  --pie-chart-color-item-s: var(--color-event-evening);
-  --pie-chart-color-item-n: var(--color-event-night);
-  --pie-chart-color-item-h: var(--color-event-overtime);
-  --pie-chart-color-item-c: var(--color-event-leave);
-  --pie-chart-color-item-a: var(--color-event-stop);
-  --pie-chart-color-item-g: var(--color-event-strike);
-  --pie-chart-color-item-d: var(--color-event-union);
-  --pie-chart-color-item-o: var(--color-event-other);
-  max-width: 30em;
-  margin-inline: 2em;
-}
-
 /* Tableaux */
 .table {
   width: 100%;
@@ -584,6 +589,10 @@ pie-chart {
 
 .table .event-overtime {
   background-color: var(--color-event-overtime);
+}
+
+.table .event-formation {
+  background-color: var(--color-event-formation);
 }
 
 .table .event-stop {

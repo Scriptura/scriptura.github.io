@@ -104,6 +104,7 @@ const ScheduleClassManager = {
     'event-holiday',
     'event-night',
     'event-leave',
+    'event-formation',
     'event-overtime',
     'event-stop',
     'event-strike',
@@ -121,6 +122,7 @@ const ScheduleClassManager = {
     ['F', 'event-holiday'],
     ['N', 'event-night'],
     ['C', 'event-leave'],
+    ['I', 'event-formation'],
     ['H', 'event-overtime'],
     ['A', 'event-stop'],
     ['G', 'event-strike'],
@@ -535,7 +537,7 @@ const EditManager = {
     const initialValue = cell.dataset.initialValue
 
     if (newValue && newValue !== initialValue) {
-      const validLetters = ['M', 'J', 'S', 'N', 'H', 'R', 'T', 'F', 'C', 'A', 'G', 'D', 'O']
+      const validLetters = ['M', 'J', 'S', 'N', 'H', 'R', 'T', 'F', 'C', 'I', 'A', 'G', 'D', 'E', 'O']
 
       if (!validLetters.includes(newValue)) {
         cell.textContent = initialValue
