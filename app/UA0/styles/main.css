@@ -706,19 +706,19 @@ textarea.custom-pattern {
   transition: 0.2s box-shadow ease-in-out;
 }
 
+.tabs .tab-list button:where(:focus-visible, :hover) {
+  @media (hover: hover) and (pointer: fine) {
+    outline: none;
+    box-shadow: inset 0 -0.3em var(--color-primary), 0 -1rem 1rem var(--color-tabs-box-shadow);
+  }
+}
+
 .tabs .tab-list button svg {
   display: inline-block;
   vertical-align: sub;
   height: 1.2em;
   aspect-ratio: 1;
   fill: currentColor;
-}
-
-.tabs:where(:focus-visible, :hover) {
-  @media (hover: hover) and (pointer: fine) {
-    outline: none;
-    box-shadow: inset 0 -0.3em var(--color2), 0 -1rem 1rem var(--color-tabs-box-shadow);
-  }
 }
 
 .tabs .tab-list [aria-selected='true'] {
