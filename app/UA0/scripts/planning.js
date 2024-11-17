@@ -293,6 +293,10 @@ const CalendarManager = {
       const rotationIndex = ((daysSinceStart % selectedPattern.length) + selectedPattern.length) % selectedPattern.length
 
       const dayCell = this.createDayCell(day, rotationIndex, selectedPattern)
+      const today = new Date() // Date actuelle
+      if (day === today.getDate() && currentMonth.getMonth() === today.getMonth() && currentMonth.getFullYear() === today.getFullYear()) {
+        dayCell.classList.add('current-day')
+      }
       row.appendChild(dayCell)
 
       if ((firstWeekday + day) % 7 === 0) {
@@ -301,11 +305,15 @@ const CalendarManager = {
       }
     }
 
-    // Cellules vides fin de mois
-    while (row.children.length < 7) {
-      row.appendChild(document.createElement('td'))
+    // Éviter d’ajouter une ligne vide à la fin
+    if (row.children.length > 0) {
+      // Cellules vides fin de mois
+      while (row.children.length < 7) {
+        row.appendChild(document.createElement('td'))
+      }
+      rowsFragment.appendChild(row)
     }
-    rowsFragment.appendChild(row)
+    
     fragment.appendChild(rowsFragment)
   },
 
@@ -404,7 +412,9 @@ const StorageManager = {
 
             const className = ScheduleClassManager.getClass(displayValue)
             if (className) {
-              cell.className = ''
+              if (!cell.classList.contains('current-day')) {
+                cell.className = ''
+              }
               cell.classList.add(className)
             }
             if (displayValue !== values[0]) {

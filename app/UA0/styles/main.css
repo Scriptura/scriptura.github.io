@@ -381,7 +381,7 @@ textarea.custom-pattern {
 .form-control:has(> [disabled])::after {
   background-color: var(--color-gray-100);
   background-image: repeating-linear-gradient(-45deg, transparent 0 5px, hsla(0, 0%, 0%, 0.05) 5px 10px);
-  cursor: not-allowed;
+  cursor: default;
 }
 
 .form-control [disabled] {
@@ -432,12 +432,13 @@ textarea.custom-pattern {
   border: 1px solid var(--color-primary);
   border-radius: 3em;
   box-shadow: var(--shadow-button);
+  outline: none;
   transition: all 0.2s linear;
   transition-property: translate, box-shadow;
   cursor: pointer;
 }
 
-.button:has(:not(span)) { /* si pas de contenu textuel */
+.round-button {
   padding: 0.6em;
   width: 3em;
   height: 3em;
@@ -446,6 +447,7 @@ textarea.custom-pattern {
 
 .button:not([disabled]):where(:focus-visible, :hover) {
   transform: translateY(-0.1rem);
+  border-color: var(--color-primary-dark);
 }
 
 .button:active {
@@ -462,7 +464,7 @@ textarea.custom-pattern {
 
 .button[disabled] {
   background-image: repeating-linear-gradient(-45deg, transparent 0 5px, hsla(0, 0%, 0%, 0.2) 5px 10px);
-  cursor: not-allowed;
+  cursor: default;
 }
 
 .button.warning {
@@ -520,8 +522,12 @@ textarea.custom-pattern {
 }
 
 @media screen {
+  .table td.current-day {
+    box-shadow: inset 0 0 0 3px var(--color-primary-light);
+  }
+
   .table td[data-day][tabindex='0']:where(:focus, :hover, :active) {
-    box-shadow: inset 0 0 0 5px pink;
+    box-shadow: inset 0 0 0 3px pink;
     outline: none;
   }
 }
@@ -625,6 +631,11 @@ textarea.custom-pattern {
 }
 
 /* Utilitaires */
+.sr-only {
+  position: absolute;
+  transform: scale(0);
+}
+
 .flex {
   display: flex;
 }
@@ -752,7 +763,7 @@ textarea.custom-pattern {
 
 @media print {
   .grid-auto {
-    --grid-item-min-width: 15em;
+    --grid-item-min-width: 13em;
   }
 
   table {
@@ -767,6 +778,6 @@ textarea.custom-pattern {
   }
 
   #calendar > * {
-    font-size: 65%;
+    font-size: 61%;
   }
 }
