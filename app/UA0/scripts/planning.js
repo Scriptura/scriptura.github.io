@@ -344,7 +344,7 @@ const CalendarManager = {
     caption.textContent = currentMonth
       .toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
       .replace(/^\p{CWU}/u, char => char.toLocaleUpperCase('fr-FR'))
-    caption.classList.add('text-center')
+    //caption.classList.add('text-center')
     table.prepend(caption)
   },
 }

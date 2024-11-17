@@ -437,6 +437,13 @@ textarea.custom-pattern {
   cursor: pointer;
 }
 
+.button:has(:not(span)) { /* si pas de contenu textuel */
+  padding: 0.6em;
+  width: 3em;
+  height: 3em;
+  border-radius: 50%;
+}
+
 .button:not([disabled]):where(:focus-visible, :hover) {
   transform: translateY(-0.1rem);
 }
