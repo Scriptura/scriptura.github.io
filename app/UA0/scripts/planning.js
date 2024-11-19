@@ -292,7 +292,7 @@ const CalendarManager = {
       const daysSinceStart = Math.floor((currentDate - startDate) / (1000 * 60 * 60 * 24))
       const rotationIndex = ((daysSinceStart % selectedPattern.length) + selectedPattern.length) % selectedPattern.length
 
-      const dayCell = this.createDayCell(day, rotationIndex, selectedPattern)
+      const dayCell = this.createDayCell(day, rotationIndex, selectedPattern, currentDate)
       const today = new Date() // Date actuelle
       if (day === today.getDate() && currentMonth.getMonth() === today.getMonth() && currentMonth.getFullYear() === today.getFullYear()) {
         dayCell.classList.add('current-day')
@@ -324,9 +324,15 @@ const CalendarManager = {
    * @param {Array<string>} selectedPattern - Motif de rotation
    * @returns {HTMLTableCellElement} Cellule du jour
    */
-  createDayCell(day, rotationIndex, selectedPattern) {
+  createDayCell(day, rotationIndex, selectedPattern, currentDate) {
     const dayCell = document.createElement('td')
     dayCell.setAttribute('data-day', day)
+
+    // Vérifier si c'est un dimanche (0 = dimanche dans getDay())
+    const isDomingo = currentDate.getDay() === 0
+    if (isDomingo) {
+      dayCell.classList.add('sunday')
+    }
 
     if (rotationIndex !== null && selectedPattern[rotationIndex]) {
       const scheduleLetter = selectedPattern[rotationIndex]
@@ -412,9 +418,9 @@ const StorageManager = {
 
             const className = ScheduleClassManager.getClass(displayValue)
             if (className) {
-              if (!cell.classList.contains('current-day')) {
+              /* if (!cell.classList.contains('current-day') || !cell.classList.contains('sunday')) {
                 cell.className = ''
-              }
+              } */
               cell.classList.add(className)
             }
             if (displayValue !== values[0]) {

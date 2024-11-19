@@ -36,6 +36,7 @@
   --color-event-other: hsl(60, 100%, 88%);
 
   /* Système d'espacement */
+  --gap: 1em;
   --spacing-xs: 0.2em;
   --spacing-sm: 0.5em;
   --spacing-md: 1em;
@@ -561,7 +562,7 @@ textarea.custom-pattern {
   caption-side: top;
   text-align: center;
   font-weight: bold;
-  margin-bottom: var(--spacing-xs);
+  margin-bottom: var(--spacing-sm);
 }
 
 /* États des événements */
@@ -624,6 +625,18 @@ textarea.custom-pattern {
   background-color: var(--color-event-other);
 }
 
+.table .sunday,
+.table .public-holiday {
+  --triangle-color: hsla(0, 0%, 0%, 0.05);
+  --triangle-size: 1.4em;
+  background-image: linear-gradient(
+    to top left,
+    var(--triangle-color) var(--triangle-size),
+    transparent calc(var(--triangle-size)),
+    transparent 100%
+  );
+}
+
 @media screen {
   .table .modified-spot {
     background-image: repeating-linear-gradient(-45deg, transparent 0 5px, hsla(0, 100%, 73%, 0.2) 5px 10px);
@@ -645,7 +658,7 @@ textarea.custom-pattern {
 }
 
 .gap {
-  gap: var(--spacing-md);
+  gap: var(--gap);
 }
 
 .gap-block {
@@ -754,10 +767,11 @@ textarea.custom-pattern {
   display: none;
 }
 
-/* #calendar {
-  max-height: calc(100svh - 20.5em);
-  overflow-y: scroll;
-} */
+#calendar {
+  gap: 2em 1em;
+  /* max-height: calc(100svh - 20.5em);
+  overflow-y: scroll; */
+}
 
 /* print */
 
