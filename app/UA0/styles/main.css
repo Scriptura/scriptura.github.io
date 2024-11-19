@@ -497,6 +497,7 @@ textarea.custom-pattern {
 
 /* Tableaux */
 .table {
+  table-layout: fixed;
   width: 100%;
   border-collapse: collapse;
 }
@@ -569,7 +570,8 @@ textarea.custom-pattern {
 /*
 .table .event-rest,
 */
-[data-day] {
+.table [data-day],
+.table .event-rest {
   background-color: var(--color-event-rest);
 }
 
@@ -635,6 +637,9 @@ textarea.custom-pattern {
     transparent calc(var(--triangle-size)),
     transparent 100%
   );
+  background-position: bottom right;
+  background-size: 2em 2em;
+  background-repeat: no-repeat;
 }
 
 @media screen {
