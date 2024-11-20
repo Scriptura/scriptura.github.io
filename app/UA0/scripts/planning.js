@@ -313,7 +313,7 @@ const CalendarManager = {
       }
       rowsFragment.appendChild(row)
     }
-    
+
     fragment.appendChild(rowsFragment)
   },
 
@@ -365,8 +365,15 @@ const CalendarManager = {
 
 // Gestionnaire de stockage local
 const StorageManager = {
+  scheduleData: {}, // Chargement des données en mémoire
+
+  // Initialise les données de planning en mémoire à partir de localStorage.
+  initSchedule() {
+    this.scheduleData = JSON.parse(localStorage.getItem('scheduleData')) || {}
+  },
+
+  // Sauvegarde les modifications du planning dans localStorage à partir du DOM.
   saveSchedule(calendarDiv) {
-    const scheduleData = {}
     const tables = calendarDiv.querySelectorAll('table[id^="month-"]')
 
     tables.forEach(table => {
@@ -375,55 +382,55 @@ const StorageManager = {
 
       cells.forEach(cell => {
         const day = cell.getAttribute('data-day')
-        const value = cell.textContent.trim().toUpperCase() // @note ajout de .toUpperCase()
-        const originalValue = cell.getAttribute('data-original-value') // `|| value` => @todo pourquoi value ?
+        const value = cell.textContent.trim().toUpperCase()
+
+        if (!this.scheduleData[monthId]) {
+          this.scheduleData[monthId] = {} // Initialiser le mois si absent
+        }
+
+        // Obtenir les valeurs originales et actuelles
+        const [originalValue, currentValue] = this.scheduleData[monthId][day] || [value, value]
 
         if (value) {
-          if (!scheduleData[monthId]) {
-            scheduleData[monthId] = {}
-          }
-
-          // On stocke toujours les deux valeurs, que la cellule soit modifiée ou non
-          if (value !== originalValue) {
-            scheduleData[monthId][day] = [originalValue, value]
+          if (value !== originalValue && value !== currentValue) {
+            this.scheduleData[monthId][day] = [originalValue, value] // Mettre à jour currentValue
           } else {
-            scheduleData[monthId][day] = [value, value]
+            this.scheduleData[monthId][day] = [originalValue, currentValue]
           }
         }
       })
     })
 
-    localStorage.setItem('scheduleData', JSON.stringify(scheduleData))
+    // Sauvegarder dans localStorage
+    localStorage.setItem('scheduleData', JSON.stringify(this.scheduleData))
   },
-
   loadSchedule(calendarDiv) {
     try {
-      const savedData = JSON.parse(localStorage.getItem('scheduleData'))
+      const savedData = StorageManager.scheduleData
       if (!savedData) return
 
       Object.entries(savedData).forEach(([monthId, monthData]) => {
-        // Conversion du format YYYY-MM en month-MM-YYYY pour trouver la table
         let [year, month] = monthId.split('-')
         const tableId = `month-${month}-${year}`
-
         const table = document.getElementById(tableId)
         if (!table) return
 
         Object.entries(monthData).forEach(([day, values]) => {
           const cell = table.querySelector(`td[data-day="${day}"]`)
           if (cell) {
-            cell.setAttribute('data-original-value', values[0])
-            const displayValue = values[1] || values[0]
+            const [originalValue, currentValue] = values
+            const displayValue = currentValue || originalValue
             cell.textContent = displayValue
+            cell.setAttribute('data-original-value', originalValue) // Maintien pour les styles CSS
 
             const className = ScheduleClassManager.getClass(displayValue)
             if (className) {
-              /* if (!cell.classList.contains('current-day') || !cell.classList.contains('sunday')) {
-                cell.className = ''
-              } */
+              cell.className = '' // Réinitialiser les classes
               cell.classList.add(className)
             }
-            if (displayValue !== values[0]) {
+
+            // Appliquer 'modified' pour les cellules modifiées
+            if (currentValue && currentValue !== originalValue) {
               cell.classList.add('modified')
             }
           }
@@ -550,35 +557,60 @@ const EditManager = {
     if (!cell) return
 
     const newValue = cell.textContent.trim().toUpperCase()
-    const initialValue = cell.dataset.initialValue
+    const day = cell.getAttribute('data-day')
+    const monthId = cell.closest('table')?.getAttribute('data-month-id')
 
-    if (newValue && newValue !== initialValue) {
-      const validLetters = ['M', 'J', 'S', 'N', 'H', 'R', 'T', 'F', 'C', 'I', 'A', 'G', 'D', 'E', 'O']
+    // Obtenir les valeurs originales et actuelles depuis scheduleData
+    const [originalValue, currentValue] = StorageManager.scheduleData[monthId]?.[day] || [null, null]
 
-      if (!validLetters.includes(newValue)) {
-        cell.textContent = initialValue
-        return
-      }
-
-      cell.textContent = newValue
-      const className = ScheduleClassManager.getClass(newValue)
-      if (className) {
-        cell.className = ''
-        cell.classList.add(className)
-      }
-
-      if (newValue !== cell.getAttribute('data-original-value')) {
-        cell.classList.add('modified-spot')
-      }
+    // Empêcher les valeurs vides, nulles ou identiques
+    if (!newValue) {
+      cell.textContent = currentValue || originalValue // Restaurer la valeur précédente
+      return
     }
 
-    delete cell.dataset.initialValue // Nettoyage de la valeur initiale
+    // Valider la nouvelle valeur avec les lettres autorisées
+    const validLetters = ['M', 'J', 'S', 'N', 'H', 'R', 'T', 'F', 'C', 'I', 'A', 'G', 'D', 'E', 'O']
+    if (!validLetters.includes(newValue)) {
+      cell.textContent = currentValue || originalValue // Restaurer si non valide
+      return
+    }
+
+    // Appliquer les modifications immédiates
+    cell.textContent = newValue
+    const className = ScheduleClassManager.getClass(newValue)
+    if (className) {
+      cell.className = '' // Réinitialiser les classes
+      cell.classList.add(className)
+    }
+
+    // Gestion de la classe 'modified-spot' pour l'interaction immédiate
+    if (newValue !== originalValue) {
+      cell.classList.add('modified-spot')
+    } else {
+      cell.classList.remove('modified-spot')
+    }
+
+    // Gestion des modifications persistantes
+    if (newValue === originalValue) {
+      // Si la valeur revient à l'originale, supprimer les classes et réinitialiser currentValue
+      cell.classList.remove('modified', 'modified-spot')
+      StorageManager.scheduleData[monthId][day] = [originalValue, originalValue]
+    } else {
+      // Sinon, marquer la cellule comme modifiée
+      cell.classList.add('modified')
+      StorageManager.scheduleData[monthId][day] = [originalValue, newValue]
+    }
+
+    // Sauvegarder les modifications
     StorageManager.saveSchedule(calendarDiv)
   },
 }
 
 // Initialisation et gestionnaires d'événements
 document.addEventListener('DOMContentLoaded', () => {
+  StorageManager.initSchedule()
+
   const calendarDiv = document.getElementById('calendar')
   const editableButton = document.getElementById('contenteditable')
   const historyButton = document.getElementById('history')
