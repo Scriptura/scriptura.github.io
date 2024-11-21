@@ -45,10 +45,11 @@ class PieChart extends HTMLElement {
         path {
           cursor: pointer;
           transition: filter .3s;
+          filter: brightness(0.9) saturate(300%);
         }
         path:hover,
         path.active {
-          filter: brightness(0.9) saturate(200%);
+          filter: brightness(0.8) saturate(300%);
         }
         #labels-container {
           position: absolute;
