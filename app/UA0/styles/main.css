@@ -627,8 +627,7 @@ textarea.custom-pattern {
   background-color: var(--color-event-other);
 }
 
-.table .sunday,
-.table .public-holiday {
+.table :not(.modified-spot):where(.sunday, .public-holiday) {
   --triangle-color: hsla(0, 0%, 0%, 0.05);
   --triangle-size: 1.4em;
   background-image: linear-gradient(

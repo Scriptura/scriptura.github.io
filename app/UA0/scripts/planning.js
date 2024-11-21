@@ -420,18 +420,39 @@ const StorageManager = {
           if (cell) {
             const [originalValue, currentValue] = values
             const displayValue = currentValue || originalValue
-            cell.textContent = displayValue
-            cell.setAttribute('data-original-value', originalValue) // Maintien pour les styles CSS
 
+            cell.textContent = displayValue
+            cell.setAttribute('data-original-value', originalValue)
+
+            // Ne pas réinitialiser toutes les classes : préserver les classes fixes
+            const isSunday = cell.classList.contains('sunday')
+            const isCurrentDay = cell.classList.contains('current-day')
+
+            // Manipuler uniquement les classes dynamiques
+            Array.from(cell.classList).forEach(cls => {
+              if (cls.startsWith('event-') || cls === 'modified' || cls === 'modified-spot') {
+                cell.classList.remove(cls)
+              }
+            })
+
+            // Appliquer le texte et les classes dynamiques
+            cell.textContent = displayValue
             const className = ScheduleClassManager.getClass(displayValue)
             if (className) {
-              cell.className = '' // Réinitialiser les classes
               cell.classList.add(className)
             }
 
             // Appliquer 'modified' pour les cellules modifiées
             if (currentValue && currentValue !== originalValue) {
               cell.classList.add('modified')
+            }
+
+            // Réappliquer les classes fixes si elles étaient présentes
+            if (isSunday) {
+              cell.classList.add('sunday')
+            }
+            if (isCurrentDay) {
+              cell.classList.add('current-day')
             }
           }
         })
@@ -524,8 +545,8 @@ const EditManager = {
       selection.removeAllRanges()
       selection.addRange(range)
 
-      // Sauvegarder la valeur initiale
-      cell.dataset.initialValue = cell.textContent.trim().toUpperCase()
+      // Sauvegarder la valeur courante
+      cell.setAttribute('data-current-value', cell.textContent.trim())
     }
   },
 
@@ -578,26 +599,30 @@ const EditManager = {
 
     // Appliquer les modifications immédiates
     cell.textContent = newValue
+
+    // Manipuler uniquement les classes dynamiques
     const className = ScheduleClassManager.getClass(newValue)
     if (className) {
-      cell.className = '' // Réinitialiser les classes
+      // Supprimer les classes dynamiques existantes et appliquer la nouvelle classe
+      Array.from(cell.classList).forEach(cls => {
+        if (cls.startsWith('event-') || cls === 'modified' || cls === 'modified-spot') {
+          cell.classList.remove(cls)
+        }
+      })
       cell.classList.add(className)
     }
 
-    // Gestion de la classe 'modified-spot' pour l'interaction immédiate
+    // Gestion des classes CSS liées aux modifications
     if (newValue !== originalValue) {
       cell.classList.add('modified-spot')
     } else {
       cell.classList.remove('modified-spot')
     }
 
-    // Gestion des modifications persistantes
     if (newValue === originalValue) {
-      // Si la valeur revient à l'originale, supprimer les classes et réinitialiser currentValue
-      cell.classList.remove('modified', 'modified-spot')
+      cell.classList.remove('modified')
       StorageManager.scheduleData[monthId][day] = [originalValue, originalValue]
     } else {
-      // Sinon, marquer la cellule comme modifiée
       cell.classList.add('modified')
       StorageManager.scheduleData[monthId][day] = [originalValue, newValue]
     }
