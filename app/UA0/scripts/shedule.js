@@ -437,6 +437,7 @@ const StorageManager = {
     // Sauvegarder dans localStorage
     localStorage.setItem('scheduleData', JSON.stringify(this.scheduleData))
   },
+  
   loadSchedule(calendarDiv) {
     try {
       const savedData = StorageManager.scheduleData
