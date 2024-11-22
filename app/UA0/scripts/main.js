@@ -58,8 +58,6 @@ function textareaAutosize(textarea) {
 }
 document.querySelectorAll('textarea.autosize').forEach(textarea => textareaAutosize(textarea))
 
-
-
 // Fonction pour définir l'état 'disabled' des éléments en fonction de la persistance
 function updateDisabledState() {
   const isScheduleDataSet = localStorage.getItem('scheduleData') !== null
@@ -96,3 +94,19 @@ document.querySelector('#reset').addEventListener('click', () => {
   }
 })
 
+/**
+ * Met à jour le texte avec l'année en cours.
+ * @param {string} elementId - ID de l'élément à mettre à jour.
+ */
+function updateYearInTitle(elementId) {
+  const currentYear = new Date().getFullYear()
+  const element = document.getElementById(elementId)
+
+  if (element) {
+    element.textContent = `Statistiques pour l'année ${currentYear}`
+  } else {
+    console.warn(`L'élément avec l'ID "${elementId}" est introuvable.`)
+  }
+}
+
+updateYearInTitle('current-year-stats')

@@ -148,7 +148,7 @@ function updateLetterStats() {
     //output.innerHTML = `<pie-chart data='[${formattedStats}]' gap="0" donut="0.7"></pie-chart>`
     output.innerHTML = `
      <pie-chart data='[${formattedStats}]' gap="0" donut="0.7"></pie-chart>
-     <p>Travail effectué sur jours fériés et dimanches : ${workOnHolidaysAndSundays} postes</span></p>
+     <p>Postes effectués sur jours fériés et dimanches&nbsp;: <strong>${workOnHolidaysAndSundays}</strong></p>
    `
   }
 }

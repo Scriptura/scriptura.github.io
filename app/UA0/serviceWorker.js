@@ -1,4 +1,6 @@
-const CACHE_NAME = 'v52'
+
+
+const CACHE_NAME = 'v53'
 const MEDIA_CACHE_NAME = `media-${CACHE_NAME}`
 const ROOT_PATH = `/app/UA0/`
 const OFFLINE_URL = `${ROOT_PATH}index.html`
@@ -10,6 +12,7 @@ const resourcesToCache = [
   `${ROOT_PATH}scripts/tabs.js`,
   `${ROOT_PATH}scripts/planning.js`,
   `${ROOT_PATH}scripts/stats.js`,
+  `${ROOT_PATH}scripts/publicHolidays.js`,
   `${ROOT_PATH}scripts/pieChart.js`,
   `${ROOT_PATH}fonts/notoSans-Regular.woff2`,
   `${ROOT_PATH}fonts/notoSerif-Regular.woff2`,

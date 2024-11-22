@@ -202,6 +202,9 @@ img {
 
 .grid-auto {
   grid-template-columns: repeat(auto-fit, minmax(min(var(--grid-item-min-width), 100%), 1fr));
+  @media print {
+    --grid-item-min-width: 13em;
+  }
 }
 
 @media (min-width: 45.01em) {
@@ -261,6 +264,7 @@ main > article {
 }
 
 .main-content :where(h1, h2, h3, h4) {
+  font-family: 'Noto Serif', serif;
   font-weight: normal;
   margin-block: 1em;
   text-wrap: balance;
@@ -500,150 +504,152 @@ textarea.custom-pattern {
   table-layout: fixed;
   width: 100%;
   border-collapse: collapse;
-}
 
-/* @media screen {
-  .table.current {
-    box-shadow: 0 0 0 5px pink;
+  @media screen {
+    &.current {
+      box-shadow: 0 0 0 3px pink;
+    }
   }
-} */
+}
 
 .grid-auto:has(.table) {
   margin-block-start: var(--spacing-lg);
-}
-
-.table th,
-.table td {
-  padding: var(--spacing-sm);
-  height: 2.5em;
-  text-align: center;
-}
-
-.table td {
-  position: relative;
-}
-
-@media screen {
-  .table td.current-day {
-    box-shadow: inset 0 0 0 3px var(--color-primary-light);
-  }
-
-  .table td[data-day][tabindex='0']:where(:focus, :hover, :active) {
-    box-shadow: inset 0 0 0 3px pink;
-    outline: none;
-  }
-}
-
-.table td::before,
-.table td::after {
-  position: absolute;
-  line-height: 1;
-  font-size: 0.7em;
-  color: var(--color-gray-600);
-}
-
-.table td::before {
-  content: attr(data-day);
-  bottom: 0.4em;
-  right: 0.4em;
-}
-
-.table td:where(.modified, .modified-spot)::after {
-  content: attr(data-original-value);
-  top: 0.4em;
-  left: 0.4em;
-}
-
-.table th {
-  background-color: var(--color-event-rest);
-  font-weight: bold;
-}
-
-.table caption {
-  caption-side: top;
-  text-align: center;
-  font-weight: bold;
-  margin-bottom: var(--spacing-sm);
 }
 
 /* États des événements */
 /*
 .table .event-rest,
 */
-.table [data-day],
-.table .event-rest {
-  background-color: var(--color-event-rest);
-}
+.table {
+  & th,
+  & td {
+    padding: var(--spacing-sm);
+    height: 2.5em;
+    text-align: center;
+  }
 
-.table .event-extra-rest {
-  background-color: var(--color-event-extra-rest);
-}
+  & td {
+    position: relative;
+  }
 
-.table .event-holiday {
-  background-color: var(--color-event-holiday);
-}
+  @media screen {
+    td.current-day {
+      box-shadow: inset 0 0 0 3px var(--color-primary-light);
+    }
 
-.table .event-day {
-  background-color: var(--color-event-day);
-}
+    td[data-day][tabindex='0']:where(:focus, :hover, :active) {
+      box-shadow: inset 0 0 0 3px pink;
+      outline: none;
+    }
+  }
 
-.table .event-evening {
-  background-color: var(--color-event-evening);
-}
+  & td::before,
+  & td::after {
+    position: absolute;
+    line-height: 1;
+    font-size: 0.7em;
+    color: var(--color-gray-600);
+  }
 
-.table .event-morning {
-  background-color: var(--color-event-morning);
-}
+  & td::before {
+    content: attr(data-day);
+    bottom: 0.4em;
+    right: 0.4em;
+  }
 
-.table .event-night {
-  background-color: var(--color-event-night);
-}
+  & td:where(.modified, .modified-spot)::after {
+    content: attr(data-original-value);
+    top: 0.4em;
+    left: 0.4em;
+  }
 
-.table .event-leave {
-  background-color: var(--color-event-leave);
-}
+  & th {
+    background-color: var(--color-event-rest);
+    font-weight: bold;
+  }
 
-.table .event-overtime {
-  background-color: var(--color-event-overtime);
-}
+  & caption {
+    caption-side: top;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: var(--spacing-sm);
+  }
 
-.table .event-formation {
-  background-color: var(--color-event-formation);
-}
+  & [data-day],
+  .table .event-rest {
+    background-color: var(--color-event-rest);
+  }
 
-.table .event-stop {
-  background-color: var(--color-event-stop);
-}
+  & .event-extra-rest {
+    background-color: var(--color-event-extra-rest);
+  }
 
-.table .event-strike {
-  background-color: var(--color-event-strike);
-}
+  & .event-holiday {
+    background-color: var(--color-event-holiday);
+  }
 
-.table .event-union {
-  background-color: var(--color-event-union);
-}
+  & .event-day {
+    background-color: var(--color-event-day);
+  }
 
-.table .event-other {
-  background-color: var(--color-event-other);
-}
+  & .event-evening {
+    background-color: var(--color-event-evening);
+  }
 
-.table :not(.modified-spot):where(.sunday, .public-holiday) {
-  --triangle-color: hsla(0, 0%, 0%, 0.05);
-  --triangle-size: 1.4em;
-  background-image: linear-gradient(
-    to top left,
-    var(--triangle-color) var(--triangle-size),
-    transparent calc(var(--triangle-size)),
-    transparent 100%
-  );
-  background-position: bottom right;
-  background-size: 2em 2em;
-  background-repeat: no-repeat;
-}
+  & .event-morning {
+    background-color: var(--color-event-morning);
+  }
 
-@media screen {
-  .table .modified-spot {
-    background-image: repeating-linear-gradient(-45deg, transparent 0 5px, hsla(0, 100%, 73%, 0.2) 5px 10px);
+  & .event-night {
+    background-color: var(--color-event-night);
+  }
+
+  & .event-leave {
+    background-color: var(--color-event-leave);
+  }
+
+  & .event-overtime {
+    background-color: var(--color-event-overtime);
+  }
+
+  & .event-formation {
+    background-color: var(--color-event-formation);
+  }
+
+  & .event-stop {
+    background-color: var(--color-event-stop);
+  }
+
+  & .event-strike {
+    background-color: var(--color-event-strike);
+  }
+
+  & .event-union {
+    background-color: var(--color-event-union);
+  }
+
+  & .event-other {
+    background-color: var(--color-event-other);
+  }
+
+  & :not(.modified-spot):where(.sunday, .public-holiday) {
+    --triangle-color: hsla(0, 0%, 0%, 0.05);
+    --triangle-size: 1.4em;
+    background-image: linear-gradient(
+      to top left,
+      var(--triangle-color) var(--triangle-size),
+      transparent calc(var(--triangle-size)),
+      transparent 100%
+    );
+    background-position: bottom right;
+    background-size: 2em 2em;
+    background-repeat: no-repeat;
+  }
+
+  @media screen {
+    .modified-spot {
+      background-image: repeating-linear-gradient(-45deg, transparent 0 5px, hsla(0, 100%, 73%, 0.2) 5px 10px);
+    }
   }
 }
 
@@ -692,98 +698,101 @@ textarea.custom-pattern {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr);
-}
 
-.tabs .tab-list {
-  display: flex;
-  /* justify-content: flex-end; */
-  padding: 0;
-}
-
-.tabs .tab-list ~ * .tab-list {
-  /* @note Si onglets imbriqués. */
-  margin-block-start: 0.5em;
-}
-
-.tabs .tab-list button {
-  z-index: 1;
-  overflow: hidden;
-  display: block;
-  height: 2.5em;
-  padding: 0 1em;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  text-decoration: none;
-  color: inherit;
-  background-color: var(--color-gray-100);
-  border: none;
-  border-radius: 0.5em 0.5em 0 0;
-  box-shadow: 0 -1rem 1rem var(--color-tabs-box-shadow);
-  cursor: pointer;
-  transition: 0.2s box-shadow ease-in-out;
-}
-
-.tabs .tab-list button:where(:focus-visible, :hover) {
-  @media (hover: hover) and (pointer: fine) {
-    outline: none;
-    box-shadow: inset 0 -0.3em var(--color-primary), 0 -1rem 1rem var(--color-tabs-box-shadow);
+  & .tab-list {
+    display: flex;
+    /* justify-content: flex-end; */
+    padding: 0;
   }
-}
 
-.tabs .tab-list button svg {
-  display: inline-block;
-  vertical-align: sub;
-  height: 1.2em;
-  aspect-ratio: 1;
-  fill: currentColor;
-}
+  & .tab-list {
+    & ~ * .tab-list {
+      /* @note Si onglets imbriqués. */
+      margin-block-start: 0.5em;
+    }
 
-.tabs .tab-list [aria-selected='true'] {
-  /* @note Permet une gestion correcte des ombres. */
-  z-index: 2;
-  flex-shrink: 0;
-  max-width: 60%;
-  background-color: #fff;
-  border-bottom: none;
-  pointer-events: none;
-}
+    & button {
+      z-index: 1;
+      overflow: hidden;
+      display: block;
+      height: 2.5em;
+      padding: 0 1em;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      text-decoration: none;
+      color: inherit;
+      background-color: var(--color-gray-100);
+      border: none;
+      border-radius: 0.5em 0.5em 0 0;
+      box-shadow: 0 -1rem 1rem var(--color-tabs-box-shadow);
+      cursor: pointer;
+      transition: 0.2s box-shadow ease-in-out;
 
-.tabs .tab-list [aria-selected='false'] {
-  color: hsl(0, 0%, 47%);
-  /* user-select: none; */
-}
+      &:where(:focus-visible, :hover) {
+        @media (hover: hover) and (pointer: fine) {
+          outline: none;
+          box-shadow: inset 0 -0.3em var(--color-primary), 0 -1rem 1rem var(--color-tabs-box-shadow);
+        }
+      }
 
-.tabs .tab-panel {
-  padding-block-start: 1em;
-}
+      & svg {
+        display: inline-block;
+        vertical-align: sub;
+        height: 1.2em;
+        aspect-ratio: 1;
+        fill: currentColor;
+      }
+    }
 
-.tabs .tab-panel[aria-hidden='false'] {
-  display: block;
-}
+    & [aria-selected='true'] {
+      /* @note Permet une gestion correcte des ombres. */
+      z-index: 2;
+      flex-shrink: 0;
+      max-width: 60%;
+      background-color: #fff;
+      border-bottom: none;
+      pointer-events: none;
+    }
 
-.tabs .tab-panel.grid-full-row[aria-hidden='false']:has(:not(.presentation-image)) {
-  display: grid;
-  /* grid-template-rows: auto minmax(0, 1fr); */
-  /* overflow: hidden; */
-}
+    & [aria-selected='false'] {
+      color: hsl(0, 0%, 47%);
+      /* user-select: none; */
+    }
+  }
 
-.tabs .tab-panel[aria-hidden='true'] {
-  display: none;
+  & .tab-panel {
+    padding-block-start: 1em;
+
+    &[aria-hidden='false'] {
+      display: block;
+    }
+
+    &.grid-full-row[aria-hidden='false']:has(:not(.presentation-image)) {
+      display: grid;
+      /* grid-template-rows: auto minmax(0, 1fr); */
+      /* overflow: hidden; */
+    }
+
+    &[aria-hidden='true'] {
+      display: none;
+    }
+  }
 }
 
 #calendar {
   gap: 2em 1em;
   /* max-height: calc(100svh - 20.5em);
   overflow-y: scroll; */
+  @media print {
+    & > * {
+      font-size: 61%;
+    }
+  }
 }
 
 /* print */
 
 @media print {
-  .grid-auto {
-    --grid-item-min-width: 13em;
-  }
-
   table {
     page-break-inside: avoid;
     -webkit-print-color-adjust: exact;
@@ -793,9 +802,5 @@ textarea.custom-pattern {
   .no-print,
   .tab-list {
     display: none !important;
-  }
-
-  #calendar > * {
-    font-size: 61%;
   }
 }
