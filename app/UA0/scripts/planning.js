@@ -1,4 +1,4 @@
-// Patterns de rotation
+import { publicHolidays } from './publicHolidays.js'
 
 // prettier-ignore
 const RotationPatterns = {
@@ -276,6 +276,7 @@ const CalendarManager = {
     const lastDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0)
     const firstWeekday = (firstDay.getDay() + 6) % 7
     const daysInMonth = lastDay.getDate()
+    const holidays = publicHolidays(currentMonth.getFullYear())
 
     // Création d'un fragment pour les lignes de la table
     const rowsFragment = document.createDocumentFragment()
@@ -297,6 +298,22 @@ const CalendarManager = {
       if (day === today.getDate() && currentMonth.getMonth() === today.getMonth() && currentMonth.getFullYear() === today.getFullYear()) {
         dayCell.classList.add('current-day')
       }
+
+    // Ajouter la classe "holiday" si le jour est férié
+    const holidayNames = Object.entries(holidays).filter(([_, date]) =>
+      date.toDateString() === currentDate.toDateString()
+    )
+
+    if (holidayNames.length > 0) {
+      dayCell.classList.add('public-holiday')
+    }
+
+
+
+
+
+
+
       row.appendChild(dayCell)
 
       if ((firstWeekday + day) % 7 === 0) {
