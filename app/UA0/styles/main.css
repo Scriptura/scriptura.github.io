@@ -504,11 +504,11 @@ textarea.custom-pattern {
   table-layout: fixed;
   width: 100%;
   border-collapse: collapse;
+}
 
-  @media screen {
-    &.current {
-      box-shadow: 0 0 0 3px pink;
-    }
+@media screen {
+  :has(.table.past):not(.hidden) ~ :has(.table.current) {
+    box-shadow: 0 0 0 3px pink;
   }
 }
 
