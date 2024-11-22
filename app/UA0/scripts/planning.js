@@ -299,20 +299,12 @@ const CalendarManager = {
         dayCell.classList.add('current-day')
       }
 
-    // Ajouter la classe "holiday" si le jour est férié
-    const holidayNames = Object.entries(holidays).filter(([_, date]) =>
-      date.toDateString() === currentDate.toDateString()
-    )
+      // Ajouter la classe "holiday" si le jour est férié
+      const holidayNames = Object.entries(holidays).filter(([_, date]) => date.toDateString() === currentDate.toDateString())
 
-    if (holidayNames.length > 0) {
-      dayCell.classList.add('public-holiday')
-    }
-
-
-
-
-
-
+      if (holidayNames.length > 0) {
+        dayCell.classList.add('public-holiday')
+      }
 
       row.appendChild(dayCell)
 

@@ -25,7 +25,7 @@ function filterCurrentYearData(scheduleData) {
   return currentYearData
 }
 
-// Fonction pour calculer les statistiques des lettres
+// Fonction pour calculer les statistiques
 function calculateLetterStats(scheduleData) {
   const letterStats = {}
   const currentYearData = filterCurrentYearData(scheduleData)
@@ -46,60 +46,6 @@ function calculateLetterStats(scheduleData) {
   }
 
   return letterStats
-}
-
-// Fonction pour calculer le nombre de jours travaillés sur des jours fériés ou des dimanches sur l'année en cours
-function calculateHolidayAndSundayWork(scheduleData) {
-  const holidays = publicHolidays(getCurrentYear());
-  let workOnHolidaysAndSundays = 0;
-  const currentYear = getCurrentYear();
-
-  // Convertir l'objet des jours fériés en tableau de dates au format YYYY-MM-DD
-  const holidayDates = Object.values(holidays).map(date => {
-    const holidayDate = new Date(date);
-    // Ajouter un jour pour compenser le décalage UTC
-    holidayDate.setDate(holidayDate.getDate() + 1);
-    return holidayDate.toISOString().split('T')[0];
-  });
-
-  // Filtrer les données pour ne garder que l'année en cours
-  const currentYearData = Object.entries(scheduleData)
-    .filter(([monthKey]) => monthKey.startsWith(currentYear))
-    .reduce((acc, [month, data]) => {
-      acc[month] = data;
-      return acc;
-    }, {});
-
-  // Parcourir les données du planning
-  Object.entries(currentYearData).forEach(([monthKey, monthData]) => {
-    // Extraire le mois depuis la clé (ex: "2024-1" -> "1")
-    const month = monthKey.split('-')[1];
-
-    Object.entries(monthData).forEach(([day, dayData]) => {
-      // Vérifier si on a une deuxième lettre
-      const letter = dayData[1];
-      
-      // Si pas de deuxième lettre, on passe à l'itération suivante
-      if (!letter) return;
-
-      // Créer une date au format YYYY-MM-DD
-      const dateString = `${currentYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-      const currentDate = new Date(dateString);
-
-      // Vérifier si c'est un dimanche
-      const isSunday = currentDate.getDay() === 0;
-
-      // Vérifier si c'est un jour férié
-      const isHoliday = holidayDates.includes(dateString);
-
-      // Vérifier les conditions et incrémenter le compteur si nécessaire
-      if ((isHoliday || isSunday) && ['M', 'J', 'S'].includes(letter)) {
-        workOnHolidaysAndSundays++;
-      }
-    });
-  });
-
-  return workOnHolidaysAndSundays;
 }
 
 /**
@@ -143,13 +89,7 @@ function updateLetterStats() {
     const formattedStats = rearrangedStats.map(([letter, count]) => `{"value": ${count}, "label": "${letter}"}`).join(',')
 
     const output = document.getElementById('stats')
-    const workOnHolidaysAndSundays = calculateHolidayAndSundayWork(scheduleData) // Calculer les jours travaillés sur des jours fériés ou des dimanches.
-
-    //output.innerHTML = `<pie-chart data='[${formattedStats}]' gap="0" donut="0.7"></pie-chart>`
-    output.innerHTML = `
-     <pie-chart data='[${formattedStats}]' gap="0" donut="0.7"></pie-chart>
-     <p>Travail effectué sur jours fériés et dimanches : ${workOnHolidaysAndSundays} postes</span></p>
-   `
+    output.innerHTML = `<pie-chart data='[${formattedStats}]' gap="0" donut="0.7"></pie-chart>`
   }
 }
 
