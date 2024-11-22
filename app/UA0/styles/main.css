@@ -202,9 +202,6 @@ img {
 
 .grid-auto {
   grid-template-columns: repeat(auto-fit, minmax(min(var(--grid-item-min-width), 100%), 1fr));
-  @media print {
-    --grid-item-min-width: 13em;
-  }
 }
 
 @media (min-width: 45.01em) {
@@ -499,15 +496,8 @@ textarea.custom-pattern {
   font-weight: bold;
 }
 
-/* Tableaux */
-.table {
-  table-layout: fixed;
-  width: 100%;
-  border-collapse: collapse;
-}
-
 @media screen {
-  :has(.table.past):not(.hidden) ~ :has(.table.current) {
+  :has(.table.past):not(.hidden) ~ :has(.table.current) table {
     box-shadow: 0 0 0 3px pink;
   }
 }
@@ -521,6 +511,10 @@ textarea.custom-pattern {
 .table .event-rest,
 */
 .table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+
   & th,
   & td {
     padding: var(--spacing-sm);
@@ -572,7 +566,7 @@ textarea.custom-pattern {
     caption-side: top;
     text-align: center;
     font-weight: bold;
-    margin-bottom: var(--spacing-sm);
+    margin: var(--spacing-sm);
   }
 
   & [data-day],
@@ -779,20 +773,11 @@ textarea.custom-pattern {
   }
 }
 
-#calendar {
-  gap: 2em 1em;
-  /* max-height: calc(100svh - 20.5em);
-  overflow-y: scroll; */
-  @media print {
-    & > * {
-      font-size: 61%;
-    }
-  }
-}
-
-/* print */
-
 @media print {
+  /* html {
+    font-size: 100%;
+  } */
+
   table {
     page-break-inside: avoid;
     -webkit-print-color-adjust: exact;
@@ -803,4 +788,8 @@ textarea.custom-pattern {
   .tab-list {
     display: none !important;
   }
+}
+
+@page {
+  margin: 0.5cm;
 }

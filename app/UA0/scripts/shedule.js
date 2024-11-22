@@ -27,6 +27,24 @@ const RotationPatterns = {
   ],
 }
 
+/**
+ * Applique une fonction donnée à chaque mois dans une plage relative.
+ * @param {number} startOffset - Déplacement initial par rapport au mois courant (-12 pour 12 mois avant).
+ * @param {number} endOffset - Déplacement final par rapport au mois courant (+13 pour 13 mois après).
+ * @param {function(Date, number): void} callback - Fonction à appliquer sur chaque mois. 
+ *                                                  Reçoit la date et l'index relatif comme paramètres.
+ */
+function iterateMonthsInRange(startOffset, endOffset, callback) {
+  const today = new Date();
+  const currentMonth = today.getMonth();
+  const currentYear = today.getFullYear();
+
+  for (let offset = startOffset; offset <= endOffset; offset++) {
+    const date = new Date(currentYear, currentMonth + offset);
+    callback(date, offset);
+  }
+}
+
 // Gestionnaire de patterns personnalisés
 const CustomPatternManager = {
   pattern: [],
@@ -154,13 +172,12 @@ const CalendarManager = {
 
     const startDate = new Date(startDateInput)
     startDate.setDate(startDate.getDate() - 1)
+
     const calendarDiv = document.getElementById('calendar')
     calendarDiv.innerHTML = ''
 
     // Création du DocumentFragment pour optimiser les performances
     const fragment = document.createDocumentFragment()
-
-    const daysOfWeek = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']
     const displayStartDate = new Date()
     displayStartDate.setMonth(0)
     displayStartDate.setDate(1)
@@ -176,7 +193,7 @@ const CalendarManager = {
 
       const isCurrentMonth = monthDate.getMonth() === currentMonth && monthDate.getFullYear() === currentYear
 
-      this.generateMonthTable(displayStartDate, monthIndex, startDate, selectedPattern, daysOfWeek, fragment, isCurrentMonth)
+      this.generateMonthTable(displayStartDate, monthIndex, startDate, selectedPattern, fragment, isCurrentMonth)
     }
 
     // Ajout unique du fragment au DOM
@@ -204,7 +221,7 @@ const CalendarManager = {
    * @param {DocumentFragment} fragment - Fragment conteneur
    * @param {boolean} isCurrentMonth - Indique si c'est le mois courant
    */
-  generateMonthTable(displayStartDate, monthIndex, startDate, selectedPattern, daysOfWeek, fragment, isCurrentMonth) {
+  generateMonthTable(displayStartDate, monthIndex, startDate, selectedPattern, fragment, isCurrentMonth) {
     const monthDiv = document.createElement('div')
     const monthTable = document.createElement('table')
     monthTable.classList.add('table')
@@ -235,7 +252,6 @@ const CalendarManager = {
     // Création d'un fragment pour les éléments de la table
     const tableFragment = document.createDocumentFragment()
 
-    this.addTableHeader(tableFragment, daysOfWeek)
     this.fillMonthTable(tableFragment, monthDate, startDate, selectedPattern)
     this.addTableCaption(monthTable, monthDate)
 
@@ -277,54 +293,62 @@ const CalendarManager = {
     const firstWeekday = (firstDay.getDay() + 6) % 7
     const daysInMonth = lastDay.getDate()
     const holidays = publicHolidays(currentMonth.getFullYear())
-
-    // Création d'un fragment pour les lignes de la table
+    const tableHead = document.createElement('thead')
+    const tableBody = document.createElement('tbody')
+  
+    // Création de l'en-tête dans le thead
+    const headerRow = document.createElement('tr')
+    const weekDays = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']
+    weekDays.forEach(day => {
+      const th = document.createElement('th')
+      th.textContent = day
+      headerRow.appendChild(th)
+    })
+    tableHead.appendChild(headerRow)
+    fragment.appendChild(tableHead)
+  
+    // Création des lignes pour le corps de la table
     const rowsFragment = document.createDocumentFragment()
     let row = document.createElement('tr')
-
-    // Cellules vides début de mois
+  
     for (let i = 0; i < firstWeekday; i++) {
       row.appendChild(document.createElement('td'))
     }
-
-    // Remplissage des jours
+  
     for (let day = 1; day <= daysInMonth; day++) {
       const currentDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day)
       const daysSinceStart = Math.floor((currentDate - startDate) / (1000 * 60 * 60 * 24))
       const rotationIndex = ((daysSinceStart % selectedPattern.length) + selectedPattern.length) % selectedPattern.length
-
+  
       const dayCell = this.createDayCell(day, rotationIndex, selectedPattern, currentDate)
-      const today = new Date() // Date actuelle
+      const today = new Date()
       if (day === today.getDate() && currentMonth.getMonth() === today.getMonth() && currentMonth.getFullYear() === today.getFullYear()) {
         dayCell.classList.add('current-day')
       }
-
-      // Ajouter la classe "holiday" si le jour est férié
+  
       const holidayNames = Object.entries(holidays).filter(([_, date]) => date.toDateString() === currentDate.toDateString())
-
       if (holidayNames.length > 0) {
         dayCell.classList.add('public-holiday')
       }
-
+  
       row.appendChild(dayCell)
-
+  
       if ((firstWeekday + day) % 7 === 0) {
         rowsFragment.appendChild(row)
         row = document.createElement('tr')
       }
     }
-
-    // Éviter d’ajouter une ligne vide à la fin
+  
     if (row.children.length > 0) {
-      // Cellules vides fin de mois
       while (row.children.length < 7) {
         row.appendChild(document.createElement('td'))
       }
       rowsFragment.appendChild(row)
     }
-
-    fragment.appendChild(rowsFragment)
-  },
+  
+    tableBody.appendChild(rowsFragment)
+    fragment.appendChild(tableBody)
+},
 
   /**
    * Crée une cellule pour un jour spécifique
