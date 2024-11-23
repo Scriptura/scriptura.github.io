@@ -419,16 +419,13 @@ textarea.custom-pattern {
 }
 
 .button {
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-sm);
-  font-weight: 400;
+  all: unset;
+  display: block;
+  max-height: 3em;
+  /* font-weight: 400; */
   padding: 0.6em 1em;
   font-size: 1em;
   text-align: center;
-  vertical-align: center;
   color: var(--color-background);
   background-color: var(--color-primary);
   border: 1px solid var(--color-primary);
@@ -438,24 +435,41 @@ textarea.custom-pattern {
   transition: all 0.2s linear;
   transition-property: translate, box-shadow;
   cursor: pointer;
-}
 
-.round-button {
-  padding: 0.6em;
-  width: 3em;
-  height: 3em;
-  border-radius: 50%;
-}
+  &.round-button {
+    padding: 0.6em;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+  }
 
-.button:not([disabled]):where(:focus-visible, :hover) {
-  transform: translateY(-0.1rem);
-  border-color: var(--color-primary-dark);
-}
+  &:not([disabled]):where(:focus-visible, :hover) {
+    transform: translateY(-0.1rem);
+    border-color: var(--color-primary-dark);
+  }
 
-.button:active {
-  box-shadow: inset 0 0 0.1em hsla(0, 0%, 0%, 0.7);
-  /* @note En em car dépend de la taille du bouton. */
-  transform: translateY(0.05em);
+  &:active {
+    box-shadow: inset 0 0 0.1em hsla(0, 0%, 0%, 0.7);
+    /* @note En em car dépend de la taille du bouton. */
+    transform: translateY(0.05em);
+  }
+
+  &[disabled] {
+    background-image: repeating-linear-gradient(-45deg, transparent 0 5px, hsla(0, 0%, 0%, 0.2) 5px 10px);
+    cursor: default;
+  }
+
+  &.warning {
+    background-color: hsl(354, 100%, 70%);
+    border-color: hsl(354, 100%, 70%);
+  }
+
+  & svg {
+    display: inline-block;
+    vertical-align: sub;
+    height: 1.2em;
+    aspect-ratio: 1;
+    fill: currentColor;
+  }
 }
 
 @media (max-width: 45.01em) {
@@ -464,36 +478,22 @@ textarea.custom-pattern {
   }
 }
 
-.button[disabled] {
-  background-image: repeating-linear-gradient(-45deg, transparent 0 5px, hsla(0, 0%, 0%, 0.2) 5px 10px);
-  cursor: default;
-}
-
-.button.warning {
-  background-color: hsl(354, 100%, 70%);
-  border-color: hsl(354, 100%, 70%);
-}
-
-.button svg {
-  fill: currentColor;
-}
-
 .stats-list {
   padding-inline-start: var(--list-start, 2.5em);
   list-style-type: none;
   margin: 0;
   padding: 0;
-}
 
-.stats-list li {
-  display: flex;
-  gap: 0.5em;
-}
+  & li {
+    display: flex;
+    gap: 0.5em;
 
-.stats-list li span {
-  min-width: 1em;
-  text-align: center;
-  font-weight: bold;
+    & span {
+      min-width: 1em;
+      text-align: center;
+      font-weight: bold;
+    }
+  }
 }
 
 @media screen {
@@ -564,6 +564,7 @@ textarea.custom-pattern {
 
   & caption {
     caption-side: top;
+    /* font-family: 'Noto Serif', serif; */
     text-align: center;
     font-weight: bold;
     margin: var(--spacing-sm);

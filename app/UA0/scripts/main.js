@@ -64,6 +64,14 @@ function updateDisabledState() {
   document.querySelector('select#pattern-select').disabled = isScheduleDataSet
   document.querySelector('input#start-date').disabled = isScheduleDataSet
   document.querySelector('#generate-schedule').disabled = isScheduleDataSet
+
+  if (isScheduleDataSet) {
+    // Mise à jour des boutons de visibilité
+    document.querySelectorAll('.visibility').forEach(el => {
+      el.classList.add('visible')
+      el.classList.remove((('hidden')))
+    })
+  }
 }
 
 // Initialisation de l'état des éléments au chargement de la page
@@ -84,6 +92,13 @@ document.querySelector('#generate-schedule').addEventListener('click', e => {
   document.querySelector('#generate-schedule').disabled = true
   document.querySelector('select#pattern-select').disabled = true
   startDateInput.disabled = true
+
+  // Mise à jour des boutons de visibilité
+  document.querySelectorAll('.visibility').forEach(el => {
+    el.classList.toggle('visible')
+    el.classList.toggle('hidden')
+    //el.classList.remove((('hidden')))
+  })
 })
 
 document.querySelector('#reset').addEventListener('click', () => {
@@ -103,7 +118,7 @@ function updateYearInTitle(elementId) {
   const element = document.getElementById(elementId)
 
   if (element) {
-    element.textContent = `Statistiques pour l'année ${currentYear}`
+    element.textContent = currentYear
   } else {
     console.warn(`L'élément avec l'ID "${elementId}" est introuvable.`)
   }

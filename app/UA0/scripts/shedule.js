@@ -28,21 +28,75 @@ const RotationPatterns = {
 }
 
 /**
- * Applique une fonction donnée à chaque mois dans une plage relative.
- * @param {number} startOffset - Déplacement initial par rapport au mois courant (-12 pour 12 mois avant).
- * @param {number} endOffset - Déplacement final par rapport au mois courant (+13 pour 13 mois après).
- * @param {function(Date, number): void} callback - Fonction à appliquer sur chaque mois. 
- *                                                  Reçoit la date et l'index relatif comme paramètres.
+ * Calcule la plage de semestres à afficher en fonction de la date actuelle.
+ * @returns {{ startDate: Date, endDate: Date }} - Les dates de début et de fin de la plage.
  */
-function iterateMonthsInRange(startOffset, endOffset, callback) {
-  const today = new Date();
-  const currentMonth = today.getMonth();
-  const currentYear = today.getFullYear();
+function getSemesterRange() {
+  const today = new Date()
+  const currentYear = today.getFullYear()
+  const currentMonth = today.getMonth()
 
-  for (let offset = startOffset; offset <= endOffset; offset++) {
-    const date = new Date(currentYear, currentMonth + offset);
-    callback(date, offset);
+  // Déterminer le semestre courant : 0 pour janvier-juin, 6 pour juillet-décembre
+  const currentSemesterStartMonth = currentMonth < 6 ? 0 : 6
+
+  // Début : un semestre avant
+  const startYear = currentSemesterStartMonth === 0 ? currentYear - 1 : currentYear
+  const startMonth = currentSemesterStartMonth === 0 ? 6 : 0
+  const startDate = new Date(startYear, startMonth, 1)
+
+  // Fin : deux semestres après
+  const endYear = currentSemesterStartMonth === 0 ? currentYear + 1 : currentYear + 1
+  const endMonth = currentSemesterStartMonth === 0 ? 6 : 12
+  const endDate = new Date(endYear, endMonth, 0) // Dernier jour du mois
+
+  return { startDate, endDate }
+}
+
+function updateScheduleData() {
+  // Vérifier si `scheduleData` existe déjà
+  if (!localStorage.getItem('scheduleData')) {
+    console.log('Aucune donnée existante pour scheduleData. Mise à jour ignorée.')
+    return
   }
+  
+  // Calculer la plage actuelle
+  const { startDate, endDate } = getSemesterRange()
+  const scheduleData = JSON.parse(localStorage.getItem('scheduleData')) || {}
+
+  // Convertir les dates en identifiants de semestres au format YYYY-MM
+  const currentSemesters = []
+  let tempDate = new Date(startDate)
+  while (tempDate <= endDate) {
+    const semesterId = `${tempDate.getFullYear()}-${tempDate.getMonth() + 1}`
+    currentSemesters.push(semesterId)
+
+    // Avancer au mois suivant
+    tempDate.setMonth(tempDate.getMonth() + 1)
+  }
+
+  // Étape 2 : Supprimer les semestres obsolètes
+  for (const storedSemester of Object.keys(scheduleData)) {
+    if (!currentSemesters.includes(storedSemester)) {
+      delete scheduleData[storedSemester]
+    }
+  }
+
+  // Étape 3 : Ajouter les nouveaux semestres
+  for (const semesterId of currentSemesters) {
+    if (!scheduleData[semesterId]) {
+      // Initialiser les jours du mois avec des valeurs par défaut
+      const [year, month] = semesterId.split('-').map(Number)
+      const daysInMonth = new Date(year, month, 0).getDate()
+
+      scheduleData[semesterId] = {}
+      for (let day = 1; day <= daysInMonth; day++) {
+        scheduleData[semesterId][day] = ['J', 'J'] // Valeur par défaut
+      }
+    }
+  }
+
+  // Étape 4 : Sauvegarder les données mises à jour
+  localStorage.setItem('scheduleData', JSON.stringify(scheduleData))
 }
 
 // Gestionnaire de patterns personnalisés
@@ -160,9 +214,9 @@ const ScheduleClassManager = {
 // Gestionnaire du calendrier
 const CalendarManager = {
   /**
-   * Génère un planning sur 24 mois à partir d'une date de début
-   * @param {string} startDateInput - Date de début au format YYYY-MM-DD
-   * @param {Array<string>} selectedPattern - Motif de rotation des horaires
+   * Génère un planning sur une plage de semestres autour du semestre actuel.
+   * @param {string} startDateInput - Date de début au format YYYY-MM-DD (facultative).
+   * @param {Array<string>} selectedPattern - Motif de rotation des horaires.
    */
   generateSchedule(startDateInput, selectedPattern) {
     if (!startDateInput) {
@@ -176,24 +230,27 @@ const CalendarManager = {
     const calendarDiv = document.getElementById('calendar')
     calendarDiv.innerHTML = ''
 
+    // Récupération de la plage de semestres
+    const { startDate: displayStartDate, endDate: displayEndDate } = getSemesterRange()
+
     // Création du DocumentFragment pour optimiser les performances
     const fragment = document.createDocumentFragment()
-    const displayStartDate = new Date()
-    displayStartDate.setMonth(0)
-    displayStartDate.setDate(1)
-
     const currentDate = new Date()
-    const currentMonth = currentDate.getMonth()
-    const currentYear = currentDate.getFullYear()
 
-    // Génération des 24 mois dans le fragment
-    for (let monthIndex = 0; monthIndex < 24; monthIndex++) {
-      const monthDate = new Date(displayStartDate)
-      monthDate.setMonth(displayStartDate.getMonth() + monthIndex)
+    // Génération des mois dans la plage définie
+    let tempDate = new Date(displayStartDate)
+    while (tempDate <= displayEndDate) {
+      const monthDate = new Date(tempDate)
 
-      const isCurrentMonth = monthDate.getMonth() === currentMonth && monthDate.getFullYear() === currentYear
+      const isCurrentMonth = monthDate.getMonth() === currentDate.getMonth() && monthDate.getFullYear() === currentDate.getFullYear()
+
+      // Index relatif basé sur le mois et l'année
+      const monthIndex =
+        (monthDate.getFullYear() - displayStartDate.getFullYear()) * 12 + monthDate.getMonth() - displayStartDate.getMonth()
 
       this.generateMonthTable(displayStartDate, monthIndex, startDate, selectedPattern, fragment, isCurrentMonth)
+
+      tempDate.setMonth(tempDate.getMonth() + 1)
     }
 
     // Ajout unique du fragment au DOM
@@ -203,12 +260,6 @@ const CalendarManager = {
     if (!localStorage.getItem('scheduleData')) {
       StorageManager.saveSchedule(calendarDiv)
     }
-
-    // Mise à jour des boutons de visibilité
-    document.querySelectorAll('.visibility').forEach(el => {
-      el.classList.toggle('visible')
-      el.classList.toggle('hidden')
-    })
   },
 
   /**
@@ -217,7 +268,6 @@ const CalendarManager = {
    * @param {number} monthIndex - Index du mois (0-23)
    * @param {Date} startDate - Date de début du planning
    * @param {Array<string>} selectedPattern - Motif de rotation
-   * @param {Array<string>} daysOfWeek - Jours de la semaine
    * @param {DocumentFragment} fragment - Fragment conteneur
    * @param {boolean} isCurrentMonth - Indique si c'est le mois courant
    */
@@ -295,7 +345,7 @@ const CalendarManager = {
     const holidays = publicHolidays(currentMonth.getFullYear())
     const tableHead = document.createElement('thead')
     const tableBody = document.createElement('tbody')
-  
+
     // Création de l'en-tête dans le thead
     const headerRow = document.createElement('tr')
     const weekDays = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']
@@ -306,49 +356,49 @@ const CalendarManager = {
     })
     tableHead.appendChild(headerRow)
     fragment.appendChild(tableHead)
-  
+
     // Création des lignes pour le corps de la table
     const rowsFragment = document.createDocumentFragment()
     let row = document.createElement('tr')
-  
+
     for (let i = 0; i < firstWeekday; i++) {
       row.appendChild(document.createElement('td'))
     }
-  
+
     for (let day = 1; day <= daysInMonth; day++) {
       const currentDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day)
       const daysSinceStart = Math.floor((currentDate - startDate) / (1000 * 60 * 60 * 24))
       const rotationIndex = ((daysSinceStart % selectedPattern.length) + selectedPattern.length) % selectedPattern.length
-  
+
       const dayCell = this.createDayCell(day, rotationIndex, selectedPattern, currentDate)
       const today = new Date()
       if (day === today.getDate() && currentMonth.getMonth() === today.getMonth() && currentMonth.getFullYear() === today.getFullYear()) {
         dayCell.classList.add('current-day')
       }
-  
+
       const holidayNames = Object.entries(holidays).filter(([_, date]) => date.toDateString() === currentDate.toDateString())
       if (holidayNames.length > 0) {
         dayCell.classList.add('public-holiday')
       }
-  
+
       row.appendChild(dayCell)
-  
+
       if ((firstWeekday + day) % 7 === 0) {
         rowsFragment.appendChild(row)
         row = document.createElement('tr')
       }
     }
-  
+
     if (row.children.length > 0) {
       while (row.children.length < 7) {
         row.appendChild(document.createElement('td'))
       }
       rowsFragment.appendChild(row)
     }
-  
+
     tableBody.appendChild(rowsFragment)
     fragment.appendChild(tableBody)
-},
+  },
 
   /**
    * Crée une cellule pour un jour spécifique
@@ -437,7 +487,7 @@ const StorageManager = {
     // Sauvegarder dans localStorage
     localStorage.setItem('scheduleData', JSON.stringify(this.scheduleData))
   },
-  
+
   loadSchedule(calendarDiv) {
     try {
       const savedData = StorageManager.scheduleData
@@ -464,7 +514,7 @@ const StorageManager = {
 
             // Manipuler uniquement les classes dynamiques
             Array.from(cell.classList).forEach(cls => {
-              if (cls.startsWith('event-') || cls === 'modified' || cls === 'modified-spot') {
+              if (['modified', 'modified-spot'].includes(cls) || cls.startsWith('event-')) {
                 cell.classList.remove(cls)
               }
             })
@@ -668,7 +718,11 @@ const EditManager = {
 
 // Initialisation et gestionnaires d'événements
 document.addEventListener('DOMContentLoaded', () => {
+  // Initialiser les données de stockage local
   StorageManager.initSchedule()
+
+  // Mettre à jour les données du planning
+  updateScheduleData()
 
   const calendarDiv = document.getElementById('calendar')
   const editableButton = document.getElementById('contenteditable')
@@ -703,6 +757,24 @@ document.addEventListener('DOMContentLoaded', () => {
   function getSelectedPattern() {
     return CustomPatternManager.stringToPattern(customPatternTextarea.value)
   }
+
+  // Charger la date de début sauvegardée (si elle existe)
+  const savedStartDate = localStorage.getItem('startDate')
+
+  if (savedStartDate) {
+    // Générer le calendrier avec les données existantes
+    CalendarManager.generateSchedule(savedStartDate, getSelectedPattern())
+    // Charger les modifications sauvegardées
+    StorageManager.loadSchedule(calendarDiv)
+  }
+
+  // Initialiser le textarea avec le pattern sélectionné
+  const initialPattern = getInitialPattern(patternSelect.value)
+  updatePatternTextarea(initialPattern)
+
+
+
+
 
   if (editableButton) {
     editableButton.addEventListener('click', () => {
