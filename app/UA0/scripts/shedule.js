@@ -27,6 +27,11 @@ const RotationPatterns = {
   ],
 }
 
+function isIphone() {
+  // @bugfix Filtrage des iPhones en raison d'un bug : 0 par défaut, puis accepte la valeur 1 pour le lundi ; pas de solution pour l'instant.
+  return /iPhone|iPad|iPod/i.test(navigator.userAgent)
+}
+
 /**
  * Calcule la plage de semestres à afficher en fonction de la date actuelle.
  * @returns {{ startDate: Date, endDate: Date }} - Les dates de début et de fin de la plage.
@@ -58,7 +63,7 @@ function updateScheduleData() {
     console.log('Aucune donnée existante pour scheduleData. Mise à jour ignorée.')
     return
   }
-  
+
   // Calculer la plage actuelle
   const { startDate, endDate } = getSemesterRange()
   const scheduleData = JSON.parse(localStorage.getItem('scheduleData')) || {}
@@ -772,10 +777,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const initialPattern = getInitialPattern(patternSelect.value)
   updatePatternTextarea(initialPattern)
 
-
-
-
-
   if (editableButton) {
     editableButton.addEventListener('click', () => {
       EditManager.toggleEditing(calendarDiv, editableButton)
@@ -828,12 +829,29 @@ document.addEventListener('DOMContentLoaded', () => {
   })
 
   // Gestionnaire d'événement pour la date de début
-  startDateInput.addEventListener('change', function () {
-    const selectedDate = new Date(this.value)
-    const day = selectedDate.getDay()
+  startDateInput.addEventListener('input', function () {
+    if (!this.value) {
+      return
+    }
 
+    if (isIphone()) {
+      // @todo Solution à revoir.
+      return
+    }
+
+    const selectedDate = new Date(this.value)
+
+    if (isNaN(selectedDate.getTime())) {
+      alert(`Date invalide. Veuillez réessayer.`)
+      this.value = ''
+      return
+    }
+
+    const day = selectedDate.getUTCDay()
+
+    // Vérifiez si le jour sélectionné est un lundi
     if (day !== 1) {
-      alert('Veuillez sélectionner un lundi.')
+      alert(`Veuillez sélectionner un lundi.`)
       this.value = ''
     } else {
       localStorage.setItem('startDate', this.value)
