@@ -223,7 +223,7 @@ const CalendarManager = {
    * @param {string} startDateInput - Date de début au format YYYY-MM-DD (facultative).
    * @param {Array<string>} selectedPattern - Motif de rotation des horaires.
    */
-  generateSchedule(startDateInput, selectedPattern) {
+  async generateSchedule(startDateInput, selectedPattern) {
     if (!startDateInput) {
       alert('Veuillez entrer une date de début.')
       return
@@ -235,35 +235,39 @@ const CalendarManager = {
     const calendarDiv = document.getElementById('calendar')
     calendarDiv.innerHTML = ''
 
-    // Récupération de la plage de semestres
     const { startDate: displayStartDate, endDate: displayEndDate } = getSemesterRange()
 
-    // Création du DocumentFragment pour optimiser les performances
+    // Création du fragment pour la manipulation hors DOM
     const fragment = document.createDocumentFragment()
     const currentDate = new Date()
 
-    // Génération des mois dans la plage définie
-    let tempDate = new Date(displayStartDate)
-    while (tempDate <= displayEndDate) {
-      const monthDate = new Date(tempDate)
+    // Génération des mois de manière asynchrone
+    const generateMonths = async () => {
+      let tempDate = new Date(displayStartDate)
+      while (tempDate <= displayEndDate) {
+        const monthDate = new Date(tempDate)
+        const isCurrentMonth = monthDate.getMonth() === currentDate.getMonth() && monthDate.getFullYear() === currentDate.getFullYear()
 
-      const isCurrentMonth = monthDate.getMonth() === currentDate.getMonth() && monthDate.getFullYear() === currentDate.getFullYear()
+        const monthIndex =
+          (monthDate.getFullYear() - displayStartDate.getFullYear()) * 12 + monthDate.getMonth() - displayStartDate.getMonth()
 
-      // Index relatif basé sur le mois et l'année
-      const monthIndex =
-        (monthDate.getFullYear() - displayStartDate.getFullYear()) * 12 + monthDate.getMonth() - displayStartDate.getMonth()
+        // Utilisation de requestAnimationFrame pour la génération des tables
+        await new Promise(resolve => {
+          requestAnimationFrame(() => {
+            this.generateMonthTable(displayStartDate, monthIndex, startDate, selectedPattern, fragment, isCurrentMonth)
+            resolve()
+          })
+        })
 
-      this.generateMonthTable(displayStartDate, monthIndex, startDate, selectedPattern, fragment, isCurrentMonth)
-
-      tempDate.setMonth(tempDate.getMonth() + 1)
+        tempDate.setMonth(tempDate.getMonth() + 1)
+      }
     }
 
-    // Ajout unique du fragment au DOM
+    await generateMonths()
     calendarDiv.appendChild(fragment)
 
-    // Sauvegarde du planning
     if (!localStorage.getItem('scheduleData')) {
-      StorageManager.saveSchedule(calendarDiv)
+      await StorageManager.saveSchedule(calendarDiv)
     }
   },
 
@@ -456,94 +460,100 @@ const StorageManager = {
   scheduleData: {}, // Chargement des données en mémoire
 
   // Initialise les données de planning en mémoire à partir de localStorage.
-  initSchedule() {
-    this.scheduleData = JSON.parse(localStorage.getItem('scheduleData')) || {}
+  async initSchedule() {
+    try {
+      const data = localStorage.getItem('scheduleData')
+      this.scheduleData = data ? JSON.parse(data) : {}
+    } catch (error) {
+      console.error("Erreur lors de l'initialisation des données:", error)
+      this.scheduleData = {}
+    }
   },
 
   // Sauvegarde les modifications du planning dans localStorage à partir du DOM.
-  saveSchedule(calendarDiv) {
-    const tables = calendarDiv.querySelectorAll('table[id^="month-"]')
+  async saveSchedule(calendarDiv) {
+    // Utilisation de requestAnimationFrame pour éviter le blocage du thread principal
+    return new Promise(resolve => {
+      requestAnimationFrame(() => {
+        const tables = calendarDiv.querySelectorAll('table[id^="month-"]')
 
-    tables.forEach(table => {
-      const monthId = table.getAttribute('data-month-id')
-      const cells = table.querySelectorAll('td[data-day]')
+        tables.forEach(table => {
+          const monthId = table.getAttribute('data-month-id')
+          const cells = table.querySelectorAll('td[data-day]')
 
-      cells.forEach(cell => {
-        const day = cell.getAttribute('data-day')
-        const value = cell.textContent.trim().toUpperCase()
+          cells.forEach(cell => {
+            const day = cell.getAttribute('data-day')
+            const value = cell.textContent.trim().toUpperCase()
 
-        if (!this.scheduleData[monthId]) {
-          this.scheduleData[monthId] = {} // Initialiser le mois si absent
-        }
+            if (!this.scheduleData[monthId]) {
+              this.scheduleData[monthId] = {}
+            }
 
-        // Obtenir les valeurs originales et actuelles
-        const [originalValue, currentValue] = this.scheduleData[monthId][day] || [value, value]
+            const [originalValue, currentValue] = this.scheduleData[monthId][day] || [value, value]
 
-        if (value) {
-          if (value !== originalValue && value !== currentValue) {
-            this.scheduleData[monthId][day] = [originalValue, value] // Mettre à jour currentValue
-          } else {
-            this.scheduleData[monthId][day] = [originalValue, currentValue]
-          }
-        }
+            if (value) {
+              if (value !== originalValue && value !== currentValue) {
+                this.scheduleData[monthId][day] = [originalValue, value]
+              } else {
+                this.scheduleData[monthId][day] = [originalValue, currentValue]
+              }
+            }
+          })
+        })
+
+        localStorage.setItem('scheduleData', JSON.stringify(this.scheduleData))
+        resolve()
       })
     })
-
-    // Sauvegarder dans localStorage
-    localStorage.setItem('scheduleData', JSON.stringify(this.scheduleData))
   },
 
-  loadSchedule(calendarDiv) {
+  async loadSchedule(calendarDiv) {
     try {
-      const savedData = StorageManager.scheduleData
-      if (!savedData) return
+      return new Promise(resolve => {
+        requestAnimationFrame(() => {
+          const savedData = this.scheduleData
+          if (!savedData) {
+            resolve()
+            return
+          }
 
-      Object.entries(savedData).forEach(([monthId, monthData]) => {
-        let [year, month] = monthId.split('-')
-        const tableId = `month-${month}-${year}`
-        const table = document.getElementById(tableId)
-        if (!table) return
+          Object.entries(savedData).forEach(([monthId, monthData]) => {
+            let [year, month] = monthId.split('-')
+            const tableId = `month-${month}-${year}`
+            const table = document.getElementById(tableId)
+            if (!table) return
 
-        Object.entries(monthData).forEach(([day, values]) => {
-          const cell = table.querySelector(`td[data-day="${day}"]`)
-          if (cell) {
-            const [originalValue, currentValue] = values
-            const displayValue = currentValue || originalValue
+            Object.entries(monthData).forEach(([day, values]) => {
+              const cell = table.querySelector(`td[data-day="${day}"]`)
+              if (cell) {
+                const [originalValue, currentValue] = values
+                const displayValue = currentValue || originalValue
 
-            cell.textContent = displayValue
-            cell.setAttribute('data-original-value', originalValue)
+                const isSunday = cell.classList.contains('sunday')
+                const isCurrentDay = cell.classList.contains('current-day')
 
-            // Ne pas réinitialiser toutes les classes : préserver les classes fixes
-            const isSunday = cell.classList.contains('sunday')
-            const isCurrentDay = cell.classList.contains('current-day')
+                Array.from(cell.classList).forEach(cls => {
+                  if (['modified', 'modified-spot'].includes(cls) || cls.startsWith('event-')) {
+                    cell.classList.remove(cls)
+                  }
+                })
 
-            // Manipuler uniquement les classes dynamiques
-            Array.from(cell.classList).forEach(cls => {
-              if (['modified', 'modified-spot'].includes(cls) || cls.startsWith('event-')) {
-                cell.classList.remove(cls)
+                cell.textContent = displayValue
+                const className = ScheduleClassManager.getClass(displayValue)
+                if (className) {
+                  cell.classList.add(className)
+                }
+
+                if (currentValue && currentValue !== originalValue) {
+                  cell.classList.add('modified')
+                }
+
+                if (isSunday) cell.classList.add('sunday')
+                if (isCurrentDay) cell.classList.add('current-day')
               }
             })
-
-            // Appliquer le texte et les classes dynamiques
-            cell.textContent = displayValue
-            const className = ScheduleClassManager.getClass(displayValue)
-            if (className) {
-              cell.classList.add(className)
-            }
-
-            // Appliquer 'modified' pour les cellules modifiées
-            if (currentValue && currentValue !== originalValue) {
-              cell.classList.add('modified')
-            }
-
-            // Réappliquer les classes fixes si elles étaient présentes
-            if (isSunday) {
-              cell.classList.add('sunday')
-            }
-            if (isCurrentDay) {
-              cell.classList.add('current-day')
-            }
-          }
+          })
+          resolve()
         })
       })
     } catch (error) {
@@ -722,9 +732,9 @@ const EditManager = {
 }
 
 // Initialisation et gestionnaires d'événements
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   // Initialiser les données de stockage local
-  StorageManager.initSchedule()
+  await StorageManager.initSchedule()
 
   // Mettre à jour les données du planning
   updateScheduleData()
@@ -768,9 +778,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (savedStartDate) {
     // Générer le calendrier avec les données existantes
-    CalendarManager.generateSchedule(savedStartDate, getSelectedPattern())
+    await CalendarManager.generateSchedule(savedStartDate, getSelectedPattern())
     // Charger les modifications sauvegardées
-    StorageManager.loadSchedule(calendarDiv)
+    await StorageManager.loadSchedule(calendarDiv)
   }
 
   // Initialiser le textarea avec le pattern sélectionné
@@ -858,9 +868,9 @@ document.addEventListener('DOMContentLoaded', () => {
   })
 
   // Gestionnaire d'événement pour la génération du planning
-  generateButton.addEventListener('click', () => {
-    CalendarManager.generateSchedule(startDateInput.value, getSelectedPattern())
-    StorageManager.loadSchedule(calendarDiv)
+  generateButton.addEventListener('click', async () => {
+    await CalendarManager.generateSchedule(startDateInput.value, getSelectedPattern())
+    await StorageManager.loadSchedule(calendarDiv)
   })
 
   if (resetButton) {
@@ -878,7 +888,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
   }
 
-  function initialize() {
+  async function initialize() {
     // Charger le pattern personnalisé
     CustomPatternManager.load()
 
@@ -893,9 +903,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (savedStartDate) {
       startDateInput.value = savedStartDate
       // Générer automatiquement le calendrier si on a une date de début
-      CalendarManager.generateSchedule(savedStartDate, getSelectedPattern())
+      await CalendarManager.generateSchedule(savedStartDate, getSelectedPattern())
       // Charger les modifications sauvegardées
-      StorageManager.loadSchedule(calendarDiv)
+      await StorageManager.loadSchedule(calendarDiv)
     }
 
     // Initialiser le textarea avec le pattern initial
@@ -903,5 +913,5 @@ document.addEventListener('DOMContentLoaded', () => {
     updatePatternTextarea(initialPattern)
   }
 
-  initialize()
+  await initialize()
 })
