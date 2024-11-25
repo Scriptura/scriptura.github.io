@@ -829,14 +829,13 @@ document.addEventListener('DOMContentLoaded', () => {
   })
 
   // Gestionnaire d'événement pour la date de début
-  startDateInput.addEventListener('input', function () {
+  startDateInput.addEventListener('blur', function () {
     if (!this.value) {
       return
     }
 
     if (isIphone()) {
-      // @todo Solution à revoir.
-      return
+      return // @todo Solution à revoir.
     }
 
     const selectedDate = new Date(this.value)
@@ -847,7 +846,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return
     }
 
-    const day = selectedDate.getUTCDay()
+    const day = selectedDate.getDay() // .getUTCDay()
 
     // Vérifiez si le jour sélectionné est un lundi
     if (day !== 1) {
