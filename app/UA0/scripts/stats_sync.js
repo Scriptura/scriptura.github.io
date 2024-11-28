@@ -145,6 +145,7 @@ function updateLetterStats() {
     const output = document.getElementById('stats')
     const workOnHolidaysAndSundays = calculateHolidayAndSundayWork(scheduleData) // Calculer les jours travaillés sur des jours fériés ou des dimanches.
 
+    //output.innerHTML = `<pie-chart data='[${formattedStats}]' gap="0" donut="0.7"></pie-chart>`
     output.innerHTML = `
      <pie-chart data='[${formattedStats}]' gap="0" donut="0.7"></pie-chart>
      <p>Dimanches et jours fériés travaillés&nbsp;: <strong>${workOnHolidaysAndSundays}</strong></p>
@@ -154,51 +155,39 @@ function updateLetterStats() {
 
 // Code d'initialisation exécuté au chargement du DOM
 document.addEventListener('DOMContentLoaded', () => {
-  // Use a debounce function to prevent excessive updates
-  const debounce = (func, delay) => {
-    let timeoutId
-    return (...args) => {
-      clearTimeout(timeoutId)
-      timeoutId = setTimeout(() => func.apply(this, args), delay)
-    }
-  }
-
-  // Debounced update function
-  const debouncedUpdateLetterStats = debounce(updateLetterStats, 1000)
-
-  // Create a MutationObserver targeting the calendar container
-  const calendarObserver = new MutationObserver(mutations => {
-    const shouldUpdate = mutations.some(
-      mutation => mutation.type === 'childList' || (mutation.type === 'attributes' && mutation.target.closest('.table')),
-    )
-
-    if (shouldUpdate) {
-      // Use microtask to ensure it runs after current execution stack
-      Promise.resolve().then(debouncedUpdateLetterStats)
-    }
+  // Configurer le MutationObserver
+  const tableObserver = new MutationObserver(mutations => {
+    // Vérifier si un ajout ou une modification d'élément a eu lieu
+    mutations.forEach(mutation => {
+      if (mutation.type === 'childList' || mutation.type === 'attributes') {
+        updateLetterStats()
+      }
+    })
   })
 
-  // Configuration for deep observation
-  const observerConfig = {
+  // Options du MutationObserver pour observer les ajouts de nœuds et les changements d'attributs
+  const tableConfig = {
     childList: true,
     subtree: true,
     attributes: true,
-    attributeFilter: ['class', 'data-*'], // Optional: Limit attribute observations
   }
 
-  // Target the calendar container instead of individual tables
-  const calendarContainer = document.getElementById('calendar')
+  const tables = document.querySelectorAll('.table')
 
-  if (calendarContainer) {
-    calendarObserver.observe(calendarContainer, observerConfig)
-  }
+  // Démarrer l'observation sur chaque table
+  tables.forEach(table => {
+    tableObserver.observe(table, tableConfig)
+  })
 
-  // Initial stats update
+  // Mettre à jour les statistiques lors du chargement initial
   updateLetterStats()
 
-  // Optional: Add click listener for generate button
+  // Ajouter un écouteur sur le bouton pour mettre à jour les statistiques lors de la génération du planning
   const generateButton = document.getElementById('generate-schedule')
+
   if (generateButton) {
-    generateButton.addEventListener('click', debouncedUpdateLetterStats)
+    generateButton.addEventListener('click', () => {
+      updateLetterStats()
+    })
   }
 })

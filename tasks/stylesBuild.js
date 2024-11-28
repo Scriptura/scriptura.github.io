@@ -7,6 +7,6 @@ const str = readdirSync('./styles/development/main.styl', 'utf8')
 
 stylus(str)
   .set('filename', './styles/' + version + 'main.css')
-  .render(function(err, css) {
+  .render(function (err, css) {
     // logic
   })

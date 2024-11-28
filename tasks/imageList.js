@@ -5,8 +5,8 @@ import fs from 'fs'
 import sizeOf from 'image-size'
 
 const fileSrc = './medias/images/src/',
-      imageList = './views/includes/imageList.pug',
-      imageSrc = '/medias/images/uploads/'
+  imageList = './views/includes/imageList.pug',
+  imageSrc = '/medias/images/uploads/'
 
 const files = fs.readdirSync(fileSrc)
 
@@ -26,7 +26,7 @@ for (const file of files) {
   try {
     const dimensions = await sizeOf(fileSrc + file)
     const fileExt = await file.split('.').pop()
-    const fileName = await file.replace(fileExt, '').replace('\.', '')
+    const fileName = await file.replace(fileExt, '').replace('.', '')
     const item = await `figure.figure-image-focus
   -
     img = {
@@ -44,8 +44,7 @@ for (const file of files) {
   figcaption!= img.caption
 `
     await writeFileImageList(item)
-  }
-  catch (error) {
+  } catch (error) {
     console.log(error)
   }
 }

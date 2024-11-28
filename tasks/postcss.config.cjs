@@ -6,12 +6,14 @@ module.exports = {
     require('postcss-import'),
     require('postcss-advanced-variables'),
     require('postcss-calc'),
-    process.env.NODE_ENV === 'production' ? require('postcss-preset-env')({
-      stage: 4,
-      features: {
-        'nesting-rules': true
-      }
-    }) : '',
-    process.env.NODE_ENV === 'production' ? require('postcss-minify') : ''
+    process.env.NODE_ENV === 'production'
+      ? require('postcss-preset-env')({
+          stage: 4,
+          features: {
+            'nesting-rules': true,
+          },
+        })
+      : '',
+    process.env.NODE_ENV === 'production' ? require('postcss-minify') : '',
   ],
 }

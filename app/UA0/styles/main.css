@@ -3,6 +3,7 @@
   /* Système de couleurs */
   --color-white: #fff;
   --color-black: #000;
+  --color-gray: hsl(0, 0%, 85%);
   --color-gray-100: hsl(0, 0%, 96%);
   --color-gray-500: hsl(0, 0%, 64%);
   --color-gray-600: hsl(0, 0%, 47%);
@@ -19,21 +20,21 @@
   --color-surface: hsl(24, 92%, 90%);
 
   /* Couleurs des événements */
-  --color-event-morning: hsl(109, 100%, 91%);
-  --color-event-day: hsl(197, 92%, 90%);
-  --color-event-evening: hsl(24, 92%, 90%);
-  --color-event-rest: var(--color-gray-100);
-  --color-event-extra-rest: hsl(60, 100%, 88%);
-  --color-event-leave: hsl(60, 100%, 88%); /* hsl(27, 100%, 80%) */
-  --color-event-holiday: hsl(60, 100%, 88%);
-  --color-event-night: hsl(0, 86%, 91%);
-  --color-event-overtime: hsl(0, 100%, 91%);
-  --color-event-formation: hsl(323, 100%, 91%);
-  --color-event-stop: hsl(310, 100%, 91%);
-  --color-event-stop: hsl(310, 100%, 91%);
-  --color-event-union: hsl(60, 100%, 88%);
-  --color-event-strike: hsl(47, 95%, 83%);
-  --color-event-other: hsl(60, 100%, 88%);
+  --color-event-morning: hsl(140, 100%, 85%); /* hsl(109, 100%, 91%) */
+  --color-event-day: hsl(216, 100%, 85%); /* hsl(197, 92%, 90%) */
+  --color-event-evening: hsl(24, 100%, 85%); /* hsl(24, 92%, 90%) */
+  --color-event-rest: var(--color-gray);
+  --color-event-extra-rest: hsl(60, 100%, 85%); /* hsl(60, 100%, 88%) */
+  --color-event-leave: hsl(60, 100%, 85%); /* hsl(60, 100%, 88%), hsl(27, 100%, 80%) */
+  --color-event-holiday: hsl(60, 100%, 85%);
+  --color-event-night: hsl(0, 100%, 85%); /* hsl(0, 86%, 91%) */
+  --color-event-overtime: hsl(0, 100%, 85%);
+  --color-event-formation: hsl(323, 100%, 85%); /* hsl(323, 100%, 91%) */
+  --color-event-stop: hsl(310, 100%, 85%);
+  --color-event-stop: hsl(310, 100%, 85%);
+  --color-event-union: hsl(60, 100%, 85%);
+  --color-event-strike: hsl(47, 100%, 85%); /* hsl(47, 95%, 83%) */
+  --color-event-other: hsl(60, 100%, 85%);
 
   /* Système d'espacement */
   --gap: 1em;
@@ -558,7 +559,7 @@ textarea.custom-pattern {
   }
 
   & th {
-    background-color: var(--color-event-rest);
+    background-color: var(--color-gray-100);
     font-weight: bold;
   }
 
@@ -628,7 +629,7 @@ textarea.custom-pattern {
   }
 
   & :not(.modified-spot):where(.sunday, .public-holiday) {
-    --triangle-color: hsla(0, 0%, 0%, 0.05);
+    --triangle-color: hsla(0, 0%, 0%, 0.1);
     --triangle-size: 1.4em;
     background-image: linear-gradient(
       to top left,
@@ -762,10 +763,8 @@ textarea.custom-pattern {
       display: block;
     }
 
-    &.grid-full-row[aria-hidden='false']:has(:not(.presentation-image)) {
+    &.grid-full-row {
       display: grid;
-      /* grid-template-rows: auto minmax(0, 1fr); */
-      /* overflow: hidden; */
     }
 
     &[aria-hidden='true'] {
@@ -775,10 +774,6 @@ textarea.custom-pattern {
 }
 
 @media print {
-  /* html {
-    font-size: 100%;
-  } */
-
   table {
     page-break-inside: avoid;
     -webkit-print-color-adjust: exact;

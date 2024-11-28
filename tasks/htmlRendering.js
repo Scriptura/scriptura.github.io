@@ -27,7 +27,7 @@ writeFileSync('index.html', renderFile('views/index.pug'))
 writeFileSync('404.html', renderFile('views/404.pug'))
 writeFileSync('offline.html', renderFile('views/offline.pug'))
 
-rmSync('page', {recursive: true}) // Suppression du dossier ; évite la persistance d'un rendu en .html d'un fichier .pug supprimé ou renommé.
+rmSync('page', { recursive: true }) // Suppression du dossier ; évite la persistance d'un rendu en .html d'un fichier .pug supprimé ou renommé.
 mkdirSync('page') // Recréation du dossier.
 
 for (let file of files) {

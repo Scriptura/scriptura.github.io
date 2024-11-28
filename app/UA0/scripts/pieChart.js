@@ -48,7 +48,7 @@ class PieChart extends HTMLElement {
         }
         path:hover,
         path.active {
-          filter: brightness(0.8) saturate(300%);
+          filter: brightness(0.8) sepia(1);
         }
         #labels-container {
           position: absolute;

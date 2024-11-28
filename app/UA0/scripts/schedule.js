@@ -228,44 +228,33 @@ const CalendarManager = {
       alert('Veuillez entrer une date de début.')
       return
     }
-
+  
     const startDate = new Date(startDateInput)
     startDate.setDate(startDate.getDate() - 1)
-
+  
     const calendarDiv = document.getElementById('calendar')
     calendarDiv.innerHTML = ''
-
+  
     const { startDate: displayStartDate, endDate: displayEndDate } = getSemesterRange()
-
-    // Création du fragment pour la manipulation hors DOM
     const fragment = document.createDocumentFragment()
-    const currentDate = new Date()
-
-    // Génération des mois de manière asynchrone
-    const generateMonths = async () => {
-      let tempDate = new Date(displayStartDate)
-      while (tempDate <= displayEndDate) {
-        const monthDate = new Date(tempDate)
-        const isCurrentMonth = monthDate.getMonth() === currentDate.getMonth() && monthDate.getFullYear() === currentDate.getFullYear()
-
-        const monthIndex =
-          (monthDate.getFullYear() - displayStartDate.getFullYear()) * 12 + monthDate.getMonth() - displayStartDate.getMonth()
-
-        // Utilisation de requestAnimationFrame pour la génération des tables
-        await new Promise(resolve => {
-          requestAnimationFrame(() => {
-            this.generateMonthTable(displayStartDate, monthIndex, startDate, selectedPattern, fragment, isCurrentMonth)
-            resolve()
-          })
-        })
-
-        tempDate.setMonth(tempDate.getMonth() + 1)
-      }
+  
+    let tempDate = new Date(displayStartDate)
+  
+    // Générer tout le contenu dans un seul fragment
+    while (tempDate <= displayEndDate) {
+      const monthDate = new Date(tempDate)
+      const isCurrentMonth = monthDate.getMonth() === new Date().getMonth() && monthDate.getFullYear() === new Date().getFullYear()
+      const monthIndex =
+        (monthDate.getFullYear() - displayStartDate.getFullYear()) * 12 + monthDate.getMonth() - displayStartDate.getMonth()
+  
+      this.generateMonthTable(displayStartDate, monthIndex, startDate, selectedPattern, fragment, isCurrentMonth)
+      tempDate.setMonth(tempDate.getMonth() + 1)
     }
-
-    await generateMonths()
+  
+    // Injecter une seule fois le fragment dans le DOM
     calendarDiv.appendChild(fragment)
-
+  
+    // Sauvegarder les données si elles n'existent pas
     if (!localStorage.getItem('scheduleData')) {
       await StorageManager.saveSchedule(calendarDiv)
     }
@@ -839,13 +828,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   })
 
   // Gestionnaire d'événement pour la date de début
-  startDateInput.addEventListener('blur', function () {
+  const eventType = isIphone() ? 'blur' : 'input'
+  startDateInput.addEventListener(eventType, function () {
     if (!this.value) {
       return
     }
 
     if (isIphone()) {
-      return // @todo Solution à revoir.
+      return // @todo Solution temporaire a supprimer si validation de la fonction en cours.
     }
 
     const selectedDate = new Date(this.value)

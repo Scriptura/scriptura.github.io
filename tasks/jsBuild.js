@@ -8,11 +8,10 @@ const fileSrc = './scripts/development/'
 const files = readdirSync(fileSrc)
 
 for (const file of files) {
-  
-    const data = file //await minify(file)
+  const data = file //await minify(file)
 
-    writeFileSync('./scripts/' + file, data, (err) => {
-      if (err) console.log(err)
-      else console.log(file + ' written successfully')
-    })
+  writeFileSync('./scripts/' + file, data, err => {
+    if (err) console.log(err)
+    else console.log(file + ' written successfully')
+  })
 }
