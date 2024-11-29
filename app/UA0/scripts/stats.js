@@ -152,8 +152,7 @@ function updateLetterStats() {
   }
 }
 
-// Code d'initialisation exécuté au chargement du DOM
-document.addEventListener('DOMContentLoaded', () => {
+function initializeStats() {
   // Use a debounce function to prevent excessive updates
   const debounce = (func, delay) => {
     let timeoutId
@@ -164,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Debounced update function
-  const debouncedUpdateLetterStats = debounce(updateLetterStats, 1000)
+  const debouncedUpdateLetterStats = debounce(updateLetterStats, 500)
 
   // Create a MutationObserver targeting the calendar container
   const calendarObserver = new MutationObserver(mutations => {
@@ -193,7 +192,6 @@ document.addEventListener('DOMContentLoaded', () => {
     calendarObserver.observe(calendarContainer, observerConfig)
   }
 
-  // Initial stats update
   updateLetterStats()
 
   // Optional: Add click listener for generate button
@@ -201,4 +199,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if (generateButton) {
     generateButton.addEventListener('click', debouncedUpdateLetterStats)
   }
+}
+
+// Appeler la fonction d'initialisation au chargement du DOM
+document.addEventListener('DOMContentLoaded', () => {
+  // Ajout d'un délai contrôlé pour éviter les conflits de reflow
+  setTimeout(() => {
+    initializeStats()
+  }, 100)
 })
