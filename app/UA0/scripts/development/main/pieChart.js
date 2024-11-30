@@ -1,5 +1,3 @@
-'use strict'
-
 /**
  * Renvoie un élément HTML depuis une chaine
  * @param {string} str

@@ -40,12 +40,10 @@ const alsaceHolidays = year => ({
  * @param {string} [options.region] the region (either "mainland" or "alsace-moselle")
  * @returns {Object} the list of holidays for the given year and region
  */
-export function publicHolidays(year, options = { region: 'mainland' }) {
+function publicHolidays(year, options = { region: 'mainland' }) {
   if (options.region === 'alsace-moselle') {
     return { ...holidays(year), ...alsaceHolidays(year) }
   } else {
     return holidays(year)
   }
 }
-
-//export { publicHolidays };

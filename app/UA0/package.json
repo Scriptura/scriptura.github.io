@@ -1,0 +1,39 @@
+{
+  "name": "ua0",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Anticiper mes horraires postés dans le temps.",
+  "main": "index.html",
+  "repository": "https://github.com/Scriptura/scriptura.github.io/tree/master/app/UA0",
+  "author": "Olivier Chavarin",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^9.15.0",
+    "ora": "^8.1.1",
+    "postcss": "^8.4.49",
+    "postcss-advanced-variables": "^5.0.0",
+    "postcss-calc": "^10.0.2",
+    "postcss-cli": "^11.0.0",
+    "postcss-import": "^16.1.0",
+    "postcss-minify": "^1.1.0",
+    "postcss-preset-env": "^10.1.1",
+    "postcss-url": "^10.1.3",
+    "pug": "^3.0.3",
+    "sharp": "^0.33.5",
+    "svg-symbol-sprite": "^1.5.2",
+    "svgo": "^3.3.2",
+    "terser": "^5.36.0"
+  },
+  "scripts": {
+    "dev": "pnpm html | pnpm js",
+    "html": "node tasks/htmlRendering",
+    "js": "pnpm jsmain | pnpm jssw",
+    "jsmain": "terser scripts/development/main/*.js -o scripts/main.js --compress --mangle",
+    "jssw": "terser scripts/development/serviceWorker.js -o sw.js --compress --mangle",
+    "css": "postcss styles/development/{main,print}.css --dir styles --config tasks/postcss.config.cjs --env production --watch --verbose",
+    "icons": "pnpm svgo && pnpm sprites && pnpm html",
+    "svgo": "node tasks/icons && svgo --config tasks/svgoConfig.cjs -f medias/icons/src -o medias/icons/dest",
+    "sprites": "svg-symbol-sprite -p '' -a 'xmlns=\"http://www.w3.org/2000/svg\"' -s '' -c false -i medias/icons/dest -o sprites/util.svg",
+    "img": "node tasks/images"
+  }
+}

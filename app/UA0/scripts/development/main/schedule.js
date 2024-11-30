@@ -1,5 +1,3 @@
-import { publicHolidays } from './publicHolidays.js'
-
 // prettier-ignore
 const RotationPatterns = {
   IDE: [

@@ -1,5 +1,3 @@
-'use strict'
-
 /**
  * Initialise le comportement des onglets sur la page.
  * Cette fonction configure les onglets, leur gestion d'état et

@@ -1,0 +1,182 @@
+extends patternLayout
+
+block variables
+  - const documentType = 'index'
+  -
+    const data = {
+      name: 'Mon Planning',
+      title: 'Mon planning à l\'UA0',
+      description: 'Anticiper mes horraires postés dans le temps.',
+      themeColor: '#2994ff',
+      ccc: 'Au fil de l\'O'
+    }
+
+block main
+  article
+    header.header.no-print(role='banner')
+      .wrapper
+        h1.main-heading!= data.name
+    .main-content
+      .wrapper
+        .tabs
+          details
+            summary
+              svg(role='img' focusable='false')
+                use(href='./sprites/util.svg#calendar_month')
+              | Planning
+            .grid-full-row
+              h2.hidden Visualisation des postes
+              .flex.gap.items-push.no-print.visibility.hidden.gap-top
+                button#contenteditable.button
+                  svg(role='img' focusable='false')
+                    use(href='./sprites/util.svg#calendar_month')
+                  span Éditer
+                  span.hidden Désactiver l'édition
+                button#history.button.round-button
+                  svg(role='img' focusable='false')
+                    use(href='./sprites/util.svg#history')
+                  span.sr-only Historique
+                  span.sr-only.hidden Désactiver l'historique
+                button.button.round-button.cmd-print
+                  svg(role='img' focusable='false')
+                    use(href='./sprites/util.svg#print')
+                  span.sr-only Imprimer
+              #calendar.grid-auto.gap
+                img.presentation-image(src='./medias/images/uploads/CalvinAndHobbes.webp', width='456', height='392', alt='Calvin et Hobbes')
+          details.no-print
+            summary
+              svg(role='img' focusable='false')
+                use(href='./sprites/util.svg#bar_chart')
+              | Statistiques
+            div
+              h2 Statistiques pour l'année 
+                span#current-year-stats en cours
+              .grid2.gap.gap-top
+                .stats
+                  #stats
+                    .message-highlight
+                      p Vous devez configurer un planning pour voir les statistiques.
+                div
+                  h3 Glossaire
+                  ul.stats-list
+                    li
+                      span M
+                      | matin
+                    li
+                      span S
+                      | soir
+                    li
+                      span J
+                      | jour
+                    li
+                      span N
+                      | nuit
+                    li
+                      span H
+                      | heures supplémentaires
+                    li
+                      span R
+                      | repos
+                    li
+                      span T
+                      | réduction du temps de travail
+                    li
+                      span F
+                      | ferié
+                    li
+                      span C
+                      | congé annuel
+                    li
+                      span I
+                      | formation
+                    li
+                      span A
+                      | arrêt travail ou maladie
+                    li
+                      span G
+                      | grève
+                    li
+                      span D
+                      | décharge syndicale
+                    li
+                      span O
+                      | autre
+          details.no-print
+            summary
+              svg(role='img' focusable='false')
+                use(href='./sprites/util.svg#tune')
+              | Configuration
+            div
+              h2 Configuration de base du planning
+              .grid2.gap.gap-top
+                .grid.gap
+                  div
+                    label(for='pattern-select') Ma fonction&nbsp;:
+                    .form-control
+                      select#pattern-select.target-for-textarea
+                        option(value='IDE', selected) Infirmier
+                        option(value='ASH') Agent des Services Hospitaliers
+                        option(value='CUSTOM') Roulement personnalisé
+                  div
+                    label.form-label(for='start-date') Début de mon roulement&nbsp;:
+                    .form-control
+                      input#start-date(type='date', required)
+                  details.details(name='details')
+                    summary
+                      em Quand débuter mon roulement&nbsp;?
+                    .message-highlight
+                      div
+                        details(name='details-sub')
+                          summary Pour les IDE
+                          p
+                            | Le roulement IDE de jour s’étend sur 11 semaines.
+                            br
+                            | Nous partirons de cette semaine&nbsp;:
+                            br
+                            code J, J, S, J, J, R, R
+                        details(name='details-sub')
+                          summary Pour les ASH
+                          p
+                            | Le roulement ASH s'étend sur 4 semaines.
+                            br
+                            | Nous partirons de cette semaine&nbsp;:
+                            br
+                            code M, M, M, M, R, S, S
+                        p Il faut repérer cette semaine dans votre planning déjà connu et la faire correspondre sur un strong lundi. Attention à ne pas confondre les semaines entre elles&nbsp;!
+                        p Quel que soit le moment où le roulement est défini, le planning sera toujours généré à partir du premier jour du mois en cours.
+                  details.details.target-for-textarea(name='details')
+                    summary
+                      em Personnaliser mon roulement
+                    .message-highlight
+                      p
+                        | Cette personnalisation permet de modifier un roulement, on peut même en
+                        | créer un nouveau. Les jours (J), soirs (S), matins (M), repos (R), etc, seront séparés par des virgules.
+                      p Par la suite sélectionner 
+                        code Ma fonction > Roulement personnalisé
+                        |  pour récupérer ce roulement.
+                      div
+                        .gap-block
+                          label(for='custom-pattern') Roulement à personnaliser&nbsp;:
+                          textarea#custom-pattern.autosize.custom-pattern(name='custom-pattern')
+                        .flex.items-push
+                          button#save-custom-pattern.button
+                            svg(role='img' focusable='false')
+                              use(href='./sprites/util.svg#event_available')
+                            | Enregistrer
+                  .flex.wrap.gap.xs-button-full
+                    button#generate-schedule.button
+                      svg(role='img' focusable='false')
+                        use(href='./sprites/util.svg#event_repeat')
+                      | Générer le planning
+                    button#reset.button.warning
+                      svg(role='img' focusable='false')
+                        use(href='./sprites/util.svg#delete')
+                      | Réinitialiser tout
+                div
+                  .message-highlight.visibility.hidden
+                    p
+                      strong Le planning a bien été créé.
+                    p Vous pouvez le réinitialiser à tout moment à partir de cet onglet.
+                    p Vous pouvez changer des postes directement sur le planning en appuyant préalablement sur le bouton 
+                      code Éditer
+                      | .

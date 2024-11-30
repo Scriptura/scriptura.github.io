@@ -1,5 +1,3 @@
-import { publicHolidays } from './publicHolidays.js'
-
 // Fonction pour obtenir l'année en cours
 function getCurrentYear() {
   return new Date().getFullYear().toString()
