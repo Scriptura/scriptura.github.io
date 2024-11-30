@@ -1,5 +1,6 @@
 /* Variables CSS globales */
 :root {
+  --l: 87%;
   /* Système de couleurs */
   --color-white: #fff;
   --color-black: #000;
@@ -20,21 +21,21 @@
   --color-surface: hsl(24, 92%, 90%);
 
   /* Couleurs des événements */
-  --color-event-morning: hsl(140, 100%, 85%); /* hsl(109, 100%, 91%) */
-  --color-event-day: hsl(216, 100%, 85%); /* hsl(197, 92%, 90%) */
-  --color-event-evening: hsl(24, 100%, 85%); /* hsl(24, 92%, 90%) */
-  --color-event-rest: var(--color-gray);
-  --color-event-extra-rest: hsl(60, 100%, 85%); /* hsl(60, 100%, 88%) */
-  --color-event-leave: hsl(60, 100%, 85%); /* hsl(60, 100%, 88%), hsl(27, 100%, 80%) */
-  --color-event-holiday: hsl(60, 100%, 85%);
-  --color-event-night: hsl(0, 100%, 85%); /* hsl(0, 86%, 91%) */
-  --color-event-overtime: hsl(0, 100%, 85%);
-  --color-event-formation: hsl(323, 100%, 85%); /* hsl(323, 100%, 91%) */
-  --color-event-stop: hsl(310, 100%, 85%);
-  --color-event-stop: hsl(310, 100%, 85%);
-  --color-event-union: hsl(60, 100%, 85%);
-  --color-event-strike: hsl(47, 100%, 85%); /* hsl(47, 95%, 83%) */
-  --color-event-other: hsl(60, 100%, 85%);
+  --color-event-morning: hsl(140, 100%, var(--l)); /* hsl(109, 100%, 91%) */
+  --color-event-day: hsl(216, 100%, var(--l)); /* hsl(197, 92%, 90%) */
+  --color-event-evening: hsl(24, 100%, var(--l)); /* hsl(24, 92%, 90%) */
+  --color-event-rest: hsl(0, 0%, var(--l));
+  --color-event-extra-rest: hsl(60, 100%, var(--l)); /* hsl(60, 100%, 88%) */
+  --color-event-leave: hsl(60, 100%, var(--l)); /* hsl(60, 100%, 88%), hsl(27, 100%, 80%) */
+  --color-event-holiday: hsl(60, 100%, var(--l));
+  --color-event-night: hsl(0, 100%, var(--l)); /* hsl(0, 86%, 91%) */
+  --color-event-overtime: hsl(0, 100%, var(--l));
+  --color-event-formation: hsl(323, 100%, var(--l)); /* hsl(323, 100%, 91%) */
+  --color-event-stop: hsl(310, 100%, var(--l));
+  --color-event-stop: hsl(310, 100%, var(--l));
+  --color-event-union: hsl(60, 100%, var(--l));
+  --color-event-strike: hsl(47, 100%, var(--l)); /* hsl(47, 95%, 83%) */
+  --color-event-other: hsl(60, 100%, var(--l));
 
   /* Système d'espacement */
   --gap: 1em;
@@ -189,6 +190,12 @@ img {
   place-self: end start;
 }
 
+.icon {
+  /* @note Valeur par défaut qui empêche l'apparition d'un visuel désagréable au moment du chargement de la page. Cette valeur est éventuellement écrasées par les suivantes si besoin */
+  width: 1.2em;
+  aspect-ratio: 1/1;
+}
+
 /* Layout */
 .wrapper {
   display: grid;
@@ -230,6 +237,7 @@ img {
 
 @media (max-width: 45.01em) {
   .header h1 {
+    /* margin-block-start: .75em; */
     text-align: center;
   }
 }
@@ -465,7 +473,7 @@ textarea.custom-pattern {
     border-color: hsl(354, 100%, 70%);
   }
 
-  & svg {
+  & .icon {
     display: inline-block;
     vertical-align: sub;
     height: 1.2em;
@@ -473,7 +481,7 @@ textarea.custom-pattern {
     fill: currentColor;
   }
 
-  &:not(.round-button) svg {
+  &:not(.round-button) .icon {
     margin-inline-end: .3em;
   }
 }
@@ -736,7 +744,7 @@ textarea.custom-pattern {
         }
       }
 
-      & svg {
+      & .icon {
         display: inline-block;
         vertical-align: sub;
         height: 1.2em;

@@ -1,0 +1,24 @@
+details
+  summary
+    svg.icon(focusable='false')
+      use(href='./sprites/util.svg#calendar_month')
+    | Planning
+  .grid-full-row
+    h2.hidden Visualisation des postes
+    .flex.gap.items-push.no-print.visibility.hidden.gap-top
+      button#contenteditable.button
+        svg.icon(focusable='false')
+          use(href='./sprites/util.svg#calendar_month')
+        span Éditer
+        span.hidden Désactiver l'édition
+      button#history.button.round-button
+        svg.icon(focusable='false')
+          use(href='./sprites/util.svg#history')
+        span.sr-only Historique
+        span.sr-only.hidden Désactiver l'historique
+      button.button.round-button.cmd-print
+        svg.icon(focusable='false')
+          use(href='./sprites/util.svg#print')
+        span.sr-only Imprimer
+    #calendar.grid-auto.gap
+      img.presentation-image(src='./medias/images/uploads/CalvinAndHobbes.webp', width='456', height='392', alt='Calvin et Hobbes' role='presentation')
