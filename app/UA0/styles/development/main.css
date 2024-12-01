@@ -529,12 +529,29 @@ textarea.custom-pattern {
   width: 100%;
   border-collapse: collapse;
 
-  & th,
-  & td {
+  & :where(th, td) {
     padding: var(--spacing-sm);
     height: 2.5em;
     text-align: center;
+		border: 1px solid #fff;
+
+		&:first-child {
+			border-inline-start: 0;
+		}
+
+		&:last-child {
+			border-inline-end: 0;
+		}
   }
+	
+	& th {
+    color: var(--color-gray-600);
+		border-block-start: 0;
+	}
+	
+	& tr:last-child td {
+		border-block-end: 0;
+	}
 
   & td {
     position: relative;
@@ -573,14 +590,15 @@ textarea.custom-pattern {
 
   & th {
     background-color: var(--color-gray-100);
-    font-weight: bold;
+    color: #555;
+    font-weight: normal;
   }
 
   & caption {
     caption-side: top;
     /* font-family: 'Noto Serif', serif; */
-    text-align: center;
-    font-weight: bold;
+    /* text-align: center;
+    font-weight: normal; */
     margin: var(--spacing-sm);
   }
 

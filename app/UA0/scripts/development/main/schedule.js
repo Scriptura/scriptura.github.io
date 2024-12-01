@@ -25,10 +25,12 @@ const RotationPatterns = {
   ],
 }
 
+/*
 function isIphone() {
   // @bugfix Filtrage des iPhones en raison d'un bug : 0 par défaut, puis accepte la valeur 1 pour le lundi ; pas de solution pour l'instant.
   return /iPhone|iPad|iPod/i.test(navigator.userAgent)
 }
+*/
 
 /**
  * Calcule la plage de semestres à afficher en fonction de la date actuelle.
@@ -826,15 +828,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   })
 
   // Gestionnaire d'événement pour la date de début
-  const eventType = isIphone() ? 'blur' : 'input'
-  startDateInput.addEventListener(eventType, function () {
+  startDateInput.addEventListener('blur', function () {
     if (!this.value) {
       return
     }
 
+    /*
     if (isIphone()) {
       return // @todo Solution temporaire a supprimer si validation de la fonction en cours.
     }
+    */
 
     const selectedDate = new Date(this.value)
 
