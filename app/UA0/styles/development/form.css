@@ -1,0 +1,102 @@
+select {
+  cursor: pointer;
+}
+
+.custom-pattern,
+.form-control {
+  display: block;
+  background-color: var(--color-gray-100);
+  border: var(--border-width) solid hsl(0, 0%, 90%);
+  resize: vertical;
+}
+
+textarea.custom-pattern {
+  min-height: var(--spacing-2xl);
+  padding: var(--spacing-md);
+  font-family: monospace, monospace;
+}
+
+.form-control {
+  position: relative;
+  width: 100%;
+  height: var(--form-control-height);
+  line-height: var(--form-control-height);
+  border-radius: var(--border-radius);
+}
+
+.form-control::after {
+  content: '';
+  position: absolute;
+  width: calc(var(--form-control-height) - 4px);
+  height: calc(var(--form-control-height) - 4px);
+  right: 0;
+  top: 0;
+  background-color: var(--color-gray-100);
+  background-size: var(--form-icon-size) var(--form-icon-size);
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  pointer-events: none;
+}
+
+.form-control:has(select)::after {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' height='24px' width='24px' viewBox='0 -960 960 960' fill='hsl(0, 0%, 47%)'><path d='M480-120 300-300l58-58 122 122 122-122 58 58-180 180ZM358-598l-58-58 180-180 180 180-58 58-122-122-122 122Z'/></svg>");
+}
+
+.form-control:has(select):where(:focus, :hover, :active) {
+  color: var(--color-accent);
+}
+
+.form-control:has(select):where(:focus, :hover, :active)::after {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' height='24px' width='24px' viewBox='0 -960 960 960' fill='orange'><path d='M480-120 300-300l58-58 122 122 122-122 58 58-180 180ZM358-598l-58-58 180-180 180 180-58 58-122-122-122 122Z'/></svg>");
+}
+
+.form-control:has([type='date'])::after {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='hsl(0, 0%, 47%)'><path d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/></svg>");
+}
+
+.form-control:has([type='date']):where(:focus, :hover, :active) {
+  color: var(--color-accent);
+}
+
+.form-control:has([type='date']):where(:focus, :hover, :active)::after {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='orange'><path d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z'/></svg>");
+}
+
+.form-control:has(> [disabled]),
+.form-control:has(> [disabled])::after {
+  background-color: var(--color-gray-100);
+  background-image: repeating-linear-gradient(-45deg, transparent 0 5px, hsla(0, 0%, 0%, 0.05) 5px 10px);
+  cursor: default;
+}
+
+.form-control [disabled] {
+  color: #999 !important;
+  pointer-events: none;
+}
+
+.form-control:has(> [disabled]) {
+  border: var(--border-width) solid var(--color-gray-100);
+}
+
+.custom-pattern,
+.form-control > * {
+  width: 100%;
+  height: var(--form-control-height);
+  padding-inline: var(--spacing-sm);
+}
+
+.custom-pattern:where(:focus, :hover, :active),
+.form-control > :where(:focus, :hover, :active),
+.form-control:has(> :where(:focus, :hover, :active)) {
+  border-color: var(--color-accent);
+  outline: none;
+}
+
+.form-control > * {
+  background-color: transparent;
+  border-color: transparent;
+}
+
+::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+}

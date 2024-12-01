@@ -1,0 +1,55 @@
+.event-rest {
+  background-color: var(--color-event-rest);
+}
+
+.event-extra-rest {
+  background-color: var(--color-event-extra-rest);
+}
+
+.event-holiday {
+  background-color: var(--color-event-holiday);
+}
+
+.event-day {
+  background-color: var(--color-event-day);
+}
+
+.event-evening {
+  background-color: var(--color-event-evening);
+}
+
+.event-morning {
+  background-color: var(--color-event-morning);
+}
+
+.event-night {
+  background-color: var(--color-event-night);
+}
+
+.event-leave {
+  background-color: var(--color-event-leave);
+}
+
+.event-overtime {
+  background-color: var(--color-event-overtime);
+}
+
+.event-formation {
+  background-color: var(--color-event-formation);
+}
+
+.event-stop {
+  background-color: var(--color-event-stop);
+}
+
+.event-strike {
+  background-color: var(--color-event-strike);
+}
+
+.event-union {
+  background-color: var(--color-event-union);
+}
+
+.event-other {
+  background-color: var(--color-event-other);
+}

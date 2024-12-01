@@ -1,0 +1,20 @@
+pie-chart {
+  --pie-chart-background-color-label: hsla(0, 0%, 100%, 1);
+  --pie-chart-color-item-r: var(--color-event-rest);
+  --pie-chart-color-item-t: var(--color-event-extra-rest);
+  --pie-chart-color-item-f: var(--color-event-holiday);
+  --pie-chart-color-item-m: var(--color-event-morning);
+  --pie-chart-color-item-j: var(--color-event-day);
+  --pie-chart-color-item-s: var(--color-event-evening);
+  --pie-chart-color-item-n: var(--color-event-night);
+  --pie-chart-color-item-h: var(--color-event-overtime);
+  --pie-chart-color-item-c: var(--color-event-leave);
+  --pie-chart-color-item-i: var(--color-event-formation);
+  --pie-chart-color-item-a: var(--color-event-stop);
+  --pie-chart-color-item-g: var(--color-event-strike);
+  --pie-chart-color-item-d: var(--color-event-union);
+  --pie-chart-color-item-e: var(--color-event-other);
+  --pie-chart-color-item-o: var(--color-event-other);
+  max-width: 30em;
+  margin-inline: 2em;
+}

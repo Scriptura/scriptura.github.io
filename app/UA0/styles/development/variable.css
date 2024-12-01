@@ -1,0 +1,67 @@
+:root {
+  --l: 87%;
+  /* Système de couleurs */
+  --color-white: #fff;
+  --color-black: #000;
+  --color-gray: hsl(0, 0%, 85%);
+  --color-gray-100: hsl(0, 0%, 96%);
+  --color-gray-500: hsl(0, 0%, 64%);
+  --color-gray-600: hsl(0, 0%, 47%);
+
+  /* Couleurs principales */
+  --color-primary: hsl(210, 100%, 58%);
+  --color-primary-light: hsl(216, 100%, 73%);
+  --color-primary-dark: hsl(216, 98%, 52%);
+  --color-accent: orange;
+
+  /* Couleurs sémantiques */
+  --color-background: var(--color-white);
+  --color-text: hsl(210, 9%, 31%);
+  --color-surface: hsl(24, 92%, 90%);
+
+  /* Couleurs des événements */
+  --color-event-morning: hsl(109, 53%, var(--l));
+  --color-event-day: hsl(216, 100%, var(--l));
+  --color-event-evening: hsl(24, 100%, var(--l));
+  --color-event-rest: hsl(60, 100%, var(--l));
+  --color-event-extra-rest: hsl(60, 100%, var(--l));
+  --color-event-leave: hsl(60, 100%, var(--l));
+  --color-event-holiday: hsl(60, 100%, var(--l));
+  --color-event-night: hsl(0, 100%, var(--l));
+  --color-event-overtime: hsl(0, 100%, var(--l));
+  --color-event-formation: hsl(323, 100%, var(--l));
+  --color-event-stop: hsl(310, 100%, var(--l));
+  --color-event-stop: hsl(310, 100%, var(--l));
+  --color-event-union: hsl(60, 100%, var(--l));
+  --color-event-strike: hsl(47, 100%, var(--l));
+  --color-event-other: hsl(60, 100%, var(--l));
+
+  /* Système d'espacement */
+  --gap: 1em;
+  --spacing-xs: 0.2em;
+  --spacing-sm: 0.5em;
+  --spacing-md: 1em;
+  --spacing-lg: 1.5em;
+  --spacing-xl: 2em;
+  --spacing-2xl: 3em;
+
+  /* Système de layout */
+  --icon-size: 2.5em;
+  --grid-item-min-width: 22em;
+  --grid-item-min-width-print: 15em;
+
+  /* Système de bordures */
+  --border-radius: 0.3em;
+  --border-width: 2px;
+
+  /* Tailles de composants */
+  --form-control-height: 3em;
+  --form-icon-size: 1.5em;
+  --scrollbar-width: 10px;
+
+  /* Z-index */
+  --z-index-default: 1;
+  --z-index-overlay: 10;
+
+  --shadow-button: 0 0.5rem 2rem hsla(0, 0%, 0%, 0.2);
+}

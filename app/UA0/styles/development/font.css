@@ -1,0 +1,23 @@
+@font-face {
+  font-family: 'Noto Sans';
+  src: url('../fonts/notoSans-Regular.woff2') format('woff2'), url('../fonts/notoSans-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Noto Serif';
+  src: url('../fonts/notoSerif-Regular.woff2') format('woff2'), url('../fonts/notoSerif-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Oleo Script Swash Caps';
+  src: url('../fonts/OleoScriptSwashCaps-Regular.woff2') format('woff2'), url('../fonts/OleoScriptSwashCaps-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}

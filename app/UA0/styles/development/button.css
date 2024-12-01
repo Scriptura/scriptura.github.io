@@ -1,0 +1,65 @@
+.button {
+  all: unset;
+  display: block;
+  max-height: 3em;
+  /* font-weight: 400; */
+  padding: 0.6em 1em;
+  font-size: 1em;
+  text-align: center;
+  /* text-shadow: 0 1px 0 hsla(0, 0%, 100%, 0.5); */
+  color: var(--color-background);
+  background-color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  border-radius: 3em;
+  box-shadow: var(--shadow-button);
+  outline: none;
+  transition: all 0.2s linear;
+  transition-property: translate, box-shadow;
+  cursor: pointer;
+
+  &.round-button {
+    width: 1.5em; /* @todo En test... */
+    padding: 0.6em;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+  }
+
+  &:not([disabled]):where(:focus-visible, :hover) {
+    transform: translateY(-0.1rem);
+    border-color: var(--color-primary-dark);
+  }
+
+  &:active {
+    box-shadow: inset 0 0 0.1em hsla(0, 0%, 0%, 0.7);
+    /* @note En em car dépend de la taille du bouton. */
+    transform: translateY(0.05em);
+  }
+
+  &[disabled] {
+    background-image: repeating-linear-gradient(-45deg, transparent 0 5px, hsla(0, 0%, 0%, 0.2) 5px 10px);
+    cursor: default;
+  }
+
+  &.warning {
+    background-color: hsl(354, 100%, 70%);
+    border-color: hsl(354, 100%, 70%);
+  }
+
+  & .icon {
+    display: inline-block;
+    vertical-align: sub;
+    height: 1.2em;
+    aspect-ratio: 1;
+    fill: currentColor;
+  }
+
+  &:not(.round-button) .icon {
+    margin-inline-end: 0.3em;
+  }
+}
+
+@media (max-width: 45.01em) {
+  .xs-button-full .button {
+    width: 100%;
+  }
+}

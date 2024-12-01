@@ -1,0 +1,23 @@
+.footer {
+  align-items: center;
+  font-family: 'Oleo Script Swash Caps';
+  color: var(--color-background);
+  background-color: var(--color-primary);
+
+  & .flex.gap {
+    gap: var(--spacing-sm);
+  }
+
+  & p {
+    font-size: 1.4em;
+    margin-block: auto;
+    padding-block: 0;
+    line-height: 1;
+  }
+
+  & .logo {
+    /* margin-block-start: 0.1em; */
+    height: var(--spacing-2xl);
+    filter: brightness(0) invert(1);
+  }
+}

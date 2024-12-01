@@ -1,0 +1,253 @@
+::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-primary-light);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-primary);
+}
+
+* {
+  scrollbar-color: var(--color-primary) var(--color-primary-light);
+}
+
+/* Reset et styles de base */
+* {
+  box-sizing: border-box;
+  user-select: none;
+}
+
+html {
+  line-height: 1.5em;
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  min-height: 100svh;
+  font-family: 'Noto Sans', sans-serif;
+  margin: 0;
+  background-color: var(--color-background);
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  /* @bugfix Change the font styles @affected All browsers. */
+  font-family: inherit;
+  /* @bugfix Change the font styles @affected All browsers. */
+  font-size: 100%;
+  /* @bugfix Change the font styles @affected All browsers. */
+  line-height: 1.15;
+  /* @bugfix Remove the margin @affected Firefox and Safari. */
+  margin: 0;
+}
+
+:not(pre) > code {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-family: monospace, monospace;
+  background-color: hsla(0, 0%, 64%, 0.2);
+  border-radius: var(--border-radius);
+}
+
+img {
+  display: block;
+  width: auto; /* Pour garder le ratio naturel */
+  height: auto; /* Pour garder le ratio naturel */
+  max-width: 100%;
+  pointer-events: none;
+}
+
+.presentation-image {
+  max-height: 50svh;
+  padding: var(--spacing-xl) 5em var(--spacing-xl) 0;
+  place-self: end start;
+}
+
+.icon {
+  /* @note Valeur par défaut qui empêche l'apparition d'un visuel désagréable au moment du chargement de la page. Cette valeur est éventuellement écrasées par les suivantes si besoin */
+  width: 1.2em;
+  aspect-ratio: 1/1;
+}
+
+/* Layout */
+.wrapper {
+  display: grid;
+  grid-template-columns: minmax(0, 90em);
+  justify-content: center;
+}
+
+[class^='grid'] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.grid-auto {
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--grid-item-min-width), 100%), 1fr));
+}
+
+@media (min-width: 45.01em) {
+  .grid2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.gap-top {
+  padding-block-start: 1em;
+}
+
+/* En-tête */
+.header {
+  padding-block-end: 1em;
+  font-family: 'Oleo Script Swash Caps';
+  color: var(--color-background);
+  background-color: var(--color-primary);
+}
+
+.header h1 {
+  margin-block: 1em 1.3em;
+  font-size: 2.5em;
+}
+
+@media (max-width: 45.01em) {
+  .header h1 {
+    /* margin-block-start: .75em; */
+    text-align: center;
+  }
+}
+
+@media (min-width: 45.01em) {
+  .header h1 {
+    font-size: 3em;
+  }
+}
+
+header > .wrapper,
+footer > .wrapper,
+article .main-content {
+  padding-inline: var(--spacing-md);
+}
+
+main {
+  display: grid;
+}
+
+main > article {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.main-content {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  margin-block: -2.5em 1em;
+}
+
+.main-content {
+  & :where(h1, h2, h3, h4) {
+    font-family: 'Noto Serif', serif;
+    /* font-family: 'Oleo Script Swash Caps'; */
+    /* font-weight: normal; */
+    text-wrap: balance;
+  }
+
+  & h2 {
+    font-size: 1.5em;
+    margin-block: .5em;
+    color: hsl(0, 0%, 40%);
+  }
+
+  & h3 {
+    font-size: 1.2em;
+    margin-block: .5em;
+  }
+}
+
+summary {
+  cursor: pointer;
+}
+
+.message-highlight {
+  padding: var(--spacing-md);
+  background-color: var(--color-event-evening);
+  border-radius: var(--border-radius);
+}
+
+.message-highlight p {
+  margin-block: var(--spacing-xs);
+}
+
+@media screen {
+  :has(.table.past):not(.hidden) ~ :has(.table.current) table {
+    box-shadow: 0 0 0 3px pink;
+  }
+}
+
+.grid-auto:has(.table) {
+  margin-block-start: var(--spacing-lg);
+}
+
+.gap {
+  gap: var(--gap);
+}
+
+.gap-block {
+  margin-block: 1em;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex.items-push {
+  justify-content: flex-end;
+}
+
+.item-push {
+  margin-inline-start: auto;
+}
+
+.autosize {
+  overflow: hidden;
+  field-sizing: content;
+}
+
+.hidden {
+  display: none;
+}
+.sr-only {
+  position: absolute;
+  transform: scale(0);
+}
+
+.wrap {
+  flex-wrap: wrap;
+}
+
+@media print {
+  table {
+    page-break-inside: avoid;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .no-print,
+  .tab-list {
+    display: none !important;
+  }
+}
+
+@page {
+  margin: 0.5cm;
+}

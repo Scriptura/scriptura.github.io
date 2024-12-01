@@ -1,0 +1,102 @@
+.table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+
+  & :where(th, td) {
+    padding: var(--spacing-sm);
+    height: 2.5em;
+    text-align: center;
+    border: 1px solid #fff;
+
+    &:first-child {
+      border-inline-start: 0;
+    }
+
+    &:last-child {
+      border-inline-end: 0;
+    }
+  }
+
+  & th {
+    color: var(--color-gray-600);
+    border-block-start: 0;
+  }
+
+  & tr:last-child td {
+    border-block-end: 0;
+  }
+
+  & td {
+    position: relative;
+  }
+
+  @media screen {
+    td.current-day {
+      box-shadow: inset 0 0 0 3px var(--color-primary-light);
+    }
+
+    td[data-day][tabindex='0']:where(:focus, :hover, :active) {
+      box-shadow: inset 0 0 0 3px pink;
+      outline: none;
+    }
+  }
+
+  & td::before,
+  & td::after {
+    position: absolute;
+    line-height: 1;
+    font-size: 0.7em;
+    color: var(--color-gray-600);
+  }
+
+  & td::before {
+    content: attr(data-day);
+    bottom: 0.4em;
+    right: 0.4em;
+  }
+
+  & td:where(.modified, .modified-spot)::after {
+    content: attr(data-original-value);
+    top: 0.4em;
+    left: 0.4em;
+  }
+
+  & th {
+    background-color: var(--color-gray-100);
+    color: #555;
+    font-weight: normal;
+  }
+
+  & caption {
+    caption-side: top;
+    /* font-family: 'Noto Serif', serif; */
+    /* text-align: center;
+      font-weight: normal; */
+    margin: var(--spacing-sm);
+  }
+
+  & :not(.modified-spot):where(.sunday, .public-holiday) {
+    --triangle-color: hsla(0, 0%, 0%, 0.1);
+    --triangle-size: 1.4em;
+    background-image: linear-gradient(
+      to top left,
+      var(--triangle-color) var(--triangle-size),
+      transparent calc(var(--triangle-size)),
+      transparent 100%
+    );
+    background-position: bottom right;
+    background-size: 2em 2em;
+    background-repeat: no-repeat;
+  }
+
+  @media screen {
+    .modified-spot {
+      background-image: repeating-linear-gradient(-45deg, transparent 0 5px, hsla(0, 100%, 73%, 0.2) 5px 10px);
+    }
+  }
+}
+
+[data-day] {
+  background-color: var(--color-event-rest);
+}
