@@ -21,20 +21,20 @@
   --color-surface: hsl(24, 92%, 90%);
 
   /* Couleurs des événements */
-  --color-event-morning: hsl(140, 100%, var(--l)); /* hsl(109, 100%, 91%) */
-  --color-event-day: hsl(216, 100%, var(--l)); /* hsl(197, 92%, 90%) */
-  --color-event-evening: hsl(24, 100%, var(--l)); /* hsl(24, 92%, 90%) */
-  --color-event-rest: hsl(0, 0%, var(--l));
-  --color-event-extra-rest: hsl(60, 100%, var(--l)); /* hsl(60, 100%, 88%) */
-  --color-event-leave: hsl(60, 100%, var(--l)); /* hsl(60, 100%, 88%), hsl(27, 100%, 80%) */
+  --color-event-morning: hsl(109, 53%, var(--l));
+  --color-event-day: hsl(216, 100%, var(--l));
+  --color-event-evening: hsl(24, 100%, var(--l));
+  --color-event-rest: hsl(60, 100%, var(--l));
+  --color-event-extra-rest: hsl(60, 100%, var(--l));
+  --color-event-leave: hsl(60, 100%, var(--l));
   --color-event-holiday: hsl(60, 100%, var(--l));
-  --color-event-night: hsl(0, 100%, var(--l)); /* hsl(0, 86%, 91%) */
+  --color-event-night: hsl(0, 100%, var(--l));
   --color-event-overtime: hsl(0, 100%, var(--l));
-  --color-event-formation: hsl(323, 100%, var(--l)); /* hsl(323, 100%, 91%) */
+  --color-event-formation: hsl(323, 100%, var(--l));
   --color-event-stop: hsl(310, 100%, var(--l));
   --color-event-stop: hsl(310, 100%, var(--l));
   --color-event-union: hsl(60, 100%, var(--l));
-  --color-event-strike: hsl(47, 100%, var(--l)); /* hsl(47, 95%, 83%) */
+  --color-event-strike: hsl(47, 100%, var(--l));
   --color-event-other: hsl(60, 100%, var(--l));
 
   /* Système d'espacement */
