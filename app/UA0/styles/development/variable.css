@@ -22,15 +22,14 @@
   /* Couleurs des événements */
   --color-event-morning: hsl(109, 53%, var(--l));
   --color-event-day: hsl(216, 100%, var(--l));
-  --color-event-evening: hsl(24, 100%, var(--l));
-  --color-event-rest: hsl(60, 100%, var(--l));
+  --color-event-evening: hsl(30, 100%, var(--l));
+  --color-event-rest: var(--color-gray-100);
   --color-event-extra-rest: hsl(60, 100%, var(--l));
   --color-event-leave: hsl(60, 100%, var(--l));
   --color-event-holiday: hsl(60, 100%, var(--l));
-  --color-event-night: hsl(0, 100%, var(--l));
+  --color-event-night: hsl(340, 100%, var(--l));
   --color-event-overtime: hsl(0, 100%, var(--l));
-  --color-event-formation: hsl(323, 100%, var(--l));
-  --color-event-stop: hsl(310, 100%, var(--l));
+  --color-event-formation: hsl(20, 50%, var(--l));
   --color-event-stop: hsl(310, 100%, var(--l));
   --color-event-union: hsl(60, 100%, var(--l));
   --color-event-strike: hsl(47, 100%, var(--l));

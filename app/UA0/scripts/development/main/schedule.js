@@ -25,13 +25,6 @@ const RotationPatterns = {
   ],
 }
 
-/*
-function isIphone() {
-  // @bugfix Filtrage des iPhones en raison d'un bug : 0 par défaut, puis accepte la valeur 1 pour le lundi ; pas de solution pour l'instant.
-  return /iPhone|iPad|iPod/i.test(navigator.userAgent)
-}
-*/
-
 /**
  * Calcule la plage de semestres à afficher en fonction de la date actuelle.
  * @returns {{ startDate: Date, endDate: Date }} - Les dates de début et de fin de la plage.
@@ -205,6 +198,16 @@ const ScheduleClassManager = {
     ['G', 'event-strike'],
     ['D', 'event-union'],
     ['O', 'event-other'],
+    ['E', 'event-other'],
+    ['L', 'event-other'],
+    ['P', 'event-other'],
+    ['Q', 'event-other'],
+    ['U', 'event-other'],
+    ['V', 'event-other'],
+    ['W', 'event-other'],
+    ['X', 'event-other'],
+    ['Y', 'event-other'],
+    ['Z', 'event-other'],
   ]),
 
   getClass(scheduleLetter) {
@@ -679,7 +682,7 @@ const EditManager = {
     }
 
     // Valider la nouvelle valeur avec les lettres autorisées
-    const validLetters = ['M', 'J', 'S', 'N', 'H', 'R', 'T', 'F', 'C', 'I', 'A', 'G', 'D', 'E', 'O']
+    const validLetters = ['M', 'J', 'S', 'N', 'H', 'R', 'T', 'F', 'C', 'I', 'A', 'G', 'D', 'O', 'E', 'L', 'P', 'Q', 'U', 'V', 'W', 'X', 'Z']
     if (!validLetters.includes(newValue)) {
       cell.textContent = currentValue || originalValue // Restaurer si non valide
       return
@@ -832,12 +835,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!this.value) {
       return
     }
-
-    /*
-    if (isIphone()) {
-      return // @todo Solution temporaire a supprimer si validation de la fonction en cours.
-    }
-    */
 
     const selectedDate = new Date(this.value)
 
