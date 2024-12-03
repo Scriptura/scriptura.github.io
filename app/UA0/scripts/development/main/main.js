@@ -130,27 +130,14 @@ updateYearInTitle('current-year-stats')
 document.addEventListener('DOMContentLoaded', () => {
   const list = document.querySelector('.stats-list')
 
-  // Charger les données existantes du localStorage lors du chargement de la page
   loadFromLocalStorage()
 
-  // Ajouter des écouteurs d'événements pour détecter les modifications
   list.addEventListener('input', event => {
     // Détecter les modifications en temps réel
     if (event.target.getAttribute('contenteditable') === 'true') {
       saveToLocalStorage()
     }
   })
-
-  list.addEventListener(
-    'blur',
-    event => {
-      // Sauvegarder lors de la perte de focus
-      if (event.target.getAttribute('contenteditable') === 'true') {
-        saveToLocalStorage()
-      }
-    },
-    true,
-  )
 
   function saveToLocalStorage() {
     const items = Array.from(list.querySelectorAll('li'))
@@ -169,20 +156,18 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function loadFromLocalStorage() {
-    // Récupérer les données du localStorage
     const savedItems = localStorage.getItem('editableItems')
 
     if (savedItems) {
       try {
         const items = JSON.parse(savedItems)
 
-        // Parcourir tous les éléments contenteditable
         const contentEditableElements = list.querySelectorAll('[contenteditable="true"]')
 
         // Mettre à jour les éléments existants
-        items.forEach((item, index) => {
-          if (index < contentEditableElements.length) {
-            contentEditableElements[index].textContent = item.text
+        items.forEach((item, i) => {
+          if (i < contentEditableElements.length) {
+            contentEditableElements[i].textContent = item.text
           }
         })
       } catch (error) {
