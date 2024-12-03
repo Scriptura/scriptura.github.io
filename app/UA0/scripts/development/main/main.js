@@ -69,7 +69,7 @@ function updateDisabledState() {
     // Mise à jour des boutons de visibilité
     document.querySelectorAll('.visibility').forEach(el => {
       el.classList.add('visible')
-      el.classList.remove((('hidden')))
+      el.classList.remove('hidden')
     })
   }
 }
@@ -125,3 +125,69 @@ function updateYearInTitle(elementId) {
 }
 
 updateYearInTitle('current-year-stats')
+
+// Items modifiables dans la liste des statistiques `.stats-list`
+document.addEventListener('DOMContentLoaded', () => {
+  const list = document.querySelector('.stats-list')
+
+  // Charger les données existantes du localStorage lors du chargement de la page
+  loadFromLocalStorage()
+
+  // Ajouter des écouteurs d'événements pour détecter les modifications
+  list.addEventListener('input', event => {
+    // Détecter les modifications en temps réel
+    if (event.target.getAttribute('contenteditable') === 'true') {
+      saveToLocalStorage()
+    }
+  })
+
+  list.addEventListener(
+    'blur',
+    event => {
+      // Sauvegarder lors de la perte de focus
+      if (event.target.getAttribute('contenteditable') === 'true') {
+        saveToLocalStorage()
+      }
+    },
+    true,
+  )
+
+  function saveToLocalStorage() {
+    const items = Array.from(list.querySelectorAll('li'))
+      .map(li => {
+        const codeElement = li.querySelector('.event-other')
+        const textElement = li.querySelector('[contenteditable="true"]')
+
+        return {
+          code: codeElement ? codeElement.textContent : '',
+          text: textElement ? textElement.textContent : '',
+        }
+      })
+      .filter(item => item.text.trim() !== '')
+
+    localStorage.setItem('editableItems', JSON.stringify(items))
+  }
+
+  function loadFromLocalStorage() {
+    // Récupérer les données du localStorage
+    const savedItems = localStorage.getItem('editableItems')
+
+    if (savedItems) {
+      try {
+        const items = JSON.parse(savedItems)
+
+        // Parcourir tous les éléments contenteditable
+        const contentEditableElements = list.querySelectorAll('[contenteditable="true"]')
+
+        // Mettre à jour les éléments existants
+        items.forEach((item, index) => {
+          if (index < contentEditableElements.length) {
+            contentEditableElements[index].textContent = item.text
+          }
+        })
+      } catch (error) {
+        console.error('Erreur lors du chargement des données:', error)
+      }
+    }
+  }
+})
