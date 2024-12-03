@@ -18,10 +18,11 @@
     }
 
     & span:nth-child(2) {
+      flex-shrink: 0;
       min-width: 3em;
-      max-height: 2em;
+      max-height: 1.5em;
 
-      &:where(:focus, :hoer, :active) {
+      &:where(:focus, :hover, :active) {
         background-color: yellow;
         outline: none;
       }
