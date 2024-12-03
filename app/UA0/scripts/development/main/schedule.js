@@ -197,9 +197,9 @@ const ScheduleClassManager = {
     ['A', 'event-stop'],
     ['G', 'event-strike'],
     ['D', 'event-union'],
-    ['O', 'event-other'],
     ['E', 'event-other'],
     ['L', 'event-other'],
+    ['O', 'event-other'],
     ['P', 'event-other'],
     ['Q', 'event-other'],
     ['U', 'event-other'],
@@ -682,7 +682,7 @@ const EditManager = {
     }
 
     // Valider la nouvelle valeur avec les lettres autorisées
-    const validLetters = ['M', 'J', 'S', 'N', 'H', 'R', 'T', 'F', 'C', 'I', 'A', 'G', 'D', 'O', 'E', 'L', 'P', 'Q', 'U', 'V', 'W', 'X', 'Z']
+    const validLetters = ['M', 'J', 'S', 'N', 'H', 'R', 'T', 'F', 'C', 'I', 'A', 'G', 'D', 'E', 'L', 'O', 'P', 'Q', 'U', 'V', 'W', 'X', 'Y', 'Z']
     if (!validLetters.includes(newValue)) {
       cell.textContent = currentValue || originalValue // Restaurer si non valide
       return

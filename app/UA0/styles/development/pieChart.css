@@ -14,7 +14,16 @@ pie-chart {
   --pie-chart-color-item-g: var(--color-event-strike);
   --pie-chart-color-item-d: var(--color-event-union);
   --pie-chart-color-item-e: var(--color-event-other);
+  --pie-chart-color-item-l: var(--color-event-other);
   --pie-chart-color-item-o: var(--color-event-other);
+  --pie-chart-color-item-p: var(--color-event-other);
+  --pie-chart-color-item-q: var(--color-event-other);
+  --pie-chart-color-item-u: var(--color-event-other);
+  --pie-chart-color-item-v: var(--color-event-other);
+  --pie-chart-color-item-w: var(--color-event-other);
+  --pie-chart-color-item-x: var(--color-event-other);
+  --pie-chart-color-item-y: var(--color-event-other);
+  --pie-chart-color-item-z: var(--color-event-other);
   max-width: 30em;
   margin-inline: 2em;
 }
