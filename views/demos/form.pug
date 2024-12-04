@@ -120,21 +120,21 @@ form(action='./')
     fieldset
       legend.h2 Textareas
       .input
-        label(for='textarea-message')
+        label(for='textarea-message0')
           code .input label + textarea
-        textarea#textarea-message(name='textarea-message' placeholder='Bonjour monsieur...' required)
+        textarea#textarea-message0(name='textarea-message0' placeholder='Bonjour monsieur...' required)
       br
       .input
-        label(for='textarea-message')
+        label(for='textarea-message1')
           code textarea.character-counter
-        textarea#textarea-message.character-counter(name='textarea-message' placeholder='Bonjour monsieur...' required)
+        textarea#textarea-message1.character-counter(name='textarea-message1' placeholder='Bonjour monsieur...' required)
         p
           output
         br
       .input
-        label(for='textarea-message')
+        label(for='textarea-message2')
           code textarea.character-counter(maxlength='200')
-        textarea#textarea-message.character-counter(name='textarea-message' maxlength='200' placeholder='Bonjour monsieur...' required)
+        textarea#textarea-message2.character-counter(name='textarea-message2' maxlength='200' placeholder='Bonjour monsieur...' required)
         p
           output
 .grid3.m-grid2.gap

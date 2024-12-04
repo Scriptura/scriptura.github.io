@@ -1,0 +1,44 @@
+.scroll-top {
+  /* display: none; /* @note Apparition de l'élément au scrool de la page via JS. */
+  position: fixed;
+  /* @todo Fallback car la variable env() est encore très récente. */
+  bottom: 0;
+  /* @note Permet de prendre en compte les éléments d'interface supperposés sur la page web, la flèche passera alors au-dessus. La valeur de "safe-area-inset-bottom" est fournie par le navigateur. */
+  bottom: env(safe-area-inset-bottom, 0);
+  right: 0;
+  z-index: 4000;
+  height: 3em;
+  width: 3em;
+  background-color: transparent;
+  border: none;
+  outline: none;
+
+  & svg {
+    height: 2em;
+    width: 2em;
+    fill: var(--colorB);
+    opacity: 0.5;
+  }
+
+  &:focus-within svg {
+    fill: var(--colorW);
+  }
+
+  &:where(:hover, :active) svg {
+    fill: var(--colorG60);
+  }
+}
+
+.fade-in {
+  visibility: visible;
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 1s ease-in;
+}
+
+.fade-out {
+  visibility: hidden;
+  opacity: 0;
+  transform: scale(0);
+  transition: opacity 1s ease-out, visibility 0s 1s ease-out, transform 0s 1s ease-out;
+}

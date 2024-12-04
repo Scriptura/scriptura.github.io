@@ -9,6 +9,6 @@
 @import 'form';
 @import 'button';
 @import 'tab';
-/* @import 'scrollTop'; */
+@import 'scrollTop';
 @import 'footer';
 @import 'pieChart';
