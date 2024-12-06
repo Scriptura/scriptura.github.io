@@ -20,7 +20,7 @@
   --color-surface: hsl(24, 92%, 90%);
 
   /* Couleurs des événements */
-  --color-event-morning: hsl(109, 53%, 83%);
+  --color-event-morning: hsl(109, 53%, 83%); /* hsl(140, 80%, 85%) */
   --color-event-day: hsl(216, 100%, 85%);
   --color-event-evening: hsl(30, 100%, 85%);
   --color-event-rest: var(--color-gray-100);
