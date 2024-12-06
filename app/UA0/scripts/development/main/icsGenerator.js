@@ -1,4 +1,4 @@
-function generateIcsFileForNext11Months() {
+function generateIcsFile() {
   const scheduleData = JSON.parse(localStorage.getItem('scheduleData')) || {}
   const now = new Date()
   const currentYear = now.getFullYear()
@@ -75,4 +75,4 @@ function downloadIcsFile(content, fileName) {
   URL.revokeObjectURL(url)
 }
 
-document.getElementById('generate-ics').addEventListener('click', generateIcsFileForNextYear)
+document.getElementById('generate-ics').addEventListener('click', generateIcsFile)
