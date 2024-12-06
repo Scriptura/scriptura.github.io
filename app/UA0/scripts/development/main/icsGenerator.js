@@ -1,11 +1,10 @@
-// Fonction pour récupérer les 12 mois à venir à partir des données "scheduleData"
-function generateIcsFileForNextYear() {
+function generateIcsFileForNext11Months() {
   const scheduleData = JSON.parse(localStorage.getItem('scheduleData')) || {}
   const now = new Date()
   const currentYear = now.getFullYear()
-  const nextYear = currentYear + 1
+  const currentMonth = now.getMonth() + 1 // Mois actuel (1-12)
+  const currentDay = now.getDate() // Jour actuel
 
-  // Dictionnaire pour les descriptions des postes
   const descriptions = {
     M: 'Poste du matin',
     J: 'Poste de journée',
@@ -18,15 +17,24 @@ function generateIcsFileForNextYear() {
 
   let icsContent = 'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//VotreEntreprise//Agenda ICS//FR\n'
 
-  for (let month = 1; month <= 12; month++) {
-    const monthKey = `${nextYear}-${month.toString().padStart(2, '0')}`
+  let monthsProcessed = 0
+
+  // Boucle pour parcourir 11 mois à partir du mois actuel
+  for (let monthOffset = 0; monthsProcessed < 11; monthOffset++) {
+    const targetDate = new Date(currentYear, currentMonth - 1 + monthOffset)
+    const targetYear = targetDate.getFullYear()
+    const targetMonth = (targetDate.getMonth() + 1).toString().padStart(2, '0')
+    const monthKey = `${targetYear}-${targetMonth}`
 
     if (scheduleData[monthKey]) {
       Object.entries(scheduleData[monthKey]).forEach(([day, shifts]) => {
+        const dayNumber = parseInt(day)
+        if (monthOffset === 0 && dayNumber < currentDay) return // Ignore les jours passés du mois actuel
+
         const eventName = shifts[1] // Priorité à la deuxième lettre
         if (eventName) {
           const eventDescription = descriptions[eventName] || defaultDescription
-          const eventDate = new Date(nextYear, month - 1, parseInt(day))
+          const eventDate = new Date(targetYear, targetMonth - 1, dayNumber)
           const year = eventDate.getFullYear()
           const monthStr = (eventDate.getMonth() + 1).toString().padStart(2, '0')
           const dayStr = eventDate.getDate().toString().padStart(2, '0')
@@ -42,20 +50,21 @@ DESCRIPTION:${eventDescription}
 END:VEVENT`
         }
       })
+      monthsProcessed++
     }
   }
 
   icsContent += '\nEND:VCALENDAR'
 
-  downloadIcsFile(icsContent, `schedule_${nextYear}.ics`)
+  downloadIcsFile(icsContent, `schedule_${currentYear}-${currentMonth}.ics`)
 }
 
-// Fonction pour formater une date en format ICS
+// Formate une date en format ICS
 function formatDateToICS(date) {
   return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'
 }
 
-// Fonction pour télécharger le fichier ICS
+// Télécharge le fichier ICS
 function downloadIcsFile(content, fileName) {
   const blob = new Blob([content], { type: 'text/calendar' })
   const url = URL.createObjectURL(blob)
