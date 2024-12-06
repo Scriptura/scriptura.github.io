@@ -1,72 +1,109 @@
-function generateIcsFile() {
+async function generateIcsFile() {
   const scheduleData = JSON.parse(localStorage.getItem('scheduleData')) || {}
   const now = new Date()
-  const currentYear = now.getFullYear()
-  const currentMonth = now.getMonth() + 1 // Mois actuel (1-12)
-  const currentDay = now.getDate() // Jour actuel
+  const maxDate = new Date(now)
+  maxDate.setFullYear(maxDate.getFullYear() + 1)
 
+  const currentYear = now.getFullYear()
+  const currentMonth = now.getMonth() + 1
+
+  // Dictionnaire pour les descriptions des postes
   const descriptions = {
     M: 'Poste du matin',
-    J: 'Poste de journée',
     S: 'Poste du soir',
+    J: 'Poste de journée',
+    N: 'Poste de nuit',
+    H: 'Heures supplémentaires',
     R: 'Repos',
-    T: 'RTT',
-    C: 'Congé',
+    T: 'Réduction du temps de travail',
+    F: 'Repos férié',
+    C: 'Congé annuel',
+    I: 'Formation',
+    A: 'Arrêt de travail ou maladie',
+    G: 'Grève',
+    D: 'Décharge syndicale',
+    X: '',
+    Y: '',
+    Z: '',
   }
   const defaultDescription = 'Poste inconnu'
 
-  let icsContent = 'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//VotreEntreprise//Agenda ICS//FR\n'
+  // Dictionnaire pour les résumés des postes
+  const summaries = {
+    M: 'M',
+    S: 'S',
+    J: 'J',
+    N: 'N',
+    H: 'H sup',
+    R: 'R',
+    T: 'RTT',
+    F: 'RF',
+    C: 'CA',
+    I: 'Formation',
+    A: 'Maladie',
+    G: 'Grève',
+    D: 'D',
+    X: 'X',
+    Y: 'Y',
+    Z: 'Z',
+  }
+  const defaultSummary = ''
 
-  let monthsProcessed = 0
+  let icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//ScripturaUA0//ICS Generator v1.0//FR
+`
 
-  // Boucle pour parcourir 11 mois à partir du mois actuel
-  for (let monthOffset = 0; monthsProcessed < 11; monthOffset++) {
-    const targetDate = new Date(currentYear, currentMonth - 1 + monthOffset)
-    const targetYear = targetDate.getFullYear()
-    const targetMonth = (targetDate.getMonth() + 1).toString().padStart(2, '0')
-    const monthKey = `${targetYear}-${targetMonth}`
+  // Tri des années et des mois dans les données
+  const sortedKeys = Object.keys(scheduleData).sort()
 
-    if (scheduleData[monthKey]) {
-      Object.entries(scheduleData[monthKey]).forEach(([day, shifts]) => {
-        const dayNumber = parseInt(day)
-        if (monthOffset === 0 && dayNumber < currentDay) return // Ignore les jours passés du mois actuel
+  sortedKeys.forEach(monthKey => {
+    const [year, month] = monthKey.split('-').map(Number)
 
-        const eventName = shifts[1] // Priorité à la deuxième lettre
-        if (eventName) {
-          const eventDescription = descriptions[eventName] || defaultDescription
-          const eventDate = new Date(targetYear, targetMonth - 1, dayNumber)
-          const year = eventDate.getFullYear()
-          const monthStr = (eventDate.getMonth() + 1).toString().padStart(2, '0')
-          const dayStr = eventDate.getDate().toString().padStart(2, '0')
+    // Vérifiez si l'année et le mois sont pertinents
+    if (year > currentYear || (year === currentYear && month >= currentMonth)) {
+      const days = scheduleData[monthKey]
+      Object.entries(days).forEach(([day, shifts]) => {
+        const eventDate = new Date(year, month - 1, parseInt(day))
+        // Inclure uniquement les dates dans la fenêtre autorisée
+        if (eventDate >= now && eventDate <= maxDate) {
+          const eventName = shifts[1] // Priorité à la deuxième lettre
+          if (eventName) {
+            const eventSummary = summaries[eventName] || defaultSummary
+            const eventDescription = descriptions[eventName] || defaultDescription
+            const yearStr = eventDate.getFullYear()
+            const monthStr = (eventDate.getMonth() + 1).toString().padStart(2, '0')
+            const dayStr = eventDate.getDate().toString().padStart(2, '0')
 
-          icsContent += `
+            icsContent += `
 BEGIN:VEVENT
-UID:event-${year}-${monthStr}-${dayStr}-${eventName}@${window.location.hostname}
+UID:event-${yearStr}-${monthStr}-${dayStr}-${eventName}@UA0
 DTSTAMP:${formatDateToICS(now)}
-DTSTART:${year}${monthStr}${dayStr}
-DTEND:${year}${monthStr}${dayStr}
-SUMMARY:${eventName}
+DTSTART:${yearStr}${monthStr}${dayStr}
+DTEND:${yearStr}${monthStr}${dayStr}
+SUMMARY:${eventSummary}
 DESCRIPTION:${eventDescription}
 END:VEVENT`
+          }
         }
       })
-      monthsProcessed++
     }
-  }
+  })
 
   icsContent += '\nEND:VCALENDAR'
 
-  downloadIcsFile(icsContent, `schedule_${currentYear}-${currentMonth}.ics`)
+  // Téléchargement du fichier
+  await downloadFile(icsContent, `schedule_${currentYear}.ics`, 'text/calendar')
 }
 
-// Formate une date en format ICS
+// Fonction pour formater une date en format ICS
 function formatDateToICS(date) {
   return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'
 }
 
-// Télécharge le fichier ICS
-function downloadIcsFile(content, fileName) {
-  const blob = new Blob([content], { type: 'text/calendar' })
+// Fonction générique pour télécharger un fichier
+async function downloadFile(content, fileName, mimeType = 'application/octet-stream') {
+  const blob = new Blob([content], { type: mimeType })
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')
   link.href = url

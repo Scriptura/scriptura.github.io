@@ -69,11 +69,15 @@ details.no-print
             svg.icon(focusable='false')
               use(href='./sprites/util.svg#delete')
             | Réinitialiser tout
-          button#generate-ics.button Télécharger un fichier ICS pour mon agenda
-      div
+      .grid.gap
         .message-highlight.visibility.hidden
           h3 Le planning a bien été créé
           p Vous pouvez le réinitialiser à tout moment à partir de cet onglet.
           p Vous pouvez changer des postes directement sur le planning en appuyant préalablement sur le bouton 
             code Éditer
             | .
+        .message-highlight.visibility.hidden
+          h3 Mettre à jour mon agenda électronique
+          p Le bouton suivant permet de générer un fichier que l'on pourra importer dans un agenda électronique. Le fichier contient les 12 mois à venir à partir de la date courrante.
+          .flex.items-push
+            button#generate-ics.button Télécharger le fichier ICS
