@@ -22,9 +22,9 @@ async function generateIcsFile() {
     A: 'Arrêt de travail ou maladie',
     G: 'Grève',
     D: 'Décharge syndicale',
-    X: '',
-    Y: '',
-    Z: '',
+    X: 'Événement à personnaliser',
+    Y: 'Événement à personnaliser',
+    Z: 'Événement à personnaliser',
   }
   const defaultDescription = 'Poste inconnu'
 
@@ -35,7 +35,7 @@ async function generateIcsFile() {
     J: 'J',
     N: 'N',
     H: 'H sup',
-    R: 'R',
+    R: 'RH',
     T: 'RTT',
     F: 'RF',
     C: 'CA',
