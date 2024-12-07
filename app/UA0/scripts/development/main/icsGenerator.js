@@ -104,7 +104,17 @@ PRODID:${ICS_CONFIG.PRODUCT_ID}
             const eventName = shifts[1] // Priorité à la deuxième lettre
 
             if (eventName) {
-              const eventSummary = ICS_CONFIG.EVENT_SUMMARIES[eventName] || ICS_CONFIG.DEFAULT_SUMMARY
+              /**
+               * Si les deux postes sont identiques, retourne simplement le poste
+               * Si les postes sont différents, affiche le poste modifié suivi du poste de base entre parenthèses
+               * Exemple :
+               * ["S","S"] → "S"
+               * ["S","M"] → "M (S)"
+               */
+              const eventSummary =
+                shifts[0] === shifts[1]
+                  ? ICS_CONFIG.EVENT_SUMMARIES[eventName]
+                  : `${ICS_CONFIG.EVENT_SUMMARIES[eventName]} (${ICS_CONFIG.EVENT_SUMMARIES[shifts[0]]})`
               const eventDescription = ICS_CONFIG.EVENT_DESCRIPTIONS[eventName] || ICS_CONFIG.DEFAULT_DESCRIPTION
 
               const yearStr = eventDate.getFullYear()
