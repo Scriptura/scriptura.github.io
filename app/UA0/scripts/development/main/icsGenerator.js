@@ -75,7 +75,7 @@ PRODID:-//ScripturaUA0//ICS Generator v1.0//FR
             const monthStr = (eventDate.getMonth() + 1).toString().padStart(2, '0')
             const dayStr = eventDate.getDate().toString().padStart(2, '0')
 
-            // @note L'UID doit être prévisible pour pouvoir être écrasé par un nouvel upload de fichier ICS si modification de l'événement.
+            // @note L'UID doit être prévisible pour pouvoir être écrasé par un nouvel upload de fichier ICS si modification de certains événements.
             icsContent += `
 BEGIN:VEVENT
 UID:${yearStr}${monthStr}${dayStr}@UA0

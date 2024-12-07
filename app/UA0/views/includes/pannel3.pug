@@ -77,7 +77,15 @@ details.no-print
             code Éditer
             | .
         .message-highlight.visibility.hidden
-          h3 Mettre à jour mon agenda électronique
-          p Le bouton suivant permet de générer un fichier que l'on pourra importer dans un agenda électronique. Le fichier contient les 12 mois à venir à partir de la date courrante.
-          .flex.items-push
-            button#generate-ics.button Télécharger le fichier ICS
+          .grid.gap
+            div
+              h3 Mettre à jour mon agenda électronique
+              p Le bouton suivant permet de générer un fichier que l'on pourra importer dans un agenda électronique.
+              details.details
+                summary
+                  em Comment ça marche&nbsp;?
+                div
+                  p Il s'agit d'un fichier ICS, un standard pour l'importation de données dans votre agenda électronique favori (Google Agenda, Apple Calendar, Outlook, etc). Le fichier contient les 12 mois à venir à partir de la date courrante. Si vous modifiez entre-temps votre agenda vous pourrez remettre à jour votre calendrier en important à nouveau le fichier ICS, les données seront alors réactualisées dans votre agenda électronique personnel.
+          .message-highlight
+            .flex.items-push
+              button#generate-ics.button Télécharger le fichier ICS
