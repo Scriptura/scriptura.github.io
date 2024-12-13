@@ -1,50 +1,48 @@
 'use strict'
 
 /**
- * @documentation :
- * Le html d'origine est composée de details > summary + div :
- *.accordion
- *  details
- *    summary Title item
- *    div Content item
- * La première partie du script transforme ce code impossible à animer, en récupérant les attributs de leur état d'origine (ouvert/fermé) :
- *.accordion
- *  div.accordion-details
- *  button.accordion-summary Title item
- *  div.accordion-panel Content item
- * La deuxième partie du code concerne les changements d'états des onglets/panneaux (ouvert/fermé).
- *
- * @param, deux options :
- * @option 'open' : onglet ouvert par défaut ; à définir sur l'élément <details> via l'attribut 'open' (comportement html natif)
- * @option 'singleTab' : un seul onglet s'ouvre à la fois ; à définir sur la div.accordion via l'attribut data-singletab
- *
- * 1. Option 'open'
- * 2. Option 'singleTab'
- *
- * Inspiration pour les rôles et les attributs aria :
- * @see https://www.w3.org/WAI/ARIA/apg/patterns/accordion/examples/accordion/
- * @see https://jqueryui.com/accordion/
- * @see http://accessibility.athena-ict.com/aria/examples/tabpanel2.shtml
- *
- * Mes remerciement à Ostara pour la factorisation du code @see https://codepen.io/ostara/pen/BajdPOO
- * Discution sur Alsacréations @see https://forum.alsacreations.com/topic-5-87178-1-Resolu-Revue-de-code-pour-un-menu-accordeon.html
+ * Gestion des onglets d'accordéon avec enregistrement des états en localStorage.
  */
-
 const accordion = () => {
-  const slug = window.location.pathname,
-    accordionPanel = `${(slug.substring(0, slug.lastIndexOf('.')) || slug).replace(/[\W_]/gi, '') || 'index'.toLowerCase()}AccordionPanel` // @note Création d'un nom de variable à partir du slug de l'URL.
+  const slug = window.location.pathname
+
+  /**
+   * Récupère l'état actuel des accordéons depuis localStorage
+   * @returns {Object} L'objet d'état des accordéons
+   */
+  const getAccordionsState = () => {
+    const storedState = localStorage.getItem('accordionsState')
+    return storedState ? JSON.parse(storedState) : { accordionsState: {} }
+  }
+
+  /**
+   * Met à jour l'état des accordéons dans localStorage
+   * @param {Object} updatedState - Le nouvel état des accordéons
+   */
+  const updateAccordionsState = updatedState => {
+    localStorage.setItem('accordionsState', JSON.stringify(updatedState))
+  }
 
   const transformHTML = (() => {
     document.querySelectorAll('.accordion').forEach((accordion, i) => {
       accordion.id = `accordion-${i}`
       accordion.role = 'tablist'
+      if (accordion.children[0].hasAttribute('name')) {
+        accordion.setAttribute('data-singletab', 'true')
+      }
     })
 
     document.querySelectorAll('.accordion > details').forEach((details, i) => {
-      const dataOpen =
-        (details.open || localStorage.getItem(accordionPanel + i) === 'open') && localStorage.getItem(accordionPanel + i) !== 'close'
-          ? 'true'
-          : 'false' // 1
+      const accordionsState = getAccordionsState()
+      const pageState = accordionsState.accordionsState[slug] || {}
+      
+      // Priorité à l'état localStorage sur l'attribut 'open'
+      const dataOpen = pageState[`accordion-${i}`] === 'open' 
+        ? 'true' 
+        : (pageState[`accordion-${i}`] === 'close' 
+          ? 'false' 
+          : (details.hasAttribute('open') ? 'true' : 'false'))
+
       details.outerHTML = `<div id="accordion-details-${i}" class="accordion-details" data-open="${dataOpen}">${details.innerHTML}</div>`
     })
 
@@ -54,32 +52,41 @@ const accordion = () => {
     })
 
     document.querySelectorAll('.accordion > * > :last-child').forEach((panel, i) => {
-      // @note On peut surcharger l'élément avec des attributs, mais il ne faut en aucun cas le remplacer pour éviter une transition d'ouverture si panneau ouvert par défaut.
       panel.id = `accordion-panel-${i}`
       panel.classList.add('accordion-panel')
       panel.role = 'tabpanel'
-      panel.setAttribute('aria-labelledby', `accordion-summary-${i}`) // @note Cet attribut ne supporte pas la notation par point.
-      panel.ariaHidden = panel.parentElement.dataset.open === 'true' ? 'false' : 'true' //panel.parentElement.open
+      panel.setAttribute('aria-labelledby', `accordion-summary-${i}`)
+      panel.ariaHidden = panel.parentElement.dataset.open === 'true' ? 'false' : 'true'
     })
   })()
 
   const stateManagement = (() => {
     document.querySelectorAll('.accordion-summary').forEach((summary, i) => {
       summary.addEventListener('click', () => {
-        const details = summary.parentElement,
-          singleTabOption = details.parentElement.dataset.singletab, // 2
-          panel = summary.nextElementSibling
+        const details = summary.parentElement
+        const singleTabOption = details.parentElement.dataset.singletab
+        const panel = summary.nextElementSibling
+        const accordionsState = getAccordionsState()
+
+        if (!accordionsState.accordionsState[slug]) {
+          accordionsState.accordionsState[slug] = {}
+        }
+
         details.dataset.open = details.dataset.open === 'true' ? 'false' : 'true'
+
         if (details.dataset.open === 'true') {
           summary.ariaExpanded = 'true'
-          localStorage.setItem(accordionPanel + i, 'open')
+          accordionsState.accordionsState[slug][`accordion-${i}`] = 'open'
           openedPanel(panel)
         } else {
           summary.ariaExpanded = 'false'
-          localStorage.setItem(accordionPanel + i, 'close')
+          accordionsState.accordionsState[slug][`accordion-${i}`] = 'close'
           closedPanel(panel)
         }
-        if (singleTabOption) siblingStateManagement(details)
+
+        updateAccordionsState(accordionsState)
+
+        if (singleTabOption) siblingStateManagement(details, accordionsState)
       })
     })
   })()
@@ -91,24 +98,27 @@ const accordion = () => {
   }
 
   const closedPanel = panel => {
-    // @note Redéfinition de la hauteur du panneau avant la suppression de cette même définition un laps de temps plus tard. Le laps de temps est minime mais suffisant pour être pris en compte par la transition CSS.
     panel.style.maxHeight = `${panel.scrollHeight}px`
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       panel.removeAttribute('style')
-      ;(panel.ariaHidden = 'true'), 1
+      panel.ariaHidden = 'true'
     })
   }
 
-  const siblingStateManagement = details => {
+  const siblingStateManagement = (details, accordionsState) => {
     for (const sibling of details.parentElement.children) {
       if (sibling !== details) {
         sibling.dataset.open = 'false'
         sibling.firstElementChild.ariaExpanded = 'false'
         closedPanel(sibling.lastElementChild)
-        localStorage.setItem(accordionPanel + sibling.id.match(/\d+$/i)[0], 'close') // @note Récupération de l'ID du panneau frère par regex.
+
+        const siblingIndex = sibling.id.match(/\d+$/i)[0]
+        accordionsState.accordionsState[slug][`accordion-${siblingIndex}`] = 'close'
       }
     }
+
+    updateAccordionsState(accordionsState)
   }
 }
 
-window.addEventListener('DOMContentLoaded', accordion()) // @note S'assurer que le script est bien chargé après le DOM et ce quelque soit la manière dont il est appelé.
+window.addEventListener('DOMContentLoaded', accordion())

@@ -27,8 +27,8 @@
           p Suspendisse fermentum luctus odio. Curabitur fringilla pulvinar interdum. Morbi porta orci neque, at commodo nulla tincidunt sed. Nulla finibus libero erat, eu auctor felis condimentum ac. Duis aliquet arcu sed luctus molestie. Pellentesque eros ipsum, ullamcorper ac turpis non, dictum hendrerit nulla. Integer mattis feugiat mauris a tincidunt. Duis fermentum faucibus nisl.
   div
     p
-      code (data-singletab='true')
-    .accordion(data-singletab='true')
+      code details(name='lambda')
+    .accordion
       details(name='singletab1')
         summary
           svg.icon-inline(role='img' focusable='false')
@@ -54,7 +54,7 @@
   div
     p
       code details(open='open')
-    .accordion(data-singletab='true')
+    .accordion
       details(name='singletab2')
         summary
           svg.icon-inline(role='img' focusable='false')
