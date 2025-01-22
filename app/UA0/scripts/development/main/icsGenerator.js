@@ -56,6 +56,19 @@ function formatDateToICS(date) {
   return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'
 }
 
+// Fonction de génération du contenu de l'événement ICS
+function generateEventContent(yearStr, monthStr, dayStr, eventSummary, eventDescription, now) {
+  return `
+BEGIN:VEVENT
+UID:${yearStr}${monthStr}${dayStr}@UA0
+DTSTAMP:${formatDateToICS(now)}
+DTSTART;VALUE=DATE:${yearStr}${monthStr}${dayStr}
+DTEND;VALUE=DATE:${yearStr}${monthStr}${dayStr}
+SUMMARY:${eventSummary}
+DESCRIPTION:${eventDescription}
+END:VEVENT`
+}
+
 // Génération et téléchargement du fichier ICS
 async function generateIcsFile() {
   try {
@@ -92,25 +105,16 @@ PRODID:${ICS_CONFIG.PRODUCT_ID}
     sortedKeys.forEach(monthKey => {
       const [year, month] = monthKey.split('-').map(Number)
 
-      // Vérification de la pertinence de l'année et du mois
       if (year > currentYear || (year === currentYear && month >= currentMonth)) {
         const days = scheduleData[monthKey]
 
         Object.entries(days).forEach(([day, shifts]) => {
           const eventDate = new Date(year, month - 1, Number(day))
 
-          // Inclusion uniquement des dates dans la fenêtre autorisée
           if (eventDate >= now && eventDate <= maxDate) {
-            const eventName = shifts[1] // Priorité à la deuxième lettre
+            const eventName = shifts[1]
 
             if (eventName) {
-              /**
-               * Si les deux postes sont identiques, retourne simplement le poste
-               * Si les postes sont différents, affiche le poste modifié suivi du poste de base entre parenthèses
-               * Exemple :
-               * ["S","S"] → "S"
-               * ["S","M"] → "M (S)"
-               */
               const eventSummary =
                 shifts[0] === shifts[1]
                   ? ICS_CONFIG.EVENT_SUMMARIES[eventName]
@@ -121,16 +125,7 @@ PRODID:${ICS_CONFIG.PRODUCT_ID}
               const monthStr = (eventDate.getMonth() + 1).toString().padStart(2, '0')
               const dayStr = eventDate.getDate().toString().padStart(2, '0')
 
-              // @note L'UID doit être prévisible pour pouvoir être écrasé par un nouvel upload de fichier ICS si modification de certains événements.
-              icsContent += `
-BEGIN:VEVENT
-UID:${yearStr}${monthStr}${dayStr}@UA0
-DTSTAMP:${formatDateToICS(now)}
-DTSTART:${yearStr}${monthStr}${dayStr}
-DTEND:${yearStr}${monthStr}${dayStr}
-SUMMARY:${eventSummary}
-DESCRIPTION:${eventDescription}
-END:VEVENT`
+              icsContent += generateEventContent(yearStr, monthStr, dayStr, eventSummary, eventDescription, now)
             }
           }
         })
