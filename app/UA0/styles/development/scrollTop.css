@@ -12,6 +12,7 @@
   background-color: transparent;
   border: none;
   outline: none;
+  cursor: pointer;
 
   & svg {
     height: 2em;
