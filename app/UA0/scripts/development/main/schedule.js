@@ -51,50 +51,99 @@ function getSemesterRange() {
 }
 
 function updateScheduleData() {
-  // Vérifier si `scheduleData` existe déjà
-  if (!localStorage.getItem('scheduleData')) {
-    console.log('Aucune donnée existante pour scheduleData. Mise à jour ignorée.')
+  // Vérifier si on a une date de début
+  const startDateStr = localStorage.getItem('startDate')
+  if (!startDateStr) {
+    console.log('Aucune date de début trouvée. Mise à jour ignorée.')
     return
   }
 
+  const startDate = new Date(startDateStr)
+  startDate.setDate(startDate.getDate() - 1) // Ajustement pour correspondre à la logique de génération
+
+  // Récupérer le pattern sélectionné
+  const patternType = localStorage.getItem('patternSelect') || 'IDE'
+  let selectedPattern
+
+  // Déterminer le pattern à utiliser
+  if (patternType === 'CUSTOM') {
+    const savedPattern = localStorage.getItem('rotation-custom-pattern')
+    selectedPattern = savedPattern ? JSON.parse(savedPattern) : RotationPatterns.IDE
+  } else {
+    selectedPattern = RotationPatterns[patternType] || RotationPatterns.IDE
+  }
+
+  // Valider le pattern
+  if (!Array.isArray(selectedPattern) || selectedPattern.length === 0) {
+    console.error('Pattern invalide détecté')
+    selectedPattern = RotationPatterns.IDE
+  }
+
   // Calculer la plage actuelle
-  const { startDate, endDate } = getSemesterRange()
-  const scheduleData = JSON.parse(localStorage.getItem('scheduleData')) || {}
+  const { startDate: rangeStart, endDate: rangeEnd } = getSemesterRange()
+  
+  // Initialiser ou charger les données existantes
+  let scheduleData = {}
+  try {
+    const savedData = localStorage.getItem('scheduleData')
+    if (savedData) {
+      scheduleData = JSON.parse(savedData)
+    }
+  } catch (error) {
+    console.error("Erreur lors du chargement des données:", error)
+    scheduleData = {}
+  }
 
   // Convertir les dates en identifiants de semestres au format YYYY-MM
   const currentSemesters = []
-  let tempDate = new Date(startDate)
-  while (tempDate <= endDate) {
+  let tempDate = new Date(rangeStart)
+  while (tempDate <= rangeEnd) {
     const semesterId = `${tempDate.getFullYear()}-${tempDate.getMonth() + 1}`
     currentSemesters.push(semesterId)
-
-    // Avancer au mois suivant
     tempDate.setMonth(tempDate.getMonth() + 1)
   }
 
-  // Étape 2 : Supprimer les semestres obsolètes
+  // Supprimer les semestres obsolètes
   for (const storedSemester of Object.keys(scheduleData)) {
     if (!currentSemesters.includes(storedSemester)) {
       delete scheduleData[storedSemester]
     }
   }
 
-  // Étape 3 : Ajouter les nouveaux semestres
+  // Ajouter ou mettre à jour les semestres actuels
   for (const semesterId of currentSemesters) {
     if (!scheduleData[semesterId]) {
-      // Initialiser les jours du mois avec des valeurs par défaut
+      // Initialiser un nouveau mois
       const [year, month] = semesterId.split('-').map(Number)
       const daysInMonth = new Date(year, month, 0).getDate()
-
+      
       scheduleData[semesterId] = {}
+      
+      // Pour chaque jour du mois
       for (let day = 1; day <= daysInMonth; day++) {
-        scheduleData[semesterId][day] = ['J', 'J'] // Valeur par défaut
+        const currentDate = new Date(year, month - 1, day)
+        const daysSinceStart = Math.floor((currentDate - startDate) / (1000 * 60 * 60 * 24))
+        const rotationIndex = ((daysSinceStart % selectedPattern.length) + selectedPattern.length) % selectedPattern.length
+        
+        // Vérifier si la valeur du pattern est valide
+        const scheduleLetter = selectedPattern[rotationIndex]
+        if (scheduleLetter && typeof scheduleLetter === 'string') {
+          scheduleData[semesterId][day] = [scheduleLetter, scheduleLetter]
+        } else {
+          console.warn(`Valeur invalide dans le pattern pour le jour ${day}/${month}/${year}`)
+          scheduleData[semesterId][day] = ['J', 'J'] // Valeur par défaut en cas d'erreur
+        }
       }
     }
   }
 
-  // Étape 4 : Sauvegarder les données mises à jour
-  localStorage.setItem('scheduleData', JSON.stringify(scheduleData))
+  // Sauvegarder les données mises à jour
+  try {
+    localStorage.setItem('scheduleData', JSON.stringify(scheduleData))
+    console.log('Données du planning mises à jour avec succès')
+  } catch (error) {
+    console.error("Erreur lors de la sauvegarde des données:", error)
+  }
 }
 
 // Gestionnaire de patterns personnalisés

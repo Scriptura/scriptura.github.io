@@ -28,7 +28,7 @@ const ICS_CONFIG = {
     N: 'N',
     H: 'H sup',
     R: 'RH',
-    T: 'RTT',
+    T: 'RT',
     F: 'RF',
     C: 'CA',
     I: 'Formation',
