@@ -58,12 +58,20 @@ function formatDateToICS(date) {
 
 // Fonction de génération du contenu de l'événement ICS
 function generateEventContent(yearStr, monthStr, dayStr, eventSummary, eventDescription, now) {
+  // Calcul de la date de fin (le jour suivant)
+  const endDate = new Date(`${yearStr}-${monthStr}-${dayStr}`)
+  endDate.setDate(endDate.getDate() + 1)
+
+  const endYearStr = endDate.getFullYear().toString()
+  const endMonthStr = (endDate.getMonth() + 1).toString().padStart(2, '0')
+  const endDayStr = endDate.getDate().toString().padStart(2, '0')
+
   return `
 BEGIN:VEVENT
 UID:${yearStr}${monthStr}${dayStr}@UA0
 DTSTAMP:${formatDateToICS(now)}
 DTSTART;VALUE=DATE:${yearStr}${monthStr}${dayStr}
-DTEND;VALUE=DATE:${yearStr}${monthStr}${dayStr}
+DTEND;VALUE=DATE:${endYearStr}${endMonthStr}${endDayStr}
 SUMMARY:${eventSummary}
 DESCRIPTION:${eventDescription}
 END:VEVENT`
