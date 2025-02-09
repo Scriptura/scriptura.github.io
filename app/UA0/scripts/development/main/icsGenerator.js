@@ -98,9 +98,6 @@ async function generateIcsFile() {
     const maxDate = new Date(now)
     maxDate.setFullYear(maxDate.getFullYear() + ICS_CONFIG.MAX_FUTURE_YEARS)
 
-    const currentYear = now.getFullYear()
-    const currentMonth = now.getMonth() + 1
-
     // Génération du contenu ICS
     let icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
@@ -112,32 +109,30 @@ PRODID:${ICS_CONFIG.PRODUCT_ID}
 
     sortedKeys.forEach(monthKey => {
       const [year, month] = monthKey.split('-').map(Number)
+      const days = scheduleData[monthKey] || {}
 
-      if (eventDate <= maxDate) {
-        const days = scheduleData[monthKey]
+      Object.entries(days).forEach(([day, shifts]) => {
+        const eventDate = new Date(year, month - 1, Number(day))
 
-        Object.entries(days).forEach(([day, shifts]) => {
-          const eventDate = new Date(year, month - 1, Number(day))
+        // Filtre journalier strict (uniquement après le jour en cours)
+        if (eventDate > now && eventDate <= maxDate) {
+          const eventName = shifts[1]
 
-          if (eventDate >= now && eventDate <= maxDate) {
-            const eventName = shifts[1]
+          if (eventName) {
+            const eventSummary =
+              shifts[0] === shifts[1]
+                ? ICS_CONFIG.EVENT_SUMMARIES[eventName]
+                : `${ICS_CONFIG.EVENT_SUMMARIES[eventName]} (${ICS_CONFIG.EVENT_SUMMARIES[shifts[0]]})`
+            const eventDescription = ICS_CONFIG.EVENT_DESCRIPTIONS[eventName] || ICS_CONFIG.DEFAULT_DESCRIPTION
 
-            if (eventName) {
-              const eventSummary =
-                shifts[0] === shifts[1]
-                  ? ICS_CONFIG.EVENT_SUMMARIES[eventName]
-                  : `${ICS_CONFIG.EVENT_SUMMARIES[eventName]} (${ICS_CONFIG.EVENT_SUMMARIES[shifts[0]]})`
-              const eventDescription = ICS_CONFIG.EVENT_DESCRIPTIONS[eventName] || ICS_CONFIG.DEFAULT_DESCRIPTION
+            const yearStr = eventDate.getFullYear()
+            const monthStr = (eventDate.getMonth() + 1).toString().padStart(2, '0')
+            const dayStr = eventDate.getDate().toString().padStart(2, '0')
 
-              const yearStr = eventDate.getFullYear()
-              const monthStr = (eventDate.getMonth() + 1).toString().padStart(2, '0')
-              const dayStr = eventDate.getDate().toString().padStart(2, '0')
-
-              icsContent += generateEventContent(yearStr, monthStr, dayStr, eventSummary, eventDescription, now)
-            }
+            icsContent += generateEventContent(yearStr, monthStr, dayStr, eventSummary, eventDescription, now)
           }
-        })
-      }
+        }
+      })
     })
 
     icsContent += '\nEND:VCALENDAR'
