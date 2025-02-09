@@ -15,22 +15,25 @@ const startPage = (() => {
   const mapElements = document.querySelectorAll('.map')
 
   // Création de l'observer pour chaque carte.
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-        const map = entry.target
-        map.classList.add(c)
+  const observer = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+          const map = entry.target
+          map.classList.add(c)
 
-        // Lancer l'animation et retirer la classe après 1,5 seconde.
-        setTimeout(() => {
-          map.classList.remove(c)
-        }, 1500)
+          // Lancer l'animation et retirer la classe après 1,5 seconde.
+          setTimeout(() => {
+            map.classList.remove(c)
+          }, 1500)
 
-        // On arrête d'observer la carte une fois l'animation déclenchée.
-        observer.unobserve(map)
-      }
-    })
-  }, { threshold: [0.5] }) // Les cartes doivent être visibles à 50%.
+          // On arrête d'observer la carte une fois l'animation déclenchée.
+          observer.unobserve(map)
+        }
+      })
+    },
+    { threshold: [0.5] },
+  ) // Les cartes doivent être visibles à 50%.
 
   // Observer chaque carte.
   mapElements.forEach(map => {
@@ -131,6 +134,7 @@ const maps = async () => {
  * @param {object} L est une variable globale produite par Leaflet, elle nous permettra de tester l'initialisation de la bibliothèque.
  * @note typeof permet de tester la variable sans que celle-ci produise une erreur si elle n'est pas définie.
  */
+/*
 window.addEventListener('load', () => {
   if (typeof L !== 'undefined') maps()
 
@@ -138,3 +142,26 @@ window.addEventListener('load', () => {
     if (document.readyState === 'complete' && typeof L !== 'undefined') maps()
   })
 })
+*/
+
+function initializeMaps(callback) {
+  if (window.L) {
+    callback()
+    return true
+  }
+  return false
+}
+
+if (!initializeMaps(maps)) {
+  const observer = new MutationObserver(() => {
+    if (initializeMaps(maps)) {
+      observer.disconnect()
+    }
+  })
+
+  // Observer uniquement le head
+  observer.observe(document.head, { childList: true, subtree: true })
+
+  // Arrêter l'observation après 10 secondes
+  setTimeout(() => observer.disconnect(), 10000)
+}

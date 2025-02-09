@@ -113,7 +113,7 @@ PRODID:${ICS_CONFIG.PRODUCT_ID}
     sortedKeys.forEach(monthKey => {
       const [year, month] = monthKey.split('-').map(Number)
 
-      if (year > currentYear || (year === currentYear && month >= currentMonth)) {
+      if (eventDate <= maxDate) {
         const days = scheduleData[monthKey]
 
         Object.entries(days).forEach(([day, shifts]) => {
