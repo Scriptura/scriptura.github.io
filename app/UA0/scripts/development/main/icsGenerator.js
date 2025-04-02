@@ -82,19 +82,12 @@ async function generateIcsFile() {
   try {
     // Récupération des données
     const scheduleDataRaw = localStorage.getItem(ICS_CONFIG.STORAGE_KEY)
-    if (!scheduleDataRaw) {
-      throw new Error('Aucune donnée de planning trouvée')
-    }
-
-    const scheduleData = JSON.parse(scheduleDataRaw)
-
-    // Validation des données
-    if (!validateScheduleData(scheduleData)) {
-      throw new Error('Les données de planning sont vides')
-    }
+    const scheduleData = scheduleDataRaw ? JSON.parse(scheduleDataRaw) : {}
 
     // Préparation des dates
     const now = new Date()
+    const startDate = new Date(now)
+    startDate.setDate(startDate.getDate() + 1) // Commence à partir de demain
     const maxDate = new Date(now)
     maxDate.setFullYear(maxDate.getFullYear() + ICS_CONFIG.MAX_FUTURE_YEARS)
 
@@ -104,36 +97,26 @@ VERSION:2.0
 PRODID:${ICS_CONFIG.PRODUCT_ID}
 `
 
-    // Tri et filtrage des événements
-    const sortedKeys = Object.keys(scheduleData).sort()
+    // Génération des événements pour chaque jour
+    for (let date = new Date(startDate); date <= maxDate; date.setDate(date.getDate() + 1)) {
+      const yearStr = date.getFullYear().toString()
+      const monthStr = (date.getMonth() + 1).toString().padStart(2, '0')
+      const dayStr = date.getDate().toString().padStart(2, '0')
 
-    sortedKeys.forEach(monthKey => {
-      const [year, month] = monthKey.split('-').map(Number)
-      const days = scheduleData[monthKey] || {}
+      const monthKey = `${yearStr}-${monthStr}`
+      const dayData = scheduleData[monthKey]?.[dayStr] || []
 
-      Object.entries(days).forEach(([day, shifts]) => {
-        const eventDate = new Date(year, month - 1, Number(day))
+      const eventName = dayData[1] || null
+      if (eventName) {
+        const eventSummary =
+          dayData[0] === dayData[1]
+            ? ICS_CONFIG.EVENT_SUMMARIES[eventName]
+            : `${ICS_CONFIG.EVENT_SUMMARIES[eventName]} (${ICS_CONFIG.EVENT_SUMMARIES[dayData[0]]})`
+        const eventDescription = ICS_CONFIG.EVENT_DESCRIPTIONS[eventName] || ICS_CONFIG.DEFAULT_DESCRIPTION
 
-        // Filtre journalier strict (uniquement après le jour en cours)
-        if (eventDate > now && eventDate <= maxDate) {
-          const eventName = shifts[1]
-
-          if (eventName) {
-            const eventSummary =
-              shifts[0] === shifts[1]
-                ? ICS_CONFIG.EVENT_SUMMARIES[eventName]
-                : `${ICS_CONFIG.EVENT_SUMMARIES[eventName]} (${ICS_CONFIG.EVENT_SUMMARIES[shifts[0]]})`
-            const eventDescription = ICS_CONFIG.EVENT_DESCRIPTIONS[eventName] || ICS_CONFIG.DEFAULT_DESCRIPTION
-
-            const yearStr = eventDate.getFullYear()
-            const monthStr = (eventDate.getMonth() + 1).toString().padStart(2, '0')
-            const dayStr = eventDate.getDate().toString().padStart(2, '0')
-
-            icsContent += generateEventContent(yearStr, monthStr, dayStr, eventSummary, eventDescription, now)
-          }
-        }
-      })
-    })
+        icsContent += generateEventContent(yearStr, monthStr, dayStr, eventSummary, eventDescription, now)
+      }
+    }
 
     icsContent += '\nEND:VCALENDAR'
 
