@@ -1,4 +1,4 @@
-const CACHE_NAME = 'v70'
+const CACHE_NAME = 'v71'
 const MEDIA_CACHE_NAME = `media-${CACHE_NAME}`
 const ROOT_PATH = `/app/UA0/`
 const OFFLINE_URL = `${ROOT_PATH}index.html`
