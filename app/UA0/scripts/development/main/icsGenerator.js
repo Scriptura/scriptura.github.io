@@ -17,7 +17,7 @@ const ICS_CONFIG = {
     A: 'Arrêt de travail ou maladie',
     G: 'Grève',
     D: 'Décharge syndicale',
-    E: 'Autorisation Spécial d\'Absence',
+    E: 'Autorisation Spéciale d\'Absence',
     X: 'Événement à personnaliser',
     Y: 'Événement à personnaliser',
     Z: 'Événement à personnaliser',
