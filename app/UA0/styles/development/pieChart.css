@@ -13,7 +13,7 @@ pie-chart {
   --pie-chart-color-item-a: var(--color-event-stop);
   --pie-chart-color-item-g: var(--color-event-strike);
   --pie-chart-color-item-d: var(--color-event-union);
-  --pie-chart-color-item-e: var(--color-event-other);
+  --pie-chart-color-item-e: var(--color-event-extra-rest);
   --pie-chart-color-item-l: var(--color-event-other);
   --pie-chart-color-item-o: var(--color-event-other);
   --pie-chart-color-item-p: var(--color-event-other);

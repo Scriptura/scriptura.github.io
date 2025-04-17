@@ -246,7 +246,7 @@ const ScheduleClassManager = {
     ['A', 'event-stop'],
     ['G', 'event-strike'],
     ['D', 'event-union'],
-    ['E', 'event-other'],
+    ['E', 'event-extra-rest'],
     ['L', 'event-other'],
     ['O', 'event-other'],
     ['P', 'event-other'],
