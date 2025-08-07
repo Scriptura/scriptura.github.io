@@ -42,8 +42,8 @@ function getSemesterRange() {
   const startMonth = currentSemesterStartMonth === 0 ? 6 : 0
   const startDate = new Date(startYear, startMonth, 1)
 
-  // Fin : deux semestres après
-  const endYear = currentSemesterStartMonth === 0 ? currentYear + 1 : currentYear + 1
+  // Fin : quatre semestres après
+  const endYear = currentSemesterStartMonth === 0 ? currentYear + 2 : currentYear + 2
   const endMonth = currentSemesterStartMonth === 0 ? 6 : 12
   const endDate = new Date(endYear, endMonth, 0) // Dernier jour du mois
 
