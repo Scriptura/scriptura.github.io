@@ -1,0 +1,14 @@
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect x="10" y="10" width="39" height="35.1" fill="hsl(216, 100%, 85%)" stroke="none"/>
+  <text x="29.5" y="32" text-anchor="middle" font-family="Noto Sans, sans-serif" font-size="17" font-weight="normal" fill="black">J</text>
+  <text x="46" y="40" text-anchor="end" font-family="Noto Sans, sans-serif" font-size="8" fill="#666666">21</text>
+  <rect x="50" y="10" width="39" height="35.1" fill="hsl(109, 53%, 83%)" stroke="none"/>
+  <text x="69.5" y="32" text-anchor="middle" font-family="Noto Sans, sans-serif" font-size="17" font-weight="normal" fill="black">M</text>
+  <text x="86" y="40" text-anchor="end" font-family="Noto Sans, sans-serif" font-size="8" fill="#666666">22</text>
+  <rect x="10" y="46.1" width="39" height="35.1" fill="hsl(30, 100%, 85%)" stroke="none"/>
+  <text x="29.5" y="68.1" text-anchor="middle" font-family="Noto Sans, sans-serif" font-size="17" font-weight="normal" fill="black">S</text>
+  <text x="46" y="76.1" text-anchor="end" font-family="Noto Sans, sans-serif" font-size="8" fill="#666666">28</text>
+  <rect x="50" y="46.1" width="39" height="35.1" fill="hsl(60, 100%, 87%)" stroke="none"/>
+  <text x="69.5" y="68.1" text-anchor="middle" font-family="Noto Sans, sans-serif" font-size="17" font-weight="normal" fill="black">C</text>
+  <text x="86" y="76.1" text-anchor="end" font-family="Noto Sans, sans-serif" font-size="8" fill="#666666">29</text>
+</svg>
