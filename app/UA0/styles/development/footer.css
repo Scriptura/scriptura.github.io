@@ -18,6 +18,6 @@
   & .logo {
     /* margin-block-start: 0.1em; */
     height: var(--spacing-2xl);
-    filter: brightness(0) invert(1);
+    /* filter: brightness(0) invert(1); */
   }
 }
