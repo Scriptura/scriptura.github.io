@@ -90,8 +90,16 @@ async function generateIcsFile() {
     const now = new Date()
     const startDate = new Date(now)
     startDate.setDate(startDate.getDate() + 1) // Commence à partir de demain
+    
+    // Normaliser startDate à minuit pour éviter les problèmes de comparaison
+    startDate.setHours(0, 0, 0, 0)
+    
     const maxDate = new Date(now)
     maxDate.setFullYear(maxDate.getFullYear() + ICS_CONFIG.MAX_FUTURE_YEARS)
+    maxDate.setHours(23, 59, 59, 999) // Fin de journée pour inclure le dernier jour
+
+    // Calcul du nombre de jours entre startDate et maxDate
+    const totalDays = Math.ceil((maxDate - startDate) / (1000 * 60 * 60 * 24))
 
     // Génération du contenu ICS
     let icsContent = `BEGIN:VCALENDAR
@@ -100,7 +108,10 @@ PRODID:${ICS_CONFIG.PRODUCT_ID}
 `
 
     // Génération des événements pour chaque jour
-    for (let date = new Date(startDate); date <= maxDate; date.setDate(date.getDate() + 1)) {
+    for (let dayOffset = 0; dayOffset <= totalDays; dayOffset++) {
+      const date = new Date(startDate)
+      date.setDate(startDate.getDate() + dayOffset)
+      
       const yearStr = date.getFullYear().toString()
       const monthStr = (date.getMonth() + 1).toString().padStart(2, '0')
       const dayStr = date.getDate().toString().padStart(2, '0')
