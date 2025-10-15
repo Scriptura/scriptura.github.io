@@ -112,12 +112,16 @@ PRODID:${ICS_CONFIG.PRODUCT_ID}
       const date = new Date(startDate)
       date.setDate(startDate.getDate() + dayOffset)
       
+      // Formatage pour le fichier ICS (avec padding)
       const yearStr = date.getFullYear().toString()
       const monthStr = (date.getMonth() + 1).toString().padStart(2, '0')
       const dayStr = date.getDate().toString().padStart(2, '0')
 
-      const monthKey = `${yearStr}-${monthStr}`
-      const dayData = scheduleData[monthKey]?.[dayStr] || []
+      // Formatage pour chercher dans scheduleData (sans padding)
+      const monthKey = `${yearStr}-${date.getMonth() + 1}`
+      const dayKey = date.getDate().toString()
+
+      const dayData = scheduleData[monthKey]?.[dayKey] || []
 
       const eventName = dayData[1] || null
       if (eventName) {
