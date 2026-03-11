@@ -25,182 +25,173 @@ const RotationPatterns = {
   ],
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+// 1. REGISTRY — Source de vérité unique des types de journée
+//
+//    Remplace intégralement :
+//      - ScheduleClassManager (classMap + validClasses)
+//      - validChars[]  dans CustomPatternManager.validate
+//      - validLetters[] dans EditManager.handleCellBlur
+//
+//    isPattern : autorisé dans un pattern de rotation
+//    isManual  : autorisé comme override manuel d'une cellule
+// ═══════════════════════════════════════════════════════════════════════════
+
 /**
- * Calcule la plage de semestres à afficher en fonction de la date actuelle.
- * @returns {{ startDate: Date, endDate: Date }} - Les dates de début et de fin de la plage.
+ * @typedef {{ cssClass: string, isPattern: boolean, isManual: boolean }} DayTypeEntry
+ */
+
+/** @type {Map<string, DayTypeEntry>} */
+const DayTypeRegistry = new Map([
+  ['J', { cssClass: 'event-day',        isPattern: true,  isManual: true }],
+  ['S', { cssClass: 'event-evening',    isPattern: true,  isManual: true }],
+  ['M', { cssClass: 'event-morning',    isPattern: true,  isManual: true }],
+  ['R', { cssClass: 'event-rest',       isPattern: true,  isManual: true }],
+  ['T', { cssClass: 'event-extra-rest', isPattern: true,  isManual: true }],
+  ['F', { cssClass: 'event-holiday',    isPattern: true,  isManual: true }],
+  ['N', { cssClass: 'event-night',      isPattern: true,  isManual: true }],
+  ['C', { cssClass: 'event-leave',      isPattern: false, isManual: true }],
+  ['I', { cssClass: 'event-formation',  isPattern: false, isManual: true }],
+  ['H', { cssClass: 'event-overtime',   isPattern: false, isManual: true }],
+  ['A', { cssClass: 'event-stop',       isPattern: false, isManual: true }],
+  ['G', { cssClass: 'event-strike',     isPattern: false, isManual: true }],
+  ['D', { cssClass: 'event-union',      isPattern: false, isManual: true }],
+  ['E', { cssClass: 'event-extra-rest', isPattern: false, isManual: true }],
+  .../** @type {[string, DayTypeEntry][]} */ (
+    ['L', 'O', 'P', 'Q', 'U', 'V', 'W', 'X', 'Y', 'Z'].map(k => [k, { cssClass: 'event-other', isPattern: false, isManual: true }])
+  ),
+])
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 2. LOGIQUE DE TEMPS
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Plage d'affichage : semestre précédent → 4 semestres après le courant.
+ * @returns {{ startDate: Date, endDate: Date }}
  */
 function getSemesterRange() {
   const today = new Date()
   const currentYear = today.getFullYear()
-  const currentMonth = today.getMonth()
+  const currentSemesterStartMonth = today.getMonth() < 6 ? 0 : 6
 
-  // Déterminer le semestre courant : 0 pour janvier-juin, 6 pour juillet-décembre
-  const currentSemesterStartMonth = currentMonth < 6 ? 0 : 6
-
-  // Début : un semestre avant
-  const startYear = currentSemesterStartMonth === 0 ? currentYear - 1 : currentYear
+  const startYear  = currentSemesterStartMonth === 0 ? currentYear - 1 : currentYear
   const startMonth = currentSemesterStartMonth === 0 ? 6 : 0
-  const startDate = new Date(startYear, startMonth, 1)
+  const endYear    = currentYear + 2
+  const endMonth   = currentSemesterStartMonth === 0 ? 6 : 12
 
-  // Fin : quatre semestres après
-  const endYear = currentSemesterStartMonth === 0 ? currentYear + 2 : currentYear + 2
-  const endMonth = currentSemesterStartMonth === 0 ? 6 : 12
-  const endDate = new Date(endYear, endMonth, 0) // Dernier jour du mois
-
-  return { startDate, endDate }
-}
-
-function updateScheduleData() {
-  // Vérifier si on a une date de début
-  const startDateStr = localStorage.getItem('startDate')
-  if (!startDateStr) {
-    console.log('Aucune date de début trouvée. Mise à jour ignorée.')
-    return
-  }
-
-  const startDate = new Date(startDateStr)
-  startDate.setDate(startDate.getDate() - 1) // Ajustement pour correspondre à la logique de génération
-
-  // Récupérer le pattern sélectionné
-  const patternType = localStorage.getItem('patternSelect') || 'IDE'
-  let selectedPattern
-
-  // Déterminer le pattern à utiliser
-  if (patternType === 'CUSTOM') {
-    const savedPattern = localStorage.getItem('rotation-custom-pattern')
-    selectedPattern = savedPattern ? JSON.parse(savedPattern) : RotationPatterns.IDE
-  } else {
-    selectedPattern = RotationPatterns[patternType] || RotationPatterns.IDE
-  }
-
-  // Valider le pattern
-  if (!Array.isArray(selectedPattern) || selectedPattern.length === 0) {
-    console.error('Pattern invalide détecté')
-    selectedPattern = RotationPatterns.IDE
-  }
-
-  // Calculer la plage actuelle
-  const { startDate: rangeStart, endDate: rangeEnd } = getSemesterRange()
-  
-  // Initialiser ou charger les données existantes
-  let scheduleData = {}
-  try {
-    const savedData = localStorage.getItem('scheduleData')
-    if (savedData) {
-      scheduleData = JSON.parse(savedData)
-    }
-  } catch (error) {
-    console.error("Erreur lors du chargement des données:", error)
-    scheduleData = {}
-  }
-
-  // Convertir les dates en identifiants de semestres au format YYYY-MM
-  const currentSemesters = []
-  let tempDate = new Date(rangeStart)
-  while (tempDate <= rangeEnd) {
-    const semesterId = `${tempDate.getFullYear()}-${tempDate.getMonth() + 1}`
-    currentSemesters.push(semesterId)
-    tempDate.setMonth(tempDate.getMonth() + 1)
-  }
-
-  // Supprimer les semestres obsolètes
-  for (const storedSemester of Object.keys(scheduleData)) {
-    if (!currentSemesters.includes(storedSemester)) {
-      delete scheduleData[storedSemester]
-    }
-  }
-
-  // Ajouter ou mettre à jour les semestres actuels
-  for (const semesterId of currentSemesters) {
-    if (!scheduleData[semesterId]) {
-      // Initialiser un nouveau mois
-      const [year, month] = semesterId.split('-').map(Number)
-      const daysInMonth = new Date(year, month, 0).getDate()
-      
-      scheduleData[semesterId] = {}
-      
-      // Pour chaque jour du mois
-      for (let day = 1; day <= daysInMonth; day++) {
-        const currentDate = new Date(year, month - 1, day)
-        const daysSinceStart = Math.floor((currentDate - startDate) / (1000 * 60 * 60 * 24))
-        const rotationIndex = ((daysSinceStart % selectedPattern.length) + selectedPattern.length) % selectedPattern.length
-        
-        // Vérifier si la valeur du pattern est valide
-        const scheduleLetter = selectedPattern[rotationIndex]
-        if (scheduleLetter && typeof scheduleLetter === 'string') {
-          scheduleData[semesterId][day] = [scheduleLetter, scheduleLetter]
-        } else {
-          console.warn(`Valeur invalide dans le pattern pour le jour ${day}/${month}/${year}`)
-          scheduleData[semesterId][day] = ['J', 'J'] // Valeur par défaut en cas d'erreur
-        }
-      }
-    }
-  }
-
-  // Sauvegarder les données mises à jour
-  try {
-    localStorage.setItem('scheduleData', JSON.stringify(scheduleData))
-    console.log('Données du planning mises à jour avec succès')
-  } catch (error) {
-    console.error("Erreur lors de la sauvegarde des données:", error)
+  return {
+    startDate: new Date(startYear, startMonth, 1),
+    endDate:   new Date(endYear, endMonth, 0),
   }
 }
 
-// Gestionnaire de patterns personnalisés
+// ═══════════════════════════════════════════════════════════════════════════
+// 3. BUFFER DE ROTATION AOT
+//
+//    Pré-calcule les indices de pattern pour toute la plage d'affichage
+//    (~900 jours → Uint8Array de 900 octets).
+//    Élimine le recalcul modulo à chaque itération de rendu (O(1) par cellule).
+// ═══════════════════════════════════════════════════════════════════════════
+
+const RotationBuffer = {
+  /** @type {Uint8Array} */
+  _indices: new Uint8Array(0),
+  /** @type {number} Jour d'époque du premier jour de la plage */
+  _epochDay0: 0,
+
+  /**
+   * Construction AOT. O(N) — appelé une seule fois par génération.
+   * @param {Date}     rangeStart
+   * @param {Date}     rangeEnd
+   * @param {Date}     rotationOrigin  Point zéro du pattern (= startDate − 1 jour)
+   * @param {string[]} pattern
+   */
+  build(rangeStart, rangeEnd, rotationOrigin, pattern) {
+    const MS_DAY   = 86_400_000
+    const d0       = Math.floor(rangeStart.getTime()     / MS_DAY)
+    const dN       = Math.floor(rangeEnd.getTime()       / MS_DAY)
+    const origin   = Math.floor(rotationOrigin.getTime() / MS_DAY)
+    const pLen     = pattern.length
+
+    this._epochDay0 = d0
+    this._indices   = new Uint8Array(dN - d0 + 1)
+
+    for (let i = 0, len = this._indices.length; i < len; i++) {
+      const delta      = d0 + i - origin
+      this._indices[i] = ((delta % pLen) + pLen) % pLen
+    }
+  },
+
+  /**
+   * Lookup O(1).
+   * @param {Date} date
+   * @returns {number} Indice dans le pattern
+   */
+  indexFor(date) {
+    const slot = Math.floor(date.getTime() / 86_400_000) - this._epochDay0
+    return this._indices[slot] ?? 0
+  },
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// 4. PATTERN PERSONNALISÉ
+// ═══════════════════════════════════════════════════════════════════════════
+
 const CustomPatternManager = {
+  /** @type {string[]} */
   pattern: [],
 
-  // Fonction pour formater le pattern pour l'affichage (groupes de 7 avec retours à la ligne)
+  /** Groupe par semaines de 7 pour l'affichage textarea. */
   formatForDisplay(pattern) {
-    const patternString = Array.isArray(pattern) ? pattern.join(',') : pattern
-    const elements = patternString.split(',').map(el => el.trim())
-
+    const elements = (Array.isArray(pattern) ? pattern.join(',') : pattern)
+      .split(',')
+      .map(el => el.trim())
+      .filter(Boolean)
     const weeks = []
     for (let i = 0; i < elements.length; i += 7) {
-      const week = elements.slice(i, i + 7)
-      weeks.push(week.join(', '))
+      weeks.push(elements.slice(i, i + 7).join(', '))
     }
     return weeks.join(',\n')
   },
 
-  // Fonction pour nettoyer et normaliser l'entrée utilisateur
   cleanInput(input) {
     return input
       .toUpperCase()
       .replace(/[\s\n\r\t]/g, '')
       .replace(/,+/g, ',')
-      .replace(/^,/, '')
-      .replace(/,$/, '')
+      .replace(/^,|,$/g, '')
   },
 
-  // Fonction pour valider le pattern
+  /**
+   * Valide via DayTypeRegistry.isPattern — source unique.
+   * @param {string} pattern  Chaîne nettoyée séparée par des virgules
+   * @returns {boolean}
+   */
   validate(pattern) {
-    if (!pattern.trim()) {
-      return true
-    }
-
-    const validChars = ['M', 'J', 'S', 'N', 'R', 'T', 'F']
-    const patternArray = pattern.split(',')
-
-    for (let char of patternArray) {
-      char = char.trim()
-      if (char && !validChars.includes(char)) {
-        alert(`Caractère invalide détecté : "${char}"\nSeuls les caractères suivants sont autorisés : M, J, S, N, R, T, F`)
+    if (!pattern.trim()) return true
+    const patternChars = [...DayTypeRegistry.entries()]
+      .filter(([, v]) => v.isPattern)
+      .map(([k]) => k)
+    for (const char of pattern.split(',').map(c => c.trim()).filter(Boolean)) {
+      if (!DayTypeRegistry.get(char)?.isPattern) {
+        alert(`Caractère invalide : "${char}"\nAutorisés : ${patternChars.join(', ')}`)
         return false
       }
     }
     return true
   },
 
-  // Fonction pour convertir une chaîne en tableau
   stringToPattern(str) {
     return !str.trim() ? [] : this.cleanInput(str).split(',')
   },
 
   load() {
-    const savedPattern = localStorage.getItem('rotation-custom-pattern')
-    if (savedPattern) {
-      this.pattern = JSON.parse(savedPattern)
+    try {
+      const saved = localStorage.getItem('rotation-custom-pattern')
+      if (saved) this.pattern = JSON.parse(saved)
+    } catch {
+      this.pattern = []
     }
     return this.pattern.length > 0 ? this.pattern : RotationPatterns.IDE
   },
@@ -211,744 +202,529 @@ const CustomPatternManager = {
   },
 }
 
-// Gestionnaire de classes CSS pour les types de journée
-const ScheduleClassManager = {
-  // Mise en cache des classes CSS avec Set pour éviter les recalculs
-  validClasses: new Set([
-    'event-day',
-    'event-evening',
-    'event-morning',
-    'event-rest',
-    'event-extra-rest',
-    'event-holiday',
-    'event-night',
-    'event-leave',
-    'event-formation',
-    'event-overtime',
-    'event-stop',
-    'event-strike',
-    'event-union',
-    'event-other',
-  ]),
+// ═══════════════════════════════════════════════════════════════════════════
+// 5. ÉTAT (StorageManager) — Source de vérité unique
+//
+//    scheduleData : Record<monthId, Record<day, [original, current]>>
+//
+//    Invariant : le DOM est une projection en lecture seule de cet état.
+//    Aucune méthode de cette couche ne lit le DOM.
+// ═══════════════════════════════════════════════════════════════════════════
 
-  // Cache de correspondance entre lettres et classes
-  classMap: new Map([
-    ['J', 'event-day'],
-    ['S', 'event-evening'],
-    ['M', 'event-morning'],
-    ['R', 'event-rest'],
-    ['T', 'event-extra-rest'],
-    ['F', 'event-holiday'],
-    ['N', 'event-night'],
-    ['C', 'event-leave'],
-    ['I', 'event-formation'],
-    ['H', 'event-overtime'],
-    ['A', 'event-stop'],
-    ['G', 'event-strike'],
-    ['D', 'event-union'],
-    ['E', 'event-extra-rest'],
-    ['L', 'event-other'],
-    ['O', 'event-other'],
-    ['P', 'event-other'],
-    ['Q', 'event-other'],
-    ['U', 'event-other'],
-    ['V', 'event-other'],
-    ['W', 'event-other'],
-    ['X', 'event-other'],
-    ['Y', 'event-other'],
-    ['Z', 'event-other'],
-  ]),
+const StorageManager = {
+  /**
+   * @type {Record<string, Record<string, [string, string]>>}
+   * monthId = "YYYY-M"  (mois non zero-padded)
+   * day     = numéro du jour (clé string issue de JSON)
+   */
+  scheduleData: {},
 
-  getClass(scheduleLetter) {
-    return this.classMap.get(scheduleLetter) || null
+  /** Charge scheduleData depuis localStorage. */
+  async init() {
+    try {
+      const raw = localStorage.getItem('scheduleData')
+      this.scheduleData = raw ? JSON.parse(raw) : {}
+    } catch {
+      this.scheduleData = {}
+    }
   },
 
-  isValidClass(className) {
-    return this.validClasses.has(className)
+  /**
+   * Reconstruit scheduleData depuis le buffer de rotation AOT.
+   * Préserve les overrides manuels sur les mois existants.
+   * O(N jours dans la plage) — appelé une fois par génération.
+   *
+   * @param {string[]} pattern
+   * @param {Date}     rotationOrigin
+   * @param {{ force?: boolean }} [options]
+   *   force=true : régénère tous les mois (appel depuis le bouton "Générer")
+   *   force=false (défaut) : ne peuple que les mois manquants (restauration init)
+   */
+  rebuild(pattern, rotationOrigin, { force = false } = {}) {
+    if (force) this.scheduleData = {}
+
+    const { startDate: rangeStart, endDate: rangeEnd } = getSemesterRange()
+    RotationBuffer.build(rangeStart, rangeEnd, rotationOrigin, pattern)
+
+    // Construire l'ensemble des mois valides dans la plage
+    const validMonthSet = new Set()
+    const cursor = new Date(rangeStart)
+    while (cursor <= rangeEnd) {
+      validMonthSet.add(`${cursor.getFullYear()}-${cursor.getMonth() + 1}`)
+      cursor.setMonth(cursor.getMonth() + 1)
+    }
+
+    // Purger les mois obsolètes
+    for (const key of Object.keys(this.scheduleData)) {
+      if (!validMonthSet.has(key)) delete this.scheduleData[key]
+    }
+
+    // Peupler les mois absents depuis le buffer AOT
+    for (const monthId of validMonthSet) {
+      if (this.scheduleData[monthId]) continue // Préservation des overrides
+
+      const [year, month] = monthId.split('-').map(Number)
+      const daysInMonth   = new Date(year, month, 0).getDate()
+      this.scheduleData[monthId] = {}
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const date   = new Date(year, month - 1, day)
+        const idx    = RotationBuffer.indexFor(date)
+        const letter = pattern[idx] ?? 'J'
+        this.scheduleData[monthId][day] = [letter, letter]
+      }
+    }
+
+    this.persist()
+  },
+
+  /**
+   * Met à jour une cellule en mémoire. O(1). Aucun accès DOM.
+   * @param {string}        monthId
+   * @param {string|number} day
+   * @param {string}        newValue
+   */
+  updateCell(monthId, day, newValue) {
+    const entry = this.scheduleData[monthId]?.[day]
+    if (!entry) return
+    const [original] = entry
+    this.scheduleData[monthId][day] = newValue === original
+      ? [original, original]
+      : [original, newValue]
+    this.persist()
+  },
+
+  /**
+   * Persiste l'état mémoire dans localStorage. O(1) — aucun accès DOM.
+   */
+  persist() {
+    try {
+      localStorage.setItem('scheduleData', JSON.stringify(this.scheduleData))
+    } catch (e) {
+      console.error('Erreur de persistance :', e)
+    }
+  },
+
+  /**
+   * Projette scheduleData sur le DOM (mise à jour ciblée, pas de innerHTML).
+   * Préserve les classes structurelles : sunday, current-day, public-holiday.
+   * @param {HTMLElement} calendarDiv
+   */
+  render(calendarDiv) {
+    requestAnimationFrame(() => {
+      for (const [monthId, monthData] of Object.entries(this.scheduleData)) {
+        const [year, month] = monthId.split('-')
+        const table = calendarDiv.querySelector(`#month-${month}-${year}`)
+        if (!table) continue
+
+        for (const [day, [original, current]] of Object.entries(monthData)) {
+          const cell = table.querySelector(`td[data-day="${day}"]`)
+          if (!cell) continue
+
+          const displayValue = current || original
+
+          // Sauvegarder les classes structurelles (non dynamiques)
+          const isSunday  = cell.classList.contains('sunday')
+          const isToday   = cell.classList.contains('current-day')
+          const isHoliday = cell.classList.contains('public-holiday')
+
+          // Reconstruire les classes dynamiques uniquement
+          cell.className = ''
+          if (isSunday)  cell.classList.add('sunday')
+          if (isToday)   cell.classList.add('current-day')
+          if (isHoliday) cell.classList.add('public-holiday')
+
+          cell.textContent = displayValue
+          const entry = DayTypeRegistry.get(displayValue)
+          if (entry) cell.classList.add(entry.cssClass)
+          if (current !== original) cell.classList.add('modified')
+        }
+      }
+    })
   },
 }
 
-// Gestionnaire du calendrier
+// ═══════════════════════════════════════════════════════════════════════════
+// 6. RENDU (CalendarManager) — Projection DOM
+//
+//    Invariant : lit scheduleData, n'écrit jamais scheduleData.
+//    La structure de la table est construite sans contenu textuel ;
+//    StorageManager.render() applique le contenu en phase 3.
+// ═══════════════════════════════════════════════════════════════════════════
+
 const CalendarManager = {
   /**
-   * Génère un planning sur une plage de semestres autour du semestre actuel.
-   * @param {string} startDateInput - Date de début au format YYYY-MM-DD (facultative).
-   * @param {Array<string>} selectedPattern - Motif de rotation des horaires.
+   * Pipeline de génération en 3 phases :
+   *   1. AOT  : RotationBuffer.build  (calcul des indices, O(N) une fois)
+   *   2. État : StorageManager.rebuild (peuplement scheduleData)
+   *   3. DOM  : construction structure + StorageManager.render (projection)
+   *
+   * @param {string}   startDateInput  Format YYYY-MM-DD
+   * @param {string[]} selectedPattern
+   * @param {{ force?: boolean }} [options]
    */
-  async generateSchedule(startDateInput, selectedPattern) {
+  generateSchedule(startDateInput, selectedPattern, { force = false } = {}) {
     if (!startDateInput) {
       alert('Veuillez entrer une date de début.')
       return
     }
-  
-    const startDate = new Date(startDateInput)
-    startDate.setDate(startDate.getDate() - 1)
-  
+
+    const rotationOrigin = new Date(startDateInput)
+    rotationOrigin.setDate(rotationOrigin.getDate() - 1)
+
+    // Phase 1 & 2 : AOT + mise à jour de l'état
+    StorageManager.rebuild(selectedPattern, rotationOrigin, { force })
+
+    // Phase 3a : Construction de la structure DOM (sans contenu textuel)
     const calendarDiv = document.getElementById('calendar')
-    calendarDiv.innerHTML = ''
-  
-    const { startDate: displayStartDate, endDate: displayEndDate } = getSemesterRange()
+    const { startDate: rangeStart, endDate: rangeEnd } = getSemesterRange()
     const fragment = document.createDocumentFragment()
-  
-    let tempDate = new Date(displayStartDate)
-  
-    // Générer tout le contenu dans un seul fragment
-    while (tempDate <= displayEndDate) {
-      const monthDate = new Date(tempDate)
-      const isCurrentMonth = monthDate.getMonth() === new Date().getMonth() && monthDate.getFullYear() === new Date().getFullYear()
-      const monthIndex =
-        (monthDate.getFullYear() - displayStartDate.getFullYear()) * 12 + monthDate.getMonth() - displayStartDate.getMonth()
-  
-      this.generateMonthTable(displayStartDate, monthIndex, startDate, selectedPattern, fragment, isCurrentMonth)
-      tempDate.setMonth(tempDate.getMonth() + 1)
+
+    const cursor = new Date(rangeStart)
+    while (cursor <= rangeEnd) {
+      this._buildMonthTable(new Date(cursor), fragment)
+      cursor.setMonth(cursor.getMonth() + 1)
     }
-  
-    // Injecter une seule fois le fragment dans le DOM
+
+    calendarDiv.innerHTML = ''
     calendarDiv.appendChild(fragment)
-  
-    // Sauvegarder les données si elles n'existent pas
-    if (!localStorage.getItem('scheduleData')) {
-      await StorageManager.saveSchedule(calendarDiv)
-    }
+
+    // Phase 3b : Projection de l'état sur les nœuds DOM
+    StorageManager.render(calendarDiv)
   },
 
   /**
-   * Génère le tableau HTML pour un mois spécifique
-   * @param {Date} displayStartDate - Date de début d'affichage
-   * @param {number} monthIndex - Index du mois (0-23)
-   * @param {Date} startDate - Date de début du planning
-   * @param {Array<string>} selectedPattern - Motif de rotation
-   * @param {DocumentFragment} fragment - Fragment conteneur
-   * @param {boolean} isCurrentMonth - Indique si c'est le mois courant
+   * Construit la structure d'un mois (table + thead + tbody) sans contenu cellule.
+   * Le contenu est appliqué par StorageManager.render().
+   * @param {Date}             monthDate
+   * @param {DocumentFragment} fragment
    */
-  generateMonthTable(displayStartDate, monthIndex, startDate, selectedPattern, fragment, isCurrentMonth) {
-    const monthDiv = document.createElement('div')
-    const monthTable = document.createElement('table')
-    monthTable.classList.add('table')
-
-    const currentDate = new Date()
-    const currentMonth = currentDate.getMonth()
-    const currentYear = currentDate.getFullYear()
-
-    const monthDate = new Date(displayStartDate)
-    monthDate.setMonth(displayStartDate.getMonth() + monthIndex)
-
+  _buildMonthTable(monthDate, fragment) {
+    const today      = new Date()
     const tableMonth = monthDate.getMonth()
-    const tableYear = monthDate.getFullYear()
+    const tableYear  = monthDate.getFullYear()
 
-    if (isCurrentMonth) {
-      monthTable.classList.add('current')
-    } else if (tableYear < currentYear || (tableYear === currentYear && tableMonth < currentMonth)) {
-      monthTable.classList.add('past')
+    const monthDiv = document.createElement('div')
+    const table    = document.createElement('table')
+    table.classList.add('table')
+    table.id = `month-${tableMonth + 1}-${tableYear}`
+    table.setAttribute('data-month-id', `${tableYear}-${tableMonth + 1}`)
+
+    const isPast = tableYear < today.getFullYear() ||
+                   (tableYear === today.getFullYear() && tableMonth < today.getMonth())
+    const isCurrent = tableMonth === today.getMonth() && tableYear === today.getFullYear()
+
+    if (isCurrent) {
+      table.classList.add('current')
+    } else if (isPast) {
+      table.classList.add('past')
+      monthDiv.classList.add('hidden')
     } else {
-      monthTable.classList.add('future')
+      table.classList.add('future')
     }
 
-    monthTable.id = `month-${tableMonth + 1}-${tableYear}`
+    // Caption
+    const caption = document.createElement('caption')
+    caption.textContent = monthDate
+      .toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
+      .replace(/^\p{CWU}/u, c => c.toLocaleUpperCase('fr-FR'))
+    table.appendChild(caption)
 
-    // Attribut data pour stocker le format YYYY-MM utilisé en interne
-    monthTable.setAttribute('data-month-id', `${tableYear}-${tableMonth + 1}`)
-
-    // Création d'un fragment pour les éléments de la table
-    const tableFragment = document.createDocumentFragment()
-
-    this.fillMonthTable(tableFragment, monthDate, startDate, selectedPattern)
-    this.addTableCaption(monthTable, monthDate)
-
-    // Ajout du contenu au tableau
-    monthTable.appendChild(tableFragment)
-    monthDiv.appendChild(monthTable)
-    fragment.appendChild(monthDiv)
-
-    if (tableYear < currentYear || (tableYear === currentYear && tableMonth < currentMonth)) {
-      monthTable.parentNode.classList.add('hidden')
+    // Thead
+    const thead     = document.createElement('thead')
+    const headerRow = document.createElement('tr')
+    for (const label of ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']) {
+      const th = document.createElement('th')
+      th.textContent = label
+      headerRow.appendChild(th)
     }
-  },
+    thead.appendChild(headerRow)
+    table.appendChild(thead)
 
-  /**
-   * Ajoute l'en-tête du tableau avec les jours de la semaine
-   * @param {DocumentFragment} fragment - Fragment conteneur
-   * @param {Array<string>} daysOfWeek - Jours de la semaine
-   */
-  addTableHeader(fragment, daysOfWeek) {
-    const headerRow = document.createElement('tr')
-    daysOfWeek.forEach(day => {
-      const th = document.createElement('th')
-      th.textContent = day
-      headerRow.appendChild(th)
-    })
-    fragment.appendChild(headerRow)
-  },
+    // Tbody
+    const tbody       = document.createElement('tbody')
+    const firstDay    = new Date(tableYear, tableMonth, 1)
+    const daysInMonth = new Date(tableYear, tableMonth + 1, 0).getDate()
+    const firstWd     = (firstDay.getDay() + 6) % 7 // Lundi = 0
+    const holidays    = publicHolidays(tableYear)
 
-  /**
-   * Remplit le tableau avec les jours du mois
-   * @param {DocumentFragment} fragment - Fragment conteneur
-   * @param {Date} currentMonth - Mois courant
-   * @param {Date} startDate - Date de début du planning
-   * @param {Array<string>} selectedPattern - Motif de rotation
-   */
-  fillMonthTable(fragment, currentMonth, startDate, selectedPattern) {
-    const firstDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1)
-    const lastDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0)
-    const firstWeekday = (firstDay.getDay() + 6) % 7
-    const daysInMonth = lastDay.getDate()
-    const holidays = publicHolidays(currentMonth.getFullYear())
-    const tableHead = document.createElement('thead')
-    const tableBody = document.createElement('tbody')
-
-    // Création de l'en-tête dans le thead
-    const headerRow = document.createElement('tr')
-    const weekDays = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']
-    weekDays.forEach(day => {
-      const th = document.createElement('th')
-      th.textContent = day
-      headerRow.appendChild(th)
-    })
-    tableHead.appendChild(headerRow)
-    fragment.appendChild(tableHead)
-
-    // Création des lignes pour le corps de la table
     const rowsFragment = document.createDocumentFragment()
     let row = document.createElement('tr')
-
-    for (let i = 0; i < firstWeekday; i++) {
-      row.appendChild(document.createElement('td'))
-    }
+    for (let i = 0; i < firstWd; i++) row.appendChild(document.createElement('td'))
 
     for (let day = 1; day <= daysInMonth; day++) {
-      const currentDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day)
-      const daysSinceStart = Math.floor((currentDate - startDate) / (1000 * 60 * 60 * 24))
-      const rotationIndex = ((daysSinceStart % selectedPattern.length) + selectedPattern.length) % selectedPattern.length
+      const date = new Date(tableYear, tableMonth, day)
+      const td   = document.createElement('td')
+      td.setAttribute('data-day', day)
 
-      const dayCell = this.createDayCell(day, rotationIndex, selectedPattern, currentDate)
-      const today = new Date()
-      if (day === today.getDate() && currentMonth.getMonth() === today.getMonth() && currentMonth.getFullYear() === today.getFullYear()) {
-        dayCell.classList.add('current-day')
+      if (date.getDay() === 0) td.classList.add('sunday')
+
+      if (day === today.getDate() && tableMonth === today.getMonth() && tableYear === today.getFullYear()) {
+        td.classList.add('current-day')
       }
 
-      const holidayNames = Object.entries(holidays).filter(([_, date]) => date.toDateString() === currentDate.toDateString())
-      if (holidayNames.length > 0) {
-        dayCell.classList.add('public-holiday')
+      if (Object.values(holidays).some(d => d.toDateString() === date.toDateString())) {
+        td.classList.add('public-holiday')
       }
 
-      row.appendChild(dayCell)
+      row.appendChild(td)
 
-      if ((firstWeekday + day) % 7 === 0) {
+      if ((firstWd + day) % 7 === 0) {
         rowsFragment.appendChild(row)
         row = document.createElement('tr')
       }
     }
 
     if (row.children.length > 0) {
-      while (row.children.length < 7) {
-        row.appendChild(document.createElement('td'))
-      }
+      while (row.children.length < 7) row.appendChild(document.createElement('td'))
       rowsFragment.appendChild(row)
     }
 
-    tableBody.appendChild(rowsFragment)
-    fragment.appendChild(tableBody)
-  },
-
-  /**
-   * Crée une cellule pour un jour spécifique
-   * @param {number} day - Jour du mois
-   * @param {number} rotationIndex - Index dans le motif de rotation
-   * @param {Array<string>} selectedPattern - Motif de rotation
-   * @returns {HTMLTableCellElement} Cellule du jour
-   */
-  createDayCell(day, rotationIndex, selectedPattern, currentDate) {
-    const dayCell = document.createElement('td')
-    dayCell.setAttribute('data-day', day)
-
-    // Vérifier si c'est un dimanche (0 = dimanche dans getDay())
-    const isDomingo = currentDate.getDay() === 0
-    if (isDomingo) {
-      dayCell.classList.add('sunday')
-    }
-
-    if (rotationIndex !== null && selectedPattern[rotationIndex]) {
-      const scheduleLetter = selectedPattern[rotationIndex]
-      dayCell.textContent = scheduleLetter
-      dayCell.setAttribute('data-original-value', scheduleLetter)
-
-      const className = ScheduleClassManager.getClass(scheduleLetter)
-      if (className) {
-        dayCell.classList.add(className)
-      }
-    }
-
-    return dayCell
-  },
-
-  /**
-   * Ajoute la légende du tableau avec le mois et l'année
-   * @param {HTMLTableElement} table - Table du mois
-   * @param {Date} currentMonth - Mois courant
-   */
-  addTableCaption(table, currentMonth) {
-    const caption = document.createElement('caption')
-    caption.textContent = currentMonth
-      .toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
-      .replace(/^\p{CWU}/u, char => char.toLocaleUpperCase('fr-FR'))
-    //caption.classList.add('text-center')
-    table.prepend(caption)
+    tbody.appendChild(rowsFragment)
+    table.appendChild(tbody)
+    monthDiv.appendChild(table)
+    fragment.appendChild(monthDiv)
   },
 }
 
-// Gestionnaire de stockage local
-const StorageManager = {
-  scheduleData: {}, // Chargement des données en mémoire
+// ═══════════════════════════════════════════════════════════════════════════
+// 7. ÉDITION
+//
+//    Cycle Data-First sur blur :
+//      Input utilisateur → updateCell O(1) → nœud DOM ciblé → persist
+//
+//    Aucun scan DOM lors de la sauvegarde.
+// ═══════════════════════════════════════════════════════════════════════════
 
-  // Initialise les données de planning en mémoire à partir de localStorage.
-  async initSchedule() {
-    try {
-      const data = localStorage.getItem('scheduleData')
-      this.scheduleData = data ? JSON.parse(data) : {}
-    } catch (error) {
-      console.error("Erreur lors de l'initialisation des données:", error)
-      this.scheduleData = {}
-    }
-  },
-
-  // Sauvegarde les modifications du planning dans localStorage à partir du DOM.
-  async saveSchedule(calendarDiv) {
-    // Utilisation de requestAnimationFrame pour éviter le blocage du thread principal
-    return new Promise(resolve => {
-      requestAnimationFrame(() => {
-        const tables = calendarDiv.querySelectorAll('table[id^="month-"]')
-
-        tables.forEach(table => {
-          const monthId = table.getAttribute('data-month-id')
-          const cells = table.querySelectorAll('td[data-day]')
-
-          cells.forEach(cell => {
-            const day = cell.getAttribute('data-day')
-            const value = cell.textContent.trim().toUpperCase()
-
-            if (!this.scheduleData[monthId]) {
-              this.scheduleData[monthId] = {}
-            }
-
-            const [originalValue, currentValue] = this.scheduleData[monthId][day] || [value, value]
-
-            if (value) {
-              if (value !== originalValue && value !== currentValue) {
-                this.scheduleData[monthId][day] = [originalValue, value]
-              } else {
-                this.scheduleData[monthId][day] = [originalValue, currentValue]
-              }
-            }
-          })
-        })
-
-        localStorage.setItem('scheduleData', JSON.stringify(this.scheduleData))
-        resolve()
-      })
-    })
-  },
-
-  async loadSchedule(calendarDiv) {
-    try {
-      return new Promise(resolve => {
-        requestAnimationFrame(() => {
-          const savedData = this.scheduleData
-          if (!savedData) {
-            resolve()
-            return
-          }
-
-          Object.entries(savedData).forEach(([monthId, monthData]) => {
-            let [year, month] = monthId.split('-')
-            const tableId = `month-${month}-${year}`
-            const table = document.getElementById(tableId)
-            if (!table) return
-
-            Object.entries(monthData).forEach(([day, values]) => {
-              const cell = table.querySelector(`td[data-day="${day}"]`)
-              if (cell) {
-                const [originalValue, currentValue] = values
-                const displayValue = currentValue || originalValue
-
-                const isSunday = cell.classList.contains('sunday')
-                const isCurrentDay = cell.classList.contains('current-day')
-
-                Array.from(cell.classList).forEach(cls => {
-                  if (['modified', 'modified-spot'].includes(cls) || cls.startsWith('event-')) {
-                    cell.classList.remove(cls)
-                  }
-                })
-
-                cell.textContent = displayValue
-                const className = ScheduleClassManager.getClass(displayValue)
-                if (className) {
-                  cell.classList.add(className)
-                }
-
-                if (currentValue && currentValue !== originalValue) {
-                  cell.classList.add('modified')
-                }
-
-                if (isSunday) cell.classList.add('sunday')
-                if (isCurrentDay) cell.classList.add('current-day')
-              }
-            })
-          })
-          resolve()
-        })
-      })
-    } catch (error) {
-      console.error('Erreur lors du chargement des données:', error)
-    }
-  },
-}
-
-// Gestionnaire d'édition du calendrier
 const EditManager = {
   isEditingEnabled: false,
-  editableCells: [], // Cache des cellules modifiables
+  /** @type {HTMLTableCellElement[]} Cache des cellules éditables */
+  _editableCells: [],
 
   toggleEditing(calendarDiv, editableButton) {
-    const tables = document.querySelectorAll('table[id^="month-"]')
-    if (!tables.length) {
-      alert(`Veuillez d'abord générer le planning.`)
+    if (!document.querySelectorAll('table[id^="month-"]').length) {
+      alert("Veuillez d'abord générer le planning.")
       return
     }
 
     this.isEditingEnabled = !this.isEditingEnabled
-    const [editText, disableEditText] = editableButton.querySelectorAll('span')
+    const [editText, disableText] = editableButton.querySelectorAll('span')
 
     if (this.isEditingEnabled) {
-      this.enableEditing(calendarDiv)
+      this._editableCells = Array.from(calendarDiv.querySelectorAll('td[data-day]'))
+      this._editableCells.forEach(cell => {
+        cell.style.cursor = 'pointer'
+        cell.setAttribute('tabindex', '0')
+        cell.setAttribute('contenteditable', 'true')
+      })
       editText.classList.add('hidden')
-      disableEditText.classList.remove('hidden')
+      disableText.classList.remove('hidden')
       editableButton.classList.add('active')
     } else {
-      this.disableEditing(calendarDiv)
+      this._editableCells.forEach(cell => {
+        cell.style.cursor = ''
+        cell.removeAttribute('tabindex')
+        cell.removeAttribute('contenteditable')
+      })
+      this._editableCells = []
+      // scheduleData déjà à jour via updateCell ; persist() = filet de sécurité
+      StorageManager.persist()
       editText.classList.remove('hidden')
-      disableEditText.classList.add('hidden')
+      disableText.classList.add('hidden')
       editableButton.classList.remove('active')
     }
   },
 
   toggleHistory(historyButton) {
-    const tables = document.querySelectorAll('.table.past')
-    const tableContainers = document.querySelectorAll(':has(>.table.past)')
-    const [historyText, disableHistoryText] = historyButton.querySelectorAll('span')
-
-    if (!tables.length) {
-      alert(`Veuillez d'abord générer le planning.`)
+    if (!document.querySelectorAll('.table.past').length) {
+      alert("Veuillez d'abord générer le planning.")
       return
     }
-
-    tableContainers.forEach(tableContainer => {
-      tableContainer.classList.toggle('hidden')
-    })
+    document.querySelectorAll(':has(>.table.past)').forEach(el => el.classList.toggle('hidden'))
     historyButton.classList.toggle('active')
-    historyText.classList.toggle('hidden')
-    disableHistoryText.classList.toggle('hidden')
+    historyButton.querySelectorAll('span').forEach(s => s.classList.toggle('hidden'))
   },
 
-  enableEditing(calendarDiv) {
-    this.editableCells = Array.from(calendarDiv.querySelectorAll('td[data-day]'))
-    this.editableCells.forEach(cell => {
-      cell.style.cursor = 'pointer'
-      cell.setAttribute('tabindex', '0')
-      cell.setAttribute('contenteditable', 'true')
-    })
-  },
-
-  disableEditing(calendarDiv) {
-    this.editableCells.forEach(cell => {
-      cell.style.cursor = ''
-      cell.removeAttribute('tabindex')
-      cell.removeAttribute('contenteditable')
-    })
-    this.editableCells = [] // Réinitialisation du cache
-    StorageManager.saveSchedule(calendarDiv)
-  },
-
-  handleCellClick(e, calendarDiv) {
+  /** @param {MouseEvent} e */
+  handleCellClick(e) {
     if (!this.isEditingEnabled) return
-
-    const cell = e.target.closest('td[data-day]')
-    if (cell) {
-      //cell.setAttribute('contenteditable', 'true')
-      cell.focus()
-
-      // Créer un Range pour sélectionner tout le contenu de la cellule ; @note cell.select() ne fonctionne pas correctement dans ce cas de figure.
-      const range = document.createRange()
-      range.selectNodeContents(cell)
-
-      // Obtenir la sélection actuelle et appliquer le range
-      const selection = window.getSelection()
-      selection.removeAllRanges()
-      selection.addRange(range)
-
-      // Sauvegarder la valeur courante
-      cell.setAttribute('data-current-value', cell.textContent.trim())
-    }
-  },
-
-  handleCellInput(e, calendarDiv) {
-    if (!this.isEditingEnabled) return
-
     const cell = e.target.closest('td[data-day]')
     if (!cell) return
 
-    //cell.removeAttribute('contenteditable')
-    //cell.removeAttribute('tabindex')
-
-    const value = cell.textContent.trim().toUpperCase()
-    if (value.length > 1) {
-      cell.textContent = value.charAt(0)
-    } else {
-      cell.textContent = value // Assure que la cellule affiche toujours en majuscules
-    }
-
-    if (value !== cell.getAttribute('data-original-value')) {
-      cell.classList.add('modified')
-    }
+    cell.focus()
+    const range = document.createRange()
+    range.selectNodeContents(cell)
+    const sel = window.getSelection()
+    sel.removeAllRanges()
+    sel.addRange(range)
+    cell.setAttribute('data-current-value', cell.textContent.trim())
   },
 
-  handleCellBlur(e, calendarDiv) {
+  /** Limite la cellule à 1 caractère en cours de saisie. */
+  /** @param {InputEvent} e */
+  handleCellInput(e) {
     if (!this.isEditingEnabled) return
+    const cell = e.target.closest('td[data-day]')
+    if (!cell) return
+    const value = cell.textContent.trim().toUpperCase()
+    cell.textContent = value.length > 1 ? value.charAt(0) : value
+  },
 
+  /**
+   * Cycle Data-First :
+   *   1. Validation via DayTypeRegistry.isManual (source unique)
+   *   2. updateCell O(1) → persist
+   *   3. Mise à jour ciblée du nœud DOM (un seul nœud, pas de re-render global)
+   * @param {FocusEvent} e
+   */
+  handleCellBlur(e) {
+    if (!this.isEditingEnabled) return
     const cell = e.target.closest('td[data-day]')
     if (!cell) return
 
     const newValue = cell.textContent.trim().toUpperCase()
-    const day = cell.getAttribute('data-day')
-    const monthId = cell.closest('table')?.getAttribute('data-month-id')
+    const day      = cell.getAttribute('data-day')
+    const monthId  = cell.closest('table')?.getAttribute('data-month-id')
+    if (!monthId) return
 
-    // Obtenir les valeurs originales et actuelles depuis scheduleData
-    const [originalValue, currentValue] = StorageManager.scheduleData[monthId]?.[day] || [null, null]
+    const entry = StorageManager.scheduleData[monthId]?.[day]
+    if (!entry) return
+    const [original, current] = entry
 
-    // Empêcher les valeurs vides, nulles ou identiques
-    if (!newValue) {
-      cell.textContent = currentValue || originalValue // Restaurer la valeur précédente
+    // Validation : rejeter les valeurs vides ou inconnues du registre
+    if (!newValue || !DayTypeRegistry.get(newValue)?.isManual) {
+      cell.textContent = current || original
       return
     }
 
-    // Valider la nouvelle valeur avec les lettres autorisées
-    const validLetters = ['M', 'J', 'S', 'N', 'H', 'R', 'T', 'F', 'C', 'I', 'A', 'G', 'D', 'E', 'L', 'O', 'P', 'Q', 'U', 'V', 'W', 'X', 'Y', 'Z']
-    if (!validLetters.includes(newValue)) {
-      cell.textContent = currentValue || originalValue // Restaurer si non valide
-      return
-    }
+    // 1. Mise à jour état O(1) + persistance (aucun accès DOM)
+    StorageManager.updateCell(monthId, day, newValue)
 
-    // Appliquer les modifications immédiates
+    // 2. Mise à jour ciblée du nœud DOM
     cell.textContent = newValue
 
-    // Manipuler uniquement les classes dynamiques
-    const className = ScheduleClassManager.getClass(newValue)
-    if (className) {
-      // Supprimer les classes dynamiques existantes et appliquer la nouvelle classe
-      Array.from(cell.classList).forEach(cls => {
-        if (cls.startsWith('event-') || cls === 'modified' || cls === 'modified-spot') {
-          cell.classList.remove(cls)
-        }
-      })
-      cell.classList.add(className)
-    }
+    // Reconstruire les classes dynamiques sur ce seul nœud
+    Array.from(cell.classList).forEach(cls => {
+      if (cls.startsWith('event-') || cls === 'modified' || cls === 'modified-spot') {
+        cell.classList.remove(cls)
+      }
+    })
 
-    // Gestion des classes CSS liées aux modifications
-    if (newValue !== originalValue) {
-      cell.classList.add('modified-spot')
-    } else {
-      cell.classList.remove('modified-spot')
-    }
+    const dayEntry = DayTypeRegistry.get(newValue)
+    if (dayEntry) cell.classList.add(dayEntry.cssClass)
 
-    if (newValue === originalValue) {
-      cell.classList.remove('modified')
-      StorageManager.scheduleData[monthId][day] = [originalValue, originalValue]
-    } else {
+    if (newValue !== original) {
       cell.classList.add('modified')
-      StorageManager.scheduleData[monthId][day] = [originalValue, newValue]
+      cell.classList.add('modified-spot')
     }
-
-    // Sauvegarder les modifications
-    StorageManager.saveSchedule(calendarDiv)
   },
 }
 
-// Initialisation et gestionnaires d'événements
+// ═══════════════════════════════════════════════════════════════════════════
+// 8. POINT D'ENTRÉE
+// ═══════════════════════════════════════════════════════════════════════════
+
 document.addEventListener('DOMContentLoaded', async () => {
-  // Initialiser les données de stockage local
-  await StorageManager.initSchedule()
+  await StorageManager.init()
 
-  // Mettre à jour les données du planning
-  updateScheduleData()
+  const calendarDiv       = document.getElementById('calendar')
+  const editableButton    = document.getElementById('contenteditable')
+  const historyButton     = document.getElementById('history')
+  const patternSelect     = document.getElementById('pattern-select')
+  const startDateInput    = document.getElementById('start-date')
+  const customPatternArea = document.getElementById('custom-pattern')
+  const saveCustomPattern = document.getElementById('save-custom-pattern')
+  const generateButton    = document.getElementById('generate-schedule')
+  const resetButton       = document.getElementById('reset')
 
-  const calendarDiv = document.getElementById('calendar')
-  const editableButton = document.getElementById('contenteditable')
-  const historyButton = document.getElementById('history')
-  const patternSelect = document.getElementById('pattern-select')
-  const startDateInput = document.getElementById('start-date')
-  const customPatternTextarea = document.getElementById('custom-pattern')
-  const saveCustomPatternButton = document.getElementById('save-custom-pattern')
-  const generateButton = document.getElementById('generate-schedule')
-  const resetButton = document.getElementById('reset')
-
-  // Fonction pour obtenir le pattern initial selon la sélection
-  function getInitialPattern(patternType) {
-    switch (patternType) {
-      case 'NightIDE':
-        return RotationPatterns.NightIDE
-      case 'ASH':
-        return RotationPatterns.ASH
-      case 'CUSTOM':
-        return CustomPatternManager.load()
-      default:
-        return RotationPatterns.IDE
-    }
+  /**
+   * Résout le pattern actif selon le sélecteur.
+   * @param {string} patternType
+   * @returns {string[]}
+   */
+  function resolvePattern(patternType) {
+    if (patternType === 'CUSTOM') return CustomPatternManager.load()
+    return RotationPatterns[patternType] ?? RotationPatterns.IDE
   }
 
-  // Fonction pour mettre à jour le textarea avec le pattern sélectionné
-  function updatePatternTextarea(pattern) {
-    customPatternTextarea.value = CustomPatternManager.formatForDisplay(pattern)
-  }
-
-  // Fonction pour obtenir le pattern sélectionné
+  /** Lit le pattern depuis le textarea. */
   function getSelectedPattern() {
-    return CustomPatternManager.stringToPattern(customPatternTextarea.value)
+    return CustomPatternManager.stringToPattern(customPatternArea.value)
   }
 
-  // Charger la date de début sauvegardée (si elle existe)
-  const savedStartDate = localStorage.getItem('startDate')
+  // ── Initialisation (restauration de l'état sauvegardé) ─────────────────
+  CustomPatternManager.load()
+
+  const savedPatternType = localStorage.getItem('patternSelect') || 'IDE'
+  const savedStartDate   = localStorage.getItem('startDate')
+
+  patternSelect.value     = savedPatternType
+  customPatternArea.value = CustomPatternManager.formatForDisplay(resolvePattern(savedPatternType))
 
   if (savedStartDate) {
-    // Générer le calendrier avec les données existantes
-    await CalendarManager.generateSchedule(savedStartDate, getSelectedPattern())
-    // Charger les modifications sauvegardées
-    await StorageManager.loadSchedule(calendarDiv)
+    startDateInput.value = savedStartDate
+    // force=false : préserve les overrides manuels existants
+    CalendarManager.generateSchedule(savedStartDate, getSelectedPattern(), { force: false })
   }
 
-  // Initialiser le textarea avec le pattern sélectionné
-  const initialPattern = getInitialPattern(patternSelect.value)
-  updatePatternTextarea(initialPattern)
+  // ── Événements ─────────────────────────────────────────────────────────
+  editableButton?.addEventListener('click', () =>
+    EditManager.toggleEditing(calendarDiv, editableButton)
+  )
 
-  if (editableButton) {
-    editableButton.addEventListener('click', () => {
-      EditManager.toggleEditing(calendarDiv, editableButton)
-    })
-  }
-
-  if (historyButton) {
-    historyButton.addEventListener('click', () => {
-      EditManager.toggleHistory(historyButton)
-    })
-  }
+  historyButton?.addEventListener('click', () =>
+    EditManager.toggleHistory(historyButton)
+  )
 
   if (calendarDiv) {
-    calendarDiv.addEventListener('click', e => {
-      EditManager.handleCellClick(e, calendarDiv)
-    })
-
-    calendarDiv.addEventListener('input', e => {
-      EditManager.handleCellInput(e, calendarDiv)
-    })
-
-    calendarDiv.addEventListener(
-      'blur',
-      e => {
-        EditManager.handleCellBlur(e, calendarDiv)
-      },
-      true,
-    )
+    calendarDiv.addEventListener('click', e => EditManager.handleCellClick(e))
+    calendarDiv.addEventListener('input', e => EditManager.handleCellInput(e))
+    calendarDiv.addEventListener('blur',  e => EditManager.handleCellBlur(e), true)
   }
 
-  // Gestionnaire d'événement pour le changement de pattern
   patternSelect.addEventListener('change', function () {
-    const initialPattern = getInitialPattern(this.value)
-    updatePatternTextarea(initialPattern)
+    customPatternArea.value = CustomPatternManager.formatForDisplay(resolvePattern(this.value))
     localStorage.setItem('patternSelect', this.value)
   })
 
-  // Gestionnaire d'événement pour la sauvegarde du pattern personnalisé
-  saveCustomPatternButton.addEventListener('click', function () {
-    const cleanedValue = CustomPatternManager.cleanInput(customPatternTextarea.value)
-
-    if (CustomPatternManager.validate(cleanedValue)) {
-      customPatternTextarea.value = CustomPatternManager.formatForDisplay(cleanedValue)
-      const pattern = CustomPatternManager.stringToPattern(cleanedValue)
-      CustomPatternManager.save(pattern)
+  saveCustomPattern.addEventListener('click', () => {
+    const cleaned = CustomPatternManager.cleanInput(customPatternArea.value)
+    if (CustomPatternManager.validate(cleaned)) {
+      customPatternArea.value = CustomPatternManager.formatForDisplay(cleaned)
+      CustomPatternManager.save(CustomPatternManager.stringToPattern(cleaned))
     } else {
-      const currentPattern = CustomPatternManager.pattern.length > 0 ? CustomPatternManager.pattern : getInitialPattern(patternSelect.value)
-      updatePatternTextarea(currentPattern)
+      const fallback = CustomPatternManager.pattern.length > 0
+        ? CustomPatternManager.pattern
+        : resolvePattern(patternSelect.value)
+      customPatternArea.value = CustomPatternManager.formatForDisplay(fallback)
     }
   })
 
-  // Gestionnaire d'événement pour la date de début
   startDateInput.addEventListener('blur', function () {
-    if (!this.value) {
-      return
-    }
-
-    const selectedDate = new Date(this.value)
-
-    if (isNaN(selectedDate.getTime())) {
-      alert(`Date invalide. Veuillez réessayer.`)
+    if (!this.value) return
+    const date = new Date(this.value)
+    if (isNaN(date.getTime())) {
+      alert('Date invalide. Veuillez réessayer.')
       this.value = ''
       return
     }
-
-    const day = selectedDate.getDay() // .getUTCDay()
-
-    // Vérifiez si le jour sélectionné est un lundi
-    if (day !== 1) {
-      alert(`Veuillez sélectionner un lundi.`)
+    if (date.getDay() !== 1) {
+      alert('Veuillez sélectionner un lundi.')
       this.value = ''
     } else {
       localStorage.setItem('startDate', this.value)
     }
   })
 
-  // Gestionnaire d'événement pour la génération du planning
-  generateButton.addEventListener('click', async () => {
-    await CalendarManager.generateSchedule(startDateInput.value, getSelectedPattern())
-    await StorageManager.loadSchedule(calendarDiv)
+  generateButton.addEventListener('click', () => {
+    // force=true : régénère depuis le pattern courant (écrase les mois existants)
+    CalendarManager.generateSchedule(startDateInput.value, getSelectedPattern(), { force: true })
   })
 
-  if (resetButton) {
-    resetButton.addEventListener('click', () => {
-      const confirmation = window.confirm(
-        'Êtes-vous sûr de vouloir effacer toutes vos données sauvegardées ? Cette action est irréversible.',
-      )
-
-      if (confirmation) {
-        localStorage.clear()
-        console.log(`Le localStorage a été réinitialisé.`)
-        location.reload()
-        console.log(`Rechargement de la page.`)
-      }
-    })
-  }
-
-  async function initialize() {
-    // Charger le pattern personnalisé
-    CustomPatternManager.load()
-
-    // Charger les préférences sauvegardées
-    const savedPattern = localStorage.getItem('patternSelect')
-    const savedStartDate = localStorage.getItem('startDate')
-
-    if (savedPattern) {
-      patternSelect.value = savedPattern
+  resetButton?.addEventListener('click', () => {
+    if (window.confirm('Êtes-vous sûr de vouloir effacer toutes vos données sauvegardées ? Cette action est irréversible.')) {
+      localStorage.clear()
+      location.reload()
     }
-
-    if (savedStartDate) {
-      startDateInput.value = savedStartDate
-      // Générer automatiquement le calendrier si on a une date de début
-      await CalendarManager.generateSchedule(savedStartDate, getSelectedPattern())
-      // Charger les modifications sauvegardées
-      await StorageManager.loadSchedule(calendarDiv)
-    }
-
-    // Initialiser le textarea avec le pattern initial
-    const initialPattern = getInitialPattern(patternSelect.value)
-    updatePatternTextarea(initialPattern)
-  }
-
-  await initialize()
+  })
 })
