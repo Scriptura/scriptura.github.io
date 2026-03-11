@@ -97,8 +97,24 @@ function getSemesterRange() {
 const RotationBuffer = {
   /** @type {Uint8Array} */
   _indices: new Uint8Array(0),
-  /** @type {number} Jour d'époque du premier jour de la plage */
+  /** @type {number} Jour d'époque UTC du premier jour de la plage */
   _epochDay0: 0,
+
+  /**
+   * Normalise une Date locale en jour d'époque UTC.
+   * Utilise les composantes calendaires (y/m/d) pour éliminer tout décalage DST.
+   * Cette fonction est la seule voie de conversion Date → époque dans ce module.
+   *
+   * Invariant : _toEpochDay et indexFor doivent utiliser exactement cette logique.
+   *
+   * @param {Date} date
+   * @returns {number} Nombre de jours depuis l'époque Unix (UTC midnight)
+   */
+  _toEpochDay(date) {
+    return Math.floor(
+      Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / 86_400_000
+    )
+  },
 
   /**
    * Construction AOT. O(N) — appelé une seule fois par génération.
@@ -108,11 +124,10 @@ const RotationBuffer = {
    * @param {string[]} pattern
    */
   build(rangeStart, rangeEnd, rotationOrigin, pattern) {
-    const MS_DAY   = 86_400_000
-    const d0       = Math.floor(rangeStart.getTime()     / MS_DAY)
-    const dN       = Math.floor(rangeEnd.getTime()       / MS_DAY)
-    const origin   = Math.floor(rotationOrigin.getTime() / MS_DAY)
-    const pLen     = pattern.length
+    const d0     = this._toEpochDay(rangeStart)
+    const dN     = this._toEpochDay(rangeEnd)
+    const origin = this._toEpochDay(rotationOrigin)
+    const pLen   = pattern.length
 
     this._epochDay0 = d0
     this._indices   = new Uint8Array(dN - d0 + 1)
@@ -124,12 +139,12 @@ const RotationBuffer = {
   },
 
   /**
-   * Lookup O(1).
+   * Lookup O(1). Utilise _toEpochDay pour garantir la cohérence avec build().
    * @param {Date} date
    * @returns {number} Indice dans le pattern
    */
   indexFor(date) {
-    const slot = Math.floor(date.getTime() / 86_400_000) - this._epochDay0
+    const slot = this._toEpochDay(date) - this._epochDay0
     return this._indices[slot] ?? 0
   },
 }
@@ -219,6 +234,15 @@ const StorageManager = {
    */
   scheduleData: {},
 
+  /**
+   * Cache de références DOM vers les cellules td.
+   * Clé : `"${monthId}:${day}"` — ex. "2025-3:15"
+   * Peuplé par CalendarManager._buildMonthTable, vidé par generateSchedule.
+   * Élimine tout querySelector dans render() → lookup O(1) garanti.
+   * @type {Map<string, HTMLTableCellElement>}
+   */
+  _cellCache: new Map(),
+
   /** Charge scheduleData depuis localStorage. */
   async init() {
     try {
@@ -306,29 +330,24 @@ const StorageManager = {
   },
 
   /**
-   * Projette scheduleData sur le DOM (mise à jour ciblée, pas de innerHTML).
+   * Projette scheduleData sur le DOM via _cellCache (O(1) par cellule, zéro querySelector).
    * Préserve les classes structurelles : sunday, current-day, public-holiday.
-   * @param {HTMLElement} calendarDiv
+   * Précondition : _cellCache doit être peuplé (CalendarManager.generateSchedule).
    */
-  render(calendarDiv) {
+  render() {
     requestAnimationFrame(() => {
       for (const [monthId, monthData] of Object.entries(this.scheduleData)) {
-        const [year, month] = monthId.split('-')
-        const table = calendarDiv.querySelector(`#month-${month}-${year}`)
-        if (!table) continue
-
         for (const [day, [original, current]] of Object.entries(monthData)) {
-          const cell = table.querySelector(`td[data-day="${day}"]`)
+          const cell = this._cellCache.get(`${monthId}:${day}`)
           if (!cell) continue
 
           const displayValue = current || original
 
-          // Sauvegarder les classes structurelles (non dynamiques)
+          // Préserver les classes structurelles (assignées à la construction, immuables)
           const isSunday  = cell.classList.contains('sunday')
           const isToday   = cell.classList.contains('current-day')
           const isHoliday = cell.classList.contains('public-holiday')
 
-          // Reconstruire les classes dynamiques uniquement
           cell.className = ''
           if (isSunday)  cell.classList.add('sunday')
           if (isToday)   cell.classList.add('current-day')
@@ -375,7 +394,10 @@ const CalendarManager = {
     // Phase 1 & 2 : AOT + mise à jour de l'état
     StorageManager.rebuild(selectedPattern, rotationOrigin, { force })
 
-    // Phase 3a : Construction de la structure DOM (sans contenu textuel)
+    // Phase 3a : Réinitialisation du cache DOM (cohérence avec la nouvelle structure)
+    StorageManager._cellCache.clear()
+
+    // Phase 3b : Construction de la structure DOM (peuple _cellCache via _buildMonthTable)
     const calendarDiv = document.getElementById('calendar')
     const { startDate: rangeStart, endDate: rangeEnd } = getSemesterRange()
     const fragment = document.createDocumentFragment()
@@ -389,8 +411,8 @@ const CalendarManager = {
     calendarDiv.innerHTML = ''
     calendarDiv.appendChild(fragment)
 
-    // Phase 3b : Projection de l'état sur les nœuds DOM
-    StorageManager.render(calendarDiv)
+    // Phase 3c : Projection de l'état sur les nœuds DOM via le cache
+    StorageManager.render()
   },
 
   /**
@@ -442,11 +464,12 @@ const CalendarManager = {
     table.appendChild(thead)
 
     // Tbody
-    const tbody       = document.createElement('tbody')
-    const firstDay    = new Date(tableYear, tableMonth, 1)
-    const daysInMonth = new Date(tableYear, tableMonth + 1, 0).getDate()
-    const firstWd     = (firstDay.getDay() + 6) % 7 // Lundi = 0
-    const holidays    = publicHolidays(tableYear)
+    const monthId      = `${tableYear}-${tableMonth + 1}`
+    const tbody        = document.createElement('tbody')
+    const firstDay     = new Date(tableYear, tableMonth, 1)
+    const daysInMonth  = new Date(tableYear, tableMonth + 1, 0).getDate()
+    const firstWd      = (firstDay.getDay() + 6) % 7 // Lundi = 0
+    const holidays     = publicHolidays(tableYear)
 
     const rowsFragment = document.createDocumentFragment()
     let row = document.createElement('tr')
@@ -466,6 +489,9 @@ const CalendarManager = {
       if (Object.values(holidays).some(d => d.toDateString() === date.toDateString())) {
         td.classList.add('public-holiday')
       }
+
+      // Enregistrement dans le cache : clé "monthId:day" → référence directe au nœud
+      StorageManager._cellCache.set(`${monthId}:${day}`, td)
 
       row.appendChild(td)
 
