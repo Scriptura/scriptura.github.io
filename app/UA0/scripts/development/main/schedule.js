@@ -1,4 +1,19 @@
 // prettier-ignore
+const MEAL_PATTERN = [
+  'N', 'N', 'R', 'N', 'N', 'N', 'N', // Semaine 1
+  'R', 'R', 'N', 'R', 'N', 'N', 'N', // Semaine 2
+  'N', 'N', 'R', 'R', 'N', 'R', 'R', // Semaine 3
+  'N', 'R', 'N', 'N', 'N', 'R', 'R', // Semaine 4
+  'R', 'N', 'N', 'N', 'R', 'N', 'N', // Semaine 5
+  'N', 'N', 'R', 'N', 'R', 'N', 'N', // Semaine 6
+  'R', 'N', 'N', 'N', 'R', 'N', 'N', // Semaine 7
+  'N', 'R', 'N', 'N', 'N', 'N', 'N', // Semaine 8
+  'R', 'R', 'R', 'N', 'N', 'R', 'R', // Semaine 9
+  'N', 'N', 'N', 'R', 'N', 'R', 'R', // Semaine 10
+  'N', 'N', 'N', 'R', 'R', 'N', 'N', // Semaine 11
+]
+
+// prettier-ignore
 const RotationPatterns = {
   IDE: [
     'J', 'J', 'S', 'J', 'J', 'R', 'R',
@@ -97,8 +112,21 @@ function getSemesterRange() {
 const RotationBuffer = {
   /** @type {Uint8Array} */
   _indices: new Uint8Array(0),
+  /**
+   * Buffer repas thérapeutiques, calculé en une seule passe avec _indices.
+   * Valeur : 1 si repas (MEAL_PATTERN[i] === 'N'), 0 sinon.
+   * @type {Uint8Array}
+   */
+  _mealIndices: new Uint8Array(0),
   /** @type {number} Jour d'époque UTC du premier jour de la plage */
   _epochDay0: 0,
+  /**
+   * Référence au pattern actif.
+   * Exposé pour que render() et handleCellBlur() résolvent la valeur théorique
+   * de chaque cellule en O(1) sans paramètre externe.
+   * @type {string[]}
+   */
+  _pattern: [],
 
   /**
    * Normalise une Date locale en jour d'époque UTC.
@@ -124,18 +152,33 @@ const RotationBuffer = {
    * @param {string[]} pattern
    */
   build(rangeStart, rangeEnd, rotationOrigin, pattern) {
+    this._pattern = pattern
     const d0     = this._toEpochDay(rangeStart)
     const dN     = this._toEpochDay(rangeEnd)
     const origin = this._toEpochDay(rotationOrigin)
     const pLen   = pattern.length
+    const mLen   = 77 // Longueur fixe de MEAL_PATTERN
 
-    this._epochDay0 = d0
-    this._indices   = new Uint8Array(dN - d0 + 1)
+    this._epochDay0  = d0
+    this._indices    = new Uint8Array(dN - d0 + 1)
+    this._mealIndices = new Uint8Array(dN - d0 + 1)
 
     for (let i = 0, len = this._indices.length; i < len; i++) {
-      const delta      = d0 + i - origin
-      this._indices[i] = ((delta % pLen) + pLen) % pLen
+      const delta          = d0 + i - origin
+      this._indices[i]     = ((delta % pLen) + pLen) % pLen
+      const mealDelta      = ((delta % mLen) + mLen) % mLen
+      this._mealIndices[i] = MEAL_PATTERN[mealDelta] === 'N' ? 1 : 0
     }
+  },
+
+  /**
+   * Retourne true si la date est un jour de repas thérapeutique. O(1).
+   * @param {Date} date
+   * @returns {boolean}
+   */
+  isMealDay(date) {
+    const slot = this._toEpochDay(date) - this._epochDay0
+    return (this._mealIndices[slot] ?? 0) === 1
   },
 
   /**
@@ -220,7 +263,14 @@ const CustomPatternManager = {
 // ═══════════════════════════════════════════════════════════════════════════
 // 5. ÉTAT (StorageManager) — Source de vérité unique
 //
-//    scheduleData : Record<monthId, Record<day, [original, current]>>
+//    scheduleData : Record<monthId, Record<day, string>>
+//
+//    Modèle différentiel : ne stocke QUE les overrides manuels.
+//    Si scheduleData[monthId][day] est absent, la valeur affichée
+//    est calculée à la volée par RotationBuffer.indexFor().
+//
+//    Bénéfice : localStorage minimal (quelques octets par override)
+//    et cohérence automatique si le pattern est recalculé.
 //
 //    Invariant : le DOM est une projection en lecture seule de cet état.
 //    Aucune méthode de cette couche ne lit le DOM.
@@ -228,7 +278,8 @@ const CustomPatternManager = {
 
 const StorageManager = {
   /**
-   * @type {Record<string, Record<string, [string, string]>>}
+   * Overrides manuels uniquement.
+   * @type {Record<string, Record<string, string>>}
    * monthId = "YYYY-M"  (mois non zero-padded)
    * day     = numéro du jour (clé string issue de JSON)
    */
@@ -254,67 +305,60 @@ const StorageManager = {
   },
 
   /**
-   * Reconstruit scheduleData depuis le buffer de rotation AOT.
-   * Préserve les overrides manuels sur les mois existants.
-   * O(N jours dans la plage) — appelé une fois par génération.
+   * Met à jour le RotationBuffer et purge les mois obsolètes de scheduleData.
+   * Ne peuple plus les cellules : scheduleData est un diff, pas une copie du planning.
    *
    * @param {string[]} pattern
    * @param {Date}     rotationOrigin
    * @param {{ force?: boolean }} [options]
-   *   force=true : régénère tous les mois (appel depuis le bouton "Générer")
-   *   force=false (défaut) : ne peuple que les mois manquants (restauration init)
+   *   force=true : efface tous les overrides (bouton "Générer")
+   *   force=false (défaut) : préserve les overrides, purge uniquement hors-plage
    */
   rebuild(pattern, rotationOrigin, { force = false } = {}) {
-    if (force) this.scheduleData = {}
-
     const { startDate: rangeStart, endDate: rangeEnd } = getSemesterRange()
     RotationBuffer.build(rangeStart, rangeEnd, rotationOrigin, pattern)
 
-    // Construire l'ensemble des mois valides dans la plage
+    if (force) {
+      this.scheduleData = {}
+      this.persist()
+      return
+    }
+
+    // Purger les mois hors de la plage d'affichage courante
     const validMonthSet = new Set()
     const cursor = new Date(rangeStart)
     while (cursor <= rangeEnd) {
       validMonthSet.add(`${cursor.getFullYear()}-${cursor.getMonth() + 1}`)
       cursor.setMonth(cursor.getMonth() + 1)
     }
-
-    // Purger les mois obsolètes
     for (const key of Object.keys(this.scheduleData)) {
       if (!validMonthSet.has(key)) delete this.scheduleData[key]
     }
-
-    // Peupler les mois absents depuis le buffer AOT
-    for (const monthId of validMonthSet) {
-      if (this.scheduleData[monthId]) continue // Préservation des overrides
-
-      const [year, month] = monthId.split('-').map(Number)
-      const daysInMonth   = new Date(year, month, 0).getDate()
-      this.scheduleData[monthId] = {}
-
-      for (let day = 1; day <= daysInMonth; day++) {
-        const date   = new Date(year, month - 1, day)
-        const idx    = RotationBuffer.indexFor(date)
-        const letter = pattern[idx] ?? 'J'
-        this.scheduleData[monthId][day] = [letter, letter]
-      }
-    }
-
     this.persist()
   },
 
   /**
-   * Met à jour une cellule en mémoire. O(1). Aucun accès DOM.
+   * Met à jour ou supprime un override. O(1). Aucun accès DOM.
+   * Si newValue === theoreticalValue : supprime l'override (retour au pattern).
+   * Sinon : enregistre l'override.
+   *
    * @param {string}        monthId
    * @param {string|number} day
    * @param {string}        newValue
+   * @param {string}        theoreticalValue  Valeur calculée par RotationBuffer
    */
-  updateCell(monthId, day, newValue) {
-    const entry = this.scheduleData[monthId]?.[day]
-    if (!entry) return
-    const [original] = entry
-    this.scheduleData[monthId][day] = newValue === original
-      ? [original, original]
-      : [original, newValue]
+  updateCell(monthId, day, newValue, theoreticalValue) {
+    if (newValue === theoreticalValue) {
+      if (this.scheduleData[monthId]) {
+        delete this.scheduleData[monthId][day]
+        if (Object.keys(this.scheduleData[monthId]).length === 0) {
+          delete this.scheduleData[monthId]
+        }
+      }
+    } else {
+      if (!this.scheduleData[monthId]) this.scheduleData[monthId] = {}
+      this.scheduleData[monthId][day] = newValue
+    }
     this.persist()
   },
 
@@ -330,34 +374,69 @@ const StorageManager = {
   },
 
   /**
-   * Projette scheduleData sur le DOM via _cellCache (O(1) par cellule, zéro querySelector).
-   * Préserve les classes structurelles : sunday, current-day, public-holiday.
+   * Applique l'état visuel complet sur un seul nœud td.
+   * Fonction partagée entre render() (bulk) et handleCellBlur() (mise à jour ciblée).
+   * Préserve les classes structurelles (sunday, current-day, public-holiday).
+   *
+   * @param {HTMLTableCellElement} cell
+   * @param {string}  displayValue  Valeur affichée (override ou valeur théorique)
+   * @param {string}  theoretical   Valeur du pattern (écrite dans data-original-value si override)
+   * @param {boolean} isModified    true si un override manuel est actif
+   * @param {boolean} isMeal        true si jour de repas thérapeutique
+   */
+  _applyCellState(cell, displayValue, theoretical, isModified, isMeal) {
+    const isSunday  = cell.classList.contains('sunday')
+    const isToday   = cell.classList.contains('current-day')
+    const isHoliday = cell.classList.contains('public-holiday')
+
+    cell.className   = ''
+    if (isSunday)  cell.classList.add('sunday')
+    if (isToday)   cell.classList.add('current-day')
+    if (isHoliday) cell.classList.add('public-holiday')
+
+    cell.textContent = displayValue
+    const entry = DayTypeRegistry.get(displayValue)
+    if (entry) cell.classList.add(entry.cssClass)
+
+    // Repas thérapeutique : indépendant du type de poste et des overrides manuels
+    if (isMeal) cell.classList.add('meal')
+
+    if (isModified) {
+      cell.classList.add('modified')
+      cell.setAttribute('data-original-value', theoretical)
+    } else {
+      cell.removeAttribute('data-original-value')
+    }
+  },
+
+  /**
+   * Projette l'état sur le DOM via _cellCache. Zéro querySelector.
+   * Pour chaque cellule du cache, croise :
+   *   - Valeur théorique : RotationBuffer._pattern[RotationBuffer.indexFor(date)]
+   *   - Override manuel  : scheduleData[monthId][day]  (absent si pas d'override)
+   *
    * Précondition : _cellCache doit être peuplé (CalendarManager.generateSchedule).
    */
   render() {
     requestAnimationFrame(() => {
-      for (const [monthId, monthData] of Object.entries(this.scheduleData)) {
-        for (const [day, [original, current]] of Object.entries(monthData)) {
-          const cell = this._cellCache.get(`${monthId}:${day}`)
-          if (!cell) continue
+      // Garde-fou repas : IDE strict + checkbox cochée
+      const showMeals = document.getElementById('pattern-select')?.value === 'IDE'
+                     && document.getElementById('is-meal')?.classList.contains('active')
 
-          const displayValue = current || original
+      for (const [cacheKey, cell] of this._cellCache) {
+        // Décodage de la clé "YYYY-M:day" sans allocation de tableau intermédiaire
+        const colonIdx  = cacheKey.lastIndexOf(':')
+        const monthId   = cacheKey.slice(0, colonIdx)
+        const day       = parseInt(cacheKey.slice(colonIdx + 1), 10)
+        const [year, month] = monthId.split('-').map(Number)
 
-          // Préserver les classes structurelles (assignées à la construction, immuables)
-          const isSunday  = cell.classList.contains('sunday')
-          const isToday   = cell.classList.contains('current-day')
-          const isHoliday = cell.classList.contains('public-holiday')
+        const date        = new Date(year, month - 1, day)
+        const idx         = RotationBuffer.indexFor(date)
+        const theoretical = RotationBuffer._pattern[idx] ?? 'J'
+        const manual      = this.scheduleData[monthId]?.[day]
+        const isMeal      = showMeals && RotationBuffer.isMealDay(date)
 
-          cell.className = ''
-          if (isSunday)  cell.classList.add('sunday')
-          if (isToday)   cell.classList.add('current-day')
-          if (isHoliday) cell.classList.add('public-holiday')
-
-          cell.textContent = displayValue
-          const entry = DayTypeRegistry.get(displayValue)
-          if (entry) cell.classList.add(entry.cssClass)
-          if (current !== original) cell.classList.add('modified')
-        }
+        this._applyCellState(cell, manual ?? theoretical, theoretical, manual !== undefined, isMeal)
       }
     })
   },
@@ -598,9 +677,10 @@ const EditManager = {
 
   /**
    * Cycle Data-First :
-   *   1. Validation via DayTypeRegistry.isManual (source unique)
-   *   2. updateCell O(1) → persist
-   *   3. Mise à jour ciblée du nœud DOM (un seul nœud, pas de re-render global)
+   *   1. Résolution de la valeur théorique via RotationBuffer (O(1))
+   *   2. Validation via DayTypeRegistry.isManual (source unique)
+   *   3. updateCell : stocke l'override ou le supprime si retour au pattern
+   *   4. _applyCellState : mise à jour visuelle ciblée (un seul nœud, data-original inclus)
    * @param {FocusEvent} e
    */
   handleCellBlur(e) {
@@ -613,42 +693,46 @@ const EditManager = {
     const monthId  = cell.closest('table')?.getAttribute('data-month-id')
     if (!monthId) return
 
-    const entry = StorageManager.scheduleData[monthId]?.[day]
-    if (!entry) return
-    const [original, current] = entry
+    // Valeur théorique depuis le buffer AOT (O(1), aucun accès scheduleData)
+    const [year, month] = monthId.split('-').map(Number)
+    const date          = new Date(year, month - 1, parseInt(day, 10))
+    const idx           = RotationBuffer.indexFor(date)
+    const theoretical   = RotationBuffer._pattern[idx] ?? 'J'
+
+    // Valeur courante affichée (pour restauration si input invalide)
+    const currentManual  = StorageManager.scheduleData[monthId]?.[day]
+    const currentDisplay = currentManual ?? theoretical
 
     // Validation : rejeter les valeurs vides ou inconnues du registre
     if (!newValue || !DayTypeRegistry.get(newValue)?.isManual) {
-      cell.textContent = current || original
+      cell.textContent = currentDisplay
       return
     }
 
-    // 1. Mise à jour état O(1) + persistance (aucun accès DOM)
-    StorageManager.updateCell(monthId, day, newValue)
+    // 1. Mise à jour état + persistance (O(1), aucun accès DOM)
+    StorageManager.updateCell(monthId, day, newValue, theoretical)
 
-    // 2. Mise à jour ciblée du nœud DOM
-    cell.textContent = newValue
-
-    // Reconstruire les classes dynamiques sur ce seul nœud
-    Array.from(cell.classList).forEach(cls => {
-      if (cls.startsWith('event-') || cls === 'modified' || cls === 'modified-spot') {
-        cell.classList.remove(cls)
-      }
-    })
-
-    const dayEntry = DayTypeRegistry.get(newValue)
-    if (dayEntry) cell.classList.add(dayEntry.cssClass)
-
-    if (newValue !== original) {
-      cell.classList.add('modified')
-      cell.classList.add('modified-spot')
-    }
+    // 2. Mise à jour visuelle ciblée du nœud DOM (inclut data-original-value + .meal)
+    const showMeals = document.getElementById('pattern-select')?.value === 'IDE'
+                   && document.getElementById('is-meal')?.classList.contains('active')
+    StorageManager._applyCellState(cell, newValue, theoretical, newValue !== theoretical, showMeals && RotationBuffer.isMealDay(date))
   },
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
 // 8. POINT D'ENTRÉE
 // ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Contrôle la visibilité du bouton repas selon le roulement actif.
+ * Le bouton n'a de sens que pour le roulement IDE.
+ * @param {string} patternValue  Valeur courante de #pattern-select
+ */
+function updateMealButtonVisibility(patternValue) {
+  const btn = document.getElementById('is-meal')
+  if (!btn) return
+  btn.classList.toggle('hidden', patternValue !== 'IDE')
+}
 
 document.addEventListener('DOMContentLoaded', async () => {
   await StorageManager.init()
@@ -687,6 +771,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   patternSelect.value     = savedPatternType
   customPatternArea.value = CustomPatternManager.formatForDisplay(resolvePattern(savedPatternType))
 
+  // Restaurer l'état du bouton repas et sa visibilité
+  const mealButton = document.getElementById('is-meal')
+  if (localStorage.getItem('showMeals') === 'true') mealButton?.classList.add('active')
+  updateMealButtonVisibility(savedPatternType)
+
   if (savedStartDate) {
     startDateInput.value = savedStartDate
     // force=false : préserve les overrides manuels existants
@@ -711,6 +800,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   patternSelect.addEventListener('change', function () {
     customPatternArea.value = CustomPatternManager.formatForDisplay(resolvePattern(this.value))
     localStorage.setItem('patternSelect', this.value)
+    updateMealButtonVisibility(this.value)
+    // render() réévalue showMeals → retire .meal si pattern !== 'IDE'
+    StorageManager.render()
+  })
+
+  // Bouton repas thérapeutiques : bascule état, persiste, re-render via cache
+  document.getElementById('is-meal')?.addEventListener('click', function () {
+    this.classList.toggle('active')
+    localStorage.setItem('showMeals', this.classList.contains('active'))
+    StorageManager.render()
   })
 
   saveCustomPattern.addEventListener('click', () => {

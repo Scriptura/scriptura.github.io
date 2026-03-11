@@ -228,9 +228,10 @@ summary {
   field-sizing: content;
 }
 
-.hidden {
+:root .hidden {
   display: none;
 }
+
 .sr-only {
   position: absolute;
   transform: scale(0);

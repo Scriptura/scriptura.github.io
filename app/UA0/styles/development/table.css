@@ -81,8 +81,8 @@
     background-image: radial-gradient(circle at .6em calc(100% - .6em), var(--color-event) .3em, transparent .3em);
   }
 
-  & :not(.modified-spot):where(.sunday, .public-holiday) { /* .meal */
-    background-image: radial-gradient(circle at .6em calc(100% - .6em), var(--color-event) .3em, transparent .3em), radial-gradient(circle at center center, hsla(0, 0%, 0%, 0.05) 1em, transparent 1em) !important;
+  & :not(.modified-spot):where(.sunday, .public-holiday) {
+    background-image: radial-gradient(circle at center center, hsla(0, 0%, 0%, 0.05) 1em, transparent 1em) !important;
   }
 
   & :not(.modified-spot):where(.sunday, .public-holiday).meal {

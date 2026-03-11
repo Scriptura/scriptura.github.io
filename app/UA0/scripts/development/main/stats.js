@@ -1,208 +1,176 @@
-// Fonction pour obtenir l'année en cours
-function getCurrentYear() {
-  return new Date().getFullYear().toString()
-}
+// ═══════════════════════════════════════════════════════════════════════════
+// STATS.JS — Couche de calcul statistique
+//
+// Source de vérité : RotationBuffer + StorageManager (schedule.js)
+// Invariant : aucun accès direct au localStorage, aucun scraping DOM.
+// Toute valeur journalière est résolue via resolveDayValue().
+// ═══════════════════════════════════════════════════════════════════════════
 
-// Fonction pour vérifier si un mois appartient à l'année en cours
-function isCurrentYearMonth(monthKey) {
-  // Le format est "month-M-YYYY"
-  const year = monthKey.split('-')[0]
-  return year === getCurrentYear()
-}
-
-// Fonction pour filtrer les données de l'année en cours
-function filterCurrentYearData(scheduleData) {
-  const currentYearData = {}
-
-  for (const monthKey in scheduleData) {
-    if (isCurrentYearMonth(monthKey)) {
-      currentYearData[monthKey] = scheduleData[monthKey]
-    }
-  }
-
-  return currentYearData
-}
-
-// Fonction pour calculer les statistiques des lettres
-function calculateLetterStats(scheduleData) {
-  const letterStats = {}
-  const currentYearData = filterCurrentYearData(scheduleData)
-
-  // Parcourir chaque mois et chaque jour pour compter les lettres
-  for (const month in currentYearData) {
-    for (const day in currentYearData[month]) {
-      // Récupérer la deuxième valeur [1] si elle existe, sinon prendre la première [0]
-      const dayData = currentYearData[month][day]
-      const letter = dayData[1] !== undefined ? dayData[1] : dayData[0]
-
-      if (letterStats[letter]) {
-        letterStats[letter]++
-      } else {
-        letterStats[letter] = 1
-      }
-    }
-  }
-
-  return letterStats
-}
-
-// Fonction pour calculer le nombre de jours travaillés sur des jours fériés ou des dimanches sur l'année en cours
-function calculateHolidayAndSundayWork(scheduleData) {
-  const holidays = publicHolidays(getCurrentYear())
-  let workOnHolidaysAndSundays = 0
-  const currentYear = getCurrentYear()
-
-  // Convertir l'objet des jours fériés en tableau de dates au format YYYY-MM-DD
-  const holidayDates = Object.values(holidays).map(date => {
-    const holidayDate = new Date(date)
-    // Ajouter un jour pour compenser le décalage UTC
-    holidayDate.setDate(holidayDate.getDate() + 1)
-    return holidayDate.toISOString().split('T')[0]
-  })
-
-  // Filtrer les données pour ne garder que l'année en cours
-  const currentYearData = Object.entries(scheduleData)
-    .filter(([monthKey]) => monthKey.startsWith(currentYear))
-    .reduce((acc, [month, data]) => {
-      acc[month] = data
-      return acc
-    }, {})
-
-  // Parcourir les données du planning
-  Object.entries(currentYearData).forEach(([monthKey, monthData]) => {
-    // Extraire le mois depuis la clé (ex: "2024-1" -> "1")
-    const month = monthKey.split('-')[1]
-
-    Object.entries(monthData).forEach(([day, dayData]) => {
-      // Vérifier si on a une deuxième lettre
-      const letter = dayData[1]
-
-      // Si pas de deuxième lettre, on passe à l'itération suivante
-      if (!letter) return
-
-      // Créer une date au format YYYY-MM-DD
-      const dateString = `${currentYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
-      const currentDate = new Date(dateString)
-
-      // Vérifier si c'est un dimanche
-      const isSunday = currentDate.getDay() === 0
-
-      // Vérifier si c'est un jour férié
-      const isHoliday = holidayDates.includes(dateString)
-
-      // Vérifier les conditions et incrémenter le compteur si nécessaire
-      if ((isHoliday || isSunday) && ['M', 'J', 'S'].includes(letter)) {
-        workOnHolidaysAndSundays++
-      }
-    })
-  })
-
-  return workOnHolidaysAndSundays
+/**
+ * Résout la valeur finale d'une journée en croisant les deux sources.
+ * Miroir exact de la logique de render() dans StorageManager.
+ *
+ * @param {Date}   date
+ * @param {number} year   Année numérique (évite un re-calcul dans les boucles)
+ * @param {number} month  Mois 1-indexé
+ * @param {number} day    Jour du mois
+ * @returns {string} Lettre finale (override manuel ou valeur théorique)
+ */
+function resolveDayValue(date, year, month, day) {
+  const monthId    = `${year}-${month}`
+  const theoretical = RotationBuffer._pattern[RotationBuffer.indexFor(date)] ?? 'J'
+  const manual      = StorageManager.scheduleData[monthId]?.[day]
+  return manual ?? theoretical
 }
 
 /**
- * Réorganise les données pour intercaler les grandes et petites valeurs.
- * @param {Object} stats - Objet contenant les statistiques à trier.
- * @returns {Array} Tableau réorganisé pour éviter que les petites valeurs se suivent.
+ * Calcule les occurrences de chaque lettre sur l'année courante.
+ * Itère du 1er janvier au 31 décembre — ne lit pas scheduleData en entier.
+ *
+ * @returns {Record<string, number>}
  */
-function rearrangeStats(stats) {
-  // Convertit les stats en un tableau d'entrées et les trie par valeur décroissante
-  const sortedEntries = Object.entries(stats).sort((a, b) => b[1] - a[1])
+function calculateLetterStats() {
+  const year  = new Date().getFullYear()
+  const stats = {}
 
-  // Divise les entrées en deux groupes : hautes et basses valeurs
-  const mid = Math.ceil(sortedEntries.length / 2)
-  const highValues = sortedEntries.slice(0, mid) // Grandes valeurs
-  const lowValues = sortedEntries.slice(mid) // Petites valeurs
-
-  const result = []
-  const maxLength = Math.max(highValues.length, lowValues.length)
-
-  // Intercale les groupes sans doublons
-  for (let i = 0; i < maxLength; i++) {
-    if (i < highValues.length) {
-      result.push(highValues[i])
-    }
-    if (i < lowValues.length) {
-      result.push(lowValues[i])
+  for (let month = 1; month <= 12; month++) {
+    const daysInMonth = new Date(year, month, 0).getDate()
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date   = new Date(year, month - 1, day)
+      const letter = resolveDayValue(date, year, month, day)
+      stats[letter] = (stats[letter] ?? 0) + 1
     }
   }
 
+  return stats
+}
+
+/**
+ * Calcule le nombre de jours travaillés (M, J, S) tombant un dimanche
+ * ou un jour férié sur l'année courante.
+ *
+ * @returns {number}
+ */
+function calculateHolidayAndSundayWork() {
+  const year     = new Date().getFullYear()
+  const holidays = publicHolidays(year)
+
+  // Set de chaînes "YYYY-MM-DD" pour lookup O(1)
+  const holidaySet = new Set(
+    Object.values(holidays).map(d => {
+      // publicHolidays retourne des dates UTC minuit — on extrait la date locale
+      const h = new Date(d)
+      h.setDate(h.getDate() + 1) // compensation décalage UTC
+      return h.toISOString().split('T')[0]
+    })
+  )
+
+  const workLetters = new Set(['M', 'J', 'S'])
+  let count = 0
+
+  for (let month = 1; month <= 12; month++) {
+    const daysInMonth = new Date(year, month, 0).getDate()
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(year, month - 1, day)
+
+      if (date.getDay() !== 0) {
+        // Pas un dimanche — vérifier jour férié
+        const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+        if (!holidaySet.has(dateStr)) continue
+      }
+
+      // Dimanche ou férié : résoudre et tester
+      const letter = resolveDayValue(date, year, month, day)
+      if (workLetters.has(letter)) count++
+    }
+  }
+
+  return count
+}
+
+/**
+ * Réorganise les statistiques pour intercaler grandes et petites valeurs
+ * (améliore la lisibilité du camembert).
+ *
+ * @param {Record<string, number>} stats
+ * @returns {Array<[string, number]>}
+ */
+function rearrangeStats(stats) {
+  const sorted = Object.entries(stats).sort((a, b) => b[1] - a[1])
+  const mid    = Math.ceil(sorted.length / 2)
+  const high   = sorted.slice(0, mid)
+  const low    = sorted.slice(mid)
+
+  const result = []
+  for (let i = 0; i < Math.max(high.length, low.length); i++) {
+    if (i < high.length) result.push(high[i])
+    if (i < low.length)  result.push(low[i])
+  }
   return result
 }
 
-// Fonction pour mettre à jour l'affichage des statistiques dans le <output>
+/**
+ * Calcule et injecte les statistiques dans l'élément #stats.
+ * Précondition : RotationBuffer._pattern doit être peuplé (generateSchedule appelé).
+ */
 function updateLetterStats() {
-  const scheduleData = JSON.parse(localStorage.getItem('scheduleData'))
-  if (scheduleData) {
-    const stats = calculateLetterStats(scheduleData)
+  // Garde-fou : buffer non encore initialisé (page chargée sans date de début)
+  if (!RotationBuffer._pattern.length) return
 
-    // Convertir les statistiques en une chaîne de texte formatée
-    const rearrangedStats = rearrangeStats(stats)
-    const formattedStats = rearrangedStats.map(([letter, count]) => `{"value": ${count}, "label": "${letter}"}`).join(',')
+  const stats        = calculateLetterStats()
+  const arranged     = rearrangeStats(stats)
+  const formattedData = arranged
+    .map(([letter, count]) => `{"value": ${count}, "label": "${letter}"}`)
+    .join(',')
 
-    const output = document.getElementById('stats')
-    const workOnHolidaysAndSundays = calculateHolidayAndSundayWork(scheduleData) // Calculer les jours travaillés sur des jours fériés ou des dimanches.
+  const holidayWork = calculateHolidayAndSundayWork()
+  const output      = document.getElementById('stats')
+  if (!output) return
 
-    output.innerHTML = `
-     <pie-chart data='[${formattedStats}]' gap="0" donut="0.7"></pie-chart>
-     <p>Dimanches et jours fériés travaillés&nbsp;: <strong>${workOnHolidaysAndSundays}</strong></p>
-   `
-  }
+  output.innerHTML = `
+    <pie-chart data='[${formattedData}]' gap="0" donut="0.7"></pie-chart>
+    <p>Dimanches et jours fériés travaillés&nbsp;: <strong>${holidayWork}</strong></p>
+  `
 }
 
+/**
+ * Initialise l'observateur de mutations et les listeners.
+ * Le MutationObserver cible #calendar pour détecter toute projection DOM
+ * issue de StorageManager.render() ou CalendarManager.generateSchedule().
+ */
 function initializeStats() {
-  // Use a debounce function to prevent excessive updates
-  const debounce = (func, delay) => {
-    let timeoutId
+  const debounce = (fn, delay) => {
+    let id
     return (...args) => {
-      clearTimeout(timeoutId)
-      timeoutId = setTimeout(() => func.apply(this, args), delay)
+      clearTimeout(id)
+      id = setTimeout(() => fn(...args), delay)
     }
   }
 
-  // Debounced update function
-  const debouncedUpdateLetterStats = debounce(updateLetterStats, 500)
+  const debouncedUpdate = debounce(updateLetterStats, 500)
 
-  // Create a MutationObserver targeting the calendar container
-  const calendarObserver = new MutationObserver(mutations => {
-    const shouldUpdate = mutations.some(
-      mutation => mutation.type === 'childList' || (mutation.type === 'attributes' && mutation.target.closest('.table')),
-    )
-
-    if (shouldUpdate) {
-      // Use microtask to ensure it runs after current execution stack
-      Promise.resolve().then(debouncedUpdateLetterStats)
-    }
-  })
-
-  // Configuration for deep observation
-  const observerConfig = {
-    childList: true,
-    subtree: true,
-    attributes: true,
-    attributeFilter: ['class', 'data-*'], // Optional: Limit attribute observations
-  }
-
-  // Target the calendar container instead of individual tables
   const calendarContainer = document.getElementById('calendar')
-
   if (calendarContainer) {
-    calendarObserver.observe(calendarContainer, observerConfig)
+    new MutationObserver(mutations => {
+      const relevant = mutations.some(
+        m => m.type === 'childList' ||
+             (m.type === 'attributes' && m.target.closest?.('.table'))
+      )
+      if (relevant) Promise.resolve().then(debouncedUpdate)
+    }).observe(calendarContainer, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class'],
+    })
   }
 
   updateLetterStats()
 
-  // Optional: Add click listener for generate button
-  const generateButton = document.getElementById('generate-schedule')
-  if (generateButton) {
-    generateButton.addEventListener('click', debouncedUpdateLetterStats)
-  }
+  document.getElementById('generate-schedule')
+    ?.addEventListener('click', debouncedUpdate)
 }
 
-// Appeler la fonction d'initialisation au chargement du DOM
 document.addEventListener('DOMContentLoaded', () => {
-  // Ajout d'un délai contrôlé pour éviter les conflits de reflow
-  setTimeout(() => {
-    initializeStats()
-  }, 100)
+  setTimeout(initializeStats, 100)
 })
