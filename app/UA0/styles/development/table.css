@@ -1,4 +1,5 @@
 .table {
+  --color-event: hsla(0, 0%, 0%, 0.1);
   table-layout: fixed;
   width: 100%;
   border-collapse: collapse;
@@ -76,18 +77,16 @@
     margin: var(--spacing-sm);
   }
 
-  & :not(.modified-spot):where(.sunday, .public-holiday) {
-    --triangle-color: hsla(0, 0%, 0%, 0.1);
-    --triangle-size: 1.4em;
-    background-image: linear-gradient(
-      to top left,
-      var(--triangle-color) var(--triangle-size),
-      transparent calc(var(--triangle-size)),
-      transparent 100%
-    );
-    background-position: bottom right;
-    background-size: 2em 2em;
-    background-repeat: no-repeat;
+  & :not(.modified-spot).meal {
+    background-image: radial-gradient(circle at .6em calc(100% - .6em), var(--color-event) .3em, transparent .3em);
+  }
+
+  & :not(.modified-spot):where(.sunday, .public-holiday) { /* .meal */
+    background-image: radial-gradient(circle at .6em calc(100% - .6em), var(--color-event) .3em, transparent .3em), radial-gradient(circle at center center, hsla(0, 0%, 0%, 0.05) 1em, transparent 1em) !important;
+  }
+
+  & :not(.modified-spot):where(.sunday, .public-holiday).meal {
+    background-image: radial-gradient(circle at .6em calc(100% - .6em), var(--color-event) .3em, transparent .3em), radial-gradient(circle at center center, hsla(0, 0%, 0%, 0.05) 1em, transparent 1em) !important;
   }
 
   @media screen {
