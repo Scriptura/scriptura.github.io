@@ -468,7 +468,6 @@ const CalendarManager = {
     }
 
     const rotationOrigin = new Date(startDateInput)
-    rotationOrigin.setDate(rotationOrigin.getDate() - 1)
 
     // Phase 1 & 2 : AOT + mise à jour de l'état
     StorageManager.rebuild(selectedPattern, rotationOrigin, { force })
