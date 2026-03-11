@@ -13,6 +13,7 @@ details.no-print(open='open')
             .form-control
               select#pattern-select.target-for-textarea
                 option(value='IDE', selected) Infirmier
+                option(value='NightIDE', selected) Infirmier de nuit
                 option(value='ASH') Agent des Services Hospitaliers
                 option(value='CUSTOM') Roulement personnalisé
           div
@@ -25,7 +26,7 @@ details.no-print(open='open')
             .message-highlight
               div
                 details(name='details-sub')
-                  summary Pour les IDE
+                  summary Pour les IDE de jour
                   p
                     | Le roulement IDE de jour s’étend sur 11 semaines.
                     br
