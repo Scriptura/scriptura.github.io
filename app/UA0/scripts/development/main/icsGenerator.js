@@ -1,171 +1,165 @@
-// Configuration centralisée
-const ICS_CONFIG = {
-  MAX_FUTURE_YEARS: 1,
+/**
+ * @file icsGenerator.js
+ * @version 2.1
+ * @description Générateur ICS optimisé : correction DST, gestion de buffer et mapping strict.
+ */
+
+const ICS_CONFIG = Object.freeze({
+  MAX_FUTURE_YEARS: 1, // Valeur d'origine
   PRODUCT_ID: '-//ScripturaUA0//ICS Generator v1.0//FR',
   STORAGE_KEY: 'scheduleData',
-  EVENT_DESCRIPTIONS: {
-    M: 'Poste du matin',
-    S: 'Poste du soir',
-    J: 'Poste de journée',
-    N: 'Poste de nuit',
-    H: 'Heures supplémentaires',
-    R: 'Repos',
-    T: 'Réduction du temps de travail',
-    F: 'Repos férié',
-    C: 'Congé annuel',
-    I: 'Formation',
-    A: 'Arrêt de travail ou maladie',
-    G: 'Grève',
-    D: 'Décharge syndicale',
-    E: 'Autorisation Spéciale d\'Absence',
-    X: 'Événement à personnaliser',
-    Y: 'Événement à personnaliser',
-    Z: 'Événement à personnaliser',
+  
+  // Mapping fusionné pour un accès O(1) sans indirection inutile
+  MAPPING: {
+    M: { s: 'M', d: 'Poste du matin' },
+    S: { s: 'S', d: 'Poste du soir' },
+    J: { s: 'J', d: 'Poste de journée' },
+    N: { s: 'N', d: 'Poste de nuit' },
+    H: { s: 'H sup', d: 'Heures supplémentaires' },
+    R: { s: 'RH', d: 'Repos' },
+    T: { s: 'RT', d: 'Réduction du temps de travail' },
+    F: { s: 'RF', d: 'Repos férié' },
+    C: { s: 'CA', d: 'Congé annuel' },
+    I: { s: 'Formation', d: 'Formation' },
+    A: { s: 'Arrêt', d: 'Arrêt de travail ou maladie' },
+    G: { s: 'Grève', d: 'Grève' },
+    D: { s: 'DS', d: 'Décharge syndicale' },
+    E: { s: 'ASA', d: "Autorisation Spéciale d'Absence" },
+    X: { s: 'X', d: 'Événement à personnaliser' },
+    Y: { s: 'Y', d: 'Événement à personnaliser' },
+    Z: { s: 'Z', d: 'Événement à personnaliser' }
   },
-  EVENT_SUMMARIES: {
-    M: 'M',
-    S: 'S',
-    J: 'J',
-    N: 'N',
-    H: 'H sup',
-    R: 'RH',
-    T: 'RT',
-    F: 'RF',
-    C: 'CA',
-    I: 'Formation',
-    A: 'Arrêt',
-    G: 'Grève',
-    D: 'DS',
-    E: 'ASA',
-    X: 'X',
-    Y: 'Y',
-    Z: 'Z',
-  },
-  DEFAULT_DESCRIPTION: 'Événement inconnu',
-  DEFAULT_SUMMARY: '',
+  DEFAULT_META: { s: '?', d: 'Événement inconnu' }
+});
+
+/**
+ * Formate une date pour les champs DTSTART/DTEND (Format DATE sans heure)
+ */
+const toIcsDay = (date) => {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}${m}${d}`;
+};
+
+/**
+ * Formate le timestamp DTSTAMP (ISO 8601 Basic)
+ */
+const toIcsTimestamp = (date) => date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+
+/**
+ * Factory de VEVENT
+ * Note : DTEND est exclusif selon la norme RFC 5545 pour VALUE=DATE.
+ */
+function buildEvent(date, summary, description, timestamp) {
+  const start = toIcsDay(date);
+  const next = new Date(date);
+  next.setDate(next.getDate() + 1);
+  const end = toIcsDay(next);
+
+  return [
+    'BEGIN:VEVENT',
+    `UID:${start}@UA0`,
+    `DTSTAMP:${timestamp}`,
+    `DTSTART;VALUE=DATE:${start}`,
+    `DTEND;VALUE=DATE:${end}`,
+    `SUMMARY:${summary}`,
+    `DESCRIPTION:${description}`,
+    'END:VEVENT'
+  ].join('\r\n');
 }
 
-// Fonction de validation des données
-function validateScheduleData(data) {
-  if (!data || typeof data !== 'object') {
-    throw new Error('Données de planning invalides')
-  }
-  return Object.keys(data).length > 0
-}
-
-// Fonction de formatage de date pour ICS
-function formatDateToICS(date) {
-  return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'
-}
-
-// Fonction de génération du contenu de l'événement ICS
-function generateEventContent(yearStr, monthStr, dayStr, eventSummary, eventDescription, now) {
-  // Calcul de la date de fin (le jour suivant)
-  const endDate = new Date(`${yearStr}-${monthStr}-${dayStr}`)
-  endDate.setDate(endDate.getDate() + 1)
-
-  const endYearStr = endDate.getFullYear().toString()
-  const endMonthStr = (endDate.getMonth() + 1).toString().padStart(2, '0')
-  const endDayStr = endDate.getDate().toString().padStart(2, '0')
-
-  return `
-BEGIN:VEVENT
-UID:${yearStr}${monthStr}${dayStr}@UA0
-DTSTAMP:${formatDateToICS(now)}
-DTSTART;VALUE=DATE:${yearStr}${monthStr}${dayStr}
-DTEND;VALUE=DATE:${endYearStr}${endMonthStr}${endDayStr}
-SUMMARY:${eventSummary}
-DESCRIPTION:${eventDescription}
-END:VEVENT`
-}
-
-// Génération et téléchargement du fichier ICS
+/**
+ * Pipeline principal de génération
+ */
 async function generateIcsFile() {
+  const buffer = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    `PRODID:${ICS_CONFIG.PRODUCT_ID}`,
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH'
+  ];
+
   try {
-    // Récupération des données
-    const scheduleDataRaw = localStorage.getItem(ICS_CONFIG.STORAGE_KEY)
-    const scheduleData = scheduleDataRaw ? JSON.parse(scheduleDataRaw) : {}
+    const rawData = localStorage.getItem(ICS_CONFIG.STORAGE_KEY);
+    if (!rawData) throw new Error('Aucune donnée trouvée dans le stockage local.');
+    const scheduleData = JSON.parse(rawData);
 
-    // Préparation des dates
-    const now = new Date()
-    const startDate = new Date(now)
-    startDate.setDate(startDate.getDate() + 1) // Commence à partir de demain
-    
-    // Normaliser startDate à minuit pour éviter les problèmes de comparaison
-    startDate.setHours(0, 0, 0, 0)
-    
-    const maxDate = new Date(now)
-    maxDate.setFullYear(maxDate.getFullYear() + ICS_CONFIG.MAX_FUTURE_YEARS)
-    maxDate.setHours(23, 59, 59, 999) // Fin de journée pour inclure le dernier jour
+    const now = new Date();
+    const timestamp = toIcsTimestamp(now);
 
-    // Calcul du nombre de jours entre startDate et maxDate
-    const totalDays = Math.ceil((maxDate - startDate) / (1000 * 60 * 60 * 24))
+    // Initialisation du curseur (étalonnage à demain 00:00:00)
+    let cursor = new Date(now);
+    cursor.setDate(cursor.getDate() + 1);
+    cursor.setHours(0, 0, 0, 0);
 
-    // Génération du contenu ICS
-    let icsContent = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:${ICS_CONFIG.PRODUCT_ID}
-`
+    // Borne de fin
+    const stopDate = new Date(now);
+    stopDate.setFullYear(stopDate.getFullYear() + ICS_CONFIG.MAX_FUTURE_YEARS);
+    stopDate.setHours(23, 59, 59, 999);
 
-    // Génération des événements pour chaque jour
-    for (let dayOffset = 0; dayOffset <= totalDays; dayOffset++) {
-      const date = new Date(startDate)
-      date.setDate(startDate.getDate() + dayOffset)
-      
-      // Formatage pour le fichier ICS (avec padding)
-      const yearStr = date.getFullYear().toString()
-      const monthStr = (date.getMonth() + 1).toString().padStart(2, '0')
-      const dayStr = date.getDate().toString().padStart(2, '0')
+    // Itération par mutation d'état (immunisé contre les dérives DST)
+    while (cursor <= stopDate) {
+      const y = cursor.getFullYear();
+      const m = cursor.getMonth() + 1;
+      const d = cursor.getDate();
 
-      // Formatage pour chercher dans scheduleData (sans padding)
-      const monthKey = `${yearStr}-${date.getMonth() + 1}`
-      const dayKey = date.getDate().toString()
+      const dayKey = d.toString();
+      const monthKey = `${y}-${m}`;
+      const dayData = scheduleData[monthKey]?.[dayKey];
 
-      const dayData = scheduleData[monthKey]?.[dayKey] || []
+      // Traitement si donnée présente (longueur > 0)
+      if (dayData && dayData.length > 0) {
+        const baseCode = dayData[0];
+        const eventCode = dayData[1] || baseCode; // Fallback structurel
 
-      const eventName = dayData[1] || null
-      if (eventName) {
-        const eventSummary =
-          dayData[0] === dayData[1]
-            ? ICS_CONFIG.EVENT_SUMMARIES[eventName]
-            : `${ICS_CONFIG.EVENT_SUMMARIES[eventName]} (${ICS_CONFIG.EVENT_SUMMARIES[dayData[0]]})`
-        const eventDescription = ICS_CONFIG.EVENT_DESCRIPTIONS[eventName] || ICS_CONFIG.DEFAULT_DESCRIPTION
+        const meta = ICS_CONFIG.MAPPING[eventCode] || ICS_CONFIG.DEFAULT_META;
+        const baseMeta = ICS_CONFIG.MAPPING[baseCode] || ICS_CONFIG.DEFAULT_META;
 
-        icsContent += generateEventContent(yearStr, monthStr, dayStr, eventSummary, eventDescription, now)
+        // Logique de composition du Summary
+        const finalSummary = (baseCode === eventCode)
+          ? meta.s
+          : `${meta.s} (${baseMeta.s})`;
+
+        buffer.push(buildEvent(cursor, finalSummary, meta.d, timestamp));
       }
+
+      // Incrément atomique
+      cursor.setDate(cursor.getDate() + 1);
     }
 
-    icsContent += '\nEND:VCALENDAR'
+    buffer.push('END:VCALENDAR');
+    downloadFile(buffer.join('\r\n'), 'schedule.ics', 'text/calendar');
 
-    // Téléchargement du fichier
-    await downloadFile(icsContent, `schedule.ics`, 'text/calendar')
   } catch (error) {
-    console.error('Erreur lors de la génération du fichier ICS:', error)
-    alert(`Impossible de générer le calendrier : ${error.message}`)
+    console.error('[ICS GENERATOR ERROR]:', error.message);
+    alert(`Erreur lors de la génération : ${error.message}`);
   }
 }
 
-// Fonction générique pour télécharger un fichier
-async function downloadFile(content, fileName, mimeType = 'application/octet-stream') {
-  try {
-    const blob = new Blob([content], { type: mimeType })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = fileName
-    link.click()
-    URL.revokeObjectURL(url)
-  } catch (error) {
-    console.error('Erreur lors du téléchargement:', error)
-    alert('Impossible de télécharger le fichier')
-  }
+/**
+ * Abstraction du téléchargement
+ */
+function downloadFile(content, fileName, mimeType) {
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  
+  link.href = url;
+  link.download = fileName;
+  link.click();
+  
+  // Cleanup mémoire différé
+  setTimeout(() => URL.revokeObjectURL(url), 150);
 }
 
+// Entry Point
 document.addEventListener('DOMContentLoaded', () => {
-  const generateButton = document.getElementById('generate-ics')
-  if (generateButton) {
-    generateButton.addEventListener('click', generateIcsFile)
+  const btn = document.getElementById('generate-ics');
+  if (btn) {
+    btn.addEventListener('click', generateIcsFile);
   } else {
-    console.warn('Bouton de génération ICS non trouvé')
+    console.warn('Bouton #generate-ics absent du DOM.');
   }
-})
+});
