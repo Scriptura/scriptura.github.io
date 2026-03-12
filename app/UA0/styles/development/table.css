@@ -1,6 +1,6 @@
 .table {
-  --color-event: hsla(0, 0%, 0%, 0.1);
-  --color-meal: var(--color-event);
+  --color-event: hsla(0, 0%, 0%, 0.05);
+  --color-meal: hsla(0, 0%, 0%, 0.1);
   table-layout: fixed;
   width: 100%;
   border-collapse: collapse;
