@@ -167,7 +167,7 @@ const RotationBuffer = {
       const delta          = d0 + i - origin
       this._indices[i]     = ((delta % pLen) + pLen) % pLen
       const mealDelta      = ((delta % mLen) + mLen) % mLen
-      this._mealIndices[i] = MEAL_PATTERN[mealDelta] === 'N' ? 1 : 0
+      this._mealIndices[i] = MEAL_PATTERN[mealDelta] === 'R' ? 1 : 0
     }
   },
 

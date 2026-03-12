@@ -1,15 +1,15 @@
 /**
  * @file icsGenerator.js
- * @version 2.1
- * @description Générateur ICS optimisé : correction DST, gestion de buffer et mapping strict.
+ * @version 2.5
+ * @description Générateur ICS complet avec calcul de rotation déterministe et fusion des overrides.
  */
 
 const ICS_CONFIG = Object.freeze({
-  MAX_FUTURE_YEARS: 1, // Valeur d'origine
+  MAX_FUTURE_YEARS: 2, 
   PRODUCT_ID: '-//ScripturaUA0//ICS Generator v1.0//FR',
   STORAGE_KEY: 'scheduleData',
   
-  // Mapping fusionné pour un accès O(1) sans indirection inutile
+  // Mapping des libellés (aligné sur les versions précédentes) 
   MAPPING: {
     M: { s: 'M', d: 'Poste du matin' },
     S: { s: 'S', d: 'Poste du soir' },
@@ -32,39 +32,31 @@ const ICS_CONFIG = Object.freeze({
   DEFAULT_META: { s: '?', d: 'Événement inconnu' }
 });
 
-/**
- * Formate une date pour les champs DTSTART/DTEND (Format DATE sans heure)
- */
-const toIcsDay = (date) => {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const d = String(date.getDate()).padStart(2, '0');
-  return `${y}${m}${d}`;
+const TimeUtils = {
+  // Calcul du jour de l'époque pour alignement AOT
+  toEpochDay: (date) => Math.floor(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / 86400000),
+  // Formatage conforme RFC 5545 
+  toIcsDay: (date) => date.getFullYear() + String(date.getMonth() + 1).padStart(2, '0') + String(date.getDate()).padStart(2, '0'),
+  toIcsTimestamp: (date) => date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'
 };
 
 /**
- * Formate le timestamp DTSTAMP (ISO 8601 Basic)
- */
-const toIcsTimestamp = (date) => date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-
-/**
- * Factory de VEVENT
- * Note : DTEND est exclusif selon la norme RFC 5545 pour VALUE=DATE.
+ * Construit un bloc VEVENT avec UID déterministe (alignement historique) [cite: 2]
  */
 function buildEvent(date, summary, description, timestamp) {
-  const start = toIcsDay(date);
+  const start = TimeUtils.toIcsDay(date);
   const next = new Date(date);
   next.setDate(next.getDate() + 1);
-  const end = toIcsDay(next);
+  const end = TimeUtils.toIcsDay(next);
 
   return [
     'BEGIN:VEVENT',
-    `UID:${start}@UA0`,
+    `UID:${start}@UA0`, // Clé primaire persistante pour éviter les doublons
     `DTSTAMP:${timestamp}`,
     `DTSTART;VALUE=DATE:${start}`,
     `DTEND;VALUE=DATE:${end}`,
-    `SUMMARY:${summary}`,
-    `DESCRIPTION:${description}`,
+    `SUMMARY:${summary.replace(/[,;]/g, '\\$&')}`,
+    `DESCRIPTION:${description.replace(/[,;]/g, '\\$&')}`,
     'END:VEVENT'
   ].join('\r\n');
 }
@@ -78,88 +70,115 @@ async function generateIcsFile() {
     'VERSION:2.0',
     `PRODID:${ICS_CONFIG.PRODUCT_ID}`,
     'CALSCALE:GREGORIAN',
-    'METHOD:PUBLISH'
+    'METHOD:PUBLISH',
+    'X-WR-CALNAME:Mon Planning',
+    'X-WR-TIMEZONE:Europe/Paris'
   ];
 
   try {
-    const rawData = localStorage.getItem(ICS_CONFIG.STORAGE_KEY);
-    if (!rawData) throw new Error('Aucune donnée trouvée dans le stockage local.');
-    const scheduleData = JSON.parse(rawData);
+    // 1. Récupération des paramètres de rotation du localStorage
+    const rotationOriginStr = localStorage.getItem('startDate');
+    if (!rotationOriginStr) throw new Error('Date de début de rotation (lundi) manquante.');
+    
+    const rotationOrigin = new Date(rotationOriginStr);
+    const originEpoch = TimeUtils.toEpochDay(rotationOrigin);
+
+    // 2. Résolution du pattern actif via l'objet window
+    const patternType = localStorage.getItem('patternSelect') || 'IDE';
+    let activePattern = [];
+
+    if (patternType === 'CUSTOM') {
+      const saved = localStorage.getItem('rotation-custom-pattern');
+      activePattern = saved ? JSON.parse(saved) : [];
+    } else {
+      const registry = window.RotationPatterns;
+      if (registry && registry[patternType]) {
+        activePattern = registry[patternType];
+      }
+    }
+
+    if (!activePattern || activePattern.length === 0) {
+      throw new Error(`Pattern "${patternType}" introuvable dans window.RotationPatterns.`);
+    }
+
+    // 3. Chargement des modifications manuelles (overrides)
+    const scheduleData = JSON.parse(localStorage.getItem(ICS_CONFIG.STORAGE_KEY) || '{}');
 
     const now = new Date();
-    const timestamp = toIcsTimestamp(now);
-
-    // Initialisation du curseur (étalonnage à demain 00:00:00)
+    const timestamp = TimeUtils.toIcsTimestamp(now);
+    
     let cursor = new Date(now);
-    cursor.setDate(cursor.getDate() + 1);
     cursor.setHours(0, 0, 0, 0);
 
-    // Borne de fin
     const stopDate = new Date(now);
     stopDate.setFullYear(stopDate.getFullYear() + ICS_CONFIG.MAX_FUTURE_YEARS);
-    stopDate.setHours(23, 59, 59, 999);
 
-    // Itération par mutation d'état (immunisé contre les dérives DST)
+    let eventCount = 0;
+
+    // 4. Itération sur la plage temporelle
     while (cursor <= stopDate) {
-      const y = cursor.getFullYear();
-      const m = cursor.getMonth() + 1;
-      const d = cursor.getDate();
+      const year = cursor.getFullYear();
+      const month = cursor.getMonth() + 1;
+      const day = cursor.getDate();
+      
+      // Calcul de la valeur théorique (Rotation Pattern)
+      const currentEpoch = TimeUtils.toEpochDay(cursor);
+      const delta = currentEpoch - originEpoch;
+      const pLen = activePattern.length;
+      const pIdx = ((delta % pLen) + pLen) % pLen;
+      const theoreticalCode = activePattern[pIdx];
 
-      const dayKey = d.toString();
-      const monthKey = `${y}-${m}`;
-      const dayData = scheduleData[monthKey]?.[dayKey];
-
-      // Traitement si donnée présente (longueur > 0)
-      if (dayData && dayData.length > 0) {
-        const baseCode = dayData[0];
-        const eventCode = dayData[1] || baseCode; // Fallback structurel
-
+      // Vérification des overrides dans scheduleData 
+      const monthKey = `${year}-${month}`;
+      const dayData = scheduleData[monthKey]?.[day];
+      
+      // Si dayData est un tableau [Base, Modif], on prend l'index 1, sinon on prend la valeur simple
+      const manualCode = Array.isArray(dayData) ? (dayData[1] || dayData[0]) : dayData;
+      const eventCode = manualCode || theoreticalCode;
+      
+      if (eventCode) {
         const meta = ICS_CONFIG.MAPPING[eventCode] || ICS_CONFIG.DEFAULT_META;
-        const baseMeta = ICS_CONFIG.MAPPING[baseCode] || ICS_CONFIG.DEFAULT_META;
+        const baseMeta = ICS_CONFIG.MAPPING[theoreticalCode] || ICS_CONFIG.DEFAULT_META;
 
-        // Logique de composition du Summary
-        const finalSummary = (baseCode === eventCode)
+        // Composition du titre (ex: "S (M)") si modification 
+        const finalSummary = (theoreticalCode === eventCode || !theoreticalCode)
           ? meta.s
           : `${meta.s} (${baseMeta.s})`;
 
         buffer.push(buildEvent(cursor, finalSummary, meta.d, timestamp));
+        eventCount++;
       }
 
-      // Incrément atomique
       cursor.setDate(cursor.getDate() + 1);
     }
 
     buffer.push('END:VCALENDAR');
-    downloadFile(buffer.join('\r\n'), 'schedule.ics', 'text/calendar');
+    
+    // Export final avec CRLF et BOM UTF-8 pour Windows/Google Calendar
+    const content = buffer.join('\r\n') + '\r\n';
+    downloadFile(content, 'schedule.ics', 'text/calendar;charset=utf-8');
+    console.log(`[ICS] Export réussi : ${eventCount} événements.`);
 
   } catch (error) {
-    console.error('[ICS GENERATOR ERROR]:', error.message);
-    alert(`Erreur lors de la génération : ${error.message}`);
+    console.error('[ICS ERROR]:', error.message);
+    alert(`Erreur de génération : ${error.message}`);
   }
 }
 
 /**
- * Abstraction du téléchargement
+ * Téléchargement du Blob avec BOM UTF-8
  */
 function downloadFile(content, fileName, mimeType) {
-  const blob = new Blob([content], { type: mimeType });
+  const blob = new Blob(['\ufeff', content], { type: mimeType });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
-  
   link.href = url;
   link.download = fileName;
   link.click();
-  
-  // Cleanup mémoire différé
-  setTimeout(() => URL.revokeObjectURL(url), 150);
+  setTimeout(() => URL.revokeObjectURL(url), 500);
 }
 
-// Entry Point
+// Initialisation au chargement du DOM
 document.addEventListener('DOMContentLoaded', () => {
-  const btn = document.getElementById('generate-ics');
-  if (btn) {
-    btn.addEventListener('click', generateIcsFile);
-  } else {
-    console.warn('Bouton #generate-ics absent du DOM.');
-  }
+  document.getElementById('generate-ics')?.addEventListener('click', generateIcsFile);
 });
