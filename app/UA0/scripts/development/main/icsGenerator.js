@@ -1,15 +1,14 @@
 /**
  * @file icsGenerator.js
- * @version 2.5
- * @description Générateur ICS complet avec calcul de rotation déterministe et fusion des overrides.
+ * @version 2.6
+ * @description Version "Mobile-First" : Suppression BOM, limitation 1 an, et nettoyage RFC 5545.
  */
 
 const ICS_CONFIG = Object.freeze({
-  MAX_FUTURE_YEARS: 2, 
+  MAX_FUTURE_YEARS: 1, // Réduit à 1 an pour performance mobile
   PRODUCT_ID: '-//ScripturaUA0//ICS Generator v1.0//FR',
   STORAGE_KEY: 'scheduleData',
   
-  // Mapping des libellés (aligné sur les versions précédentes) 
   MAPPING: {
     M: { s: 'M', d: 'Poste du matin' },
     S: { s: 'S', d: 'Poste du soir' },
@@ -33,37 +32,36 @@ const ICS_CONFIG = Object.freeze({
 });
 
 const TimeUtils = {
-  // Calcul du jour de l'époque pour alignement AOT
   toEpochDay: (date) => Math.floor(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / 86400000),
-  // Formatage conforme RFC 5545 
   toIcsDay: (date) => date.getFullYear() + String(date.getMonth() + 1).padStart(2, '0') + String(date.getDate()).padStart(2, '0'),
   toIcsTimestamp: (date) => date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'
 };
 
-/**
- * Construit un bloc VEVENT avec UID déterministe (alignement historique) [cite: 2]
- */
 function buildEvent(date, summary, description, timestamp) {
   const start = TimeUtils.toIcsDay(date);
   const next = new Date(date);
   next.setDate(next.getDate() + 1);
   const end = TimeUtils.toIcsDay(next);
 
+  // Échappement minimaliste pour éviter les caractères de contrôle
+  const cleanSummary = summary.replace(/[,;]/g, '\\$&');
+  const cleanDesc = description.replace(/[,;]/g, '\\$&');
+
   return [
     'BEGIN:VEVENT',
-    `UID:${start}@UA0`, // Clé primaire persistante pour éviter les doublons
+    `UID:${start}@UA0`,
     `DTSTAMP:${timestamp}`,
+    `SEQUENCE:0`,
+    `STATUS:CONFIRMED`,
+    `TRANSP:TRANSPARENT`, // Pour ne pas bloquer le calendrier (disponible)
     `DTSTART;VALUE=DATE:${start}`,
     `DTEND;VALUE=DATE:${end}`,
-    `SUMMARY:${summary.replace(/[,;]/g, '\\$&')}`,
-    `DESCRIPTION:${description.replace(/[,;]/g, '\\$&')}`,
+    `SUMMARY:${cleanSummary}`,
+    `DESCRIPTION:${cleanDesc}`,
     'END:VEVENT'
   ].join('\r\n');
 }
 
-/**
- * Pipeline principal de génération
- */
 async function generateIcsFile() {
   const buffer = [
     'BEGIN:VCALENDAR',
@@ -71,19 +69,16 @@ async function generateIcsFile() {
     `PRODID:${ICS_CONFIG.PRODUCT_ID}`,
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
-    'X-WR-CALNAME:Mon Planning',
-    'X-WR-TIMEZONE:Europe/Paris'
+    'X-WR-CALNAME:Mon Planning'
   ];
 
   try {
-    // 1. Récupération des paramètres de rotation du localStorage
     const rotationOriginStr = localStorage.getItem('startDate');
-    if (!rotationOriginStr) throw new Error('Date de début de rotation (lundi) manquante.');
+    if (!rotationOriginStr) throw new Error('Date de début de rotation manquante.');
     
     const rotationOrigin = new Date(rotationOriginStr);
     const originEpoch = TimeUtils.toEpochDay(rotationOrigin);
 
-    // 2. Résolution du pattern actif via l'objet window
     const patternType = localStorage.getItem('patternSelect') || 'IDE';
     let activePattern = [];
 
@@ -97,13 +92,9 @@ async function generateIcsFile() {
       }
     }
 
-    if (!activePattern || activePattern.length === 0) {
-      throw new Error(`Pattern "${patternType}" introuvable dans window.RotationPatterns.`);
-    }
+    if (!activePattern || activePattern.length === 0) throw new Error('Pattern introuvable.');
 
-    // 3. Chargement des modifications manuelles (overrides)
     const scheduleData = JSON.parse(localStorage.getItem(ICS_CONFIG.STORAGE_KEY) || '{}');
-
     const now = new Date();
     const timestamp = TimeUtils.toIcsTimestamp(now);
     
@@ -113,26 +104,20 @@ async function generateIcsFile() {
     const stopDate = new Date(now);
     stopDate.setFullYear(stopDate.getFullYear() + ICS_CONFIG.MAX_FUTURE_YEARS);
 
-    let eventCount = 0;
-
-    // 4. Itération sur la plage temporelle
     while (cursor <= stopDate) {
       const year = cursor.getFullYear();
       const month = cursor.getMonth() + 1;
       const day = cursor.getDate();
       
-      // Calcul de la valeur théorique (Rotation Pattern)
       const currentEpoch = TimeUtils.toEpochDay(cursor);
       const delta = currentEpoch - originEpoch;
       const pLen = activePattern.length;
       const pIdx = ((delta % pLen) + pLen) % pLen;
       const theoreticalCode = activePattern[pIdx];
 
-      // Vérification des overrides dans scheduleData 
       const monthKey = `${year}-${month}`;
       const dayData = scheduleData[monthKey]?.[day];
       
-      // Si dayData est un tableau [Base, Modif], on prend l'index 1, sinon on prend la valeur simple
       const manualCode = Array.isArray(dayData) ? (dayData[1] || dayData[0]) : dayData;
       const eventCode = manualCode || theoreticalCode;
       
@@ -140,36 +125,30 @@ async function generateIcsFile() {
         const meta = ICS_CONFIG.MAPPING[eventCode] || ICS_CONFIG.DEFAULT_META;
         const baseMeta = ICS_CONFIG.MAPPING[theoreticalCode] || ICS_CONFIG.DEFAULT_META;
 
-        // Composition du titre (ex: "S (M)") si modification 
         const finalSummary = (theoreticalCode === eventCode || !theoreticalCode)
           ? meta.s
           : `${meta.s} (${baseMeta.s})`;
 
         buffer.push(buildEvent(cursor, finalSummary, meta.d, timestamp));
-        eventCount++;
       }
-
       cursor.setDate(cursor.getDate() + 1);
     }
 
     buffer.push('END:VCALENDAR');
     
-    // Export final avec CRLF et BOM UTF-8 pour Windows/Google Calendar
+    // Jointure finale avec saut de ligne RFC et SANS BOM au début
     const content = buffer.join('\r\n') + '\r\n';
-    downloadFile(content, 'schedule.ics', 'text/calendar;charset=utf-8');
-    console.log(`[ICS] Export réussi : ${eventCount} événements.`);
+    downloadFile(content, 'planning.ics', 'text/calendar;charset=utf-8');
 
   } catch (error) {
     console.error('[ICS ERROR]:', error.message);
-    alert(`Erreur de génération : ${error.message}`);
+    alert(`Erreur : ${error.message}`);
   }
 }
 
-/**
- * Téléchargement du Blob avec BOM UTF-8
- */
 function downloadFile(content, fileName, mimeType) {
-  const blob = new Blob(['\ufeff', content], { type: mimeType });
+  // Suppression du '\ufeff' (BOM) pour une meilleure compatibilité Android
+  const blob = new Blob([content], { type: mimeType });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
@@ -178,7 +157,6 @@ function downloadFile(content, fileName, mimeType) {
   setTimeout(() => URL.revokeObjectURL(url), 500);
 }
 
-// Initialisation au chargement du DOM
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('generate-ics')?.addEventListener('click', generateIcsFile);
 });
