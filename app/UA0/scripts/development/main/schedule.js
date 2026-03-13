@@ -40,6 +40,8 @@ const RotationPatterns = {
   ],
 }
 
+window.RotationPatterns = RotationPatterns;
+
 // ═══════════════════════════════════════════════════════════════════════════
 // 1. REGISTRY — Source de vérité unique des types de journée
 //
