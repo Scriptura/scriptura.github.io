@@ -1,154 +1,93 @@
 'use strict'
 
-/**
- * Initialise le comportement des onglets sur la page.
- * Cette fonction configure les onglets, leur gestion d'état et
- * conserve les états des onglets en mémoire dans un format JSON.
- * @function
- * @returns {void}
- */
-const tabs = () => {
+const tabsSystem = () => {
   const slug = window.location.pathname
+  const STATE_KEY = 'tabsState'
 
+  // --- Data Access Layer ---
+  const getStoredState = () => {
+    const stored = localStorage.getItem(STATE_KEY)
+    return stored ? JSON.parse(stored) : { tabsState: {} }
+  }
+
+  const saveStoredState = (newState) => {
+    localStorage.setItem(STATE_KEY, JSON.stringify(newState))
+  }
+
+  // --- Logic / Systems ---
+  
   /**
-   * Récupère l'état actuel des onglets depuis localStorage
-   * @returns {Object} L'objet d'état des onglets
+   * Aligne l'UI sur un état donné pour un groupe d'onglets
+   * @param {HTMLElement} activeTab - L'onglet qui doit être actif
+   * @param {HTMLElement} container - Le conteneur parent .tabs
    */
-  const getTabsState = () => {
-    const storedState = localStorage.getItem('tabsState')
-    return storedState ? JSON.parse(storedState) : { tabsState: {} }
-  }
+  const syncGroupState = (activeTab, container) => {
+    const targetPanelId = activeTab.getAttribute('aria-controls')
+    const allTabs = container.querySelectorAll('[role="tab"]')
+    const allPanels = container.querySelectorAll('.tab-panel')
 
-  /**
-   * Met à jour l'état des onglets dans localStorage
-   * @param {Object} updatedState - Le nouvel état des onglets
-   */
-  const updateTabsState = updatedState => {
-    localStorage.setItem('tabsState', JSON.stringify(updatedState))
-  }
-
-  const transformHTML = () => {
-    document.querySelectorAll('.tabs').forEach((tabs, i) => {
-      tabs.id = `tabs-${i}`
-      tabs.insertAdjacentHTML('afterbegin', `<div role="tablist" aria-label="Entertainment" class="tab-list"></div>`)
+    // Update Tabs (Linear Scan)
+    allTabs.forEach(tab => {
+      const isActive = (tab === activeTab)
+      tab.disabled = isActive
+      tab.setAttribute('aria-selected', isActive)
+      tab.setAttribute('aria-expanded', isActive)
     })
 
-    document.querySelectorAll('.tabs > * > summary').forEach((summary, i) => {
-      const tabsState = getTabsState()
-      const pageState = tabsState.tabsState[slug] || {}
-      const state = pageState[`tab-${i}`] === 'open'
-
-      const summaryHtml = summary.innerHTML
-      summary.parentElement.parentElement.firstElementChild.appendChild(summary)
-      summary.outerHTML = `<button id="tabsummary-${i}" type="button" role="tab" class="tab-summary" aria-controls="tab-panel-${i}" aria-selected="${state}" aria-expanded="${state}" ${
-        state ? 'disabled' : ''
-      }>${summaryHtml}</button>`
+    // Update Panels (Linear Scan)
+    allPanels.forEach(panel => {
+      panel.setAttribute('aria-hidden', panel.id !== targetPanelId)
     })
 
-    document.querySelectorAll('.tab-summary:first-child').forEach(firstTab => setCurrentTab(firstTab))
-
-    document.querySelectorAll('.tabs > details > *').forEach((panel, i) => {
-      panel.id = `tab-panel-${i}`
-      panel.classList.add('tab-panel')
-      panel.role = 'tabpanel'
-      panel.setAttribute('aria-labelledby', `tabsummary-${i}`)
-      panel.ariaHidden = 'true'
-      panel.parentElement.parentElement.appendChild(panel)
-      panel.parentElement.children[1].remove()
-    })
-
-    document.querySelectorAll('.tabs > :nth-child(2)').forEach(firstPanel => (firstPanel.ariaHidden = 'false'))
+    // Persistence update
+    updatePersistence(activeTab.id, allTabs)
   }
 
-  const stateManagement = () => {
-    document.querySelectorAll('.tab-summary').forEach(tab => {
-      tab.addEventListener('click', () => handleTabClick(tab))
+  const updatePersistence = (activeId, siblingTabs) => {
+    const state = getStoredState()
+    if (!state.tabsState[slug]) state.tabsState[slug] = {}
+
+    // On marque l'actif comme 'open', les autres du même groupe comme 'close'
+    siblingTabs.forEach(tab => {
+      state.tabsState[slug][tab.id] = (tab.id === activeId) ? 'open' : 'close'
     })
+
+    saveStoredState(state)
   }
 
-  const handleTabClick = tab => {
-    const tabIndex = tab.id.match(/\d+$/i)[0]
-    const currentPanel = document.getElementById(tab.getAttribute('aria-controls'))
+  // --- Initialization ---
 
-    setCurrentTab(tab)
+  const init = () => {
+    const containers = document.querySelectorAll('.tabs')
+    const globalState = getStoredState().tabsState[slug] || {}
 
-    // Mise à jour de l'état dans le localStorage
-    const tabsState = getTabsState()
-    if (!tabsState.tabsState[slug]) {
-      tabsState.tabsState[slug] = {}
-    }
-    tabsState.tabsState[slug][`tab-${tabIndex}`] = 'open'
-    updateTabsState(tabsState)
+    containers.forEach(container => {
+      const tabs = container.querySelectorAll('[role="tab"]')
+      let tabToActivate = tabs[0] // Default fallback
 
-    currentPanel.ariaHidden = 'false'
+      // Restauration de l'état si présent dans le storage
+      tabs.forEach(tab => {
+        if (globalState[tab.id] === 'open') {
+          tabToActivate = tab
+        }
+        
+        // Attachment de l'event
+        tab.addEventListener('click', () => syncGroupState(tab, container))
+      })
 
-    const parentElement = tab.parentElement.parentElement
-    parentElement.querySelectorAll(':scope > .tab-panel').forEach(panel => {
-      if (panel !== currentPanel) {
-        panel.ariaHidden = 'true'
+      // Premier rendu (Warm-up)
+      if (tabToActivate) {
+        syncGroupState(tabToActivate, container)
       }
     })
-
-    siblingStateManagement(tab)
   }
 
-  const siblingStateManagement = tab => {
-    const tabsState = getTabsState()
-    if (!tabsState.tabsState[slug]) {
-      tabsState.tabsState[slug] = {}
-    }
-
-    const tabs = tab.parentElement.children
-    ;[...tabs].forEach(tabSibling => {
-      if (tabSibling !== tab) {
-        setPastTab(tabSibling)
-        const tabIndex = tabSibling.id.match(/\d+$/i)[0]
-        tabsState.tabsState[slug][`tab-${tabIndex}`] = 'close'
-      }
-    })
-
-    updateTabsState(tabsState)
-  }
-
-  const setCurrentTab = tab => {
-    tab.disabled = true
-    tab.ariaSelected = 'true'
-    tab.ariaExpanded = 'true'
-  }
-
-  const setPastTab = tab => {
-    tab.disabled = false
-    tab.ariaSelected = 'false'
-    tab.ariaExpanded = 'false'
-  }
-
-  const restoreTabStates = () => {
-    const tabsState = getTabsState()
-    const pageState = tabsState.tabsState[slug] || {}
-
-    document.querySelectorAll('.tab-summary').forEach(tab => {
-      const tabIndexMatch = tab.id.match(/\d+$/i)
-      if (!tabIndexMatch) return
-      const tabIndex = tabIndexMatch[0]
-      const state = pageState[`tab-${tabIndex}`]
-
-      if (!state) return
-
-      const panelId = `tab-panel-${tabIndex}`
-      const panel = document.getElementById(panelId)
-
-      if (panel) {
-        panel.setAttribute('aria-hidden', state === 'open' ? 'false' : 'true')
-      }
-
-      const setTabState = state === 'open' ? setCurrentTab : setPastTab
-      setTabState(tab)
-    })
-  }
-
-  transformHTML()
-  stateManagement()
-  restoreTabStates()
+  init()
 }
 
-window.addEventListener('DOMContentLoaded', tabs())
+// Lancement au DOMReady
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', tabsSystem)
+} else {
+  tabsSystem()
+}

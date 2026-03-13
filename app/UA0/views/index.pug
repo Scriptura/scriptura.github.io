@@ -19,6 +19,19 @@ block main
     .main-content
       .wrapper
         .tabs
+          .tab-list(role='tablist' aria-label='Entertainment')
+            button#tabsummary-0.tab-summary(type='button' role='tab' aria-controls='tab-panel-0' aria-selected='true')
+              svg.icon(focusable='false')
+                use(href='./sprites/util.svg#calendar_month')
+              span Planning
+            button#tabsummary-1.tab-summary(type='button' role='tab' aria-controls='tab-panel-1' aria-selected='false')
+              svg.icon(focusable='false')
+                use(href='./sprites/util.svg#bar_chart')
+              span Statistiques
+            button#tabsummary-2.tab-summary(type='button' role='tab' aria-controls='tab-panel-2' aria-selected='false')
+              svg.icon(focusable='false')
+                use(href='./sprites/util.svg#tune')
+              span Configuration
           include includes/pannel1
           include includes/pannel2
           include includes/pannel3

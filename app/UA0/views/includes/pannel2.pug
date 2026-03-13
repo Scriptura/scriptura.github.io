@@ -1,68 +1,63 @@
-details.no-print
-  summary
-    svg.icon(focusable='false')
-      use(href='./sprites/util.svg#bar_chart')
-    | Statistiques
-  div
-    h2 Statistiques pour l'année 
-      span#current-year-stats en cours
-    .grid2.gap.gap-top
-      .stats
-        #stats
-          .message-highlight
-            p Vous devez configurer un planning pour voir les statistiques.
-      div
-        h3.sr-only Glossaire
-        ul.stats-list
-          li
-            span.event-morning M
-            | Matin
-          li
-            span.event-evening S
-            | Soir
-          li
-            span.event-day J
-            | Jour
-          li
-            span.event-night N
-            | Nuit
-          li
-            span.event-overtime H
-            | Heures Supplémentaires
-          li
-            span.event-rest R
-            | Repos
-          li
-            span.event-extra-rest T
-            | Réduction du Temps de Travail
-          li
-            span.event-holiday F
-            | Repos Férié
-          li
-            span.event-leave C
-            | Congé Annuel
-          li
-            span.event-formation I
-            | Formation
-          li
-            span.event-stop A
-            | Arrêt de Travail ou Maladie
-          li
-            span.event-strike G
-            | Grève
-          li
-            span.event-union D
-            | Décharge syndicale
-          li
-            span.event-union E
-            | Autorisation Spéciale d'Absence
-          li
-            span.event-other X
-            span(contenteditable='true') item personnalisable
-          li
-            span.event-other Y
-            span(contenteditable='true') item personnalisable
-          li
-            span.event-other Z
-            span(contenteditable='true') item personnalisable
-          //- L, O, P, Q, U, V, W
+#tab-panel-1.tab-panel(role='tabpanel' aria-labelledby='tabsummary-1' aria-hidden='true')
+  h2 Statistiques pour l'année 
+    span#current-year-stats en cours
+  .grid2.gap.gap-top
+    .stats
+      #stats
+        .message-highlight
+          p Vous devez configurer un planning pour voir les statistiques.
+    div
+      h3.sr-only Glossaire
+      ul.stats-list
+        li
+          span.event-morning M
+          | Matin
+        li
+          span.event-evening S
+          | Soir
+        li
+          span.event-day J
+          | Jour
+        li
+          span.event-night N
+          | Nuit
+        li
+          span.event-overtime H
+          | Heures Supplémentaires
+        li
+          span.event-rest R
+          | Repos
+        li
+          span.event-extra-rest T
+          | Réduction du Temps de Travail
+        li
+          span.event-holiday F
+          | Repos Férié
+        li
+          span.event-leave C
+          | Congé Annuel
+        li
+          span.event-formation I
+          | Formation
+        li
+          span.event-stop A
+          | Arrêt de Travail ou Maladie
+        li
+          span.event-strike G
+          | Grève
+        li
+          span.event-union D
+          | Décharge syndicale
+        li
+          span.event-union E
+          | Autorisation Spéciale d'Absence
+        li
+          span.event-other X
+          span(contenteditable='true') item personnalisable
+        li
+          span.event-other Y
+          span(contenteditable='true') item personnalisable
+        li
+          span.event-other Z
+          span(contenteditable='true') item personnalisable
+        //- L, O, P, Q, U, V, W
