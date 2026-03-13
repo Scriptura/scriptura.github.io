@@ -2,6 +2,20 @@
  * @file icsGenerator.js
  * @version 2.6.2
  * @description Correction du trigger de téléchargement : Invariant de User Activation.
+ *
+ * LIMITATION TECHNIQUE MAJEURE : "Android 200-Event Buffer"
+ * -----------------------------------------------------------------------
+ * Constat : Sur les environnements Android (Google Calendar Importer), 
+ * l'importation de fichiers .ics locaux est tronquée après ~200 événements.
+ * * Symptôme : Les données sont correctement générées dans le fichier (vérifié 
+ * via ADB/Ubuntu), mais l'application mobile arrête l'ingestion sans erreur 
+ * explicite (ex: arrêt systématique au bout de 6-7 mois de planning).
+ * * Invariant : Pour garantir la synchronisation des jours de repos (RH/R) 
+ * et permettre l'écrasement des anciens cycles, tous les jours restent 
+ * inclus explicitement, quitte à subir cette troncature temporelle.
+ * * Solution de contournement : Si un horizon > 6 mois est requis sur mobile,
+ * réduire MAX_FUTURE_YEARS ou segmenter l'export.
+ * -----------------------------------------------------------------------
  */
 
 const ICS_CONFIG = Object.freeze({
