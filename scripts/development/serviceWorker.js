@@ -1,4 +1,4 @@
-const CACHE_NAME = 'v49'
+const CACHE_NAME = 'v51'
 const MEDIA_CACHE_NAME = `media-${CACHE_NAME}`
 const OFFLINE_URL = '/offline.html'
 
