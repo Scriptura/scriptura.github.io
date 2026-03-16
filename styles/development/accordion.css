@@ -79,7 +79,7 @@
   }
 
   & > details[open] summary::after,
-  & [data-open='true'] .accordion-summary::after {
+  & .accordion-summary[aria-expanded='true']::after {
     transform: rotate(-90deg);
   }
 }

@@ -1847,7 +1847,7 @@ samp {
     }
   }
 } /* @import 'forum'; */ /* @import 'skin'; */ /* @import 'demo'; */ /* @note Les helpers s'appliquent à la fin dans le but d'écraser des styles tels que font-size. */ .hidden,
-[hidden] {
+[hidden]:not([hidden='until-found']) {
   display: none !important;
 } @container grid (width < 35.01em) {
   .xs-hidden {
