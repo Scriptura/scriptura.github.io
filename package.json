@@ -9,22 +9,22 @@
   "license": "MIT",
   "devDependencies": {
     "browser-sync": "^3.0.4",
-    "eslint": "^9.23.0",
+    "eslint": "^10.0.3",
     "image-size": "^2.0.2",
-    "ora": "^8.2.0",
-    "postcss": "^8.5.3",
+    "ora": "^9.3.0",
+    "postcss": "^8.5.8",
     "postcss-advanced-variables": "^5.0.0",
     "postcss-calc": "^10.1.1",
     "postcss-cli": "^11.0.1",
-    "postcss-import": "^16.1.0",
-    "postcss-minify": "^1.1.0",
-    "postcss-preset-env": "^10.1.5",
+    "postcss-import": "^16.1.1",
+    "postcss-minify": "^1.2.0",
+    "postcss-preset-env": "^11.2.0",
     "postcss-url": "^10.1.3",
-    "pug": "^3.0.3",
-    "sharp": "^0.33.5",
+    "pug": "^3.0.4",
+    "sharp": "^0.34.5",
     "svg-symbol-sprite": "^1.5.2",
-    "svgo": "^3.3.2",
-    "terser": "^5.39.0"
+    "svgo": "^4.0.1",
+    "terser": "^5.46.1"
   },
   "scripts": {
     "dev": "pnpm html | pnpm js",
@@ -46,5 +46,13 @@
     "img": "node tasks/images",
     "imglist": "node tasks/imageList",
     "bs": "browser-sync start --proxy 'scriptura.github.io.localhost' --port 9010 --reload-debounce 2000 --files 'assets' 'views' --no-notify"
+  },
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "sharp"
+    ],
+    "onlyBuiltDependencies": [
+      "sharp"
+    ]
   }
 }
