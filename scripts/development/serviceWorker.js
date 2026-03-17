@@ -1,6 +1,5 @@
 /**
  * @file serviceWorker.js
- * @version 1
  *
  * @summary
  * Service Worker de l'application. Intercepte les requêtes GET et les route
@@ -75,7 +74,7 @@
  *   navigator.serviceWorker.addEventListener('message', handler)
  */
 
-const CACHE_NAME = 'v1'
+const CACHE_NAME = 'v2'
 const MEDIA_CACHE_NAME = `media-${CACHE_NAME}`
 const OFFLINE_URL = '/offline.html'
 
