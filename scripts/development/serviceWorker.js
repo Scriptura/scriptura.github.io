@@ -61,11 +61,17 @@
  *   compromis entre réactivité UI et coût CPU ; ajuster selon la densité
  *   de requêtes en vol acceptable dans l'application.
  *
- * @architectural-decision Exclusion du périmètre /app/
- *   Les requêtes dont l'URL contient '/app/' sont passées directement au
- *   réseau sans interception ni mise en cache. Ce périmètre est supposé
- *   gérer son propre cycle de vie (SPA, auth, API). Toute extension de ce
- *   prédicat doit être coordonnée avec la stratégie de routing applicatif.
+ * @architectural-decision Absence d'exclusion du périmètre /app/
+ *   L'exclusion explicite des requêtes '/app/' a été supprimée. L'isolation
+ *   est déléguée à la mécanique de scope navigateur : tout enfant de /app/
+ *   enregistrant son propre SW (scope /app/enfant/) intercepte ses requêtes
+ *   avant que ce SW racine ne soit consulté. Le scope le plus spécifique
+ *   gagne, indépendamment de l'ordre d'enregistrement.
+ *   Les enfants de /app/ sans SW propre héritent en conséquence des
+ *   stratégies de ce fichier, ce qui est le comportement souhaité.
+ *   Réintroduire une exclusion URL explicite ne serait justifié que pour
+ *   un périmètre devant échapper à toute interception (API, auth token)
+ *   indépendamment de la présence d'un SW enfant.
  *
  * @architectural-decision Listener 'message' absent de ce fichier
  *   La manipulation de document.documentElement est interdite dans le scope
@@ -74,7 +80,7 @@
  *   navigator.serviceWorker.addEventListener('message', handler)
  */
 
-const CACHE_NAME = 'v81'
+const CACHE_NAME = 'v90'
 const MEDIA_CACHE_NAME = `media-${CACHE_NAME}`
 const OFFLINE_URL = '/offline.html'
 
@@ -142,10 +148,6 @@ async function notifyServiceUnavailable() {
 // Les stratégies reçoivent l'event complet pour attacher l'I/O disque à son cycle de vie.
 async function networkFirst(event) {
   const { request } = event
-
-  if (request.url.includes('/app/')) {
-    return fetch(request)
-  }
 
   try {
     const networkResponse = await fetch(request)

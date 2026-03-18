@@ -65,8 +65,18 @@ const AppPipeline = (() => {
   /**
    * Table de dépendances assets. Un seul passage DOM au boot.
    * Présence d'un sélecteur → injection des scripts et styles associés.
+   *
+   * Champ optionnel `onload` : callback déclenché sur le `load` du dernier script
+   * de l'entrée. Utilisé pour séquencer des initialisations qui dépendent du script
+   * injecté (ex. : `window.initMaps` ne peut s'exécuter qu'après `leaflet.js`).
+   *
    * @note .map et [class*=language-] apparaissent dans l'entrée 'more' car
    *       more.js fournit aussi des enrichissements pour ces contextes.
+   *
+   * @architectural-decision `onload` est posé sur l'entrée Leaflet, pas sur
+   *       l'entrée more.js. Leaflet est la dépendance bloquante pour les cartes :
+   *       `window.initMaps` (défini dans more.js) peut être appelé dès que `L`
+   *       est disponible, quelle que soit l'ordre d'exécution des deux scripts.
    */
   const ASSET_REGISTRY = [
     {
@@ -77,7 +87,8 @@ const AppPipeline = (() => {
     {
       selectors: ['.map', '[class*=map]'],
       scripts:   ['/libraries/leaflet/leaflet.js'],
-      styles:    [{ url: '/libraries/leaflet/leaflet.css', media: 'screen, print' }]
+      styles:    [{ url: '/libraries/leaflet/leaflet.css', media: 'screen, print' }],
+      onload:    () => window.initMaps?.()
     },
     {
       selectors: [
@@ -170,30 +181,37 @@ const AppPipeline = (() => {
         : document.head.appendChild(link)
     },
 
-    injectScript(url) {
+    injectScript(url, onload) {
       if (document.querySelector(`script[src="${url}"]`)) return
       const script   = document.createElement('script')
       script.src     = url
       script.async   = true
+      if (onload) script.addEventListener('load', onload)
       DOM.body.appendChild(script)
     },
 
     resolve() {
-      const scripts = new Set()
+      const scripts = new Map() // url → onload|undefined
       const styles  = new Map() // url → media
 
       // Phase Read : un seul passage DOM
       for (let i = 0; i < ASSET_REGISTRY.length; i++) {
         const entry = ASSET_REGISTRY[i]
         if (document.querySelector(entry.selectors.join(','))) {
-          entry.scripts.forEach(s => scripts.add(s))
+          // Le callback onload est affecté au dernier script de l'entrée.
+          const cb = entry.onload
+          entry.scripts.forEach((s, idx) => {
+            if (!scripts.has(s)) {
+              scripts.set(s, idx === entry.scripts.length - 1 ? cb : undefined)
+            }
+          })
           entry.styles.forEach(({ url, media }) => styles.set(url, media))
         }
       }
 
       // Phase Write
       styles.forEach((media, url) => this.injectStyle(url, media))
-      scripts.forEach(url => this.injectScript(url))
+      scripts.forEach((onload, url) => this.injectScript(url, onload))
     }
   }
 

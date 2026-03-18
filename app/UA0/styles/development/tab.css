@@ -1,16 +1,8 @@
 .tabs {
-  --color-tabs-box-shadow: hsla(0, 0%, 0%, 0.05);
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: auto minmax(0, 1fr);
-
   & .tab-list {
     display: flex;
-    /* justify-content: flex-end; */
     padding: 0;
-  }
 
-  & .tab-list {
     & ~ * .tab-list {
       /* @note Si onglets imbriqués. */
       margin-block-start: 0.5em;
@@ -28,12 +20,13 @@
       text-shadow: 0 1px 0 hsla(0, 0%, 100%, 0.4);
       color: inherit;
       background-color: var(--color-gray-100);
-      border: none;
+      border: var(--border2);
       border-radius: 0.5em 0.5em 0 0;
       box-shadow: 0 -1rem 1rem var(--color-tabs-box-shadow);
+      /* filter: drop-shadow(0 -.5rem .5rem rgba(0, 0, 0, .1)); */
       cursor: pointer;
       transition: 0.2s box-shadow ease-in-out;
-
+      
       &:where(:focus-visible, :hover) {
         @media (hover: hover) and (pointer: fine) {
           outline: none;
@@ -49,33 +42,38 @@
         margin-inline-end: 0.3em;
         fill: currentColor;
       }
-    }
 
-    & [aria-selected='true'] {
-      /* @note Permet une gestion correcte des ombres. */
-      z-index: 2;
-      flex-shrink: 0;
-      max-width: 60%;
-      background-color: #fff;
-      border-bottom: none;
-      pointer-events: none;
-    }
+      &[aria-selected='true'] {
+        /* @note Permet une gestion correcte des ombres. */
+        z-index: 2;
+        flex-shrink: 0;
+        max-width: 60%;
+        background-color: var(--color-background);
+        border-bottom: none;
+        pointer-events: none;
+      }
 
-    & [aria-selected='false'] {
-      color: hsl(0, 0%, 40%);
-      /* user-select: none; */
+      &[aria-selected='false'] {
+        color: hsl(0, 0%, 40%);
+        user-select: none;
+      }
     }
   }
 
   & .tab-panel {
-    padding-block-start: 1em;
+
+    &:not([hidden='until-found']) {
+      position: relative;
+      /* @note Compensation de la bordure inférieure des onglets. */
+      top: -1px;
+      /* @note Idem. */
+      padding-block-start: 1em;
+      border: var(--border2);
+      box-shadow: var(--shadow8);
+    }
 
     &[aria-hidden='false'] {
       display: block;
-    }
-
-    &.grid-full-row {
-      display: grid;
     }
 
     &[aria-hidden='true'] {

@@ -317,17 +317,24 @@ const observeMaps = (configs) => {
  * Point d'entrée unique du module.
  * Vérifie la disponibilité de Leaflet, collecte les configs et arme l'observer.
  *
- * @strategy        Déclenchement sur `load` (chemin nominal) + exposition via
- *                  `window.initMaps` (chemin alternatif si Leaflet est injecté
- *                  async après `load`).
+ * @strategy        Trois chemins d'entrée couvrent tous les contextes de chargement :
+ *                  (1) `load` non encore fired → listener standard.
+ *                  (2) `load` déjà fired, `L` disponible → appel immédiat.
+ *                  (3) `load` déjà fired, `L` absent → `window.initMaps` exposé,
+ *                  invoqué par `AssetSystem` via le callback `onload` du script Leaflet.
  *
- * @architectural-decision Le `MutationObserver` sur `document.head` est supprimé.
- *                  Raisons : (1) observe le DOM global pour détecter un seul
- *                  script tiers, disproportionné ; (2) le timeout de 10 s est
- *                  arbitraire et silencieux en cas d'échec ; (3) transfère au
- *                  script une responsabilité qui appartient au site appelant.
- *                  Contrat de remplacement : si Leaflet arrive après `load`,
- *                  appeler `window.initMaps()` explicitement.
+ * @architectural-decision `more.js` est injecté par `AssetSystem` dans un
+ *                  `requestIdleCallback`, donc systématiquement après l'événement
+ *                  `load`. Un `addEventListener('load', …)` posé ici ne se
+ *                  déclencherait jamais. Le test `document.readyState === 'complete'`
+ *                  détecte ce contexte post-load et court-circuite le listener.
+ *
+ * @architectural-decision Leaflet est injecté en parallèle de `more.js` par le même
+ *                  `AssetSystem` : aucune garantie d'ordre. Si `more.js` s'exécute
+ *                  avant `leaflet.js`, `L` n'est pas encore défini. `window.initMaps`
+ *                  reste exposé pour que `AssetSystem` le déclenche sur le `onload`
+ *                  du script Leaflet (voir `_base.js`). Ce contrat externalise la
+ *                  responsabilité du séquencement au système qui contrôle l'injection.
  *
  * @returns {void}
  */
@@ -339,4 +346,8 @@ const bootstrap = () => {
 
 /** @type {() => void} Point d'entrée public pour init manuelle post-`load`. */
 window.initMaps = bootstrap
-window.addEventListener('load', bootstrap)
+
+document.readyState === 'complete'
+  ? bootstrap()
+  : window.addEventListener('load', bootstrap)
+  
