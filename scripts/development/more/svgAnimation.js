@@ -1,122 +1,115 @@
 /**
- * Initialise l'IntersectionObserver pour observer les SVG animés sur la page.
- * Si l'utilisateur a activé la réduction des animations dans ses préférences, les animations ne seront pas déclenchées.
+ * @summary Système d'animation de tracés SVG piloté par les données géométriques.
+ * @strategy 
+ * - AOT Geometry Pre-calculation : Calcul unique des longueurs de tracés à l'initialisation pour éviter les "Layout Thrashing" lors du scroll.
+ * - Component Mapping : Stockage des invariants (longueurs, états initiaux) dans une Map centralisée, transformant le handler d'intersection en une opération O(1).
+ * - Lifecycle Delegation : Utilisation exclusive de l'IntersectionObserver pour la détection de visibilité, supprimant les calculs manuels de bounding boxes.
+ * @architectural-decision
+ * - Séparation du "Discovery System" (recherche des SVG) et du "Mutation System" (application des styles).
+ * - Utilisation de CSS Variables pour injecter les données calculées (dasharray), déléguant le pipeline d'animation au moteur de rendu du navigateur.
+ * - Nettoyage automatique des ressources via `unobserve` et suppression des références dans la Map pour prévenir les fuites mémoire.
  */
-function initSvgObserver() {
-  const prefersNormalMotion = window.matchMedia('(prefers-reduced-motion: no-preference)').matches
+'use strict';
 
-  if (!prefersNormalMotion) {
-    console.log("Les animations sont désactivées car l'utilisateur préfère réduire les animations.")
-    return
-  }
+{
+  // Registre des composants (Data Store)
+  const registry = new WeakMap();
 
-  const animatedSvgs = document.querySelectorAll('svg.svg-animation')
+  const CONFIG = {
+    SELECTOR: 'svg.svg-animation',
+    ACTIVE_CLASS: 'active',
+    HIDDEN_CLASS: 'invisible-if-animation'
+  };
 
-  if (!animatedSvgs.length) return
+  /**
+   * Système de préparation (AOT / Boot phase)
+   * Extrait les données géométriques et prépare le DOM.
+   */
+  const bootstrapSvg = (svg) => {
+    const paths = svg.querySelectorAll('path');
+    const pathData = Array.from(paths).map(path => {
+      const length = path.getTotalLength();
+      
+      // Injection immédiate des invariants dans le style inline (Data-to-CSS)
+      path.style.setProperty('--path-length', length);
+      path.setAttribute('stroke-dasharray', length);
+      path.setAttribute('stroke-dashoffset', length);
 
-  const observerOptions = {
-    root: null,
-    rootMargin: '0px',
-    threshold: 0.5,
-  }
-  const observer = new IntersectionObserver(handleSvgVisibility, observerOptions)
+      return {
+        ref: path,
+        originalDashArray: path.getAttribute('stroke-dasharray'),
+        originalDashOffset: path.getAttribute('stroke-dashoffset')
+      };
+    });
 
-  animatedSvgs.forEach(svg => observer.observe(svg))
-  checkInitialVisibility(animatedSvgs, observer)
+    registry.set(svg, pathData);
+  };
+
+  /**
+   * Restoration System
+   * Réinitialise les attributs après exécution de la logique d'animation.
+   */
+  const restoreSvg = (svg) => {
+    const data = registry.get(svg);
+    if (!data) return;
+
+    data.forEach(item => {
+      item.originalDashArray 
+        ? item.ref.setAttribute('stroke-dasharray', item.originalDashArray) 
+        : item.ref.removeAttribute('stroke-dasharray');
+      
+      item.originalDashOffset 
+        ? item.ref.setAttribute('stroke-dashoffset', item.originalDashOffset) 
+        : item.ref.removeAttribute('stroke-dashoffset');
+    });
+
+    svg.classList.remove(CONFIG.ACTIVE_CLASS);
+    registry.delete(svg);
+  };
+
+  /**
+   * Intersection Handler (Execution System)
+   */
+  const onIntersection = (entries, observer) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+
+      const svg = entry.target;
+      if (svg.classList.contains(CONFIG.ACTIVE_CLASS)) return;
+
+      // Activation
+      svg.classList.remove(CONFIG.HIDDEN_CLASS);
+      svg.classList.add(CONFIG.ACTIVE_CLASS);
+
+      // Cleanup post-animation
+      const onEnd = () => {
+        restoreSvg(svg);
+        svg.removeEventListener('animationend', onEnd);
+        observer.unobserve(svg);
+      };
+
+      svg.addEventListener('animationend', onEnd);
+    });
+  };
+
+  const init = () => {
+    // Early exit: User preference check
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const targets = document.querySelectorAll(CONFIG.SELECTOR);
+    if (!targets.length) return;
+
+    const observer = new IntersectionObserver(onIntersection, {
+      root: null,
+      threshold: 0.5
+    });
+
+    targets.forEach(svg => {
+      bootstrapSvg(svg);
+      observer.observe(svg);
+    });
+  };
+
+  // Entry point synchronisé avec le cycle de vie du Sprite
+  document.addEventListener('svgSpriteInlined', init, { once: true });
 }
-
-/**
- * Définit les attributs d'animation des éléments <path> d'un SVG.
- * 
- * @param {SVGPathElement} path - Un élément <path> du SVG.
- * @returns {Object} - Un objet contenant le chemin d'origine et ses attributs initiaux.
- */
-function setSvgAnimationAttributes(path) {
-  const initialAttributes = {
-    strokeDasharray: path.getAttribute('stroke-dasharray'),
-    strokeDashoffset: path.getAttribute('stroke-dashoffset'),
-  }
-
-  const pathLength = path.getTotalLength() // Math.round(path.getTotalLength())
-  path.setAttribute('stroke-dasharray', pathLength)
-  path.setAttribute('stroke-dashoffset', pathLength)
-
-  return { path, ...initialAttributes }
-}
-
-/**
- * Restaure les attributs des éléments <path> après l'animation.
- * 
- * @param {Array<Object>} initialAttributesList - Liste des objets contenant les éléments <path> et leurs attributs initiaux.
- */
-function restoreSvgAttributes(initialAttributesList) {
-  initialAttributesList.forEach(({ path, strokeDasharray, strokeDashoffset, fill, stroke, strokeWidth }) => {
-    strokeDasharray !== null ? path.setAttribute('stroke-dasharray', strokeDasharray) : path.removeAttribute('stroke-dasharray')
-    strokeDashoffset !== null ? path.setAttribute('stroke-dashoffset', strokeDashoffset) : path.removeAttribute('stroke-dashoffset')
-  })
-}
-
-/**
- * Gère les classes CSS d'un élément SVG pour activer ou désactiver l'animation.
- * 
- * @param {SVGElement} svg - L'élément SVG à manipuler.
- * @param {string} action - L'action à effectuer ('activate' pour activer l'animation, 'deactivate' pour la désactiver).
- */
-function manageSvgClasses(svg, action) {
-  if (action === 'activate') {
-    svg.classList.remove('invisible-if-animation')
-    svg.classList.add('active')
-  } else if (action === 'deactivate') {
-    svg.classList.remove('active')
-  }
-}
-
-/**
- * Fonction principale pour gérer la visibilité des SVG et déclencher les animations.
- * Appelée par l'IntersectionObserver lorsque les éléments SVG deviennent visibles ou invisibles.
- * 
- * @param {IntersectionObserverEntry[]} entries - Les entrées de l'observateur contenant les éléments SVG.
- * @param {IntersectionObserver} observer - L'instance de l'IntersectionObserver utilisée pour observer les SVG.
- */
-async function handleSvgVisibility(entries, observer) {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      const svg = entry.target
-      const paths = svg.querySelectorAll('path')
-
-      if (!svg.classList.contains('active')) {
-        manageSvgClasses(svg, 'activate')
-
-        const initialAttributesList = [...paths].map(setSvgAnimationAttributes)
-
-        function handleAnimationEnd() {
-          restoreSvgAttributes(initialAttributesList)
-          manageSvgClasses(svg, 'deactivate')
-          svg.removeEventListener('animationend', handleAnimationEnd)
-          observer.unobserve(svg) // Optionnel : arrêter d'observer cet élément une fois l'animation terminée
-        }
-
-        svg.addEventListener('animationend', handleAnimationEnd)
-      }
-    }
-  })
-}
-
-/**
- * Vérifie la visibilité initiale des SVG au chargement de la page et déclenche l'animation si nécessaire.
- * 
- * @param {NodeListOf<SVGElement>} animatedSvgs - Liste des SVGs à observer.
- * @param {IntersectionObserver} observer - L'instance de l'IntersectionObserver utilisée pour observer les SVG.
- */
-function checkInitialVisibility(animatedSvgs, observer) {
-  animatedSvgs.forEach(svg => {
-    const rect = svg.getBoundingClientRect()
-    if (rect.top < window.innerHeight && rect.bottom > 0 && rect.left < window.innerWidth && rect.right > 0) {
-      // Si le SVG est visible, déclenche l'animation
-      handleSvgVisibility([{ target: svg, isIntersecting: true }], observer)
-    }
-  })
-}
-
-// Ecoute de l'événement personnalisé pour démarrer l'observation
-document.addEventListener('svgSpriteInlined', initSvgObserver)

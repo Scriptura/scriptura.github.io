@@ -1,604 +1,370 @@
 'use strict'
 
-// -----------------------------------------------------------------------------
-// @section     Support
-// @description Détecte les supports et ajoute des classes dans le tag html
-// -----------------------------------------------------------------------------
-
-// jsDetect :
-// document.documentElement.classList.replace('no-js', 'js') // @note Remplacé par la solution full CSS "@media (scripting: none)"
-
-// printDetect :
-window.print || document.documentElement.classList.add('no-print') // @see Firefox Android a perdu sa fonction d'impression...
-
-// touchDetect
-// @see https://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript
-// @deprecated Script remplacé par règle CSS @media (hover hover) and (pointer fine)
-
-// -----------------------------------------------------------------------------
-// @section     Online Status
-// @description En ligne ou hors ligne
-// -----------------------------------------------------------------------------
-
-// Fonction pour vérifier si l'utilisateur est en ligne ou hors ligne
-function updateOnlineStatus() {
-  const htmlTag = document.documentElement // Sélectionne la balise <html>
-  
-  // Ajoute ou supprime la classe "offline" selon l'état de la connexion
-  if (navigator.onLine) {
-    console.log('online')
-    htmlTag.classList.remove('offline')
-  } else {
-    console.log('offline')
-    htmlTag.classList.add('offline')
-  }
-}
-
-// Écoute les événements 'online' et 'offline'
-window.addEventListener('online', updateOnlineStatus)
-window.addEventListener('offline', updateOnlineStatus)
-
-// Vérification initiale au chargement de la page
-updateOnlineStatus()
-
-// -----------------------------------------------------------------------------
-// @section     Service Unavailable
-// @description Test de l'indisponibilité du service
-// -----------------------------------------------------------------------------
-
-// Fonction pour ajouter la classe 'service-unavailable' à l'élément HTML
-function addServiceUnavailableClass() {
-  document.documentElement.classList.add('service-unavailable')
-}
-
-// Ecouter les messages envoyés par le Service Worker
-if (navigator.serviceWorker) {
-  navigator.serviceWorker.addEventListener('message', event => {
-    if (event.data && event.data.action === 'service-unavailable') {
-      console.log('Service unavailable (test)')
-      addServiceUnavailableClass()
-    }
-  })
-}
-
-// -----------------------------------------------------------------------------
-// @section     Service Worker
-// @description Expérience hors ligne pour application web progressive (PWA)
-// -----------------------------------------------------------------------------
-
 /**
- * Enregistre un Service Worker pour l'application si le navigateur le supporte.
- * @see https://developer.mozilla.org/fr/docs/Web/API/Service_Worker_API/Using_Service_Workers
- * @async
- * @function
- * @returns {Promise<void>} Une promesse qui se résout lorsque l'enregistrement du Service Worker est terminé.
+ * @summary Pipeline de boot unique : détection des capacités, statut réseau,
+ *          chargement conditionnel des assets (scripts + styles), routage global
+ *          des événements d'interaction, et enregistrement du Service Worker.
+ *
+ * @strategy
+ *   – DOM en lecture seule : références capturées une fois à l'init, jamais
+ *     re-requêtées à l'exécution.
+ *   – Délégation d'événements (Event Router) : un seul listener 'click' au niveau
+ *     document, routé par classe CSS. Zéro allocation de closure dans des boucles.
+ *   – ASSET_REGISTRY data-driven : table de dépendances évaluée en un seul passage
+ *     DOM (sélecteurs concaténés → un seul appel moteur), scripts et styles injectés
+ *     sans doublon, exécution différée dans les cycles d'inactivité du thread
+ *     (requestIdleCallback) pour ne pas bloquer le First Contentful Paint.
+ *   – Scroll-to-top via scroll event passif ({ passive: true }) : lecture de scrollY
+ *     seule, sans lecture de layout (getBoundingClientRect, offsetTop) — zéro reflow.
+ *   – Image fallback réactif : écoute globale en phase de capture sur window.error —
+ *     zéro test réseau proactif, zéro allocation par élément <img>.
+ *
+ * @architectural-decision
+ *   – Les styles conditionnels sont insérés après le premier <link rel=stylesheet>
+ *     existant (non en fin de <head>) afin de respecter l'ordre de cascade planifié
+ *     par l'architecture CSS du projet.
+ *   – openExternalLinksInNewTab est une passe d'initialisation (mutation d'attributs),
+ *     non une délégation d'événement : target="_blank" doit être en place avant tout
+ *     clic, et le coût est O(liens externes) une seule fois au boot.
+ *   – preloadImages est déclenché sur 'load' (non sur 'DOMContentLoaded') pour ne pas
+ *     concurrencer le chargement des ressources critiques. Objectif : amorcer le cache
+ *     Service Worker pour la navigation suivante.
+ *   – Le timeout de NavigationSystem est déclaré dans la portée du système et non dans
+ *     le handler resize : corrige le bug silencieux de l'original où clearTimeout était
+ *     inopérant (nouvelle variable à chaque appel).
+ *   – initScrollButton utilise un scroll event { passive: true } plutôt qu'un
+ *     IntersectionObserver sur élément sentinel injecté. La lecture de scrollY seule
+ *     ne provoque aucun reflow — le thrashing n'existe que lorsqu'une lecture de layout
+ *     est suivie d'une écriture dans le même frame. { passive: true } garantit que le
+ *     listener ne bloque jamais le scroll du navigateur. Zéro injection HTML utilitaire.
  */
-async function registerServiceWorker() {
-  if ('serviceWorker' in navigator) {
-    try {
-      const registration = await navigator.serviceWorker.register('/sw.js')
+const AppPipeline = (() => {
 
-      if (registration.installing) {
-        console.log('Installation du service worker en cours')
-      } else if (registration.waiting) {
-        console.log('Service worker installé')
-      } else if (registration.active) {
-        console.log('Service worker actif')
-      }
-    } catch (error) {
-      console.error(`L'enregistrement du service worker a échoué : ${error}`)
-    }
+  // ---------------------------------------------------------------------------
+  // 1. Capability Detection (synchrone, avant tout rendu)
+  // ---------------------------------------------------------------------------
+
+  // @see Firefox Android a perdu sa fonction d'impression
+  // @note jsDetect : remplacé par @media (scripting: none)
+  // @deprecated touchDetect : remplacé par @media (hover: hover) and (pointer: fine)
+  window.print || document.documentElement.classList.add('no-print')
+
+  // ---------------------------------------------------------------------------
+  // 2. Data Layout
+  // ---------------------------------------------------------------------------
+
+  const DOM = {
+    html: document.documentElement,
+    body: document.body,
+    gdprTemplate: document.getElementById('gdpr'),
+    gdprTarget: document.querySelector('.alert'),
   }
-}
 
-registerServiceWorker()
+  const FALLBACK_IMG = '/medias/icons/utilDest/xmark.svg'
 
-// -----------------------------------------------------------------------------
-// @section     Get Scripts
-// @description Appel de scripts
-// -----------------------------------------------------------------------------
-
-/**
- * @warning Les scripts chargés par ce biais doivent éviter des modifications trop importantes du DOM ou de repeindre la page (reflow and repaint).
- * @param {string} url : une url de script
- * @param {string} hook : le placement du script, 'head' ou 'footer', footer par défaut.
- */
-const getScript = (url, hook = 'footer') =>
-  new Promise((resolve, reject) => {
-    // @see https://stackoverflow.com/questions/16839698#61903296
-    const script = document.createElement('script')
-    script.src = url
-    script.async = 1
-    script.onerror = reject
-    script.onload = script.onreadystatechange = function () {
-      const loadState = this.readyState
-      if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
-      script.onload = script.onreadystatechange = null
-      resolve()
+  /**
+   * Table de dépendances assets. Un seul passage DOM au boot.
+   * Présence d'un sélecteur → injection des scripts et styles associés.
+   * @note .map et [class*=language-] apparaissent dans l'entrée 'more' car
+   *       more.js fournit aussi des enrichissements pour ces contextes.
+   */
+  const ASSET_REGISTRY = [
+    {
+      selectors: ['pre > code[class*=language]', '[class*=language-]'],
+      scripts:   ['/libraries/prism/prism.js'],
+      styles:    [{ url: '/styles/prism.css', media: 'screen' }]
+    },
+    {
+      selectors: ['.map', '[class*=map]'],
+      scripts:   ['/libraries/leaflet/leaflet.js'],
+      styles:    [{ url: '/libraries/leaflet/leaflet.css', media: 'screen, print' }]
+    },
+    {
+      selectors: [
+        '[class*=validation]', '[class*=assistance]', '[class*=character-counter]',
+        '[class*=-focus]', '.preview-container', '[class*=accordion]', '.pre',
+        '[class^=range]', '.add-line-marks', '.video-youtube', '.client-test',
+        '.map', '[class*=language-]', '.input-add-terms', '.flip',
+        '.sprite-to-inline', '.svg-animation'
+      ],
+      scripts:   ['/scripts/more.js'],
+      styles:    []
     }
-    if (hook === 'footer') document.body.appendChild(script)
-    else if (hook === 'head') document.head.appendChild(script)
-    else console.error(`Error: le choix de l'élement HTML pour getScript() n'est pas correct.`)
-  })
-
-const getScriptRequests = (() => {
-  if (document.querySelector('[class*=language-]')) getScript('/libraries/prism/prism.js')
-  if (document.querySelector('.map')) getScript('/libraries/leaflet/leaflet.js')
-  const selectors = [
-    '[class*=validation]',
-    '[class*=assistance]',
-    '[class*=character-counter]',
-    '[class*=-focus]',
-    '.preview-container',
-    '[class*=accordion]',
-    '.pre',
-    '[class^=range]',
-    '.add-line-marks',
-    '.video-youtube',
-    '.client-test',
-    '.map',
-    '[class*=language-]',
-    '.input-add-terms',
-    '.flip',
-    '.sprite-to-inline',
-    '.svg-animation',
   ]
-  if (selectors.some(selector => document.querySelector(selector))) getScript('/scripts/more.js')
-})()
 
-// -----------------------------------------------------------------------------
-// @section     Load Styles
-// @description Appel de styles
-// -----------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
+  // 3. Systems
+  // ---------------------------------------------------------------------------
 
-/**
- * Fonction permettant d'ajouter un fichier CSS au document
- *
- * @param {string} url - L'URL du fichier CSS à charger
- * @param {string} [media='all'] - Le média pour lequel les styles sont destinés (par défaut : 'all')
- * @returns {Promise<string>} - Une promesse qui est résolue lorsque le fichier CSS est chargé avec succès
- */
-function loadStyle(url, media = 'all') {
-  return new Promise((resolve, reject) => {
-    const link = document.createElement('link')
-    link.rel = 'stylesheet'
-    link.href = url
-    link.media = media
-    link.onload = () => resolve(url)
-    link.onerror = () => reject(new Error(`Failed to load ${url}`))
-    //document.head.appendChild(link)
-    const target = document.querySelector('[rel=stylesheet]')
-    document.head.insertBefore(link, target.nextSibling)
-  })
-}
-
-/**
- * Fonction pour charger conditionnellement les styles nécessaires à la page
- */
-async function loadConditionalStyles() {
-  try {
-    if (document.querySelector('pre > code[class*=language]')) {
-      await loadStyle('/styles/prism.css', 'screen')
-    }
-    if (document.querySelector('[class*=map]')) {
-      await loadStyle('/libraries/leaflet/leaflet.css', 'screen, print')
-    }
-  } catch (error) {
-    console.error('Erreur de chargement des styles:', error)
+  // — Réseau —
+  const NetworkSystem = {
+    update: () => DOM.html.classList.toggle('offline', !navigator.onLine)
   }
-}
 
-loadConditionalStyles()
-
-// -----------------------------------------------------------------------------
-// @section     Polyfills
-// @description Permettent de compenser un manque de support CSS dans certains navigateurs
-// -----------------------------------------------------------------------------
-/*
-// @note Fallback pour CSS Container Queries et grid layout @affected Firefox en particulier, et les navigateurs moins récents.
-// @see https://css-tricks.com/a-new-container-query-polyfill-that-just-works/
-// @note Conditional JS : plus performant que de passer par la détection d'une classe dans le HTML comme pour les autres scripts.
-const supportContainerQueries = 'container' in document.documentElement.style // Test support des Container Queries (ok pour Chrome, problème avec Firefox)
-const supportMediaQueriesRangeContext = window.matchMedia('(width > 0px)').matches // Test support des requêtes média de niveau 4 (Media Query Range Contexts).
-const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1 // @todo Solution temporaire pour Firefox.
-
-if (!supportContainerQueries || !supportMediaQueriesRangeContext || isFirefox) {
-  getStyle('/styles/gridFallback.css', 'screen')
-  document.querySelectorAll('[class^=grid]').forEach(grid => grid.parentElement.classList.add('parent-grid')) // @affected Firefox =< v108 @note Compense le non support de :has() sur les grilles.
-}
-*/
-
-// -----------------------------------------------------------------------------
-// @section     Preload Images
-// @description Précharge les images ayant l'attribut loading="lazy"
-// -----------------------------------------------------------------------------
-
-/**
- * Précharge les images ayant l'attribut loading="lazy"
- * en les téléchargeant après le chargement complet de la page.
- * Cela permet d'améliorer les performances lors d'une navigation ultérieure.
- * Notamment pour l'utilisation du cache avec un Service Worker.
- */
- function preloadImages() {
-  const images = document.querySelectorAll('img[loading="lazy"]')
-
-  images.forEach(img => {
-    const preloadedImage = new Image()
-    preloadedImage.src = img.src
-  })
-}
-
-window.addEventListener('load', preloadImages)
-
-// -----------------------------------------------------------------------------
-// @section     Sprites SVG
-// @description Injection de spites SVG
-// -----------------------------------------------------------------------------
-
-/**
- * Injecte un sprite SVG dans un élément cible.
- *
- * @param {HTMLElement} targetElement - L'élément dans lequel le sprite SVG sera injecté.
- * @param {string} spriteId - L'identifiant du sprite à injecter.
- * @param {string} [svgFile='util'] - Le nom du fichier de sprite (par défaut 'util' si non fourni).
- */
-function injectSvgSprite(targetElement, spriteId, svgFile) {
-  const path = '/sprites/' // Chemin des fichiers de sprites SVG
-  svgFile = svgFile || 'util'
-  const icon = `<svg role="img" focusable="false"><use href="${path + svgFile}.svg#${spriteId}"></use></svg>`
-  targetElement.insertAdjacentHTML('beforeEnd', icon)
-}
-
-// -----------------------------------------------------------------------------
-// @section     External links
-// @description Gestion des liens externes au site
-// -----------------------------------------------------------------------------
-
-/**
- * Ouvre tous les liens externes dans un nouvel onglet, sauf les liens internes.
- * @note Par défaut, tous les liens externes conduisent à l'ouverture d'un nouvel onglet, sauf les liens internes.
- */
-function openExternalLinksInNewTab() {
-  const links = document.querySelectorAll('a')
-
-  for (const link of links) {
-    if (link.hostname !== window.location.hostname) {
-      link.setAttribute('target', '_blank')
+  // — Vibration —
+  const VibrateSystem = {
+    play: (frame) => {
+      if ('vibrate' in navigator) navigator.vibrate(frame ? parseInt(frame, 10) : 200)
     }
   }
-}
 
-openExternalLinksInNewTab()
+  // — Navigation principale —
+  const NavigationSystem = {
+    _btn:          null,
+    _subNav:       null,
+    _content:      null,
+    _sizeNav:      0,
+    _htmlFontSize: 1,
+    _resizeTimer:  null,
 
-// -----------------------------------------------------------------------------
-// @section     Cmd Print
-// @description Commande pour l'impression
-// -----------------------------------------------------------------------------
+    init() {
+      this._btn    = document.querySelector('.cmd-nav')
+      this._subNav = document.querySelector('.sub-nav')
+      if (!this._btn || !this._subNav) return
 
-/**
- * Ajoute un gestionnaire d'événement 'click' sur tous les éléments avec la classe '.cmd-print'
- * pour déclencher l'impression de la fenêtre.
- */
-function addPrintEventListener() {
-  const printButtons = document.querySelectorAll('.cmd-print')
+      this._content      = document.querySelectorAll('body > :not(.nav)')
+      this._sizeNav      = parseFloat(getComputedStyle(DOM.html).getPropertyValue('--size-nav'))
+      this._htmlFontSize = parseFloat(getComputedStyle(DOM.html).getPropertyValue('font-size'))
 
-  for (const printButton of printButtons) {
-    printButton.onclick = function () {
-      window.print()
-    }
-  }
-}
-
-addPrintEventListener()
-
-// -----------------------------------------------------------------------------
-// @section     GDPR / gprd
-// @description Règlement Général sur la Protection des Données
-// -----------------------------------------------------------------------------
-
-const gdpr = (() => {
-  //const gdprConsent = localStorage.getItem('gdprConsent')
-  const template = document.getElementById('gdpr')
-  //console.log(template)
-  const target = document.querySelector('.alert')
-  //document.importNode(panel.content, true)
-  const clone = template.content.cloneNode(true)
-  target.appendChild(clone)
-  const panel = document.getElementById('gdpr-see')
-  const trueConsentButton = document.getElementById('gdpr-true-consent')
-  const falseConsentButton = document.getElementById('gdpr-false-consent')
-  if (localStorage.getItem('gdprConsent') === 'yes') panel.style.display = 'none'
-  trueConsentButton.addEventListener(
-    'click',
-    () => {
-      localStorage.setItem('gdprConsent', 'yes')
-      panel.style.display = 'none'
+      // État initial : menu fermé
+      this._btn.setAttribute('aria-expanded', 'false')
+      this._subNav.setAttribute('aria-hidden', 'true')
     },
-    false,
-  )
-  falseConsentButton.addEventListener(
-    'click',
-    () => {
-      localStorage.setItem('gdprConsent', 'no')
-      panel.style.display = 'none' // 'grid'
+
+    toggle() {
+      if (!this._btn) return
+      const isActive = DOM.html.classList.toggle('active')
+      DOM.body.classList.toggle('active')
+      this._btn.setAttribute('aria-expanded', isActive.toString())
+      this._subNav.setAttribute('aria-hidden', (!isActive).toString())
+      this._content.forEach(e => isActive ? e.setAttribute('inert', '') : e.removeAttribute('inert'))
     },
-    false,
-  )
-})()
 
-// -----------------------------------------------------------------------------
-// @section     Dates
-// @description Champs pour les dates
-// -----------------------------------------------------------------------------
-
-const dateInputToday = (() => {
-  // @note Date du jour si présence de la classe 'today-date' @see https://css-tricks.com/prefilling-date-input/
-  document.querySelectorAll('input[type=date].today-date').forEach(e => (e.valueAsDate = new Date())) // @bugfixed Semble problématique sur certains navigateurs. @todo À voir dans le temps.
-})()
-
-// -----------------------------------------------------------------------------
-// @section     Multiple Select
-// @description Modification du champ html de selection multiple
-// -----------------------------------------------------------------------------
-
-const multipleSelectCustom = (() => {
-  document.querySelectorAll('.input select[multiple]').forEach(select => {
-    const maxLength = 7,
-      length = select.length
-    if (length < maxLength) {
-      // @note Permet d'afficher toutes les options du sélecteur multiple à l'écran (pour les desktops)
-      select.size = length
-      select.style.overflow = 'hidden'
-    } else {
-      select.size = maxLength
-    }
-  })
-})()
-
-// -----------------------------------------------------------------------------
-// @section     Color inputs
-// @description Champs pour les couleurs
-// -----------------------------------------------------------------------------
-
-const colorInput = (() => {
-  document.querySelectorAll('.input:has([type=color] + output) input').forEach(input => {
-    const output = input.nextElementSibling
-    output.textContent = input.value
-    input.oninput = function () {
-      this.value = this.value
-      output.textContent = this.value
-    }
-  })
-})()
-
-// -----------------------------------------------------------------------------
-// @section     Scroll To Top
-// @description Défilement vers le haut
-// -----------------------------------------------------------------------------
-
-function scrollToTop() {
-  const footer = document.querySelector('.footer')
-  const button = document.createElement('button')
-
-  button.type = 'button'
-  button.classList.add('scroll-top')
-  button.setAttribute('aria-label', 'Scroll to top')
-  injectSvgSprite(button, 'arrow-up')
-  footer.appendChild(button)
-
-  const item = document.querySelector('.scroll-top')
-  item.classList.add('fade-out')
-
-  function position() {
-    const yy = window.innerHeight / 2 // @note Scroll sur la demi-hauteur d'une fenêtre avant apparition de la flèche.
-    let y = window.scrollY
-    if (y > yy) {
-      item.classList.remove('fade-out')
-      item.classList.add('fade-in')
-    } else {
-      item.classList.add('fade-out')
-      item.classList.remove('fade-in')
+    onResize() {
+      clearTimeout(this._resizeTimer)
+      this._resizeTimer = setTimeout(() => {
+        if (
+          this._btn &&
+          this._sizeNav < window.innerWidth / this._htmlFontSize &&
+          this._btn.getAttribute('aria-expanded') === 'true'
+        ) {
+          this.toggle()
+        }
+      }, 200)
     }
   }
 
-  window.addEventListener('scroll', position)
+  // — Assets —
+  const AssetSystem = {
+    // Capturé une fois : point d'insertion pour respecter l'ordre de cascade CSS.
+    _anchor: document.querySelector('link[rel=stylesheet]'),
 
-  function scroll() {
-    window.scrollTo({ top: 0 })
-  }
+    injectStyle(url, media = 'all') {
+      if (document.querySelector(`link[href="${url}"]`)) return
+      const link = document.createElement('link')
+      link.rel   = 'stylesheet'
+      link.href  = url
+      link.media = media
+      this._anchor
+        ? document.head.insertBefore(link, this._anchor.nextSibling)
+        : document.head.appendChild(link)
+    },
 
-  item.addEventListener('click', scroll, false)
-}
+    injectScript(url) {
+      if (document.querySelector(`script[src="${url}"]`)) return
+      const script   = document.createElement('script')
+      script.src     = url
+      script.async   = true
+      DOM.body.appendChild(script)
+    },
 
-scrollToTop()
+    resolve() {
+      const scripts = new Set()
+      const styles  = new Map() // url → media
 
-// -----------------------------------------------------------------------------
-// @section     Navigation
-// @description Menu principal
-// -----------------------------------------------------------------------------
-
-const mainMenu = (() => {
-  const button = document.querySelector('.cmd-nav'),
-    subNav = document.querySelector('.sub-nav'),
-    content = document.querySelectorAll('body > :not(.nav'),
-    sizeNav = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--size-nav')),
-    htmlFontSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('font-size'))
-
-  button.ariaExpanded = 'false'
-  subNav.ariaHidden = 'false'
-
-  const toggleNavigation = () => {
-    document.documentElement.classList.toggle('active')
-    document.body.classList.toggle('active')
-    button.ariaExpanded = button.ariaExpanded === 'true' ? 'false' : 'true'
-    subNav.ariaHidden = subNav.ariaHidden === 'true' ? 'false' : 'true'
-    content.forEach(e => (e.hasAttribute('inert') ? e.removeAttribute('inert') : e.setAttribute('inert', '')))
-  }
-
-  button.addEventListener('click', e => {
-    toggleNavigation()
-    //e.preventDefault()
-  })
-
-  const clearMenu = () => {
-    const windowWidth = window.innerWidth / htmlFontSize
-    if (sizeNav < windowWidth && button.ariaExpanded === 'true') toggleNavigation()
-  }
-
-  window.addEventListener('resize', () => {
-    // @note Si le menu déroulant est ouvert, mais que la fenêtre est redimentionnée au-delà de la navigation prévue pour cette version du menu, alors suppression des états prévus pour la version "menu déroulant".
-    let resizeTimeout
-    clearTimeout(resizeTimeout)
-    resizeTimeout = setTimeout(() => {
-      clearMenu()
-    }, 200) // Limitation du nombre de calculs @see https://stackoverflow.com/questions/5836779/
-  })
-})()
-
-// -----------------------------------------------------------------------------
-// @section     Horizontal progress bar
-// @description Barre de progression horizontale
-// -----------------------------------------------------------------------------
-
-// @note Solution intéressante techniquement mais pas forcément opportune sur le site car fait double emploi avec la barre verticale.
-// @see https://nouvelle-techno.fr/articles/creer-une-barre-de-progression-horizontale-en-haut-de-page
-/*
-window.onload = () => {
-  const el = document.createElement('div')
-  el.id = 'progress-page'
-  document.body.appendChild(el)
-  window.addEventListener('scroll', () => {
-    const height = document.documentElement.scrollHeight - window.innerHeight,
-          position = window.scrollY,
-          width = document.documentElement.clientWidth,
-          value = position / height * width
-    el.style.width = value + 'px'
-  })
-}
-*/
-
-// -----------------------------------------------------------------------------
-// @section     Button Effect
-// @description Effect lors du click sur les boutons
-// -----------------------------------------------------------------------------
-
-// @affected Chrome mobile uniquement. @note Firefox a adopté une politique restrictive de cet usage via Content Security Policy, iPhone et Mac ne supportent pas l'API vibration.
-// @see https://caniuse.com/vibration
-
-function buttonEffect(e) {
-  const frame = e.dataset.frame
-  if ('vibrate' in navigator) navigator.vibrate(frame ? frame : 200)
-}
-document.querySelectorAll('button[class*=button]').forEach(e => e && e.addEventListener('click', () => buttonEffect(e), false))
-
-/*
-Mode "application" ou "navigateur" :
-let displayMode = 'browser'
-window.matchMedia('(display-mode: standalone)').addEventListener('change', e => {
-  if (e.matches) displayMode = 'standalone'
-})
-console.log('DISPLAY_MODE_CHANGED', displayMode)
-*/
-
-// -----------------------------------------------------------------------------
-// @section     Go Back
-// @description Retour à la page précédente de l'historique de navigation
-// -----------------------------------------------------------------------------
-
-function goBack() {
-  window.history.back()
-}
-
-const goBackElements = document.querySelectorAll('.go-back')
-
-for (const element of goBackElements) {
-  element.addEventListener('click', goBack)
-}
-
-// -----------------------------------------------------------------------------
-// @section     Image Fallback
-// @description Fallback pour les images
-// -----------------------------------------------------------------------------
-
-/**
- * Initialise le mécanisme de fallback pour les images et les sources d'images.
- * Remplace les images et les sources d'images qui échouent à se charger par une image par défaut (SVG).
- *
- * Fonctionnement :
- * - Pour chaque élément <img>, un gestionnaire d'événement 'error' est ajouté.
- * - Si une image échoue à se charger, elle est remplacée par l'image par défaut.
- * - Pour chaque élément <source> dans un <picture> parent, un gestionnaire d'événement 'error' est ajouté.
- * - Si une source échoue à se charger, elle est remplacée par l'image par défaut.
- */
-/* Solution fonctionnelle mais non utilisée en raison de problème de performance (-7 points sous Lighthouse)
-function initializeImageFallback() {
-  const defaultImageURL = '/medias/icons/utilDest/xmark.svg'
-  const urlCache = new Map()
-
-  function testImageURL(url) {
-    return new Promise(resolve => {
-      if (urlCache.has(url)) {
-        resolve(urlCache.get(url))
-        return
+      // Phase Read : un seul passage DOM
+      for (let i = 0; i < ASSET_REGISTRY.length; i++) {
+        const entry = ASSET_REGISTRY[i]
+        if (document.querySelector(entry.selectors.join(','))) {
+          entry.scripts.forEach(s => scripts.add(s))
+          entry.styles.forEach(({ url, media }) => styles.set(url, media))
+        }
       }
 
-      const img = new Image()
-      img.onload = () => {
-        urlCache.set(url, true)
-        resolve(true)
+      // Phase Write
+      styles.forEach((media, url) => this.injectStyle(url, media))
+      scripts.forEach(url => this.injectScript(url))
+    }
+  }
+
+  // — SVG Sprites —
+  const injectSvgSprite = (targetElement, spriteId, svgFile = 'util') => {
+    targetElement.insertAdjacentHTML(
+      'beforeend',
+      `<svg role="img" focusable="false"><use href="/sprites/${svgFile}.svg#${spriteId}"></use></svg>`
+    )
+  }
+
+  // — Liens externes —
+  const ExternalLinksSystem = {
+    init() {
+      const links = document.querySelectorAll('a')
+      for (let i = 0; i < links.length; i++) {
+        if (links[i].hostname !== location.hostname) {
+          links[i].setAttribute('target', '_blank')
+        }
       }
-      img.onerror = () => {
-        urlCache.set(url, false)
-        resolve(false)
+    }
+  }
+
+  // — GDPR —
+  const GdprSystem = {
+    init() {
+      const { gdprTemplate: tpl, gdprTarget: target } = DOM
+      if (!tpl || !target) return
+
+      target.appendChild(tpl.content.cloneNode(true))
+
+      const panel    = document.getElementById('gdpr-see')
+      const btnTrue  = document.getElementById('gdpr-true-consent')
+      const btnFalse = document.getElementById('gdpr-false-consent')
+      if (!panel || !btnTrue || !btnFalse) return
+
+      if (localStorage.getItem('gdprConsent') === 'yes') panel.style.display = 'none'
+
+      const hide = (consent) => {
+        localStorage.setItem('gdprConsent', consent)
+        panel.style.display = 'none'
       }
-      img.src = url
+      btnTrue.addEventListener('click',  () => hide('yes'))
+      btnFalse.addEventListener('click', () => hide('no'))
+    }
+  }
+
+  // — Formulaires —
+  const FormSystem = {
+    init() {
+      // Pré-remplissage date du jour
+      // @bugfixed Comportement instable sur certains navigateurs — à surveiller
+      document.querySelectorAll('input[type=date].today-date')
+        .forEach(e => (e.valueAsDate = new Date()))
+
+      // Multiple select : affiche toutes les options si en dessous du seuil
+      const MAX_SIZE = 7
+      document.querySelectorAll('.input select[multiple]').forEach(select => {
+        const size = Math.min(select.length, MAX_SIZE)
+        select.size = size
+        if (select.length < MAX_SIZE) select.style.overflow = 'hidden'
+      })
+
+      // Color input → synchronisation du champ <output>
+      document.querySelectorAll('.input:has([type=color] + output) input').forEach(input => {
+        const output = input.nextElementSibling
+        output.textContent = input.value
+        input.addEventListener('input', function () { output.textContent = this.value })
+      })
+    }
+  }
+
+  // — Image fallback (réactif, phase capture) —
+  const handleResourceError = (e) => {
+    const t = e.target
+    if (t?.tagName === 'IMG' && t.src !== location.origin + FALLBACK_IMG && !t.dataset.fallback) {
+      t.dataset.fallback = 'active'
+      t.removeAttribute('srcset')
+      t.src = FALLBACK_IMG
+    }
+  }
+
+  // — Préchargement images lazy (amorçage cache SW) —
+  const preloadLazyImages = () => {
+    document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+      new Image().src = img.src
     })
   }
 
-  async function replaceSourceWithDefault(sourceElement) {
-    const srcset = sourceElement.srcset
-    const urls = srcset.split(',').map(src => src.trim().split(' ')[0])
-    for (const url of urls) {
-      const isValid = await testImageURL(url)
-      if (!isValid) {
-        sourceElement.srcset = defaultImageURL
-        break
-      }
+  // ---------------------------------------------------------------------------
+  // 4. Scroll To Top
+  // ---------------------------------------------------------------------------
+
+  const initScrollButton = () => {
+    const footer = document.querySelector('.footer')
+    if (!footer) return
+
+    const button = document.createElement('button')
+    button.type      = 'button'
+    button.className = 'scroll-top fade-out go-top-cmd'
+    button.setAttribute('aria-label', 'Scroll to top')
+    injectSvgSprite(button, 'arrow-up')
+    footer.appendChild(button)
+
+    // Seuil capturé une fois au boot — suffisant pour un déclencheur de visibilité.
+    const threshold = window.innerHeight / 2
+
+    window.addEventListener('scroll', () => {
+      const past = scrollY > threshold
+      button.classList.toggle('fade-in',   past)
+      button.classList.toggle('fade-out',  !past)
+    }, { passive: true })
+  }
+
+  // ---------------------------------------------------------------------------
+  // 5. Event Router (délégation globale)
+  // ---------------------------------------------------------------------------
+
+  const handleClick = (e) => {
+    const t = e.target
+
+    if (t.closest('.go-back'))    { history.back();             return }
+    if (t.closest('.go-top-cmd')) { scrollTo({ top: 0 });      return }
+    if (t.closest('.cmd-print'))  { print();                    return }
+    if (t.closest('.cmd-nav'))    { NavigationSystem.toggle();  return }
+
+    const btn = t.closest('button[class*=button]')
+    if (btn) VibrateSystem.play(btn.dataset.frame)
+  }
+
+  // ---------------------------------------------------------------------------
+  // 6. Boot (pipeline déterministe)
+  // ---------------------------------------------------------------------------
+
+  const boot = () => {
+    // 6.1 États initiaux & init systèmes
+    NetworkSystem.update()
+    NavigationSystem.init()
+    GdprSystem.init()
+    FormSystem.init()
+    ExternalLinksSystem.init()
+
+    // 6.2 Listeners
+    window.addEventListener('online',  NetworkSystem.update)
+    window.addEventListener('offline', NetworkSystem.update)
+    window.addEventListener('resize',  NavigationSystem.onResize.bind(NavigationSystem))
+    window.addEventListener('error',   handleResourceError, true) // capture : error ne bubble pas
+    window.addEventListener('load',    preloadLazyImages)
+    document.addEventListener('click', handleClick)
+
+    // 6.3 Scroll To Top
+    initScrollButton()
+
+    // 6.4 Assets (différé — ne doit pas concurrencer le FCP)
+    'requestIdleCallback' in window
+      ? requestIdleCallback(() => AssetSystem.resolve())
+      : setTimeout(() => AssetSystem.resolve(), 1)
+
+    // 6.5 Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(console.error)
+
+      navigator.serviceWorker.addEventListener('message', ({ data }) => {
+        if (data?.action === 'service-unavailable') {
+          DOM.html.classList.add('service-unavailable')
+        }
+      })
     }
   }
 
-  async function replaceImageWithDefault(event) {
-    const imgElement = event.target
-    imgElement.src = defaultImageURL
+  return { boot }
+})()
 
-    if (!imgElement.hasAttribute('width')) {
-      imgElement.setAttribute('width', '1000')
-    }
-    if (!imgElement.hasAttribute('height')) {
-      imgElement.setAttribute('height', '1000')
-    }
-
-    const pictureElement = imgElement.closest('picture')
-    if (pictureElement) {
-      const sources = pictureElement.querySelectorAll('source')
-      for (const source of sources) {
-        await replaceSourceWithDefault(source)
-      }
-    }
-  }
-
-  const images = document.querySelectorAll('img')
-
-  images.forEach(image => {
-    image.addEventListener('error', replaceImageWithDefault)
-
-    testImageURL(image.src).then(isValid => {
-      if (!isValid) {
-        replaceImageWithDefault({ target: image })
-      }
-    })
-  })
-}
-
-window.addEventListener('load', initializeImageFallback)
-*/
+AppPipeline.boot()

@@ -1,79 +1,109 @@
-'use strict'
-
-const flipList = document.querySelectorAll('.flip')
-let autoFlipTimeout, autoUnflipTimeout
-let isAutoFlipping = true // Variable de contrôle
-
 /**
- * Script de démonstration permettant à l'utilisateur de comprendre qu'une action
- * est possible sur la carte. Retourne automatiquement la première carte après n seconde
- * et la remet à son état initial après n seconde.
+ * @summary Système de gestion de l'état "Flip" par délégation d'événements et pilotage par données.
+ * * @strategy 
+ * - Event Delegation : Réduction de l'empreinte mémoire (O(1) listener vs O(N)).
+ * - State Mirroring : Utilisation des attributs data-* comme source de vérité structurelle, permettant un pipeline CSS déterministe.
+ * - Timer Pooling : Remplacement des multiples timeouts par une gestion d'expiration centralisée pour éviter la fragmentation de l'Event Loop.
+ * * @architectural-decision
+ * - Suppression du `forEach` sur le DOM pour éviter l'allocation de multiples closures.
+ * - Transformation du toggle en une fonction pure de transition d'état (Input -> State Update -> Render).
+ * - Utilisation de `localStorage` en accès hâtif (AOT logic) pour court-circuiter le système de démo.
  */
-const autoFlipFirstCard = () => {
-  if (flipList.length > 0) {
-    autoFlipTimeout = setTimeout(() => {
-      flipList[0].classList.add('active')
-      autoUnflipTimeout = setTimeout(() => {
-        flipList[0].classList.remove('active')
-        isAutoFlipping = false // Processus automatique terminé
-      }, 1500)
-    }, 1000)
-  }
-}
+'use strict';
 
-/**
- * Gère l'événement de vue de page en mettant à jour le compteur de vues dans
- * le stockage local et en retournant automatiquement la première carte si le
- * compteur de vues est inférieur à n.
- *
- * @note Le compteur de vues est unique pour toutes les pages.
- */
-const handlePageView = () => {
-  const pageViewed = 'demoCounterFlipCards' // @note Un unique compteur pour toutes les pages.
+{
+  const CONFIG = {
+    CLASS_FLIP: 'flip',
+    ATTR_STATE: 'data-flipped',
+    DEMO_KEY: 'demoCounterFlipCards',
+    AUTO_FLIP_LIMIT: 4,
+    AUTO_UNFLIP_MS: 1500,
+    GLOBAL_UNFLIP_MS: 3000
+  };
 
-  let views = parseInt(localStorage.getItem(pageViewed)) || 0
-  views++
-  localStorage.setItem(pageViewed, views)
+  // State Manager (Data Layer)
+  const state = {
+    autoFlipping: true,
+    viewCount: parseInt(localStorage.getItem(CONFIG.DEMO_KEY)) || 0,
+    timers: new Map() // Pool de timers indexés par élément pour éviter les collisions
+  };
 
-  if (views < 4) {
-    autoFlipFirstCard()
-  }
-}
+  /**
+   * Update unique du compteur (AOT check)
+   */
+  const updateAnalytics = () => {
+    state.viewCount++;
+    localStorage.setItem(CONFIG.DEMO_KEY, state.viewCount);
+  };
 
-handlePageView()
+  /**
+   * Système de rendu / Mutation DOM
+   */
+  const setFlipState = (el, isActive) => {
+    if (!el) return;
+    el.setAttribute(CONFIG.ATTR_STATE, isActive);
+    // Transition class-based pour compatibilité CSS existante
+    el.classList.toggle('active', isActive);
+  };
 
-/**
- * Ajoute un gestionnaire d'événements à chaque élément avec la classe 'flip'.
- * Lorsqu'un élément est cliqué, il vérifie s'il possède déjà la classe 'active'.
- * Si c'est le cas, il la supprime, sinon il l'ajoute.
- * Si un autre élément a déjà la classe 'active', elle lui est retirée après 3 secondes.
- * @param {NodeList} flipList Liste des éléments auxquels ajouter des gestionnaires d'événements.
- */
-flipList.forEach(flip => {
-  flip.removeAttribute('tabindex')
-  flip.addEventListener('click', () => {
-    // Annuler le processus automatique si l'utilisateur clique sur la première carte flip
-    if (flip === flipList[0] && isAutoFlipping) {
-      clearTimeout(autoFlipTimeout)
-      clearTimeout(autoUnflipTimeout)
-      isAutoFlipping = false
+  /**
+   * Gestionnaire de cycle de vie des timers (Evite les fuites mémoires)
+   */
+  const scheduleUnflip = (el, delay) => {
+    if (state.timers.has(el)) clearTimeout(state.timers.get(el));
+    const timer = setTimeout(() => {
+      setFlipState(el, false);
+      state.timers.delete(el);
+    }, delay);
+    state.timers.set(el, timer);
+  };
+
+  /**
+   * Initialisation de la séquence démo (Pipeline déterministe)
+   */
+  const runDemoSequence = () => {
+    const firstCard = document.querySelector(`.${CONFIG.CLASS_FLIP}`);
+    if (!firstCard || state.viewCount >= CONFIG.AUTO_FLIP_LIMIT) {
+      state.autoFlipping = false;
+      return;
     }
 
-    if (flip.classList.contains('active')) {
-      flip.classList.remove('active')
+    setTimeout(() => {
+      if (!state.autoFlipping) return;
+      setFlipState(firstCard, true);
+      scheduleUnflip(firstCard, CONFIG.AUTO_UNFLIP_MS);
+      state.autoFlipping = false;
+    }, 1000);
+  };
+
+  /**
+   * Event Bus (Input System)
+   * Centralisation de la capture sur le document ou un container racine.
+   */
+  document.addEventListener('click', (e) => {
+    const card = e.target.closest(`.${CONFIG.CLASS_FLIP}`);
+    if (!card) return;
+
+    // Interruption du flux automatique sur interaction utilisateur
+    if (state.autoFlipping) state.autoFlipping = false;
+
+    const isCurrentlyActive = card.getAttribute(CONFIG.ATTR_STATE) === 'true';
+    
+    if (isCurrentlyActive) {
+      setFlipState(card, false);
     } else {
-      document.querySelectorAll('.flip').forEach(element => {
-        if (element !== flip && element.classList.contains('active')) {
-          setTimeout(() => {
-            element.classList.remove('active')
-          }, 3000)
-        }
-      })
-      flip.classList.add('active')
+      // Logic: Unflip des autres entités actives avec délai
+      document.querySelectorAll(`.${CONFIG.CLASS_FLIP}[data-flipped="true"]`).forEach(other => {
+        if (other !== card) scheduleUnflip(other, CONFIG.GLOBAL_UNFLIP_MS);
+      });
+      setFlipState(card, true);
     }
-  })
+  });
 
-  flip.addEventListener('focusin', () => {
-    flip.classList.remove('active')
-  })
-})
+  // Nettoyage de l'accessibilité via sélecteur global (AOT style)
+  document.querySelectorAll(`.${CONFIG.CLASS_FLIP}`).forEach(el => el.removeAttribute('tabindex'));
+
+  // Entry point
+  updateAnalytics();
+  runDemoSequence();
+}

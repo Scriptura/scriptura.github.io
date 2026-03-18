@@ -1,70 +1,90 @@
 'use strict'
 
-const clientTest = () => {
-  const el = document.querySelector('.client-test')
+/**
+ * @summary Affiche les informations techniques du client dans l'élément `.client-test`.
+ *
+ * @strategy
+ *   – Séparation stricte données statiques / données dynamiques : OS, navigateur et
+ *     résolution écran sont calculés une seule fois au boot (AOT) et mis en cache.
+ *     Seules les dimensions de fenêtre sont relues à chaque resize.
+ *   – Injection DOM en un seul passage : les cinq lignes sont concaténées en une
+ *     string avant l'unique affectation à innerHTML, évitant les re-parse répétés.
+ *   – Référence DOM capturée une fois à l'init, jamais re-requêtée sur les events.
+ *
+ * @architectural-decision
+ *   – userAgent est deprecié mais reste la seule solution cross-browser sans dépendance
+ *     externe pour ce niveau de détection (usage interne, non critique).
+ *   – Le timer de debounce resize est déclaré dans la portée du module et non dans le
+ *     handler, condition nécessaire pour que clearTimeout soit opérant.
+ *   – Pas de listener 'load' / guard readyState : ce script est injecté via script.async
+ *     post-DOMContentLoaded (pipeline more.js). Le DOM est garanti disponible à
+ *     l'évaluation — appel direct de boot().
+ */
+const ClientTestSystem = (() => {
+  // ---------------------------------------------------------------------------
+  // 1. Data Layout
+  // ---------------------------------------------------------------------------
 
-  const os = ((agent) => {
-    switch (true) {
-      case agent.indexOf('Win') != -1:
-        return 'Windows'
-      case agent.indexOf('Mac') != -1:
-        return 'Macintosh'
-      case agent.indexOf('Linux') != -1:
-        return 'Linux'
-      case agent.indexOf('Android') != -1:
-        return 'Android'
-      case agent.indexOf('like Mac') != -1:
-        return 'iOS'
-      default:
-        return 'Unknown OS'
-    }
-  })(navigator.userAgent)
+  // Données statiques : calculées une fois, jamais recalculées
+  const agent = navigator.userAgent
+  const agentLow = agent.toLowerCase()
 
-  const browserName = (agent => {
-    switch (true) {
-      case agent.indexOf('edge') > -1:
-        return 'MS Edge'
-      case agent.indexOf('edg/') > -1:
-        return 'Edge ( chromium based)'
-      case agent.indexOf('opr') > -1 && !!window.opr:
-        return 'Opera'
-      case agent.indexOf('chrome') > -1 && !!window.chrome:
-        return 'Chrome'
-      case agent.indexOf('trident') > -1:
-        return 'MS IE'
-      case agent.indexOf('firefox') > -1:
-        return 'Mozilla Firefox'
-      case agent.indexOf('safari') > -1:
-        return 'Safari'
-      default:
-        return 'other'
-    }
-  })(window.navigator.userAgent.toLowerCase())
+  const os = (() => {
+    if (agent.includes('Win'))      return 'Windows'
+    if (agent.includes('Android'))  return 'Android'
+    if (agent.includes('like Mac')) return 'iOS'
+    if (agent.includes('Mac'))      return 'Macintosh'
+    if (agent.includes('Linux'))    return 'Linux'
+    return 'Unknown OS'
+  })()
 
-  let windowWidth = window.innerWidth
-  let windowHeight = window.innerHeight
+  const browser = (() => {
+    if (agentLow.includes('edge'))                           return 'MS Edge'
+    if (agentLow.includes('edg/'))                          return 'Edge (Chromium)'
+    if (agentLow.includes('opr')  && window.opr)            return 'Opera'
+    if (agentLow.includes('chrome') && window.chrome)       return 'Chrome'
+    if (agentLow.includes('trident'))                       return 'MS IE'
+    if (agentLow.includes('firefox'))                       return 'Firefox'
+    if (agentLow.includes('safari'))                        return 'Safari'
+    return 'Unknown'
+  })()
 
-  //const reportWindowSize = () => {
-  //  windowWidth = window.innerWidth
-  //  windowHeight = window.innerHeight
-  //}
+  const screenInfo = `${screen.width}×${screen.height}px — ${screen.pixelDepth} bits`
 
-  //window.onresize = () => reportWindowSize()
-  if (el) {
-    el.innerHTML = `<li>Système d'exploitation&nbsp;: ${os}</i>`
-    el.innerHTML += `<li>Navigateur&nbsp;: ${browserName}</i>`
-    el.innerHTML += `<li>Profondeur de l'écran&nbsp;: ${screen.pixelDepth} bits</i>`
-    el.innerHTML += `<li>Définition écran&nbsp;: ${screen.width}px x ${screen.height}px</i>`
-    el.innerHTML += `<li>Fenêtre de navigation&nbsp;: ${windowWidth}px x ${windowHeight}px</i>`
+  // ---------------------------------------------------------------------------
+  // 2. System
+  // ---------------------------------------------------------------------------
+
+  let el = null
+  let _resizeTimer = null
+
+  const render = () => {
+    if (!el) return
+    el.innerHTML =
+      `<li>Système d'exploitation&nbsp;: ${os}</li>` +
+      `<li>Navigateur&nbsp;: ${browser}</li>` +
+      `<li>Résolution écran&nbsp;: ${screenInfo}</li>` +
+      `<li>Fenêtre de navigation&nbsp;: ${window.innerWidth}×${window.innerHeight}px</li>`
   }
-}
 
-window.addEventListener('load', () => clientTest())
+  // ---------------------------------------------------------------------------
+  // 3. Boot
+  // ---------------------------------------------------------------------------
 
-window.addEventListener('resize', () => {
-  let resizeTimeout
-  clearTimeout(resizeTimeout)
-  resizeTimeout = setTimeout(() => {
-    clientTest()
-  }, 200) // Limitation du nombre de calculs @see https://stackoverflow.com/questions/5836779/
-})
+  const boot = () => {
+    el = document.querySelector('.client-test')
+    if (!el) return
+
+    render()
+
+    window.addEventListener('resize', () => {
+      clearTimeout(_resizeTimer)
+      _resizeTimer = setTimeout(render, 200)
+    })
+  }
+
+  return { boot }
+})()
+
+// Ce script est injecté en async post-DOMContentLoaded : exécution immédiate garantie.
+ClientTestSystem.boot()

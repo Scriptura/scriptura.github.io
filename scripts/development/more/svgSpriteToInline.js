@@ -1,69 +1,113 @@
 /**
- * Remplace un élément <use> SVG par le contenu inline du symbole SVG référencé.
- * Ce script n'a de raison d'être que pour permettre l'animation du SVG.
- *
- * Cette fonction recherche des éléments <use> avec la classe 'sprite-to-inline',
- * récupère le fichier SVG correspondant, extrait le symbole avec l'ID spécifié,
- * et remplace l'élément parent du <use> par le contenu inline du symbole SVG,
- * tout en conservant les classes CSS déjà présentes. Elle s'assure également de
- * transférer les attributs du symbole vers le SVG parent tout en évitant l'injection
- * indésirable d'attributs `xmlns`.
- *
- * @async
- * @function svgSpriteToInline
- * @returns {Promise<void>} Une promesse qui est résolue une fois le remplacement effectué.
- * @throws {Error} Lance une erreur si le fichier SVG ne peut pas être chargé ou parsé.
+ * @summary Moteur d'inlining de sprites SVG par déduplication de ressources et traitement par lots.
+ * @strategy
+ * - Resource Pooling (Déduplication) : Extraction AOT des URLs uniques pour garantir qu'un fichier SVG n'est téléchargé et parsé qu'une seule fois, indépendamment du nombre de références.
+ * - Parallel I/O : Remplacement de l'itération sérielle par des requêtes concurrentes (Promise.all) pour saturer efficacement le réseau.
+ * - Batch DOM Mutation : Isolation des manipulations DOM (clonage) via un `DocumentFragment` pour minimiser les invalidations de l'arbre de rendu (Layout Thrashing).
+ * @architectural-decision
+ * - Séparation stricte entre le sous-système de récupération des données (Data Fetching) et le sous-système d'application visuelle (DOM Mutation).
+ * - Utilisation de `replaceChildren()` natif pour purger le SVG parent, plus performant que la boucle `while(firstChild) removeChild`.
+ * - Émission garantie de l'événement `svgSpriteInlined` même en cas de sortie prématurée (A11Y) pour prévenir le deadlock des scripts dépendants.
  */
-async function svgSpriteToInline() {
-  // Vérifier si l'utilisateur n'a pas de préférence pour réduire les animations
-  const prefersNormalMotion = window.matchMedia('(prefers-reduced-motion: no-preference)').matches
+'use strict';
 
-  if (!prefersNormalMotion) return
+{
+  const CONFIG = {
+    SELECTOR: '.sprite-to-inline use',
+    EVENT_READY: 'svgSpriteInlined'
+  };
 
-  const svgUseElements = document.querySelectorAll('.sprite-to-inline use')
+  // Resource Cache (Data Store) : Associe une URL à un Document SVG parsé en mémoire
+  const spriteCache = new Map();
 
-  for (const svgUseElement of svgUseElements) {
-    const [spriteURL, symbolID] = svgUseElement.getAttribute('href').split('#')
+  /**
+   * Data Layer : Récupération et parsing concurrents (AOT)
+   */
+  const loadUniqueSprites = async (urls) => {
+    const uniqueUrls = [...new Set(urls)];
+    const parser = new DOMParser();
 
-    try {
-      const response = await fetch(spriteURL)
-      const svgText = await response.text()
-
-      const parser = new DOMParser()
-      const svgDocument = parser.parseFromString(svgText, 'image/svg+xml')
-      const symbol = svgDocument.querySelector(`#${symbolID}`)
-
-      if (symbol) {
-        const parent = svgUseElement.parentElement
-
-        if (parent instanceof SVGSVGElement) {
-          const svgElement = parent
-
-          //svgElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg') // Attribut et valeur implicites dans un contexte de page HTML5.
-
-          for (const attr of symbol.attributes) {
-            svgElement.setAttribute(attr.name, attr.value)
-          }
-
-          while (svgElement.firstChild) {
-            svgElement.removeChild(svgElement.firstChild)
-          }
-
-          for (const child of symbol.childNodes) {
-            // Manipulation directe du DOM pour éviter les injections d'attributs `xmlns` sur les élements enfants, donc utilisation de la méthode `appendChild` plutôt que `innerHTML`.
-            svgElement.appendChild(child.cloneNode(true))
-          }
-        } else {
-          console.error(`L'élément parent n'est pas un SVG.`)
-        }
+    // Exécution parallèle de toutes les requêtes réseau requises
+    await Promise.all(uniqueUrls.map(async (url) => {
+      if (spriteCache.has(url)) return;
+      
+      try {
+        const response = await fetch(url);
+        const text = await response.text();
+        const doc = parser.parseFromString(text, 'image/svg+xml');
+        spriteCache.set(url, doc);
+      } catch (error) {
+        console.error(`Erreur réseau/parsing pour ${url}:`, error);
       }
-    } catch (error) {
-      console.error(`Erreur lors du chargement du fichier SVG:`, error)
+    }));
+  };
+
+  /**
+   * Execution Layer : Mutation du DOM
+   */
+  const mutateEntities = (useElements) => {
+    useElements.forEach(useEl => {
+      const href = useEl.getAttribute('href');
+      if (!href) return;
+
+      const [url, symbolId] = href.split('#');
+      const doc = spriteCache.get(url);
+      if (!doc) return;
+
+      const symbol = doc.querySelector(`#${symbolId}`);
+      if (!symbol) return;
+
+      const parentSvg = useEl.parentElement;
+      if (!(parentSvg instanceof SVGSVGElement)) {
+        console.error(`L'élément parent n'est pas un SVG.`);
+        return;
+      }
+
+      // 1. Transfert des invariants (Attributs)
+      Array.from(symbol.attributes).forEach(attr => {
+        parentSvg.setAttribute(attr.name, attr.value);
+      });
+
+      // 2. Construction du nouveau layout en mémoire (Fragment)
+      const fragment = document.createDocumentFragment();
+      Array.from(symbol.childNodes).forEach(child => {
+        // Apprendice direct pour éviter l'injection xmlns non désirée
+        fragment.appendChild(child.cloneNode(true)); 
+      });
+
+      // 3. Application atomique : Purge rapide et injection
+      parentSvg.replaceChildren(fragment);
+    });
+  };
+
+  /**
+   * Main Pipeline
+   */
+  const executeSystem = async () => {
+    // Early exit : Préférences d'accessibilité
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.dispatchEvent(new CustomEvent(CONFIG.EVENT_READY));
+      return; // Fin du processus, mais le signal de résolution est tout de même émis
     }
-  }
 
-  // Déclenchement de l'événement personnalisé à la fin de la fonction
-  document.dispatchEvent(new CustomEvent('svgSpriteInlined'))
+    const useElements = Array.from(document.querySelectorAll(CONFIG.SELECTOR));
+    if (!useElements.length) {
+      document.dispatchEvent(new CustomEvent(CONFIG.EVENT_READY));
+      return;
+    }
+
+    // AOT : Extraction exclusive des données nécessaires (URLs) avant toute I/O
+    const urls = useElements
+      .map(el => el.getAttribute('href')?.split('#')[0])
+      .filter(Boolean);
+
+    // Pipeline synchrone/asynchrone
+    await loadUniqueSprites(urls);
+    mutateEntities(useElements);
+
+    // Broadcast de fin de traitement
+    document.dispatchEvent(new CustomEvent(CONFIG.EVENT_READY));
+  };
+
+  executeSystem();
 }
-
-svgSpriteToInline()
