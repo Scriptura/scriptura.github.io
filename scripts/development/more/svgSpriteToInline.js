@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * @summary Moteur d'inlining de sprites SVG par déduplication de ressources et traitement par lots.
  * @strategy
@@ -9,7 +11,6 @@
  * - Utilisation de `replaceChildren()` natif pour purger le SVG parent, plus performant que la boucle `while(firstChild) removeChild`.
  * - Émission garantie de l'événement `svgSpriteInlined` même en cas de sortie prématurée (A11Y) pour prévenir le deadlock des scripts dépendants.
  */
-'use strict';
 
 {
   const CONFIG = {

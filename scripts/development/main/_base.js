@@ -12,8 +12,8 @@
  *     document, routé par classe CSS. Zéro allocation de closure dans des boucles.
  *   – ASSET_REGISTRY data-driven : table de dépendances évaluée en un seul passage
  *     DOM (sélecteurs concaténés → un seul appel moteur), scripts et styles injectés
- *     sans doublon, exécution différée dans les cycles d'inactivité du thread
- *     (requestIdleCallback) pour ne pas bloquer le First Contentful Paint.
+ *     sans doublon. Les scripts sont async : injectés après parsing, ils ne bloquent
+ *     jamais le rendu — aucune deferral supplémentaire n'est nécessaire.
  *   – Scroll-to-top via scroll event passif ({ passive: true }) : lecture de scrollY
  *     seule, sans lecture de layout (getBoundingClientRect, offsetTop) — zéro reflow.
  *   – Image fallback réactif : écoute globale en phase de capture sur window.error —
@@ -32,6 +32,14 @@
  *   – Le timeout de NavigationSystem est déclaré dans la portée du système et non dans
  *     le handler resize : corrige le bug silencieux de l'original où clearTimeout était
  *     inopérant (nouvelle variable à chaque appel).
+ *   – aria-hidden sur sub-nav est conditionnel au viewport, pas fixé à true au boot :
+ *     en mode desktop, le sub-nav est visible via CSS et doit être accessible aux AT.
+ *     Le breakpoint est lu depuis la CSS custom property --size-nav (getComputedStyle) —
+ *     source de vérité unique, pas de valeur dupliquée en dur dans le JS.
+ *   – injectSvgSprite est exposée sur window (non confinée dans l'IIFE) : elle est
+ *     appelée directement depuis main.js et more.js qui s'exécutent dans des bundles
+ *     distincts et n'ont pas accès à la portée de l'IIFE. Un namespace window.App
+ *     aurait requis une mise à jour de tous les appelants sans bénéfice architectural.
  *   – initScrollButton utilise un scroll event { passive: true } plutôt qu'un
  *     IntersectionObserver sur élément sentinel injecté. La lecture de scrollY seule
  *     ne provoque aucun reflow — le thrashing n'existe que lorsqu'une lecture de layout
@@ -137,9 +145,12 @@ const AppPipeline = (() => {
       this._sizeNav      = parseFloat(getComputedStyle(DOM.html).getPropertyValue('--size-nav'))
       this._htmlFontSize = parseFloat(getComputedStyle(DOM.html).getPropertyValue('font-size'))
 
-      // État initial : menu fermé
+      // État initial : dépend du viewport courant.
+      // En mode desktop (viewport > sizeNav), le sub-nav est visible en CSS
+      // et ne doit pas être masqué aux AT via aria-hidden.
+      const isMobile = window.innerWidth / this._htmlFontSize < this._sizeNav
       this._btn.setAttribute('aria-expanded', 'false')
-      this._subNav.setAttribute('aria-hidden', 'true')
+      this._subNav.setAttribute('aria-hidden', isMobile ? 'true' : 'false')
     },
 
     toggle() {
@@ -154,12 +165,13 @@ const AppPipeline = (() => {
     onResize() {
       clearTimeout(this._resizeTimer)
       this._resizeTimer = setTimeout(() => {
-        if (
-          this._btn &&
-          this._sizeNav < window.innerWidth / this._htmlFontSize &&
-          this._btn.getAttribute('aria-expanded') === 'true'
-        ) {
-          this.toggle()
+        if (!this._btn) return
+        const isDesktop = window.innerWidth / this._htmlFontSize > this._sizeNav
+        if (isDesktop) {
+          // Passage en desktop : ferme le menu burger si ouvert et restaure
+          // aria-hidden à false — le sub-nav est désormais visible en CSS.
+          if (this._btn.getAttribute('aria-expanded') === 'true') this.toggle()
+          this._subNav.setAttribute('aria-hidden', 'false')
         }
       }, 200)
     }
@@ -216,7 +228,9 @@ const AppPipeline = (() => {
   }
 
   // — SVG Sprites —
-  const injectSvgSprite = (targetElement, spriteId, svgFile = 'util') => {
+  // Exposée globalement : appelée depuis main.js et more.js (hors IIFE).
+  // TODO : refactoriser pour éviter l'exposition globale.
+  window.injectSvgSprite = (targetElement, spriteId, svgFile = 'util') => {
     targetElement.insertAdjacentHTML(
       'beforeend',
       `<svg role="img" focusable="false"><use href="/sprites/${svgFile}.svg#${spriteId}"></use></svg>`
@@ -365,10 +379,8 @@ const AppPipeline = (() => {
     // 6.3 Scroll To Top
     initScrollButton()
 
-    // 6.4 Assets (différé — ne doit pas concurrencer le FCP)
-    'requestIdleCallback' in window
-      ? requestIdleCallback(() => AssetSystem.resolve())
-      : setTimeout(() => AssetSystem.resolve(), 1)
+    // 6.4 Assets
+    AssetSystem.resolve()
 
     // 6.5 Service Worker
     if ('serviceWorker' in navigator) {
