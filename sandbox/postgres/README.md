@@ -1,5 +1,14 @@
 # Marius — ECS/DOD Database Engine
 
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-18-336791?style=for-the-badge&logo=postgresql&logoColor=white)]()
+[![PostGIS](https://img.shields.io/badge/PostGIS-3.x-008BB9?style=for-the-badge&logo=postgresql&logoColor=white)]()
+[![Architecture](https://img.shields.io/badge/Architecture-ECS%2FDOD-E85D04?style=for-the-badge)]()
+[![Design](https://img.shields.io/badge/Design-Data--Oriented-2D6A4F?style=for-the-badge)]()
+[![Semantics](https://img.shields.io/badge/Sémantique-schema.org-1565C0?style=for-the-badge)]()
+[![Hierarchy](https://img.shields.io/badge/Hiérarchies-ltree-5C6BC0?style=for-the-badge)]()
+[![ADR](https://img.shields.io/badge/ADR-19%20décisions-455A64?style=for-the-badge)]()
+[![Status](https://img.shields.io/badge/Statut-R%26D-7B1FA2?style=for-the-badge)]()
+
 Architecture de base de données orientée données (DOD) pour PostgreSQL 18,
 appliquant les principes de l'Entity-Component-System (ECS) à la modélisation
 relationnelle. Conçu pour une cible de **500 000 utilisateurs actifs**.

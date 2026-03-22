@@ -217,6 +217,7 @@ CREATE TABLE identity.account_core (
   UNIQUE (slug),
   FOREIGN KEY (entity_id)        REFERENCES identity.entity(id) ON DELETE CASCADE,
   FOREIGN KEY (person_entity_id) REFERENCES identity.entity(id) ON DELETE SET NULL,
+  FOREIGN KEY (media_id)         REFERENCES content.media_core(id) ON DELETE SET NULL,
   CONSTRAINT display_mode_range  CHECK (display_mode BETWEEN 0 AND 3),
   CONSTRAINT slug_format         CHECK (slug ~ '^[a-z0-9-]+$')
 );
@@ -278,7 +279,8 @@ CREATE TABLE identity.person_content (
   devise      VARCHAR(100)  NULL,
   description TEXT          NULL,
   PRIMARY KEY (entity_id),
-  FOREIGN KEY (entity_id) REFERENCES identity.entity(id) ON DELETE CASCADE
+  FOREIGN KEY (entity_id) REFERENCES identity.entity(id) ON DELETE CASCADE,
+  FOREIGN KEY (media_id)  REFERENCES content.media_core(id) ON DELETE SET NULL
 ) WITH (toast_tuple_target = 128);
 
 -- GROUP — communautés / groupes d'utilisateurs
@@ -321,7 +323,8 @@ CREATE TABLE org.org_core (
   FOREIGN KEY (entity_id)         REFERENCES org.entity(id)       ON DELETE CASCADE,
   FOREIGN KEY (parent_entity_id)  REFERENCES org.entity(id)       ON DELETE SET NULL,
   FOREIGN KEY (place_id)          REFERENCES geo.place_core(id)   ON DELETE SET NULL,
-  FOREIGN KEY (contact_entity_id) REFERENCES identity.entity(id)  ON DELETE SET NULL
+  FOREIGN KEY (contact_entity_id) REFERENCES identity.entity(id)  ON DELETE SET NULL,
+  FOREIGN KEY (media_id)          REFERENCES content.media_core(id) ON DELETE SET NULL
 );
 
 CREATE INDEX org_core_created_brin ON org.org_core USING brin (created_at)
@@ -395,7 +398,8 @@ CREATE TABLE commerce.product_core (
   is_available  BOOLEAN        NOT NULL DEFAULT true,
   price         NUMERIC(12,2)  NULL  CHECK (price >= 0),
   PRIMARY KEY (id),
-  CONSTRAINT stock_positive CHECK (stock >= 0)
+  CONSTRAINT stock_positive CHECK (stock >= 0),
+  FOREIGN KEY (media_id) REFERENCES content.media_core(id) ON DELETE SET NULL
 ) WITH (fillfactor = 80);
 
 -- PRODUCT IDENTITY — catalogue
@@ -668,7 +672,18 @@ $$;
 
 -- Fonction partagée : déduplication des slugs
 -- Fonctionne sur n'importe quelle table via TG_TABLE_SCHEMA / TG_TABLE_NAME
--- Ignore la ligne courante (document_id <> NEW.document_id) pour les UPDATE
+-- Ignore la ligne courante (PK <> valeur courante) pour les UPDATE.
+--
+-- COMPORTEMENT SOUS CONCURRENCE
+-- La boucle SELECT EXISTS + incrément fonctionne correctement en session unique.
+-- Sous forte concurrence (deux transactions qui génèrent le même slug simultanément),
+-- la contrainte UNIQUE est le vrai garde-fou : elle rejettera l'une des deux
+-- insertions avec une erreur 23505 (unique_violation). Ce n'est pas un état
+-- corrompu — l'erreur est propre et attrapable côté applicatif.
+-- Le pattern "déduplication optimiste + UNIQUE comme filet" est acceptable pour
+-- les slugs (générés depuis un titre, collisions rares). Pour un système à très
+-- haute concurrence sur les titres (ex: importation de masse), préférer une
+-- séquence applicationnelle avec retry explicite.
 CREATE FUNCTION public.fn_slug_deduplicate()
 RETURNS TRIGGER LANGUAGE plpgsql AS $$
 DECLARE
@@ -703,6 +718,12 @@ END;
 $$;
 
 -- Numérotation automatique des révisions (BEFORE INSERT)
+-- Calcule COALESCE(MAX(revision_num), 0) + 1 pour le document courant.
+-- La colonne revision_num DEFAULT 0 est écrasée par ce trigger avant que
+-- le CHECK revision_num > 0 ne soit évalué (les CHECK s'appliquent après
+-- les triggers BEFORE dans PostgreSQL). Le 0 ne touche jamais le disque.
+-- Le sentinel DEFAULT 0 n'est donc pas un bug : c'est une valeur placeholder
+-- déléguée au moteur, documentée pour prévenir toute confusion future.
 CREATE FUNCTION content.fn_revision_num()
 RETURNS TRIGGER LANGUAGE plpgsql AS $$
 BEGIN
@@ -868,8 +889,13 @@ BEGIN
   IF p_content IS NOT NULL THEN
     INSERT INTO content.body (document_id, content) VALUES (p_document_id, p_content);
   END IF;
-  INSERT INTO content.revision (document_id, author_entity_id, revision_num, snapshot_name, snapshot_slug, snapshot_body)
-  VALUES (p_document_id, p_author_id, 0, p_name, p_slug, p_content);
+  -- La colonne revision_num est intentionnellement omise :
+  -- le trigger BEFORE INSERT fn_revision_num() calcule COALESCE(MAX, 0)+1
+  -- et écrase le DEFAULT (0) avant que le CHECK revision_num > 0 ne s'évalue.
+  -- Passer 0 explicitement fonctionnerait aussi (le trigger l'écrase), mais
+  -- omettre la colonne exprime clairement que la valeur est déléguée au moteur.
+  INSERT INTO content.revision (document_id, author_entity_id, snapshot_name, snapshot_slug, snapshot_body)
+  VALUES (p_document_id, p_author_id, p_name, p_slug, p_content);
 END;
 $$;
 
@@ -890,8 +916,8 @@ BEGIN
   INTO   v_name, v_slug, v_body
   FROM   content.identity i LEFT JOIN content.body b ON b.document_id = i.document_id
   WHERE  i.document_id = p_document_id FOR SHARE;
-  INSERT INTO content.revision (document_id, author_entity_id, revision_num, snapshot_name, snapshot_slug, snapshot_body)
-  VALUES (p_document_id, p_author_id, 0, v_name, v_slug, v_body);
+  INSERT INTO content.revision (document_id, author_entity_id, snapshot_name, snapshot_slug, snapshot_body)
+  VALUES (p_document_id, p_author_id, v_name, v_slug, v_body);
 END;
 $$;
 
@@ -923,9 +949,16 @@ BEGIN
     SELECT path INTO v_parent_path
     FROM   content.comment
     WHERE  id = p_parent_id
+      AND  document_id = p_document_id   -- invariant inter-document : le parent
+                                         -- doit appartenir au même document.
+                                         -- Sans cette garde, un parent_id valide
+                                         -- d'un autre document produirait un chemin
+                                         -- ltree incohérent silencieusement.
     FOR SHARE;
     IF v_parent_path IS NULL THEN
-      RAISE EXCEPTION 'Commentaire parent introuvable (id=%)', p_parent_id
+      RAISE EXCEPTION
+        'Commentaire parent introuvable ou appartenant à un autre document (parent_id=%, document_id=%)',
+        p_parent_id, p_document_id
         USING ERRCODE = 'foreign_key_violation';
     END IF;
     v_path := v_parent_path || text2ltree(p_comment_id::text);
