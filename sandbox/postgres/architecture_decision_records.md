@@ -132,6 +132,157 @@ descriptives (`mime_type`, `folder_url`, `file_name`, `width`, `height`).
 
 ---
 
+## ADR-023 — Éclatement de l'agrégat de commande en composants ECS 1:1
+
+**Statut** : Adopté
+
+### Contexte
+
+Un système de commande réel nécessite des données de natures radicalement
+différentes : statut d'exécution (hot, consulté à chaque affichage), données
+financières (warm, consultées à la confirmation et à la facturation), informations
+de livraison (cold, consultées après expédition). Les stocker dans une table
+unique pollue systématiquement le cache CPU avec des données froides lors de
+chaque accès chaud.
+
+### Décision
+
+L'entité commande est décomposée en quatre composants denses, reliés par la
+même clé primaire (`transaction_id`) :
+
+| Composant                   | Sémantique schema.org             | Fréquence d'accès |
+| --------------------------- | --------------------------------- | ----------------- |
+| `transaction_core`          | `Order`                           | Très haute        |
+| `transaction_price`         | `PriceSpecification`              | Haute             |
+| `transaction_payment`       | `PaymentChargeSpecification`      | Moyenne           |
+| `transaction_delivery`      | `ParcelDelivery`                  | Basse             |
+| `transaction_item`          | `OrderItem` (N lignes)            | Haute             |
+
+Chaque composant est une relation 1:1 stricte (PK = FK vers `transaction_core`).
+
+### Justification — cache CPU et densité
+
+L'argument "éviter une jointure" en faveur d'une fat table repose sur un coût
+mal évalué. Une jointure sur clé primaire entière (`INT4`) est un déréférencement
+mémoire trivial sur une ligne déjà en cache — coût de l'ordre de quelques
+nanosecondes. La pollution de cache par des colonnes froides a un coût
+structurellement récurrent :
+
+- `tracking_number VARCHAR(255)` dans `transaction_core` gonfle chaque tuple
+  d'au moins 4 bytes d'en-tête varlena, plus le contenu. Sur 500 000 commandes,
+  un champ non nul de 20 chars ajoute ~12 Mo de bruit sur le heap du composant core.
+- Ce bruit réduit mécaniquement le nombre de tuples par page cache, augmentant
+  les shared_blks_hit nécessaires pour chauffer le working set.
+
+Avec la décomposition, `transaction_core` tient en **32 bytes/tuple** (~258
+tuples/page). L'affichage du statut de toutes les commandes d'un client ne charge
+jamais le transporteur ni le numéro de facture.
+
+### Arbitrages typologiques (DOD)
+
+**`currency_code SMALLINT`** (2 bytes, pass-by-value) plutôt que `CHAR(3)`
+(varlena avec padding) ou `VARCHAR(3)` (varlena). Le code ISO 4217 numérique
+(978 = EUR, 840 = USD, 826 = GBP) couvre l'ensemble des devises actives.
+Le mapping vers le code alphabétique est délégué à la couche applicative — c'est
+une simple table de lookup statique, jamais un accès base de données.
+
+**`tax_rate_bp INT4`** (4 bytes, pass-by-value) plutôt que `NUMERIC(5,2)`
+(varlena, arithmétique logicielle). Le taux est stocké en **basis points**
+(1 bp = 0,01%). Exemples : 2000 = 20,00% · 550 = 5,50%. L'arithmétique entière
+ALU native remplace l'émulation NUMERIC : `(amount_cents * tax_rate_bp) / 10000`
+reste dans les registres CPU.
+
+**Tous les montants en `INT8` centimes** (ADR-022) : `shipping_cents`,
+`discount_cents`, `tax_cents` suivent la même règle que `price_cents`. Pas de
+NUMERIC dans le hot path financier.
+
+### Procédure `create_transaction`
+
+La procédure crée atomiquement les quatre composants : `transaction_core` +
+`transaction_price` (devise + montants à zéro) + `transaction_payment` (statut 0)
++ `transaction_delivery` (statut 0). **Il n'existe jamais de transaction_core sans
+ses trois composants** — l'invariant est garanti par l'atomicité de la transaction.
+Les composants sont mis à jour indépendamment au fil du cycle de vie de la commande.
+
+### Relation avec les autres ADR
+
+- ADR-005 (fragmentation ECS) : même pattern appliqué au domaine Commerce.
+- ADR-022 (INT8 centimes) : invariant étendu à tous les montants de `transaction_price`.
+- ADR-020 (SECURITY DEFINER) : `create_transaction` est la seule procédure
+  d'écriture autorisée pour `marius_user` sur `transaction_core` et ses composants.
+
+---
+
+## ADR-022 — Optimisations CPU/mémoire : entiers natifs, VARCHAR, padding documenté, pushdown
+
+**Statut** : Adopté
+
+### Contexte
+
+Audit DOD ciblé sur les composants chauds (`commerce.product_core`,
+`commerce.transaction_item`, `org.org_legal`, `identity.auth`,
+`commerce.v_transaction`). Quatre ajustements de topologie physique.
+
+### 1. NUMERIC → INT8 centimes (commerce)
+
+Voir ADR-014 pour le raisonnement complet. Résumé :
+
+- `NUMERIC` est varlena → padding d'alignement, tuple deforming indirect, arithmétique logicielle.
+- `INT8` est pass-by-value, aligné sur 8 bytes, arithmétique ALU native.
+- Gain de densité : ×2 sur `product_core` (24 B/tuple), ×2,2 sur `transaction_item` (20 B/tuple).
+- Convention de nommage : suffixe `_cents` visible dans les noms de colonnes et dans les alias de vues.
+
+### 2. `CHAR(n)` → `VARCHAR(n)` (org.org_legal, commerce.product_identity)
+
+`CHAR(n)` dans PostgreSQL est varlena comme `VARCHAR(n)`. La seule différence est
+le padding espace sur écriture et le stripping sur lecture : **surcoût CPU sans
+contrepartie**. Les contraintes CHECK avec regex garantissent la longueur exacte et
+la conservation des zéros initiaux — `VARCHAR(n)` est strictement suffisant.
+
+Correction étendue à `isbn_ean VARCHAR(13)` dans `commerce.product_identity` pour
+la même raison (était `CHAR(13)`).
+
+### 3. Slot de padding libre dans `identity.auth` — documentation
+
+Séquence de types en fin de tuple fixe de `identity.auth` :
+```
+role_id   SMALLINT  (2 B, offset 28)
+is_banned BOOLEAN   (1 B, offset 30)
+[padding] —         (1 B, offset 31)  ← slot libre
+password_hash varlena               (offset 32, alignement 4 B)
+```
+
+Ce byte de padding est structurellement inévitable : la varlena `password_hash`
+requiert un alignement sur 4 bytes, et la séquence SMALLINT + BOOLEAN consomme
+3 bytes. Le slot à l'offset 31 est documenté comme **emplacement réservé pour un
+prochain BOOLEAN** (ex : `is_email_verified`) sans coût marginal.
+
+**Pourquoi pas le type interne `"char"`** : c'est un type système sans opérateurs
+de domaine ni coercition standard. Il rend le schéma opaque pour tout DBA et
+incompatible avec les outils standards. Pour les états fermés futurs, `SMALLINT`
+avec `CHECK (status IN (...))` reste le bon choix.
+
+### 4. Pushdown garanti sur `commerce.v_transaction` — documentation
+
+PostgreSQL inline les vues avant planification : la vue n'est pas une barrière
+d'optimisation. `WHERE "identifier" = :id` appliqué sur `v_transaction` se réécrit
+en `WHERE t.id = :id` par le query rewriter avant que le planner n'intervienne.
+`t.id` figure dans le GROUP BY — le prédicat est poussé avant `json_agg()`, l'index
+PK est utilisé, l'agrégation porte sur les lignes de la commande concernée uniquement.
+
+**Vérification recommandée** :
+```sql
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT * FROM commerce.v_transaction WHERE "identifier" = 1;
+-- Attendu : Index Scan sur commerce.transaction (PK), pas de Seq Scan.
+```
+
+**Invariant d'usage** : `v_transaction` ne doit jamais être appelée sans filtre.
+Un `SELECT *` sans `WHERE` agrège toutes les lignes de toutes les transactions.
+Documenté dans la définition de la vue.
+
+---
+
 ## ADR-005 — Fragmentation ECS : SoA en lieu de AoS
 
 **Statut** : Adopté
@@ -610,20 +761,49 @@ est direct sur les tables à forte volumétrie (`content_to_tag`, `transaction_i
 
 ---
 
-## ADR-014 — `NUMERIC(12,2)` pour tous les montants monétaires
+## ADR-014 — `INT8` centimes pour tous les montants monétaires
 
-**Statut** : Adopté
+**Statut** : Adopté (révisé — ADR-022)
 
-### Justification
+### Décision
 
-`FLOAT8` introduit des erreurs d'arrondi binaire sur les représentations
-décimales exactes (`0.1 + 0.2 ≠ 0.3`). Inacceptable pour des montants financiers
-archivés dans `unit_price_snapshot` — le prix capturé doit être exact et stable.
+Les montants monétaires (`price_cents` dans `product_core`,
+`unit_price_snapshot_cents` dans `transaction_item`) sont stockés en **centimes
+de la devise de référence** sous forme d'entier `INT8`. La conversion décimale
+est déléguée à la couche applicative.
 
-`NUMERIC` sans précision produit un stockage variable non contrôlé.
+### Pourquoi pas NUMERIC
 
-`NUMERIC(12,2)` : précision décimale exacte, plage jusqu'à 9 999 999 999,99
-(~10 Md€), stockage interne de 6–8 bytes pour les montants courants.
+`NUMERIC` est varlena dans PostgreSQL sans exception, quelle que soit la précision
+déclarée. Conséquences directes :
+
+- **Padding d'alignement** : le moteur insère des bytes de remplissage entre les
+  colonnes à taille fixe et l'en-tête varlena de NUMERIC. Ce padding est invisible
+  dans `\d` et permanent.
+- **Tuple deforming** : NUMERIC déclenche un appel indirect via parsing de l'en-tête
+  varlena à chaque lecture de tuple, même pour une comparaison triviale.
+- **Arithmétique** : les opérations sur NUMERIC sont émulées en base 10000 en
+  logiciel. `unit_price * quantity` dans `v_transaction` ne touche pas l'ALU.
+
+### Pourquoi INT8 et non INT4
+
+INT4 max = 2 147 483 647 centimes ≈ 21,4 M€. Insuffisant pour les transactions
+B2B (équipements industriels, licences). INT8 max ≈ 92 000 Md€. Le surcoût est
+nul : INT8 est pass-by-value sur toutes les architectures 64 bits.
+
+### Gain de densité
+
+| Table                       | Avant (NUMERIC) | Après (INT8) | Tuples/page |
+| --------------------------- | --------------- | ------------ | ----------- |
+| `commerce.product_core`     | ~48 B           | 24 B         | ~341 (×2)   |
+| `commerce.transaction_item` | ~44 B           | 20 B         | ~409 (×2,2) |
+
+### Convention de nommage
+
+Les colonnes suffixées `_cents` rendent l'invariant d'unité visible à tout lecteur
+du schéma sans documentation supplémentaire. La vue expose le suffixe
+(`"priceCents"`, `"unitPriceCents"`, `"totalPriceCents"`) pour que le contrat API
+soit sans ambiguïté.
 
 ---
 
@@ -634,33 +814,39 @@ archivés dans `unit_price_snapshot` — le prix capturé doit être exact et st
 ### Décision
 
 Les lignes de commande sont une table dédiée :
-`commerce.transaction_item(transaction_id, product_id, quantity, unit_price_snapshot)`.
+`commerce.transaction_item(unit_price_snapshot_cents, transaction_id, product_id, quantity)`.
 
 ### Justification
 
 Une liste d'identifiants sérialisée en colonne varchar rend impossible toute FK
 référentielle, tout agrégat par produit et tout historique de prix. Le champ
-`unit_price_snapshot NUMERIC(12,2)` capture le prix au moment de l'INSERT : le
-prix courant peut évoluer sans altérer l'historique des commandes passées.
+`unit_price_snapshot_cents INT8` capture le prix en centimes au moment de l'INSERT :
+le prix courant peut évoluer sans altérer l'historique des commandes passées.
 
 `quantity INT4` (et non `SMALLINT`) : SMALLINT max = 32 767. Les commandes B2B
 peuvent dépasser ce volume. INT4 couvre jusqu'à ~2,1 milliards.
 
 ---
 
-## ADR-010 — Typage `CHAR(9)` / `CHAR(14)` pour DUNS et SIRET
+## ADR-010 — `VARCHAR(n)` pour DUNS, SIRET et ISBN/EAN
 
-**Statut** : Adopté
+**Statut** : Adopté (révisé — ADR-022)
+
+### Décision
+
+Les identifiants de longueur fixe (`duns VARCHAR(9)`, `siret VARCHAR(14)`,
+`isbn_ean VARCHAR(13)`) utilisent `VARCHAR(n)` et non `CHAR(n)`.
 
 ### Justification
 
-DUNS (9 chiffres) et SIRET (14 chiffres) sont des identifiants non arithmétiques :
-**les zéros initiaux sont significatifs**. Un type entier les perd silencieusement.
-`VARCHAR` n'impose pas la longueur fixe. `CHAR(n)` est le seul type garantissant
-longueur fixe et conservation des zéros initiaux.
+`CHAR(n)` dans PostgreSQL est varlena au même titre que `VARCHAR(n)` — il n'offre
+aucun stockage fixe. La seule différence opérationnelle est le **padding espace**
+à l'écriture et le **stripping** à la lecture : surcoût CPU pur sans contrepartie
+en densité ni en performance de recherche.
 
-Validation par contrainte CHECK avec regex (`'^[0-9]{9}$'`, `'^[0-9]{14}$'`) :
-coût fixe à l'INSERT, zéro coût à la lecture, pas de trigger.
+L'invariant de longueur exacte est garanti par les contraintes CHECK avec regex.
+`VARCHAR(n)` avec CHECK est strictement équivalent en termes de validation, et
+absent de tout overhead de padding.
 
 ---
 
@@ -692,9 +878,10 @@ au même titre que les `REVOKE` qui les suivent.
 | `identity.person_identity`  | ~74 B       | ~110        |
 | `identity.person_biography` | 44 B        | ~185        |
 | `org.org_hierarchy`         | 40 B        | ~204        |
-| `commerce.transaction_item` | 44 B        | ~186        |
+| `commerce.product_core`     | 24 B        | ~341        |
+| `commerce.transaction_item` | 20 B        | ~409        |
 | `geo.place_core` (minimal)  | 61 B        | ~134        |
 
 ---
 
-*Architecture ECS/DOD · PostgreSQL 18 · Projet Marius · 21 décisions*
+*Architecture ECS/DOD · PostgreSQL 18 · Projet Marius · 23 décisions*

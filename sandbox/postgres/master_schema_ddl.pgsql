@@ -184,7 +184,10 @@ INSERT INTO identity.role (permissions, name) VALUES
 -- ==============================================================================
 
 -- AUTH — hot path (chaque requête authentifiée) · fillfactor=70 pour HOT updates
--- Layout : 3×TIMESTAMPTZ (8B) · entity_id INT4 · role_id SMALLINT · is_banned BOOL · 1B pad · password varlena
+-- Layout (ADR-004) :
+--   3×TIMESTAMPTZ (8B, offsets 0–23) · entity_id INT4 (24) · role_id SMALLINT (28)
+--   · is_banned BOOL (30, 1B) · [1B libre offset 31 — slot réservé pour un prochain
+--   BOOLEAN sans coût marginal, ex : is_email_verified] · password_hash varlena (32+)
 -- Tuple ~155 B → ~51 tuples/page
 CREATE TABLE identity.auth (
   created_at     TIMESTAMPTZ   NOT NULL DEFAULT now(),
@@ -193,6 +196,7 @@ CREATE TABLE identity.auth (
   entity_id      INT           NOT NULL,
   role_id        SMALLINT      NOT NULL DEFAULT 7,
   is_banned      BOOLEAN       NOT NULL DEFAULT false,
+  -- Slot 1B libre à l'offset 31 (padding avant varlena) — voir commentaire de table.
   password_hash  VARCHAR(255)  NOT NULL,
   PRIMARY KEY (entity_id),
   FOREIGN KEY (entity_id) REFERENCES identity.entity(id) ON DELETE CASCADE,
@@ -360,12 +364,14 @@ CREATE TABLE org.org_contact (
   FOREIGN KEY (entity_id) REFERENCES org.entity(id) ON DELETE CASCADE
 );
 
--- ORG LEGAL — corrections DUNS CHAR(9) et SIRET CHAR(14) (ex SMALLINT)
+-- ORG LEGAL — DUNS/SIRET en VARCHAR (ADR-022) : CHAR(n) dans PostgreSQL est varlena
+-- comme VARCHAR(n) — aucun stockage fixe, mais surcoût de padding/stripping CPU.
+-- L'invariant de longueur est garanti exclusivement par les contraintes CHECK.
 CREATE TABLE org.org_legal (
-  entity_id   INT          NOT NULL,
-  duns        CHAR(9)      NULL,
-  siret       CHAR(14)     NULL,
-  vat_number  VARCHAR(15)  NULL,
+  entity_id   INT           NOT NULL,
+  duns        VARCHAR(9)    NULL,
+  siret       VARCHAR(14)   NULL,
+  vat_number  VARCHAR(15)   NULL,
   PRIMARY KEY (entity_id),
   FOREIGN KEY (entity_id) REFERENCES org.entity(id) ON DELETE CASCADE,
   CONSTRAINT duns_format  CHECK (duns  IS NULL OR duns  ~ '^[0-9]{9}$'),
@@ -392,26 +398,30 @@ CREATE INDEX org_hierarchy_interval ON org.org_hierarchy (lft, rgt);
 -- ==============================================================================
 
 -- PRODUCT CORE — prix et stock (HAUTE fréquence) · fillfactor=80 pour HOT updates
--- Layout : id INT4 · stock INT4 · media_id INT4 · is_available BOOL · 3B pad · price NUMERIC
--- Tuple ~48 B → ~170 tuples/page
+-- Layout (ADR-004 + ADR-022) :
+--   price_cents INT8 (offset 0, 8B) · id INT4 (8) · stock INT4 (12) · media_id INT4 (16)
+--   · is_available BOOL (20, 1B) · 3B pad (21-23)
+-- Tuple 24 B → ~341 tuples/page (vs ~170 avec NUMERIC — densité ×2)
+-- price_cents : montant en centimes de la devise de référence (ADR-022).
+--   Exemples : 1999 = 19,99 € · 0 = gratuit · NULL = prix non défini.
+--   La conversion décimale est déléguée à la couche applicative.
 CREATE TABLE commerce.product_core (
-  id            INT            GENERATED ALWAYS AS IDENTITY,
-  stock         INT            NOT NULL DEFAULT 0,
-  media_id      INT            NULL,
-  is_available  BOOLEAN        NOT NULL DEFAULT true,
-  price         NUMERIC(12,2)  NULL  CHECK (price >= 0),
+  price_cents   INT8     NULL                  CHECK (price_cents >= 0),
+  id            INT      GENERATED ALWAYS AS IDENTITY,
+  stock         INT      NOT NULL DEFAULT 0    CHECK (stock >= 0),
+  media_id      INT      NULL,
+  is_available  BOOLEAN  NOT NULL DEFAULT true,
   PRIMARY KEY (id),
-  CONSTRAINT stock_positive CHECK (stock >= 0),
   FOREIGN KEY (media_id) REFERENCES content.media_core(id) ON DELETE SET NULL
 ) WITH (fillfactor = 80);
 
 -- PRODUCT IDENTITY — catalogue
--- Correction _iso VARCHAR(255) → isbn_ean CHAR(13) (ISBN-13 / EAN-13)
+-- isbn_ean en VARCHAR(13) : même raisonnement que duns/siret (ADR-022).
 CREATE TABLE commerce.product_identity (
-  product_id  INT          NOT NULL,
-  name        VARCHAR(64)  NOT NULL,
-  slug        VARCHAR(64)  NOT NULL,
-  isbn_ean    CHAR(13)     NULL,
+  product_id  INT           NOT NULL,
+  name        VARCHAR(64)   NOT NULL,
+  slug        VARCHAR(64)   NOT NULL,
+  isbn_ean    VARCHAR(13)   NULL,
   PRIMARY KEY (product_id),
   UNIQUE (slug),
   UNIQUE (isbn_ean),
@@ -429,48 +439,116 @@ CREATE TABLE commerce.product_content (
   FOREIGN KEY (product_id) REFERENCES commerce.product_core(id) ON DELETE CASCADE
 ) WITH (toast_tuple_target = 128);
 
--- TRANSACTION — en-tête de commande
--- Layout : 3×TIMESTAMPTZ · 5×INT4 · status SMALLINT · 2B pad | description TEXT
--- Correction : suppression de _list VARCHAR(255) → remplacé par transaction_item
--- Correction : _name INT → number INT (numéro de facture)
-CREATE TABLE commerce.transaction (
-  created_at        TIMESTAMPTZ   NOT NULL DEFAULT now(),
-  purchased_at      TIMESTAMPTZ   NULL,
-  modified_at       TIMESTAMPTZ   NULL,
-  id                INT           GENERATED ALWAYS AS IDENTITY,
-  number            INT           NOT NULL,
-  client_entity_id  INT           NOT NULL,
-  org_entity_id     INT           NOT NULL,
-  billing_place_id  INT           NULL,
-  status            SMALLINT      NOT NULL DEFAULT 0,
-  description       TEXT          NULL,
+-- TRANSACTION CORE — spine de commande (ADR-023)
+-- Composant hot path : statut, dates, FK entités — zero champs froids.
+-- Layout (ADR-004) :
+--   2×TIMESTAMPTZ (offset 0, 16B) · id INT4 (16) · client_entity_id INT4 (20)
+--   · seller_entity_id INT4 (24) · status SMALLINT (28) · 2B pad (30)
+-- Tuple 32 B (sans description) → ~258 tuples/page
+-- seller_entity_id : entité org vendeur (était org_entity_id — renommé pour
+--   cohérence avec la sémantique schema.org/Order.seller).
+CREATE TABLE commerce.transaction_core (
+  created_at          TIMESTAMPTZ   NOT NULL DEFAULT now(),
+  modified_at         TIMESTAMPTZ   NULL,
+  id                  INT           GENERATED ALWAYS AS IDENTITY,
+  client_entity_id    INT           NOT NULL,
+  seller_entity_id    INT           NOT NULL,
+  status              SMALLINT      NOT NULL DEFAULT 0,
+  description         TEXT          NULL,
   PRIMARY KEY (id),
-  UNIQUE (number),
   FOREIGN KEY (client_entity_id)  REFERENCES identity.entity(id),
-  FOREIGN KEY (org_entity_id)     REFERENCES org.entity(id),
-  FOREIGN KEY (billing_place_id)  REFERENCES geo.place_core(id)  ON DELETE SET NULL,
-  CONSTRAINT status_range   CHECK (status IN (0, 1, 2, 3, 9)),
-  CONSTRAINT number_positive CHECK (number > 0)
+  FOREIGN KEY (seller_entity_id)  REFERENCES org.entity(id),
+  CONSTRAINT status_range CHECK (status IN (0, 1, 2, 3, 9))
 );
 
-CREATE INDEX transaction_pending ON commerce.transaction (client_entity_id, created_at DESC)
+CREATE INDEX transaction_core_pending ON commerce.transaction_core (client_entity_id, created_at DESC)
   WHERE status = 0;
-CREATE INDEX transaction_created_brin ON commerce.transaction USING brin (created_at)
+CREATE INDEX transaction_created_brin ON commerce.transaction_core USING brin (created_at)
   WITH (pages_per_range = 128);
 
--- TRANSACTION ITEM — résolution 1NF (ex _list VARCHAR)
--- Layout : transaction_id INT4 · product_id INT4 · quantity INT4 | unit_price NUMERIC
--- Tuple ~44 B → ~186 tuples/page
+-- TRANSACTION PRICE — PriceSpecification (ADR-023)
+-- Composant financier : montants, devise, taxe. Accès à la validation/affichage.
+-- Layout (ADR-004 + ADR-022) :
+--   3×INT8 (offset 0, 24B) · transaction_id INT4 (24) · tax_rate_bp INT4 (28)
+--   · currency_code SMALLINT (32) · is_tax_included BOOL (34) · 1B pad (35)
+-- Tuple 36 B → ~229 tuples/page
+-- currency_code : code ISO 4217 numérique (ex: 978 = EUR, 840 = USD).
+--   SMALLINT 2 B pass-by-value (ADR-023) vs CHAR(3) varlena avec padding.
+-- tax_rate_bp : taux de taxe en basis points (ex: 2000 = 20,00%).
+--   INT4 pass-by-value (ADR-023) vs NUMERIC varlena + arithmétique logicielle.
+CREATE TABLE commerce.transaction_price (
+  shipping_cents   INT8      NOT NULL DEFAULT 0  CHECK (shipping_cents  >= 0),
+  discount_cents   INT8      NOT NULL DEFAULT 0  CHECK (discount_cents  >= 0),
+  tax_cents        INT8      NOT NULL DEFAULT 0  CHECK (tax_cents       >= 0),
+  transaction_id   INT       NOT NULL,
+  tax_rate_bp      INT4      NOT NULL DEFAULT 0  CHECK (tax_rate_bp     >= 0),
+  currency_code    SMALLINT  NOT NULL DEFAULT 978,
+  is_tax_included  BOOLEAN   NOT NULL DEFAULT false,
+  PRIMARY KEY (transaction_id),
+  FOREIGN KEY (transaction_id) REFERENCES commerce.transaction_core(id) ON DELETE CASCADE,
+  CONSTRAINT currency_code_range CHECK (currency_code BETWEEN 1 AND 999)
+);
+
+-- TRANSACTION PAYMENT — PaymentChargeSpecification (ADR-023)
+-- Composant paiement : statut, méthode, référence PSP, numéro de facture.
+-- Accès contextuel (confirmation de commande, facture, tableau de bord admin).
+-- Layout (ADR-004) :
+--   paid_at TIMESTAMPTZ (offset 0, 8B) · transaction_id INT4 (8)
+--   · billing_place_id INT4 (12) · payment_status SMALLINT (16) · 2B pad (18)
+--   · invoice_number varlena · payment_method varlena · provider_reference varlena
+CREATE TABLE commerce.transaction_payment (
+  paid_at             TIMESTAMPTZ   NULL,
+  transaction_id      INT           NOT NULL,
+  billing_place_id    INT           NULL,
+  payment_status      SMALLINT      NOT NULL DEFAULT 0,
+  invoice_number      VARCHAR(64)   NULL,
+  payment_method      VARCHAR(32)   NULL,
+  provider_reference  VARCHAR(255)  NULL,
+  PRIMARY KEY (transaction_id),
+  UNIQUE (invoice_number),
+  FOREIGN KEY (transaction_id)  REFERENCES commerce.transaction_core(id) ON DELETE CASCADE,
+  FOREIGN KEY (billing_place_id) REFERENCES geo.place_core(id)           ON DELETE SET NULL,
+  CONSTRAINT payment_status_range CHECK (payment_status IN (0, 1, 2, 3, 9))
+);
+
+-- TRANSACTION DELIVERY — ParcelDelivery (ADR-023)
+-- Composant logistique : adresse, transporteur, suivi. Données froides —
+-- consultées après expédition uniquement. Isolées pour ne pas polluer
+-- transaction_core qui est accédé à chaque affichage de statut de commande.
+-- Layout (ADR-004) :
+--   3×TIMESTAMPTZ (offset 0, 24B) · transaction_id INT4 (24)
+--   · shipping_place_id INT4 (28) · delivery_status SMALLINT (32) · 2B pad (34)
+--   · carrier varlena · tracking_number varlena
+CREATE TABLE commerce.transaction_delivery (
+  shipped_at          TIMESTAMPTZ   NULL,
+  estimated_at        TIMESTAMPTZ   NULL,
+  delivered_at        TIMESTAMPTZ   NULL,
+  transaction_id      INT           NOT NULL,
+  shipping_place_id   INT           NULL,
+  delivery_status     SMALLINT      NOT NULL DEFAULT 0,
+  carrier             VARCHAR(64)   NULL,
+  tracking_number     VARCHAR(255)  NULL,
+  PRIMARY KEY (transaction_id),
+  FOREIGN KEY (transaction_id)    REFERENCES commerce.transaction_core(id) ON DELETE CASCADE,
+  FOREIGN KEY (shipping_place_id) REFERENCES geo.place_core(id)            ON DELETE SET NULL,
+  CONSTRAINT delivery_status_range CHECK (delivery_status IN (0, 1, 2, 3, 4, 9))
+);
+
+-- TRANSACTION ITEM — résolution 1NF
+-- Layout (ADR-004 + ADR-022) :
+--   unit_price_snapshot_cents INT8 (offset 0, 8B) · transaction_id INT4 (8)
+--   · product_id INT4 (12) · quantity INT4 (16)
+-- Tuple 20 B → ~409 tuples/page (vs ~186 avec NUMERIC — densité ×2,2)
+-- unit_price_snapshot_cents : snapshot du prix en centimes au moment de l'INSERT.
+--   Immuable après création — garantit l'intégrité de l'historique des commandes.
 CREATE TABLE commerce.transaction_item (
-  transaction_id       INT            NOT NULL,
-  product_id           INT            NOT NULL,
-  quantity             INT            NOT NULL DEFAULT 1,
-  unit_price_snapshot  NUMERIC(12,2)  NOT NULL,
+  unit_price_snapshot_cents  INT8  NOT NULL  CHECK (unit_price_snapshot_cents >= 0),
+  transaction_id             INT   NOT NULL,
+  product_id                 INT   NOT NULL,
+  quantity                   INT   NOT NULL DEFAULT 1  CHECK (quantity > 0),
   PRIMARY KEY (transaction_id, product_id),
-  FOREIGN KEY (transaction_id) REFERENCES commerce.transaction(id)   ON UPDATE CASCADE ON DELETE CASCADE,
-  FOREIGN KEY (product_id)     REFERENCES commerce.product_core(id),
-  CONSTRAINT quantity_positive  CHECK (quantity > 0),
-  CONSTRAINT price_snapshot_pos CHECK (unit_price_snapshot >= 0)
+  FOREIGN KEY (transaction_id) REFERENCES commerce.transaction_core(id) ON UPDATE CASCADE ON DELETE CASCADE,
+  FOREIGN KEY (product_id)     REFERENCES commerce.product_core(id)
 );
 
 CREATE INDEX transaction_item_product ON commerce.transaction_item (product_id);
@@ -792,13 +870,11 @@ CREATE TRIGGER content_revision_num
 BEFORE INSERT ON content.revision
 FOR EACH ROW EXECUTE FUNCTION content.fn_revision_num();
 
--- COMMERCE : transaction — modified_at
+-- COMMERCE : transaction_core — modified_at (sur changement de statut)
 CREATE TRIGGER transaction_modified_at
-BEFORE UPDATE ON commerce.transaction
+BEFORE UPDATE ON commerce.transaction_core
 FOR EACH ROW WHEN (
-  OLD.status           IS DISTINCT FROM NEW.status OR
-  OLD.purchased_at     IS DISTINCT FROM NEW.purchased_at OR
-  OLD.billing_place_id IS DISTINCT FROM NEW.billing_place_id
+  OLD.status IS DISTINCT FROM NEW.status
 ) EXECUTE FUNCTION identity.fn_update_modified_at();
 
 -- CONTENT : media_core — modified_at (ADR-021)
@@ -1013,19 +1089,58 @@ BEGIN
 END;
 $$;
 
+-- Création d'une commande (transaction_core + trois composants ECS) (ADR-023)
+-- Les composants price, payment et delivery sont initialisés avec des valeurs par
+-- défaut : ils existent toujours après create_transaction, sans NULL structurel.
+-- La couche applicative met à jour chaque composant indépendamment via UPDATE
+-- direct (marius_admin) ou via des procédures métier dédiées.
+-- p_currency_code : code ISO 4217 numérique (défaut 978 = EUR).
+CREATE PROCEDURE commerce.create_transaction(
+  p_client_entity_id  INT,
+  p_seller_entity_id  INT,
+  p_currency_code     SMALLINT DEFAULT 978,
+  p_status            SMALLINT DEFAULT 0,
+  p_description       TEXT     DEFAULT NULL,
+  OUT p_transaction_id INT
+) LANGUAGE plpgsql AS $$
+BEGIN
+  INSERT INTO commerce.transaction_core
+    (client_entity_id, seller_entity_id, status, description)
+  VALUES (p_client_entity_id, p_seller_entity_id, p_status, p_description)
+  RETURNING id INTO p_transaction_id;
+
+  -- Composant prix : devise et montants initialisés à zéro
+  INSERT INTO commerce.transaction_price
+    (transaction_id, currency_code, shipping_cents, discount_cents, tax_cents,
+     tax_rate_bp, is_tax_included)
+  VALUES (p_transaction_id, p_currency_code, 0, 0, 0, 0, false);
+
+  -- Composant paiement : statut 0 = en attente
+  INSERT INTO commerce.transaction_payment (transaction_id, payment_status)
+  VALUES (p_transaction_id, 0);
+
+  -- Composant livraison : statut 0 = en attente
+  INSERT INTO commerce.transaction_delivery (transaction_id, delivery_status)
+  VALUES (p_transaction_id, 0);
+END;
+$$;
+
 -- Insertion d'une ligne de commande avec snapshot du prix
--- FOR UPDATE sur product_core (ADR-021) : verrouillage exclusif de la ligne
--- pour prévenir la sur-vente sous concurrence. FOR SHARE permettrait à deux
--- transactions de lire le même stock simultanément avant décrémentation.
+-- FOR UPDATE sur product_core (ADR-021) : verrou exclusif pour prévenir la sur-vente.
+-- price_cents lue et stockée telle quelle — arithmétique entière native (ADR-022).
 CREATE PROCEDURE commerce.create_transaction_item(
   p_transaction_id INT, p_product_id INT, p_quantity INT DEFAULT 1
 ) LANGUAGE plpgsql AS $$
-DECLARE v_price NUMERIC(12,2);
+DECLARE v_price_cents INT8;
 BEGIN
-  SELECT price INTO v_price FROM commerce.product_core WHERE id = p_product_id FOR UPDATE;
-  IF v_price IS NULL THEN RAISE EXCEPTION 'Produit % introuvable ou prix non défini', p_product_id; END IF;
-  INSERT INTO commerce.transaction_item (transaction_id, product_id, quantity, unit_price_snapshot)
-  VALUES (p_transaction_id, p_product_id, p_quantity, v_price);
+  SELECT price_cents INTO v_price_cents
+  FROM   commerce.product_core WHERE id = p_product_id FOR UPDATE;
+  IF v_price_cents IS NULL THEN
+    RAISE EXCEPTION 'Produit % introuvable ou prix non défini', p_product_id;
+  END IF;
+  INSERT INTO commerce.transaction_item
+    (unit_price_snapshot_cents, transaction_id, product_id, quantity)
+  VALUES (v_price_cents, p_transaction_id, p_product_id, p_quantity);
   UPDATE commerce.product_core SET stock = stock - p_quantity WHERE id = p_product_id;
 END;
 $$;
@@ -1153,12 +1268,15 @@ LEFT JOIN   org.org_legal       ol  ON ol.entity_id  = e.id
 LEFT JOIN   geo.v_place         gp  ON gp."identifier" = oc.place_id;
 
 -- COMMERCE : v_product — schema.org/Product
+-- price_cents exposé tel quel (INT8, centimes). La conversion décimale est
+-- déléguée à la couche applicative (ADR-022).
 CREATE VIEW commerce.v_product AS
 SELECT
   pc.id                         AS "identifier",
   pi.name, pi.slug,
   pi.isbn_ean                   AS "gtin13",
-  pc.price, pc.stock,
+  pc.price_cents                AS "priceCents",
+  pc.stock,
   pc.is_available               AS "availability",
   pc.media_id                   AS "imageId",
   pco.description, pco.tags
@@ -1166,29 +1284,71 @@ FROM        commerce.product_core     pc
 JOIN        commerce.product_identity pi  ON pi.product_id  = pc.id
 LEFT JOIN   commerce.product_content  pco ON pco.product_id = pc.id;
 
--- COMMERCE : v_transaction — schema.org/Order avec lignes agrégées
+-- COMMERCE : v_transaction — schema.org/Order enrichi (ADR-023)
+-- Agrège transaction_core + trois composants ECS (price, payment, delivery) + items.
+-- Montants en centimes INT8 (ADR-022) — arithmétique ALU native.
+-- totalCents = subtotal + shipping + tax - discount (entiers purs).
+-- PUSHDOWN GARANTI : WHERE "identifier" = :id → WHERE tc.id = :id avant json_agg().
+-- OBLIGATION : toujours filtrer par "identifier" ou "customerId".
 CREATE VIEW commerce.v_transaction AS
 SELECT
-  t.id                          AS "identifier",
-  t.number                      AS "orderNumber",
-  t.status                      AS "orderStatus",
-  t.created_at                  AS "orderDate",
-  t.purchased_at                AS "paymentDueDate",
-  t.client_entity_id            AS "customerId",
-  t.org_entity_id               AS "sellerId",
+  -- Core (schema.org/Order)
+  tc.id                         AS "identifier",
+  tc.status                     AS "orderStatus",
+  tc.created_at                 AS "orderDate",
+  tc.modified_at                AS "dateModified",
+  tc.client_entity_id           AS "customerId",
+  tc.seller_entity_id           AS "sellerId",
+  tc.description,
+  -- Price component (schema.org/PriceSpecification)
+  tp.currency_code              AS "currencyCode",
+  tp.shipping_cents             AS "shippingCents",
+  tp.discount_cents             AS "discountCents",
+  tp.tax_cents                  AS "taxCents",
+  tp.tax_rate_bp                AS "taxRateBp",
+  tp.is_tax_included            AS "isTaxIncluded",
+  -- Payment component (schema.org/PaymentChargeSpecification)
+  tpay.payment_status           AS "paymentStatus",
+  tpay.payment_method           AS "paymentMethod",
+  tpay.invoice_number           AS "orderNumber",
+  tpay.paid_at                  AS "paymentDate",
+  tpay.billing_place_id         AS "billingAddressId",
+  -- Delivery component (schema.org/ParcelDelivery)
+  tdel.delivery_status          AS "deliveryStatus",
+  tdel.shipping_place_id        AS "deliveryAddressId",
+  tdel.carrier,
+  tdel.tracking_number          AS "trackingNumber",
+  tdel.shipped_at               AS "shippedAt",
+  tdel.estimated_at             AS "estimatedDeliveryDate",
+  tdel.delivered_at             AS "deliveredAt",
+  -- Items aggregation
   json_agg(json_build_object(
-    'productId',   ti.product_id,
-    'productName', pi.name,
-    'quantity',    ti.quantity,
-    'unitPrice',   ti.unit_price_snapshot,
-    'lineTotal',   ti.quantity * ti.unit_price_snapshot
+    'productId',      ti.product_id,
+    'productName',    pi.name,
+    'quantity',       ti.quantity,
+    'unitPriceCents', ti.unit_price_snapshot_cents,
+    'lineTotalCents', ti.quantity * ti.unit_price_snapshot_cents
   ) ORDER BY ti.product_id)     AS "orderedItem",
-  SUM(ti.quantity * ti.unit_price_snapshot) AS "totalPrice"
-FROM        commerce.transaction      t
-JOIN        commerce.transaction_item ti ON ti.transaction_id = t.id
-JOIN        commerce.product_identity pi ON pi.product_id     = ti.product_id
-GROUP BY t.id, t.number, t.status, t.created_at, t.purchased_at,
-         t.client_entity_id, t.org_entity_id;
+  SUM(ti.quantity * ti.unit_price_snapshot_cents)                AS "subtotalCents",
+  SUM(ti.quantity * ti.unit_price_snapshot_cents)
+    + COALESCE(tp.shipping_cents, 0)
+    + COALESCE(tp.tax_cents,      0)
+    - COALESCE(tp.discount_cents, 0)                             AS "totalCents"
+FROM        commerce.transaction_core    tc
+JOIN        commerce.transaction_item    ti   ON ti.transaction_id   = tc.id
+JOIN        commerce.product_identity    pi   ON pi.product_id       = ti.product_id
+LEFT JOIN   commerce.transaction_price   tp   ON tp.transaction_id   = tc.id
+LEFT JOIN   commerce.transaction_payment tpay ON tpay.transaction_id = tc.id
+LEFT JOIN   commerce.transaction_delivery tdel ON tdel.transaction_id = tc.id
+GROUP BY
+  tc.id, tc.status, tc.created_at, tc.modified_at,
+  tc.client_entity_id, tc.seller_entity_id, tc.description,
+  tp.currency_code, tp.shipping_cents, tp.discount_cents,
+  tp.tax_cents, tp.tax_rate_bp, tp.is_tax_included,
+  tpay.payment_status, tpay.payment_method, tpay.invoice_number,
+  tpay.paid_at, tpay.billing_place_id,
+  tdel.delivery_status, tdel.shipping_place_id, tdel.carrier,
+  tdel.tracking_number, tdel.shipped_at, tdel.estimated_at, tdel.delivered_at;
 
 -- CONTENT : v_article_list — hot path listing (zéro TOAST, zéro agrégat)
 CREATE VIEW content.v_article_list AS
@@ -1394,6 +1554,9 @@ ALTER PROCEDURE content.save_revision(integer, integer)
 
 ALTER PROCEDURE content.create_comment(integer, integer, text, integer, smallint)
   SECURITY DEFINER SET search_path = 'content', 'pg_catalog';
+
+ALTER PROCEDURE commerce.create_transaction(integer, integer, smallint, smallint, text)
+  SECURITY DEFINER SET search_path = 'commerce', 'identity', 'pg_catalog';
 
 ALTER PROCEDURE commerce.create_transaction_item(integer, integer, integer)
   SECURITY DEFINER SET search_path = 'commerce', 'pg_catalog';

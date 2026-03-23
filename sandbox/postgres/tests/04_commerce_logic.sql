@@ -1,0 +1,239 @@
+-- ==============================================================================
+-- 04_commerce_logic.sql
+-- Tests fonctionnels : domaine Commerce
+-- pgTAP test suite — Projet Marius · PostgreSQL 18 · ECS/DOD
+--
+-- Couvre : atomicité de create_transaction (ADR-023), décrémentation atomique
+--          du stock (ADR-021 FOR UPDATE), immutabilité du snapshot de prix
+--          en centimes (ADR-022), rejet de la sur-vente (CHECK stock_positive),
+--          agrégation correcte dans v_transaction (subtotal + total avec taxes).
+--
+-- Exécution : psql -U postgres -d marius -f tests/04_commerce_logic.sql
+-- ==============================================================================
+
+\set ON_ERROR_STOP 1
+
+BEGIN;
+
+SELECT plan(12);
+
+
+-- ============================================================
+-- DONNÉES DE TEST
+-- ============================================================
+
+CREATE TEMP TABLE _ids (key TEXT PRIMARY KEY, val INT) ON COMMIT DROP;
+
+-- Client
+DO $$
+DECLARE v_id INT;
+BEGIN
+  CALL identity.create_account(
+    'buyer_cmt', '$argon2id$v=19$m=65536$com_test',
+    'buyer-cmt', 7, 'fr_FR', v_id
+  );
+  INSERT INTO _ids VALUES ('client_id', v_id);
+END;
+$$;
+
+-- Organisation vendeur
+DO $$
+DECLARE v_id INT;
+BEGIN
+  CALL org.create_organization('Org Vendeur Test', 'org-vendeur-test', 'company', NULL, NULL, v_id);
+  INSERT INTO _ids VALUES ('org_id', v_id);
+END;
+$$;
+
+-- Produit — prix initial : 29,99 € = 2999 centimes, stock = 5
+WITH ins AS (
+  INSERT INTO commerce.product_core (price_cents, stock, is_available)
+  VALUES (2999, 5, true) RETURNING id
+)
+INSERT INTO _ids SELECT 'product_id', id FROM ins;
+
+INSERT INTO commerce.product_identity (product_id, name, slug)
+VALUES ((SELECT val FROM _ids WHERE key = 'product_id'), 'Produit de test', 'produit-de-test');
+
+-- Transaction créée via la procédure (ADR-023)
+DO $$
+DECLARE v_id INT;
+BEGIN
+  CALL commerce.create_transaction(
+    (SELECT val FROM _ids WHERE key = 'client_id'),
+    (SELECT val FROM _ids WHERE key = 'org_id'),
+    978,   -- EUR
+    0,     -- pending
+    NULL,  -- description
+    v_id
+  );
+  INSERT INTO _ids VALUES ('txn_id', v_id);
+END;
+$$;
+
+
+-- ============================================================
+-- TEST 1–3 — create_transaction : atomicité des quatre composants (ADR-023)
+-- ============================================================
+
+SELECT ok(
+  EXISTS (SELECT 1 FROM commerce.transaction_core WHERE id = (SELECT val FROM _ids WHERE key = 'txn_id')),
+  'create_transaction : transaction_core créé'
+);
+
+SELECT ok(
+  EXISTS (SELECT 1 FROM commerce.transaction_price WHERE transaction_id = (SELECT val FROM _ids WHERE key = 'txn_id')),
+  'create_transaction : transaction_price initialisé'
+);
+
+SELECT ok(
+  EXISTS (SELECT 1 FROM commerce.transaction_payment WHERE transaction_id = (SELECT val FROM _ids WHERE key = 'txn_id')),
+  'create_transaction : transaction_payment initialisé'
+);
+
+SELECT ok(
+  EXISTS (SELECT 1 FROM commerce.transaction_delivery WHERE transaction_id = (SELECT val FROM _ids WHERE key = 'txn_id')),
+  'create_transaction : transaction_delivery initialisé'
+);
+
+
+-- ============================================================
+-- TEST 4 — currency_code par défaut : 978 (EUR) (ADR-023)
+-- ============================================================
+
+SELECT is(
+  (SELECT currency_code FROM commerce.transaction_price
+   WHERE  transaction_id = (SELECT val FROM _ids WHERE key = 'txn_id')),
+  978::SMALLINT,
+  'create_transaction : currency_code = 978 (EUR) par défaut (ADR-023)'
+);
+
+
+-- ============================================================
+-- TEST 5 — Ajout d'une ligne de commande et décrémentation du stock
+-- ============================================================
+
+CALL commerce.create_transaction_item(
+  (SELECT val FROM _ids WHERE key = 'txn_id'),
+  (SELECT val FROM _ids WHERE key = 'product_id'),
+  2   -- quantité
+);
+
+SELECT is(
+  (SELECT stock FROM commerce.product_core WHERE id = (SELECT val FROM _ids WHERE key = 'product_id')),
+  3,
+  'create_transaction_item : stock décrémenté de 5 à 3 (quantité = 2)'
+);
+
+
+-- ============================================================
+-- TEST 6 — Snapshot du prix au moment de la commande (ADR-022)
+-- ============================================================
+
+SELECT is(
+  (SELECT unit_price_snapshot_cents FROM commerce.transaction_item
+   WHERE  transaction_id = (SELECT val FROM _ids WHERE key = 'txn_id')
+     AND  product_id     = (SELECT val FROM _ids WHERE key = 'product_id')),
+  2999::BIGINT,
+  'create_transaction_item : snapshot de prix = 2999 centimes (29,99 €)'
+);
+
+
+-- ============================================================
+-- TEST 7 — Immutabilité du snapshot après modification du prix catalogue
+-- ============================================================
+
+UPDATE commerce.product_core
+SET    price_cents = 4999
+WHERE  id = (SELECT val FROM _ids WHERE key = 'product_id');
+
+SELECT is(
+  (SELECT unit_price_snapshot_cents FROM commerce.transaction_item
+   WHERE  transaction_id = (SELECT val FROM _ids WHERE key = 'txn_id')
+     AND  product_id     = (SELECT val FROM _ids WHERE key = 'product_id')),
+  2999::BIGINT,
+  'Snapshot immuable : unit_price_snapshot_cents reste 2999 après update du prix catalogue'
+);
+
+
+-- ============================================================
+-- TEST 8 — Rejet de la sur-vente (CHECK stock_positive)
+-- stock courant = 3, tentative qty = 10 → stock cible = -7 → 23514
+-- ============================================================
+
+SELECT throws_ok(
+  format(
+    'CALL commerce.create_transaction_item(%s, %s, 10)',
+    (SELECT val FROM _ids WHERE key = 'txn_id'),
+    (SELECT val FROM _ids WHERE key = 'product_id')
+  ),
+  '23514',
+  NULL,
+  'Commande dépassant le stock (qty=10 > stock=3) : CHECK violation 23514'
+);
+
+
+-- ============================================================
+-- TEST 9 — v_transaction : subtotalCents correct (ADR-018 + ADR-022)
+-- 2 unités × 2999 = 5998 centimes
+-- ============================================================
+
+SELECT is(
+  (SELECT "subtotalCents"
+   FROM   commerce.v_transaction
+   WHERE  "identifier" = (SELECT val FROM _ids WHERE key = 'txn_id')),
+  5998::BIGINT,
+  'v_transaction."subtotalCents" = 5998 (2 × 2999 centimes)'
+);
+
+
+-- ============================================================
+-- TEST 10 — v_transaction : totalCents avec taxes et livraison (ADR-023)
+-- On fixe shipping = 500 ct, tax = 1200 ct, discount = 0
+-- totalCents attendu = 5998 + 500 + 1200 - 0 = 7698
+-- ============================================================
+
+UPDATE commerce.transaction_price
+SET    shipping_cents = 500,
+       tax_cents      = 1200,
+       discount_cents = 0
+WHERE  transaction_id = (SELECT val FROM _ids WHERE key = 'txn_id');
+
+SELECT is(
+  (SELECT "totalCents"
+   FROM   commerce.v_transaction
+   WHERE  "identifier" = (SELECT val FROM _ids WHERE key = 'txn_id')),
+  7698::BIGINT,
+  'v_transaction."totalCents" = 7698 (5998 subtotal + 500 ship + 1200 tax)'
+);
+
+
+-- ============================================================
+-- TEST 11 — v_product : exposition de priceCents courant (ADR-022)
+-- Prix catalogue mis à jour à 4999 ci-dessus
+-- ============================================================
+
+SELECT is(
+  (SELECT "priceCents"
+   FROM   commerce.v_product
+   WHERE  "identifier" = (SELECT val FROM _ids WHERE key = 'product_id')),
+  4999::BIGINT,
+  'v_product."priceCents" = 4999 (prix catalogue après mise à jour)'
+);
+
+
+-- ============================================================
+-- TEST 12 — v_transaction : currencyCode présent (ADR-023)
+-- ============================================================
+
+SELECT is(
+  (SELECT "currencyCode"
+   FROM   commerce.v_transaction
+   WHERE  "identifier" = (SELECT val FROM _ids WHERE key = 'txn_id')),
+  978::SMALLINT,
+  'v_transaction."currencyCode" = 978 (EUR)'
+);
+
+
+SELECT * FROM finish();
+ROLLBACK;
