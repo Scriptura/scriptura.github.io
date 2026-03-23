@@ -6,7 +6,7 @@
 [![Design](https://img.shields.io/badge/Design-Data--Oriented-2D6A4F?style=for-the-badge)]()
 [![Semantics](https://img.shields.io/badge/Sémantique-schema.org-1565C0?style=for-the-badge)]()
 [![Hierarchy](https://img.shields.io/badge/Hiérarchies-ltree-5C6BC0?style=for-the-badge)]()
-[![ADR](https://img.shields.io/badge/ADR-19%20décisions-455A64?style=for-the-badge)]()
+[![ADR](https://img.shields.io/badge/ADR-20%20décisions-455A64?style=for-the-badge)]()
 [![Status](https://img.shields.io/badge/Statut-R%26D-7B1FA2?style=for-the-badge)]()
 
 Architecture de base de données orientée données (DOD) pour PostgreSQL 18,
@@ -17,13 +17,8 @@ relationnelle. Conçu pour une cible de **500 000 utilisateurs actifs**.
 
 ## Philosophie
 
-Les modèles relationnels traditionnels organisent les données en **AoS** (*Array
-of Structures*) : chaque entité — utilisateur, article, organisation — est
-stockée dans un tuple large regroupant tous ses attributs, qu'ils soient accédés
-à chaque requête ou une fois par an.
-
-Ce projet applique le paradigme inverse, **SoA** (*Structure of Arrays*), inspiré
-de l'ECS des moteurs de jeu et du DOD bas niveau :
+Ce projet applique le paradigme **SoA** (*Structure of Arrays*), inspiré de l'ECS
+des moteurs de jeu et du DOD bas niveau :
 
 - **Entity** — un identifiant entier pur, sans donnée métier.
 - **Component** — une table physique par axe d'accès (noms, contact, biographie,
@@ -35,8 +30,8 @@ La couche applicative ne voit que des **vues sémantiques** reconstituant
 l'interface [schema.org](https://schema.org) par-dessus les composants fragmentés.
 
 **Résultat mesurable** : la densité de certains composants hot path atteint
-×8,5 celle du modèle monolithique original (`identity.person_identity` :
-~110 tuples/page vs ~13 pour `__person`).
+×8,5 celle d'un modèle monolithique équivalent (`identity.person_identity` :
+~110 tuples/page).
 
 ---
 
@@ -46,7 +41,7 @@ l'interface [schema.org](https://schema.org) par-dessus les composants fragment�
 .
 ├── master_schema_ddl.pgsql          # Blueprint immuable — DDL pur
 ├── master_schema_dml.pgsql          # Seed data — dev / CI uniquement
-├── architecture_decision_records.md # Journal des 18 décisions architecturales
+├── architecture_decision_records.md # 20 arbitrages architecturaux
 └── README.md
 ```
 
@@ -62,31 +57,28 @@ Le schéma complet en un fichier autonome. Contient dans l'ordre d'exécution :
 | 3 — Spines | `identity.entity`, `org.entity`, `content.document` |
 | 4 — Fondation | `geo.place_core/content`, `identity.permission_bit`, `identity.role` |
 | 5–8 — Composants | Toutes les tables physiques par domaine |
-| 9 — Fonctions | Fonctions partagées (`fn_update_modified_at`, `fn_slug_deduplicate`, etc.) |
-| 10 — Triggers | Triggers `modified_at`, déduplication de slug, révisions |
+| 9 — Fonctions | `fn_update_modified_at`, `fn_slug_deduplicate`, `fn_revision_num`, `has_permission` |
+| 10 — Triggers | Triggers `modified_at`, déduplication de slug, numérotation des révisions |
 | 11 — Procédures | `create_account`, `create_document`, `create_comment`, `create_transaction_item`, etc. |
 | 12 — Vues | Toutes les vues sémantiques schema.org |
-| 13 — Permissions | `GRANT` / `REVOKE` par rôle applicatif + calibrage autovacuum |
+| 13 — Permissions | `GRANT SELECT + EXECUTE` sur `marius_user` · calibrage autovacuum |
+| 14 — Verrouillage ECS | `marius_admin` · révocation DML globale · `SECURITY DEFINER` (ADR-020) |
 
 ### `master_schema_dml.pgsql`
 
 Données de remplissage à des fins de développement et de benchmarking.
 **Ne pas exécuter en production.**
 
-Contenu : 8 entités identity · 12 lieux · 4 profils historiques · 16 articles ·
-232 tags · 9 médias · 5 commentaires (via `CALL content.create_comment()`) · liaisons N:N.
-
-Les commentaires sont insérés via la procédure stockée, non par `INSERT` direct :
-le DML traverse le même chemin d'écriture que la production, validant l'absence
-de dead tuples structurels sur `content.comment`.
-
-Prérequis : `master_schema_ddl.pgsql` exécuté préalablement.
+Exécuté en tant que `postgres` (superutilisateur) : la révocation DML sur
+`marius_user` (ADR-020) ne l'affecte pas. Les commentaires sont insérés via
+`CALL content.create_comment()` — le seed traverse exactement le même chemin
+d'écriture que la production.
 
 ### `architecture_decision_records.md`
 
-Journal des 18 décisions architecturales de la session R&D. Pour chaque décision :
-contexte, options évaluées, décision retenue, justification avec chiffres.
-Document de référence pour toute évolution future du schéma.
+20 arbitrages architecturaux, ordonnés par importance décroissante. Chaque
+entrée documente ce qui **n'est pas déductible de la lecture du code** : le
+raisonnement derrière la décision, les alternatives écartées et leurs coûts.
 
 ---
 
@@ -98,9 +90,6 @@ Document de référence pour toute évolution future du schéma.
 | PostGIS | 3.x |
 
 ### Extensions PostgreSQL requises
-
-Les extensions sont déclarées dans le DDL et créées automatiquement à l'exécution.
-Elles doivent être disponibles sur le serveur PostgreSQL cible.
 
 | Extension | Usage |
 |---|---|
@@ -123,14 +112,11 @@ ORDER  BY name;
 
 ### 1. Déploiement du schéma (DDL)
 
-Le fichier DDL crée lui-même l'utilisateur, la base et se connecte. Exécuter
-en tant que superutilisateur PostgreSQL :
-
 ```bash
 psql -U postgres -f master_schema_ddl.pgsql
 ```
 
-Ce script est **idempotent sur une installation vierge** (`DROP DATABASE IF EXISTS`
+Script **idempotent sur une installation vierge** (`DROP DATABASE IF EXISTS`
 en tête). Sur une base existante, supprimer manuellement la base avant exécution.
 
 ### 2. Injection des données de test (optionnel)
@@ -138,10 +124,6 @@ en tête). Sur une base existante, supprimer manuellement la base avant exécuti
 ```bash
 psql -U postgres -d marius -f master_schema_dml.pgsql
 ```
-
-Le DML utilise `CALL content.create_comment()` pour les commentaires : les
-données de test traversent exactement le même chemin d'écriture qu'en production,
-validant l'absence de dead tuples structurels et la construction des chemins ltree.
 
 ### 3. Vérification post-installation
 
@@ -168,6 +150,20 @@ LIMIT  5;
 SELECT id, path, nlevel(path) AS depth
 FROM   content.comment
 ORDER  BY path;
+
+-- Vérifier que marius_user ne peut pas écrire directement (ADR-020)
+SET ROLE marius_user;
+INSERT INTO identity.entity DEFAULT VALUES; -- doit échouer avec ERROR 42501
+RESET ROLE;
+
+-- Vérifier que SECURITY DEFINER est actif sur toutes les procédures de mutation
+SELECT n.nspname, p.proname, p.prosecdef
+FROM   pg_proc p
+JOIN   pg_namespace n ON n.oid = p.pronamespace
+WHERE  n.nspname IN ('identity','content','org','commerce')
+  AND  p.prokind = 'p'
+ORDER  BY n.nspname, p.proname;
+-- prosecdef = true attendu sur toutes les lignes
 ```
 
 ### Séquence complète (environnement CI/CD)
@@ -184,7 +180,7 @@ psql -U postgres -f master_schema_ddl.pgsql \
 ### Alignement mémoire et padding
 
 Toutes les tables respectent un ordre de déclaration **décroissant par taille
-d'alignement** pour éliminer le padding invisible entre colonnes :
+d'alignement** pour éliminer le padding invisible entre colonnes (ADR-004) :
 
 ```
 8 bytes  →  TIMESTAMPTZ, FLOAT8, INT8
@@ -194,48 +190,23 @@ d'alignement** pour éliminer le padding invisible entre colonnes :
 variable →  VARCHAR, TEXT, CHAR, NUMERIC, ltree, geometry
 ```
 
-NUMERIC est varlena dans PostgreSQL indépendamment de sa précision déclarée —
+`NUMERIC` est varlena dans PostgreSQL indépendamment de sa précision déclarée —
 il va toujours après les types fixes.
 
 ### Bitmask des permissions de rôle
 
-Les 15 permissions de `identity.role` sont stockées dans un seul `INT4`
-(`permissions`). Chaque bit correspond à une permission (voir `identity.permission_bit`).
+Les permissions sont encodées dans un `INT4` par OR binaire des puissances de 2
+(ADR-003). Vérification en une opération `&` sans jointure :
 
 ```sql
--- Vérifier si une entité peut publier des contenus
-SELECT identity.has_permission(42, 16);  -- 16 = publish_contents
+-- Vérifier si un utilisateur peut publier (bit 4 = valeur 16)
+SELECT identity.has_permission(entity_id, 16);
 
--- Lire les permissions d'un compte comme colonnes nommées
-SELECT access_admin, create_contents, can_read
-FROM   identity.v_role
-WHERE  name = 'editor';
-
--- Accorder une permission à un rôle
-CALL identity.grant_permission(3, 256);   -- manage_users au rôle id=3
-CALL identity.revoke_permission(3, 256);  -- révoquer
+-- Décomposer le bitmask en colonnes booléennes nommées
+SELECT * FROM identity.v_role WHERE id = 1;
 ```
 
-Gain : lecture d'un rôle = 1 appel `slot_getattr()` + 30 instructions CPU
-en registre, contre 45 appels dans le modèle booléen original.
-
-### TOAST agressif (`toast_tuple_target = 128`)
-
-Les tables cold path (`content.body`, `geo.place_content`,
-`commerce.product_content`, `identity.person_content`) sont configurées avec
-`toast_tuple_target = 128`. Ce seuil force l'externalisation de tout texte
-long, quelle que soit sa taille, laissant un pointeur TOAST de 18 bytes dans
-le tuple principal.
-
-Conséquence directe : un `SELECT headline, slug FROM content.v_article_list`
-ne déclenche **zéro accès TOAST**, même si la vue inclut `content.body` via
-jointure. PostgreSQL ne résout le pointeur TOAST que si la colonne est dans
-la liste de projection.
-
-> Ne pas supprimer ce paramètre. Sa valeur non-standard est intentionnelle
-> (voir ADR-016).
-
-### Vues de listing vs vues complètes
+### Vues de listing vs page complète (isolation TOAST, ADR-016)
 
 | Vue | Usage | Charge TOAST |
 |---|---|---|
@@ -245,10 +216,12 @@ la liste de projection.
 Toujours utiliser `v_article_list` pour les listings. Ne projeter `articleBody`
 que sur les lectures de page complète.
 
-### Écriture via procédures uniquement
+### Écriture via procédures uniquement (ADR-020)
 
-Les `INSERT`/`UPDATE` directs sur les tables physiques sont révoqués pour les
-rôles applicatifs. Toute mutation passe par les procédures stockées :
+`marius_user` ne possède aucun droit `INSERT`, `UPDATE`, `DELETE` direct sur les
+tables physiques. Toute mutation passe par les procédures stockées, déclarées
+`SECURITY DEFINER` : elles s'exécutent avec les droits du propriétaire (`postgres`)
+indépendamment des droits de l'appelant.
 
 | Procédure | Usage |
 |---|---|
@@ -258,8 +231,20 @@ rôles applicatifs. Toute mutation passe par les procédures stockées :
 | `content.create_document(...)` | Créer un article/page |
 | `content.publish_document(document_id)` | Publier un brouillon |
 | `content.save_revision(document_id, author_id)` | Snapshot éditorial |
-| `content.create_comment(...)` | Insérer un commentaire (zéro dead tuple) |
-| `commerce.create_transaction_item(...)` | Ajouter une ligne de commande avec snapshot de prix |
+| `content.create_comment(...)` | Insérer un commentaire (zéro dead tuple, ADR-012) |
+| `commerce.create_transaction_item(...)` | Ligne de commande avec snapshot de prix |
+
+### Rôles PostgreSQL
+
+| Rôle           | Droits | Usage |
+|---|---|---|
+| `marius_user`  | `SELECT` + `EXECUTE` | Runtime applicatif |
+| `marius_admin` | `SELECT` + `EXECUTE` + `INSERT/UPDATE/DELETE` | Maintenance, migrations, CI seed |
+| `postgres`     | Superutilisateur | Déploiement DDL, installation |
+
+`marius_admin` hérite de `marius_user` via `GRANT ... WITH INHERIT TRUE`.
+En environnement hautement sécurisé, désactiver le `LOGIN` direct sur
+`marius_admin` et passer par `SET ROLE marius_admin` depuis une session `postgres`.
 
 ---
 
@@ -275,21 +260,19 @@ rigueur mécanique la rend pertinente à n'importe quelle échelle.
 
 **Cible** : VPS 1 Go RAM, Raspberry Pi 4, instance mutualisée.
 
-L'enjeu sur ces environnements n'est pas le débit mais la **résidence en RAM**
-du hot path. Si les pages les plus accédées tiennent dans `shared_buffers`,
-chaque requête est servie sans I/O disque.
+L'enjeu n'est pas le débit mais la **résidence en RAM** du hot path. Si les
+pages les plus accédées tiennent dans `shared_buffers`, chaque requête est
+servie sans I/O disque.
 
 **Estimation concrète** : pour un site de 5 000 articles avec 500 tags et
 2 000 utilisateurs actifs, les composants hot path (`content.core`,
 `content.identity`, `identity.auth`, `identity.account_core`) représentent
 environ 5 000 × (64 + 240) + 2 000 × (155 + 77) ≈ **2 Mo de données utiles**.
-Un `shared_buffers` de 128 Mo — valeur raisonnable sur un VPS 1 Go — couvre
-ce volume avec une marge ×60. Le système est silencieux : zéro I/O heap sur
-les lectures de listing une fois le cache chaud.
+Un `shared_buffers` de 128 Mo couvre ce volume avec une marge ×60. Le système
+est silencieux : zéro I/O heap sur les lectures de listing une fois le cache chaud.
 
-Le paramètre `toast_tuple_target = 128` (ADR-016) garantit que les corps
-d'articles, quelle que soit leur longueur, ne gonfleront jamais ces tables
-hot path. La base grossit, les composants core restent denses.
+`toast_tuple_target = 128` (ADR-016) garantit que les corps d'articles ne
+gonfleront jamais les tables hot path, quelle que soit leur longueur.
 
 ---
 
@@ -299,63 +282,43 @@ hot path. La base grossit, les composants core restent denses.
 massifs, catalogues produits dynamiques.
 
 À ce volume, le coût dominant n'est plus le I/O disque mais la **fragmentation
-progressive du stockage** (*bloat*) et la pression sur l'autovacuum. Trois
-décisions techniques adressent directement ce problème.
+progressive du stockage** (*bloat*) et la pression sur l'autovacuum.
 
-**Élimination des dead tuples structurels** (ADR-012) : la procédure
-`content.create_comment()` utilise `nextval()` en amont de l'INSERT pour
-construire le chemin ltree en mémoire et n'effectuer qu'une seule écriture
-heap. Le double trigger `BEFORE`/`AFTER` précédent généraient un dead tuple
-garanti par commentaire — sur 10 000 commentaires/jour, l'autovacuum traitait
-un bloat auto-infligé continu.
+**Zéro dead tuple structurel** (ADR-012) : `content.create_comment()` effectue
+une seule écriture heap par commentaire. Sur 10 000 commentaires/jour, l'absence
+de dead tuples structurels réduit significativement la charge autovacuum.
 
-**HOT updates sur les tables à mutations fréquentes** (ADR-015) : les `fillfactor`
-réduits (70 sur `identity.auth`, 80 sur `commerce.product_core`) réservent de
-l'espace libre dans chaque page pour les mises à jour de `last_login_at` et
-`stock`. Un HOT update ne crée pas de nouvelle entrée d'index — sur
-500 000 connexions/jour, l'économie en index maintenance est significative.
+**HOT updates** (ADR-015) : les `fillfactor` réduits (70 sur `identity.auth`,
+80 sur `commerce.product_core`) permettent les mises à jour `last_login_at` et
+`stock` sans nouvelle entrée d'index. Sur 500 000 connexions/jour, l'économie
+en index maintenance est significative.
 
-**Index BRIN sur les colonnes temporelles** (ADR-017) : les colonnes `created_at`
-utilisent des index BRIN dont l'empreinte est ~200 fois inférieure à un B-tree
-équivalent. Sur `identity.auth` à 500 000 lignes, le BRIN occupe ~50 Ko de
-`shared_buffers` contre ~11 Mo pour un B-tree — autant de cache disponible
-pour les pages heap à haute densité.
+**BRIN sur les colonnes temporelles** (ADR-017) : sur `identity.auth` à 500 000
+lignes, le BRIN occupe ~50 Ko de `shared_buffers` contre ~11 Mo pour un B-tree
+équivalent.
 
 ---
 
 ### Architecture Headless & API-first — le "Content Hub"
 
 **Cible** : Systèmes où le contenu est consommé par plusieurs clients (web,
-mobile, IoT, services tiers) via une API, sans couplage à un front-end unique.
+mobile, IoT, services tiers) via une API.
 
-L'isolation stricte des domaines en schémas PostgreSQL (`identity`, `content`,
-`commerce`, `geo`, `org`) permet d'utiliser Marius comme un **moteur de données
-pur**, indépendant de toute couche de présentation.
+**Zéro N+1 par agrégation SQL** (ADR-018) : un `SELECT` sur `content.v_article`
+retourne l'article, ses tags et ses médias en un seul aller-retour réseau.
 
-**Zéro N+1 par agrégation SQL** (ADR-018) : les vues sémantiques
-(`content.v_article`, `commerce.v_transaction`) embarquent les relations N:N
-(tags, médias, lignes de commande) directement dans le moteur via `json_agg`.
-Un `SELECT` sur `content.v_article WHERE "identifier" = :id` retourne l'article,
-ses tags et ses médias en un seul aller-retour réseau, quel que soit le client
-consommateur.
+**Interface schema.org stable** (ADR-006) : les vues exposent un contrat nommé
+(`"givenName"`, `"datePublished"`, `"gtin13"`) découplé du modèle physique. Un
+remaniement interne ne casse pas l'interface API.
 
-**Interface schema.org stable** (ADR-006) : les vues exposent un contrat
-nommé (`"givenName"`, `"datePublished"`, `"gtin13"`) découplé du modèle
-physique sous-jacent. Un remaniement interne des composants ne casse pas
-l'interface API tant que la vue est maintenue.
-
-**Cloisonnement des permissions par domaine** (ADR-007) : chaque service
-applicatif peut se voir accorder l'accès à un sous-ensemble de schémas.
-Un service éditorial n'a accès qu'à `content` et aux vues en lecture de
-`identity` ; un service de facturation accède à `commerce` sans voir les
-données personnelles de `identity`.
+**Cloisonnement des permissions par domaine** (ADR-007 + ADR-020) :
 
 ```sql
 -- Exemple : rôle éditorial, lecture identity + écriture content
 CREATE ROLE editorial_service;
 GRANT USAGE ON SCHEMA content  TO editorial_service;
 GRANT USAGE ON SCHEMA identity TO editorial_service;
-GRANT SELECT ON identity.v_account    TO editorial_service;
+GRANT SELECT ON identity.v_account     TO editorial_service;
 GRANT SELECT ON content.v_article_list TO editorial_service;
 GRANT EXECUTE ON PROCEDURE content.create_document  TO editorial_service;
 GRANT EXECUTE ON PROCEDURE content.publish_document TO editorial_service;
@@ -368,7 +331,6 @@ GRANT EXECUTE ON PROCEDURE content.publish_document TO editorial_service;
 ### Surveillance des dead tuples
 
 ```sql
--- État global par table (trier par n_dead_tup DESC)
 SELECT schemaname, relname, n_live_tup, n_dead_tup,
        round(n_dead_tup::numeric / nullif(n_live_tup + n_dead_tup, 0) * 100, 2) AS dead_pct,
        last_autovacuum, last_analyze
@@ -378,23 +340,16 @@ ORDER  BY n_dead_tup DESC
 LIMIT  20;
 ```
 
-Les tables à surveiller en priorité :
-
 | Table | Source de dead tuples | fillfactor |
 |---|---|---|
-| `identity.auth` | `last_login_at` mis à jour à chaque connexion | 70 |
-| `commerce.product_core` | `stock` décrémenté à chaque vente | 80 |
-| `content.core` | `status` à chaque changement de cycle de vie | 75 |
+| `identity.auth` | `last_login_at` à chaque connexion | 70 |
+| `commerce.product_core` | `stock` à chaque vente | 80 |
+| `content.core` | `status` à chaque changement de cycle | 75 |
 | `content.comment` | Suppressions de modération (`status = 9`) | défaut |
 
-La procédure `content.create_comment()` (intégrée nativement dans le DDL) élimine les dead tuples
-**structurels** liés à la construction du chemin ltree. Les dead tuples
-résiduels proviennent uniquement des suppressions légitimes (modération).
-
-### Vérification de l'isolation TOAST post-insertion
+### Vérification de l'isolation TOAST
 
 ```sql
--- Comparer les shared_blks_hit entre listing et lecture complète
 EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)
 SELECT "identifier", headline, slug FROM content.v_article_list LIMIT 20;
 
@@ -403,37 +358,39 @@ SELECT "identifier", headline, "articleBody" FROM content.v_article
 WHERE  "identifier" = 1;
 ```
 
-`shared_blks_hit` doit être significativement plus élevé pour la seconde requête
-(accès TOAST). Si les deux sont identiques, vérifier que `toast_tuple_target = 128`
-est bien en place sur `content.body`.
+`shared_blks_hit` doit être significativement plus élevé pour la seconde requête.
 
 ### Calibrage autovacuum sur `content.comment`
-
-Les paramètres autovacuum de la table sont calibrés dans le DDL (SECTION 13).
 
 ```sql
 SELECT reloptions FROM pg_class
 WHERE  relname = 'comment'
   AND  relnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'content');
+-- Attendu : autovacuum_vacuum_scale_factor=0.05, autovacuum_analyze_scale_factor=0.02
 ```
 
-Attendu : `autovacuum_vacuum_scale_factor=0.05, autovacuum_analyze_scale_factor=0.02`.
+### Audit des connexions par rôle
+
+```sql
+SELECT usename, application_name, client_addr, state
+FROM   pg_stat_activity
+WHERE  usename IN ('marius_user', 'marius_admin')
+ORDER  BY usename, state;
+-- marius_admin ne doit apparaître que lors d'opérations de maintenance explicites.
+```
 
 ---
 
 ## Références
 
-- [Architecture Decision Records](./architecture_decision_records.md) — journal
-  des 18 décisions structurantes de la session R&D.
+- [Architecture Decision Records](./architecture_decision_records.md)
 - [PostgreSQL 18 — Async I/O](https://www.postgresql.org/docs/18/runtime-config-resource.html)
 - [PostGIS — ST_DWithin / opérateur KNN](https://postgis.net/docs/ST_DWithin.html)
-- [schema.org — Person](https://schema.org/Person) ·
-  [Article](https://schema.org/Article) ·
-  [Organization](https://schema.org/Organization) ·
-  [Order](https://schema.org/Order)
+- [schema.org — Person](https://schema.org/Person) · [Article](https://schema.org/Article) · [Organization](https://schema.org/Organization) · [Order](https://schema.org/Order)
 - [ltree — PostgreSQL](https://www.postgresql.org/docs/current/ltree.html)
 - [BRIN Indexes](https://www.postgresql.org/docs/current/brin-intro.html)
+- [SECURITY DEFINER — PostgreSQL](https://www.postgresql.org/docs/current/sql-createfunction.html#SQL-CREATEFUNCTION-SECURITY)
 
 ---
 
-*Architecture ECS/DOD · PostgreSQL 18 · Session R&D Marius*
+*Architecture ECS/DOD · PostgreSQL 18 · Projet Marius*

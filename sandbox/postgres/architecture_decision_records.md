@@ -1,760 +1,149 @@
 # Architecture Decision Records (ADR)
 
-## Projet Marius — Refonte ECS/DOD · PostgreSQL 18
-
-## Session R&D · 2025–2026
+## Projet Marius — ECS/DOD · PostgreSQL 18
 
 ---
 
-> Ce document consolide l'ensemble des arbitrages architecturaux effectués au fil
-> des phases de refonte. Pour chaque décision : le contexte, les options évaluées,
-> la décision retenue et sa justification technique.
+> Arbitrages architecturaux du projet Marius. Chaque entrée documente ce qui
+> **n'est pas déductible de la lecture du code** : le raisonnement qui a conduit
+> à une décision, les alternatives écartées et leurs coûts respectifs.
+>
+> Ordre : priorité décroissante — invariants de sécurité et contraintes physiques
+> d'abord, décisions structurelles et de typage ensuite, organisation du dépôt en fin.
 
 ---
 
-## ADR-001 — Séparation DDL / DML
-
-**Statut** : Adopté  
-**Phase** : Consolidation finale
-
-### Contexte
-
-Le master schema initial fusionnait schéma et données de test dans un seul fichier.
-
-### Décision
-
-Scinder en deux artefacts :
-
-- `master_schema_ddl.pgsql` — Blueprint immuable (schéma pur)
-- `master_schema_dml.pgsql` — Seed data (dev/CI uniquement)
-
-### Justification
-
-Les données de remplissage n'ont pas vocation à être exécutées en production. La
-séparation permet un cycle CI/CD propre : le DDL est idempotent et versionnable
-seul ; le DML est optionnel et dépend de l'environnement cible.
-
-**Exception documentée** : les `INSERT` sur `identity.permission_bit` et
-`identity.role` restent dans le DDL. Ce sont des données de configuration
-structurelle insécables du schéma (au même titre que les `REVOKE` qui les suivent).
-
----
-
-## ADR-002 — Spine `content.document` indépendant de `identity.entity`
-
-**Statut** : Adopté  
-**Phase** : Phase 3 (domaine content)
-
-### Contexte
-
-Le modèle `identity.entity` sert de spine universel pour les acteurs du système
-(comptes, profils publics). La question s'est posée de le réutiliser pour les
-documents (articles, pages).
-
-### Options évaluées
-
-| Option                            | Avantage               | Inconvénient                                                 |
-| --------------------------------- | ---------------------- | ------------------------------------------------------------ |
-| Spine partagé (`identity.entity`) | Un seul registre d'IDs | Mélange volumétrique, cascades croisées, couplage sémantique |
-| Spine dédié (`content.document`)  | Isolation complète     | Un registre de plus à maintenir                              |
-
-### Décision
-
-Spine `content.document` indépendant.
-
-### Justification
-
-Quatre raisons distinctes, chacune suffisante :
-
-1. **Sémantique** : un document n'est pas un acteur. Il n'a pas d'auth, pas de
-   contact, pas de permissions. Partager le spine introduit des jointures à vide
-   sur 100 % des requêtes documentaires.
-
-2. **Volumétrie asymétrique** : 500 000 utilisateurs vs potentiellement plusieurs
-   millions de documents et révisions. Un spine partagé ferait exploser
-   `identity.entity`, dégradant ses index B-tree.
-
-3. **Cascade isolée** : `DELETE CASCADE` sur un article ne doit pas traverser
-   `identity.entity` (table des acteurs du système).
-
-4. **Évolutivité** : `content.document` peut supporter du polymorphisme documentaire
-   (`doc_type`) sans modifier `identity`.
-
----
-
-## ADR-003 — Bitmask `INT4` pour les permissions de rôle
-
-**Statut** : Adopté  
-**Phase** : Optimisation bitmask (itération post-Phase 1)
-
-### Contexte
-
-Le modèle original stockait 15 colonnes `BOOLEAN` dans `identity.role`.
-
-### Options évaluées
-
-| Type           | Taille réelle                 | Alignement     | Opérateurs                                  |
-| -------------- | ----------------------------- | -------------- | ------------------------------------------- |
-| 15 × `BOOLEAN` | 15 B (+ padding)              | Align 1 chacun | Accès colonne par colonne                   |
-| `BIT(16)`      | 6 B (varlena 4B + 2B données) | varlena        | Syntaxe `B'...'` peu lisible                |
-| `INT2`         | 2 B fixe                      | Align 2        | `&`, `\|`, `~` natifs — mais bit 15 = signe |
-| `INT4`         | 4 B fixe                      | Align 4        | `&`, `\|`, `~` natifs — 17 bits libres      |
-
-### Décision
-
-`INT4` unique, colonne `permissions`.
-
-### Justification
-
-- `BIT(n)` est varlena dans PostgreSQL : 4 bytes d'en-tête + données. Plus lourd
-  que `INT4`, opérateurs moins naturels.
-- `INT2` couvre les 15 permissions actuelles (max 32 767), mais le bit 15 est le
-  bit de signe signé. Toute 16e permission déclencherait un dépassement silencieux.
-- `INT4` : 4 bytes fixes, alignement natif CPU, 17 bits libres pour extensions,
-  opérateurs `&` / `|` / `~` lisibles par tout développeur.
-
-**Gain mesuré** : tuple `identity.role` passe de 61 bytes à 49 bytes (−20 %).
-Le gain réel est en "CPU tuple deforming" : réduction de 17 à 3 appels
-`slot_getattr()` par lecture de rôle (hot path login).
-
-**Invariant layout** : `permissions INT4` est déclaré _avant_ `id SMALLINT` pour
-éliminer 2 bytes de padding (INT4 à offset 0 → aligné nativement ; SMALLINT
-suit sans contrainte d'alignement supplémentaire).
-
----
-
-## ADR-004 — Layout physique décroissant (règle universelle)
-
-**Statut** : Adopté  
-**Phase** : Phase 1, appliqué à tous les domaines
-
-### Contexte
-
-PostgreSQL aligne chaque colonne sur un multiple de son `typalign`. Un type
-de petite taille suivi d'un type de grande taille génère du padding invisible.
-
-### Décision
-
-Ordre de déclaration systématique dans toutes les tables :
-
-```
-8 bytes  → TIMESTAMPTZ, FLOAT8, INT8
-4 bytes  → INT4, DATE, FLOAT4
-2 bytes  → SMALLINT
-1 byte   → BOOLEAN
-variable → CHAR, VARCHAR, TEXT, NUMERIC, ltree, geometry
-```
-
-### Justification
-
-Exemples concrets de gains dans ce projet :
-
-| Table                      | Avant  | Après  | Gain/tuple |
-| -------------------------- | ------ | ------ | ---------- |
-| `identity.auth`            | ~167 B | ~155 B | 12 B       |
-| `identity.person_identity` | ~88 B  | ~74 B  | 14 B       |
-| `org.org_hierarchy`        | 42 B   | 40 B   | 2 B        |
-
-Le gain par tuple est modeste en absolu mais permanent. Sur 500 000 lignes en
-cache L2/L3, l'économie en pages chargées est mesurable (facteur ×8–10 sur les
-tables person comparées au modèle monolithique original).
-
-**Note** : `NUMERIC` est toujours varlena dans PostgreSQL, quel que soit le
-paramétrage `NUMERIC(n,m)`. Il va systématiquement après les types fixes.
-
----
-
-## ADR-005 — Fragmentation ECS des tables larges
-
-**Statut** : Adopté  
-**Phase** : Phase 1 (identity), Phase 2 (geo, org, commerce), Phase 3 (content)
-
-### Contexte
-
-Le modèle original (AoS — Array of Structures) stockait tous les attributs d'une
-entité dans un seul tuple large. Ex : `__person` = 26 colonnes, ~600 bytes/tuple,
-~13 tuples/page.
-
-### Décision
-
-Fragmentation par fréquence d'accès (pattern ECS — Entity-Component-System) :
-
-```
-Entité (spine)    → ID pur, aucune donnée métier
-Core              → champs hot path (status, dates, FK primaires)
-Identity          → noms, slugs, données de listing
-Contact           → email, téléphone, URL (accès contextuel)
-Biography/Legal   → dates, identifiants légaux (accès rare)
-Content           → textes longs (TOAST, accès très rare)
-```
-
-### Justification
-
-Un scan qui ne cible que les noms d'auteur (`person_identity`) ne charge plus
-la biographie ni les descriptions. La densité par page passe de ~13 à ~110 tuples
-sur ce composant seul — facteur ×8,5.
-
-**Coût** : jointures supplémentaires sur les requêtes complètes. Mitigation via
-vues sémantiques qui reconstituent l'objet complet pour la couche applicative.
-
----
-
-## ADR-006 — Vues sémantiques comme seule interface applicative
-
-**Statut** : Adopté  
-**Phase** : Toutes phases
-
-### Contexte
-
-Les tables physiques fragmentées sont opaques et non-intuitives pour un
-développeur applicatif. La sémantique schema.org était perdue dans la
-fragmentation.
-
-### Décision
-
-La couche applicative ne connaît que les vues. Les tables physiques sont
-considérées comme un détail d'implémentation.
-
-```
-Tables physiques → Composants ECS (optimisées, denses)
-Vues SQL         → Interface schema.org (lisible, compatible)
-```
-
-### Justification
-
-- Découplage total entre le modèle physique et l'interface applicative.
-- Les vues peuvent être modifiées sans impacter le code applicatif (et
-  réciproquement).
-- La séparation `v_article_list` (listing, zéro TOAST) / `v_article` (page
-  complète, avec TOAST) garantit architecturalement que les listings ne chargent
-  jamais les corps HTML.
-
-**Règle d'écriture** : lecture via vues, écriture via procédures stockées
-exclusivement. Les `INSERT`/`UPDATE` directs sur les tables physiques sont
-révoqués pour les rôles applicatifs.
-
----
-
-## ADR-007 — Schémas PostgreSQL pour l'isolation des domaines
-
-**Statut** : Adopté  
-**Phase** : Phase 1 (décision initiale)
-
-### Contexte
-
-Le modèle original utilisait un préfixe `__` (double underscore) pour toutes les
-tables dans le schéma `public`.
-
-### Décision
-
-Migration vers cinq schémas dédiés :
-
-| Schéma     | Contenu                                    |
-| ---------- | ------------------------------------------ |
-| `identity` | Acteurs, comptes, permissions, rôles       |
-| `geo`      | Lieux, coordonnées géospatiales            |
-| `org`      | Organisations, hiérarchies                 |
-| `commerce` | Produits, transactions, lignes de commande |
-| `content`  | Documents, médias, tags, commentaires      |
-
-### Justification
-
-- Isolation des permissions : `GRANT USAGE ON SCHEMA content TO editorial_role`
-  sans exposer `identity` ou `commerce`.
-- `search_path` configurable par rôle de connexion (isolation par service).
-- Lisibilité : `content.tag` vs `__tag`, `identity.auth` vs `__account`.
-- Prérequis à la fragmentation ECS : sans schémas, les tables fragmentées
-  (`person_core`, `person_identity`...) polluent un espace de noms unique.
-
----
-
-## ADR-008 — Gestion des spines org et geo sans `identity.entity`
-
-**Statut** : Adopté  
-**Phase** : Phase 2
-
-### Contexte
-
-Les organisations et les lieux sont des entités structurelles. Faut-il les
-rattacher au spine `identity.entity` (spine universel) ou leur créer un spine
-propre ?
-
-### Décision
-
-- `org.entity` : spine propre (même pattern que `identity.entity`)
-- `geo.place_core` : pas de spine séparé, PK `INT` directe sur la table
-
-### Justification
-
-**org.entity** : les organisations peuvent avoir des contacts, des membres, des
-permissions futures. Un spine dédié permet les mêmes extensions que `identity`.
-
-**geo.place_core** : les lieux ne sont pas des acteurs. Ils sont des destinations
-(FK cibles depuis `org`, `identity`, `commerce`). Un spine séparé ajouterait
-une jointure sur 100 % des requêtes géospatiales sans aucun bénéfice sémantique.
-Le PK `INT` direct est le bon niveau d'abstraction.
-
----
-
-## ADR-009 — Résolution 1NF : suppression de `__transaction._list`
-
-**Statut** : Adopté  
-**Phase** : Phase 2 (domaine commerce)
-
-### Contexte
-
-Le modèle original stockait la liste des produits d'une commande dans une
-colonne `_list VARCHAR(255)` contenant des IDs sérialisés en CSV.
-
-### Problèmes identifiés
-
-1. **1NF violée** : plusieurs valeurs atomiques dans une colonne.
-2. **Intégrité référentielle impossible** : pas de FK sur un CSV.
-3. **Requêtes impossibles** : impossible d'agréger quantités ou prix par produit
-   sans parsing applicatif.
-4. **Snapshot de prix absent** : le prix historique d'une commande était perdu.
-
-### Décision
-
-Table `commerce.transaction_item(transaction_id, product_id, quantity,
-unit_price_snapshot)`.
-
-### Justification
-
-- FK sur `product_id` → intégrité référentielle garantie.
-- `unit_price_snapshot NUMERIC(12,2)` : copie du prix au moment de l'INSERT
-  (pattern "snapshot de prix"). Le prix courant peut changer sans altérer
-  l'historique des commandes.
-- `quantity INT4` (et non `SMALLINT`) : le SMALLINT max est 32 767. Les commandes
-  B2B peuvent dépasser ce volume. INT4 couvre jusqu'à 2 147 483 647.
-
----
-
-## ADR-010 — Corrections de typage DUNS / SIRET
-
-**Statut** : Adopté  
-**Phase** : Phase 2 (domaine org)
-
-### Contexte
-
-Le modèle original déclarait `_duns SMALLINT` et `_siret SMALLINT`.
-SMALLINT est limité à 32 767.
-
-### Décision
-
-- `duns CHAR(9)` + contrainte `CHECK (duns ~ '^[0-9]{9}$')`
-- `siret CHAR(14)` + contrainte CHECK Luhn inline
-
-### Justification
-
-DUNS = 9 chiffres, plage 000000000–999999999. Non-arithmétique : les zéros
-initiaux sont significatifs. SMALLINT (max 32 767) ne couvre même pas 5 chiffres.
-INT4 couvrirait la plage numérique mais perdrait les zéros initiaux.
-`CHAR(9)` est le type exact : longueur fixe, zéros conservés, validation par regex.
-
-Même raisonnement pour SIRET (14 chiffres, clé de Luhn).
-
-La contrainte Luhn est implémentée inline en CHECK (pas de trigger) :
-coût = 14 opérations entières à l'INSERT, zéro coût à la lecture.
-
----
-
-## ADR-011 — `ltree` pour les hiérarchies de tags et commentaires
-
-**Statut** : Adopté  
-**Phase** : Phase 3 (domaine content)
-
-### Contexte
-
-Deux structures hiérarchiques à gérer : la taxonomie des tags et l'arborescence
-des commentaires. Trois patterns évalués : Adjacency List, Nested Set, ltree.
-
-### Comparaison
-
-| Critère            | Adjacency List                | Nested Set                  | ltree                 |
-| ------------------ | ----------------------------- | --------------------------- | --------------------- |
-| Lecture sous-arbre | O(profondeur) — CTE récursive | O(1) — BETWEEN              | O(log n) — index GiST |
-| INSERT             | O(1)                          | O(n) — recalcul intervalles | O(1) — concat chemin  |
-| Lisibilité         | `parent_id = 42`              | `lft=5, rgt=12`             | `theology.patristics` |
-| Index utilisable   | B-tree sur parent_id          | B-tree sur lft/rgt          | GiST (KNN, @>, <@)    |
-
-### Décision
-
-`ltree` pour les deux cas.
-
-### Justification
-
-**Tags** : les insertions de tags sont rares (taxonomie éditoriale stable), les
-lectures de sous-arbres sont fréquentes ("tous les articles sur les Pères de
-l'Église"). ltree avec index GiST résout le sous-arbre en O(log n) sans CTE.
-
-**Commentaires** : le pattern dominant est l'affichage d'un thread complet
-(`<@` descendant). ltree le résout en O(log n). Les insertions sont O(1)
-(concat du chemin parent + id). La modération (déplacement d'un commentaire)
-est rare et acceptable en O(descendants).
-
-Le Nested Set est écarté pour les commentaires : son INSERT est O(n), catastrophique
-sous concurrence (verrouillage de table nécessaire pour recalculer les intervalles).
-
----
-
-## ADR-012 — Procédure `content.create_comment()` vs double trigger BEFORE/AFTER
-
-**Statut** : Adopté  
-**Phase** : Patch post-Phase 3
-
-### Contexte
-
-La construction du chemin ltree nécessitait l'`id` du commentaire, alloué par
-`GENERATED ALWAYS AS IDENTITY` seulement après l'INSERT. La solution initiale
-utilisait un trigger BEFORE (chemin préfixe) + trigger AFTER (finalisation).
-
-### Problème
-
-Le trigger AFTER génère un `UPDATE` immédiat sur la ligne venant d'être insérée.
-Sous MVCC, un UPDATE crée un dead tuple (v1 marqué `xmax`, v2 écrit sur le heap).
-La colonne `path` étant couverte par deux index (GiST + B-tree composite), HOT
-est impossible → chaque INSERT déclenche 2 entrées d'index par commentaire.
-
-Sur un site actif (10 000+ commentaires/jour) :
-
-- Bloat linéaire sur `content.comment`
-- Pression autovacuum doublée (dead tuples auto-infligés)
-- 2 écritures heap par commentaire au lieu de 1
-
-### Décision
-
-Procédure `content.create_comment()` avec `nextval()` préalable.
-
-### Mécanisme
-
-```
-1. nextval(sequence) → id alloué en mémoire, avant toute écriture heap
-2. SELECT path du parent (si réponse) → lecture en cache probable
-3. Construction du chemin ltree complet en mémoire PL/pgSQL
-4. INSERT OVERRIDING SYSTEM VALUE → une seule écriture heap, chemin définitif
-```
-
-### Justification
-
-- Zéro dead tuple structurel.
-- Une seule entrée d'index par commentaire (GiST + B-tree).
-- Logique explicite, testable unitairement, instrumentable.
-- `nextval()` est atomique et transactionnel : les gaps de séquence en cas
-  de rollback sont identiques au comportement GENERATED ALWAYS standard.
-
-**Contrainte opérationnelle** : les INSERT directs sur `content.comment` sont
-révoqués pour les rôles applicatifs. La procédure est le seul point d'entrée.
-
----
-
-## ADR-013 — `GENERATED ALWAYS AS IDENTITY` vs `SERIAL` / UUID
-
-**Statut** : Adopté implicitement  
-**Phase** : Phase 1 (décision initiale)
-
-### Contexte
-
-Le modèle original utilisait `INT GENERATED BY DEFAULT AS IDENTITY` (syntaxe SQL
-standard). Le commentaire dans le fichier original mentionnait UUID comme
-alternative.
-
-### Décision
-
-`INT GENERATED ALWAYS AS IDENTITY` sur toutes les tables.
-
-### Justification
-
-- **UUID** : 16 bytes vs 4 bytes (INT4). Sur les tables de liaison N:N (tuples
-  à 32 bytes), remplacer les deux INT4 par deux UUID doublerait la taille du
-  tuple et dégraderait les index. UUID est pertinent pour les systèmes
-  distribués multi-nœuds ; un PostgreSQL monolithique n'en a pas besoin.
-- **SERIAL** : syntaxe propriétaire PostgreSQL, dépréciée depuis PG 10.
-  `GENERATED ALWAYS AS IDENTITY` est le standard SQL:2003 équivalent.
-- **GENERATED ALWAYS** vs **BY DEFAULT** : `ALWAYS` interdit les INSERT directs
-  avec une valeur explicite (sauf `OVERRIDING SYSTEM VALUE`), forçant l'usage
-  des procédures d'écriture. Cohérent avec l'architecture de contrôle d'accès.
-
----
-
-## ADR-014 — `NUMERIC(12,2)` pour les montants monétaires
-
-**Statut** : Adopté  
-**Phase** : Phase 2 (domaine commerce)
-
-### Contexte
-
-Le modèle original déclarait `_price NUMERIC NULL` (sans précision).
-
-### Décision
-
-`NUMERIC(12,2)` pour tous les montants (`price`, `unit_price_snapshot`).
-
-### Justification
-
-- `FLOAT8` (double précision) introduit des erreurs d'arrondi binaire sur les
-  représentations décimales exactes. Ex : `0.1 + 0.2 ≠ 0.3` en virgule flottante.
-  Inacceptable pour des montants financiers.
-- `NUMERIC` sans précision : stockage variable non contrôlé, performances
-  imprévisibles.
-- `NUMERIC(12,2)` : précision décimale exacte, max 9 999 999 999,99 (~10 Md€),
-  stockage interne compact (~6-8 bytes pour les montants courants).
-
----
-
-## ADR-015 — `fillfactor` sur les tables à mises à jour fréquentes
-
-**Statut** : Adopté  
-**Phase** : Phases 1, 2, 3
-
-### Décision et valeurs retenues
-
-| Table                   | fillfactor | Colonne(s) mise(s) à jour fréquemment  |
-| ----------------------- | ---------- | -------------------------------------- |
-| `identity.auth`         | 70         | `last_login_at` (chaque connexion)     |
-| `commerce.product_core` | 80         | `stock`, `is_available` (chaque vente) |
-| `content.core`          | 75         | `status`, `modified_at` (cycle de vie) |
-
-### Justification
-
-Le `fillfactor` réserve un pourcentage de chaque page pour les mises à jour
-futures. Un UPDATE qui tient dans l'espace réservé de la même page devient
-un HOT update (Heap-Only Tuple) : aucune nouvelle entrée d'index n'est créée.
-
-**Condition HOT** : la colonne modifiée n'est couverte par aucun index.
-
-- `last_login_at` : non indexé → HOT garanti avec fillfactor < 100
-- `stock` : non indexé → HOT garanti
-- `status` : non indexé → HOT garanti (l'index `core_published` est partiel sur
-  `status = 1` ; un UPDATE status 0→1 crée une entrée, mais 1→2 n'en crée pas)
-
-**Coût** : augmentation de l'espace disque proportionnelle à `(100 - fillfactor) %`.
-Sur `identity.auth` (fillfactor 70) : +43 % de pages physiques.
-Acceptable au regard de l'élimination du bloat sur une table accédée 500 000×/jour.
-
----
-
-## ADR-016 — Isolation agressive du TOAST (`toast_tuple_target = 128`)
-
-**Statut** : Adopté  
-**Phase** : Phases 2 et 3 (toutes les tables de contenu "froid")
-
-### Contexte
-
-PostgreSQL déclenche le TOAST (The Oversized-Attribute Storage Technique) par
-défaut au-delà de ~2 Ko par tuple. En dessous, les varlena longs (TEXT, VARCHAR
-volumineux) restent dans le tuple principal, alourdissant les scans même lorsque
-la colonne n'est pas projetée.
-
-### Tables concernées
-
-| Table                      | Colonne(s) TOAST     | Justification                           |
-| -------------------------- | -------------------- | --------------------------------------- |
-| `content.body`             | `content TEXT`       | Corps HTML, toujours > 2 Ko en pratique |
-| `content.revision`         | `snapshot_body TEXT` | Snapshot éditorial, même volume         |
-| `geo.place_content`        | `description TEXT`   | Texte descriptif long                   |
-| `commerce.product_content` | `description TEXT`   | Fiche produit longue                    |
-| `identity.person_content`  | `description TEXT`   | Biographie longue                       |
-
-### Décision
-
-`toast_tuple_target = 128` sur toutes les tables de contenu "froid".
-
-### Justification
-
-Le seuil par défaut (≈ 2 Ko) est un compromis généraliste. Pour les tables cold
-path de ce modèle, le comportement souhaité est le TOAST _systématique_ de tout
-texte long, même court (< 2 Ko), afin de garantir que les tables hot path
-(`content.core`, `content.identity`) ne soient jamais alourdies par des
-attributs textuels, quelle que soit la taille du contenu.
-
-**Mécanisme concret** : avec `toast_tuple_target = 128`, PostgreSQL tente de
-maintenir le tuple principal sous 128 bytes. Toute varlena qui dépasse ce budget
-est externalisée dans la table TOAST associée. Dans le tuple principal, seul un
-pointeur TOAST de 18 bytes subsiste.
-
-**Conséquence directe pour le hot path** : un `SELECT` sur `content.v_article_list`
-(qui ne projette pas `articleBody`) ne déclenche _aucun_ accès à la table TOAST,
-même si `content.body` est physiquement joint dans la vue parente `content.v_article`.
-PostgreSQL ne résout le pointeur TOAST que si la colonne est dans la liste de
-projection.
-
-**Avertissement DBA** : supprimer ce paramètre (retour au défaut de 2 Ko) ne
-détruirait pas les données existantes, mais les prochains INSERT et UPDATE
-laisseraient des tuples plus larges en heap, dégradant progressivement la
-densité des tables cold path et leur impact sur le cache.
-
-**Stratégie de stockage complémentaire** : `content.body.content` est configuré
-en `STORAGE EXTENDED` (compression LZ4 + TOAST). Un article HTML de 50 Ko est
-typiquement compressé à 12–15 Ko en stockage réel.
-
----
-
-## ADR-017 — Index BRIN sur les colonnes temporelles chronologiques
-
-**Statut** : Adopté  
-**Phase** : Phases 1, 2 et 3
-
-### Contexte
-
-Les colonnes `created_at` de type `TIMESTAMPTZ` sont présentes dans la majorité
-des tables. Un index B-tree classique sur ces colonnes serait valide mais
-disproportionné pour l'usage réel.
-
-### Tables concernées
-
-| Table                  | Index BRIN                 | pages_per_range |
-| ---------------------- | -------------------------- | --------------- |
-| `identity.auth`        | `auth_created_at_brin`     | 128             |
-| `content.core`         | `core_created_brin`        | 128             |
-| `commerce.transaction` | `transaction_created_brin` | 128             |
-| `org.org_core`         | `org_core_created_brin`    | 64              |
-
-### Décision
-
-Index BRIN (Block Range Index) sur toutes les colonnes `created_at` à progression
-monotone, en remplacement des index B-tree.
-
-### Justification
-
-**Définition** : un BRIN stocke, pour chaque plage de N blocs consécutifs
-(`pages_per_range`), les valeurs min et max de la colonne indexée. La taille
-totale d'un BRIN est de l'ordre de quelques dizaines de Ko, contre plusieurs Mo
-pour un B-tree sur la même colonne.
-
-**Condition d'efficacité** : le BRIN est optimal lorsque la corrélation entre
-l'ordre physique des tuples et l'ordre des valeurs est forte. C'est exactement
-le cas pour `created_at` : les lignes sont insérées chronologiquement, donc
-les valeurs min/max par plage de blocs sont naturellement resserrées.
-
-**Compromis accepté** :
-
-- Recherche ponctuelle (`WHERE created_at = '2024-05-16'`) : le BRIN est moins
-  précis qu'un B-tree (il indique _quels blocs_ sont candidats, pas _quelle ligne_).
-  Le heap scan résiduel est acceptable car ces requêtes sont rares (analytics,
-  audit).
-- Requête par plage (`WHERE created_at BETWEEN ... AND ...`) : efficace — le BRIN
-  élimine les blocs hors plage sans les charger.
-- Listings chronologiques (usage dominant) : couverts par les index partiels sur
-  `published_at` et `status`, pas par le BRIN.
-
-**Gain RAM** : un index B-tree sur `identity.auth.created_at` (500 000 lignes)
-occuperait ~11 Mo en shared buffers. Le BRIN équivalent : ~50 Ko. Le delta (~10 Mo)
-reste disponible pour le cache des pages heap à haute densité.
-
----
-
-## ADR-018 — Résolution du problème N+1 par agrégation JSON dans les vues
+## ADR-020 — Interface d'écriture scellée : révocation DML globale et SECURITY DEFINER
 
 **Statut** : Adopté
-**Phase** : Phases 2 et 3 (vues cross-schéma)
-
-### Contexte
-
-Les vues sémantiques (`content.v_article`, `commerce.v_transaction`) doivent
-exposer des relations N:N (tags d'un article, médias d'un article, lignes d'une
-commande). Sans précaution, la couche applicative effectuerait une requête
-principale + N requêtes secondaires (une par entité liée) : le problème N+1.
 
 ### Décision
 
-Agrégation JSON directement dans le moteur PostgreSQL via `json_agg()` +
-`json_build_object()`, ou l'équivalent SQL:2016 `JSON_ARRAYAGG()` +
-`JSON_OBJECT()` (PG 15+).
+Trois mécanismes conjugués forment le verrou d'écriture :
 
-### Implémentation
+1. `marius_user` (rôle applicatif) ne reçoit que `SELECT` et `EXECUTE`. Aucun
+   `INSERT`, `UPDATE`, `DELETE` direct sur les tables physiques.
+2. Toutes les procédures de mutation sont déclarées `SECURITY DEFINER` avec
+   `SET search_path = 'schema', 'pg_catalog'`. Elles s'exécutent avec les droits
+   du propriétaire (`postgres`), indépendamment des droits de l'appelant.
+3. `marius_admin` hérite de `marius_user` et reçoit en sus l'écriture directe.
+   Réservé aux migrations, backfills et correctifs de production.
 
-```sql
--- Exemple dans content.v_article
-(
-  SELECT json_agg(
-    json_build_object('id', t.id, 'name', t.name, 'slug', t.slug, 'path', t.path::text)
-    ORDER BY t.path
-  )
-  FROM  content.content_to_tag ct
-  JOIN  content.tag t ON t.id = ct.tag_id
-  WHERE ct.content_id = d.id
-) AS "keywords"
+### Pourquoi ce n'est pas de la sur-ingénierie
+
+L'invariant ECS posé par ADR-019 — les procédures sont les seuls points d'entrée
+en écriture — ne peut être tenu qu'au niveau moteur. Laisser `INSERT/UPDATE/DELETE`
+accessibles à `marius_user` revient à documenter une contrainte sans l'appliquer.
+Toute dérive (ORM bypassant les procédures, script de migration mal ciblé) est
+silencieuse et non détectable à la lecture du DDL.
+
+### Risques SECURITY DEFINER et parades
+
+**Vulnérabilité `search_path`** : une procédure `SECURITY DEFINER` qui résout
+des noms non qualifiés dans un `search_path` contrôlé par l'attaquant peut être
+détournée pour appeler des objets substitués.
+
+Double parade :
+
+- `SET search_path = 'schema', 'pg_catalog'` fixe le `search_path` pour chaque
+  exécution, indépendamment du `search_path` de la session appelante.
+- Tous les noms d'objets dans les corps de procédures sont entièrement qualifiés
+  (`identity.entity`, `content.comment`, etc.) — seconde ligne de défense
+  indépendante du `search_path`.
+
+`marius_user` n'ayant pas de privilège `CREATE` sur les schémas applicatifs,
+il ne peut pas y déposer d'objets substituts.
+
+**Surcoût de performance** : le context switch de privilèges est de l'ordre de
+quelques µs. `CREATE PROCEDURE` n'est jamais inlinable par le planner (contrairement
+à `CREATE FUNCTION`), donc `SECURITY DEFINER` n'ajoute aucune régression.
+
+### Rôles résultants
+
+| Rôle           | SELECT | EXECUTE | INSERT/UPDATE/DELETE | Usage                             |
+| -------------- | ------ | ------- | -------------------- | --------------------------------- |
+| `marius_user`  | ✓      | ✓       | ✗                    | Runtime applicatif                |
+| `marius_admin` | ✓      | ✓       | ✓                    | Maintenance, migrations, CI seed  |
+| `postgres`     | ✓      | ✓       | ✓                    | Owner des objets, déploiement DDL |
+
+---
+
+## ADR-005 — Fragmentation ECS : SoA en lieu de AoS
+
+**Statut** : Adopté
+
+### Décision
+
+Chaque entité est fragmentée en tables physiques par fréquence d'accès :
+
+```
+Spine      → id pur, aucune donnée métier
+Core       → champs hot path (status, dates clés, FK primaires)
+Identity   → noms, slugs, données de listing
+Contact    → email, téléphone, URL (accès contextuel)
+Biography  → dates, lieux (accès rare)
+Content    → textes longs (TOAST systématique, accès très rare)
 ```
 
 ### Justification
 
-**Problème N+1 éliminé** : une requête sur `content.v_article` retourne l'article
-_et_ tous ses tags _et_ tous ses médias en un seul aller-retour réseau,
-indépendamment du nombre de tags ou de médias associés.
+La densité de page détermine directement la quantité de données utiles résidente
+en `shared_buffers`. Un tuple large charge des colonnes froides à chaque accès
+chaud, comprimant inutilement le cache.
 
-**Contrat d'interface avec la couche applicative** : la base de données livre un
-objet JSON directement désérialisable. L'applicatif n'a pas à orchestrer de
-jointures secondaires ni à assembler l'objet manuellement.
+**Densités mesurées dans ce schéma** :
 
-**Coût CPU vs coût réseau** :
+| Composant                   | Bytes/tuple | Tuples/page |
+| --------------------------- | ----------- | ----------- |
+| `identity.person_identity`  | ~74 B       | ~110        |
+| `identity.auth`             | ~155 B      | ~51         |
+| `identity.person_biography` | 44 B        | ~185        |
+| `content.core`              | 64 B        | ~127        |
 
-- CPU moteur pour `json_agg` : élevé sur des volumes importants.
-- Latence réseau pour N requêtes supplémentaires : multiplicateur de la latence
-  de base (typiquement 1–5 ms par aller-retour en réseau local, 10–50 ms en WAN).
-- Arbitrage : pour des objets contenant 3–20 éléments liés (tags, médias, lignes
-  de commande), le coût CPU de l'agrégation est systématiquement inférieur au
-  coût cumulé des aller-retours réseau.
+Un scan sur `person_identity` (listing d'auteurs) ne charge jamais les biographies
+ni les textes longs, même si ces composants sont physiquement liés à la même entité.
 
-**Limites documentées** :
-
-- `commerce.v_transaction` : la vue agrège toutes les lignes de commande. Sans
-  clause `WHERE` couverte par un index, un `SELECT *` sur cette vue sur 500 000
-  transactions force une agrégation complète. Utiliser uniquement avec filtre
-  (`WHERE t.id = :id` ou `WHERE t.client_entity_id = :id`), ou via la
-  `MATERIALIZED VIEW` suggérée dans `extension_blueprint.pgsql`.
-- Les sous-requêtes corrélées dans les vues (`SELECT COUNT(*)` pour
-  `v_tag_tree."articleCount"`) sont réévaluées pour chaque ligne de la vue.
-  Acceptable pour une liste de tags (~200 entrées) ; à matérialiser si la
-  taxonomie dépasse plusieurs milliers de tags.
+**Coût accepté** : jointures supplémentaires sur les lectures complètes. Mitigé
+par les vues sémantiques (ADR-006) qui masquent la fragmentation à la couche
+applicative.
 
 ---
 
-## ADR-019 — Spine polymorphe : absence de validation de sous-type
+## ADR-019 — Spine polymorphe : absence de validation de sous-type au niveau moteur
 
-**Statut** : Décision documentée (limite connue)  
-**Phase** : Phases 1, 2, 3
+**Statut** : Décision documentée (limite connue)
 
 ### Contexte
 
-Plusieurs colonnes FK pointent vers un spine (`identity.entity`, `org.entity`)
-sans exiger la présence du composant spécifique attendu :
+Plusieurs colonnes FK pointent vers `identity.entity` ou `org.entity` en
+implicitant la présence d'un composant spécifique :
 
-| Colonne                         | Table                   | Pointe vers           | Composant implicitement attendu |
-| ------------------------------- | ----------------------- | --------------------- | ------------------------------- |
-| `account_core.person_entity_id` | `identity.account_core` | `identity.entity(id)` | `identity.person_identity`      |
-| `core.author_entity_id`         | `content.core`          | `identity.entity(id)` | `identity.person_identity`      |
-| `org_core.contact_entity_id`    | `org.org_core`          | `identity.entity(id)` | `identity.person_contact`       |
+| Colonne FK                      | Table                   | Composant attendu          |
+| ------------------------------- | ----------------------- | -------------------------- |
+| `account_core.person_entity_id` | `identity.account_core` | `identity.person_identity` |
+| `core.author_entity_id`         | `content.core`          | `identity.person_identity` |
+| `org_core.contact_entity_id`    | `org.org_core`          | `identity.person_contact`  |
 
-Une entité valide dans `identity.entity` peut exister sans aucun composant associé
-(entité nue). La FK est satisfaite, mais l'entité ne possède pas les données
-attendues (pas de nom, pas de contact).
+### Pourquoi l'intégrité de sous-type n'est pas portée par le moteur
 
-### Pourquoi ne pas ajouter de FK vers les tables composant
-
-Une FK `account_core.person_entity_id → person_identity(entity_id)` rendrait
-le composant `person_identity` **obligatoire** pour toute entité référencée comme
-personne d'un compte. Cela viole la sémantique ECS fondamentale : les composants
-sont optionnels par définition. L'intérêt du spine polymorphe est précisément
-de permettre à une entité d'exister sans tous ses composants.
+Ajouter une FK `account_core.person_entity_id → person_identity(entity_id)`
+rendrait le composant `person_identity` **obligatoire** pour toute entité
+référencée comme personne d'un compte. Cela viole la sémantique ECS fondamentale :
+**les composants sont optionnels par définition**. Le spine polymorphe perd son
+intérêt si chaque référence impose l'existence du composant.
 
 ### Invariant effectif
 
-La cohérence n'est pas imposée par le moteur mais par les **procédures d'écriture** :
+La cohérence est garantie par les procédures d'écriture (ADR-020) :
 
 - `identity.create_account()` crée systématiquement `entity + auth + account_core`
 - `identity.create_person()` crée systématiquement `entity + person_identity`
-- Toute écriture directe sur les tables physiques est révoquée pour les rôles
-  applicatifs → les procédures sont les seuls points d'entrée
 
-L'intégrité de sous-type est une **invariante applicative**, pas une contrainte
-moteur. Ce choix est cohérent avec les ORM et frameworks qui utilisent le même
-pattern (ex: table polymorphique sans discriminant de type strict au niveau FK).
+Puisque l'écriture directe est révoquée pour `marius_user`, les procédures sont
+les seuls points d'entrée. L'intégrité de sous-type est une **invariante
+applicative**, pas une contrainte moteur.
 
-### Alternative documentée
-
-Si une validation moteur stricte est requise sur un sous-ensemble de colonnes, une
-contrainte partielle via trigger est possible :
+### Alternative si une validation moteur est requise
 
 ```sql
 CREATE FUNCTION identity.fn_check_person_entity()
@@ -763,36 +152,485 @@ BEGIN
   IF NEW.person_entity_id IS NOT NULL AND NOT EXISTS (
     SELECT 1 FROM identity.person_identity WHERE entity_id = NEW.person_entity_id
   ) THEN
-    RAISE EXCEPTION 'person_entity_id % ne possède pas de composant person_identity',
-      NEW.person_entity_id;
+    RAISE EXCEPTION 'entity_id % sans composant person_identity', NEW.person_entity_id;
   END IF;
   RETURN NEW;
 END;
 $$;
 ```
 
-Non implémenté en production car le coût (un SELECT supplémentaire à chaque INSERT
-sur `account_core`) n'est pas justifié lorsque les procédures d'écriture sont les
-seuls points d'entrée. À activer uniquement si des insertions directes devaient
-être autorisées sur ces tables.
+Non implémenté : coût d'un SELECT supplémentaire à chaque INSERT sur `account_core`,
+injustifié dès lors qu'ADR-020 est en place.
 
 ---
 
-## Récapitulatif des tables et densités
+## ADR-012 — Procédure `content.create_comment()` : zéro dead tuple structurel
 
-| Table                       | Bytes/tuple | Tuples/page | Ratio vs modèle original               |
-| --------------------------- | ----------- | ----------- | -------------------------------------- |
-| `content.document`          | 32 B        | ~255        | — (nouvelle)                           |
-| `content.core`              | 64 B        | ~127        | — (nouvelle)                           |
-| `content_to_tag`            | 32 B        | ~255        | = `__tag_to_article`                   |
-| `identity.role`             | 49 B        | ~167        | −20 % vs ancien modèle booléen         |
-| `identity.auth`             | ~155 B      | ~51         | vs `__account` : ×1,7 densité          |
-| `identity.person_identity`  | ~74 B       | ~110        | vs `__person` : ×8,5 densité           |
-| `identity.person_biography` | 44 B        | ~185        | — (composant isolé)                    |
-| `org.org_hierarchy`         | 40 B        | ~204        | — (nested set conservé)                |
-| `commerce.transaction_item` | 44 B        | ~186        | remplace `_list` VARCHAR non-indexable |
-| `geo.place_core` (minimal)  | 61 B        | ~134        | vs `__place` complet : ×2,5            |
+**Statut** : Adopté
+
+### Problème à résoudre
+
+La construction du chemin `ltree` requiert l'`id` du commentaire, alloué par
+`GENERATED ALWAYS AS IDENTITY` seulement après l'INSERT. Toute approche fondée
+sur un trigger AFTER génère un UPDATE immédiat sur la ligne insérée.
+
+Sous MVCC, un UPDATE crée une version morte (dead tuple) : la version v1 est
+marquée `xmax` et reste sur le heap jusqu'au prochain autovacuum. La colonne
+`path` étant couverte par deux index (GiST + B-tree composite), HOT est impossible
+— chaque INSERT produit deux entrées d'index et un dead tuple garanti.
+
+### Mécanisme retenu
+
+```
+1. nextval(sequence)  →  id alloué en mémoire, avant toute écriture heap
+2. SELECT path parent →  si commentaire enfant, FOR SHARE pour stabilité
+3. Construction ltree  →  chemin complet assemblé en PL/pgSQL
+4. INSERT unique       →  OVERRIDING SYSTEM VALUE, chemin définitif, zéro dead tuple
+```
+
+### Justification
+
+- Une seule écriture heap par commentaire → zéro dead tuple structurel.
+- Une seule entrée par index (GiST + B-tree) au lieu de deux.
+- `nextval()` est transactionnel : les gaps de séquence en cas de rollback
+  sont identiques au comportement `GENERATED ALWAYS` standard.
+- La procédure est le seul point d'entrée autorisé (ADR-020), ce qui garantit
+  l'invariant sans trigger de contrôle supplémentaire.
 
 ---
 
-_Document généré à partir de la session R&D Marius · Architecture ECS/DOD · PostgreSQL 18_
+## ADR-015 — `fillfactor` réduit sur les tables à mises à jour fréquentes
+
+**Statut** : Adopté
+
+### Décision
+
+| Table                   | fillfactor | Colonne mise à jour fréquemment         |
+| ----------------------- | ---------- | --------------------------------------- |
+| `identity.auth`         | 70         | `last_login_at` (chaque connexion)      |
+| `commerce.product_core` | 80         | `stock` (chaque vente)                  |
+| `content.core`          | 75         | `status`, `modified_at` (cycle de vie)  |
+
+### Justification
+
+Un `fillfactor < 100` réserve de l'espace libre dans chaque page heap. Un UPDATE
+dont la nouvelle version tient dans cet espace devient un **HOT update**
+(Heap-Only Tuple) : aucune nouvelle entrée d'index n'est créée, la chaîne HOT
+est maintenue dans la même page.
+
+**Condition HOT** : la colonne modifiée ne doit être couverte par aucun index.
+
+- `last_login_at` : non indexé → HOT garanti.
+- `stock` : non indexé → HOT garanti.
+- `status` : non indexé directement. L'index partiel `core_published` couvre
+  `status = 1` ; un UPDATE `0→1` crée une entrée, `1→2` n'en crée pas.
+
+**Coût** : `(100 - fillfactor) %` de pages physiques supplémentaires.
+Sur `identity.auth` (fillfactor 70), +43 % de pages disque. Acceptable au regard
+de l'élimination du bloat sur une table mise à jour 500 000 fois/jour.
+
+---
+
+## ADR-016 — Isolation agressive du TOAST (`toast_tuple_target = 128`)
+
+**Statut** : Adopté
+
+### Décision
+
+`toast_tuple_target = 128` sur toutes les tables portant des textes longs :
+`content.body`, `content.revision`, `geo.place_content`, `commerce.product_content`,
+`identity.person_content`.
+
+`content.body.content` est de plus configuré en `STORAGE EXTENDED`
+(compression LZ4 + externalisation TOAST).
+
+### Justification
+
+Le seuil TOAST par défaut (~2 Ko) est un compromis généraliste. Avec
+`toast_tuple_target = 128`, PostgreSQL externalise toute varlena dépassant le
+budget de 128 bytes dans la table TOAST associée. Dans le tuple principal, seul
+un pointeur TOAST de 18 bytes subsiste.
+
+**Conséquence directe** : `SELECT` sur `content.v_article_list` (qui ne projette
+pas `articleBody`) ne déclenche **aucun** accès à la table TOAST. PostgreSQL ne
+résout le pointeur TOAST que si la colonne figure dans la liste de projection.
+
+Les composants hot path (`content.core`, `content.identity`) restent denses
+indépendamment du volume de contenu stocké dans `content.body`.
+
+---
+
+## ADR-017 — Index BRIN sur les colonnes temporelles à progression monotone
+
+**Statut** : Adopté
+
+### Décision
+
+Index BRIN en lieu d'un index B-tree sur toutes les colonnes `created_at` à
+progression chronologique.
+
+| Table                  | Index                      | pages_per_range |
+| ---------------------- | -------------------------- | --------------- |
+| `identity.auth`        | `auth_created_at_brin`     | 128             |
+| `content.core`         | `core_created_brin`        | 128             |
+| `commerce.transaction` | `transaction_created_brin` | 128             |
+| `org.org_core`         | `org_core_created_brin`    | 64              |
+
+### Justification
+
+**Définition BRIN** : stocke, pour chaque plage de N blocs physiques consécutifs,
+les valeurs min et max de la colonne. Efficace uniquement si la corrélation entre
+ordre d'insertion et ordre des valeurs est forte — ce qui est exact pour
+`created_at` (insertions chronologiques).
+
+**Gain RAM** : sur `identity.auth` à 500 000 lignes, un B-tree occupe ~11 Mo en
+`shared_buffers`. Le BRIN équivalent : ~50 Ko. Le delta (~10 Mo) reste disponible
+pour les pages heap à haute densité.
+
+**Compromis accepté** : la recherche ponctuelle par date exacte est moins précise
+(le BRIN indique quels blocs sont candidats, pas quelle ligne). Acceptable car
+ces requêtes sont rares (analytics, audit). Les listings chronologiques sont
+couverts par les index partiels sur `published_at` et `status`.
+
+---
+
+## ADR-004 — Layout physique décroissant (règle universelle)
+
+**Statut** : Adopté
+
+### Décision
+
+Ordre de déclaration systématique dans toutes les tables :
+
+```
+8 bytes  →  TIMESTAMPTZ, FLOAT8, INT8
+4 bytes  →  INT4, DATE, FLOAT4
+2 bytes  →  SMALLINT
+1 byte   →  BOOLEAN
+variable →  CHAR, VARCHAR, TEXT, NUMERIC, ltree, geometry
+```
+
+### Justification
+
+PostgreSQL aligne chaque colonne sur un multiple de son `typalign`. Un type de
+petite taille suivi d'un type de grande taille génère du **padding invisible** :
+bytes non utilisés insérés automatiquement pour satisfaire l'alignement du type
+suivant. Ce padding est permanent et invisible dans `\d`.
+
+`NUMERIC` est varlena dans PostgreSQL quelle que soit la précision déclarée
+(`NUMERIC(12,2)` inclus). Il va systématiquement après les types fixes.
+
+**Exemples dans ce schéma** :
+
+| Table                      | Économie/tuple |
+| -------------------------- | -------------- |
+| `identity.auth`            | 12 B           |
+| `identity.person_identity` | 14 B           |
+| `identity.role`            | 2 B            |
+
+---
+
+## ADR-003 — Bitmask `INT4` pour les permissions de rôle
+
+**Statut** : Adopté
+
+### Décision
+
+Les 15 permissions du système sont encodées dans une colonne `permissions INT4`
+unique, par OR binaire des puissances de 2.
+
+### Arbitrage entre les types candidats
+
+| Type     | Taille   | Contrainte                                               |
+| -------- | -------- | -------------------------------------------------------- |
+| `BIT(n)` | varlena  | 4 bytes d'en-tête + données ; opérateurs moins naturels  |
+| `INT2`   | 2 bytes  | Bit 15 = bit de signe ; toute 16e permission déborde     |
+| `INT4`   | 4 bytes  | 17 bits libres pour extensions ; `&`, `\|`, `~` natifs   |
+
+### Justification
+
+`INT4` : alignement natif sur 4 bytes (déclaré à offset 0 dans `identity.role`,
+zéro padding), opérateurs bitwise standard lisibles, 17 bits libres pour
+extensions futures sans migration de type.
+
+**Gain en CPU tuple deforming** : un accès à `permissions` est un seul appel
+`slot_getattr()`. Pertinent sur le hot path d'authentification.
+
+---
+
+## ADR-006 — Vues sémantiques comme seule interface de lecture
+
+**Statut** : Adopté
+
+### Décision
+
+La couche applicative ne connaît que les vues. Les tables physiques sont un
+détail d'implémentation invisible au-dessus de la fragmentation ECS.
+
+```
+Tables physiques  →  Composants ECS (optimisés pour la densité)
+Vues SQL          →  Interface schema.org (stable, nommage sémantique)
+```
+
+### Justification
+
+La fragmentation ECS (ADR-005) produit un modèle physique opaque. Les vues
+reconstituent l'objet complet (`v_person`, `v_account`) en masquant les jointures.
+
+**Découplage physique/logique** : un remaniement interne des composants (split
+d'une table, changement de layout) ne casse pas l'interface API tant que la vue
+est maintenue. Le contrat nommé (`"givenName"`, `"datePublished"`, `"gtin13"`)
+est stable.
+
+**Séparation listing/page complète** : `content.v_article_list` projette
+uniquement les colonnes hot path (zéro TOAST). `content.v_article` projette
+en plus `content.body` (accès TOAST). Cette séparation est **architecturalement
+garantie** — il est impossible de charger accidentellement les corps HTML lors
+d'un listing, quelle que soit la requête applicative.
+
+---
+
+## ADR-018 — Agrégation JSON dans les vues pour éliminer le N+1
+
+**Statut** : Adopté
+
+### Décision
+
+Les relations N:N (tags, médias, lignes de commande) sont agrégées directement
+dans le moteur via `json_agg()` + `json_build_object()` depuis les vues
+sémantiques `content.v_article` et `commerce.v_transaction`.
+
+### Justification
+
+Sans agrégation moteur, la couche applicative effectue une requête principale
++ N requêtes secondaires. Pour 3–20 éléments liés, le coût CPU de `json_agg`
+est systématiquement inférieur au coût cumulé des aller-retours réseau
+(1–5 ms/requête en LAN, 10–50 ms en WAN).
+
+La base de données livre un objet JSON directement désérialisable. L'applicatif
+n'orchestre aucune jointure secondaire.
+
+**Limites documentées** :
+
+- `commerce.v_transaction` sans `WHERE` force une agrégation complète sur
+  l'ensemble des transactions. Toujours filtrer par `id` ou `client_entity_id`.
+- `v_tag_tree."articleCount"` est une sous-requête corrélée réévaluée pour
+  chaque tag. Acceptable jusqu'à ~1 000 tags ; à matérialiser au-delà.
+
+---
+
+## ADR-011 — `ltree` pour les hiérarchies de tags et commentaires
+
+**Statut** : Adopté
+
+### Comparaison des patterns hiérarchiques
+
+| Critère             | Adjacency List                | Nested Set                  | ltree                  |
+| ------------------- | ----------------------------- | --------------------------- | ---------------------- |
+| Lecture sous-arbre  | O(profondeur) — CTE récursive | O(1) — BETWEEN              | O(log n) — index GiST  |
+| INSERT              | O(1)                          | O(n) — recalcul intervalles | O(1) — concat chemin   |
+| Lisibilité du chemin| `parent_id = 42`              | `lft=5, rgt=12`             | `theology.patristics`  |
+| Index disponible    | B-tree sur `parent_id`        | B-tree sur `lft`/`rgt`      | GiST (`@>`, `<@`, KNN) |
+
+### Justification
+
+**Tags** : la lecture de sous-arbres est le pattern dominant. `ltree` + index
+GiST résout en O(log n) sans CTE récursive. Les insertions sont rares.
+
+**Commentaires** : le pattern dominant est l'affichage d'un thread complet
+(opérateur `<@`). ltree résout en O(log n). L'INSERT est O(1) — critique sous
+concurrence.
+
+Le Nested Set est écarté pour les commentaires : son INSERT est O(n) et requiert
+un verrouillage de table pour recalculer les intervalles. Incompatible avec une
+table à insertions concurrentes.
+
+La procédure `content.create_comment()` (ADR-012) construit le chemin en mémoire
+avant l'INSERT unique, sans aucun UPDATE post-insertion.
+
+---
+
+## ADR-002 — Spine `content.document` indépendant de `identity.entity`
+
+**Statut** : Adopté
+
+### Arbitrage
+
+| Option                            | Avantage               | Inconvénient                                    |
+| --------------------------------- | ---------------------- | ----------------------------------------------- |
+| Spine partagé (`identity.entity`) | Un seul registre d'IDs | Mélange volumétrique, cascades croisées         |
+| Spine dédié (`content.document`)  | Isolation complète     | Un registre supplémentaire                      |
+
+### Justification
+
+1. **Sémantique** : un document n'est pas un acteur. Un spine partagé introduit
+   des jointures à vide sur 100 % des requêtes documentaires.
+
+2. **Volumétrie asymétrique** : 500 000 utilisateurs vs potentiellement plusieurs
+   millions de documents et révisions. Un spine partagé dégraderait les index
+   B-tree du registre des acteurs.
+
+3. **Cascade isolée** : `DELETE CASCADE` sur un document ne doit pas traverser
+   le registre des acteurs.
+
+4. **Polymorphisme documentaire** : `content.document` porte `doc_type`
+   (article, page, billet, newsletter) sans impact sur `identity`.
+
+---
+
+## ADR-008 — Spines `org.entity` et `geo.place_core` : stratégies distinctes
+
+**Statut** : Adopté
+
+### Décision
+
+- `org.entity` : spine dédié (même pattern que `identity.entity`).
+- `geo.place_core` : PK `INT` directe sur la table, pas de spine séparé.
+
+### Justification
+
+**`org.entity`** : les organisations peuvent avoir des contacts, des membres et
+des permissions futures. Un spine dédié permet les mêmes extensions que
+`identity.entity` sans couplage croisé.
+
+**`geo.place_core`** : les lieux sont des destinations (FK cibles depuis `org`,
+`identity`, `commerce`), pas des acteurs. Un spine séparé ajouterait une jointure
+sur 100 % des requêtes géospatiales sans bénéfice sémantique. Le PK direct est
+le niveau d'abstraction adéquat.
+
+---
+
+## ADR-007 — Schémas PostgreSQL pour l'isolation des domaines
+
+**Statut** : Adopté
+
+### Décision
+
+Cinq schémas dédiés : `identity`, `geo`, `org`, `commerce`, `content`.
+
+### Justification
+
+La raison première n'est pas la lisibilité mais **l'isolation des permissions** :
+`GRANT USAGE ON SCHEMA content TO editorial_service` expose uniquement le domaine
+éditorial, sans aucun accès à `identity` ou `commerce`. Sans schémas, toute
+granularité fine de `GRANT` nécessite un `GRANT` table par table dans `public`.
+
+Corollaire : le `search_path` est configurable par rôle de connexion, permettant
+l'isolation par service applicatif sans configuration supplémentaire côté
+application.
+
+---
+
+## ADR-013 — `GENERATED ALWAYS AS IDENTITY` sur toutes les PK
+
+**Statut** : Adopté
+
+### Arbitrage entre les options d'identité
+
+| Option                 | Taille | Remarque                                                        |
+| ---------------------- | ------ | --------------------------------------------------------------- |
+| UUID v4                | 16 B   | Pertinent multi-nœuds ; pénalisant sur les tables de liaison N:N |
+| `SERIAL`               | 4 B    | Syntaxe propriétaire, dépréciée depuis PG 10                    |
+| `GENERATED BY DEFAULT` | 4 B    | Permet les INSERT explicites sans `OVERRIDING SYSTEM VALUE`     |
+| `GENERATED ALWAYS`     | 4 B    | Interdit les INSERT explicites — cohérent avec ADR-020          |
+
+### Justification
+
+`GENERATED ALWAYS` renforce le verrou d'ADR-020 au niveau de la séquence :
+même `marius_admin` doit passer par `OVERRIDING SYSTEM VALUE` pour forcer un
+id. Cela signale explicitement toute insertion hors procédure dans le code source.
+
+UUID est écarté pour les tables de liaison N:N : deux `INT4` en PK composée
+= 8 bytes. Deux UUID = 32 bytes. L'impact sur les index et la densité de page
+est direct sur les tables à forte volumétrie (`content_to_tag`, `transaction_item`).
+
+---
+
+## ADR-014 — `NUMERIC(12,2)` pour tous les montants monétaires
+
+**Statut** : Adopté
+
+### Justification
+
+`FLOAT8` introduit des erreurs d'arrondi binaire sur les représentations
+décimales exactes (`0.1 + 0.2 ≠ 0.3`). Inacceptable pour des montants financiers
+archivés dans `unit_price_snapshot` — le prix capturé doit être exact et stable.
+
+`NUMERIC` sans précision produit un stockage variable non contrôlé.
+
+`NUMERIC(12,2)` : précision décimale exacte, plage jusqu'à 9 999 999 999,99
+(~10 Md€), stockage interne de 6–8 bytes pour les montants courants.
+
+---
+
+## ADR-009 — Table `commerce.transaction_item` : résolution 1NF
+
+**Statut** : Adopté
+
+### Décision
+
+Les lignes de commande sont une table dédiée :
+`commerce.transaction_item(transaction_id, product_id, quantity, unit_price_snapshot)`.
+
+### Justification
+
+Une liste d'identifiants sérialisée en colonne varchar rend impossible toute FK
+référentielle, tout agrégat par produit et tout historique de prix. Le champ
+`unit_price_snapshot NUMERIC(12,2)` capture le prix au moment de l'INSERT : le
+prix courant peut évoluer sans altérer l'historique des commandes passées.
+
+`quantity INT4` (et non `SMALLINT`) : SMALLINT max = 32 767. Les commandes B2B
+peuvent dépasser ce volume. INT4 couvre jusqu'à ~2,1 milliards.
+
+---
+
+## ADR-010 — Typage `CHAR(9)` / `CHAR(14)` pour DUNS et SIRET
+
+**Statut** : Adopté
+
+### Justification
+
+DUNS (9 chiffres) et SIRET (14 chiffres) sont des identifiants non arithmétiques :
+**les zéros initiaux sont significatifs**. Un type entier les perd silencieusement.
+`VARCHAR` n'impose pas la longueur fixe. `CHAR(n)` est le seul type garantissant
+longueur fixe et conservation des zéros initiaux.
+
+Validation par contrainte CHECK avec regex (`'^[0-9]{9}$'`, `'^[0-9]{14}$'`) :
+coût fixe à l'INSERT, zéro coût à la lecture, pas de trigger.
+
+---
+
+## ADR-001 — Séparation DDL / DML
+
+**Statut** : Adopté
+
+Deux artefacts distincts :
+
+- `master_schema_ddl.pgsql` — Blueprint immuable, idempotent, versionnable seul.
+- `master_schema_dml.pgsql` — Seed data, dev/CI uniquement, jamais exécuté en
+  production.
+
+**Exception** : les `INSERT` sur `identity.permission_bit` et `identity.role`
+restent dans le DDL — données de configuration structurelle insécables du schéma
+au même titre que les `REVOKE` qui les suivent.
+
+---
+
+## Récapitulatif des densités
+
+| Table                       | Bytes/tuple | Tuples/page |
+| --------------------------- | ----------- | ----------- |
+| `content.document`          | 32 B        | ~255        |
+| `content.core`              | 64 B        | ~127        |
+| `content.content_to_tag`    | 32 B        | ~255        |
+| `identity.role`             | 49 B        | ~167        |
+| `identity.auth`             | ~155 B      | ~51         |
+| `identity.person_identity`  | ~74 B       | ~110        |
+| `identity.person_biography` | 44 B        | ~185        |
+| `org.org_hierarchy`         | 40 B        | ~204        |
+| `commerce.transaction_item` | 44 B        | ~186        |
+| `geo.place_core` (minimal)  | 61 B        | ~134        |
+
+---
+
+*Architecture ECS/DOD · PostgreSQL 18 · Projet Marius*

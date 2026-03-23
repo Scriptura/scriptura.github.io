@@ -134,6 +134,8 @@ CREATE TABLE identity.permission_bit (
   CONSTRAINT power_of_2  CHECK (bit_value > 0 AND (bit_value & (bit_value - 1)) = 0),
   CONSTRAINT index_range CHECK (bit_index BETWEEN 0 AND 30)
 );
+-- Données de configuration structurelle — immuables en production
+-- Protégées ici au plus tôt, avant le GRANT global de SECTION 13.
 REVOKE INSERT, UPDATE, DELETE ON identity.permission_bit FROM PUBLIC;
 
 INSERT INTO identity.permission_bit (bit_value, bit_index, name, description) VALUES
@@ -162,6 +164,7 @@ CREATE TABLE identity.role (
   PRIMARY KEY (id),
   CONSTRAINT permissions_range CHECK (permissions BETWEEN 0 AND 32767)
 );
+-- Données de configuration structurelle — immuables en production
 REVOKE INSERT, UPDATE, DELETE ON identity.role FROM PUBLIC;
 
 -- Valeurs calculées : somme des puissances de 2 des permissions actives (voir role_bitmask_update.pgsql)
@@ -646,7 +649,7 @@ CREATE TABLE content.comment (
   CONSTRAINT comment_path_not_null CHECK (path IS NOT NULL)
   -- Le CHECK remplace NOT NULL pour laisser la procédure insérer avec OVERRIDING SYSTEM VALUE.
   -- Un INSERT direct sans fournir path sera rejeté. Seule content.create_comment() est
-  -- autorisée (droits applicatifs révoqués sur INSERT direct en SECTION 13).
+  -- autorisée (droits applicatifs révoqués en SECTION 14 — ADR-020).
 );
 
 CREATE INDEX comment_path_gist  ON content.comment USING gist (path);
@@ -797,6 +800,7 @@ FOR EACH ROW WHEN (
 
 -- ==============================================================================
 -- SECTION 11 : PROCÉDURES D'ÉCRITURE (SYSTEM / AOT LAYER)
+-- Les attributs SECURITY DEFINER et SET search_path sont appliqués en SECTION 14.
 -- ==============================================================================
 
 -- Création d'un compte (entity + auth + account_core)
@@ -1218,35 +1222,41 @@ FROM content.tag t;
 
 
 -- ==============================================================================
--- SECTION 13 : PERMISSIONS
+-- SECTION 13 : PERMISSIONS — rôle applicatif marius_user
+-- marius_user = SELECT (tables/vues) + EXECUTE (procédures/fonctions)
+-- Les procédures de mutation s'exécutent en SECURITY DEFINER (SECTION 14).
+-- marius_user n'a jamais de droits INSERT/UPDATE/DELETE directs sur les tables.
 -- ==============================================================================
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public    TO marius_user;
-GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA identity  TO marius_user;
-GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA geo       TO marius_user;
-GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA org       TO marius_user;
-GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA commerce  TO marius_user;
-GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA content   TO marius_user;
+-- Accès aux schémas (USAGE obligatoire pour référencer les objets)
+GRANT USAGE ON SCHEMA identity  TO marius_user;
+GRANT USAGE ON SCHEMA geo       TO marius_user;
+GRANT USAGE ON SCHEMA org       TO marius_user;
+GRANT USAGE ON SCHEMA commerce  TO marius_user;
+GRANT USAGE ON SCHEMA content   TO marius_user;
+
+-- Lecture des tables et vues (interface applicative en lecture)
+GRANT SELECT ON ALL TABLES IN SCHEMA identity  TO marius_user;
+GRANT SELECT ON ALL TABLES IN SCHEMA geo       TO marius_user;
+GRANT SELECT ON ALL TABLES IN SCHEMA org       TO marius_user;
+GRANT SELECT ON ALL TABLES IN SCHEMA commerce  TO marius_user;
+GRANT SELECT ON ALL TABLES IN SCHEMA content   TO marius_user;
+
+-- USAGE séquences : permet currval() et inspection — les nextval() des procédures
+-- passent via SECURITY DEFINER (owner = postgres) et n'en ont pas besoin.
 GRANT USAGE ON ALL SEQUENCES IN SCHEMA identity  TO marius_user;
 GRANT USAGE ON ALL SEQUENCES IN SCHEMA geo       TO marius_user;
 GRANT USAGE ON ALL SEQUENCES IN SCHEMA org       TO marius_user;
 GRANT USAGE ON ALL SEQUENCES IN SCHEMA commerce  TO marius_user;
 GRANT USAGE ON ALL SEQUENCES IN SCHEMA content   TO marius_user;
+
+-- Exécution des procédures et fonctions (seul chemin d'écriture autorisé)
 GRANT EXECUTE ON ALL FUNCTIONS  IN SCHEMA identity TO marius_user;
 GRANT EXECUTE ON ALL FUNCTIONS  IN SCHEMA content  TO marius_user;
 GRANT EXECUTE ON ALL PROCEDURES IN SCHEMA identity TO marius_user;
 GRANT EXECUTE ON ALL PROCEDURES IN SCHEMA org      TO marius_user;
 GRANT EXECUTE ON ALL PROCEDURES IN SCHEMA commerce TO marius_user;
 GRANT EXECUTE ON ALL PROCEDURES IN SCHEMA content  TO marius_user;
--- Protections en lecture seule (données de référence immuables)
-REVOKE INSERT, UPDATE, DELETE ON identity.permission_bit FROM PUBLIC;
-REVOKE INSERT, UPDATE, DELETE ON identity.role           FROM PUBLIC;
-
--- Verrouillage du flux d'écriture commentaires (ADR-012)
--- INSERT direct révoqué : seule content.create_comment() est le point d'entrée autorisé.
--- La procédure s'exécute avec les droits DEFINER → le rôle applicatif n'a besoin
--- que de EXECUTE sur la procédure, déjà accordé ci-dessus.
-REVOKE INSERT ON content.comment FROM marius_user;
 
 -- Calibrage autovacuum sur content.comment
 -- Valeurs relâchées par rapport au modèle précédent à double trigger :
@@ -1257,6 +1267,103 @@ ALTER TABLE content.comment SET (
   autovacuum_analyze_scale_factor = 0.02,
   autovacuum_vacuum_cost_delay    = 10
 );
+
+
+-- ==============================================================================
+-- SECTION 14 : VERROUILLAGE ECS STRICT — ADR-020
+-- ==============================================================================
+-- Scelle le contrat d'interface d'écriture :
+--   marius_user → SELECT + EXECUTE uniquement (zéro DML direct)
+--   marius_admin → maintenance/migrations (hérite marius_user + DML direct)
+--   Procédures  → SECURITY DEFINER (s'exécutent avec les droits du propriétaire)
+--
+-- Rationalise et absorbe :
+--   • ADR-012 : REVOKE INSERT ON content.comment (désormais couvert globalement)
+-- ==============================================================================
+
+-- 14.1 — Rôle de maintenance production
+-- Hérite de marius_user (SELECT + EXECUTE + USAGE séquences + USAGE schémas).
+-- Reçoit en sus l'écriture directe sur toutes les tables physiques.
+-- LOGIN activé pour les sessions de maintenance ; désactiver en environnement
+-- hautement sécurisé et passer par SET ROLE depuis une session postgres.
+CREATE ROLE marius_admin WITH LOGIN ENCRYPTED PASSWORD 'change_in_production';
+GRANT marius_user TO marius_admin WITH INHERIT TRUE;
+
+GRANT USAGE ON SCHEMA identity  TO marius_admin;
+GRANT USAGE ON SCHEMA geo       TO marius_admin;
+GRANT USAGE ON SCHEMA org       TO marius_admin;
+GRANT USAGE ON SCHEMA commerce  TO marius_admin;
+GRANT USAGE ON SCHEMA content   TO marius_admin;
+
+GRANT INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA identity  TO marius_admin;
+GRANT INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA geo       TO marius_admin;
+GRANT INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA org       TO marius_admin;
+GRANT INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA commerce  TO marius_admin;
+GRANT INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA content   TO marius_admin;
+
+GRANT USAGE, UPDATE ON ALL SEQUENCES IN SCHEMA identity  TO marius_admin;
+GRANT USAGE, UPDATE ON ALL SEQUENCES IN SCHEMA geo       TO marius_admin;
+GRANT USAGE, UPDATE ON ALL SEQUENCES IN SCHEMA org       TO marius_admin;
+GRANT USAGE, UPDATE ON ALL SEQUENCES IN SCHEMA commerce  TO marius_admin;
+GRANT USAGE, UPDATE ON ALL SEQUENCES IN SCHEMA content   TO marius_admin;
+
+-- 14.2 — Révocation globale DML sur marius_user (défense en profondeur)
+-- Idempotent : marius_user n'a jamais reçu ces droits en SECTION 13.
+-- Ce bloc garantit l'invariant même si une migration future ajoute
+-- accidentellement un GRANT DML sur marius_user.
+REVOKE INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA identity  FROM marius_user;
+REVOKE INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA geo       FROM marius_user;
+REVOKE INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA org       FROM marius_user;
+REVOKE INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA commerce  FROM marius_user;
+REVOKE INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA content   FROM marius_user;
+
+-- 14.3 — Élévation SECURITY DEFINER sur toutes les procédures de mutation
+-- Mécanisme : la procédure s'exécute avec les droits de son propriétaire
+-- (postgres), non ceux de l'appelant (marius_user).
+-- SET search_path : neutralise l'injection de schéma via search_path de session.
+-- Seconde ligne de défense : tous les noms d'objets dans les corps de procédures
+-- sont entièrement qualifiés (schema.table), indépendamment du search_path.
+
+ALTER PROCEDURE identity.create_account(
+  character varying, character varying, character varying, smallint, character
+) SECURITY DEFINER SET search_path = 'identity', 'pg_catalog';
+
+ALTER PROCEDURE identity.create_person(
+  character varying, character varying, smallint, character
+) SECURITY DEFINER SET search_path = 'identity', 'pg_catalog';
+
+ALTER PROCEDURE identity.record_login(integer)
+  SECURITY DEFINER SET search_path = 'identity', 'pg_catalog';
+
+ALTER PROCEDURE identity.grant_permission(smallint, integer)
+  SECURITY DEFINER SET search_path = 'identity', 'pg_catalog';
+
+ALTER PROCEDURE identity.revoke_permission(smallint, integer)
+  SECURITY DEFINER SET search_path = 'identity', 'pg_catalog';
+
+ALTER PROCEDURE org.create_organization(
+  character varying, character varying, character varying, integer, integer
+) SECURITY DEFINER SET search_path = 'org', 'identity', 'pg_catalog';
+
+-- content.create_document déclenche fn_slug_deduplicate (schéma public).
+-- Le trigger est résolu par OID — pas de risque fonctionnel lié au search_path.
+-- 'public' inclus pour la résolution des fonctions utilitaires dans le corps.
+ALTER PROCEDURE content.create_document(
+  integer, character varying, character varying,
+  smallint, smallint, text, character varying, character varying
+) SECURITY DEFINER SET search_path = 'content', 'identity', 'public', 'pg_catalog';
+
+ALTER PROCEDURE content.publish_document(integer)
+  SECURITY DEFINER SET search_path = 'content', 'pg_catalog';
+
+ALTER PROCEDURE content.save_revision(integer, integer)
+  SECURITY DEFINER SET search_path = 'content', 'pg_catalog';
+
+ALTER PROCEDURE content.create_comment(integer, integer, text, integer, smallint)
+  SECURITY DEFINER SET search_path = 'content', 'pg_catalog';
+
+ALTER PROCEDURE commerce.create_transaction_item(integer, integer, integer)
+  SECURITY DEFINER SET search_path = 'commerce', 'pg_catalog';
 
 
 -- ==============================================================================
