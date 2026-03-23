@@ -6,7 +6,7 @@
 [![Design](https://img.shields.io/badge/Design-Data--Oriented-2D6A4F?style=for-the-badge)]()
 [![Semantics](https://img.shields.io/badge/Sémantique-schema.org-1565C0?style=for-the-badge)]()
 [![Hierarchy](https://img.shields.io/badge/Hiérarchies-ltree-5C6BC0?style=for-the-badge)]()
-[![ADR](https://img.shields.io/badge/ADR-20%20décisions-455A64?style=for-the-badge)]()
+[![ADR](https://img.shields.io/badge/ADR-21%20décisions-455A64?style=for-the-badge)]()
 [![Status](https://img.shields.io/badge/Statut-R%26D-7B1FA2?style=for-the-badge)]()
 
 Architecture de base de données orientée données (DOD) pour PostgreSQL 18,
@@ -76,7 +76,7 @@ d'écriture que la production.
 
 ### `architecture_decision_records.md`
 
-20 arbitrages architecturaux, ordonnés par importance décroissante. Chaque
+21 arbitrages architecturaux, ordonnés par importance décroissante. Chaque
 entrée documente ce qui **n'est pas déductible de la lecture du code** : le
 raisonnement derrière la décision, les alternatives écartées et leurs coûts.
 
@@ -230,7 +230,7 @@ indépendamment des droits de l'appelant.
 | `identity.record_login(entity_id)` | Enregistrer une connexion (hot path) |
 | `content.create_document(...)` | Créer un article/page |
 | `content.publish_document(document_id)` | Publier un brouillon |
-| `content.save_revision(document_id, author_id)` | Snapshot éditorial |
+| `content.save_revision(document_id, author_id)` | Snapshot éditorial complet (name, slug, alt_headline, description, body) |
 | `content.create_comment(...)` | Insérer un commentaire (zéro dead tuple, ADR-012) |
 | `commerce.create_transaction_item(...)` | Ligne de commande avec snapshot de prix |
 

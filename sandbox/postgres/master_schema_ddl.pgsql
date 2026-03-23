@@ -533,15 +533,19 @@ ALTER TABLE content.body ALTER COLUMN content SET STORAGE EXTENDED;
 
 -- CONTENT REVISION — cold storage des snapshots éditoriaux
 -- Layout : saved_at TIMESTAMPTZ · document_id INT4 · author_entity_id INT4
---          · revision_num SMALLINT · 2B pad | varlena × 3
+--          · revision_num SMALLINT · 2B pad | varlena × 5
+-- snapshot_alternative_headline et snapshot_description inclus (ADR-021) :
+-- un snapshot incomplet crée un historique silencieusement faux.
 CREATE TABLE content.revision (
-  saved_at          TIMESTAMPTZ   NOT NULL DEFAULT now(),
-  document_id       INT           NOT NULL,
-  author_entity_id  INT           NOT NULL,
-  revision_num      SMALLINT      NOT NULL DEFAULT 0,
-  snapshot_name     VARCHAR(255)  NOT NULL,
-  snapshot_slug     VARCHAR(255)  NOT NULL,
-  snapshot_body     TEXT          NULL,
+  saved_at                      TIMESTAMPTZ    NOT NULL DEFAULT now(),
+  document_id                   INT            NOT NULL,
+  author_entity_id              INT            NOT NULL,
+  revision_num                  SMALLINT       NOT NULL DEFAULT 0,
+  snapshot_name                 VARCHAR(255)   NOT NULL,
+  snapshot_slug                 VARCHAR(255)   NOT NULL,
+  snapshot_alternative_headline VARCHAR(255)   NULL,
+  snapshot_description          VARCHAR(1000)  NULL,
+  snapshot_body                 TEXT           NULL,
   PRIMARY KEY (document_id, revision_num),
   FOREIGN KEY (document_id)       REFERENCES content.document(id)  ON DELETE CASCADE,
   FOREIGN KEY (author_entity_id)  REFERENCES identity.entity(id),
@@ -797,6 +801,18 @@ FOR EACH ROW WHEN (
   OLD.billing_place_id IS DISTINCT FROM NEW.billing_place_id
 ) EXECUTE FUNCTION identity.fn_update_modified_at();
 
+-- CONTENT : media_core — modified_at (ADR-021)
+-- Déclenché uniquement sur les colonnes descriptives, pas sur created_at.
+CREATE TRIGGER media_core_modified_at
+BEFORE UPDATE ON content.media_core
+FOR EACH ROW WHEN (
+  OLD.mime_type   IS DISTINCT FROM NEW.mime_type   OR
+  OLD.folder_url  IS DISTINCT FROM NEW.folder_url  OR
+  OLD.file_name   IS DISTINCT FROM NEW.file_name   OR
+  OLD.width       IS DISTINCT FROM NEW.width       OR
+  OLD.height      IS DISTINCT FROM NEW.height
+) EXECUTE FUNCTION identity.fn_update_modified_at();
+
 
 -- ==============================================================================
 -- SECTION 11 : PROCÉDURES D'ÉCRITURE (SYSTEM / AOT LAYER)
@@ -898,8 +914,12 @@ BEGIN
   -- et écrase le DEFAULT (0) avant que le CHECK revision_num > 0 ne s'évalue.
   -- Passer 0 explicitement fonctionnerait aussi (le trigger l'écrase), mais
   -- omettre la colonne exprime clairement que la valeur est déléguée au moteur.
-  INSERT INTO content.revision (document_id, author_entity_id, snapshot_name, snapshot_slug, snapshot_body)
-  VALUES (p_document_id, p_author_id, p_name, p_slug, p_content);
+  INSERT INTO content.revision (
+    document_id, author_entity_id,
+    snapshot_name, snapshot_slug, snapshot_alternative_headline,
+    snapshot_description, snapshot_body
+  )
+  VALUES (p_document_id, p_author_id, p_name, p_slug, p_alt_headline, p_description, p_content);
 END;
 $$;
 
@@ -911,17 +931,27 @@ CREATE PROCEDURE content.publish_document(p_document_id INT) LANGUAGE sql AS $$
 $$;
 
 -- Snapshot éditorial avant modification
+-- Capture l'intégralité de content.identity + content.body (ADR-021).
 CREATE PROCEDURE content.save_revision(p_document_id INT, p_author_id INT)
 LANGUAGE plpgsql AS $$
 DECLARE
-  v_name VARCHAR(255); v_slug VARCHAR(255); v_body TEXT;
+  v_name        VARCHAR(255);
+  v_slug        VARCHAR(255);
+  v_alt         VARCHAR(255);
+  v_description VARCHAR(1000);
+  v_body        TEXT;
 BEGIN
-  SELECT i.name, i.slug, b.content
-  INTO   v_name, v_slug, v_body
-  FROM   content.identity i LEFT JOIN content.body b ON b.document_id = i.document_id
+  SELECT i.name, i.slug, i.alternative_headline, i.description, b.content
+  INTO   v_name, v_slug, v_alt, v_description, v_body
+  FROM   content.identity i
+  LEFT JOIN content.body b ON b.document_id = i.document_id
   WHERE  i.document_id = p_document_id FOR SHARE;
-  INSERT INTO content.revision (document_id, author_entity_id, snapshot_name, snapshot_slug, snapshot_body)
-  VALUES (p_document_id, p_author_id, v_name, v_slug, v_body);
+  INSERT INTO content.revision (
+    document_id, author_entity_id,
+    snapshot_name, snapshot_slug, snapshot_alternative_headline,
+    snapshot_description, snapshot_body
+  )
+  VALUES (p_document_id, p_author_id, v_name, v_slug, v_alt, v_description, v_body);
 END;
 $$;
 
@@ -984,12 +1014,15 @@ END;
 $$;
 
 -- Insertion d'une ligne de commande avec snapshot du prix
+-- FOR UPDATE sur product_core (ADR-021) : verrouillage exclusif de la ligne
+-- pour prévenir la sur-vente sous concurrence. FOR SHARE permettrait à deux
+-- transactions de lire le même stock simultanément avant décrémentation.
 CREATE PROCEDURE commerce.create_transaction_item(
   p_transaction_id INT, p_product_id INT, p_quantity INT DEFAULT 1
 ) LANGUAGE plpgsql AS $$
 DECLARE v_price NUMERIC(12,2);
 BEGIN
-  SELECT price INTO v_price FROM commerce.product_core WHERE id = p_product_id FOR SHARE;
+  SELECT price INTO v_price FROM commerce.product_core WHERE id = p_product_id FOR UPDATE;
   IF v_price IS NULL THEN RAISE EXCEPTION 'Produit % introuvable ou prix non défini', p_product_id; END IF;
   INSERT INTO commerce.transaction_item (transaction_id, product_id, quantity, unit_price_snapshot)
   VALUES (p_transaction_id, p_product_id, p_quantity, v_price);

@@ -68,6 +68,70 @@ quelques µs. `CREATE PROCEDURE` n'est jamais inlinable par le planner (contrair
 
 ---
 
+## ADR-021 — Correctifs de cohérence : snapshot complet, verrou exclusif, trigger manquant
+
+**Statut** : Adopté
+
+### Contexte
+
+Audit externe ayant produit 8 suggestions. Trois adressent des lacunes réelles ;
+cinq sont écartées (voir analyse en fin d'entrée).
+
+### Correction 1 — Snapshot complet dans `content.revision`
+
+`content.save_revision()` et `content.create_document()` ne capturaient que
+`name`, `slug` et `body`. Les colonnes `alternative_headline` et `description`
+(portées par `content.identity`) n'étaient pas versionnées.
+
+**Conséquence** : un `UPDATE` sur `alternative_headline` entre deux révisions
+effaçait silencieusement la valeur précédente de l'historique. Le snapshot était
+fonctionnellement faux sans aucun signal d'erreur.
+
+**Correction** : deux colonnes ajoutées à `content.revision` :
+`snapshot_alternative_headline VARCHAR(255)` et `snapshot_description VARCHAR(1000)`.
+Les procédures `save_revision` et `create_document` les alimentent désormais.
+
+La règle générale en découlant : **tout champ de `content.identity` éditable par
+l'utilisateur doit avoir son équivalent `snapshot_*` dans `content.revision`**.
+
+### Correction 2 — `FOR UPDATE` dans `create_transaction_item`
+
+La procédure lisait `product_core` avec `FOR SHARE` (verrou partagé) avant de
+décrémenter le stock. Deux transactions concurrentes sur le même produit pouvaient
+lire simultanément `stock = 5`, vérifier la disponibilité, puis décrémenter
+chacune — produisant un stock négatif (sur-vente).
+
+`FOR SHARE` : plusieurs lecteurs simultanés autorisés → race condition possible.
+`FOR UPDATE` : verrou exclusif sur la ligne → la seconde transaction attend la
+fin de la première avant de lire le stock mis à jour.
+
+**Correction** : `FOR SHARE` → `FOR UPDATE` sur le `SELECT price`.
+
+**Note** : le `UPDATE commerce.product_core SET stock = stock - p_quantity`
+qui suit opère sur la même ligne déjà verrouillée — pas de deadlock possible.
+
+### Correction 3 — Trigger `modified_at` manquant sur `content.media_core`
+
+`content.media_core` expose une colonne `modified_at TIMESTAMPTZ NULL` mais
+n'avait pas de trigger pour la mettre à jour. Toutes les autres tables mutables
+du schéma (`identity.auth`, `content.core`, `commerce.transaction`) en
+disposaient.
+
+**Correction** : trigger `BEFORE UPDATE` avec clause `WHEN` ciblant les colonnes
+descriptives (`mime_type`, `folder_url`, `file_name`, `width`, `height`).
+
+### Suggestions écartées
+
+| # | Suggestion | Motif d'exclusion |
+|---|---|---|
+| 1 | Retry automatique dans `fn_slug_deduplicate` | Comportement intentionnel documenté dans le DDL : la contrainte `UNIQUE` est le garde-fou ; l'erreur 23505 est propre et attrapable côté applicatif. Ajouter un retry dans le trigger déplacerait la responsabilité du retry au mauvais niveau. |
+| 4 | Remplacer `CHECK (path IS NOT NULL)` par `NOT NULL` | Déjà documenté en détail dans le DDL. Le `CHECK` est l'unique moyen de permettre `OVERRIDING SYSTEM VALUE` dans `create_comment` tout en rejetant les INSERT directs sans path. |
+| 5 | B-tree complémentaire si BRIN inefficace | Déjà couvert en ADR-017 : la condition d'efficacité (insertions chronologiques) est documentée ; l'ajout d'un B-tree complémentaire est une décision opérationnelle à prendre sur données réelles, pas un invariant à inscrire dans le blueprint. |
+| 7 | Partitionnement de `content.comment` et `content.revision` | Prématuré à l'échelle cible (500 k utilisateurs). PostgreSQL gère confortablement ces volumes avec les index existants. Le partitionnement ajoute de la complexité opérationnelle significative (maintenance des partitions, contraintes croisées) sans bénéfice mesurable à ce stade. |
+| 8 | Suite de tests pgTAP | Hors périmètre du blueprint DDL. Pertinent comme étape CI/CD distincte. |
+
+---
+
 ## ADR-005 — Fragmentation ECS : SoA en lieu de AoS
 
 **Statut** : Adopté
@@ -633,4 +697,4 @@ au même titre que les `REVOKE` qui les suivent.
 
 ---
 
-*Architecture ECS/DOD · PostgreSQL 18 · Projet Marius*
+*Architecture ECS/DOD · PostgreSQL 18 · Projet Marius · 21 décisions*
