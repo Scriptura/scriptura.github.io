@@ -132,6 +132,83 @@ descriptives (`mime_type`, `folder_url`, `file_name`, `width`, `height`).
 
 ---
 
+## ADR-026 — Closure Table pour la taxonomie des tags : ltree conservé pour les commentaires
+
+**Statut** : Adopté
+
+### Contexte
+
+Le composant `content.tag` utilisait un chemin `ltree` (`path`) et un `parent_id`
+pour représenter la hiérarchie taxonomique. Deux limites opérationnelles ont été
+identifiées :
+
+1. **Mobilité des tags** : déplacer un tag dans la hiérarchie avec ltree nécessite
+   un UPDATE en cascade de `path` sur tous les descendants — O(n_descendants) UPDATEs,
+   risque de locks en production.
+2. **Couplage structurel** : `path` encode à la fois l'identité du tag
+   (`theology.patristics.cyrille`) et sa position hiérarchique. Renommer un ancêtre
+   force un UPDATE en cascade sur tous ses descendants.
+
+### Décision : Closure Table pour les tags
+
+La hiérarchie est portée par `content.tag_hierarchy(ancestor_id, descendant_id, depth)`
+indépendamment des données du tag. Le spine `content.tag` devient `(id, slug, name)` — immuable.
+
+**Invariant opérationnel** : chaque tag possède obligatoirement une self-reference
+`(id, id, 0)`. La procédure `content.create_tag` garantit cet invariant à l'insertion.
+
+**Profondeur maximale = 4** : contrainte CHECK `depth BETWEEN 0 AND 4`. La procédure
+lève une exception à l'INSERT si un parent est déjà à depth 4.
+
+### Pourquoi pas ltree pour les tags
+
+| Critère           | ltree                            | Closure Table                         |
+| ----------------- | -------------------------------- | ------------------------------------- |
+| Sous-arbre query  | `path <@ 'parent.path'` (GiST)   | `WHERE ancestor_id = X AND depth > 0` (B-tree) |
+| Move tag          | UPDATE en cascade O(descendants) | DELETE + reinsert O(depth)            |
+| Rename ancestor   | UPDATE en cascade O(descendants) | Zéro impact (noms dans tag spine)     |
+| Insert nouveau tag| O(1) — concat path               | O(depth) — inserts ancêtres           |
+| Breadcrumb        | Gratuit (le path IS le chemin)   | string_agg + self-join                |
+| Dépendance        | Extension ltree                  | SQL pur                               |
+
+Pour une taxonomie éditoriale à insertions rares et depth ≤ 4, le coût du move
+est le critère déterminant. La requête de sous-arbre sur la Closure Table est un
+équijoin sur INT4 avec index B-tree — plus cache-friendly qu'un scan GiST sur varlena.
+
+### ltree conservé pour `content.comment`
+
+**Non négociable.** ADR-012 est architecturalement construit autour du ltree :
+la procédure `create_comment` utilise `nextval()` préalable + construction du
+chemin en mémoire + INSERT unique pour garantir zéro dead tuple. La Closure Table
+sur les commentaires est inapplicable :
+
+- Volume : 10 000+ commentaires/jour → O(profondeur) inserts par commentaire
+  avec locks en cascade sur `tag_hierarchy` équivalent.
+- Les commentaires ne sont jamais "déplacés" — la raison principale de la Closure
+  Table n'existe pas pour eux.
+- La profondeur des commentaires est non bornée (ADR-011 : ltree supporte des
+  arborescences profondes avec O(log n) via GiST).
+
+L'extension ltree reste installée et en usage actif pour `content.comment.path`.
+
+### Physique — densité
+
+| Table              | Avant              | Après                 |
+| ------------------ | ------------------ | --------------------- |
+| `content.tag`      | ~80 B (ltree path) | ~50 B (slug+name)     |
+| `content.tag_hierarchy` | —             | 12 B/tuple (~682/page)|
+
+Pour 232 tags à plat : 232 lignes dans `tag_hierarchy` (self-refs).
+Pour une taxonomie 4 niveaux de 232 tags répartis : max ~500-900 lignes.
+
+### Procédure `create_tag`
+
+Seul point d'entrée autorisé pour `marius_user`. Gère atomiquement :
+l'INSERT dans le spine `tag`, la self-reference depth=0, et l'héritage des
+ancêtres du parent via SELECT/INSERT depuis `tag_hierarchy`.
+
+---
+
 ## ADR-025 — Interface sémantique snake_case : schema.org sans guillemets SQL
 
 **Statut** : Adopté
@@ -1054,4 +1131,4 @@ au même titre que les `REVOKE` qui les suivent.
 
 ---
 
-*Architecture ECS/DOD · PostgreSQL 18 · Projet Marius · 25 décisions*
+*Architecture ECS/DOD · PostgreSQL 18 · Projet Marius · 26 décisions*

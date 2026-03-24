@@ -662,24 +662,41 @@ CREATE TABLE content.revision (
 
 CREATE INDEX revision_recent ON content.revision (document_id, revision_num DESC);
 
--- CONTENT TAG — taxonomie ltree (lectures fréquentes, insertions rares)
--- Layout : id INT4 · parent_id INT4 | puis varlena (ltree + slug + name)
+-- CONTENT TAG — spine taxonomique (Closure Table, ADR-026)
+-- parent_id et path ltree supprimés : la hiérarchie est portée par tag_hierarchy.
+-- Le spine tag reste immuable : seuls name et slug le définissent.
+-- Layout (ADR-004) : id INT4 | slug varlena · name varlena
+-- Tuple ~50 B (nom+slug 20 chars chacun) → ~164 tuples/page
 CREATE TABLE content.tag (
-  id         INT          GENERATED ALWAYS AS IDENTITY,
-  parent_id  INT          NULL,
-  path       ltree        NOT NULL,
-  slug       VARCHAR(64)  NOT NULL,
-  name       VARCHAR(64)  NOT NULL,
+  id    INT          GENERATED ALWAYS AS IDENTITY,
+  slug  VARCHAR(64)  NOT NULL,
+  name  VARCHAR(64)  NOT NULL,
   PRIMARY KEY (id),
-  UNIQUE (path),
   UNIQUE (slug),
-  FOREIGN KEY (parent_id) REFERENCES content.tag(id) ON DELETE RESTRICT,
-  CONSTRAINT slug_format CHECK (slug ~ '^[a-z0-9-]+$'),
-  CONSTRAINT path_format  CHECK (path::text ~ '^[a-z0-9_]+(\.[a-z0-9_]+)*$')
+  CONSTRAINT slug_format CHECK (slug ~ '^[a-z0-9-]+$')
 );
 
-CREATE INDEX tag_path_gist  ON content.tag USING gist (path);
-CREATE INDEX tag_path_btree ON content.tag (path);
+-- TAG HIERARCHY — Closure Table (ADR-026)
+-- Stocke toutes les paires (ancêtre, descendant) avec leur distance.
+-- Un tag est son propre ancêtre à depth=0 (self-reference obligatoire).
+-- Profondeur maximale : 4 niveaux (depth BETWEEN 0 AND 4).
+-- Layout (ADR-004) :
+--   ancestor_id INT4 (offset 0) · descendant_id INT4 (4) · depth SMALLINT (8) · 2B pad
+-- Tuple 12 B → ~682 tuples/page
+-- Cardinalité maximale théorique : N*(N+1)/2 ≈ 500 000 / 2 = 250 000 pour 1 000 tags
+-- profonds. En pratique, taxonomie de ~200-500 tags avec depth ≤ 4 : ~1 000-2 000 lignes.
+CREATE TABLE content.tag_hierarchy (
+  ancestor_id    INT       NOT NULL,
+  descendant_id  INT       NOT NULL,
+  depth          SMALLINT  NOT NULL,
+  PRIMARY KEY (ancestor_id, descendant_id),
+  FOREIGN KEY (ancestor_id)   REFERENCES content.tag(id) ON DELETE CASCADE,
+  FOREIGN KEY (descendant_id) REFERENCES content.tag(id) ON DELETE CASCADE,
+  CONSTRAINT depth_range CHECK (depth BETWEEN 0 AND 4)
+);
+
+-- Index inverse : chercher tous les ancêtres d'un tag (breadcrumb, move)
+CREATE INDEX tag_hierarchy_descendant ON content.tag_hierarchy (descendant_id, depth);
 
 -- MEDIA CORE — métadonnées fichiers (MOYENNE fréquence)
 -- Layout : 2×TIMESTAMPTZ · id INT4 · author_id INT4 · 2×INT4 (w/h) | varlena × 3
@@ -1118,6 +1135,52 @@ BEGIN
 END;
 $$;
 
+-- Création d'un tag et insertion automatique dans la Closure Table (ADR-026)
+-- Automatise la gestion des ancêtres : l'appelant fournit uniquement le parent_id.
+-- SECURITY DEFINER : marius_user n'a pas de droits DML directs (ADR-020).
+--
+-- Mécanisme :
+--   1. INSERT du tag dans content.tag (spine)
+--   2. Self-reference (ancestor = descendant = new_tag_id, depth = 0)
+--   3. Héritage des ancêtres du parent :
+--      INSERT (ancestor_id, new_tag_id, parent_depth + 1)
+--      FROM tag_hierarchy WHERE descendant_id = parent_id
+-- Validation de profondeur : si le parent est déjà à depth=4, l'INSERT viole
+-- le CHECK depth BETWEEN 0 AND 4 — l'exception est propagée à l'appelant.
+CREATE PROCEDURE content.create_tag(
+  p_name      VARCHAR(64),
+  p_slug      VARCHAR(64),
+  p_parent_id INT      DEFAULT NULL,
+  OUT p_tag_id INT
+) LANGUAGE plpgsql AS $$
+BEGIN
+  -- 1. Créer le tag (spine)
+  INSERT INTO content.tag (slug, name)
+  VALUES (p_slug, p_name)
+  RETURNING id INTO p_tag_id;
+
+  -- 2. Self-reference obligatoire (depth = 0)
+  INSERT INTO content.tag_hierarchy (ancestor_id, descendant_id, depth)
+  VALUES (p_tag_id, p_tag_id, 0);
+
+  -- 3. Propager les ancêtres du parent (si fourni)
+  IF p_parent_id IS NOT NULL THEN
+    -- Valider l'existence du parent
+    IF NOT EXISTS (SELECT 1 FROM content.tag_hierarchy
+                   WHERE ancestor_id = p_parent_id AND descendant_id = p_parent_id) THEN
+      RAISE EXCEPTION 'Tag parent introuvable dans la Closure Table (id=%)', p_parent_id
+        USING ERRCODE = 'foreign_key_violation';
+    END IF;
+
+    INSERT INTO content.tag_hierarchy (ancestor_id, descendant_id, depth)
+    SELECT th.ancestor_id, p_tag_id, th.depth + 1
+    FROM   content.tag_hierarchy th
+    WHERE  th.descendant_id = p_parent_id;
+    -- Le CHECK depth BETWEEN 0 AND 4 rejette automatiquement si depth + 1 > 4.
+  END IF;
+END;
+$$;
+
 -- Insertion d'un commentaire avec construction du chemin ltree (une seule écriture heap)
 -- Remplace définitivement le double trigger BEFORE/AFTER (ADR-012).
 -- nextval() préalable → path construit en mémoire → INSERT unique, zéro dead tuple.
@@ -1509,17 +1572,38 @@ JOIN        content.core      co ON co.document_id = d.id
 JOIN        content.identity  ci ON ci.document_id = d.id
 LEFT JOIN   content.body      b  ON b.document_id  = d.id;
 
--- CONTENT : v_tag_tree — taxonomie avec métadonnées hiérarchiques
+-- CONTENT : v_tag_tree — taxonomie avec Closure Table (ADR-026)
+-- depth = distance depuis la racine (0 = racine, 4 = feuille maximale).
+-- parent_id = ancêtre immédiat (depth = 1), NULL si racine.
+-- breadcrumb = chemin textuel racine→tag, séparateurs " > ".
+-- article_count = articles directement taggés (pas subtree — requête explicite via tag_hierarchy).
+--
+-- Navigation de sous-arbre côté applicatif :
+--   SELECT descendant_id FROM content.tag_hierarchy
+--   WHERE ancestor_id = :tag_id AND depth > 0
 CREATE VIEW content.v_tag_tree AS
 SELECT
-  t.id                     AS identifier,
-  t.name, t.slug,
-  t.path::text             AS path,
-  t.parent_id,
-  nlevel(t.path)           AS depth,
+  t.id         AS identifier,
+  t.name,
+  t.slug,
+  -- Profondeur depuis la racine (0 = racine)
+  COALESCE((
+    SELECT MAX(th.depth) FROM content.tag_hierarchy th
+    WHERE  th.descendant_id = t.id AND th.ancestor_id <> t.id
+  ), 0)        AS depth,
+  -- Parent immédiat (NULL si racine)
+  (SELECT th_p.ancestor_id FROM content.tag_hierarchy th_p
+   WHERE  th_p.descendant_id = t.id AND th_p.depth = 1
+   LIMIT  1)   AS parent_id,
+  -- Breadcrumb : ancêtres ordonnés racine en tête (depth DESC)
+  (SELECT string_agg(a.name, ' > ' ORDER BY th_a.depth DESC)
+   FROM   content.tag_hierarchy th_a
+   JOIN   content.tag           a  ON a.id = th_a.ancestor_id
+   WHERE  th_a.descendant_id = t.id AND th_a.depth > 0) AS breadcrumb,
+  -- Articles directement associés à ce tag (statut publié)
   (SELECT COUNT(*) FROM content.content_to_tag ct
-   JOIN content.core co ON co.document_id = ct.content_id
-   WHERE ct.tag_id = t.id AND co.status = 1) AS article_count
+   JOIN   content.core co ON co.document_id = ct.content_id
+   WHERE  ct.tag_id = t.id AND co.status = 1) AS article_count
 FROM content.tag t;
 
 
@@ -1665,6 +1749,9 @@ ALTER PROCEDURE content.save_revision(integer, integer)
   SECURITY DEFINER SET search_path = 'content', 'pg_catalog';
 
 ALTER PROCEDURE content.create_comment(integer, integer, text, integer, smallint)
+  SECURITY DEFINER SET search_path = 'content', 'pg_catalog';
+
+ALTER PROCEDURE content.create_tag(character varying, character varying, integer)
   SECURITY DEFINER SET search_path = 'content', 'pg_catalog';
 
 ALTER PROCEDURE commerce.create_transaction(integer, integer, smallint, smallint, text)

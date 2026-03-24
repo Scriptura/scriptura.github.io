@@ -47,7 +47,8 @@ l'interface [schema.org](https://schema.org) par-dessus les composants fragment�
     ├── 01_schema_and_security.sql   # Types physiques, BRIN, RBAC, SECURITY DEFINER
     ├── 02_identity_logic.sql        # Comptes, slugs, bitmask, connexions
     ├── 03_content_logic.sql         # Documents, révisions, commentaires ltree
-    └── 04_commerce_logic.sql        # Stock, snapshots de prix, agrégats
+    ├── 04_commerce_logic.sql        # Stock, snapshots de prix, agrégats
+    └── 05_tag_hierarchy.sql         # Mots clefs hiérarchisés
 ```
 
 ### `master_schema_ddl.pgsql`
