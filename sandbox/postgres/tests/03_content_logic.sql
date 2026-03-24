@@ -141,11 +141,11 @@ SELECT ok(
 -- ============================================================
 
 SELECT is(
-  (SELECT snapshot_name FROM content.revision
+  (SELECT snapshot_headline FROM content.revision
    WHERE  document_id = (SELECT val FROM _ids WHERE key = 'doc1_id')
      AND  revision_num = 1),
   'Article de test',
-  'Révision initiale : snapshot_name = ''Article de test'''
+  'Révision initiale : snapshot_headline = ''Article de test'''
 );
 
 SELECT is(
@@ -199,7 +199,7 @@ SELECT ok(
 -- On met à jour les colonnes de content.identity et content.body directement
 -- (as postgres, owner des tables), puis on appelle save_revision.
 -- La révision n°2 doit refléter les nouvelles valeurs pour les champs modifiés.
--- snapshot_name n'est pas touché → doit rester identique à la révision n°1.
+-- snapshot_headline n'est pas touché → doit rester identique à la révision n°1.
 -- ============================================================
 
 UPDATE content.identity
@@ -217,11 +217,11 @@ CALL content.save_revision(
 );
 
 SELECT is(
-  (SELECT snapshot_name FROM content.revision
+  (SELECT snapshot_headline FROM content.revision
    WHERE  document_id = (SELECT val FROM _ids WHERE key = 'doc1_id')
      AND  revision_num = 2),
   'Article de test',
-  'save_revision n°2 : snapshot_name inchangé (titre non modifié)'
+  'save_revision n°2 : snapshot_headline inchangé (titre non modifié)'
 );
 
 SELECT is(

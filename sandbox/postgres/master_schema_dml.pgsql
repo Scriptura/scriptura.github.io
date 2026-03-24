@@ -61,22 +61,37 @@
 INSERT INTO identity.entity (id) OVERRIDING SYSTEM VALUE VALUES (1),(2),(3),(4),(5),(6),(7),(8);
 SELECT setval(pg_get_serial_sequence('identity.entity', 'id'), 8);
 
--- LIEUX
-INSERT INTO geo.place_core (id, name, street, postal_code, locality, region, country, coordinates, elevation)
+-- LIEUX — spine spatial (ADR-024 : données postales séparées dans geo.postal_address)
+INSERT INTO geo.place_core (id, name, coordinates, elevation)
 OVERRIDING SYSTEM VALUE VALUES
-  (1,  'Cathédrale Notre-Dame de Paris',           '6 Parvis Notre-Dame - Pl. Jean-Paul II', '75004', 'Paris',                      'Île-de-France',    'France', ST_SetSRID(ST_MakePoint(2.349747,  48.853133), 4326), 210),
-  (2,  'Basilique du Sacré-Cœur de Montmartre',    '35 Rue du Chevalier de la Barre',        '75018', 'Paris',                      'Île-de-France',    'France', ST_SetSRID(ST_MakePoint(2.343076,  48.886719), 4326), NULL),
-  (3,  'Primatiale Saint-Jean de Lyon',            'Place Saint-Jean',                       '69005', 'Lyon',                       'Rhône',            'France', ST_SetSRID(ST_MakePoint(4.827409,  45.760792), 4326), NULL),
-  (4,  'Basilique Notre-Dame de Fourvière',        '8 Place de Fourvière',                   '69005', 'Lyon',                       'Rhône',            'France', ST_SetSRID(ST_MakePoint(4.822550,  45.762300), 4326), 287),
-  (5,  'Carmel de Montmartre',                     '34 Rue du Chevalier de la Barre',        '75018', 'Paris',                      'Île-de-France',    'France', NULL, NULL),
-  (6,  'Chapelle Notre-Dame de la Médaille Miraculeuse', '140 Rue du Bac',                   '75007', 'Paris',                      'Île-de-France',    'France', ST_SetSRID(ST_MakePoint(2.323305,  48.851043), 4326), NULL),
-  (7,  'Collège des Bernardins',                   NULL,                                     NULL,    'Paris',                      'Île-de-France',    'France', ST_SetSRID(ST_MakePoint(2.351987,  48.848775), 4326), NULL),
-  (8,  'École Cathédrale',                         NULL,                                     NULL,    'Paris',                      'Île-de-France',    'France', ST_SetSRID(ST_MakePoint(2.350691,  48.853372), 4326), NULL),
-  (9,  'Bibliothèque du Saulchoir',                NULL,                                     NULL,    'Paris',                      'Île-de-France',    'France', ST_SetSRID(ST_MakePoint(2.344720,  48.832783), 4326), NULL),
-  (10, 'Basilique Notre-Dame-de-la-Garde',         'Rue Fort du Sanctuaire',                 '13281', 'Marseille',                  'Bouches-du-Rhône', 'France', ST_SetSRID(ST_MakePoint(5.371195,  43.284002), 4326), NULL),
-  (11, 'Lille',                                    NULL,                                     '59000', 'Lille',                      'Nord',             'France', ST_SetSRID(ST_MakePoint(2.699902,  50.763034), 4326), 20),
-  (12, 'Colombey-les-Deux-Églises',               NULL,                                     '52330', 'Colombey-les-Deux-Églises', 'Haute-Marne',      'France', ST_SetSRID(ST_MakePoint(3.782467,  48.192773), 4326), 239);
+  (1,  'Cathédrale Notre-Dame de Paris',                ST_SetSRID(ST_MakePoint(2.349747,  48.853133), 4326), 210),
+  (2,  'Basilique du Sacré-Cœur de Montmartre',         ST_SetSRID(ST_MakePoint(2.343076,  48.886719), 4326), NULL),
+  (3,  'Primatiale Saint-Jean de Lyon',                 ST_SetSRID(ST_MakePoint(4.827409,  45.760792), 4326), NULL),
+  (4,  'Basilique Notre-Dame de Fourvière',             ST_SetSRID(ST_MakePoint(4.822550,  45.762300), 4326), 287),
+  (5,  'Carmel de Montmartre',                          NULL,                                                  NULL),
+  (6,  'Chapelle Notre-Dame de la Médaille Miraculeuse', ST_SetSRID(ST_MakePoint(2.323305,  48.851043), 4326), NULL),
+  (7,  'Collège des Bernardins',                        ST_SetSRID(ST_MakePoint(2.351987,  48.848775), 4326), NULL),
+  (8,  'École Cathédrale',                              ST_SetSRID(ST_MakePoint(2.350691,  48.853372), 4326), NULL),
+  (9,  'Bibliothèque du Saulchoir',                     ST_SetSRID(ST_MakePoint(2.344720,  48.832783), 4326), NULL),
+  (10, 'Basilique Notre-Dame-de-la-Garde',              ST_SetSRID(ST_MakePoint(5.371195,  43.284002), 4326), NULL),
+  (11, 'Lille',                                         ST_SetSRID(ST_MakePoint(2.699902,  50.763034), 4326), 20),
+  (12, 'Colombey-les-Deux-Églises',                    ST_SetSRID(ST_MakePoint(3.782467,  48.192773), 4326), 239);
 SELECT setval(pg_get_serial_sequence('geo.place_core', 'id'), 12);
+
+-- ADRESSES POSTALES (ADR-024 · country_code 250 = France ISO 3166-1 numérique)
+INSERT INTO geo.postal_address (place_id, country_code, street,                            postal_code, locality,                      region) VALUES
+  (1,  250, '6 Parvis Notre-Dame - Pl. Jean-Paul II', '75004', 'Paris',                      'Île-de-France'),
+  (2,  250, '35 Rue du Chevalier de la Barre',         '75018', 'Paris',                      'Île-de-France'),
+  (3,  250, 'Place Saint-Jean',                        '69005', 'Lyon',                       'Rhône'),
+  (4,  250, '8 Place de Fourvière',                    '69005', 'Lyon',                       'Rhône'),
+  (5,  250, '34 Rue du Chevalier de la Barre',         '75018', 'Paris',                      'Île-de-France'),
+  (6,  250, '140 Rue du Bac',                          '75007', 'Paris',                      'Île-de-France'),
+  (7,  250, NULL,                                      NULL,    'Paris',                      'Île-de-France'),
+  (8,  250, NULL,                                      NULL,    'Paris',                      'Île-de-France'),
+  (9,  250, NULL,                                      NULL,    'Paris',                      'Île-de-France'),
+  (10, 250, 'Rue Fort du Sanctuaire',                  '13281', 'Marseille',                  'Bouches-du-Rhône'),
+  (11, 250, NULL,                                      '59000', 'Lille',                      'Nord'),
+  (12, 250, NULL,                                      '52330', 'Colombey-les-Deux-Églises', 'Haute-Marne');
 
 -- PERSONNES (entities 1-4) — person_identity + biography + contact + content
 INSERT INTO identity.person_identity (entity_id, gender, given_name, additional_name, family_name, suffix, prefix, nickname, nationality) VALUES
@@ -143,7 +158,7 @@ INSERT INTO content.core (published_at, created_at, modified_at, document_id, au
   ('2022-04-16 19:10:25-07', '2022-04-16 19:10:25-07', '2022-04-16 20:15:22-01', 16, 1, 1, true, false);
 
 -- CONTENT IDENTITY (slugs/titres — le trigger slug_dedup est actif)
-INSERT INTO content.identity (document_id, slug, name, alternative_headline, description) VALUES
+INSERT INTO content.identity (document_id, slug, headline, alternative_headline, description) VALUES
   (1,  'legenda-aurea',                                                    'La légende dorée',                                                  '',           'Encyclique Dominum et vivificantem, Sur l''Esprit Saint dans la vie de l''Église et du monde, § 46, 1986'),
   (2,  'le-peche-contre-l-esprit-saint-jean-paul-ii',                     'Le péché contre l''Esprit Saint',                                   '',           'Encyclique Dominum et vivificantem, Sur l''Esprit Saint dans la vie de l''Église et du monde, § 46, 1986'),
   (3,  'o-prends-mon-ame',                                                 'Ô prends mon âme',                                                  '',           'Oh ! prends mon âme, aussi intitulé Ô prends mon âme, est un cantique chrétien du milieu du XXe siècle.'),

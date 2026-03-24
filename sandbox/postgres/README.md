@@ -41,7 +41,7 @@ l'interface [schema.org](https://schema.org) par-dessus les composants fragment�
 .
 ├── master_schema_ddl.pgsql          # Blueprint immuable — DDL pur
 ├── master_schema_dml.pgsql          # Seed data — dev / CI uniquement
-├── architecture_decision_records.md # 23 arbitrages architecturaux
+├── architecture_decision_records.md # 25 arbitrages architecturaux
 ├── README.md
 └── tests/
     ├── 01_schema_and_security.sql   # Types physiques, BRIN, RBAC, SECURITY DEFINER
@@ -81,7 +81,7 @@ d'écriture que la production.
 
 ### `architecture_decision_records.md`
 
-23 arbitrages architecturaux, ordonnés par importance décroissante. Chaque
+25 arbitrages architecturaux, ordonnés par importance décroissante. Chaque
 entrée documente ce qui **n'est pas déductible de la lecture du code** : le
 raisonnement derrière la décision, les alternatives écartées et leurs coûts.
 
@@ -168,7 +168,7 @@ WHERE  table_schema IN ('identity','geo','org','commerce','content')
 GROUP  BY table_schema ORDER BY table_schema;
 
 -- Tester une vue sémantique
-SELECT "identifier", "headline", "datePublished"
+SELECT identifier, headline, published_at
 FROM   content.v_article_list
 LIMIT  5;
 
@@ -227,11 +227,11 @@ alias de vues :
 
 ```sql
 -- Lecture du prix d'un produit
-SELECT "identifier", "priceCents" FROM commerce.v_product WHERE "identifier" = 1;
+SELECT identifier, price_cents FROM commerce.v_product WHERE identifier = 1;
 -- priceCents = 1999 → 19,99 € (conversion déléguée à la couche applicative)
 
 -- Total d'une commande
-SELECT "totalPriceCents" FROM commerce.v_transaction WHERE "identifier" = 42;
+SELECT total_cents FROM commerce.v_transaction WHERE identifier = 42;
 ```
 
 `INT8` est pass-by-value sur toutes les architectures 64 bits : arithmétique ALU
@@ -406,7 +406,7 @@ SELECT "identifier", headline, slug FROM content.v_article_list LIMIT 20;
 
 EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)
 SELECT "identifier", headline, "articleBody" FROM content.v_article
-WHERE  "identifier" = 1;
+WHERE  identifier = 1;
 ```
 
 `shared_blks_hit` doit être significativement plus élevé pour la seconde requête.

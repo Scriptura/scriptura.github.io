@@ -56,8 +56,12 @@ CREATE SCHEMA content;
 -- ==============================================================================
 
 -- Acteurs du système (utilisateurs, profils publics, contacts)
+-- anonymized_at : timestamp de la dernière anonymisation RGPD (irréversible).
+-- NULL = entité active. Non-NULL = données nominatives effacées (ADR-024).
+-- L'entité physique est conservée pour maintenir l'intégrité des FK commerce.
 CREATE TABLE identity.entity (
-  id  INT  GENERATED ALWAYS AS IDENTITY,
+  anonymized_at  TIMESTAMPTZ  NULL,
+  id             INT          GENERATED ALWAYS AS IDENTITY,
   PRIMARY KEY (id)
 );
 
@@ -86,19 +90,17 @@ CREATE TABLE content.document (
 -- 4a — GEO : PLACE CORE & PLACE CONTENT
 -- ------------------------------------------------------------------------------
 
--- Layout (colonnes décroissantes) :
---   id INT4 · elevation SMALLINT · type_id SMALLINT | puis varlena
--- Tuple moyen (adresse complète + GPS) : ~211 B → ~38 tuples/page
+-- Spine spatial pur — ADR-024 : données postales extraites vers geo.postal_address.
+-- Layout (ADR-004) :
+--   id INT4 (offset 0) · elevation SMALLINT (4) · type_id SMALLINT (6) | varlena
+-- Tuple avec GPS+nom : ~46 B → ~179 tuples/page (vs ~211 B avant fragmentation)
+-- Tuple GPS seul, sans nom : ~26 B → ~317 tuples/page
+-- Les requêtes KNN/ST_DWithin ne chargent plus aucune donnée postale.
 CREATE TABLE geo.place_core (
   id            INT                   GENERATED ALWAYS AS IDENTITY,
   elevation     SMALLINT              NULL,
   type_id       SMALLINT              NULL,
-  locality      VARCHAR(64)           NULL,
-  region        VARCHAR(64)           NULL,
-  country       VARCHAR(64)           NULL,
   name          VARCHAR(60)           NULL,
-  street        VARCHAR(60)           NULL,
-  postal_code   VARCHAR(16)           NULL,
   coordinates   geometry(Point,4326)  NULL,
   PRIMARY KEY (id),
   CONSTRAINT coordinates_valid CHECK (coordinates IS NULL OR ST_IsValid(coordinates))
@@ -106,8 +108,31 @@ CREATE TABLE geo.place_core (
 
 CREATE INDEX place_core_gist ON geo.place_core USING gist (coordinates)
   WHERE coordinates IS NOT NULL;
-CREATE INDEX place_core_country_locality ON geo.place_core (country, locality)
-  WHERE country IS NOT NULL;
+
+-- POSTAL ADDRESS — adresse postale (ADR-024 · sémantique schema.org/PostalAddress)
+-- Composant logistique 1:1 sur place_id. Accès lors de l'affichage d'une adresse,
+-- de la génération d'une facture ou d'un bordereau d'expédition.
+-- Layout (ADR-004) :
+--   place_id INT4 (offset 0) · country_code SMALLINT (4) · 2B pad (6) | varlena
+-- country_code : ISO 3166-1 numérique — 2 B pass-by-value (ADR-024).
+-- Nom conservé (vs address_country) : country_code signale explicitement que la
+-- valeur est un code entier (250), pas une chaîne textuelle ("France") — ADR-025.
+--   Exemples : 250 = France · 276 = Allemagne · 840 = États-Unis · 826 = Royaume-Uni.
+--   Le mapping vers le code alphabétique (FR, DE, US) est délégué à l'applicatif.
+CREATE TABLE geo.postal_address (
+  place_id      INT          NOT NULL,
+  country_code  SMALLINT     NULL,
+  address_locality  VARCHAR(64)  NULL,
+  address_region    VARCHAR(64)  NULL,
+  street_address    VARCHAR(60)  NULL,
+  postal_code   VARCHAR(16)  NULL,
+  PRIMARY KEY (place_id),
+  FOREIGN KEY (place_id) REFERENCES geo.place_core(id) ON DELETE CASCADE,
+  CONSTRAINT country_code_range CHECK (country_code IS NULL OR country_code BETWEEN 1 AND 999)
+);
+
+CREATE INDEX postal_address_country_locality ON geo.postal_address (country_code, address_locality)
+  WHERE country_code IS NOT NULL;
 
 -- Corps textuel isolé : TOAST systématique (toast_tuple_target = 128)
 CREATE TABLE geo.place_content (
@@ -206,8 +231,13 @@ CREATE TABLE identity.auth (
 CREATE INDEX auth_created_at_brin ON identity.auth USING brin (created_at)
   WITH (pages_per_range = 128);
 
--- ACCOUNT CORE — données publiques du compte · ~77 B → ~106 tuples/page
+-- ACCOUNT CORE — données publiques du compte (ADR-024 : +tos_accepted_at)
+-- Layout (ADR-004) : tos_accepted_at TIMESTAMPTZ (offset 0, 8B)
+--   · 4×INT4 (8-23) · 2×SMALLINT (24-27) · 2×BOOL (28-29) · 2B pad (30-31) | varlena
+-- Tuple ~85 B → ~99 tuples/page
+-- tos_accepted_at : timestamp d'acceptation des CGU. NULL = non encore accepté.
 CREATE TABLE identity.account_core (
+  tos_accepted_at     TIMESTAMPTZ  NULL,
   entity_id           INT          NOT NULL,
   person_entity_id    INT          NULL,
   media_id            INT          NULL,
@@ -371,7 +401,7 @@ CREATE TABLE org.org_legal (
   entity_id   INT           NOT NULL,
   duns        VARCHAR(9)    NULL,
   siret       VARCHAR(14)   NULL,
-  vat_number  VARCHAR(15)   NULL,
+  vat_id      VARCHAR(32)   NULL,   -- VARCHAR(32) : TVA internationale + IDs fiscaux hors UE (ADR-024)
   PRIMARY KEY (entity_id),
   FOREIGN KEY (entity_id) REFERENCES org.entity(id) ON DELETE CASCADE,
   CONSTRAINT duns_format  CHECK (duns  IS NULL OR duns  ~ '^[0-9]{9}$'),
@@ -587,7 +617,7 @@ CREATE INDEX core_created_brin ON content.core USING brin (created_at)
 CREATE TABLE content.identity (
   document_id           INT            NOT NULL,
   slug                  VARCHAR(255)   NOT NULL,
-  name                  VARCHAR(255)   NOT NULL,
+  headline              VARCHAR(255)   NOT NULL,
   alternative_headline  VARCHAR(255)   NULL,
   description           VARCHAR(1000)  NULL,
   PRIMARY KEY (document_id),
@@ -596,8 +626,8 @@ CREATE TABLE content.identity (
   CONSTRAINT slug_format CHECK (slug ~ '^[a-z0-9-]+$')
 );
 
-CREATE INDEX content_identity_name_trgm ON content.identity
-  USING gin (unaccent(name) gin_trgm_ops);
+CREATE INDEX content_identity_headline_trgm ON content.identity
+  USING gin (unaccent(headline) gin_trgm_ops);
 
 -- CONTENT BODY — corps HTML (BASSE fréquence) · TOAST EXTENDED systématique
 CREATE TABLE content.body (
@@ -611,7 +641,7 @@ ALTER TABLE content.body ALTER COLUMN content SET STORAGE EXTENDED;
 
 -- CONTENT REVISION — cold storage des snapshots éditoriaux
 -- Layout : saved_at TIMESTAMPTZ · document_id INT4 · author_entity_id INT4
---          · revision_num SMALLINT · 2B pad | varlena × 5
+--          · revision_num SMALLINT · 2B pad | varlena × 5 (snapshot_headline remplace snapshot_name)
 -- snapshot_alternative_headline et snapshot_description inclus (ADR-021) :
 -- un snapshot incomplet crée un historique silencieusement faux.
 CREATE TABLE content.revision (
@@ -619,7 +649,7 @@ CREATE TABLE content.revision (
   document_id                   INT            NOT NULL,
   author_entity_id              INT            NOT NULL,
   revision_num                  SMALLINT       NOT NULL DEFAULT 0,
-  snapshot_name                 VARCHAR(255)   NOT NULL,
+  snapshot_headline             VARCHAR(255)   NOT NULL,
   snapshot_slug                 VARCHAR(255)   NOT NULL,
   snapshot_alternative_headline VARCHAR(255)   NULL,
   snapshot_description          VARCHAR(1000)  NULL,
@@ -668,11 +698,15 @@ CREATE TABLE content.media_core (
   FOREIGN KEY (author_id) REFERENCES identity.entity(id)
 );
 
--- MEDIA CONTENT — titre et texte alternatif (BASSE fréquence)
+-- MEDIA CONTENT — titre, texte alternatif, mention de droits (BASSE fréquence)
+-- copyright_notice : mention légale du titulaire des droits (ADR-024).
+--   Placé dans media_content (cold path) et non dans media_core (hot path)
+--   pour ne pas diluer la densité du composant de métadonnées techniques.
 CREATE TABLE content.media_content (
-  media_id     INT           NOT NULL,
-  name         VARCHAR(255)  NULL,
-  description  VARCHAR(255)  NULL,
+  media_id          INT           NOT NULL,
+  name              VARCHAR(255)  NULL,
+  description       VARCHAR(255)  NULL,
+  copyright_notice  VARCHAR(255)  NULL,
   PRIMARY KEY (media_id),
   FOREIGN KEY (media_id) REFERENCES content.media_core(id) ON DELETE CASCADE
 );
@@ -928,6 +962,59 @@ BEGIN
 END;
 $$;
 
+-- Anonymisation RGPD d'une personne physique (ADR-024)
+-- Opération irréversible. Préserve l'entité (spine) pour l'intégrité des FK
+-- commerce.transaction_core. Efface toutes les données nominatives dans les
+-- composants person_*, invalide les credentials, purge les appartenances aux groupes.
+-- Le champ anonymized_at dans identity.entity sert de marqueur de statut et
+-- de preuve d'exécution pour les audits de conformité RGPD.
+CREATE PROCEDURE identity.anonymize_person(p_entity_id INT)
+LANGUAGE plpgsql AS $$
+BEGIN
+  -- 1. Marquer l'entité (marqueur d'audit, timestamp irréversible)
+  UPDATE identity.entity SET anonymized_at = now() WHERE id = p_entity_id;
+
+  -- 2. Effacement des données nominatives (person_identity)
+  UPDATE identity.person_identity
+  SET    given_name      = NULL, family_name     = NULL, usual_name  = NULL,
+         nickname        = NULL, prefix          = NULL, suffix      = NULL,
+         additional_name = NULL, gender          = NULL, nationality = NULL
+  WHERE  entity_id = p_entity_id;
+
+  -- 3. Effacement des données de contact (person_contact)
+  UPDATE identity.person_contact
+  SET    email = NULL, phone = NULL, phone2 = NULL, fax = NULL, url = NULL
+  WHERE  entity_id = p_entity_id;
+
+  -- 4. Effacement des données biographiques (person_biography)
+  UPDATE identity.person_biography
+  SET    birth_date = NULL, death_date     = NULL,
+         birth_place_id = NULL, death_place_id = NULL
+  WHERE  entity_id = p_entity_id;
+
+  -- 5. Effacement du contenu personnel (person_content)
+  UPDATE identity.person_content
+  SET    occupation = NULL, bias = NULL, hobby = NULL, award = NULL,
+         devise = NULL, description = NULL, media_id = NULL
+  WHERE  entity_id = p_entity_id;
+
+  -- 6. Neutralisation du compte public (username et slug non-nominatifs)
+  UPDATE identity.account_core
+  SET    username = 'user_' || p_entity_id::text,
+         slug     = 'user-' || p_entity_id::text
+  WHERE  entity_id = p_entity_id;
+
+  -- 7. Invalidation des credentials (hash non fonctionnel + bannissement)
+  UPDATE identity.auth
+  SET    password_hash = 'ANONYMIZED',
+         is_banned     = true
+  WHERE  entity_id = p_entity_id;
+
+  -- 8. Purge des appartenances aux groupes (donnée de traçabilité sociale)
+  DELETE FROM identity.group_to_account WHERE account_entity_id = p_entity_id;
+END;
+$$;
+
 -- Enregistrement d'une connexion (hot path — LANGUAGE sql pour inlining)
 CREATE PROCEDURE identity.record_login(p_entity_id INT)
 LANGUAGE sql AS $$
@@ -980,7 +1067,7 @@ BEGIN
   INSERT INTO content.core (document_id, author_entity_id, status, published_at, created_at)
   VALUES (p_document_id, p_author_id, p_status,
           CASE WHEN p_status = 1 THEN now() ELSE NULL END, now());
-  INSERT INTO content.identity (document_id, slug, name, alternative_headline, description)
+  INSERT INTO content.identity (document_id, slug, headline, alternative_headline, description)
   VALUES (p_document_id, p_slug, p_name, p_alt_headline, p_description);
   IF p_content IS NOT NULL THEN
     INSERT INTO content.body (document_id, content) VALUES (p_document_id, p_content);
@@ -992,7 +1079,7 @@ BEGIN
   -- omettre la colonne exprime clairement que la valeur est déléguée au moteur.
   INSERT INTO content.revision (
     document_id, author_entity_id,
-    snapshot_name, snapshot_slug, snapshot_alternative_headline,
+    snapshot_headline, snapshot_slug, snapshot_alternative_headline,
     snapshot_description, snapshot_body
   )
   VALUES (p_document_id, p_author_id, p_name, p_slug, p_alt_headline, p_description, p_content);
@@ -1011,23 +1098,23 @@ $$;
 CREATE PROCEDURE content.save_revision(p_document_id INT, p_author_id INT)
 LANGUAGE plpgsql AS $$
 DECLARE
-  v_name        VARCHAR(255);
+  v_headline    VARCHAR(255);
   v_slug        VARCHAR(255);
   v_alt         VARCHAR(255);
   v_description VARCHAR(1000);
   v_body        TEXT;
 BEGIN
-  SELECT i.name, i.slug, i.alternative_headline, i.description, b.content
-  INTO   v_name, v_slug, v_alt, v_description, v_body
+  SELECT i.headline, i.slug, i.alternative_headline, i.description, b.content
+  INTO   v_headline, v_slug, v_alt, v_description, v_body
   FROM   content.identity i
   LEFT JOIN content.body b ON b.document_id = i.document_id
   WHERE  i.document_id = p_document_id FOR SHARE;
   INSERT INTO content.revision (
     document_id, author_entity_id,
-    snapshot_name, snapshot_slug, snapshot_alternative_headline,
+    snapshot_headline, snapshot_slug, snapshot_alternative_headline,
     snapshot_description, snapshot_body
   )
-  VALUES (p_document_id, p_author_id, v_name, v_slug, v_alt, v_description, v_body);
+  VALUES (p_document_id, p_author_id, v_headline, v_slug, v_alt, v_description, v_body);
 END;
 $$;
 
@@ -1147,8 +1234,10 @@ $$;
 
 
 -- ==============================================================================
--- SECTION 12 : VUES SÉMANTIQUES (INTERFACE schema.org)
--- Déclarées après toutes les tables et fonctions.
+-- SECTION 12 : VUES SÉMANTIQUES (INTERFACE schema.org — snake_case, ADR-025)
+-- Couche de traduction : composants ECS physiques → contrat d'accès public.
+-- snake_case systématique : pas de guillemets requis dans les requêtes SQL.
+-- Suffixes DOD conservés : _at (TIMESTAMPTZ), _cents (INT8), _id (FK), _code.
 -- ==============================================================================
 
 -- IDENTITY : v_role — décompose le bitmask en colonnes booléennes nommées
@@ -1171,7 +1260,7 @@ SELECT id, name, permissions,
   (permissions & 16384) <> 0  AS can_read
 FROM identity.role;
 
--- IDENTITY : v_auth — hot path authentification (masque brut exposé)
+-- IDENTITY : v_auth — hot path authentification
 CREATE VIEW identity.v_auth AS
 SELECT a.entity_id, a.password_hash, a.is_banned, a.role_id,
   r.name AS role_name, r.permissions AS role_permissions
@@ -1180,22 +1269,24 @@ FROM identity.auth a JOIN identity.role r ON r.id = a.role_id;
 -- IDENTITY : v_account — schema.org/Person (compte utilisateur)
 CREATE VIEW identity.v_account AS
 SELECT
-  ac.entity_id                AS "identifier",
+  ac.entity_id             AS identifier,
   ac.username, ac.slug,
-  ac.language, ac.time_zone   AS "timeZone",
-  ac.is_visible               AS "isVisible",
-  ac.display_mode             AS "displayMode",
-  ac.media_id                 AS "imageId",
-  a.role_id, a.is_banned      AS "isBanned",
-  a.created_at                AS "dateCreated",
-  a.modified_at               AS "dateModified",
-  a.last_login_at             AS "lastLoginAt",
-  pi.given_name               AS "givenName",
-  pi.family_name              AS "familyName",
-  pi.usual_name               AS "alternativeName",
-  pi.nickname                 AS "alternateName",
-  pi.prefix                   AS "honorificPrefix",
-  pi.suffix                   AS "honorificSuffix",
+  ac.language, ac.time_zone,
+  ac.is_visible,
+  ac.display_mode,
+  ac.media_id              AS image_id,
+  ac.tos_accepted_at,
+  a.role_id,
+  a.is_banned,
+  a.created_at,
+  a.modified_at,
+  a.last_login_at,
+  pi.given_name,
+  pi.family_name,
+  pi.usual_name            AS alternative_name,
+  pi.nickname              AS alternate_name,
+  pi.prefix                AS honorific_prefix,
+  pi.suffix                AS honorific_suffix,
   pi.nationality
 FROM        identity.account_core    ac
 JOIN        identity.auth            a  ON a.entity_id  = ac.entity_id
@@ -1204,136 +1295,149 @@ LEFT JOIN   identity.person_identity pi ON pi.entity_id = ac.person_entity_id;
 -- IDENTITY : v_person — schema.org/Person (profil public complet)
 CREATE VIEW identity.v_person AS
 SELECT
-  e.id                          AS "identifier",
-  pi.given_name                 AS "givenName",
-  pi.additional_name            AS "additionalName",
-  pi.family_name                AS "familyName",
-  pi.usual_name                 AS "alternativeName",
-  pi.nickname                   AS "alternateName",
-  pi.prefix                     AS "honorificPrefix",
-  pi.suffix                     AS "honorificSuffix",
+  e.id                     AS identifier,
+  e.anonymized_at,
+  pi.given_name,
+  pi.additional_name,
+  pi.family_name,
+  pi.usual_name            AS alternative_name,
+  pi.nickname              AS alternate_name,
+  pi.prefix                AS honorific_prefix,
+  pi.suffix                AS honorific_suffix,
   pi.gender, pi.nationality,
-  pb.birth_date                 AS "birthDate",
-  pb.birth_place_id             AS "birthPlaceId",
-  pb.death_date                 AS "deathDate",
-  pb.death_place_id             AS "deathPlaceId",
-  pc.email, pc.phone            AS "telephone",
-  pc.url, pc.place_id           AS "addressId",
-  pco.media_id                  AS "imageId",
-  pco.occupation                AS "hasOccupation",
-  pco.devise                    AS "description",
-  pco.description               AS "disambiguatingDescription"
+  pb.birth_date,
+  pb.birth_place_id,
+  pb.death_date,
+  pb.death_place_id,
+  pc.email,
+  pc.phone                 AS telephone,
+  pc.url,
+  pc.place_id              AS address_id,
+  pco.media_id             AS image_id,
+  pco.occupation,
+  pco.devise               AS description,
+  pco.description          AS disambiguating_description
 FROM        identity.entity           e
 JOIN        identity.person_identity  pi  ON pi.entity_id = e.id
 LEFT JOIN   identity.person_biography pb  ON pb.entity_id = e.id
 LEFT JOIN   identity.person_contact   pc  ON pc.entity_id = e.id
 LEFT JOIN   identity.person_content   pco ON pco.entity_id = e.id;
 
--- GEO : v_place — schema.org/Place
+-- GEO : v_place — schema.org/Place + PostalAddress (ADR-024)
+-- Jointure spine spatial (place_core) + composant postal (postal_address).
+-- LEFT JOIN : un lieu peut exister sans adresse postale (ex : point GPS pur).
+-- country_code (SMALLINT) conserve son nom physique — ADR-025 : un code entier
+-- n'est pas un pays textuel.
 CREATE VIEW geo.v_place AS
 SELECT
-  c.id                          AS "identifier",
-  c.name, c.street              AS "streetAddress",
-  c.postal_code                 AS "postalCode",
-  c.locality                    AS "addressLocality",
-  c.region                      AS "addressRegion",
-  c.country                     AS "addressCountry",
+  c.id                     AS identifier,
+  c.name,
   c.elevation,
   CASE WHEN c.coordinates IS NOT NULL
     THEN ST_AsGeoJSON(c.coordinates)::jsonb ELSE NULL
-  END                           AS "geo",
-  ST_Y(c.coordinates)           AS "latitude",
-  ST_X(c.coordinates)           AS "longitude",
+  END                      AS geo,
+  ST_Y(c.coordinates)      AS latitude,
+  ST_X(c.coordinates)      AS longitude,
+  pa.street_address,
+  pa.postal_code,
+  pa.address_locality,
+  pa.address_region,
+  pa.country_code,
   co.description
 FROM      geo.place_core    c
-LEFT JOIN geo.place_content co ON co.place_id = c.id;
+LEFT JOIN geo.postal_address pa ON pa.place_id = c.id
+LEFT JOIN geo.place_content  co ON co.place_id = c.id;
 
 -- ORG : v_organization — schema.org/Organization
 CREATE VIEW org.v_organization AS
 SELECT
-  e.id                          AS "identifier",
+  e.id                     AS identifier,
   oi.name, oi.slug, oi.brand,
-  oc.type                       AS "@type",
-  oc.purpose, oc.created_at     AS "foundingDate",
-  oct.email, oct.phone          AS "telephone", oct.url,
-  ol.duns, ol.siret, ol.vat_number AS "vatID",
-  gp.name                       AS "locationName",
-  gp."addressLocality", gp."addressCountry", gp."geo",
-  oc.parent_entity_id           AS "parentOrganizationId"
+  oc.type                  AS org_type,
+  oc.purpose,
+  oc.created_at            AS founding_date,
+  oct.email,
+  oct.phone                AS telephone,
+  oct.url,
+  ol.legal_name,
+  ol.duns, ol.siret,
+  ol.vat_id,
+  gp.name                  AS location_name,
+  gp.address_locality,
+  gp.country_code,
+  gp.geo,
+  oc.parent_entity_id      AS parent_organization_id
 FROM        org.entity          e
 JOIN        org.org_identity    oi  ON oi.entity_id = e.id
 JOIN        org.org_core        oc  ON oc.entity_id = e.id
 LEFT JOIN   org.org_contact     oct ON oct.entity_id = e.id
 LEFT JOIN   org.org_legal       ol  ON ol.entity_id  = e.id
-LEFT JOIN   geo.v_place         gp  ON gp."identifier" = oc.place_id;
+LEFT JOIN   geo.v_place         gp  ON gp.identifier  = oc.place_id;
 
 -- COMMERCE : v_product — schema.org/Product
--- price_cents exposé tel quel (INT8, centimes). La conversion décimale est
--- déléguée à la couche applicative (ADR-022).
+-- price_cents (INT8) — conversion décimale déléguée à l'applicatif (ADR-022).
 CREATE VIEW commerce.v_product AS
 SELECT
-  pc.id                         AS "identifier",
+  pc.id                    AS identifier,
   pi.name, pi.slug,
-  pi.isbn_ean                   AS "gtin13",
-  pc.price_cents                AS "priceCents",
+  pi.isbn_ean              AS gtin13,
+  pc.price_cents,
   pc.stock,
-  pc.is_available               AS "availability",
-  pc.media_id                   AS "imageId",
+  pc.is_available,
+  pc.media_id              AS image_id,
   pco.description, pco.tags
 FROM        commerce.product_core     pc
 JOIN        commerce.product_identity pi  ON pi.product_id  = pc.id
 LEFT JOIN   commerce.product_content  pco ON pco.product_id = pc.id;
 
 -- COMMERCE : v_transaction — schema.org/Order enrichi (ADR-023)
--- Agrège transaction_core + trois composants ECS (price, payment, delivery) + items.
--- Montants en centimes INT8 (ADR-022) — arithmétique ALU native.
--- totalCents = subtotal + shipping + tax - discount (entiers purs).
--- PUSHDOWN GARANTI : WHERE "identifier" = :id → WHERE tc.id = :id avant json_agg().
--- OBLIGATION : toujours filtrer par "identifier" ou "customerId".
+-- snake_case + suffixes _cents conservés (ADR-025).
+-- PUSHDOWN GARANTI : WHERE identifier = :id → WHERE tc.id = :id avant json_agg().
+-- OBLIGATION : toujours filtrer par identifier ou customer_id.
 CREATE VIEW commerce.v_transaction AS
 SELECT
   -- Core (schema.org/Order)
-  tc.id                         AS "identifier",
-  tc.status                     AS "orderStatus",
-  tc.created_at                 AS "orderDate",
-  tc.modified_at                AS "dateModified",
-  tc.client_entity_id           AS "customerId",
-  tc.seller_entity_id           AS "sellerId",
+  tc.id                    AS identifier,
+  tc.status                AS order_status,
+  tc.created_at,
+  tc.modified_at,
+  tc.client_entity_id      AS customer_id,
+  tc.seller_entity_id      AS seller_id,
   tc.description,
   -- Price component (schema.org/PriceSpecification)
-  tp.currency_code              AS "currencyCode",
-  tp.shipping_cents             AS "shippingCents",
-  tp.discount_cents             AS "discountCents",
-  tp.tax_cents                  AS "taxCents",
-  tp.tax_rate_bp                AS "taxRateBp",
-  tp.is_tax_included            AS "isTaxIncluded",
+  tp.currency_code,
+  tp.shipping_cents,
+  tp.discount_cents,
+  tp.tax_cents,
+  tp.tax_rate_bp,
+  tp.is_tax_included,
   -- Payment component (schema.org/PaymentChargeSpecification)
-  tpay.payment_status           AS "paymentStatus",
-  tpay.payment_method           AS "paymentMethod",
-  tpay.invoice_number           AS "orderNumber",
-  tpay.paid_at                  AS "paymentDate",
-  tpay.billing_place_id         AS "billingAddressId",
+  tpay.payment_status,
+  tpay.payment_method,
+  tpay.invoice_number,
+  tpay.paid_at,
+  tpay.billing_place_id,
   -- Delivery component (schema.org/ParcelDelivery)
-  tdel.delivery_status          AS "deliveryStatus",
-  tdel.shipping_place_id        AS "deliveryAddressId",
+  tdel.delivery_status,
+  tdel.shipping_place_id,
   tdel.carrier,
-  tdel.tracking_number          AS "trackingNumber",
-  tdel.shipped_at               AS "shippedAt",
-  tdel.estimated_at             AS "estimatedDeliveryDate",
-  tdel.delivered_at             AS "deliveredAt",
-  -- Items aggregation
+  tdel.tracking_number,
+  tdel.shipped_at,
+  tdel.estimated_at,
+  tdel.delivered_at,
+  -- Items aggregation (JSON keys en snake_case)
   json_agg(json_build_object(
-    'productId',      ti.product_id,
-    'productName',    pi.name,
-    'quantity',       ti.quantity,
-    'unitPriceCents', ti.unit_price_snapshot_cents,
-    'lineTotalCents', ti.quantity * ti.unit_price_snapshot_cents
-  ) ORDER BY ti.product_id)     AS "orderedItem",
-  SUM(ti.quantity * ti.unit_price_snapshot_cents)                AS "subtotalCents",
+    'product_id',            ti.product_id,
+    'product_name',          pi.name,
+    'quantity',              ti.quantity,
+    'unit_price_cents',      ti.unit_price_snapshot_cents,
+    'line_total_cents',      ti.quantity * ti.unit_price_snapshot_cents
+  ) ORDER BY ti.product_id) AS ordered_items,
+  SUM(ti.quantity * ti.unit_price_snapshot_cents)               AS subtotal_cents,
   SUM(ti.quantity * ti.unit_price_snapshot_cents)
     + COALESCE(tp.shipping_cents, 0)
     + COALESCE(tp.tax_cents,      0)
-    - COALESCE(tp.discount_cents, 0)                             AS "totalCents"
+    - COALESCE(tp.discount_cents, 0)                            AS total_cents
 FROM        commerce.transaction_core    tc
 JOIN        commerce.transaction_item    ti   ON ti.transaction_id   = tc.id
 JOIN        commerce.product_identity    pi   ON pi.product_id       = ti.product_id
@@ -1353,13 +1457,13 @@ GROUP BY
 -- CONTENT : v_article_list — hot path listing (zéro TOAST, zéro agrégat)
 CREATE VIEW content.v_article_list AS
 SELECT
-  d.id                          AS "identifier",
-  ci.name                       AS "headline",
+  d.id                     AS identifier,
+  ci.headline,
   ci.slug,
-  ci.alternative_headline       AS "alternativeHeadline",
+  ci.alternative_headline,
   ci.description,
-  co.published_at               AS "datePublished",
-  co.author_entity_id           AS "authorId",
+  co.published_at,
+  co.author_entity_id      AS author_id,
   co.status
 FROM        content.document  d
 JOIN        content.core      co ON co.document_id = d.id
@@ -1367,34 +1471,39 @@ JOIN        content.identity  ci ON ci.document_id = d.id
 WHERE co.status = 1;
 
 -- CONTENT : v_article — schema.org/Article (page complète avec TOAST + agrégats)
+-- doc_type remplace "@type" (caractère @ incompatible avec les identifiants SQL nus).
+-- is_readable remplace "isAccessibleForFree" (miroir exact du nom physique).
 CREATE VIEW content.v_article AS
 SELECT
-  d.id                          AS "identifier",
-  d.doc_type                    AS "@type",
-  ci.name                       AS "headline",
+  d.id                     AS identifier,
+  d.doc_type,
+  ci.headline,
   ci.slug,
-  ci.alternative_headline       AS "alternativeHeadline",
+  ci.alternative_headline,
   ci.description,
-  co.status, co.is_readable     AS "isAccessibleForFree",
+  co.status,
+  co.is_readable,
   co.is_commentable,
-  co.published_at               AS "datePublished",
-  co.created_at                 AS "dateCreated",
-  co.modified_at                AS "dateModified",
-  co.author_entity_id           AS "authorId",
-  b.content                     AS "articleBody",
-  (SELECT json_agg(json_build_object('id', t.id, 'name', t.name, 'slug', t.slug,
-                                     'path', t.path::text) ORDER BY t.path)
+  co.published_at,
+  co.created_at,
+  co.modified_at,
+  co.author_entity_id      AS author_id,
+  b.content                AS article_body,
+  (SELECT json_agg(json_build_object(
+    'id', t.id, 'name', t.name, 'slug', t.slug, 'path', t.path::text
+  ) ORDER BY t.path)
    FROM content.content_to_tag ct JOIN content.tag t ON t.id = ct.tag_id
-   WHERE ct.content_id = d.id)  AS "keywords",
-  (SELECT json_agg(json_build_object('id', m.id, 'name', mc.name,
-                                     'url', m.folder_url || '/' || m.file_name,
-                                     'mimeType', m.mime_type, 'width', m.width,
-                                     'height', m.height, 'position', ctm.position)
-                   ORDER BY ctm.position)
+   WHERE ct.content_id = d.id) AS keywords,
+  (SELECT json_agg(json_build_object(
+    'id', m.id, 'name', mc.name,
+    'url', m.folder_url || '/' || m.file_name,
+    'mime_type', m.mime_type, 'width', m.width,
+    'height', m.height, 'position', ctm.position
+  ) ORDER BY ctm.position)
    FROM  content.content_to_media ctm
-   JOIN  content.media_core m   ON m.id          = ctm.media_id
+   JOIN  content.media_core m   ON m.id       = ctm.media_id
    LEFT JOIN content.media_content mc ON mc.media_id = m.id
-   WHERE ctm.content_id = d.id) AS "image"
+   WHERE ctm.content_id = d.id) AS images
 FROM        content.document  d
 JOIN        content.core      co ON co.document_id = d.id
 JOIN        content.identity  ci ON ci.document_id = d.id
@@ -1403,14 +1512,14 @@ LEFT JOIN   content.body      b  ON b.document_id  = d.id;
 -- CONTENT : v_tag_tree — taxonomie avec métadonnées hiérarchiques
 CREATE VIEW content.v_tag_tree AS
 SELECT
-  t.id                          AS "identifier",
+  t.id                     AS identifier,
   t.name, t.slug,
-  t.path::text                  AS "path",
-  t.parent_id                   AS "parentId",
-  nlevel(t.path)                AS "depth",
+  t.path::text             AS path,
+  t.parent_id,
+  nlevel(t.path)           AS depth,
   (SELECT COUNT(*) FROM content.content_to_tag ct
    JOIN content.core co ON co.document_id = ct.content_id
-   WHERE ct.tag_id = t.id AND co.status = 1) AS "articleCount"
+   WHERE ct.tag_id = t.id AND co.status = 1) AS article_count
 FROM content.tag t;
 
 
@@ -1516,6 +1625,9 @@ REVOKE INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA content   FROM marius_user
 -- SET search_path : neutralise l'injection de schéma via search_path de session.
 -- Seconde ligne de défense : tous les noms d'objets dans les corps de procédures
 -- sont entièrement qualifiés (schema.table), indépendamment du search_path.
+
+ALTER PROCEDURE identity.anonymize_person(integer)
+  SECURITY DEFINER SET search_path = 'identity', 'pg_catalog';
 
 ALTER PROCEDURE identity.create_account(
   character varying, character varying, character varying, smallint, character

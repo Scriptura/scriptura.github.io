@@ -179,11 +179,11 @@ SELECT throws_ok(
 -- ============================================================
 
 SELECT is(
-  (SELECT "subtotalCents"
+  (SELECT subtotal_cents
    FROM   commerce.v_transaction
-   WHERE  "identifier" = (SELECT val FROM _ids WHERE key = 'txn_id')),
+   WHERE  identifier = (SELECT val FROM _ids WHERE key = 'txn_id')),
   5998::BIGINT,
-  'v_transaction."subtotalCents" = 5998 (2 × 2999 centimes)'
+  'v_transaction.subtotal_cents = 5998 (2 × 2999 centimes)'
 );
 
 
@@ -200,11 +200,11 @@ SET    shipping_cents = 500,
 WHERE  transaction_id = (SELECT val FROM _ids WHERE key = 'txn_id');
 
 SELECT is(
-  (SELECT "totalCents"
+  (SELECT total_cents
    FROM   commerce.v_transaction
-   WHERE  "identifier" = (SELECT val FROM _ids WHERE key = 'txn_id')),
+   WHERE  identifier = (SELECT val FROM _ids WHERE key = 'txn_id')),
   7698::BIGINT,
-  'v_transaction."totalCents" = 7698 (5998 subtotal + 500 ship + 1200 tax)'
+  'v_transaction.total_cents = 7698 (5998 subtotal + 500 ship + 1200 tax)'
 );
 
 
@@ -214,11 +214,11 @@ SELECT is(
 -- ============================================================
 
 SELECT is(
-  (SELECT "priceCents"
+  (SELECT price_cents
    FROM   commerce.v_product
-   WHERE  "identifier" = (SELECT val FROM _ids WHERE key = 'product_id')),
+   WHERE  identifier = (SELECT val FROM _ids WHERE key = 'product_id')),
   4999::BIGINT,
-  'v_product."priceCents" = 4999 (prix catalogue après mise à jour)'
+  'v_product.price_cents = 4999 (prix catalogue après mise à jour)'
 );
 
 
@@ -227,11 +227,11 @@ SELECT is(
 -- ============================================================
 
 SELECT is(
-  (SELECT "currencyCode"
+  (SELECT currency_code
    FROM   commerce.v_transaction
-   WHERE  "identifier" = (SELECT val FROM _ids WHERE key = 'txn_id')),
+   WHERE  identifier = (SELECT val FROM _ids WHERE key = 'txn_id')),
   978::SMALLINT,
-  'v_transaction."currencyCode" = 978 (EUR)'
+  'v_transaction.currency_code = 978 (EUR)'
 );
 
 

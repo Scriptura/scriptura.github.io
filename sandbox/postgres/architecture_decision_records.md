@@ -132,6 +132,176 @@ descriptives (`mime_type`, `folder_url`, `file_name`, `width`, `height`).
 
 ---
 
+## ADR-025 — Interface sémantique snake_case : schema.org sans guillemets SQL
+
+**Statut** : Adopté
+
+### Contexte
+
+Les vues sémantiques exposaient des alias camelCase entre guillemets doubles
+(`"givenName"`, `"datePublished"`, `"@type"`). Cette convention crée trois
+frictions opérationnelles :
+
+1. **Guillemets obligatoires dans toute requête SQL** : `SELECT "givenName" FROM
+   identity.v_person` — l'oubli d'un guillemet provoque une erreur silencieuse
+   (colonne non trouvée, ou pire : résolution vers une colonne système).
+2. **Caractère `@` illégal** comme identifiant SQL nu : `"@type"` ne peut jamais
+   être utilisé sans guillemets.
+3. **Friction avec les ORM et drivers** : la majorité des drivers (psycopg3, JDBC,
+   node-postgres) retournent les colonnes en minuscules par défaut, ce qui force
+   soit des mappings explicites, soit des guillemets systématiques.
+
+### Décision
+
+Toutes les vues sémantiques utilisent désormais le **snake_case PostgreSQL natif**,
+sans guillemets. Le vocabulaire schema.org est préservé dans les noms de colonnes
+par translittération directe : `givenName → given_name`, `datePublished →
+published_at`, `articleBody → article_body`.
+
+### Règles de translittération
+
+| Règle | Exemple schema.org | Alias vue |
+| ----- | ------------------ | --------- |
+| camelCase → snake_case | `givenName` | `given_name` |
+| Suffixe `_at` pour TIMESTAMPTZ | `datePublished` | `published_at` |
+| Suffixe `_cents` pour INT8 monétaire | `price` | `price_cents` |
+| Suffixe `_id` pour FK | `authorId` | `author_id` |
+| Suffixe `_code` pour codes numériques | `currencyCode` | `currency_code` |
+| Miroir du nom physique quand identique | `is_readable` | `is_readable` (pas `is_accessible_for_free`) |
+| `@type` → `doc_type` / `org_type` | `@type` | `doc_type`, `org_type` |
+
+### Exceptions documentées — refus de `address_country` pour `country_code`
+
+La suggestion d'aliaser `country_code` en `address_country` est refusée.
+`address_country` évoque une valeur textuelle ("France"), alors que le type
+physique est `SMALLINT` contenant un code ISO 3166-1 numérique (250).
+Un alias trompeur sur le type crée des erreurs de comparaison applicatives
+(`WHERE address_country = 'FR'` ne fonctionnerait pas sur un SMALLINT).
+Le nom `country_code` est conservé dans la table et dans la vue — il est
+auto-documenté : "c'est un code, pas un nom de pays".
+
+### Colonne `content.identity.name` → `headline`
+
+Renommage du nom physique, pas seulement de l'alias. `name` est ambigu dans
+le contexte d'un article (est-ce le titre, le nom de fichier, le nom d'auteur ?).
+`headline` est le terme exact schema.org/Article. Le renommage s'étend à
+`content.revision.snapshot_name → snapshot_headline` pour la cohérence du
+composant de versioning.
+
+### Colonnes `org.org_legal`
+
+`vat_number → vat_id` : le suffixe `_id` signale un identifiant externe (non
+une valeur calculée). Cohérent avec `duns` et `siret`. Ajout de `legal_name
+VARCHAR(128)` : raison sociale officielle, distincte du nom commercial dans
+`org.org_identity.name`.
+
+### Impact applicatif
+
+Les consommateurs existants de l'API doivent adapter leurs sélections :
+`"givenName"` → `given_name`, `"headline"` → `headline` (idem), etc. Ce
+changement est une rupture de contrat intentionnelle, effectuée en phase R&D
+avant toute mise en production.
+
+---
+
+## ADR-024 — Fragmentation geo, soft delete RGPD et compliance de production
+
+**Statut** : Adopté
+
+### Contexte
+
+Quatre vecteurs de risque identifiés avant mise en production européenne :
+
+1. `geo.place_core` mélange spine spatial (coordonnées KNN) et adresse postale (logistique).
+2. `org.org_legal.vat_number VARCHAR(15)` trop court pour les identifiants fiscaux internationaux.
+3. Absence de mécanisme de droit à l'oubli (RGPD art. 17) et de traçabilité du consentement.
+4. Absence de mention de droits dans les métadonnées médias (risque légal d'exploitation d'images).
+
+---
+
+### 1. Séparation `geo.place_core` / `geo.postal_address` (ECS spatial vs logistique)
+
+**Problème** : `geo.place_core` mixait coordonnées GPS et adresse postale dans le même tuple.
+Les requêtes géospatiales (KNN `<->`, `ST_DWithin`) ne nécessitent que `id + coordinates`,
+mais chargeaient systématiquement `street`, `locality`, `region`, `country`, `postal_code`.
+
+**Décision** : fragmentation en deux composants 1:1 :
+
+| Composant           | Sémantique schema.org  | Contenu                                     | Fréquence |
+| ------------------- | ---------------------- | ------------------------------------------- | --------- |
+| `geo.place_core`    | `Place`                | id, name, elevation, type_id, coordinates   | Hot       |
+| `geo.postal_address`| `PostalAddress`        | country_code, locality, region, street, postal_code | Warm |
+
+**Gain de densité** :
+
+| État         | Bytes/tuple | Tuples/page |
+| ------------ | ----------- | ----------- |
+| Avant (mixte)| ~211 B      | ~38         |
+| Après (spine)| ~26–46 B    | ~179–317    |
+
+Les requêtes KNN sur 500 000 lieux ne chargent plus aucun octet postal.
+
+**`country_code SMALLINT` (ISO 3166-1 numérique)** : cohérent avec `currency_code`
+d'ADR-022. 2 bytes pass-by-value vs `CHAR(2)` ou `VARCHAR(2)` varlena avec en-tête
+de 4 bytes. Le mapping vers le code alphabétique (`250 → "FR"`) est délégué à
+l'applicatif — table de lookup statique, zéro accès base de données.
+
+---
+
+### 2. `vat_number VARCHAR(32)` (compliance internationale)
+
+`VARCHAR(15)` couvrait les numéros TVA européens (max 15 chars incluant le préfixe
+pays). Les identifiants fiscaux hors UE (GSTIN indien 15 chars avec format strict,
+CNPJ brésilien 18 chars avec ponctuation, CFE mexicain 13 chars) nécessitent
+davantage de marge. `VARCHAR(32)` absorbe tous les formats connus sans coût physique
+(varlena : seul le contenu réel est stocké).
+
+---
+
+### 3. Soft delete RGPD : `anonymized_at` + procédure `anonymize_person`
+
+**Problème** : un `DELETE` physique d'une entité casserait les FK vers
+`commerce.transaction_core` — les commandes passéesdeviendraient incohérentes.
+Une suppression logicielle par colonne booléenne (`is_deleted`) serait ambiguë
+et difficile à auditer.
+
+**Décision** : colonne `anonymized_at TIMESTAMPTZ NULL` dans `identity.entity` (spine).
+
+- `NULL` = entité active.
+- Non-NULL = anonymisation exécutée, timestamp d'audit RGPD irréversible.
+
+La procédure `identity.anonymize_person(p_entity_id)` (SECURITY DEFINER) efface
+en une transaction atomique :
+
+| Composant                  | Action                                             |
+| -------------------------- | -------------------------------------------------- |
+| `identity.entity`          | `anonymized_at = now()`                            |
+| `identity.person_identity` | Tous les champs nominatifs → NULL                  |
+| `identity.person_contact`  | email, phone, fax, url → NULL                      |
+| `identity.person_biography`| Dates et lieux → NULL                              |
+| `identity.person_content`  | Textes personnels → NULL, media_id → NULL          |
+| `identity.account_core`    | username/slug → `user_<id>` (non nominatif)        |
+| `identity.auth`            | password_hash → `'ANONYMIZED'`, is_banned → true   |
+| `identity.group_to_account`| Suppression (appartenance = donnée de traçabilité) |
+
+L'entité physique subsiste dans `identity.entity` avec son `id` — toutes les FK
+`commerce.transaction_core.client_entity_id` restent valides.
+
+**`tos_accepted_at TIMESTAMPTZ NULL`** dans `identity.account_core` : timestamp
+d'acceptation des CGU. NULL = non encore accepté. Placé en première colonne
+(TIMESTAMPTZ 8 bytes, ADR-004) pour zéro padding.
+
+---
+
+### 4. `copyright_notice VARCHAR(255)` dans `content.media_content`
+
+Placé dans `media_content` (cold path, BASSE fréquence) et non dans `media_core`
+(hot path, HAUTE fréquence). Un `SELECT` sur les listings d'articles ne charge
+jamais la mention de droits — elle n'est projetée que lors de l'affichage complet
+d'un média ou de la génération d'une page légale.
+
+---
+
 ## ADR-023 — Éclatement de l'agrégat de commande en composants ECS 1:1
 
 **Statut** : Adopté
@@ -884,4 +1054,4 @@ au même titre que les `REVOKE` qui les suivent.
 
 ---
 
-*Architecture ECS/DOD · PostgreSQL 18 · Projet Marius · 23 décisions*
+*Architecture ECS/DOD · PostgreSQL 18 · Projet Marius · 25 décisions*
