@@ -132,6 +132,217 @@ descriptives (`mime_type`, `folder_url`, `file_name`, `width`, `height`).
 
 ---
 
+## ADR-028 — Row-Level Security stateless via GUC bitmask
+
+**Statut** : Adopté
+
+### Problème
+
+Activer un filtrage de sécurité par ligne (RLS) sans déclencher de jointure sur
+`identity.role` à chaque ligne évaluée. Avec un modèle traditionnel, chaque
+évaluation de politique ferait `SELECT permissions FROM identity.role WHERE id = ...`
+— un accès disque potentiel par ligne et par requête.
+
+### Décision — Pattern GUC Stateless
+
+Le middleware injecte deux variables de session PostgreSQL (GUC) avant toute requête :
+
+```sql
+SET LOCAL marius.user_id   = '<entity_id>';
+SET LOCAL marius.auth_bits = '<bitmask INT4>';
+```
+
+Les politiques lisent ces GUC via deux fonctions helpers STABLE :
+
+```sql
+identity.rls_user_id()   → COALESCE(current_setting('marius.user_id',  true)::INT, -1)
+identity.rls_auth_bits() → COALESCE(current_setting('marius.auth_bits', true)::INT,  0)
+```
+
+Le paramètre `true` de `current_setting` retourne NULL au lieu de lever une erreur
+si le GUC n'est pas défini (connexion système, seed CI/CD). Le COALESCE garantit
+le comportement fail-closed : `user_id = -1` ne correspond à aucune ligne,
+`auth_bits = 0` désactive tous les bits.
+
+**Coût d'évaluation** : une lecture de GUC de session (mémoire de processus) +
+une opération bitwise `&`. O(1) inconditionnel, zéro accès disque.
+
+**Fonctions STABLE** : PostgreSQL évalue une fonction STABLE une seule fois par
+statement, pas une fois par ligne. Pour une requête retournant N lignes, les deux
+GUC sont lus une seule fois.
+
+### Tables RLS activées
+
+| Table                         | Politiques SELECT         | Politiques UPDATE/DELETE |
+| ----------------------------- | ------------------------- | ------------------------ |
+| `content.core`                | publié OU éditeur OU auteur | propre contenu OU edit_others |
+| `commerce.transaction_core`   | propre commande OU view_transactions | manage_commerce uniquement |
+| `identity.account_core`       | propre compte OU manage_users | propre compte OU manage_users |
+
+### Interaction avec SECURITY DEFINER (ADR-020)
+
+Les procédures s'exécutent en tant que `postgres` (superutilisateur), qui contourne
+toujours le RLS. Ce comportement est **intentionnel** : les procédures implémentent
+leur propre logique métier (ex : `create_document` écrit `author_entity_id` correctement)
+et ne doivent pas être filtrées par des politiques conçues pour les lectures applicatives.
+
+Le RLS sécurise le **chemin de lecture** (`marius_user` → `SELECT` sur vues).
+Le chemin d'écriture est déjà sécurisé par l'absence de DML direct (ADR-020).
+
+### marius_admin et BYPASSRLS
+
+`marius_admin` est un rôle non-superutilisateur avec DML direct. Sans `BYPASSRLS`,
+ses opérations de maintenance seraient bloquées par les politiques RLS. `GRANT
+BYPASSRLS TO marius_admin` est ajouté en Section 14 — cohérent avec son rôle de
+maintenance, distinct du chemin applicatif normal.
+
+### Fermeture des accès directs par REVOKE SELECT (audit post-implémentation)
+
+Un audit a identifié un gap structurel : `GRANT SELECT ON ALL TABLES` en Section 13
+donnait à `marius_user` un accès direct aux tables physiques sensibles, contournant
+les vues contrôlées. Le RLS sur 3 tables ne fermait pas ce vecteur.
+
+Quatre tables reçoivent un `REVOKE SELECT FROM marius_user` en Section 13 :
+
+| Table                         | Données sensibles                        | Interface contrôlée       |
+| ----------------------------- | ---------------------------------------- | ------------------------- |
+| `identity.auth`               | Hash argon2id, état de bannissement      | `identity.v_auth` (SECDEF)|
+| `identity.person_contact`     | Email, téléphone, fax (PII RGPD)         | `identity.v_person`       |
+| `commerce.transaction_payment`| Numéro de facture, méthode, ref. PSP     | `commerce.v_transaction`  |
+| `commerce.transaction_delivery`| Numéro de suivi logistique              | `commerce.v_transaction`  |
+
+**Deux mécanismes distincts, à ne pas confondre.**
+
+`REVOKE SELECT` et RLS ne sont pas deux couches du même dispositif — ce sont deux
+mécanismes de nature différente :
+
+- **`REVOKE SELECT`** : suppression du privilège. PostgreSQL refuse l'accès avant
+  même d'évaluer une requête. Le résultat est `42501` (insufficient_privilege).
+  Aucun GUC, aucune politique, aucun contournement possible via une session
+  `marius_user`. C'est une frontière d'accès, pas un filtre.
+
+- **RLS** : filtrage par ligne sur des tables *auxquelles* `marius_user` a `SELECT`.
+  Le moteur évalue la politique pour chaque ligne candidate. Le résultat n'est pas
+  une erreur — c'est un ensemble vide ou partiel. RLS présuppose l'existence du
+  privilège SELECT ; il ne le remplace pas.
+
+**Modèle à deux étages résultant :**
+
+| Table                         | Mécanisme                | Comportement si `marius_user` accède directement |
+| ----------------------------- | ------------------------ | ------------------------------------------------- |
+| `identity.auth`               | `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
+| `identity.person_contact`     | `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
+| `commerce.transaction_payment`| `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
+| `commerce.transaction_delivery`| `REVOKE SELECT`         | Erreur 42501 — accès refusé                       |
+| `content.core`                | RLS (politiques actives) | Résultat filtré selon GUC                         |
+| `commerce.transaction_core`   | RLS (politiques actives) | Résultat filtré selon GUC                         |
+| `identity.account_core`       | RLS (politiques actives) | Résultat filtré selon GUC                         |
+| Toutes autres tables          | `SELECT` autorisé        | Accès complet (vues = interface recommandée)      |
+
+**Conséquence pratique** : les tables avec `REVOKE SELECT` n'ont pas de politique
+RLS et n'en ont pas besoin — elles sont structurellement inaccessibles. Ajouter
+du RLS dessus serait redondant et trompeur (laisserait croire que le RLS est le
+mécanisme protecteur alors que c'est le REVOKE).
+
+**Ordre de priorité des couches** :
+
+1. **Révocation DML** (ADR-020) : `marius_user` ne peut pas écrire directement.
+2. **Révocation SELECT ciblée** (Section 13) : fermeture totale sur les tables
+   les plus sensibles — accès uniquement via leurs vues sémantiques.
+3. **RLS stateless GUC** (Section 15) : filtrage par ligne sur les tables
+   restantes accessibles en lecture directe.
+
+### WITH CHECK explicite sur les politiques UPDATE
+
+PostgreSQL hérite `WITH CHECK` de `USING` par défaut sur les politiques UPDATE.
+Comportement correct aujourd'hui, mais implicite : un refactoring futur pourrait
+changer `USING` sans réaliser que `WITH CHECK` suit. Toutes les politiques UPDATE
+exposent désormais `WITH CHECK` explicitement — contrat rendu visible dans le DDL.
+
+### Ce que le RLS ne remplace pas
+
+Le RLS est la troisième couche de défense. Il ne remplace pas :
+
+- La révocation DML sur `marius_user` (ADR-020) — première couche
+- La révocation SELECT sur tables sensibles (Section 13) — deuxième couche
+- La logique métier des procédures (ownership, transitions d'état)
+- L'authentification applicative
+
+### Politiques absentes
+
+`INSERT` : `marius_user` n'a pas de droit `INSERT` sur ces tables (ADR-020).
+Aucune politique INSERT nécessaire. Le DML seed s'exécute en tant que `postgres`
+(bypass automatique).
+
+---
+
+## ADR-027 — Expansion du bitmask de sécurité : passage à 21 bits sur INT4
+
+**Statut** : Adopté
+
+### Correction de prémisse
+
+Le prompt demandait "passer de SMALLINT à INT4 pour permissions". Cette migration
+était déjà effectuée en ADR-003 (session initiale). `permissions` est et a toujours
+été `INT4` dans ce schéma. Ce qui est réellement muté ici :
+
+1. Le plafond du CHECK `permissions BETWEEN 0 AND 32767` → `BETWEEN 0 AND 2097151`
+   (2²¹−1 = tous les bits 0 à 20 actifs).
+2. L'ajout de 6 entrées dans `identity.permission_bit` (bits 15 à 20).
+3. Le recalcul des valeurs de `identity.role`.
+4. L'extension de `identity.v_role` à 21 colonnes booléennes.
+
+### Nouveaux bits
+
+| Bit | Valeur    | Nom                   | Sémantique |
+| --- | --------- | --------------------- | ---------- |
+| 15  | 32768     | edit_others_contents  | Modifier les contenus d'autres auteurs |
+| 16  | 65536     | moderate_comments     | Changer le statut des commentaires (spam, approbation) |
+| 17  | 131072    | view_transactions     | Lecture des données financières commerce |
+| 18  | 262144    | manage_commerce       | Gestion produits, stocks, remboursements |
+| 19  | 524288    | manage_system         | Modification des invariants structurels |
+| 20  | 1048576   | export_data           | Extraction massive (RGPD, sauvegarde) |
+
+### Pourquoi INT4 et pas INT8 ?
+
+INT8 offrirait 63 bits utilisables. Mais la plage INT4 signée couvre 31 bits
+positifs (2³¹−1 = 2 147 483 647). Avec 21 bits actuels et `bit_index BETWEEN 0 AND 30`
+déjà en place, INT4 absorbe 10 bits de réserve supplémentaires sans migration.
+INT8 doublerait la taille de la colonne (8 B vs 4 B) pour un bénéfice non
+justifiable : l'architecture de sécurité d'un CMS n'a pas vocation à dépasser
+30 permissions distinctes.
+
+### Cohérence du type pass-by-value
+
+INT4 est pass-by-value sur toutes les architectures 64 bits. L'opération de
+vérification `(permissions & p_permission) <> 0` reste O(1) — une instruction
+ALU, indépendante du nombre de bits définis.
+
+### Valeurs des rôles
+
+| Rôle           | Valeur  | Composition |
+| -------------- | ------- | ----------- |
+| administrator  | 2097151 | Tous bits 0–20 (2²¹−1) |
+| moderator      | 122934  | base_author + publish_contents + edit_others_contents + moderate_comments |
+| editor         | 59430   | base_author + edit_others_contents + manage_tags |
+| author         | 24614   | can_read + create_contents + edit_contents + upload_files + create_comments |
+| contributor    | 16418   | can_read + create_contents + create_comments |
+| commentator    | 16608   | can_read + create_comments + edit_comments + delete_comments |
+| subscriber     | 16384   | can_read uniquement |
+
+`base_author` = 16384+2+4+8192+32 = **24614**. Vérification : tous les calculs
+ont été validés par addition explicite des puissances de 2 avant intégration.
+
+### Choix éditoriaux pour moderator et editor
+
+Le modérateur dispose de la pleine autonomie sur le cycle de vie éditorial :
+modification des contenus d'autrui (`edit_others_contents`), publication et
+dépublication (`publish_contents`), gestion du statut des commentaires
+(`moderate_comments`). `delete_contents` et `manage_users` restent réservés
+à l'éditeur et aux rangs supérieurs.
+
+---
+
 ## ADR-026 — Closure Table pour la taxonomie des tags : ltree conservé pour les commentaires
 
 **Statut** : Adopté
@@ -1131,4 +1342,4 @@ au même titre que les `REVOKE` qui les suivent.
 
 ---
 
-*Architecture ECS/DOD · PostgreSQL 18 · Projet Marius · 26 décisions*
+*Architecture ECS/DOD · PostgreSQL 18 · Projet Marius · 28 décisions*

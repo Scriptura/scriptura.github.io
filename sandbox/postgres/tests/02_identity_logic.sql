@@ -14,7 +14,7 @@
 
 BEGIN;
 
-SELECT plan(9);
+SELECT plan(13);
 
 
 -- ============================================================
@@ -182,6 +182,76 @@ SELECT ok(
     1
   ),
   'revoke_permission : bit access_admin (1) retiré du rôle subscriber'
+);
+
+
+-- ============================================================
+-- Vérification des nouvelles permissions bits 15-20 sur administrator (ADR-027)
+-- L'administrateur (role_id=1) doit avoir tous les bits 0-20.
+-- ============================================================
+
+DO $$
+DECLARE v_id INT;
+BEGIN
+  CALL identity.create_account(
+    'usr_idt_admin',
+    '$argon2id$v=19$m=65536$admin',
+    'usr-idt-admin',
+    1,       -- role_id = administrator
+    'fr_FR',
+    v_id
+  );
+  INSERT INTO _ids VALUES ('admin_id', v_id);
+END;
+$$;
+
+SELECT ok(
+  identity.has_permission(
+    (SELECT val FROM _ids WHERE key = 'admin_id'),
+    32768    -- edit_others_contents (bit 15)
+  ),
+  'administrator : edit_others_contents (32768) = true (ADR-027)'
+);
+
+SELECT ok(
+  identity.has_permission(
+    (SELECT val FROM _ids WHERE key = 'admin_id'),
+    1048576  -- export_data (bit 20)
+  ),
+  'administrator : export_data (1048576) = true (ADR-027)'
+);
+
+SELECT ok(
+  NOT identity.has_permission(
+    (SELECT val FROM _ids WHERE key = 'acct1_id'),
+    32768    -- subscriber n''a pas edit_others_contents
+  ),
+  'subscriber : edit_others_contents (32768) = false (ADR-027)'
+);
+
+-- Vérification que le rôle moderator inclut publish_contents (bit 4 = 16)
+-- On crée un compte moderator (role_id = 2) et on vérifie le bit.
+DO $$
+DECLARE v_id INT;
+BEGIN
+  CALL identity.create_account(
+    'usr_idt_mod',
+    '$argon2id$v=19$m=65536$mod',
+    'usr-idt-mod',
+    2,       -- role_id = moderator
+    'fr_FR',
+    v_id
+  );
+  INSERT INTO _ids VALUES ('mod_id', v_id);
+END;
+$$;
+
+SELECT ok(
+  identity.has_permission(
+    (SELECT val FROM _ids WHERE key = 'mod_id'),
+    16       -- publish_contents (bit 4)
+  ),
+  'moderator : publish_contents (16) = true après correction ADR-027'
 );
 
 

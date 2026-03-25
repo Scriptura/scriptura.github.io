@@ -178,7 +178,13 @@ INSERT INTO identity.permission_bit (bit_value, bit_index, name, description) VA
   ( 2048, 11, 'manage_tags',      'Gérer la taxonomie (tags)'),
   ( 4096, 12, 'manage_menus',     'Gérer la navigation (menus)'),
   ( 8192, 13, 'upload_files',     'Uploader des fichiers médias'),
-  (16384, 14, 'can_read',         'Lire les contenus protégés (rôle minimal)');
+  (16384, 14, 'can_read',             'Lire les contenus protégés (rôle minimal)'),
+  (32768,    15, 'edit_others_contents', 'Modifier les contenus rédigés par d''autres auteurs'),
+  (65536,    16, 'moderate_comments',    'Changer le statut des commentaires (spam, approbation)'),
+  (131072,   17, 'view_transactions',    'Lire les données financières du schéma commerce'),
+  (262144,   18, 'manage_commerce',      'Gérer produits, stocks et remboursements'),
+  (524288,   19, 'manage_system',        'Modifier les invariants structurels (org, geo, config)'),
+  (1048576,  20, 'export_data',          'Extraction massive de données (RGPD, sauvegarde)');
 
 -- Layout : permissions INT4 (offset 0) · id SMALLINT (offset 4) · 2B pad · name varlena
 -- Tuple 'administrator' (13 chars) : 24+4+2+2+17 = 49 B  (vs 61 B ancien modèle booléen)
@@ -187,20 +193,28 @@ CREATE TABLE identity.role (
   id           SMALLINT     GENERATED ALWAYS AS IDENTITY,
   name         VARCHAR(13)  NOT NULL UNIQUE,
   PRIMARY KEY (id),
-  CONSTRAINT permissions_range CHECK (permissions BETWEEN 0 AND 32767)
+  CONSTRAINT permissions_range CHECK (permissions BETWEEN 0 AND 2097151)
 );
 -- Données de configuration structurelle — immuables en production
 REVOKE INSERT, UPDATE, DELETE ON identity.role FROM PUBLIC;
 
 -- Valeurs calculées : somme des puissances de 2 des permissions actives (voir role_bitmask_update.pgsql)
+-- Valeurs recalculées avec les bits 15-20 (ADR-027).
+-- administrator   : tous les bits 0–20 = 2^21−1
+-- moderator       : base_author + publish_contents(16) + edit_others_contents(32768) + moderate_comments(65536)
+-- editor          : base_author + edit_others_contents(32768) + manage_tags(2048)
+-- author (base)   : can_read(16384)+create_contents(2)+edit_contents(4)+upload_files(8192)+create_comments(32)
+-- contributor     : can_read(16384)+create_contents(2)+create_comments(32)
+-- commentator     : can_read(16384)+create_comments(32)+edit_comments(64)+delete_comments(128)
+-- subscriber      : can_read uniquement (bit 14) · id=7, DEFAULT dans identity.auth
 INSERT INTO identity.role (permissions, name) VALUES
-  (32255, 'administrator'),  -- tous sauf manage_groups (bit 9)
-  (27903, 'moderator'),
-  (26622, 'editor'),
-  (24830, 'author'),
-  (24610, 'contributor'),
-  (16608, 'commentator'),
-  (16384, 'subscriber');     -- can_read uniquement · id=7, DEFAULT dans identity.auth
+  (2097151, 'administrator'),
+  ( 122934, 'moderator'),
+  (  59430, 'editor'),
+  (  24614, 'author'),
+  (  16418, 'contributor'),
+  (  16608, 'commentator'),
+  (  16384, 'subscriber');
 
 
 -- ==============================================================================
@@ -1304,23 +1318,30 @@ $$;
 -- ==============================================================================
 
 -- IDENTITY : v_role — décompose le bitmask en colonnes booléennes nommées
+-- Bits 0–20 exposés (ADR-027 : expansion 15→21 bits sur INT4).
 CREATE VIEW identity.v_role AS
 SELECT id, name, permissions,
-  (permissions &     1) <> 0  AS access_admin,
-  (permissions &     2) <> 0  AS create_contents,
-  (permissions &     4) <> 0  AS edit_contents,
-  (permissions &     8) <> 0  AS delete_contents,
-  (permissions &    16) <> 0  AS publish_contents,
-  (permissions &    32) <> 0  AS create_comments,
-  (permissions &    64) <> 0  AS edit_comments,
-  (permissions &   128) <> 0  AS delete_comments,
-  (permissions &   256) <> 0  AS manage_users,
-  (permissions &   512) <> 0  AS manage_groups,
-  (permissions &  1024) <> 0  AS manage_contents,
-  (permissions &  2048) <> 0  AS manage_tags,
-  (permissions &  4096) <> 0  AS manage_menus,
-  (permissions &  8192) <> 0  AS upload_files,
-  (permissions & 16384) <> 0  AS can_read
+  (permissions &       1) <> 0  AS access_admin,
+  (permissions &       2) <> 0  AS create_contents,
+  (permissions &       4) <> 0  AS edit_contents,
+  (permissions &       8) <> 0  AS delete_contents,
+  (permissions &      16) <> 0  AS publish_contents,
+  (permissions &      32) <> 0  AS create_comments,
+  (permissions &      64) <> 0  AS edit_comments,
+  (permissions &     128) <> 0  AS delete_comments,
+  (permissions &     256) <> 0  AS manage_users,
+  (permissions &     512) <> 0  AS manage_groups,
+  (permissions &    1024) <> 0  AS manage_contents,
+  (permissions &    2048) <> 0  AS manage_tags,
+  (permissions &    4096) <> 0  AS manage_menus,
+  (permissions &    8192) <> 0  AS upload_files,
+  (permissions &   16384) <> 0  AS can_read,
+  (permissions &   32768) <> 0  AS edit_others_contents,
+  (permissions &   65536) <> 0  AS moderate_comments,
+  (permissions &  131072) <> 0  AS view_transactions,
+  (permissions &  262144) <> 0  AS manage_commerce,
+  (permissions &  524288) <> 0  AS manage_system,
+  (permissions & 1048576) <> 0  AS export_data
 FROM identity.role;
 
 -- IDENTITY : v_auth — hot path authentification
@@ -1622,11 +1643,33 @@ GRANT USAGE ON SCHEMA commerce  TO marius_user;
 GRANT USAGE ON SCHEMA content   TO marius_user;
 
 -- Lecture des tables et vues (interface applicative en lecture)
+-- GRANT large par schéma, puis REVOKE ciblé sur les tables sensibles (ADR-028 audit).
+-- Interface contractuelle : les vues de Section 12 sont le chemin de lecture attendu.
 GRANT SELECT ON ALL TABLES IN SCHEMA identity  TO marius_user;
 GRANT SELECT ON ALL TABLES IN SCHEMA geo       TO marius_user;
 GRANT SELECT ON ALL TABLES IN SCHEMA org       TO marius_user;
 GRANT SELECT ON ALL TABLES IN SCHEMA commerce  TO marius_user;
 GRANT SELECT ON ALL TABLES IN SCHEMA content   TO marius_user;
+
+-- REVOKE SELECT sur les tables physiques sensibles :
+-- Accès à leur contenu uniquement via les vues sémantiques de Section 12,
+-- qui appliquent le RLS ou contrôlent la projection (pas de colonne credential exposée).
+
+-- identity.auth : hashes argon2id, état de bannissement — jamais exposés directement.
+--   Interface contrôlée : identity.v_auth (SECURITY DEFINER, usage login uniquement).
+REVOKE SELECT ON identity.auth FROM marius_user;
+
+-- identity.person_contact : email, téléphone — PII au sens RGPD.
+--   Interface contrôlée : identity.v_person (projection maîtrisée).
+REVOKE SELECT ON identity.person_contact FROM marius_user;
+
+-- commerce.transaction_payment : numéro de facture, méthode de paiement, référence PSP.
+--   Interface contrôlée : commerce.v_transaction (RLS via transaction_core).
+REVOKE SELECT ON commerce.transaction_payment FROM marius_user;
+
+-- commerce.transaction_delivery : numéro de suivi logistique (données transporteur).
+--   Interface contrôlée : commerce.v_transaction.
+REVOKE SELECT ON commerce.transaction_delivery FROM marius_user;
 
 -- USAGE séquences : permet currval() et inspection — les nextval() des procédures
 -- passent via SECURITY DEFINER (owner = postgres) et n'en ont pas besoin.
@@ -1692,6 +1735,11 @@ GRANT USAGE, UPDATE ON ALL SEQUENCES IN SCHEMA geo       TO marius_admin;
 GRANT USAGE, UPDATE ON ALL SEQUENCES IN SCHEMA org       TO marius_admin;
 GRANT USAGE, UPDATE ON ALL SEQUENCES IN SCHEMA commerce  TO marius_admin;
 GRANT USAGE, UPDATE ON ALL SEQUENCES IN SCHEMA content   TO marius_admin;
+
+-- marius_admin doit contourner le RLS pour les opérations de maintenance et migrations.
+-- Sans BYPASSRLS, ses UPDATE/INSERT directs seraient bloqués par les politiques RLS
+-- activées en SECTION 15 sur content.core, commerce.transaction_core, identity.account_core.
+GRANT BYPASSRLS TO marius_admin;
 
 -- 14.2 — Révocation globale DML sur marius_user (défense en profondeur)
 -- Idempotent : marius_user n'a jamais reçu ces droits en SECTION 13.
@@ -1759,6 +1807,166 @@ ALTER PROCEDURE commerce.create_transaction(integer, integer, smallint, smallint
 
 ALTER PROCEDURE commerce.create_transaction_item(integer, integer, integer)
   SECURITY DEFINER SET search_path = 'commerce', 'pg_catalog';
+
+
+-- ==============================================================================
+-- SECTION 15 : ROW-LEVEL SECURITY (RLS) — Pattern Stateless GUC (ADR-028)
+-- ==============================================================================
+-- Architecture : la couche applicative injecte deux GUC dans chaque session avant
+-- toute requête :
+--   SET LOCAL marius.user_id  = '<entity_id>'   -- identifiant de l'utilisateur connecté
+--   SET LOCAL marius.auth_bits = '<bitmask INT4>' -- permissions du rôle (ADR-003/027)
+--
+-- Les politiques lisent ces GUC via current_setting(..., true) — le paramètre `true`
+-- retourne NULL au lieu de lever une erreur si le GUC n'est pas défini (session système,
+-- seed CI/CD, connexion postgres directe).
+-- Fallback : user_id → -1 (ne correspondra à aucune ligne), auth_bits → 0 (tous bits off).
+--
+-- Superutilisateurs (postgres) et marius_admin (BYPASSRLS) contournent le RLS.
+-- Ce contournement est intentionnel : les procédures SECURITY DEFINER s'exécutent
+-- en tant que postgres et doivent pouvoir écrire sans restriction (ADR-020).
+-- Le RLS sécurise le chemin de LECTURE (SELECT sur vues par marius_user).
+-- Les tables les plus sensibles (identity.auth, person_contact, transaction_payment,
+-- transaction_delivery) ont vu leur SELECT révoqué en Section 13 : le RLS est une
+-- défense complémentaire, pas le seul verrou sur ces données.
+-- ==============================================================================
+
+-- Helper functions — évitent de répéter le COALESCE/casting dans chaque politique.
+-- STABLE : retourne la même valeur pour toutes les lignes d'un même statement.
+-- SECURITY INVOKER : pas besoin d'élévation pour lire un GUC de session.
+
+CREATE FUNCTION identity.rls_user_id()
+RETURNS INT LANGUAGE sql STABLE SECURITY INVOKER AS $$
+  SELECT COALESCE(current_setting('marius.user_id',  true)::INT, -1);
+$$;
+
+CREATE FUNCTION identity.rls_auth_bits()
+RETURNS INT LANGUAGE sql STABLE SECURITY INVOKER AS $$
+  SELECT COALESCE(current_setting('marius.auth_bits', true)::INT, 0);
+$$;
+
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- 15.1 — content.core
+-- Politique SELECT :
+--   Ligne visible si publiée (status=1)
+--   OU si l'utilisateur possède publish_contents (bit 4, valeur 16) → accès éditorial
+--   OU si l'utilisateur est l'auteur de la ligne.
+-- Politique UPDATE/DELETE :
+--   Permissive A : auteur de la ligne ET bit edit_contents (bit 2, valeur 4)
+--   Permissive B : bit edit_others_contents (bit 15, valeur 32768) → édition globale
+-- Note : INSERT est géré exclusivement par content.create_document (SECURITY DEFINER).
+-- ─────────────────────────────────────────────────────────────────────────────
+
+ALTER TABLE content.core ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY rls_core_select ON content.core
+  FOR SELECT
+  USING (
+    status = 1                                          -- article publié : visible de tous
+    OR (identity.rls_auth_bits() & 16) = 16            -- publish_contents : accès éditorial
+    OR author_entity_id = identity.rls_user_id()       -- auteur : voit ses propres brouillons
+  );
+
+-- Auteur peut modifier son propre contenu (edit_contents requis)
+CREATE POLICY rls_core_update_own ON content.core
+  FOR UPDATE
+  USING (
+    author_entity_id = identity.rls_user_id()
+    AND (identity.rls_auth_bits() & 4) = 4             -- edit_contents
+  )
+  WITH CHECK (
+    author_entity_id = identity.rls_user_id()
+    AND (identity.rls_auth_bits() & 4) = 4
+  );
+
+-- Éditeur peut modifier n'importe quel contenu (edit_others_contents)
+CREATE POLICY rls_core_update_others ON content.core
+  FOR UPDATE
+  USING (
+    (identity.rls_auth_bits() & 32768) = 32768         -- edit_others_contents
+  )
+  WITH CHECK (
+    (identity.rls_auth_bits() & 32768) = 32768
+  );
+
+-- Suppression : auteur uniquement (ou edit_others_contents)
+CREATE POLICY rls_core_delete_own ON content.core
+  FOR DELETE
+  USING (
+    author_entity_id = identity.rls_user_id()
+    AND (identity.rls_auth_bits() & 4) = 4
+  );
+
+CREATE POLICY rls_core_delete_others ON content.core
+  FOR DELETE
+  USING (
+    (identity.rls_auth_bits() & 32768) = 32768
+  );
+
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- 15.2 — commerce.transaction_core
+-- Politique SELECT :
+--   Ligne visible si l'utilisateur est le client (isolation stricte)
+--   OU si le bit view_transactions (bit 17, valeur 131072) est présent.
+-- Politique UPDATE :
+--   Uniquement si le bit manage_commerce (bit 18, valeur 262144) est présent.
+--   Un client ne peut jamais modifier sa propre transaction — seul un gestionnaire
+--   commerce le peut (remboursement, correction de statut).
+-- ─────────────────────────────────────────────────────────────────────────────
+
+ALTER TABLE commerce.transaction_core ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY rls_transaction_select ON commerce.transaction_core
+  FOR SELECT
+  USING (
+    client_entity_id = identity.rls_user_id()          -- client : ses propres commandes
+    OR (identity.rls_auth_bits() & 131072) = 131072    -- view_transactions
+  );
+
+CREATE POLICY rls_transaction_update ON commerce.transaction_core
+  FOR UPDATE
+  USING (
+    (identity.rls_auth_bits() & 262144) = 262144       -- manage_commerce uniquement
+  )
+  WITH CHECK (
+    (identity.rls_auth_bits() & 262144) = 262144
+  );
+
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- 15.3 — identity.account_core
+-- Politique SELECT :
+--   Un compte voit uniquement sa propre ligne
+--   OU si le bit manage_users (bit 8, valeur 256) est présent.
+-- Politique UPDATE :
+--   Identique au SELECT (un utilisateur peut modifier son propre profil).
+-- ─────────────────────────────────────────────────────────────────────────────
+
+ALTER TABLE identity.account_core ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY rls_account_select ON identity.account_core
+  FOR SELECT
+  USING (
+    entity_id = identity.rls_user_id()                 -- lecture de son propre compte
+    OR (identity.rls_auth_bits() & 256) = 256          -- manage_users : accès admin
+  );
+
+CREATE POLICY rls_account_update ON identity.account_core
+  FOR UPDATE
+  USING (
+    entity_id = identity.rls_user_id()                 -- modification de son propre compte
+    OR (identity.rls_auth_bits() & 256) = 256          -- manage_users
+  )
+  WITH CHECK (
+    entity_id = identity.rls_user_id()
+    OR (identity.rls_auth_bits() & 256) = 256
+  );
+
+-- Permissions EXECUTE sur les helpers RLS (lecture des GUC uniquement)
+GRANT EXECUTE ON FUNCTION identity.rls_user_id()   TO marius_user;
+GRANT EXECUTE ON FUNCTION identity.rls_auth_bits() TO marius_user;
 
 
 -- ==============================================================================

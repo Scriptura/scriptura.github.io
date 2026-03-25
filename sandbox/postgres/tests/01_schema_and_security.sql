@@ -14,7 +14,7 @@
 
 BEGIN;
 
-SELECT plan(37);
+SELECT plan(42);
 
 
 -- ============================================================
@@ -360,6 +360,38 @@ SELECT ok(
      )
   ) = 4,
   'Quatre composants ECS de commande présents dans le schéma commerce (ADR-023)'
+);
+
+-- Bits 0-20 définis dans identity.permission_bit (ADR-027)
+SELECT is(
+  (SELECT COUNT(*)::INT FROM identity.permission_bit),
+  21,
+  'identity.permission_bit : 21 entrées (bits 0-20, ADR-027)'
+);
+
+-- Bit 20 (export_data = 1048576) présent
+SELECT ok(
+  EXISTS (SELECT 1 FROM identity.permission_bit WHERE bit_value = 1048576 AND bit_index = 20),
+  'identity.permission_bit : export_data (bit 20 = 1048576) présent (ADR-027)'
+);
+
+-- content.tag ne doit plus avoir de colonne ltree path (ADR-026)
+SELECT hasnt_column(
+  'content', 'tag', 'path',
+  'content.tag : colonne path ltree supprimée (ADR-026 — Closure Table)'
+);
+
+-- content.tag_hierarchy existe avec la PK composite attendue
+SELECT has_table('content', 'tag_hierarchy', 'content.tag_hierarchy présente (ADR-026)');
+
+-- create_tag : SECURITY DEFINER
+SELECT ok(
+  COALESCE((
+    SELECT p.prosecdef FROM pg_proc p
+    JOIN   pg_namespace n ON n.oid = p.pronamespace
+    WHERE  n.nspname = 'content' AND p.proname = 'create_tag' AND p.prokind = 'p'
+  ), false),
+  'content.create_tag : SECURITY DEFINER (ADR-020 + ADR-026)'
 );
 
 
