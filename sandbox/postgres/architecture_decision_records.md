@@ -4,15 +4,6 @@
 
 ---
 
-> Arbitrages architecturaux du projet Marius. Chaque entrée documente ce qui
-> **n'est pas déductible de la lecture du code** : le raisonnement qui a conduit
-> à une décision, les alternatives écartées et leurs coûts respectifs.
->
-> Ordre : priorité décroissante — invariants de sécurité et contraintes physiques
-> d'abord, décisions structurelles et de typage ensuite, organisation du dépôt en fin.
-
----
-
 ## ADR-020 — Interface d'écriture scellée : révocation DML globale et SECURITY DEFINER
 
 **Statut** : Adopté
@@ -66,69 +57,54 @@ quelques µs. `CREATE PROCEDURE` n'est jamais inlinable par le planner (contrair
 | `marius_admin` | ✓      | ✓       | ✓                    | Maintenance, migrations, CI seed  |
 | `postgres`     | ✓      | ✓       | ✓                    | Owner des objets, déploiement DDL |
 
----
+### Gardes d'autorisation dans les procédures SECURITY DEFINER
 
-## ADR-021 — Correctifs de cohérence : snapshot complet, verrou exclusif, trigger manquant
+L'élévation de privilèges vers `postgres` contourne le RLS. Sans logique
+d'autorisation interne, toute procédure est exécutable par n'importe quel
+`marius_user` possédant `EXECUTE` — indépendamment de son rôle applicatif.
 
-**Statut** : Adopté
+**Pattern de garde GUC** appliqué à chaque procédure sensible :
 
-### Contexte
+```sql
+IF identity.rls_user_id() <> -1           -- GUC absent = contexte seed/admin : bypass
+   AND (identity.rls_auth_bits() & <bit>) <> <bit> THEN
+  RAISE EXCEPTION 'insufficient_privilege: <permission> required'
+    USING ERRCODE = '42501';
+END IF;
+```
 
-Audit externe ayant produit 8 suggestions. Trois adressent des lacunes réelles ;
-cinq sont écartées (voir analyse en fin d'entrée).
+Le bypass sur `rls_user_id() = -1` est intentionnel : le seed CI/CD et les
+sessions `marius_admin` directes n'injectent pas les GUC applicatifs. Leur accès
+est contrôlé par ADR-020 au niveau du rôle, pas par les GUC.
 
-### Correction 1 — Snapshot complet dans `content.revision`
+| Procédure                     | Permission requise          | Complément                          |
+| ----------------------------- | --------------------------- | ----------------------------------- |
+| `content.publish_document`    | `publish_contents` (16)     | —                                   |
+| `content.create_document`     | `create_contents` (2)       | `p_author_id` = `rls_user_id()` sauf `edit_others_contents` |
+| `content.save_revision`       | `edit_contents` (4)         | OU `edit_others_contents` (32768)   |
+| `content.create_tag`          | `manage_tags` (2048)        | —                                   |
+| `content.add_tag_to_document` | `edit_contents` (4)         | OU `edit_others_contents` (32768) + ownership check |
+| `content.remove_tag_from_document` | `edit_contents` (4)    | OU `edit_others_contents` (32768) + ownership check |
+| `content.create_comment`      | `create_comments` (32)      | `p_account_entity_id` = `rls_user_id()` |
+| `identity.anonymize_person`   | `manage_users` (256)        | Sauf auto-anonymisation (`p_entity_id` = `rls_user_id()`) |
+| `identity.grant_permission`   | `manage_users` (256)        | —                                   |
+| `identity.revoke_permission`  | `manage_users` (256)        | —                                   |
 
-`content.save_revision()` et `content.create_document()` ne capturaient que
-`name`, `slug` et `body`. Les colonnes `alternative_headline` et `description`
-(portées par `content.identity`) n'étaient pas versionnées.
+| `org.create_organization`              | `manage_system` (524288) | —                                   |
+| `org.add_organization_to_hierarchy`    | `manage_system` (524288) | —                                   |
 
-**Conséquence** : un `UPDATE` sur `alternative_headline` entre deux révisions
-effaçait silencieusement la valeur précédente de l'historique. Le snapshot était
-fonctionnellement faux sans aucun signal d'erreur.
+| `commerce.create_transaction`      | ownership `client_entity_id` = `rls_user_id()` | OU `manage_commerce` (262144) |
+| `commerce.create_transaction_item` | ownership transaction + `manage_commerce` | statut `status=0` requis |
 
-**Correction** : deux colonnes ajoutées à `content.revision` :
-`snapshot_alternative_headline VARCHAR(255)` et `snapshot_description VARCHAR(1000)`.
-Les procédures `save_revision` et `create_document` les alimentent désormais.
+Procédures sans garde (accès ouvert à tout `marius_user` authentifié) :
+`identity.create_account`, `identity.create_person`, `identity.record_login`.
 
-La règle générale en découlant : **tout champ de `content.identity` éditable par
-l'utilisateur doit avoir son équivalent `snapshot_*` dans `content.revision`**.
-
-### Correction 2 — `FOR UPDATE` dans `create_transaction_item`
-
-La procédure lisait `product_core` avec `FOR SHARE` (verrou partagé) avant de
-décrémenter le stock. Deux transactions concurrentes sur le même produit pouvaient
-lire simultanément `stock = 5`, vérifier la disponibilité, puis décrémenter
-chacune — produisant un stock négatif (sur-vente).
-
-`FOR SHARE` : plusieurs lecteurs simultanés autorisés → race condition possible.
-`FOR UPDATE` : verrou exclusif sur la ligne → la seconde transaction attend la
-fin de la première avant de lire le stock mis à jour.
-
-**Correction** : `FOR SHARE` → `FOR UPDATE` sur le `SELECT price`.
-
-**Note** : le `UPDATE commerce.product_core SET stock = stock - p_quantity`
-qui suit opère sur la même ligne déjà verrouillée — pas de deadlock possible.
-
-### Correction 3 — Trigger `modified_at` manquant sur `content.media_core`
-
-`content.media_core` expose une colonne `modified_at TIMESTAMPTZ NULL` mais
-n'avait pas de trigger pour la mettre à jour. Toutes les autres tables mutables
-du schéma (`identity.auth`, `content.core`, `commerce.transaction`) en
-disposaient.
-
-**Correction** : trigger `BEFORE UPDATE` avec clause `WHEN` ciblant les colonnes
-descriptives (`mime_type`, `folder_url`, `file_name`, `width`, `height`).
-
-### Suggestions écartées
-
-| # | Suggestion | Motif d'exclusion |
-|---|---|---|
-| 1 | Retry automatique dans `fn_slug_deduplicate` | Comportement intentionnel documenté dans le DDL : la contrainte `UNIQUE` est le garde-fou ; l'erreur 23505 est propre et attrapable côté applicatif. Ajouter un retry dans le trigger déplacerait la responsabilité du retry au mauvais niveau. |
-| 4 | Remplacer `CHECK (path IS NOT NULL)` par `NOT NULL` | Déjà documenté en détail dans le DDL. Le `CHECK` est l'unique moyen de permettre `OVERRIDING SYSTEM VALUE` dans `create_comment` tout en rejetant les INSERT directs sans path. |
-| 5 | B-tree complémentaire si BRIN inefficace | Déjà couvert en ADR-017 : la condition d'efficacité (insertions chronologiques) est documentée ; l'ajout d'un B-tree complémentaire est une décision opérationnelle à prendre sur données réelles, pas un invariant à inscrire dans le blueprint. |
-| 7 | Partitionnement de `content.comment` et `content.revision` | Prématuré à l'échelle cible (500 k utilisateurs). PostgreSQL gère confortablement ces volumes avec les index existants. Le partitionnement ajoute de la complexité opérationnelle significative (maintenance des partitions, contraintes croisées) sans bénéfice mesurable à ce stade. |
-| 8 | Suite de tests pgTAP | Hors périmètre du blueprint DDL. Pertinent comme étape CI/CD distincte. |
+**`content.ensure_tag` : non implémenté (rejet délibéré).** Un `ensure_tag` gardé
+par `edit_contents` permettrait à tout auteur de créer des tags arbitrairement,
+contournant le bit `manage_tags` que `create_tag` exige. La taxonomie est un
+domaine structurel distinct de l'édition de contenu. Le workflow correct : les
+tags sont créés en amont par les rôles `manage_tags` ; les auteurs lient les tags
+existants via `add_tag_to_document`.
 
 ---
 
@@ -173,11 +149,12 @@ GUC sont lus une seule fois.
 
 ### Tables RLS activées
 
-| Table                         | Politiques SELECT         | Politiques UPDATE/DELETE |
-| ----------------------------- | ------------------------- | ------------------------ |
-| `content.core`                | publié OU éditeur OU auteur | propre contenu OU edit_others |
-| `commerce.transaction_core`   | propre commande OU view_transactions | manage_commerce uniquement |
-| `identity.account_core`       | propre compte OU manage_users | propre compte OU manage_users |
+| Table                         | Politiques SELECT                                    | Politiques UPDATE/DELETE      |
+| ----------------------------- | ---------------------------------------------------- | ----------------------------- |
+| `content.core`                | publié OU publish_contents OU edit_others OU auteur  | propre contenu OU edit_others |
+| `commerce.transaction_core`   | propre commande OU view_transactions OU manage_commerce | manage_commerce uniquement |
+| `identity.account_core`       | propre compte OU manage_users                        | propre compte OU manage_users |
+| `content.comment`             | approuvé OU auteur OU moderate_comments              | aucune (pas de DML applicatif)|
 
 ### Interaction avec SECURITY DEFINER (ADR-020)
 
@@ -202,14 +179,20 @@ Un audit a identifié un gap structurel : `GRANT SELECT ON ALL TABLES` en Sectio
 donnait à `marius_user` un accès direct aux tables physiques sensibles, contournant
 les vues contrôlées. Le RLS sur 3 tables ne fermait pas ce vecteur.
 
-Quatre tables reçoivent un `REVOKE SELECT FROM marius_user` en Section 13 :
+Dix tables reçoivent un `REVOKE SELECT FROM marius_user` en Section 13 :
 
-| Table                         | Données sensibles                        | Interface contrôlée       |
-| ----------------------------- | ---------------------------------------- | ------------------------- |
-| `identity.auth`               | Hash argon2id, état de bannissement      | `identity.v_auth` (SECDEF)|
-| `identity.person_contact`     | Email, téléphone, fax (PII RGPD)         | `identity.v_person`       |
-| `commerce.transaction_payment`| Numéro de facture, méthode, ref. PSP     | `commerce.v_transaction`  |
-| `commerce.transaction_delivery`| Numéro de suivi logistique              | `commerce.v_transaction`  |
+| Table                         | Données sensibles                          | Interface contrôlée       |
+| ----------------------------- | ------------------------------------------ | ------------------------- |
+| `identity.auth`               | Hash argon2id, état de bannissement        | `identity.v_auth` (SECDEF)|
+| `identity.person_contact`     | Email, téléphone, fax (PII RGPD)           | `identity.v_person`       |
+| `commerce.transaction_payment`| Numéro de facture, méthode, ref. PSP       | `commerce.v_transaction`  |
+| `commerce.transaction_delivery`| Numéro de suivi logistique               | `commerce.v_transaction`  |
+| `commerce.transaction_price`  | Montants, devise, taux de taxe             | `commerce.v_transaction`  |
+| `commerce.transaction_item`   | Lignes de commande, prix snapshot          | `commerce.v_transaction`  |
+| `content.identity`            | Headline, slug, description de tous docs   | `content.v_article_list`, `content.v_article` |
+| `content.body`                | Corps HTML complet de tous docs            | `content.v_article`       |
+| `content.revision`            | Snapshots éditoriaux complets              | `content.v_article`       |
+| `org.org_legal`               | DUNS, SIRET, TVA — identifiants légaux     | `marius_admin` uniquement |
 
 **Deux mécanismes distincts, à ne pas confondre.**
 
@@ -228,16 +211,28 @@ mécanismes de nature différente :
 
 **Modèle à deux étages résultant :**
 
-| Table                         | Mécanisme                | Comportement si `marius_user` accède directement |
-| ----------------------------- | ------------------------ | ------------------------------------------------- |
-| `identity.auth`               | `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
-| `identity.person_contact`     | `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
-| `commerce.transaction_payment`| `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
-| `commerce.transaction_delivery`| `REVOKE SELECT`         | Erreur 42501 — accès refusé                       |
-| `content.core`                | RLS (politiques actives) | Résultat filtré selon GUC                         |
-| `commerce.transaction_core`   | RLS (politiques actives) | Résultat filtré selon GUC                         |
-| `identity.account_core`       | RLS (politiques actives) | Résultat filtré selon GUC                         |
-| Toutes autres tables          | `SELECT` autorisé        | Accès complet (vues = interface recommandée)      |
+| Table                          | Mécanisme                | Comportement si `marius_user` accède directement |
+| ------------------------------ | ------------------------ | ------------------------------------------------- |
+| `identity.auth`                | `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
+| `identity.person_contact`      | `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
+| `commerce.transaction_payment` | `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
+| `commerce.transaction_delivery`| `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
+| `commerce.transaction_price`   | `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
+| `commerce.transaction_item`    | `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
+| `content.identity`             | `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
+| `content.body`                 | `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
+| `content.revision`             | `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
+| `org.org_legal`                | `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
+| `content.core`                 | RLS (politiques actives) | Résultat filtré selon GUC                         |
+| `commerce.transaction_core`    | RLS (politiques actives) | Résultat filtré selon GUC                         |
+| `identity.account_core`        | RLS (politiques actives) | Résultat filtré selon GUC                         |
+| Toutes autres tables           | `SELECT` autorisé        | Accès complet (vues = interface recommandée)      |
+
+**Note sur le security context des vues (ADR-029 invariant 2).**
+Les vues Section 12 sont owned par `postgres` (BYPASSRLS). Le RLS sur les tables
+Core n'est pas évalué sur le chemin de lecture via ces vues. Le filtre d'accès
+est implémenté dans le WHERE de chaque vue concernée, via les helpers GUC. Le RLS
+physique reste actif pour les accès directs aux tables Core (défense en profondeur).
 
 **Conséquence pratique** : les tables avec `REVOKE SELECT` n'ont pas de politique
 RLS et n'en ont pas besoin — elles sont structurellement inaccessibles. Ajouter
@@ -273,6 +268,132 @@ Le RLS est la troisième couche de défense. Il ne remplace pas :
 `INSERT` : `marius_user` n'a pas de droit `INSERT` sur ces tables (ADR-020).
 Aucune politique INSERT nécessaire. Le DML seed s'exécute en tant que `postgres`
 (bypass automatique).
+
+---
+
+## ADR-029 — RLS et fragmentation ECS : trois invariants de cohérence
+
+**Statut** : Adopté
+
+### Problème
+
+Le pattern GUC Stateless (ADR-028) garantit un filtrage O(1) par ligne sur les
+tables Core. Trois propriétés structurelles de PostgreSQL RLS, non déductibles
+de la lecture du DDL seul, peuvent rendre ce filtrage inopérant ou incohérent
+si elles ne sont pas documentées comme contraintes d'architecture.
+
+### Invariant 1 — Fermeture des composants satellites (ECS × RLS)
+
+**Règle** : toute table satellite d'un composant Core sous RLS doit recevoir soit
+un `REVOKE SELECT`, soit sa propre politique RLS.
+
+**Pourquoi ce n'est pas déductible du DDL.**
+Le RLS d'une table Core ne se propage pas automatiquement à ses satellites. Un
+`SELECT * FROM commerce.transaction_item` par `marius_user` contourne entièrement
+`rls_transaction_select` — PostgreSQL évalue le RLS de la table accédée, pas
+celui de ses tables parentes. La fragmentation ECS (ADR-023) crée donc un vecteur
+de fuite par défaut : chaque composant satellite 1:1 est une porte d'entrée
+indépendante vers les données de la commande.
+
+**Application dans ce schéma.**
+Les satellites de `commerce.transaction_core` (`transaction_price`, `transaction_item`,
+`transaction_payment`, `transaction_delivery`) reçoivent tous un `REVOKE SELECT`.
+Les satellites de `content.core` (`content.identity`, `content.body`, `content.revision`)
+reçoivent de même un `REVOKE SELECT` : un SELECT direct sur `content.identity`
+retournerait les titres et slugs de tous les brouillons sans que `rls_core_select`
+ne soit jamais évalué. L'accès applicatif est contraint aux vues sémantiques
+`content.v_article_list` et `content.v_article`, qui imposent la jointure sur
+`content.core` filtré par RLS.
+
+**Invariant de maintenance.**
+Lors de tout ajout d'un composant satellite dans un schéma dont le Core est sous
+RLS, le `GRANT SELECT` hérité de `GRANT SELECT ON ALL TABLES` doit être
+immédiatement suivi d'un `REVOKE SELECT` ciblé ou d'une politique RLS dédiée.
+L'absence de protection est silencieuse — PostgreSQL n'émet aucun avertissement.
+
+### Invariant 2 — Security context des vues et responsabilité du contrôle d'accès
+
+**Règle** : les vues owned par un superutilisateur (BYPASSRLS) **doivent** porter
+explicitement les prédicats de contrôle d'accès dans leur clause WHERE. Le RLS
+physique sur les tables sous-jacentes est inopérant sur ce chemin.
+
+**Pourquoi ce n'est pas déductible du DDL.**
+Par défaut (sans `security_invoker = true`), PostgreSQL évalue les politiques RLS
+en utilisant l'identité du propriétaire de la vue, pas celle de l'appelant. Les
+vues de la Section 12 sont toutes owned par `postgres`, qui possède l'attribut
+`BYPASSRLS`. Conséquence : `SELECT * FROM content.v_article_list` exécuté par
+`marius_user` lit `content.core` en tant que `postgres` — la politique
+`rls_core_select` n'est jamais évaluée. Tous les brouillons sont visibles.
+
+L'option `security_invoker = true` restaurerait le RLS physique, mais rendrait
+la vue incapable de lire les composants satellites sous REVOKE SELECT
+(`content.identity`, `content.body`, etc.) — puisqu'elle s'exécuterait alors
+avec les droits de `marius_user`, qui n'a pas ces privilèges.
+
+**Invariant résultant.**
+L'architecture retenue (vues owned par `postgres` + REVOKE sur satellites) est
+cohérente si et seulement si chaque vue exposant des données filtrées par un Core
+sous RLS réplique explicitement le prédicat de filtrage dans son WHERE. Ce WHERE
+utilise les helpers GUC (`rls_user_id()`, `rls_auth_bits()`), qui lisent le GUC
+de **session** — invariant par rapport au security context d'exécution de la vue.
+Un `current_setting('marius.user_id', true)` appelé depuis un contexte `postgres`
+retourne correctement la valeur injectée par le middleware dans la session de
+`marius_user`.
+
+**Application dans ce schéma.**
+Les vues `content.v_article_list`, `content.v_article`, `identity.v_account` et
+`commerce.v_transaction` portent toutes un WHERE répliquant le prédicat de leur
+Core respectif. Le RLS physique reste actif pour les accès directs aux tables
+(défense en profondeur), mais le WHERE de la vue est le mécanisme primaire sur le
+chemin de lecture applicatif normal.
+
+Le comportement en accès anonyme (GUC absent) reste correct : `rls_user_id() = -1`
+ne correspond à aucun auteur, `rls_auth_bits() = 0` annule tous les bits → seul
+`status = 1` passe pour le contenu.
+
+### Invariant 3 — Symétrie SELECT/UPDATE dans les politiques RLS
+
+**Règle** : tout bit de permission accordant un UPDATE ou DELETE sur une table
+doit figurer aussi dans le prédicat `USING` de la politique `SELECT` de cette
+même table.
+
+**Pourquoi ce n'est pas déductible du DDL.**
+PostgreSQL évalue la politique `FOR SELECT` comme pré-condition à toute opération
+d'écriture : une ligne invisible en SELECT est invisible en UPDATE et DELETE. Une
+politique `FOR UPDATE USING ((auth_bits & X) = X)` dont le bit X n'est pas couvert
+par `FOR SELECT USING` est structurellement morte — elle ne s'applique jamais, sans
+erreur ni avertissement. L'UPDATE renvoie 0 lignes affectées, indiscernable d'un
+UPDATE valide sur un ensemble vide.
+
+**Application dans ce schéma.**
+`rls_core_select` inclut le bit `edit_others_contents` (32768), qui figure aussi
+dans `rls_core_update_others` et `rls_core_delete_others`. Sans ce critère dans le
+SELECT, le rôle `editor` (59438 = base_author + edit_others_contents + manage_tags,
+sans `publish_contents`) ne peut ni voir, ni donc modifier, ni supprimer les
+brouillons d'autrui — les politiques UPDATE/DELETE d'éditeur sont inatteignables.
+
+`rls_transaction_select` inclut le bit `manage_commerce` (262144), qui figure dans
+`rls_transaction_update`. Les bits `view_transactions` (131072) et `manage_commerce`
+(262144) sont orthogonaux : un profil gestionnaire commerce portant uniquement
+`manage_commerce` échouerait silencieusement sur tout UPDATE sans ce critère dans
+le SELECT.
+
+**Corollaire pour les procédures SECURITY DEFINER.**
+Les procédures s'exécutant en tant que `postgres` bypassent le RLS. Un bit de
+permission vérifié dans la garde procédurale suffit pour les opérations globales
+(ex : `publish_contents` → toute publication). Pour les opérations à portée
+restreinte (modifier/sauvegarder son propre contenu), la garde doit reconstituer
+explicitement le filtre d'appartenance : la politique RLS d'ownership est bypassée
+et ne constitue pas un garde procédural implicite.
+
+`content.save_revision` illustre ce cas : un auteur sans `edit_others_contents`
+ne peut sauvegarder que ses propres documents — ce filtre est implémenté
+explicitement dans le corps de la procédure via un SELECT sur `content.core`.
+
+**Invariant de maintenance.**
+Lors de tout ajout d'une politique `FOR UPDATE` ou `FOR DELETE` sur une table Core
+sous RLS, vérifier que chaque bit présent dans son `USING` est aussi couvert par
+au moins un critère de la politique `FOR SELECT` de la même table.
 
 ---
 
@@ -323,421 +444,36 @@ ALU, indépendante du nombre de bits définis.
 | Rôle           | Valeur  | Composition |
 | -------------- | ------- | ----------- |
 | administrator  | 2097151 | Tous bits 0–20 (2²¹−1) |
-| moderator      | 122934  | base_author + publish_contents + edit_others_contents + moderate_comments |
-| editor         | 59430   | base_author + edit_others_contents + manage_tags |
-| author         | 24614   | can_read + create_contents + edit_contents + upload_files + create_comments |
+| moderator      | 124990  | base_author + publish_contents + manage_tags + edit_others_contents + moderate_comments |
+| editor         | 59438   | base_author + edit_others_contents + manage_tags |
+| author         | 24622   | can_read + create_contents + edit_contents + delete_contents + upload_files + create_comments |
 | contributor    | 16418   | can_read + create_contents + create_comments |
 | commentator    | 16608   | can_read + create_comments + edit_comments + delete_comments |
 | subscriber     | 16384   | can_read uniquement |
 
-`base_author` = 16384+2+4+8192+32 = **24614**. Vérification : tous les calculs
-ont été validés par addition explicite des puissances de 2 avant intégration.
+`base_author` = 16384+2+4+8+8192+32 = **24622** (ADR-029 : delete_contents(8) ajouté).
+`moderator` = base_author + 16 + 2048 + 32768 + 65536 = **124990** (manage_tags ajouté — cohérence avec le cycle de vie éditorial complet).
+Vérification : tous les calculs ont été validés par addition explicite des puissances de 2 avant intégration.
 
 ### Choix éditoriaux pour moderator et editor
 
 Le modérateur dispose de la pleine autonomie sur le cycle de vie éditorial :
 modification des contenus d'autrui (`edit_others_contents`), publication et
 dépublication (`publish_contents`), gestion du statut des commentaires
-(`moderate_comments`). `delete_contents` et `manage_users` restent réservés
-à l'éditeur et aux rangs supérieurs.
-
----
-
-## ADR-026 — Closure Table pour la taxonomie des tags : ltree conservé pour les commentaires
-
-**Statut** : Adopté
-
-### Contexte
-
-Le composant `content.tag` utilisait un chemin `ltree` (`path`) et un `parent_id`
-pour représenter la hiérarchie taxonomique. Deux limites opérationnelles ont été
-identifiées :
-
-1. **Mobilité des tags** : déplacer un tag dans la hiérarchie avec ltree nécessite
-   un UPDATE en cascade de `path` sur tous les descendants — O(n_descendants) UPDATEs,
-   risque de locks en production.
-2. **Couplage structurel** : `path` encode à la fois l'identité du tag
-   (`theology.patristics.cyrille`) et sa position hiérarchique. Renommer un ancêtre
-   force un UPDATE en cascade sur tous ses descendants.
-
-### Décision : Closure Table pour les tags
-
-La hiérarchie est portée par `content.tag_hierarchy(ancestor_id, descendant_id, depth)`
-indépendamment des données du tag. Le spine `content.tag` devient `(id, slug, name)` — immuable.
-
-**Invariant opérationnel** : chaque tag possède obligatoirement une self-reference
-`(id, id, 0)`. La procédure `content.create_tag` garantit cet invariant à l'insertion.
-
-**Profondeur maximale = 4** : contrainte CHECK `depth BETWEEN 0 AND 4`. La procédure
-lève une exception à l'INSERT si un parent est déjà à depth 4.
-
-### Pourquoi pas ltree pour les tags
-
-| Critère           | ltree                            | Closure Table                         |
-| ----------------- | -------------------------------- | ------------------------------------- |
-| Sous-arbre query  | `path <@ 'parent.path'` (GiST)   | `WHERE ancestor_id = X AND depth > 0` (B-tree) |
-| Move tag          | UPDATE en cascade O(descendants) | DELETE + reinsert O(depth)            |
-| Rename ancestor   | UPDATE en cascade O(descendants) | Zéro impact (noms dans tag spine)     |
-| Insert nouveau tag| O(1) — concat path               | O(depth) — inserts ancêtres           |
-| Breadcrumb        | Gratuit (le path IS le chemin)   | string_agg + self-join                |
-| Dépendance        | Extension ltree                  | SQL pur                               |
-
-Pour une taxonomie éditoriale à insertions rares et depth ≤ 4, le coût du move
-est le critère déterminant. La requête de sous-arbre sur la Closure Table est un
-équijoin sur INT4 avec index B-tree — plus cache-friendly qu'un scan GiST sur varlena.
-
-### ltree conservé pour `content.comment`
-
-**Non négociable.** ADR-012 est architecturalement construit autour du ltree :
-la procédure `create_comment` utilise `nextval()` préalable + construction du
-chemin en mémoire + INSERT unique pour garantir zéro dead tuple. La Closure Table
-sur les commentaires est inapplicable :
-
-- Volume : 10 000+ commentaires/jour → O(profondeur) inserts par commentaire
-  avec locks en cascade sur `tag_hierarchy` équivalent.
-- Les commentaires ne sont jamais "déplacés" — la raison principale de la Closure
-  Table n'existe pas pour eux.
-- La profondeur des commentaires est non bornée (ADR-011 : ltree supporte des
-  arborescences profondes avec O(log n) via GiST).
-
-L'extension ltree reste installée et en usage actif pour `content.comment.path`.
-
-### Physique — densité
-
-| Table              | Avant              | Après                 |
-| ------------------ | ------------------ | --------------------- |
-| `content.tag`      | ~80 B (ltree path) | ~50 B (slug+name)     |
-| `content.tag_hierarchy` | —             | 12 B/tuple (~682/page)|
-
-Pour 232 tags à plat : 232 lignes dans `tag_hierarchy` (self-refs).
-Pour une taxonomie 4 niveaux de 232 tags répartis : max ~500-900 lignes.
-
-### Procédure `create_tag`
-
-Seul point d'entrée autorisé pour `marius_user`. Gère atomiquement :
-l'INSERT dans le spine `tag`, la self-reference depth=0, et l'héritage des
-ancêtres du parent via SELECT/INSERT depuis `tag_hierarchy`.
-
----
-
-## ADR-025 — Interface sémantique snake_case : schema.org sans guillemets SQL
-
-**Statut** : Adopté
-
-### Contexte
-
-Les vues sémantiques exposaient des alias camelCase entre guillemets doubles
-(`"givenName"`, `"datePublished"`, `"@type"`). Cette convention crée trois
-frictions opérationnelles :
-
-1. **Guillemets obligatoires dans toute requête SQL** : `SELECT "givenName" FROM
-   identity.v_person` — l'oubli d'un guillemet provoque une erreur silencieuse
-   (colonne non trouvée, ou pire : résolution vers une colonne système).
-2. **Caractère `@` illégal** comme identifiant SQL nu : `"@type"` ne peut jamais
-   être utilisé sans guillemets.
-3. **Friction avec les ORM et drivers** : la majorité des drivers (psycopg3, JDBC,
-   node-postgres) retournent les colonnes en minuscules par défaut, ce qui force
-   soit des mappings explicites, soit des guillemets systématiques.
-
-### Décision
-
-Toutes les vues sémantiques utilisent désormais le **snake_case PostgreSQL natif**,
-sans guillemets. Le vocabulaire schema.org est préservé dans les noms de colonnes
-par translittération directe : `givenName → given_name`, `datePublished →
-published_at`, `articleBody → article_body`.
-
-### Règles de translittération
-
-| Règle | Exemple schema.org | Alias vue |
-| ----- | ------------------ | --------- |
-| camelCase → snake_case | `givenName` | `given_name` |
-| Suffixe `_at` pour TIMESTAMPTZ | `datePublished` | `published_at` |
-| Suffixe `_cents` pour INT8 monétaire | `price` | `price_cents` |
-| Suffixe `_id` pour FK | `authorId` | `author_id` |
-| Suffixe `_code` pour codes numériques | `currencyCode` | `currency_code` |
-| Miroir du nom physique quand identique | `is_readable` | `is_readable` (pas `is_accessible_for_free`) |
-| `@type` → `doc_type` / `org_type` | `@type` | `doc_type`, `org_type` |
-
-### Exceptions documentées — refus de `address_country` pour `country_code`
-
-La suggestion d'aliaser `country_code` en `address_country` est refusée.
-`address_country` évoque une valeur textuelle ("France"), alors que le type
-physique est `SMALLINT` contenant un code ISO 3166-1 numérique (250).
-Un alias trompeur sur le type crée des erreurs de comparaison applicatives
-(`WHERE address_country = 'FR'` ne fonctionnerait pas sur un SMALLINT).
-Le nom `country_code` est conservé dans la table et dans la vue — il est
-auto-documenté : "c'est un code, pas un nom de pays".
-
-### Colonne `content.identity.name` → `headline`
-
-Renommage du nom physique, pas seulement de l'alias. `name` est ambigu dans
-le contexte d'un article (est-ce le titre, le nom de fichier, le nom d'auteur ?).
-`headline` est le terme exact schema.org/Article. Le renommage s'étend à
-`content.revision.snapshot_name → snapshot_headline` pour la cohérence du
-composant de versioning.
-
-### Colonnes `org.org_legal`
-
-`vat_number → vat_id` : le suffixe `_id` signale un identifiant externe (non
-une valeur calculée). Cohérent avec `duns` et `siret`. Ajout de `legal_name
-VARCHAR(128)` : raison sociale officielle, distincte du nom commercial dans
-`org.org_identity.name`.
-
-### Impact applicatif
-
-Les consommateurs existants de l'API doivent adapter leurs sélections :
-`"givenName"` → `given_name`, `"headline"` → `headline` (idem), etc. Ce
-changement est une rupture de contrat intentionnelle, effectuée en phase R&D
-avant toute mise en production.
-
----
-
-## ADR-024 — Fragmentation geo, soft delete RGPD et compliance de production
-
-**Statut** : Adopté
-
-### Contexte
-
-Quatre vecteurs de risque identifiés avant mise en production européenne :
-
-1. `geo.place_core` mélange spine spatial (coordonnées KNN) et adresse postale (logistique).
-2. `org.org_legal.vat_number VARCHAR(15)` trop court pour les identifiants fiscaux internationaux.
-3. Absence de mécanisme de droit à l'oubli (RGPD art. 17) et de traçabilité du consentement.
-4. Absence de mention de droits dans les métadonnées médias (risque légal d'exploitation d'images).
-
----
-
-### 1. Séparation `geo.place_core` / `geo.postal_address` (ECS spatial vs logistique)
-
-**Problème** : `geo.place_core` mixait coordonnées GPS et adresse postale dans le même tuple.
-Les requêtes géospatiales (KNN `<->`, `ST_DWithin`) ne nécessitent que `id + coordinates`,
-mais chargeaient systématiquement `street`, `locality`, `region`, `country`, `postal_code`.
-
-**Décision** : fragmentation en deux composants 1:1 :
-
-| Composant           | Sémantique schema.org  | Contenu                                     | Fréquence |
-| ------------------- | ---------------------- | ------------------------------------------- | --------- |
-| `geo.place_core`    | `Place`                | id, name, elevation, type_id, coordinates   | Hot       |
-| `geo.postal_address`| `PostalAddress`        | country_code, locality, region, street, postal_code | Warm |
-
-**Gain de densité** :
-
-| État         | Bytes/tuple | Tuples/page |
-| ------------ | ----------- | ----------- |
-| Avant (mixte)| ~211 B      | ~38         |
-| Après (spine)| ~26–46 B    | ~179–317    |
-
-Les requêtes KNN sur 500 000 lieux ne chargent plus aucun octet postal.
-
-**`country_code SMALLINT` (ISO 3166-1 numérique)** : cohérent avec `currency_code`
-d'ADR-022. 2 bytes pass-by-value vs `CHAR(2)` ou `VARCHAR(2)` varlena avec en-tête
-de 4 bytes. Le mapping vers le code alphabétique (`250 → "FR"`) est délégué à
-l'applicatif — table de lookup statique, zéro accès base de données.
-
----
-
-### 2. `vat_number VARCHAR(32)` (compliance internationale)
-
-`VARCHAR(15)` couvrait les numéros TVA européens (max 15 chars incluant le préfixe
-pays). Les identifiants fiscaux hors UE (GSTIN indien 15 chars avec format strict,
-CNPJ brésilien 18 chars avec ponctuation, CFE mexicain 13 chars) nécessitent
-davantage de marge. `VARCHAR(32)` absorbe tous les formats connus sans coût physique
-(varlena : seul le contenu réel est stocké).
-
----
-
-### 3. Soft delete RGPD : `anonymized_at` + procédure `anonymize_person`
-
-**Problème** : un `DELETE` physique d'une entité casserait les FK vers
-`commerce.transaction_core` — les commandes passéesdeviendraient incohérentes.
-Une suppression logicielle par colonne booléenne (`is_deleted`) serait ambiguë
-et difficile à auditer.
-
-**Décision** : colonne `anonymized_at TIMESTAMPTZ NULL` dans `identity.entity` (spine).
-
-- `NULL` = entité active.
-- Non-NULL = anonymisation exécutée, timestamp d'audit RGPD irréversible.
-
-La procédure `identity.anonymize_person(p_entity_id)` (SECURITY DEFINER) efface
-en une transaction atomique :
-
-| Composant                  | Action                                             |
-| -------------------------- | -------------------------------------------------- |
-| `identity.entity`          | `anonymized_at = now()`                            |
-| `identity.person_identity` | Tous les champs nominatifs → NULL                  |
-| `identity.person_contact`  | email, phone, fax, url → NULL                      |
-| `identity.person_biography`| Dates et lieux → NULL                              |
-| `identity.person_content`  | Textes personnels → NULL, media_id → NULL          |
-| `identity.account_core`    | username/slug → `user_<id>` (non nominatif)        |
-| `identity.auth`            | password_hash → `'ANONYMIZED'`, is_banned → true   |
-| `identity.group_to_account`| Suppression (appartenance = donnée de traçabilité) |
-
-L'entité physique subsiste dans `identity.entity` avec son `id` — toutes les FK
-`commerce.transaction_core.client_entity_id` restent valides.
-
-**`tos_accepted_at TIMESTAMPTZ NULL`** dans `identity.account_core` : timestamp
-d'acceptation des CGU. NULL = non encore accepté. Placé en première colonne
-(TIMESTAMPTZ 8 bytes, ADR-004) pour zéro padding.
-
----
-
-### 4. `copyright_notice VARCHAR(255)` dans `content.media_content`
-
-Placé dans `media_content` (cold path, BASSE fréquence) et non dans `media_core`
-(hot path, HAUTE fréquence). Un `SELECT` sur les listings d'articles ne charge
-jamais la mention de droits — elle n'est projetée que lors de l'affichage complet
-d'un média ou de la génération d'une page légale.
-
----
-
-## ADR-023 — Éclatement de l'agrégat de commande en composants ECS 1:1
-
-**Statut** : Adopté
-
-### Contexte
-
-Un système de commande réel nécessite des données de natures radicalement
-différentes : statut d'exécution (hot, consulté à chaque affichage), données
-financières (warm, consultées à la confirmation et à la facturation), informations
-de livraison (cold, consultées après expédition). Les stocker dans une table
-unique pollue systématiquement le cache CPU avec des données froides lors de
-chaque accès chaud.
-
-### Décision
-
-L'entité commande est décomposée en quatre composants denses, reliés par la
-même clé primaire (`transaction_id`) :
-
-| Composant                   | Sémantique schema.org             | Fréquence d'accès |
-| --------------------------- | --------------------------------- | ----------------- |
-| `transaction_core`          | `Order`                           | Très haute        |
-| `transaction_price`         | `PriceSpecification`              | Haute             |
-| `transaction_payment`       | `PaymentChargeSpecification`      | Moyenne           |
-| `transaction_delivery`      | `ParcelDelivery`                  | Basse             |
-| `transaction_item`          | `OrderItem` (N lignes)            | Haute             |
-
-Chaque composant est une relation 1:1 stricte (PK = FK vers `transaction_core`).
-
-### Justification — cache CPU et densité
-
-L'argument "éviter une jointure" en faveur d'une fat table repose sur un coût
-mal évalué. Une jointure sur clé primaire entière (`INT4`) est un déréférencement
-mémoire trivial sur une ligne déjà en cache — coût de l'ordre de quelques
-nanosecondes. La pollution de cache par des colonnes froides a un coût
-structurellement récurrent :
-
-- `tracking_number VARCHAR(255)` dans `transaction_core` gonfle chaque tuple
-  d'au moins 4 bytes d'en-tête varlena, plus le contenu. Sur 500 000 commandes,
-  un champ non nul de 20 chars ajoute ~12 Mo de bruit sur le heap du composant core.
-- Ce bruit réduit mécaniquement le nombre de tuples par page cache, augmentant
-  les shared_blks_hit nécessaires pour chauffer le working set.
-
-Avec la décomposition, `transaction_core` tient en **32 bytes/tuple** (~258
-tuples/page). L'affichage du statut de toutes les commandes d'un client ne charge
-jamais le transporteur ni le numéro de facture.
-
-### Arbitrages typologiques (DOD)
-
-**`currency_code SMALLINT`** (2 bytes, pass-by-value) plutôt que `CHAR(3)`
-(varlena avec padding) ou `VARCHAR(3)` (varlena). Le code ISO 4217 numérique
-(978 = EUR, 840 = USD, 826 = GBP) couvre l'ensemble des devises actives.
-Le mapping vers le code alphabétique est délégué à la couche applicative — c'est
-une simple table de lookup statique, jamais un accès base de données.
-
-**`tax_rate_bp INT4`** (4 bytes, pass-by-value) plutôt que `NUMERIC(5,2)`
-(varlena, arithmétique logicielle). Le taux est stocké en **basis points**
-(1 bp = 0,01%). Exemples : 2000 = 20,00% · 550 = 5,50%. L'arithmétique entière
-ALU native remplace l'émulation NUMERIC : `(amount_cents * tax_rate_bp) / 10000`
-reste dans les registres CPU.
-
-**Tous les montants en `INT8` centimes** (ADR-022) : `shipping_cents`,
-`discount_cents`, `tax_cents` suivent la même règle que `price_cents`. Pas de
-NUMERIC dans le hot path financier.
-
-### Procédure `create_transaction`
-
-La procédure crée atomiquement les quatre composants : `transaction_core` +
-`transaction_price` (devise + montants à zéro) + `transaction_payment` (statut 0)
-+ `transaction_delivery` (statut 0). **Il n'existe jamais de transaction_core sans
-ses trois composants** — l'invariant est garanti par l'atomicité de la transaction.
-Les composants sont mis à jour indépendamment au fil du cycle de vie de la commande.
-
-### Relation avec les autres ADR
-
-- ADR-005 (fragmentation ECS) : même pattern appliqué au domaine Commerce.
-- ADR-022 (INT8 centimes) : invariant étendu à tous les montants de `transaction_price`.
-- ADR-020 (SECURITY DEFINER) : `create_transaction` est la seule procédure
-  d'écriture autorisée pour `marius_user` sur `transaction_core` et ses composants.
-
----
-
-## ADR-022 — Optimisations CPU/mémoire : entiers natifs, VARCHAR, padding documenté, pushdown
-
-**Statut** : Adopté
-
-### Contexte
-
-Audit DOD ciblé sur les composants chauds (`commerce.product_core`,
-`commerce.transaction_item`, `org.org_legal`, `identity.auth`,
-`commerce.v_transaction`). Quatre ajustements de topologie physique.
-
-### 1. NUMERIC → INT8 centimes (commerce)
-
-Voir ADR-014 pour le raisonnement complet. Résumé :
-
-- `NUMERIC` est varlena → padding d'alignement, tuple deforming indirect, arithmétique logicielle.
-- `INT8` est pass-by-value, aligné sur 8 bytes, arithmétique ALU native.
-- Gain de densité : ×2 sur `product_core` (24 B/tuple), ×2,2 sur `transaction_item` (20 B/tuple).
-- Convention de nommage : suffixe `_cents` visible dans les noms de colonnes et dans les alias de vues.
-
-### 2. `CHAR(n)` → `VARCHAR(n)` (org.org_legal, commerce.product_identity)
-
-`CHAR(n)` dans PostgreSQL est varlena comme `VARCHAR(n)`. La seule différence est
-le padding espace sur écriture et le stripping sur lecture : **surcoût CPU sans
-contrepartie**. Les contraintes CHECK avec regex garantissent la longueur exacte et
-la conservation des zéros initiaux — `VARCHAR(n)` est strictement suffisant.
-
-Correction étendue à `isbn_ean VARCHAR(13)` dans `commerce.product_identity` pour
-la même raison (était `CHAR(13)`).
-
-### 3. Slot de padding libre dans `identity.auth` — documentation
-
-Séquence de types en fin de tuple fixe de `identity.auth` :
-```
-role_id   SMALLINT  (2 B, offset 28)
-is_banned BOOLEAN   (1 B, offset 30)
-[padding] —         (1 B, offset 31)  ← slot libre
-password_hash varlena               (offset 32, alignement 4 B)
-```
-
-Ce byte de padding est structurellement inévitable : la varlena `password_hash`
-requiert un alignement sur 4 bytes, et la séquence SMALLINT + BOOLEAN consomme
-3 bytes. Le slot à l'offset 31 est documenté comme **emplacement réservé pour un
-prochain BOOLEAN** (ex : `is_email_verified`) sans coût marginal.
-
-**Pourquoi pas le type interne `"char"`** : c'est un type système sans opérateurs
-de domaine ni coercition standard. Il rend le schéma opaque pour tout DBA et
-incompatible avec les outils standards. Pour les états fermés futurs, `SMALLINT`
-avec `CHECK (status IN (...))` reste le bon choix.
-
-### 4. Pushdown garanti sur `commerce.v_transaction` — documentation
-
-PostgreSQL inline les vues avant planification : la vue n'est pas une barrière
-d'optimisation. `WHERE "identifier" = :id` appliqué sur `v_transaction` se réécrit
-en `WHERE t.id = :id` par le query rewriter avant que le planner n'intervienne.
-`t.id` figure dans le GROUP BY — le prédicat est poussé avant `json_agg()`, l'index
-PK est utilisé, l'agrégation porte sur les lignes de la commande concernée uniquement.
-
-**Vérification recommandée** :
-```sql
-EXPLAIN (ANALYZE, BUFFERS)
-SELECT * FROM commerce.v_transaction WHERE "identifier" = 1;
--- Attendu : Index Scan sur commerce.transaction (PK), pas de Seq Scan.
-```
-
-**Invariant d'usage** : `v_transaction` ne doit jamais être appelée sans filtre.
-Un `SELECT *` sans `WHERE` agrège toutes les lignes de toutes les transactions.
-Documenté dans la définition de la vue.
+(`moderate_comments`). `manage_users` reste réservé aux rangs supérieurs.
+
+`delete_contents` est accordé dès le rôle `author` (ADR-029) : un auteur doit
+pouvoir supprimer ses propres brouillons, et la politique `rls_core_delete_own`
+vérifie ce bit. Par composition, editor et moderator en héritent. La suppression
+de contenus tiers est régie par `edit_others_contents` via `rls_core_delete_others`,
+indépendamment de `delete_contents`.
+
+`manage_tags` (2048) est présent dans `editor` et `moderator`. Le modérateur ayant
+autorité complète sur le cycle de vie éditorial (publication, modification, modération),
+lui retirer la gestion de la taxonomie créait une asymétrie opérationnelle : il peut
+publier un article mais pas créer le tag manquant pour l'indexer. `contributor` et
+`author` ne reçoivent pas `manage_tags` — la taxonomie est un domaine structurel
+distinct de la création de contenu.
 
 ---
 
@@ -782,58 +518,39 @@ applicative.
 
 ---
 
-## ADR-019 — Spine polymorphe : absence de validation de sous-type au niveau moteur
+## ADR-004 — Layout physique décroissant (règle universelle)
 
-**Statut** : Décision documentée (limite connue)
+**Statut** : Adopté
 
-### Contexte
+### Décision
 
-Plusieurs colonnes FK pointent vers `identity.entity` ou `org.entity` en
-implicitant la présence d'un composant spécifique :
+Ordre de déclaration systématique dans toutes les tables :
 
-| Colonne FK                      | Table                   | Composant attendu          |
-| ------------------------------- | ----------------------- | -------------------------- |
-| `account_core.person_entity_id` | `identity.account_core` | `identity.person_identity` |
-| `core.author_entity_id`         | `content.core`          | `identity.person_identity` |
-| `org_core.contact_entity_id`    | `org.org_core`          | `identity.person_contact`  |
-
-### Pourquoi l'intégrité de sous-type n'est pas portée par le moteur
-
-Ajouter une FK `account_core.person_entity_id → person_identity(entity_id)`
-rendrait le composant `person_identity` **obligatoire** pour toute entité
-référencée comme personne d'un compte. Cela viole la sémantique ECS fondamentale :
-**les composants sont optionnels par définition**. Le spine polymorphe perd son
-intérêt si chaque référence impose l'existence du composant.
-
-### Invariant effectif
-
-La cohérence est garantie par les procédures d'écriture (ADR-020) :
-
-- `identity.create_account()` crée systématiquement `entity + auth + account_core`
-- `identity.create_person()` crée systématiquement `entity + person_identity`
-
-Puisque l'écriture directe est révoquée pour `marius_user`, les procédures sont
-les seuls points d'entrée. L'intégrité de sous-type est une **invariante
-applicative**, pas une contrainte moteur.
-
-### Alternative si une validation moteur est requise
-
-```sql
-CREATE FUNCTION identity.fn_check_person_entity()
-RETURNS TRIGGER LANGUAGE plpgsql AS $$
-BEGIN
-  IF NEW.person_entity_id IS NOT NULL AND NOT EXISTS (
-    SELECT 1 FROM identity.person_identity WHERE entity_id = NEW.person_entity_id
-  ) THEN
-    RAISE EXCEPTION 'entity_id % sans composant person_identity', NEW.person_entity_id;
-  END IF;
-  RETURN NEW;
-END;
-$$;
+```
+8 bytes  →  TIMESTAMPTZ, FLOAT8, INT8
+4 bytes  →  INT4, DATE, FLOAT4
+2 bytes  →  SMALLINT
+1 byte   →  BOOLEAN
+variable →  CHAR, VARCHAR, TEXT, NUMERIC, ltree, geometry
 ```
 
-Non implémenté : coût d'un SELECT supplémentaire à chaque INSERT sur `account_core`,
-injustifié dès lors qu'ADR-020 est en place.
+### Justification
+
+PostgreSQL aligne chaque colonne sur un multiple de son `typalign`. Un type de
+petite taille suivi d'un type de grande taille génère du **padding invisible** :
+bytes non utilisés insérés automatiquement pour satisfaire l'alignement du type
+suivant. Ce padding est permanent et invisible dans `\d`.
+
+`NUMERIC` est varlena dans PostgreSQL quelle que soit la précision déclarée
+(`NUMERIC(12,2)` inclus). Il va systématiquement après les types fixes.
+
+**Exemples dans ce schéma** :
+
+| Table                      | Économie/tuple |
+| -------------------------- | -------------- |
+| `identity.auth`            | 12 B           |
+| `identity.person_identity` | 14 B           |
+| `identity.role`            | 2 B            |
 
 ---
 
@@ -967,67 +684,24 @@ couverts par les index partiels sur `published_at` et `status`.
 
 ---
 
-## ADR-004 — Layout physique décroissant (règle universelle)
+## ADR-007 — Schémas PostgreSQL pour l'isolation des domaines
 
 **Statut** : Adopté
 
 ### Décision
 
-Ordre de déclaration systématique dans toutes les tables :
-
-```
-8 bytes  →  TIMESTAMPTZ, FLOAT8, INT8
-4 bytes  →  INT4, DATE, FLOAT4
-2 bytes  →  SMALLINT
-1 byte   →  BOOLEAN
-variable →  CHAR, VARCHAR, TEXT, NUMERIC, ltree, geometry
-```
+Cinq schémas dédiés : `identity`, `geo`, `org`, `commerce`, `content`.
 
 ### Justification
 
-PostgreSQL aligne chaque colonne sur un multiple de son `typalign`. Un type de
-petite taille suivi d'un type de grande taille génère du **padding invisible** :
-bytes non utilisés insérés automatiquement pour satisfaire l'alignement du type
-suivant. Ce padding est permanent et invisible dans `\d`.
+La raison première n'est pas la lisibilité mais **l'isolation des permissions** :
+`GRANT USAGE ON SCHEMA content TO editorial_service` expose uniquement le domaine
+éditorial, sans aucun accès à `identity` ou `commerce`. Sans schémas, toute
+granularité fine de `GRANT` nécessite un `GRANT` table par table dans `public`.
 
-`NUMERIC` est varlena dans PostgreSQL quelle que soit la précision déclarée
-(`NUMERIC(12,2)` inclus). Il va systématiquement après les types fixes.
-
-**Exemples dans ce schéma** :
-
-| Table                      | Économie/tuple |
-| -------------------------- | -------------- |
-| `identity.auth`            | 12 B           |
-| `identity.person_identity` | 14 B           |
-| `identity.role`            | 2 B            |
-
----
-
-## ADR-003 — Bitmask `INT4` pour les permissions de rôle
-
-**Statut** : Adopté
-
-### Décision
-
-Les 15 permissions du système sont encodées dans une colonne `permissions INT4`
-unique, par OR binaire des puissances de 2.
-
-### Arbitrage entre les types candidats
-
-| Type     | Taille   | Contrainte                                               |
-| -------- | -------- | -------------------------------------------------------- |
-| `BIT(n)` | varlena  | 4 bytes d'en-tête + données ; opérateurs moins naturels  |
-| `INT2`   | 2 bytes  | Bit 15 = bit de signe ; toute 16e permission déborde     |
-| `INT4`   | 4 bytes  | 17 bits libres pour extensions ; `&`, `\|`, `~` natifs   |
-
-### Justification
-
-`INT4` : alignement natif sur 4 bytes (déclaré à offset 0 dans `identity.role`,
-zéro padding), opérateurs bitwise standard lisibles, 17 bits libres pour
-extensions futures sans migration de type.
-
-**Gain en CPU tuple deforming** : un accès à `permissions` est un seul appel
-`slot_getattr()`. Pertinent sur le hot path d'authentification.
+Corollaire : le `search_path` est configurable par rôle de connexion, permettant
+l'isolation par service applicatif sans configuration supplémentaire côté
+application.
 
 ---
 
@@ -1063,63 +737,284 @@ d'un listing, quelle que soit la requête applicative.
 
 ---
 
-## ADR-018 — Agrégation JSON dans les vues pour éliminer le N+1
+## ADR-019 — Spine polymorphe : absence de validation de sous-type au niveau moteur
+
+**Statut** : Décision documentée (limite connue)
+
+### Contexte
+
+Plusieurs colonnes FK pointent vers `identity.entity` ou `org.entity` en
+implicitant la présence d'un composant spécifique :
+
+| Colonne FK                      | Table                   | Composant attendu          |
+| ------------------------------- | ----------------------- | -------------------------- |
+| `account_core.person_entity_id` | `identity.account_core` | `identity.person_identity` |
+| `core.author_entity_id`         | `content.core`          | `identity.person_identity` |
+| `org_core.contact_entity_id`    | `org.org_core`          | `identity.person_contact`  |
+
+### Pourquoi l'intégrité de sous-type n'est pas portée par le moteur
+
+Ajouter une FK `account_core.person_entity_id → person_identity(entity_id)`
+rendrait le composant `person_identity` **obligatoire** pour toute entité
+référencée comme personne d'un compte. Cela viole la sémantique ECS fondamentale :
+**les composants sont optionnels par définition**. Le spine polymorphe perd son
+intérêt si chaque référence impose l'existence du composant.
+
+### Invariant effectif
+
+La cohérence est garantie par les procédures d'écriture (ADR-020) :
+
+- `identity.create_account()` crée systématiquement `entity + auth + account_core`
+- `identity.create_person()` crée systématiquement `entity + person_identity`
+
+Puisque l'écriture directe est révoquée pour `marius_user`, les procédures sont
+les seuls points d'entrée. L'intégrité de sous-type est une **invariante
+applicative**, pas une contrainte moteur.
+
+### Alternative si une validation moteur est requise
+
+```sql
+CREATE FUNCTION identity.fn_check_person_entity()
+RETURNS TRIGGER LANGUAGE plpgsql AS $$
+BEGIN
+  IF NEW.person_entity_id IS NOT NULL AND NOT EXISTS (
+    SELECT 1 FROM identity.person_identity WHERE entity_id = NEW.person_entity_id
+  ) THEN
+    RAISE EXCEPTION 'entity_id % sans composant person_identity', NEW.person_entity_id;
+  END IF;
+  RETURN NEW;
+END;
+$$;
+```
+
+Non implémenté : coût d'un SELECT supplémentaire à chaque INSERT sur `account_core`,
+injustifié dès lors qu'ADR-020 est en place.
+
+---
+
+## ADR-013 — `GENERATED ALWAYS AS IDENTITY` sur toutes les PK
+
+**Statut** : Adopté
+
+### Arbitrage entre les options d'identité
+
+| Option                 | Taille | Remarque                                                        |
+| ---------------------- | ------ | --------------------------------------------------------------- |
+| UUID v4                | 16 B   | Pertinent multi-nœuds ; pénalisant sur les tables de liaison N:N |
+| `SERIAL`               | 4 B    | Syntaxe propriétaire, dépréciée depuis PG 10                    |
+| `GENERATED BY DEFAULT` | 4 B    | Permet les INSERT explicites sans `OVERRIDING SYSTEM VALUE`     |
+| `GENERATED ALWAYS`     | 4 B    | Interdit les INSERT explicites — cohérent avec ADR-020          |
+
+### Justification
+
+`GENERATED ALWAYS` renforce le verrou d'ADR-020 au niveau de la séquence :
+même `marius_admin` doit passer par `OVERRIDING SYSTEM VALUE` pour forcer un
+id. Cela signale explicitement toute insertion hors procédure dans le code source.
+
+UUID est écarté pour les tables de liaison N:N : deux `INT4` en PK composée
+= 8 bytes. Deux UUID = 32 bytes. L'impact sur les index et la densité de page
+est direct sur les tables à forte volumétrie (`content_to_tag`, `transaction_item`).
+
+---
+
+## ADR-003 — Bitmask `INT4` pour les permissions de rôle
 
 **Statut** : Adopté
 
 ### Décision
 
-Les relations N:N (tags, médias, lignes de commande) sont agrégées directement
-dans le moteur via `json_agg()` + `json_build_object()` depuis les vues
-sémantiques `content.v_article` et `commerce.v_transaction`.
+Les 15 permissions du système sont encodées dans une colonne `permissions INT4`
+unique, par OR binaire des puissances de 2.
+
+### Arbitrage entre les types candidats
+
+| Type     | Taille   | Contrainte                                               |
+| -------- | -------- | -------------------------------------------------------- |
+| `BIT(n)` | varlena  | 4 bytes d'en-tête + données ; opérateurs moins naturels  |
+| `INT2`   | 2 bytes  | Bit 15 = bit de signe ; toute 16e permission déborde     |
+| `INT4`   | 4 bytes  | 17 bits libres pour extensions ; `&`, `\|`, `~` natifs   |
 
 ### Justification
 
-Sans agrégation moteur, la couche applicative effectue une requête principale
-+ N requêtes secondaires. Pour 3–20 éléments liés, le coût CPU de `json_agg`
-est systématiquement inférieur au coût cumulé des aller-retours réseau
-(1–5 ms/requête en LAN, 10–50 ms en WAN).
+`INT4` : alignement natif sur 4 bytes (déclaré à offset 0 dans `identity.role`,
+zéro padding), opérateurs bitwise standard lisibles, 17 bits libres pour
+extensions futures sans migration de type.
 
-La base de données livre un objet JSON directement désérialisable. L'applicatif
-n'orchestre aucune jointure secondaire.
-
-**Limites documentées** :
-
-- `commerce.v_transaction` sans `WHERE` force une agrégation complète sur
-  l'ensemble des transactions. Toujours filtrer par `id` ou `client_entity_id`.
-- `v_tag_tree."articleCount"` est une sous-requête corrélée réévaluée pour
-  chaque tag. Acceptable jusqu'à ~1 000 tags ; à matérialiser au-delà.
+**Gain en CPU tuple deforming** : un accès à `permissions` est un seul appel
+`slot_getattr()`. Pertinent sur le hot path d'authentification.
 
 ---
 
-## ADR-011 — `ltree` pour les hiérarchies de tags et commentaires
+## ADR-023 — Éclatement de l'agrégat de commande en composants ECS 1:1
 
 **Statut** : Adopté
 
-### Comparaison des patterns hiérarchiques
+### Contexte
 
-| Critère             | Adjacency List                | Nested Set                  | ltree                  |
-| ------------------- | ----------------------------- | --------------------------- | ---------------------- |
-| Lecture sous-arbre  | O(profondeur) — CTE récursive | O(1) — BETWEEN              | O(log n) — index GiST  |
-| INSERT              | O(1)                          | O(n) — recalcul intervalles | O(1) — concat chemin   |
-| Lisibilité du chemin| `parent_id = 42`              | `lft=5, rgt=12`             | `theology.patristics`  |
-| Index disponible    | B-tree sur `parent_id`        | B-tree sur `lft`/`rgt`      | GiST (`@>`, `<@`, KNN) |
+Un système de commande réel nécessite des données de natures radicalement
+différentes : statut d'exécution (hot, consulté à chaque affichage), données
+financières (warm, consultées à la confirmation et à la facturation), informations
+de livraison (cold, consultées après expédition). Les stocker dans une table
+unique pollue systématiquement le cache CPU avec des données froides lors de
+chaque accès chaud.
 
-### Justification
+### Décision
 
-**Tags** : la lecture de sous-arbres est le pattern dominant. `ltree` + index
-GiST résout en O(log n) sans CTE récursive. Les insertions sont rares.
+L'entité commande est décomposée en quatre composants denses, reliés par la
+même clé primaire (`transaction_id`) :
 
-**Commentaires** : le pattern dominant est l'affichage d'un thread complet
-(opérateur `<@`). ltree résout en O(log n). L'INSERT est O(1) — critique sous
-concurrence.
+| Composant                   | Sémantique schema.org             | Fréquence d'accès |
+| --------------------------- | --------------------------------- | ----------------- |
+| `transaction_core`          | `Order`                           | Très haute        |
+| `transaction_price`         | `PriceSpecification`              | Haute             |
+| `transaction_payment`       | `PaymentChargeSpecification`      | Moyenne           |
+| `transaction_delivery`      | `ParcelDelivery`                  | Basse             |
+| `transaction_item`          | `OrderItem` (N lignes)            | Haute             |
 
-Le Nested Set est écarté pour les commentaires : son INSERT est O(n) et requiert
-un verrouillage de table pour recalculer les intervalles. Incompatible avec une
-table à insertions concurrentes.
+Chaque composant est une relation 1:1 stricte (PK = FK vers `transaction_core`).
 
-La procédure `content.create_comment()` (ADR-012) construit le chemin en mémoire
-avant l'INSERT unique, sans aucun UPDATE post-insertion.
+### Justification — cache CPU et densité
+
+L'argument "éviter une jointure" en faveur d'une fat table repose sur un coût
+mal évalué. Une jointure sur clé primaire entière (`INT4`) est un déréférencement
+mémoire trivial sur une ligne déjà en cache — coût de l'ordre de quelques
+nanosecondes. La pollution de cache par des colonnes froides a un coût
+structurellement récurrent :
+
+- `tracking_number VARCHAR(255)` dans `transaction_core` gonfle chaque tuple
+  d'au moins 4 bytes d'en-tête varlena, plus le contenu. Sur 500 000 commandes,
+  un champ non nul de 20 chars ajoute ~12 Mo de bruit sur le heap du composant core.
+- Ce bruit réduit mécaniquement le nombre de tuples par page cache, augmentant
+  les shared_blks_hit nécessaires pour chauffer le working set.
+
+Avec la décomposition, `transaction_core` tient en **32 bytes/tuple** (~258
+tuples/page). L'affichage du statut de toutes les commandes d'un client ne charge
+jamais le transporteur ni le numéro de facture.
+
+### Arbitrages typologiques (DOD)
+
+**`currency_code SMALLINT`** (2 bytes, pass-by-value) plutôt que `CHAR(3)`
+(varlena avec padding) ou `VARCHAR(3)` (varlena). Le code ISO 4217 numérique
+(978 = EUR, 840 = USD, 826 = GBP) couvre l'ensemble des devises actives.
+Le mapping vers le code alphabétique est délégué à la couche applicative — c'est
+une simple table de lookup statique, jamais un accès base de données.
+
+**`tax_rate_bp INT4`** (4 bytes, pass-by-value) plutôt que `NUMERIC(5,2)`
+(varlena, arithmétique logicielle). Le taux est stocké en **basis points**
+(1 bp = 0,01%). Exemples : 2000 = 20,00% · 550 = 5,50%. L'arithmétique entière
+ALU native remplace l'émulation NUMERIC : `(amount_cents * tax_rate_bp) / 10000`
+reste dans les registres CPU.
+
+**Tous les montants en `INT8` centimes** (ADR-022) : `shipping_cents`,
+`discount_cents`, `tax_cents` suivent la même règle que `price_cents`. Pas de
+NUMERIC dans le hot path financier.
+
+### Procédure `create_transaction`
+
+La procédure crée atomiquement les quatre composants : `transaction_core` +
+`transaction_price` (devise + montants à zéro) + `transaction_payment` (statut 0)
++ `transaction_delivery` (statut 0). **Il n'existe jamais de transaction_core sans
+ses trois composants** — l'invariant est garanti par l'atomicité de la transaction.
+Les composants sont mis à jour indépendamment au fil du cycle de vie de la commande.
+
+### Relation avec les autres ADR
+
+- ADR-005 (fragmentation ECS) : même pattern appliqué au domaine Commerce.
+- ADR-022 (INT8 centimes) : invariant étendu à tous les montants de `transaction_price`.
+- ADR-020 (SECURITY DEFINER) : `create_transaction` est la seule procédure
+  d'écriture autorisée pour `marius_user` sur `transaction_core` et ses composants.
+
+---
+
+## ADR-024 — Fragmentation geo, soft delete RGPD et compliance de production
+
+**Statut** : Adopté
+
+### Contexte
+
+Quatre vecteurs de risque identifiés avant mise en production européenne :
+
+1. `geo.place_core` mélange spine spatial (coordonnées KNN) et adresse postale (logistique).
+2. `org.org_legal.vat_number VARCHAR(15)` trop court pour les identifiants fiscaux internationaux.
+3. Absence de mécanisme de droit à l'oubli (RGPD art. 17) et de traçabilité du consentement.
+4. Absence de mention de droits dans les métadonnées médias (risque légal d'exploitation d'images).
+
+---
+
+## ADR-026 — Closure Table pour la taxonomie des tags : ltree conservé pour les commentaires
+
+**Statut** : Adopté
+
+### Contexte
+
+Le composant `content.tag` utilisait un chemin `ltree` (`path`) et un `parent_id`
+pour représenter la hiérarchie taxonomique. Deux limites opérationnelles ont été
+identifiées :
+
+1. **Mobilité des tags** : déplacer un tag dans la hiérarchie avec ltree nécessite
+   un UPDATE en cascade de `path` sur tous les descendants — O(n_descendants) UPDATEs,
+   risque de locks en production.
+2. **Couplage structurel** : `path` encode à la fois l'identité du tag
+   (`theology.patristics.cyrille`) et sa position hiérarchique. Renommer un ancêtre
+   force un UPDATE en cascade sur tous ses descendants.
+
+### Décision : Closure Table pour les tags
+
+La hiérarchie est portée par `content.tag_hierarchy(ancestor_id, descendant_id, depth)`
+indépendamment des données du tag. Le spine `content.tag` devient `(id, slug, name)` — immuable.
+
+**Invariant opérationnel** : chaque tag possède obligatoirement une self-reference
+`(id, id, 0)`. La procédure `content.create_tag` garantit cet invariant à l'insertion.
+
+**Profondeur maximale = 4** : contrainte CHECK `depth BETWEEN 0 AND 4`. La procédure
+lève une exception à l'INSERT si un parent est déjà à depth 4.
+
+### Pourquoi pas ltree pour les tags
+
+| Critère           | ltree                            | Closure Table                         |
+| ----------------- | -------------------------------- | ------------------------------------- |
+| Sous-arbre query  | `path <@ 'parent.path'` (GiST)   | `WHERE ancestor_id = X AND depth > 0` (B-tree) |
+| Move tag          | UPDATE en cascade O(descendants) | DELETE + reinsert O(depth)            |
+| Rename ancestor   | UPDATE en cascade O(descendants) | Zéro impact (noms dans tag spine)     |
+| Insert nouveau tag| O(1) — concat path               | O(depth) — inserts ancêtres           |
+| Breadcrumb        | Gratuit (le path IS le chemin)   | string_agg + self-join                |
+| Dépendance        | Extension ltree                  | SQL pur                               |
+
+Pour une taxonomie éditoriale à insertions rares et depth ≤ 4, le coût du move
+est le critère déterminant. La requête de sous-arbre sur la Closure Table est un
+équijoin sur INT4 avec index B-tree — plus cache-friendly qu'un scan GiST sur varlena.
+
+### ltree conservé pour `content.comment`
+
+**Non négociable.** ADR-012 est architecturalement construit autour du ltree :
+la procédure `create_comment` utilise `nextval()` préalable + construction du
+chemin en mémoire + INSERT unique pour garantir zéro dead tuple. La Closure Table
+sur les commentaires est inapplicable :
+
+- Volume : 10 000+ commentaires/jour → O(profondeur) inserts par commentaire
+  avec locks en cascade sur `tag_hierarchy` équivalent.
+- Les commentaires ne sont jamais "déplacés" — la raison principale de la Closure
+  Table n'existe pas pour eux.
+- La profondeur des commentaires est non bornée (ADR-011 : ltree supporte des
+  arborescences profondes avec O(log n) via GiST).
+
+L'extension ltree reste installée et en usage actif pour `content.comment.path`.
+
+### Physique — densité
+
+| Table              | Avant              | Après                 |
+| ------------------ | ------------------ | --------------------- |
+| `content.tag`      | ~80 B (ltree path) | ~50 B (slug+name)     |
+| `content.tag_hierarchy` | —             | 12 B/tuple (~682/page)|
+
+Pour 232 tags à plat : 232 lignes dans `tag_hierarchy` (self-refs).
+Pour une taxonomie 4 niveaux de 232 tags répartis : max ~500-900 lignes.
+
+### Procédure `create_tag`
+
+Seul point d'entrée autorisé pour `marius_user`. Gère atomiquement :
+l'INSERT dans le spine `tag`, la self-reference depth=0, et l'héritage des
+ancêtres du parent via SELECT/INSERT depuis `tag_hierarchy`.
 
 ---
 
@@ -1173,49 +1068,148 @@ le niveau d'abstraction adéquat.
 
 ---
 
-## ADR-007 — Schémas PostgreSQL pour l'isolation des domaines
+## ADR-009 — Table `commerce.transaction_item` : résolution 1NF
 
 **Statut** : Adopté
 
 ### Décision
 
-Cinq schémas dédiés : `identity`, `geo`, `org`, `commerce`, `content`.
+Les lignes de commande sont une table dédiée :
+`commerce.transaction_item(unit_price_snapshot_cents, transaction_id, product_id, quantity)`.
 
 ### Justification
 
-La raison première n'est pas la lisibilité mais **l'isolation des permissions** :
-`GRANT USAGE ON SCHEMA content TO editorial_service` expose uniquement le domaine
-éditorial, sans aucun accès à `identity` ou `commerce`. Sans schémas, toute
-granularité fine de `GRANT` nécessite un `GRANT` table par table dans `public`.
+Une liste d'identifiants sérialisée en colonne varchar rend impossible toute FK
+référentielle, tout agrégat par produit et tout historique de prix. Le champ
+`unit_price_snapshot_cents INT8` capture le prix en centimes au moment de l'INSERT :
+le prix courant peut évoluer sans altérer l'historique des commandes passées.
 
-Corollaire : le `search_path` est configurable par rôle de connexion, permettant
-l'isolation par service applicatif sans configuration supplémentaire côté
-application.
+`quantity INT4` (et non `SMALLINT`) : SMALLINT max = 32 767. Les commandes B2B
+peuvent dépasser ce volume. INT4 couvre jusqu'à ~2,1 milliards.
 
 ---
 
-## ADR-013 — `GENERATED ALWAYS AS IDENTITY` sur toutes les PK
+## ADR-011 — `ltree` pour les hiérarchies de tags et commentaires
 
 **Statut** : Adopté
 
-### Arbitrage entre les options d'identité
+### Comparaison des patterns hiérarchiques
 
-| Option                 | Taille | Remarque                                                        |
-| ---------------------- | ------ | --------------------------------------------------------------- |
-| UUID v4                | 16 B   | Pertinent multi-nœuds ; pénalisant sur les tables de liaison N:N |
-| `SERIAL`               | 4 B    | Syntaxe propriétaire, dépréciée depuis PG 10                    |
-| `GENERATED BY DEFAULT` | 4 B    | Permet les INSERT explicites sans `OVERRIDING SYSTEM VALUE`     |
-| `GENERATED ALWAYS`     | 4 B    | Interdit les INSERT explicites — cohérent avec ADR-020          |
+| Critère             | Adjacency List                | Nested Set                  | ltree                  |
+| ------------------- | ----------------------------- | --------------------------- | ---------------------- |
+| Lecture sous-arbre  | O(profondeur) — CTE récursive | O(1) — BETWEEN              | O(log n) — index GiST  |
+| INSERT              | O(1)                          | O(n) — recalcul intervalles | O(1) — concat chemin   |
+| Lisibilité du chemin| `parent_id = 42`              | `lft=5, rgt=12`             | `theology.patristics`  |
+| Index disponible    | B-tree sur `parent_id`        | B-tree sur `lft`/`rgt`      | GiST (`@>`, `<@`, KNN) |
 
 ### Justification
 
-`GENERATED ALWAYS` renforce le verrou d'ADR-020 au niveau de la séquence :
-même `marius_admin` doit passer par `OVERRIDING SYSTEM VALUE` pour forcer un
-id. Cela signale explicitement toute insertion hors procédure dans le code source.
+**Tags** : la lecture de sous-arbres est le pattern dominant. `ltree` + index
+GiST résout en O(log n) sans CTE récursive. Les insertions sont rares.
 
-UUID est écarté pour les tables de liaison N:N : deux `INT4` en PK composée
-= 8 bytes. Deux UUID = 32 bytes. L'impact sur les index et la densité de page
-est direct sur les tables à forte volumétrie (`content_to_tag`, `transaction_item`).
+**Commentaires** : le pattern dominant est l'affichage d'un thread complet
+(opérateur `<@`). ltree résout en O(log n). L'INSERT est O(1) — critique sous
+concurrence.
+
+Le Nested Set est écarté pour les commentaires : son INSERT est O(n) et requiert
+un verrouillage de table pour recalculer les intervalles. Incompatible avec une
+table à insertions concurrentes.
+
+La procédure `content.create_comment()` (ADR-012) construit le chemin en mémoire
+avant l'INSERT unique, sans aucun UPDATE post-insertion.
+
+---
+
+## ADR-018 — Agrégation JSON dans les vues pour éliminer le N+1
+
+**Statut** : Adopté
+
+### Décision
+
+Les relations N:N (tags, médias, lignes de commande) sont agrégées directement
+dans le moteur via `json_agg()` + `json_build_object()` depuis les vues
+sémantiques `content.v_article` et `commerce.v_transaction`.
+
+### Justification
+
+Sans agrégation moteur, la couche applicative effectue une requête principale
++ N requêtes secondaires. Pour 3–20 éléments liés, le coût CPU de `json_agg`
+est systématiquement inférieur au coût cumulé des aller-retours réseau
+(1–5 ms/requête en LAN, 10–50 ms en WAN).
+
+La base de données livre un objet JSON directement désérialisable. L'applicatif
+n'orchestre aucune jointure secondaire.
+
+**Limites documentées** :
+
+- `commerce.v_transaction` sans `WHERE` force une agrégation complète sur
+  l'ensemble des transactions. Toujours filtrer par `id` ou `client_entity_id`.
+- `v_tag_tree."articleCount"` est une sous-requête corrélée réévaluée pour
+  chaque tag. Acceptable jusqu'à ~1 000 tags ; à matérialiser au-delà.
+
+---
+
+## ADR-021 — Correctifs de cohérence : snapshot complet, verrou exclusif, trigger manquant
+
+**Statut** : Adopté
+
+### Contexte
+
+Audit externe ayant produit 8 suggestions. Trois adressent des lacunes réelles ;
+cinq sont écartées (voir analyse en fin d'entrée).
+
+### Correction 1 — Snapshot complet dans `content.revision`
+
+`content.save_revision()` et `content.create_document()` ne capturaient que
+`name`, `slug` et `body`. Les colonnes `alternative_headline` et `description`
+(portées par `content.identity`) n'étaient pas versionnées.
+
+**Conséquence** : un `UPDATE` sur `alternative_headline` entre deux révisions
+effaçait silencieusement la valeur précédente de l'historique. Le snapshot était
+fonctionnellement faux sans aucun signal d'erreur.
+
+**Correction** : deux colonnes ajoutées à `content.revision` :
+`snapshot_alternative_headline VARCHAR(255)` et `snapshot_description VARCHAR(1000)`.
+Les procédures `save_revision` et `create_document` les alimentent désormais.
+
+La règle générale en découlant : **tout champ de `content.identity` éditable par
+l'utilisateur doit avoir son équivalent `snapshot_*` dans `content.revision`**.
+
+### Correction 2 — `FOR UPDATE` dans `create_transaction_item`
+
+La procédure lisait `product_core` avec `FOR SHARE` (verrou partagé) avant de
+décrémenter le stock. Deux transactions concurrentes sur le même produit pouvaient
+lire simultanément `stock = 5`, vérifier la disponibilité, puis décrémenter
+chacune — produisant un stock négatif (sur-vente).
+
+`FOR SHARE` : plusieurs lecteurs simultanés autorisés → race condition possible.
+`FOR UPDATE` : verrou exclusif sur la ligne → la seconde transaction attend la
+fin de la première avant de lire le stock mis à jour.
+
+**Correction** : `FOR SHARE` → `FOR UPDATE` sur le `SELECT price`.
+
+**Note** : le `UPDATE commerce.product_core SET stock = stock - p_quantity`
+qui suit opère sur la même ligne déjà verrouillée — pas de deadlock possible.
+
+### Correction 3 — Trigger `modified_at` manquant sur `content.media_core`
+
+`content.media_core` expose une colonne `modified_at TIMESTAMPTZ NULL` mais
+n'avait pas de trigger pour la mettre à jour. Toutes les autres tables mutables
+du schéma (`identity.auth`, `content.core`, `commerce.transaction`) en
+disposaient.
+
+**Correction** : trigger `BEFORE UPDATE` avec clause `WHEN` ciblant les colonnes
+descriptives (`mime_type`, `folder_url`, `file_name`, `width`, `height`).
+
+### Suggestions écartées
+
+| # | Suggestion | Motif d'exclusion |
+|---|---|---|
+| 1 | Retry automatique dans `fn_slug_deduplicate` | Comportement intentionnel documenté dans le DDL : la contrainte `UNIQUE` est le garde-fou ; l'erreur 23505 est propre et attrapable côté applicatif. Ajouter un retry dans le trigger déplacerait la responsabilité du retry au mauvais niveau. |
+| 4 | Remplacer `CHECK (path IS NOT NULL)` par `NOT NULL` | Déjà documenté en détail dans le DDL. Le `CHECK` est l'unique moyen de permettre `OVERRIDING SYSTEM VALUE` dans `create_comment` tout en rejetant les INSERT directs sans path. |
+| 5 | B-tree complémentaire si BRIN inefficace | Déjà couvert en ADR-017 : la condition d'efficacité (insertions chronologiques) est documentée ; l'ajout d'un B-tree complémentaire est une décision opérationnelle à prendre sur données réelles, pas un invariant à inscrire dans le blueprint. |
+| 7 | Partitionnement de `content.comment` et `content.revision` | Prématuré à l'échelle cible (500 k utilisateurs). PostgreSQL gère confortablement ces volumes avec les index existants. Le partitionnement ajoute de la complexité opérationnelle significative (maintenance des partitions, contraintes croisées) sans bénéfice mesurable à ce stade. |
+| 8 | Suite de tests pgTAP | Hors périmètre du blueprint DDL. Pertinent comme étape CI/CD distincte. |
 
 ---
 
@@ -1265,24 +1259,73 @@ soit sans ambiguïté.
 
 ---
 
-## ADR-009 — Table `commerce.transaction_item` : résolution 1NF
+## ADR-022 — Optimisations CPU/mémoire : entiers natifs, VARCHAR, padding documenté, pushdown
 
 **Statut** : Adopté
 
-### Décision
+### Contexte
 
-Les lignes de commande sont une table dédiée :
-`commerce.transaction_item(unit_price_snapshot_cents, transaction_id, product_id, quantity)`.
+Audit DOD ciblé sur les composants chauds (`commerce.product_core`,
+`commerce.transaction_item`, `org.org_legal`, `identity.auth`,
+`commerce.v_transaction`). Quatre ajustements de topologie physique.
 
-### Justification
+### 1. NUMERIC → INT8 centimes (commerce)
 
-Une liste d'identifiants sérialisée en colonne varchar rend impossible toute FK
-référentielle, tout agrégat par produit et tout historique de prix. Le champ
-`unit_price_snapshot_cents INT8` capture le prix en centimes au moment de l'INSERT :
-le prix courant peut évoluer sans altérer l'historique des commandes passées.
+Voir ADR-014 pour le raisonnement complet. Résumé :
 
-`quantity INT4` (et non `SMALLINT`) : SMALLINT max = 32 767. Les commandes B2B
-peuvent dépasser ce volume. INT4 couvre jusqu'à ~2,1 milliards.
+- `NUMERIC` est varlena → padding d'alignement, tuple deforming indirect, arithmétique logicielle.
+- `INT8` est pass-by-value, aligné sur 8 bytes, arithmétique ALU native.
+- Gain de densité : ×2 sur `product_core` (24 B/tuple), ×2,2 sur `transaction_item` (20 B/tuple).
+- Convention de nommage : suffixe `_cents` visible dans les noms de colonnes et dans les alias de vues.
+
+### 2. `CHAR(n)` → `VARCHAR(n)` (org.org_legal, commerce.product_identity)
+
+`CHAR(n)` dans PostgreSQL est varlena comme `VARCHAR(n)`. La seule différence est
+le padding espace sur écriture et le stripping sur lecture : **surcoût CPU sans
+contrepartie**. Les contraintes CHECK avec regex garantissent la longueur exacte et
+la conservation des zéros initiaux — `VARCHAR(n)` est strictement suffisant.
+
+Correction étendue à `isbn_ean VARCHAR(13)` dans `commerce.product_identity` pour
+la même raison (était `CHAR(13)`).
+
+### 3. Slot de padding libre dans `identity.auth` — documentation
+
+Séquence de types en fin de tuple fixe de `identity.auth` :
+```
+role_id   SMALLINT  (2 B, offset 28)
+is_banned BOOLEAN   (1 B, offset 30)
+[padding] —         (1 B, offset 31)  ← slot libre
+password_hash varlena               (offset 32, alignement 4 B)
+```
+
+Ce byte de padding est structurellement inévitable : la varlena `password_hash`
+requiert un alignement sur 4 bytes, et la séquence SMALLINT + BOOLEAN consomme
+3 bytes. Le slot à l'offset 31 est documenté comme **emplacement réservé pour un
+prochain BOOLEAN** (ex : `is_email_verified`) sans coût marginal.
+
+**Pourquoi pas le type interne `"char"`** : c'est un type système sans opérateurs
+de domaine ni coercition standard. Il rend le schéma opaque pour tout DBA et
+incompatible avec les outils standards. Pour les états fermés futurs, `SMALLINT`
+avec `CHECK (status IN (...))` reste le bon choix.
+
+### 4. Pushdown garanti sur `commerce.v_transaction` — documentation
+
+PostgreSQL inline les vues avant planification : la vue n'est pas une barrière
+d'optimisation. `WHERE "identifier" = :id` appliqué sur `v_transaction` se réécrit
+en `WHERE t.id = :id` par le query rewriter avant que le planner n'intervienne.
+`t.id` figure dans le GROUP BY — le prédicat est poussé avant `json_agg()`, l'index
+PK est utilisé, l'agrégation porte sur les lignes de la commande concernée uniquement.
+
+**Vérification recommandée** :
+```sql
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT * FROM commerce.v_transaction WHERE "identifier" = 1;
+-- Attendu : Index Scan sur commerce.transaction (PK), pas de Seq Scan.
+```
+
+**Invariant d'usage** : `v_transaction` ne doit jamais être appelée sans filtre.
+Un `SELECT *` sans `WHERE` agrège toutes les lignes de toutes les transactions.
+Documenté dans la définition de la vue.
 
 ---
 
@@ -1308,6 +1351,78 @@ absent de tout overhead de padding.
 
 ---
 
+## ADR-025 — Interface sémantique snake_case : schema.org sans guillemets SQL
+
+**Statut** : Adopté
+
+### Contexte
+
+Les vues sémantiques exposaient des alias camelCase entre guillemets doubles
+(`"givenName"`, `"datePublished"`, `"@type"`). Cette convention crée trois
+frictions opérationnelles :
+
+1. **Guillemets obligatoires dans toute requête SQL** : `SELECT "givenName" FROM
+   identity.v_person` — l'oubli d'un guillemet provoque une erreur silencieuse
+   (colonne non trouvée, ou pire : résolution vers une colonne système).
+2. **Caractère `@` illégal** comme identifiant SQL nu : `"@type"` ne peut jamais
+   être utilisé sans guillemets.
+3. **Friction avec les ORM et drivers** : la majorité des drivers (psycopg3, JDBC,
+   node-postgres) retournent les colonnes en minuscules par défaut, ce qui force
+   soit des mappings explicites, soit des guillemets systématiques.
+
+### Décision
+
+Toutes les vues sémantiques utilisent désormais le **snake_case PostgreSQL natif**,
+sans guillemets. Le vocabulaire schema.org est préservé dans les noms de colonnes
+par translittération directe : `givenName → given_name`, `datePublished →
+published_at`, `articleBody → article_body`.
+
+### Règles de translittération
+
+| Règle | Exemple schema.org | Alias vue |
+| ----- | ------------------ | --------- |
+| camelCase → snake_case | `givenName` | `given_name` |
+| Suffixe `_at` pour TIMESTAMPTZ | `datePublished` | `published_at` |
+| Suffixe `_cents` pour INT8 monétaire | `price` | `price_cents` |
+| Suffixe `_id` pour FK | `authorId` | `author_id` |
+| Suffixe `_code` pour codes numériques | `currencyCode` | `currency_code` |
+| Miroir du nom physique quand identique | `is_readable` | `is_readable` (pas `is_accessible_for_free`) |
+| `@type` → `doc_type` / `org_type` | `@type` | `doc_type`, `org_type` |
+
+### Exceptions documentées — refus de `address_country` pour `country_code`
+
+La suggestion d'aliaser `country_code` en `address_country` est refusée.
+`address_country` évoque une valeur textuelle ("France"), alors que le type
+physique est `SMALLINT` contenant un code ISO 3166-1 numérique (250).
+Un alias trompeur sur le type crée des erreurs de comparaison applicatives
+(`WHERE address_country = 'FR'` ne fonctionnerait pas sur un SMALLINT).
+Le nom `country_code` est conservé dans la table et dans la vue — il est
+auto-documenté : "c'est un code, pas un nom de pays".
+
+### Colonne `content.identity.name` → `headline`
+
+Renommage du nom physique, pas seulement de l'alias. `name` est ambigu dans
+le contexte d'un article (est-ce le titre, le nom de fichier, le nom d'auteur ?).
+`headline` est le terme exact schema.org/Article. Le renommage s'étend à
+`content.revision.snapshot_name → snapshot_headline` pour la cohérence du
+composant de versioning.
+
+### Colonnes `org.org_legal`
+
+`vat_number → vat_id` : le suffixe `_id` signale un identifiant externe (non
+une valeur calculée). Cohérent avec `duns` et `siret`. Ajout de `legal_name
+VARCHAR(128)` : raison sociale officielle, distincte du nom commercial dans
+`org.org_identity.name`.
+
+### Impact applicatif
+
+Les consommateurs existants de l'API doivent adapter leurs sélections :
+`"givenName"` → `given_name`, `"headline"` → `headline` (idem), etc. Ce
+changement est une rupture de contrat intentionnelle, effectuée en phase R&D
+avant toute mise en production.
+
+---
+
 ## ADR-001 — Séparation DDL / DML
 
 **Statut** : Adopté
@@ -1321,6 +1436,53 @@ Deux artefacts distincts :
 **Exception** : les `INSERT` sur `identity.permission_bit` et `identity.role`
 restent dans le DDL — données de configuration structurelle insécables du schéma
 au même titre que les `REVOKE` qui les suivent.
+
+---
+
+## ADR-030 — Audit commerce : immuabilité financière, gardes AOT et séparation des privilèges
+
+**Statut** : Adopté
+
+### Contexte
+
+Audit ciblé du schéma `commerce` sur quatre axes : séparation des privilèges lecture/transaction, immuabilité des enregistrements financiers, déshydratation du layout, robustesse aux concurrences.
+
+### Correction 1 — Immuabilité de `transaction_item` (Trigger moteur)
+
+**Invariant** : `unit_price_snapshot_cents` est un enregistrement d'audit financier. Sa valeur au moment de l'INSERT constitue la preuve du prix contractuel. Toute modification ultérieure, même par `marius_admin`, invalide l'intégrité de l'historique.
+
+**Mécanisme** : trigger `BEFORE UPDATE` `transaction_item_immutable` appelant `commerce.fn_deny_transaction_item_update()` — lève `55000 (object_not_in_prerequisite_state)` sur tout UPDATE. La seule opération légitime sur une ligne existante est la suppression (annulation de ligne) : elle est couverte par `ON DELETE CASCADE` depuis `transaction_core`.
+
+**Cohérence avec le commentaire DDL** : la table documentait déjà `unit_price_snapshot_cents` comme "immuable après création". Le trigger matérialise cet invariant au niveau moteur.
+
+### Correction 2 — Gardes AOT sur `create_transaction_item`
+
+Deux gardes manquants :
+
+**Garde ownership** : la procédure étant SECURITY DEFINER (bypass RLS), tout `marius_user` pouvait ajouter des lignes à n'importe quelle transaction. Garde ajouté : `client_entity_id = rls_user_id() OR manage_commerce (262144)`.
+
+**Garde statut** : pas de vérification que la transaction est en état `pending (status=0)`. Un item pouvait être inséré sur une transaction confirmée, expédiée ou annulée. Garde ajouté : `status <> 0` lève `55000`. La lecture du statut utilise `FOR SHARE` pour éviter une race condition avec `rls_transaction_update`.
+
+### Correction 3 — Garde AOT sur `create_transaction`
+
+`create_transaction` était dans la liste des "procédures sans garde" (ADR-020). Tout subscriber pouvait créer une transaction pour n'importe quel `client_entity_id` (usurpation). Garde ajouté : `p_client_entity_id = rls_user_id() OR manage_commerce (262144)`.
+
+### Analyse des points conformes
+
+**Séparation lecture prix / transactions** : cohérente. Le catalogue produit (`product_core`, `product_identity`) est intentionnellement public — pas de RLS, pas de REVOKE. Les données transactionnelles sont toutes sous REVOKE SELECT + RLS sur `transaction_core`.
+
+**Déshydratation** : conforme à ADR-004 et ADR-023. `transaction_core` porte uniquement les champs hot path. `product_content` a `toast_tuple_target = 128`. `transaction_core.description TEXT` est une varlena dans le hot tuple — non-nul, elle gonfle chaque lecture de statut ; la valeur NULL (défaut) maintient le tuple à 32B.
+
+**Race condition sur le stock** : `FOR UPDATE` sur `product_core` dans `create_transaction_item` + CHECK `stock >= 0` — correctement traité depuis ADR-021.
+
+### Invariant de maintenance
+
+Toute procédure SECURITY DEFINER opérant sur des données financières doit vérifier :
+1. L'ownership du contexte (à qui appartient la ressource cible)
+2. L'état courant de la ressource (transitions d'état valides)
+3. Le bit de permission approprié
+
+Ces trois gardes sont indépendants et tous trois nécessaires : chacun couvre un vecteur d'attaque distinct.
 
 ---
 
@@ -1342,4 +1504,4 @@ au même titre que les `REVOKE` qui les suivent.
 
 ---
 
-*Architecture ECS/DOD · PostgreSQL 18 · Projet Marius · 28 décisions*
+*Architecture ECS/DOD · PostgreSQL 18 · Projet Marius · 30 décisions*

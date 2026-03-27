@@ -7,6 +7,7 @@
 --          du stock (ADR-021 FOR UPDATE), immutabilité du snapshot de prix
 --          en centimes (ADR-022), rejet de la sur-vente (CHECK stock_positive),
 --          agrégation correcte dans v_transaction (subtotal + total avec taxes).
+--          ADR-030 : gardes ownership/statut create_transaction(_item), trigger immutabilité.
 --
 -- Exécution : psql -U postgres -d marius -f tests/04_commerce_logic.sql
 -- ==============================================================================
@@ -15,7 +16,7 @@
 
 BEGIN;
 
-SELECT plan(12);
+SELECT plan(17);
 
 
 -- ============================================================
@@ -234,6 +235,115 @@ SELECT is(
   'v_transaction.currency_code = 978 (EUR)'
 );
 
+
+
+
+-- ============================================================
+-- TEST 13 — create_transaction : ownership guard (ADR-030)
+-- Un subscriber ne peut pas créer une transaction pour un autre client.
+-- ============================================================
+
+DO $$
+DECLARE v_id INT;
+BEGIN
+  CALL identity.create_account(
+    'buyer_other', '$argon2id$v=19$m=65536$other',
+    'buyer-other', 7, 'fr_FR', v_id
+  );
+  INSERT INTO _ids VALUES ('other_client_id', v_id);
+END;
+$$;
+
+SELECT set_config('marius.user_id',
+  (SELECT val::text FROM _ids WHERE key = 'client_id'), true);
+SELECT set_config('marius.auth_bits', '16384', true);  -- subscriber
+SET LOCAL ROLE marius_user;
+
+SELECT throws_ok(
+  format(
+    'CALL commerce.create_transaction(%s, %s, 978, 0, NULL)',
+    (SELECT val FROM _ids WHERE key = 'other_client_id'),  -- autre client
+    (SELECT val FROM _ids WHERE key = 'org_id')
+  ),
+  '42501', NULL,
+  'create_transaction : subscriber ne peut pas créer une transaction pour un autre client (ADR-030)'
+);
+
+RESET ROLE;
+
+
+-- ============================================================
+-- TEST 14 — create_transaction_item : statut guard (ADR-030)
+-- Impossible d'ajouter un item à une transaction confirmée (status ≠ 0).
+-- ============================================================
+
+-- Confirmer la transaction de test (status 0 → 1)
+UPDATE commerce.transaction_core
+SET    status = 1
+WHERE  id = (SELECT val FROM _ids WHERE key = 'txn_id');
+
+SELECT set_config('marius.user_id',
+  (SELECT val::text FROM _ids WHERE key = 'client_id'), true);
+SELECT set_config('marius.auth_bits', '16384', true);
+SET LOCAL ROLE marius_user;
+
+SELECT throws_ok(
+  format(
+    'CALL commerce.create_transaction_item(%s, %s, 1)',
+    (SELECT val FROM _ids WHERE key = 'txn_id'),
+    (SELECT val FROM _ids WHERE key = 'product_id')
+  ),
+  '55000', NULL,
+  'create_transaction_item : impossible d''ajouter un item à une transaction confirmée (ADR-030)'
+);
+
+RESET ROLE;
+
+-- Remettre en pending pour les tests suivants
+UPDATE commerce.transaction_core
+SET    status = 0
+WHERE  id = (SELECT val FROM _ids WHERE key = 'txn_id');
+
+
+-- ============================================================
+-- TEST 15 — create_transaction_item : ownership guard (ADR-030)
+-- Un subscriber ne peut pas ajouter des items à la transaction d'un autre client.
+-- ============================================================
+
+SELECT set_config('marius.user_id',
+  (SELECT val::text FROM _ids WHERE key = 'other_client_id'), true);  -- pas le client de txn_id
+SELECT set_config('marius.auth_bits', '16384', true);
+SET LOCAL ROLE marius_user;
+
+SELECT throws_ok(
+  format(
+    'CALL commerce.create_transaction_item(%s, %s, 1)',
+    (SELECT val FROM _ids WHERE key = 'txn_id'),
+    (SELECT val FROM _ids WHERE key = 'product_id')
+  ),
+  '42501', NULL,
+  'create_transaction_item : subscriber ne peut pas ajouter un item à la transaction d''autrui (ADR-030)'
+);
+
+RESET ROLE;
+
+
+-- ============================================================
+-- TEST 16 — Trigger immutabilité de transaction_item (ADR-030)
+-- unit_price_snapshot_cents ne peut pas être modifié après INSERT.
+-- ============================================================
+
+SELECT throws_ok(
+  format(
+    $$UPDATE commerce.transaction_item
+      SET    unit_price_snapshot_cents = 9999
+      WHERE  transaction_id = %s AND product_id = %s$$,
+    (SELECT val FROM _ids WHERE key = 'txn_id'),
+    (SELECT val FROM _ids WHERE key = 'product_id')
+  ),
+  '55000', NULL,
+  'transaction_item : UPDATE interdit par trigger immutabilité (ADR-030)'
+);
 
 SELECT * FROM finish();
 ROLLBACK;

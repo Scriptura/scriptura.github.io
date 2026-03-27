@@ -1,6 +1,6 @@
 -- ==============================================================================
 -- 06_rls_policies.sql
--- Tests fonctionnels : Row-Level Security — Pattern GUC Stateless (ADR-028)
+-- Tests fonctionnels : Row-Level Security — Pattern GUC Stateless (ADR-028/029)
 -- pgTAP test suite — Projet Marius · PostgreSQL 18 · ECS/DOD
 --
 -- Stratégie : chaque scénario suit le cycle
@@ -13,23 +13,41 @@
 --   (les entités 1-8 et les documents 1-16 doivent exister)
 --
 -- Exécution : psql -U postgres -d marius -f tests/06_rls_policies.sql
+--
+-- Révisions :
+--   ADR-029 — A4  : auth_bits corrigé (59430→124990, moderator)
+--             A8  : éditeur voit brouillon d'autrui via edit_others_contents (32768)
+--             A9  : auteur DELETE son propre contenu via delete_contents (8)
+--             A10 : subscriber ne peut pas DELETE le contenu d'autrui
+--             B4  : gestionnaire manage_commerce sans view_transactions peut UPDATE
+--             D4  : REVOKE SELECT commerce.transaction_price
+--             D5  : REVOKE SELECT commerce.transaction_item
+--             D6  : REVOKE SELECT content.identity
+--             D7  : REVOKE SELECT content.body
+--             D8  : REVOKE SELECT content.revision
+--   ADR-020 rev. — E1-E4 : gardes d'autorisation dans procédures SECURITY DEFINER
+--   ADR-028 rev. — F1-F4 : RLS content.comment
+--   ADR-029 inv.2 — G1-G3 : WHERE GUC dans vues (security context postgres/BYPASSRLS)
+--   ADR-029 inv.3 — G4   : save_revision ownership check
+--   ADR-020 rev. — H1-H4 : add_tag_to_document / remove_tag_from_document
+--   Audit org   — I1-I5 : schéma org (REVOKE legal, guard create_organization, hiérarchie)
+--   Perm audit  — moderator 124990→124990 (+manage_tags=2048)
 -- ==============================================================================
 
 \set ON_ERROR_STOP 1
 
 BEGIN;
 
-SELECT plan(15);
+SELECT plan(45);
 
 
 -- ============================================================
 -- SECTION A — content.core
 -- Document 7 (auteur = entity_id 1, status = 1 = publié)
--- Document 3 (auteur = entity_id 2, status = 1 = publié)
 -- ============================================================
 
 -- ── A1 : article publié visible sans aucun GUC positionné
--- Simule une connexion anonyme / seed : user_id et auth_bits non définis.
+-- Simule une connexion anonyme : user_id et auth_bits non définis.
 -- status = 1 → visible pour tous (premier critère de la politique).
 SET LOCAL ROLE marius_user;
 
@@ -42,15 +60,8 @@ RESET ROLE;
 
 
 -- ── A2 : brouillon de l'auteur visible par l'auteur lui-même
--- On ne peut pas créer de brouillon dans ce test sans procédure, mais on peut
--- vérifier la mécanique sur un article existant en simulant son auteur.
--- Document 7, auteur entity_id=1, status=1.
--- En tant qu'entity_id=1 avec auth_bits=24614 (author), la ligne est visible
--- via le critère "author_entity_id = rls_user_id()" (redondant ici car publié,
--- mais valide le chemin auteur).
-
 SELECT set_config('marius.user_id',   '1', true);
-SELECT set_config('marius.auth_bits', '24614', true);   -- author
+SELECT set_config('marius.auth_bits', '24622', true);   -- author (ADR-029 : +delete_contents)
 SET LOCAL ROLE marius_user;
 
 SELECT ok(
@@ -62,19 +73,14 @@ SELECT ok(
 RESET ROLE;
 
 
--- ── A3 : utilisateur sans droits éditoriaux ne voit pas les brouillons d'autrui
--- Scenario : entity_id=5 (subscriber, auth_bits=16384) ne peut pas voir un
--- article de status=0 dont il n'est pas l'auteur.
--- On insère temporairement un brouillon signé entity_id=1 visible seulement
--- par son auteur ou un éditeur.
-
+-- ── A3 : subscriber ne voit pas les brouillons d'autrui
 INSERT INTO content.document (id) OVERRIDING SYSTEM VALUE VALUES (9999);
 INSERT INTO content.core
   (published_at, created_at, document_id, author_entity_id, status)
 VALUES (NULL, now(), 9999, 1, 0);   -- brouillon, auteur = entity_id 1
 
-SELECT set_config('marius.user_id',   '5', true);    -- subscriber, pas auteur
-SELECT set_config('marius.auth_bits', '16384', true); -- can_read uniquement
+SELECT set_config('marius.user_id',   '5', true);
+SELECT set_config('marius.auth_bits', '16384', true); -- subscriber : can_read uniquement
 SET LOCAL ROLE marius_user;
 
 SELECT ok(
@@ -85,14 +91,16 @@ SELECT ok(
 RESET ROLE;
 
 
--- ── A4 : éditeur avec publish_contents voit les brouillons
-SELECT set_config('marius.user_id',   '6', true);     -- autre utilisateur
-SELECT set_config('marius.auth_bits', '59430', true);  -- editor (inclut publish_contents bit 4=16)
+-- ── A4 : modérateur avec publish_contents(16) voit les brouillons
+-- auth_bits = 124990 (moderator) : 124990 & 16 = 16 → critère publish_contents satisfait.
+-- Le scénario éditeur (bit 32768 sans bit 16) est couvert par A8.
+SELECT set_config('marius.user_id',   '6', true);
+SELECT set_config('marius.auth_bits', '124990', true);  -- moderator
 SET LOCAL ROLE marius_user;
 
 SELECT ok(
   (SELECT COUNT(*)::INT FROM content.core WHERE document_id = 9999) = 1,
-  'RLS content.core : editor (auth_bits contient publish_contents=16) voit le brouillon'
+  'RLS content.core : moderator (publish_contents=16) voit le brouillon'
 );
 
 RESET ROLE;
@@ -100,7 +108,7 @@ RESET ROLE;
 
 -- ── A5 : auteur peut UPDATE son propre contenu (edit_contents requis)
 SELECT set_config('marius.user_id',   '1', true);
-SELECT set_config('marius.auth_bits', '24614', true);  -- author : inclut edit_contents(4)
+SELECT set_config('marius.auth_bits', '24622', true);  -- author
 SET LOCAL ROLE marius_user;
 
 SELECT lives_ok(
@@ -111,13 +119,11 @@ SELECT lives_ok(
 RESET ROLE;
 
 
--- ── A6 : utilisateur sans edit_others_contents ne peut pas UPDATE le contenu d'autrui
--- entity_id=5 (subscriber) essaie de modifier le document 9999 (auteur=1)
+-- ── A6 : subscriber ne peut pas UPDATE le contenu d'autrui (0 lignes, pas d'erreur)
 SELECT set_config('marius.user_id',   '5', true);
-SELECT set_config('marius.auth_bits', '16384', true);  -- can_read uniquement
+SELECT set_config('marius.auth_bits', '16384', true);
 SET LOCAL ROLE marius_user;
 
--- L'UPDATE ne lève pas d'erreur mais affecte 0 lignes (RLS filtre silencieusement)
 SELECT is(
   (WITH upd AS (
     UPDATE content.core SET is_commentable = true
@@ -125,15 +131,15 @@ SELECT is(
     RETURNING document_id
   ) SELECT COUNT(*)::INT FROM upd),
   0,
-  'RLS content.core : subscriber ne peut pas UPDATE le contenu d''autrui (0 lignes affectées)'
+  'RLS content.core : subscriber ne peut pas UPDATE le contenu d''autrui (0 lignes)'
 );
 
 RESET ROLE;
 
 
--- ── A7 : utilisateur avec edit_others_contents peut UPDATE n'importe quel contenu
+-- ── A7 : modérateur avec edit_others_contents peut UPDATE n'importe quel contenu
 SELECT set_config('marius.user_id',   '6', true);
-SELECT set_config('marius.auth_bits', '122934', true);  -- moderator : inclut edit_others_contents
+SELECT set_config('marius.auth_bits', '124990', true);  -- moderator
 SET LOCAL ROLE marius_user;
 
 SELECT is(
@@ -149,11 +155,74 @@ SELECT is(
 RESET ROLE;
 
 
+-- ── A8 : éditeur (edit_others_contents=32768, sans publish_contents) voit les brouillons d'autrui
+-- ADR-029 invariant 3 : rls_core_select inclut le bit 32768.
+-- editor (59438) : 59438 & 16 = 0 (publish_contents absent)
+--                  59438 & 32768 = 32768 (edit_others_contents présent)
+-- Sans ce critère dans SELECT, les politiques UPDATE/DELETE d'éditeur sont inatteignables.
+SELECT set_config('marius.user_id',   '6', true);
+SELECT set_config('marius.auth_bits', '59438', true);   -- editor
+SET LOCAL ROLE marius_user;
+
+SELECT ok(
+  (SELECT COUNT(*)::INT FROM content.core WHERE document_id = 9999) = 1,
+  'RLS content.core : editor (edit_others_contents=32768, sans publish_contents) voit le brouillon d''autrui'
+);
+
+RESET ROLE;
+
+
+-- ── A9 : auteur peut DELETE son propre contenu (delete_contents=8 requis)
+-- ADR-029 : rls_core_delete_own vérifie le bit 8 (delete_contents) et non le bit 4
+-- (edit_contents). Le rôle author (24622) inclut delete_contents depuis ADR-029.
+SELECT set_config('marius.user_id',   '1', true);
+SELECT set_config('marius.auth_bits', '24622', true);   -- author
+SET LOCAL ROLE marius_user;
+
+SELECT is(
+  (WITH del AS (
+    DELETE FROM content.core
+    WHERE  document_id = 9999
+      AND  author_entity_id = 1
+    RETURNING document_id
+  ) SELECT COUNT(*)::INT FROM del),
+  1,
+  'RLS content.core : auteur peut DELETE son propre contenu (delete_contents=8 présent)'
+);
+
+RESET ROLE;
+
+
+-- ── A10 : subscriber ne peut pas DELETE le contenu d'autrui
+-- Réinsérer le brouillon pour ce test (A9 l'a supprimé).
+INSERT INTO content.core
+  (published_at, created_at, document_id, author_entity_id, status)
+VALUES (NULL, now(), 9999, 1, 0);
+
+SELECT set_config('marius.user_id',   '5', true);
+SELECT set_config('marius.auth_bits', '16384', true);   -- subscriber
+SET LOCAL ROLE marius_user;
+
+SELECT is(
+  (WITH del AS (
+    DELETE FROM content.core WHERE document_id = 9999
+    RETURNING document_id
+  ) SELECT COUNT(*)::INT FROM del),
+  0,
+  'RLS content.core : subscriber ne peut pas DELETE le contenu d''autrui (0 lignes)'
+);
+
+RESET ROLE;
+
+-- Nettoyage
+DELETE FROM content.core     WHERE document_id = 9999;
+DELETE FROM content.document WHERE id          = 9999;
+
+
 -- ============================================================
 -- SECTION B — commerce.transaction_core
 -- ============================================================
 
--- Insérer une transaction de test (auteur = entity_id 5)
 DO $$
 DECLARE v_id INT;
 BEGIN
@@ -165,7 +234,7 @@ $$;
 
 -- ── B1 : client voit sa propre transaction
 SELECT set_config('marius.user_id',   '5', true);
-SELECT set_config('marius.auth_bits', '24614', true);  -- author, pas view_transactions
+SELECT set_config('marius.auth_bits', '24622', true);  -- author, pas view_transactions
 SET LOCAL ROLE marius_user;
 
 SELECT ok(
@@ -180,19 +249,19 @@ RESET ROLE;
 
 -- ── B2 : autre utilisateur sans view_transactions ne voit pas la transaction d'autrui
 SELECT set_config('marius.user_id',   '6', true);
-SELECT set_config('marius.auth_bits', '24614', true);  -- author, sans view_transactions
+SELECT set_config('marius.auth_bits', '24622', true);  -- author, sans view_transactions
 SET LOCAL ROLE marius_user;
 
 SELECT ok(
   (SELECT COUNT(*)::INT FROM commerce.transaction_core
    WHERE id = current_setting('test.txn_id')::INT) = 0,
-  'RLS transaction_core : autre utilisateur sans view_transactions ne voit pas la transaction'
+  'RLS transaction_core : utilisateur sans view_transactions ne voit pas la transaction d''autrui'
 );
 
 RESET ROLE;
 
 
--- ── B3 : gestionnaire commerce avec manage_commerce peut UPDATE n'importe quelle transaction
+-- ── B3 : administrator peut UPDATE n'importe quelle transaction
 SELECT set_config('marius.user_id',   '6', true);
 SELECT set_config('marius.auth_bits', '2097151', true);  -- administrator
 SET LOCAL ROLE marius_user;
@@ -205,6 +274,28 @@ SELECT is(
   ) SELECT COUNT(*)::INT FROM upd),
   1,
   'RLS transaction_core : administrator (manage_commerce=262144) peut UPDATE'
+);
+
+RESET ROLE;
+
+
+-- ── B4 : gestionnaire avec manage_commerce seul (sans view_transactions) peut UPDATE
+-- ADR-029 invariant 3 : manage_commerce (262144) ajouté dans rls_transaction_select.
+-- view_transactions (131072) et manage_commerce (262144) sont orthogonaux.
+-- Sans le critère 262144 dans SELECT, cet UPDATE renverrait 0 lignes silencieusement.
+-- On construit un bitmask minimal : manage_commerce seul, sans view_transactions.
+SELECT set_config('marius.user_id',   '6', true);
+SELECT set_config('marius.auth_bits', '262144', true);   -- manage_commerce uniquement
+SET LOCAL ROLE marius_user;
+
+SELECT is(
+  (WITH upd AS (
+    UPDATE commerce.transaction_core SET status = 2
+    WHERE  id = current_setting('test.txn_id')::INT
+    RETURNING id
+  ) SELECT COUNT(*)::INT FROM upd),
+  1,
+  'RLS transaction_core : manage_commerce seul (sans view_transactions) peut UPDATE (ADR-029 inv.3)'
 );
 
 RESET ROLE;
@@ -242,55 +333,481 @@ RESET ROLE;
 
 
 -- ============================================================
--- SECTION D — Frontière de privilège par REVOKE SELECT (audit ADR-028)
--- Ces tests vérifient le mécanisme de REVOKE SELECT (Section 13), distinct du RLS.
--- REVOKE SELECT = suppression du privilège : PostgreSQL refuse avant d'évaluer la requête.
--- RLS = filtrage par ligne : s'applique uniquement sur les tables où SELECT est accordé.
--- Les GUC marius.user_id / marius.auth_bits sont sans effet sur un REVOKE SELECT.
+-- SECTION D — Frontière de privilège par REVOKE SELECT (ADR-028/029)
+-- Ces tests vérifient le mécanisme REVOKE SELECT, distinct du RLS.
+-- REVOKE SELECT = suppression du privilège : PostgreSQL refuse avant d'évaluer
+-- la requête, quel que soit le GUC positionné. Résultat : erreur 42501.
 -- ============================================================
 
--- ── D1 : identity.auth inaccessible à marius_user
--- Ce test valide le REVOKE SELECT (frontière de privilège), PAS le RLS.
--- Le 42501 est émis avant évaluation de toute politique — les GUC sont sans effet.
+-- ── D1 : identity.auth inaccessible (REVOKE SELECT)
 SELECT set_config('marius.user_id',   '1', true);
 SELECT set_config('marius.auth_bits', '2097151', true);   -- même administrator
 SET LOCAL ROLE marius_user;
 
 SELECT throws_ok(
   $$SELECT password_hash FROM identity.auth LIMIT 1$$,
-  '42501',
-  NULL,
-  'REVOKE SELECT (pas RLS) : identity.auth inaccessible à marius_user, même administrator'
+  '42501', NULL,
+  'REVOKE SELECT : identity.auth inaccessible à marius_user (même administrator)'
 );
 
 RESET ROLE;
 
 
--- ── D2 : identity.person_contact inaccessible (REVOKE SELECT, pas RLS)
+-- ── D2 : identity.person_contact inaccessible (REVOKE SELECT)
 SET LOCAL ROLE marius_user;
 
 SELECT throws_ok(
   $$SELECT email FROM identity.person_contact LIMIT 1$$,
-  '42501',
-  NULL,
-  'REVOKE SELECT : identity.person_contact.email inaccessible à marius_user'
+  '42501', NULL,
+  'REVOKE SELECT : identity.person_contact inaccessible à marius_user'
 );
 
 RESET ROLE;
 
 
--- ── D3 : commerce.transaction_payment inaccessible (REVOKE SELECT, pas RLS)
+-- ── D3 : commerce.transaction_payment inaccessible (REVOKE SELECT)
 SET LOCAL ROLE marius_user;
 
 SELECT throws_ok(
   $$SELECT invoice_number FROM commerce.transaction_payment LIMIT 1$$,
-  '42501',
-  NULL,
+  '42501', NULL,
   'REVOKE SELECT : commerce.transaction_payment inaccessible à marius_user'
 );
 
 RESET ROLE;
 
 
+-- ── D4 : commerce.transaction_price inaccessible (REVOKE SELECT — ADR-029 inv.1)
+-- Satellite de transaction_core : SELECT direct bypasse rls_transaction_select.
+SET LOCAL ROLE marius_user;
+
+SELECT throws_ok(
+  $$SELECT shipping_cents FROM commerce.transaction_price LIMIT 1$$,
+  '42501', NULL,
+  'REVOKE SELECT : commerce.transaction_price inaccessible (ADR-029 inv.1)'
+);
+
+RESET ROLE;
+
+
+-- ── D5 : commerce.transaction_item inaccessible (REVOKE SELECT — ADR-029 inv.1)
+SET LOCAL ROLE marius_user;
+
+SELECT throws_ok(
+  $$SELECT quantity FROM commerce.transaction_item LIMIT 1$$,
+  '42501', NULL,
+  'REVOKE SELECT : commerce.transaction_item inaccessible (ADR-029 inv.1)'
+);
+
+RESET ROLE;
+
+
+-- ── D6 : content.identity inaccessible (REVOKE SELECT — ADR-029 inv.1)
+-- Satellite de content.core : SELECT direct exposerait titres et slugs de tous
+-- les brouillons sans que rls_core_select ne soit évalué.
+SET LOCAL ROLE marius_user;
+
+SELECT throws_ok(
+  $$SELECT headline FROM content.identity LIMIT 1$$,
+  '42501', NULL,
+  'REVOKE SELECT : content.identity inaccessible (ADR-029 inv.1)'
+);
+
+RESET ROLE;
+
+
+-- ── D7 : content.body inaccessible (REVOKE SELECT — ADR-029 inv.1)
+-- Corps HTML complet de tous les documents, brouillons inclus.
+SET LOCAL ROLE marius_user;
+
+SELECT throws_ok(
+  $$SELECT content FROM content.body LIMIT 1$$,
+  '42501', NULL,
+  'REVOKE SELECT : content.body inaccessible (ADR-029 inv.1)'
+);
+
+RESET ROLE;
+
+
+-- ── D8 : content.revision inaccessible (REVOKE SELECT — ADR-029 inv.1)
+-- Snapshots éditoriaux complets (headline + body) de tous les documents.
+SET LOCAL ROLE marius_user;
+
+SELECT throws_ok(
+  $$SELECT snapshot_headline FROM content.revision LIMIT 1$$,
+  '42501', NULL,
+  'REVOKE SELECT : content.revision inaccessible (ADR-029 inv.1)'
+);
+
+RESET ROLE;
+
+
+
+
+-- ============================================================
+-- SECTION G — Security context des vues et ownership procédural
+-- (ADR-029 invariant 2 et corollaire invariant 3)
+-- ============================================================
+
+-- ── G1 : subscriber ne voit pas les brouillons via v_article_list
+-- Valide que le WHERE GUC de la vue est bien le mécanisme de contrôle d'accès
+-- (et non le RLS physique, bypassé par le security context postgres/BYPASSRLS).
+-- Un brouillon (status=0) ne doit pas être visible par un subscriber non-auteur.
+INSERT INTO content.document (id) OVERRIDING SYSTEM VALUE VALUES (8888);
+INSERT INTO content.core
+  (published_at, created_at, document_id, author_entity_id, status)
+VALUES (NULL, now(), 8888, 1, 0);
+INSERT INTO content.identity (document_id, slug, headline)
+VALUES (8888, 'brouillon-test-g1', 'Brouillon test G1');
+
+SELECT set_config('marius.user_id',   '5', true);    -- subscriber, pas auteur
+SELECT set_config('marius.auth_bits', '16384', true);
+SET LOCAL ROLE marius_user;
+
+SELECT ok(
+  (SELECT COUNT(*)::INT FROM content.v_article_list WHERE identifier = 8888) = 0,
+  'Vue v_article_list : subscriber ne voit pas le brouillon d''autrui (WHERE GUC)'
+);
+
+RESET ROLE;
+
+
+-- ── G2 : auteur voit son propre brouillon via v_article_list
+SELECT set_config('marius.user_id',   '1', true);    -- auteur du document 8888
+SELECT set_config('marius.auth_bits', '24622', true); -- author
+SET LOCAL ROLE marius_user;
+
+SELECT ok(
+  (SELECT COUNT(*)::INT FROM content.v_article_list WHERE identifier = 8888) = 1,
+  'Vue v_article_list : auteur voit son propre brouillon (WHERE GUC, co.author_entity_id = rls_user_id())'
+);
+
+RESET ROLE;
+
+
+-- ── G3 : subscriber ne voit pas la transaction d'autrui via v_transaction
+-- Valide le WHERE GUC dans v_transaction.
+SELECT set_config('marius.user_id',   '6', true);    -- pas le client de la transaction créée en B
+SELECT set_config('marius.auth_bits', '24622', true); -- author, sans view_transactions
+SET LOCAL ROLE marius_user;
+
+SELECT ok(
+  (SELECT COUNT(*)::INT FROM commerce.v_transaction
+   WHERE customer_id = 5) = 0,
+  'Vue v_transaction : utilisateur non-client (sans view_transactions) ne voit pas la transaction (WHERE GUC)'
+);
+
+RESET ROLE;
+
+
+-- ── G4 : auteur ne peut pas sauvegarder une révision du document d''autrui
+-- Valide l''ownership check dans content.save_revision (ADR-029 inv.3 corollaire).
+-- entity_id=5 a edit_contents(4) mais pas edit_others_contents(32768),
+-- et n''est pas l''auteur du document 8888 (auteur = entity_id 1).
+SELECT set_config('marius.user_id',   '5', true);
+SELECT set_config('marius.auth_bits', '24622', true);   -- author (a edit_contents=4)
+SET LOCAL ROLE marius_user;
+
+SELECT throws_ok(
+  $$CALL content.save_revision(8888, 5)$$,
+  '42501', NULL,
+  'Proc save_revision : auteur ne peut pas sauvegarder la révision du document d''autrui'
+);
+
+RESET ROLE;
+
+-- Nettoyage
+DELETE FROM content.identity WHERE document_id = 8888;
+DELETE FROM content.core     WHERE document_id = 8888;
+DELETE FROM content.document WHERE id          = 8888;
+
+
+-- ============================================================
+-- SECTION H — content.add_tag_to_document / remove_tag_from_document
+-- (ADR-020 rev. — procédures de liaison taxonomique)
+-- Prérequis : tag seed id=1 doit exister (chargé depuis master_schema_dml.pgsql).
+-- ============================================================
+
+-- ── H1 : subscriber ne peut pas lier un tag (sans edit_contents)
+SELECT set_config('marius.user_id',   '5', true);
+SELECT set_config('marius.auth_bits', '16384', true);   -- subscriber
+SET LOCAL ROLE marius_user;
+
+SELECT throws_ok(
+  $$CALL content.add_tag_to_document(7, 1)$$,
+  '42501', NULL,
+  'Proc add_tag_to_document : subscriber (sans edit_contents=4) ne peut pas lier un tag'
+);
+
+RESET ROLE;
+
+
+-- ── H2 : auteur peut lier un tag à son propre document
+SELECT set_config('marius.user_id',   '1', true);      -- auteur du document 7
+SELECT set_config('marius.auth_bits', '24622', true);   -- author (edit_contents=4)
+SET LOCAL ROLE marius_user;
+
+SELECT lives_ok(
+  $$CALL content.add_tag_to_document(7, 1)$$,
+  'Proc add_tag_to_document : auteur peut lier un tag à son propre document'
+);
+
+RESET ROLE;
+
+
+-- ── H3 : auteur ne peut pas lier un tag au document d''autrui
+-- Document 3 appartient à entity_id=2 ; l''appelant est entity_id=1.
+SELECT set_config('marius.user_id',   '1', true);
+SELECT set_config('marius.auth_bits', '24622', true);   -- author, sans edit_others_contents
+SET LOCAL ROLE marius_user;
+
+SELECT throws_ok(
+  $$CALL content.add_tag_to_document(3, 1)$$,
+  '42501', NULL,
+  'Proc add_tag_to_document : auteur ne peut pas lier un tag au document d''autrui'
+);
+
+RESET ROLE;
+
+
+-- ── H4 : éditeur (edit_others_contents) peut lier un tag à n''importe quel document
+SELECT set_config('marius.user_id',   '6', true);
+SELECT set_config('marius.auth_bits', '59438', true);   -- editor (edit_others_contents=32768)
+SET LOCAL ROLE marius_user;
+
+SELECT lives_ok(
+  $$CALL content.add_tag_to_document(3, 1)$$,
+  'Proc add_tag_to_document : editor (edit_others_contents=32768) peut lier un tag à n''importe quel document'
+);
+
+RESET ROLE;
+
+-- Nettoyage des liaisons de test
+DELETE FROM content.content_to_tag WHERE content_id IN (3, 7) AND tag_id = 1;
+
+
+-- ============================================================
+-- SECTION I — Schéma org (audit performance + sécurité)
+-- ============================================================
+
+-- ── I1 : org.org_legal inaccessible directement (REVOKE SELECT)
+SELECT set_config('marius.user_id',   '1', true);
+SELECT set_config('marius.auth_bits', '2097151', true);  -- administrator
+SET LOCAL ROLE marius_user;
+
+SELECT throws_ok(
+  $$SELECT duns FROM org.org_legal LIMIT 1$$,
+  '42501', NULL,
+  'REVOKE SELECT : org.org_legal inaccessible à marius_user (données légales sensibles)'
+);
+
+RESET ROLE;
+
+
+-- ── I2 : v_organization ne projette pas les données légales
+-- Les colonnes duns/siret/vat_id ont été retirées de la vue.
+SET LOCAL ROLE marius_user;
+
+SELECT ok(
+  NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = 'org'
+      AND table_name   = 'v_organization'
+      AND column_name  IN ('duns', 'siret', 'vat_id')
+  ),
+  'Vue v_organization : colonnes légales (duns, siret, vat_id) absentes de la projection'
+);
+
+RESET ROLE;
+
+
+-- ── I3 : subscriber ne peut pas créer une organisation (manage_system requis)
+SELECT set_config('marius.user_id',   '5', true);
+SELECT set_config('marius.auth_bits', '16384', true);   -- subscriber
+SET LOCAL ROLE marius_user;
+
+SELECT throws_ok(
+  $$CALL org.create_organization('Test Org', 'test-org')$$,
+  '42501', NULL,
+  'Proc create_organization : subscriber (sans manage_system=524288) ne peut pas créer une organisation'
+);
+
+RESET ROLE;
+
+
+-- ── I4 : subscriber ne peut pas modifier la hiérarchie (manage_system requis)
+SELECT set_config('marius.user_id',   '5', true);
+SELECT set_config('marius.auth_bits', '16384', true);
+SET LOCAL ROLE marius_user;
+
+SELECT throws_ok(
+  $$CALL org.add_organization_to_hierarchy(1, NULL)$$,
+  '42501', NULL,
+  'Proc add_organization_to_hierarchy : subscriber (sans manage_system=524288) ne peut pas modifier la hiérarchie'
+);
+
+RESET ROLE;
+
+
+-- ── I5 : administrator peut insérer une organisation dans la hiérarchie
+-- Crée une organisation de test, l''insère dans la hiérarchie, vérifie les intervalles,
+-- puis nettoie. On utilise marius_admin (BYPASSRLS) pour le seed, marius_user pour le test.
+DO $$
+DECLARE v_org_id INT;
+BEGIN
+  -- Seed en tant que postgres (SECURITY DEFINER bypass) : GUC non injecté
+  CALL org.create_organization('Org Hiérarchie Test', 'org-hierarchie-test', v_org_id);
+  PERFORM set_config('test.org_id', v_org_id::text, true);
+END;
+$$;
+
+SELECT set_config('marius.user_id',   '1', true);
+SELECT set_config('marius.auth_bits', '2097151', true);  -- administrator (manage_system=524288)
+SET LOCAL ROLE marius_user;
+
+SELECT lives_ok(
+  $$CALL org.add_organization_to_hierarchy(current_setting('test.org_id')::INT, NULL)$$,
+  'Proc add_organization_to_hierarchy : administrator peut insérer une org dans la hiérarchie'
+);
+
+RESET ROLE;
+
+-- Nettoyage
+DELETE FROM org.org_hierarchy WHERE entity_id = current_setting('test.org_id')::INT;
+DELETE FROM org.org_identity  WHERE entity_id = current_setting('test.org_id')::INT;
+DELETE FROM org.org_core      WHERE entity_id = current_setting('test.org_id')::INT;
+DELETE FROM org.entity        WHERE id        = current_setting('test.org_id')::INT;
+
 SELECT * FROM finish();
 ROLLBACK;
+
+-- ============================================================
+-- SECTION E — Gardes d'autorisation dans les procédures SECURITY DEFINER
+-- (ADR-020 rev.)
+-- Ces tests vérifient que l'élévation SECURITY DEFINER n'ouvre pas les
+-- procédures à des appelants sans permission. Le GUC est positionné pour
+-- simuler un contexte applicatif (rls_user_id() ≠ -1).
+-- ============================================================
+
+-- ── E1 : subscriber ne peut pas publier un document
+SELECT set_config('marius.user_id',   '5', true);
+SELECT set_config('marius.auth_bits', '16384', true);   -- subscriber : sans publish_contents
+SET LOCAL ROLE marius_user;
+
+SELECT throws_ok(
+  $$CALL content.publish_document(7)$$,
+  '42501', NULL,
+  'Proc publish_document : subscriber (sans publish_contents=16) ne peut pas publier'
+);
+
+RESET ROLE;
+
+
+-- ── E2 : subscriber ne peut pas créer un document attribué à un autre auteur
+SELECT set_config('marius.user_id',   '5', true);
+SELECT set_config('marius.auth_bits', '16418', true);   -- contributor : a create_contents(2) mais sans edit_others
+SET LOCAL ROLE marius_user;
+
+SELECT throws_ok(
+  $$CALL content.create_document(1, 'Titre test', 'titre-test')$$,  -- auteur = entity_id 1, caller = 5
+  '42501', NULL,
+  'Proc create_document : ne peut pas créer un document attribué à un autre auteur'
+);
+
+RESET ROLE;
+
+
+-- ── E3 : subscriber ne peut pas créer un tag (manage_tags requis)
+SELECT set_config('marius.user_id',   '5', true);
+SELECT set_config('marius.auth_bits', '16384', true);   -- subscriber
+SET LOCAL ROLE marius_user;
+
+SELECT throws_ok(
+  $$CALL content.create_tag('test', 'test-slug')$$,
+  '42501', NULL,
+  'Proc create_tag : subscriber (sans manage_tags=2048) ne peut pas créer un tag'
+);
+
+RESET ROLE;
+
+
+-- ── E4 : subscriber ne peut pas modifier les permissions de rôle
+SELECT set_config('marius.user_id',   '5', true);
+SELECT set_config('marius.auth_bits', '16384', true);   -- subscriber
+SET LOCAL ROLE marius_user;
+
+SELECT throws_ok(
+  $$CALL identity.grant_permission(7, 256)$$,
+  '42501', NULL,
+  'Proc grant_permission : subscriber (sans manage_users=256) ne peut pas modifier les permissions'
+);
+
+RESET ROLE;
+
+
+-- ============================================================
+-- SECTION F — content.comment RLS
+-- Commentaire 9999 : status=0 (pending), auteur = entity_id 1
+-- Commentaire 9998 : status=1 (approuvé), auteur = entity_id 2
+-- ============================================================
+
+INSERT INTO content.comment (
+  created_at, document_id, account_entity_id, id, status, path, content
+)
+OVERRIDING SYSTEM VALUE VALUES
+  (now(), 7, 1, 9999, 0, '7.9999', 'commentaire en attente'),
+  (now(), 7, 2, 9998, 1, '7.9998', 'commentaire approuvé');
+
+
+-- ── F1 : commentaire approuvé (status=1) visible sans GUC
+SET LOCAL ROLE marius_user;
+
+SELECT ok(
+  (SELECT COUNT(*)::INT FROM content.comment WHERE id = 9998) = 1,
+  'RLS comment : commentaire approuvé (status=1) visible sans GUC (accès anonyme)'
+);
+
+RESET ROLE;
+
+
+-- ── F2 : commentaire pending invisible pour un subscriber non-auteur
+SELECT set_config('marius.user_id',   '5', true);
+SELECT set_config('marius.auth_bits', '16384', true);   -- subscriber (pas l'auteur entity_id=1)
+SET LOCAL ROLE marius_user;
+
+SELECT ok(
+  (SELECT COUNT(*)::INT FROM content.comment WHERE id = 9999) = 0,
+  'RLS comment : commentaire pending invisible pour subscriber non-auteur'
+);
+
+RESET ROLE;
+
+
+-- ── F3 : auteur voit son propre commentaire pending
+SELECT set_config('marius.user_id',   '1', true);      -- entity_id 1 = auteur du commentaire 9999
+SELECT set_config('marius.auth_bits', '24622', true);   -- author
+SET LOCAL ROLE marius_user;
+
+SELECT ok(
+  (SELECT COUNT(*)::INT FROM content.comment WHERE id = 9999) = 1,
+  'RLS comment : auteur (entity_id=1) voit son propre commentaire pending'
+);
+
+RESET ROLE;
+
+
+-- ── F4 : modérateur avec moderate_comments voit tous les commentaires
+SELECT set_config('marius.user_id',   '6', true);
+SELECT set_config('marius.auth_bits', '124990', true);   -- moderator
+SET LOCAL ROLE marius_user;
+
+SELECT ok(
+  (SELECT COUNT(*)::INT FROM content.comment WHERE id = 9999) = 1,
+  'RLS comment : moderator (moderate_comments=65536) voit les commentaires pending'
+);
+
+RESET ROLE;
+
+-- Nettoyage
+DELETE FROM content.comment WHERE id IN (9998, 9999);
+

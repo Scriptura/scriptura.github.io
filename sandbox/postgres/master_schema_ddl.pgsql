@@ -199,19 +199,19 @@ CREATE TABLE identity.role (
 REVOKE INSERT, UPDATE, DELETE ON identity.role FROM PUBLIC;
 
 -- Valeurs calculées : somme des puissances de 2 des permissions actives (voir role_bitmask_update.pgsql)
--- Valeurs recalculées avec les bits 15-20 (ADR-027).
+-- Valeurs recalculées avec les bits 15-20 (ADR-027) ; delete_contents(8) ajouté à base_author (ADR-029).
 -- administrator   : tous les bits 0–20 = 2^21−1
--- moderator       : base_author + publish_contents(16) + edit_others_contents(32768) + moderate_comments(65536)
+-- moderator       : base_author + publish_contents(16) + manage_tags(2048) + edit_others_contents(32768) + moderate_comments(65536)
 -- editor          : base_author + edit_others_contents(32768) + manage_tags(2048)
--- author (base)   : can_read(16384)+create_contents(2)+edit_contents(4)+upload_files(8192)+create_comments(32)
+-- author (base)   : can_read(16384)+create_contents(2)+edit_contents(4)+delete_contents(8)+upload_files(8192)+create_comments(32)
 -- contributor     : can_read(16384)+create_contents(2)+create_comments(32)
 -- commentator     : can_read(16384)+create_comments(32)+edit_comments(64)+delete_comments(128)
 -- subscriber      : can_read uniquement (bit 14) · id=7, DEFAULT dans identity.auth
 INSERT INTO identity.role (permissions, name) VALUES
   (2097151, 'administrator'),
-  ( 122934, 'moderator'),
-  (  59430, 'editor'),
-  (  24614, 'author'),
+  ( 124990, 'moderator'),
+  (  59438, 'editor'),
+  (  24622, 'author'),
   (  16418, 'contributor'),
   (  16608, 'commentator'),
   (  16384, 'subscriber');
@@ -380,6 +380,11 @@ CREATE TABLE org.org_core (
 
 CREATE INDEX org_core_created_brin ON org.org_core USING brin (created_at)
   WITH (pages_per_range = 64);
+
+-- Index B-tree sur parent_entity_id : navigation parent→enfants directs (O(log n)).
+-- Sans cet index, WHERE parent_entity_id = X est un seq scan sur org_core.
+CREATE INDEX org_core_parent ON org.org_core (parent_entity_id)
+  WHERE parent_entity_id IS NOT NULL;
 
 -- ORG IDENTITY — noms et marques (HAUTE fréquence)
 CREATE TABLE org.org_identity (
@@ -596,6 +601,25 @@ CREATE TABLE commerce.transaction_item (
 );
 
 CREATE INDEX transaction_item_product ON commerce.transaction_item (product_id);
+
+-- Immutabilité de transaction_item (ADR-030) :
+-- unit_price_snapshot_cents est un enregistrement d'audit financier — il ne doit
+-- jamais être modifié après l'INSERT, même par marius_admin.
+-- La seule opération légitime sur une ligne existante est la suppression (annulation).
+-- EXCEPTION : quantity peut être corrigée avant confirmation (status=0) — non implémenté
+-- ici car hors périmètre du blueprint ; le trigger bloque tout UPDATE sans distinction.
+CREATE FUNCTION commerce.fn_deny_transaction_item_update()
+RETURNS TRIGGER LANGUAGE plpgsql AS $$
+BEGIN
+  RAISE EXCEPTION
+    'transaction_item is immutable after INSERT: modify quantity by deleting and re-inserting the line'
+    USING ERRCODE = '55000';  -- object_not_in_prerequisite_state
+END;
+$$;
+
+CREATE TRIGGER transaction_item_immutable
+BEFORE UPDATE ON commerce.transaction_item
+FOR EACH ROW EXECUTE FUNCTION commerce.fn_deny_transaction_item_update();
 
 
 -- ==============================================================================
@@ -999,9 +1023,18 @@ $$;
 -- composants person_*, invalide les credentials, purge les appartenances aux groupes.
 -- Le champ anonymized_at dans identity.entity sert de marqueur de statut et
 -- de preuve d'exécution pour les audits de conformité RGPD.
+-- Garde d'autorisation (ADR-020 rev.) :
+--   manage_users (bit 8, valeur 256) requis pour anonymiser autrui.
+--   L'auto-anonymisation (p_entity_id = rls_user_id()) est toujours autorisée.
 CREATE PROCEDURE identity.anonymize_person(p_entity_id INT)
 LANGUAGE plpgsql AS $$
 BEGIN
+  IF identity.rls_user_id() <> -1
+     AND p_entity_id <> identity.rls_user_id()
+     AND (identity.rls_auth_bits() & 256) <> 256 THEN
+    RAISE EXCEPTION 'insufficient_privilege: manage_users required to anonymize another entity'
+      USING ERRCODE = '42501';
+  END IF;
   -- 1. Marquer l'entité (marqueur d'audit, timestamp irréversible)
   UPDATE identity.entity SET anonymized_at = now() WHERE id = p_entity_id;
 
@@ -1053,17 +1086,34 @@ LANGUAGE sql AS $$
 $$;
 
 -- Ajout/révocation de permission sur un rôle
+-- Garde d'autorisation (ADR-020 rev.) : manage_users (bit 8, valeur 256) requis.
+-- Opérations structurelles : modifier les permissions d'un rôle affecte tous ses membres.
 CREATE PROCEDURE identity.grant_permission(p_role_id SMALLINT, p_permission INT)
-LANGUAGE sql AS $$
+LANGUAGE plpgsql AS $$
+BEGIN
+  IF identity.rls_user_id() <> -1
+     AND (identity.rls_auth_bits() & 256) <> 256 THEN
+    RAISE EXCEPTION 'insufficient_privilege: manage_users required'
+      USING ERRCODE = '42501';
+  END IF;
   UPDATE identity.role SET permissions = permissions | p_permission WHERE id = p_role_id;
+END;
 $$;
 
 CREATE PROCEDURE identity.revoke_permission(p_role_id SMALLINT, p_permission INT)
-LANGUAGE sql AS $$
+LANGUAGE plpgsql AS $$
+BEGIN
+  IF identity.rls_user_id() <> -1
+     AND (identity.rls_auth_bits() & 256) <> 256 THEN
+    RAISE EXCEPTION 'insufficient_privilege: manage_users required'
+      USING ERRCODE = '42501';
+  END IF;
   UPDATE identity.role SET permissions = permissions & (~p_permission) WHERE id = p_role_id;
+END;
 $$;
 
 -- Création d'une organisation (entity + org_core + org_identity)
+-- Garde d'autorisation (ADR-020 rev.) : manage_system (bit 19, valeur 524288) requis.
 CREATE PROCEDURE org.create_organization(
   p_name       VARCHAR(64),
   p_slug       VARCHAR(64),
@@ -1073,6 +1123,11 @@ CREATE PROCEDURE org.create_organization(
   OUT p_entity_id INT
 ) LANGUAGE plpgsql AS $$
 BEGIN
+  IF identity.rls_user_id() <> -1
+     AND (identity.rls_auth_bits() & 524288) <> 524288 THEN
+    RAISE EXCEPTION 'insufficient_privilege: manage_system required'
+      USING ERRCODE = '42501';
+  END IF;
   INSERT INTO org.entity DEFAULT VALUES RETURNING id INTO p_entity_id;
   INSERT INTO org.org_core     (created_at, entity_id, place_id, contact_entity_id, type)
   VALUES (now(), p_entity_id, p_place_id, p_contact_id, p_type);
@@ -1081,7 +1136,65 @@ BEGIN
 END;
 $$;
 
+-- Insertion d'une organisation dans la hiérarchie Nested Set
+-- Verrouillage exclusif obligatoire : toute insertion décale les intervalles de tous
+-- les nœuds à droite du point d'insertion — opération non concurrente par nature.
+-- Garde : manage_system (524288) requis (opération structurelle sur la hiérarchie).
+-- p_parent_entity_id NULL → organisation racine (lft=1, rgt=2 dans un arbre vide,
+-- ou décalée à la fin des racines existantes).
+CREATE PROCEDURE org.add_organization_to_hierarchy(
+  p_entity_id        INT,
+  p_parent_entity_id INT DEFAULT NULL
+) LANGUAGE plpgsql AS $$
+DECLARE
+  v_parent_rgt  INT;
+  v_new_lft     INT;
+BEGIN
+  IF identity.rls_user_id() <> -1
+     AND (identity.rls_auth_bits() & 524288) <> 524288 THEN
+    RAISE EXCEPTION 'insufficient_privilege: manage_system required'
+      USING ERRCODE = '42501';
+  END IF;
+
+  -- Verrou exclusif : bloque toute lecture/écriture concurrente sur org_hierarchy
+  -- pendant le décalage des intervalles.
+  LOCK TABLE org.org_hierarchy IN EXCLUSIVE MODE;
+
+  IF p_parent_entity_id IS NULL THEN
+    -- Organisation racine : insertion à la fin des nœuds existants.
+    SELECT COALESCE(MAX(rgt), 0) + 1 INTO v_new_lft FROM org.org_hierarchy;
+    INSERT INTO org.org_hierarchy (entity_id, lft, rgt, depth)
+    VALUES (p_entity_id, v_new_lft, v_new_lft + 1, 0);
+  ELSE
+    -- Vérifier l'existence du parent
+    SELECT rgt INTO v_parent_rgt FROM org.org_hierarchy
+    WHERE entity_id = p_parent_entity_id;
+    IF v_parent_rgt IS NULL THEN
+      RAISE EXCEPTION 'Organisation parente introuvable dans la hiérarchie (entity_id=%)', p_parent_entity_id
+        USING ERRCODE = 'foreign_key_violation';
+    END IF;
+    v_new_lft := v_parent_rgt;
+
+    -- Décalage de tous les nœuds à droite du point d'insertion
+    UPDATE org.org_hierarchy SET rgt = rgt + 2 WHERE rgt >= v_parent_rgt;
+    UPDATE org.org_hierarchy SET lft = lft + 2 WHERE lft >= v_parent_rgt;
+
+    -- Insertion de la nouvelle feuille
+    INSERT INTO org.org_hierarchy (entity_id, lft, rgt, depth)
+    SELECT p_entity_id, v_new_lft, v_new_lft + 1,
+           (SELECT depth + 1 FROM org.org_hierarchy WHERE entity_id = p_parent_entity_id)
+    FROM   org.org_hierarchy
+    WHERE  entity_id = p_parent_entity_id;
+  END IF;
+END;
+$$;
+
+
 -- Création d'un document (spine + core + identity + body optionnel + première révision)
+-- Gardes d'autorisation (ADR-020 rev.) :
+--   create_contents (bit 1, valeur 2) requis.
+--   p_author_id doit correspondre à rls_user_id() sauf si edit_others_contents (32768)
+--   (interdit l'usurpation d'identité d'auteur par un utilisateur standard).
 CREATE PROCEDURE content.create_document(
   p_author_id     INT,
   p_name          VARCHAR(255),
@@ -1094,6 +1207,17 @@ CREATE PROCEDURE content.create_document(
   OUT p_document_id INT
 ) LANGUAGE plpgsql AS $$
 BEGIN
+  IF identity.rls_user_id() <> -1 THEN
+    IF (identity.rls_auth_bits() & 2) <> 2 THEN
+      RAISE EXCEPTION 'insufficient_privilege: create_contents required'
+        USING ERRCODE = '42501';
+    END IF;
+    IF p_author_id <> identity.rls_user_id()
+       AND (identity.rls_auth_bits() & 32768) <> 32768 THEN
+      RAISE EXCEPTION 'insufficient_privilege: cannot create document attributed to another author'
+        USING ERRCODE = '42501';
+    END IF;
+  END IF;
   INSERT INTO content.document (doc_type) VALUES (p_doc_type) RETURNING id INTO p_document_id;
   INSERT INTO content.core (document_id, author_entity_id, status, published_at, created_at)
   VALUES (p_document_id, p_author_id, p_status,
@@ -1118,14 +1242,25 @@ END;
 $$;
 
 -- Publication d'un document (brouillon/archivé → publié)
-CREATE PROCEDURE content.publish_document(p_document_id INT) LANGUAGE sql AS $$
+-- Garde d'autorisation (ADR-020 rev.) : publish_contents (bit 4, valeur 16) requis.
+-- Bypass si rls_user_id() = -1 (GUC absent : contexte seed/admin sans session applicative).
+CREATE PROCEDURE content.publish_document(p_document_id INT)
+LANGUAGE plpgsql AS $$
+BEGIN
+  IF identity.rls_user_id() <> -1
+     AND (identity.rls_auth_bits() & 16) <> 16 THEN
+    RAISE EXCEPTION 'insufficient_privilege: publish_contents required'
+      USING ERRCODE = '42501';
+  END IF;
   UPDATE content.core
   SET status = 1, published_at = COALESCE(published_at, now())
   WHERE document_id = p_document_id AND status IN (0, 2);
+END;
 $$;
 
 -- Snapshot éditorial avant modification
 -- Capture l'intégralité de content.identity + content.body (ADR-021).
+-- Garde d'autorisation (ADR-020 rev.) : edit_contents (4) ou edit_others_contents (32768).
 CREATE PROCEDURE content.save_revision(p_document_id INT, p_author_id INT)
 LANGUAGE plpgsql AS $$
 DECLARE
@@ -1135,6 +1270,25 @@ DECLARE
   v_description VARCHAR(1000);
   v_body        TEXT;
 BEGIN
+  IF identity.rls_user_id() <> -1 THEN
+    IF (identity.rls_auth_bits() & 4) <> 4
+       AND (identity.rls_auth_bits() & 32768) <> 32768 THEN
+      RAISE EXCEPTION 'insufficient_privilege: edit_contents or edit_others_contents required'
+        USING ERRCODE = '42501';
+    END IF;
+    -- Ownership check : sans edit_others_contents, l'auteur ne peut sauvegarder
+    -- que ses propres documents. La procédure étant SECURITY DEFINER, la politique
+    -- rls_core_delete_own est bypassée — ce filtre reconstitue explicitement l'invariant.
+    IF (identity.rls_auth_bits() & 32768) <> 32768 THEN
+      PERFORM 1 FROM content.core
+      WHERE document_id = p_document_id
+        AND author_entity_id = identity.rls_user_id();
+      IF NOT FOUND THEN
+        RAISE EXCEPTION 'insufficient_privilege: cannot save revision for another author''s document'
+          USING ERRCODE = '42501';
+      END IF;
+    END IF;
+  END IF;
   SELECT i.headline, i.slug, i.alternative_headline, i.description, b.content
   INTO   v_headline, v_slug, v_alt, v_description, v_body
   FROM   content.identity i
@@ -1161,6 +1315,7 @@ $$;
 --      FROM tag_hierarchy WHERE descendant_id = parent_id
 -- Validation de profondeur : si le parent est déjà à depth=4, l'INSERT viole
 -- le CHECK depth BETWEEN 0 AND 4 — l'exception est propagée à l'appelant.
+-- Garde d'autorisation (ADR-020 rev.) : manage_tags (bit 11, valeur 2048) requis.
 CREATE PROCEDURE content.create_tag(
   p_name      VARCHAR(64),
   p_slug      VARCHAR(64),
@@ -1168,6 +1323,11 @@ CREATE PROCEDURE content.create_tag(
   OUT p_tag_id INT
 ) LANGUAGE plpgsql AS $$
 BEGIN
+  IF identity.rls_user_id() <> -1
+     AND (identity.rls_auth_bits() & 2048) <> 2048 THEN
+    RAISE EXCEPTION 'insufficient_privilege: manage_tags required'
+      USING ERRCODE = '42501';
+  END IF;
   -- 1. Créer le tag (spine)
   INSERT INTO content.tag (slug, name)
   VALUES (p_slug, p_name)
@@ -1195,9 +1355,71 @@ BEGIN
 END;
 $$;
 
+-- Liaison d'un tag à un document (content_to_tag)
+-- Gardes AOT (ADR-020 rev.) :
+--   edit_contents (bit 2, valeur 4) OU edit_others_contents (bit 15, valeur 32768).
+--   Sans edit_others_contents, ownership check : l'appelant doit être l'auteur du document.
+-- ON CONFLICT DO NOTHING : idempotent — une double liaison n'est pas une erreur.
+CREATE PROCEDURE content.add_tag_to_document(p_document_id INT, p_tag_id INT)
+LANGUAGE plpgsql AS $$
+BEGIN
+  IF identity.rls_user_id() <> -1 THEN
+    IF (identity.rls_auth_bits() & 4) <> 4
+       AND (identity.rls_auth_bits() & 32768) <> 32768 THEN
+      RAISE EXCEPTION 'insufficient_privilege: edit_contents or edit_others_contents required'
+        USING ERRCODE = '42501';
+    END IF;
+    IF (identity.rls_auth_bits() & 32768) <> 32768 THEN
+      PERFORM 1 FROM content.core
+      WHERE document_id = p_document_id
+        AND author_entity_id = identity.rls_user_id();
+      IF NOT FOUND THEN
+        RAISE EXCEPTION 'insufficient_privilege: cannot tag another author''s document'
+          USING ERRCODE = '42501';
+      END IF;
+    END IF;
+  END IF;
+  INSERT INTO content.content_to_tag (content_id, tag_id)
+  VALUES (p_document_id, p_tag_id)
+  ON CONFLICT DO NOTHING;
+END;
+$$;
+
+-- Suppression d'un tag d'un document (content_to_tag)
+-- Mêmes gardes qu'add_tag_to_document (ownership symétrique).
+-- Idempotent : supprimer une liaison inexistante ne lève pas d'erreur.
+CREATE PROCEDURE content.remove_tag_from_document(p_document_id INT, p_tag_id INT)
+LANGUAGE plpgsql AS $$
+BEGIN
+  IF identity.rls_user_id() <> -1 THEN
+    IF (identity.rls_auth_bits() & 4) <> 4
+       AND (identity.rls_auth_bits() & 32768) <> 32768 THEN
+      RAISE EXCEPTION 'insufficient_privilege: edit_contents or edit_others_contents required'
+        USING ERRCODE = '42501';
+    END IF;
+    IF (identity.rls_auth_bits() & 32768) <> 32768 THEN
+      PERFORM 1 FROM content.core
+      WHERE document_id = p_document_id
+        AND author_entity_id = identity.rls_user_id();
+      IF NOT FOUND THEN
+        RAISE EXCEPTION 'insufficient_privilege: cannot untag another author''s document'
+          USING ERRCODE = '42501';
+      END IF;
+    END IF;
+  END IF;
+  DELETE FROM content.content_to_tag
+  WHERE content_id = p_document_id AND tag_id = p_tag_id;
+END;
+$$;
+
+
 -- Insertion d'un commentaire avec construction du chemin ltree (une seule écriture heap)
 -- Remplace définitivement le double trigger BEFORE/AFTER (ADR-012).
 -- nextval() préalable → path construit en mémoire → INSERT unique, zéro dead tuple.
+-- Gardes d'autorisation (ADR-020 rev.) :
+--   create_comments (bit 5, valeur 32) requis.
+--   p_account_entity_id doit correspondre à rls_user_id() (interdit les commentaires
+--   attribués à un autre compte).
 CREATE PROCEDURE content.create_comment(
   p_document_id       INT,
   p_account_entity_id INT,
@@ -1212,6 +1434,16 @@ DECLARE
   v_parent_path ltree;
   v_path        ltree;
 BEGIN
+  IF identity.rls_user_id() <> -1 THEN
+    IF (identity.rls_auth_bits() & 32) <> 32 THEN
+      RAISE EXCEPTION 'insufficient_privilege: create_comments required'
+        USING ERRCODE = '42501';
+    END IF;
+    IF p_account_entity_id <> identity.rls_user_id() THEN
+      RAISE EXCEPTION 'insufficient_privilege: cannot post comment attributed to another account'
+        USING ERRCODE = '42501';
+    END IF;
+  END IF;
   -- 1. Allouer l'id avant toute écriture heap
   SELECT pg_get_serial_sequence('content.comment', 'id') INTO v_seq_name;
   p_comment_id := nextval(v_seq_name);
@@ -1259,6 +1491,9 @@ $$;
 -- La couche applicative met à jour chaque composant indépendamment via UPDATE
 -- direct (marius_admin) ou via des procédures métier dédiées.
 -- p_currency_code : code ISO 4217 numérique (défaut 978 = EUR).
+-- Garde AOT (ADR-020 rev.) :
+--   p_client_entity_id doit correspondre à rls_user_id() OU manage_commerce (262144).
+--   Interdit la création de commandes au nom d'un autre client.
 CREATE PROCEDURE commerce.create_transaction(
   p_client_entity_id  INT,
   p_seller_entity_id  INT,
@@ -1268,6 +1503,12 @@ CREATE PROCEDURE commerce.create_transaction(
   OUT p_transaction_id INT
 ) LANGUAGE plpgsql AS $$
 BEGIN
+  IF identity.rls_user_id() <> -1
+     AND p_client_entity_id <> identity.rls_user_id()
+     AND (identity.rls_auth_bits() & 262144) <> 262144 THEN
+    RAISE EXCEPTION 'insufficient_privilege: cannot create transaction for another client'
+      USING ERRCODE = '42501';
+  END IF;
   INSERT INTO commerce.transaction_core
     (client_entity_id, seller_entity_id, status, description)
   VALUES (p_client_entity_id, p_seller_entity_id, p_status, p_description)
@@ -1292,11 +1533,45 @@ $$;
 -- Insertion d'une ligne de commande avec snapshot du prix
 -- FOR UPDATE sur product_core (ADR-021) : verrou exclusif pour prévenir la sur-vente.
 -- price_cents lue et stockée telle quelle — arithmétique entière native (ADR-022).
+-- Gardes AOT (ADR-020 rev.) :
+--   1. Ownership : la transaction doit appartenir à rls_user_id() OU manage_commerce.
+--   2. Statut : ajout d'items uniquement sur transaction status=0 (pending).
+--      Une transaction confirmée, expédiée ou annulée est verrouillée.
 CREATE PROCEDURE commerce.create_transaction_item(
   p_transaction_id INT, p_product_id INT, p_quantity INT DEFAULT 1
 ) LANGUAGE plpgsql AS $$
-DECLARE v_price_cents INT8;
+DECLARE
+  v_price_cents    INT8;
+  v_txn_status     SMALLINT;
+  v_txn_client_id  INT;
 BEGIN
+  -- Lire le statut et le client de la transaction (avec verrou partagé)
+  SELECT status, client_entity_id
+  INTO   v_txn_status, v_txn_client_id
+  FROM   commerce.transaction_core
+  WHERE  id = p_transaction_id
+  FOR SHARE;
+
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'Transaction % introuvable', p_transaction_id
+      USING ERRCODE = 'foreign_key_violation';
+  END IF;
+
+  -- Garde ownership : le client ou un gestionnaire commerce
+  IF identity.rls_user_id() <> -1
+     AND v_txn_client_id <> identity.rls_user_id()
+     AND (identity.rls_auth_bits() & 262144) <> 262144 THEN
+    RAISE EXCEPTION 'insufficient_privilege: cannot add item to another client''s transaction'
+      USING ERRCODE = '42501';
+  END IF;
+
+  -- Garde statut : transaction doit être en attente (status=0)
+  IF v_txn_status <> 0 THEN
+    RAISE EXCEPTION 'Transaction % is not in pending state (status=%): items cannot be added',
+      p_transaction_id, v_txn_status
+      USING ERRCODE = '55000';
+  END IF;
+
   SELECT price_cents INTO v_price_cents
   FROM   commerce.product_core WHERE id = p_product_id FOR UPDATE;
   IF v_price_cents IS NULL THEN
@@ -1351,6 +1626,7 @@ SELECT a.entity_id, a.password_hash, a.is_banned, a.role_id,
 FROM identity.auth a JOIN identity.role r ON r.id = a.role_id;
 
 -- IDENTITY : v_account — schema.org/Person (compte utilisateur)
+-- Sécurité : WHERE GUC miroir de rls_account_select (ADR-029 invariant 2 révisé).
 CREATE VIEW identity.v_account AS
 SELECT
   ac.entity_id             AS identifier,
@@ -1374,7 +1650,11 @@ SELECT
   pi.nationality
 FROM        identity.account_core    ac
 JOIN        identity.auth            a  ON a.entity_id  = ac.entity_id
-LEFT JOIN   identity.person_identity pi ON pi.entity_id = ac.person_entity_id;
+LEFT JOIN   identity.person_identity pi ON pi.entity_id = ac.person_entity_id
+WHERE (
+  ac.entity_id = identity.rls_user_id()        -- utilisateur : son propre compte
+  OR (identity.rls_auth_bits() & 256) = 256    -- manage_users
+);
 
 -- IDENTITY : v_person — schema.org/Person (profil public complet)
 CREATE VIEW identity.v_person AS
@@ -1432,7 +1712,13 @@ FROM      geo.place_core    c
 LEFT JOIN geo.postal_address pa ON pa.place_id = c.id
 LEFT JOIN geo.place_content  co ON co.place_id = c.id;
 
--- ORG : v_organization — schema.org/Organization
+-- ORG : v_organization — schema.org/Organization (catalogue public)
+-- Données légales (SIRET, DUNS, TVA) exclues de la projection :
+--   org.org_legal est sous REVOKE SELECT pour marius_user. La vue étant owned par
+--   postgres, elle pourrait techniquement joindre org_legal malgré le REVOKE —
+--   mais exposer des identifiants légaux dans un catalogue public viole le principe
+--   de moindre exposition. L'accès aux données légales passe par marius_admin.
+-- Pas de filtre GUC : les organisations sont un catalogue global non multi-tenant.
 CREATE VIEW org.v_organization AS
 SELECT
   e.id                     AS identifier,
@@ -1443,9 +1729,6 @@ SELECT
   oct.email,
   oct.phone                AS telephone,
   oct.url,
-  ol.legal_name,
-  ol.duns, ol.siret,
-  ol.vat_id,
   gp.name                  AS location_name,
   gp.address_locality,
   gp.country_code,
@@ -1455,7 +1738,6 @@ FROM        org.entity          e
 JOIN        org.org_identity    oi  ON oi.entity_id = e.id
 JOIN        org.org_core        oc  ON oc.entity_id = e.id
 LEFT JOIN   org.org_contact     oct ON oct.entity_id = e.id
-LEFT JOIN   org.org_legal       ol  ON ol.entity_id  = e.id
 LEFT JOIN   geo.v_place         gp  ON gp.identifier  = oc.place_id;
 
 -- COMMERCE : v_product — schema.org/Product
@@ -1477,7 +1759,9 @@ LEFT JOIN   commerce.product_content  pco ON pco.product_id = pc.id;
 -- COMMERCE : v_transaction — schema.org/Order enrichi (ADR-023)
 -- snake_case + suffixes _cents conservés (ADR-025).
 -- PUSHDOWN GARANTI : WHERE identifier = :id → WHERE tc.id = :id avant json_agg().
--- OBLIGATION : toujours filtrer par identifier ou customer_id.
+-- Sécurité : la vue est owned par postgres (BYPASSRLS). Le WHERE GUC ci-dessous
+-- est le mécanisme de contrôle d'accès primaire (ADR-029 invariant 2 révisé).
+-- Miroir de rls_transaction_select : client OU view_transactions OU manage_commerce.
 CREATE VIEW commerce.v_transaction AS
 SELECT
   -- Core (schema.org/Order)
@@ -1528,6 +1812,11 @@ JOIN        commerce.product_identity    pi   ON pi.product_id       = ti.produc
 LEFT JOIN   commerce.transaction_price   tp   ON tp.transaction_id   = tc.id
 LEFT JOIN   commerce.transaction_payment tpay ON tpay.transaction_id = tc.id
 LEFT JOIN   commerce.transaction_delivery tdel ON tdel.transaction_id = tc.id
+WHERE (
+  tc.client_entity_id = identity.rls_user_id()      -- client : ses propres commandes
+  OR (identity.rls_auth_bits() & 131072) = 131072   -- view_transactions
+  OR (identity.rls_auth_bits() & 262144) = 262144   -- manage_commerce
+)
 GROUP BY
   tc.id, tc.status, tc.created_at, tc.modified_at,
   tc.client_entity_id, tc.seller_entity_id, tc.description,
@@ -1539,6 +1828,13 @@ GROUP BY
   tdel.tracking_number, tdel.shipped_at, tdel.estimated_at, tdel.delivered_at;
 
 -- CONTENT : v_article_list — hot path listing (zéro TOAST, zéro agrégat)
+-- Sécurité : la vue est owned par postgres (BYPASSRLS). Le RLS physique sur
+-- content.core est inopérant sur ce chemin (ADR-029 invariant 2 révisé).
+-- Le WHERE ci-dessous constitue le mécanisme de contrôle d'accès primaire
+-- pour ce chemin de lecture. Les helpers rls_user_id() / rls_auth_bits()
+-- lisent le GUC de session — invariant par rapport au security context de la vue.
+-- Comportement anonyme (GUC absent) : (0&16)=0, (0&32768)=0, author=-1 →
+--   seul status=1 passe → comportement public préservé.
 CREATE VIEW content.v_article_list AS
 SELECT
   d.id                     AS identifier,
@@ -1552,7 +1848,12 @@ SELECT
 FROM        content.document  d
 JOIN        content.core      co ON co.document_id = d.id
 JOIN        content.identity  ci ON ci.document_id = d.id
-WHERE co.status = 1;
+WHERE (
+  co.status = 1
+  OR (identity.rls_auth_bits() & 16)    = 16       -- publish_contents
+  OR (identity.rls_auth_bits() & 32768) = 32768    -- edit_others_contents
+  OR co.author_entity_id = identity.rls_user_id()  -- auteur : ses propres brouillons
+);
 
 -- CONTENT : v_article — schema.org/Article (page complète avec TOAST + agrégats)
 -- doc_type remplace "@type" (caractère @ incompatible avec les identifiants SQL nus).
@@ -1591,7 +1892,14 @@ SELECT
 FROM        content.document  d
 JOIN        content.core      co ON co.document_id = d.id
 JOIN        content.identity  ci ON ci.document_id = d.id
-LEFT JOIN   content.body      b  ON b.document_id  = d.id;
+LEFT JOIN   content.body      b  ON b.document_id  = d.id
+WHERE (
+  co.status = 1
+  OR (identity.rls_auth_bits() & 16)    = 16       -- publish_contents
+  OR (identity.rls_auth_bits() & 32768) = 32768    -- edit_others_contents
+  OR co.author_entity_id = identity.rls_user_id()  -- auteur : ses propres brouillons
+);
+-- Sécurité : voir note v_article_list — même mécanisme WHERE GUC.
 
 -- CONTENT : v_tag_tree — taxonomie avec Closure Table (ADR-026)
 -- depth = distance depuis la racine (0 = racine, 4 = feuille maximale).
@@ -1670,6 +1978,37 @@ REVOKE SELECT ON commerce.transaction_payment FROM marius_user;
 -- commerce.transaction_delivery : numéro de suivi logistique (données transporteur).
 --   Interface contrôlée : commerce.v_transaction.
 REVOKE SELECT ON commerce.transaction_delivery FROM marius_user;
+
+-- commerce.transaction_price : montants, devise, taux de taxe — données financières.
+--   Interface contrôlée : commerce.v_transaction (RLS via transaction_core).
+--   ADR-029 : sans ce REVOKE, un SELECT direct bypasse le RLS de transaction_core
+--   (fragmentation ECS — le RLS d'un composant Core ne se propage pas aux satellites).
+REVOKE SELECT ON commerce.transaction_price FROM marius_user;
+
+-- commerce.transaction_item : lignes de commande, produits, quantités, prix snapshot.
+--   Interface contrôlée : commerce.v_transaction.
+--   ADR-029 : même vecteur de fuite que transaction_price.
+REVOKE SELECT ON commerce.transaction_item FROM marius_user;
+
+-- Composants satellites éditoriaux — ADR-029 invariant 1 (ECS × RLS).
+-- Le RLS de content.core ne se propage pas aux satellites : un SELECT direct
+-- sur ces tables retourne l'intégralité des données (brouillons inclus) sans
+-- que rls_core_select ne soit jamais évalué.
+-- Interface contrôlée : content.v_article_list, content.v_article.
+
+-- content.identity : headline, slug, description — métadonnées de tous les documents.
+REVOKE SELECT ON content.identity FROM marius_user;
+
+-- content.body : corps HTML complet — contenu de tous les documents.
+REVOKE SELECT ON content.body FROM marius_user;
+
+-- content.revision : snapshots éditoriaux complets (headline + body).
+REVOKE SELECT ON content.revision FROM marius_user;
+
+-- org.org_legal : DUNS, SIRET, TVA — identifiants légaux sensibles.
+--   Interface contrôlée : org.v_organization, projetés uniquement pour manage_system.
+--   ADR-029 inv.1 : satellite d'org.org_core, accessible directement sans ce REVOKE.
+REVOKE SELECT ON org.org_legal FROM marius_user;
 
 -- USAGE séquences : permet currval() et inspection — les nextval() des procédures
 -- passent via SECURITY DEFINER (owner = postgres) et n'en ont pas besoin.
@@ -1782,6 +2121,9 @@ ALTER PROCEDURE org.create_organization(
   character varying, character varying, character varying, integer, integer
 ) SECURITY DEFINER SET search_path = 'org', 'identity', 'pg_catalog';
 
+ALTER PROCEDURE org.add_organization_to_hierarchy(integer, integer)
+  SECURITY DEFINER SET search_path = 'org', 'identity', 'pg_catalog';
+
 -- content.create_document déclenche fn_slug_deduplicate (schéma public).
 -- Le trigger est résolu par OID — pas de risque fonctionnel lié au search_path.
 -- 'public' inclus pour la résolution des fonctions utilitaires dans le corps.
@@ -1801,6 +2143,12 @@ ALTER PROCEDURE content.create_comment(integer, integer, text, integer, smallint
 
 ALTER PROCEDURE content.create_tag(character varying, character varying, integer)
   SECURITY DEFINER SET search_path = 'content', 'pg_catalog';
+
+ALTER PROCEDURE content.add_tag_to_document(integer, integer)
+  SECURITY DEFINER SET search_path = 'content', 'identity', 'pg_catalog';
+
+ALTER PROCEDURE content.remove_tag_from_document(integer, integer)
+  SECURITY DEFINER SET search_path = 'content', 'identity', 'pg_catalog';
 
 ALTER PROCEDURE commerce.create_transaction(integer, integer, smallint, smallint, text)
   SECURITY DEFINER SET search_path = 'commerce', 'identity', 'pg_catalog';
@@ -1851,10 +2199,18 @@ $$;
 -- Politique SELECT :
 --   Ligne visible si publiée (status=1)
 --   OU si l'utilisateur possède publish_contents (bit 4, valeur 16) → accès éditorial
+--   OU si l'utilisateur possède edit_others_contents (bit 15, valeur 32768) → éditeur/modérateur
 --   OU si l'utilisateur est l'auteur de la ligne.
+-- Note ADR-029 : tout bit accordant UPDATE ou DELETE sur cette table doit figurer
+-- aussi dans le USING SELECT, sans quoi la politique d'écriture est structurellement
+-- inatteignable (PostgreSQL évalue le filtre SELECT avant d'accorder l'écriture).
 -- Politique UPDATE/DELETE :
---   Permissive A : auteur de la ligne ET bit edit_contents (bit 2, valeur 4)
---   Permissive B : bit edit_others_contents (bit 15, valeur 32768) → édition globale
+--   Permissive A : auteur de la ligne ET edit_contents(4) pour UPDATE
+--                  auteur de la ligne ET delete_contents(8) pour DELETE (ADR-029)
+--   Permissive B : edit_others_contents(32768) → édition/suppression globale
+-- Note ADR-029 : delete_own vérifie delete_contents (8) et non edit_contents (4).
+--   Utiliser edit_contents pour garder une suppression est un mismatch sémantique :
+--   un rôle perdant uniquement edit_contents conserverait sa capacité destructrice.
 -- Note : INSERT est géré exclusivement par content.create_document (SECURITY DEFINER).
 -- ─────────────────────────────────────────────────────────────────────────────
 
@@ -1863,9 +2219,10 @@ ALTER TABLE content.core ENABLE ROW LEVEL SECURITY;
 CREATE POLICY rls_core_select ON content.core
   FOR SELECT
   USING (
-    status = 1                                          -- article publié : visible de tous
-    OR (identity.rls_auth_bits() & 16) = 16            -- publish_contents : accès éditorial
-    OR author_entity_id = identity.rls_user_id()       -- auteur : voit ses propres brouillons
+    status = 1                                             -- article publié : visible de tous
+    OR (identity.rls_auth_bits() & 16)    = 16            -- publish_contents : accès éditorial
+    OR (identity.rls_auth_bits() & 32768) = 32768         -- edit_others_contents : éditeur/modérateur
+    OR author_entity_id = identity.rls_user_id()          -- auteur : voit ses propres brouillons
   );
 
 -- Auteur peut modifier son propre contenu (edit_contents requis)
@@ -1890,18 +2247,22 @@ CREATE POLICY rls_core_update_others ON content.core
     (identity.rls_auth_bits() & 32768) = 32768
   );
 
--- Suppression : auteur uniquement (ou edit_others_contents)
+-- Suppression propre : auteur ET delete_contents (bit 3, valeur 8)
+-- ADR-029 : corrigé de edit_contents(4) → delete_contents(8). Le rôle author
+-- inclut delete_contents depuis ADR-029. Utiliser le bit d'édition pour garder
+-- une suppression crée un sur-privilège silencieux lors d'un déclassement de rôle.
 CREATE POLICY rls_core_delete_own ON content.core
   FOR DELETE
   USING (
     author_entity_id = identity.rls_user_id()
-    AND (identity.rls_auth_bits() & 4) = 4
+    AND (identity.rls_auth_bits() & 8) = 8             -- delete_contents
   );
 
+-- Suppression globale : edit_others_contents (bit 15, valeur 32768)
 CREATE POLICY rls_core_delete_others ON content.core
   FOR DELETE
   USING (
-    (identity.rls_auth_bits() & 32768) = 32768
+    (identity.rls_auth_bits() & 32768) = 32768         -- edit_others_contents
   );
 
 
@@ -1910,6 +2271,11 @@ CREATE POLICY rls_core_delete_others ON content.core
 -- Politique SELECT :
 --   Ligne visible si l'utilisateur est le client (isolation stricte)
 --   OU si le bit view_transactions (bit 17, valeur 131072) est présent.
+--   OU si le bit manage_commerce (bit 18, valeur 262144) est présent.
+--   Note ADR-029 (invariant 3) : manage_commerce est requis dans le USING UPDATE ;
+--   il doit donc figurer aussi dans le USING SELECT pour que la politique d'écriture
+--   soit atteignable. Un profil portant manage_commerce mais pas view_transactions
+--   (bits orthogonaux) échouerait silencieusement (0 rows updated) sans ce critère.
 -- Politique UPDATE :
 --   Uniquement si le bit manage_commerce (bit 18, valeur 262144) est présent.
 --   Un client ne peut jamais modifier sa propre transaction — seul un gestionnaire
@@ -1923,6 +2289,7 @@ CREATE POLICY rls_transaction_select ON commerce.transaction_core
   USING (
     client_entity_id = identity.rls_user_id()          -- client : ses propres commandes
     OR (identity.rls_auth_bits() & 131072) = 131072    -- view_transactions
+    OR (identity.rls_auth_bits() & 262144) = 262144    -- manage_commerce (ADR-029 invariant 3)
   );
 
 CREATE POLICY rls_transaction_update ON commerce.transaction_core
@@ -1963,6 +2330,28 @@ CREATE POLICY rls_account_update ON identity.account_core
     entity_id = identity.rls_user_id()
     OR (identity.rls_auth_bits() & 256) = 256
   );
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- 15.4 — content.comment
+-- Politique SELECT :
+--   status = 1 (commentaire approuvé) : visible de tous.
+--   OU auteur du commentaire (account_entity_id = rls_user_id()) : voit ses propres
+--      commentaires en attente ou rejetés.
+--   OU moderate_comments (bit 16, valeur 65536) : modérateurs voient tout.
+-- Note ADR-029 invariant 3 : marius_user n'a pas de DML sur content.comment
+-- (ADR-020) → pas de politique UPDATE/DELETE nécessaire sur ce chemin.
+-- ─────────────────────────────────────────────────────────────────────────────
+
+ALTER TABLE content.comment ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY rls_comment_select ON content.comment
+  FOR SELECT
+  USING (
+    status = 1                                             -- commentaire approuvé : visible de tous
+    OR account_entity_id = identity.rls_user_id()         -- auteur : voit ses propres commentaires
+    OR (identity.rls_auth_bits() & 65536) = 65536         -- moderate_comments : accès modération
+  );
+
 
 -- Permissions EXECUTE sur les helpers RLS (lecture des GUC uniquement)
 GRANT EXECUTE ON FUNCTION identity.rls_user_id()   TO marius_user;
