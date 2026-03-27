@@ -4,8 +4,8 @@
 -- pgTAP test suite — Projet Marius · PostgreSQL 18 · ECS/DOD
 --
 -- Couvre : atomicité de create_document, snapshot complet de save_revision
---          (ADR-021), cycle de vie éditorial (publish_document), construction
---          des chemins ltree dans create_comment (ADR-012), rejet des
+--          (ADR-024), cycle de vie éditorial (publish_document), construction
+--          des chemins ltree dans create_comment (ADR-007), rejet des
 --          parentés inter-documents.
 --
 -- Exécution : psql -U postgres -d marius -f 03_content_logic.sql
@@ -132,11 +132,11 @@ SELECT ok(
 
 
 -- ============================================================
--- Snapshot initial de create_document (ADR-021)
+-- Snapshot initial de create_document (ADR-024)
 --
 -- La révision n°1 est insérée dans create_document. Elle doit capturer
 -- l'intégralité des champs éditoriaux, y compris alternative_headline et
--- description — ajoutés suite à l'audit ADR-021 (manquants dans la version
+-- description — ajoutés suite à l'audit ADR-024 (manquants dans la version
 -- précédente, ce qui rendait l'historique silencieusement incomplet).
 -- ============================================================
 
@@ -153,7 +153,7 @@ SELECT is(
    WHERE  document_id = (SELECT val FROM _ids WHERE key = 'doc1_id')
      AND  revision_num = 1),
   'Chapô initial',
-  'Révision initiale : snapshot_alternative_headline capturé (ADR-021)'
+  'Révision initiale : snapshot_alternative_headline capturé (ADR-024)'
 );
 
 SELECT is(
@@ -161,7 +161,7 @@ SELECT is(
    WHERE  document_id = (SELECT val FROM _ids WHERE key = 'doc1_id')
      AND  revision_num = 1),
   'Description initiale',
-  'Révision initiale : snapshot_description capturé (ADR-021)'
+  'Révision initiale : snapshot_description capturé (ADR-024)'
 );
 
 SELECT is(
@@ -194,7 +194,7 @@ SELECT ok(
 
 
 -- ============================================================
--- save_revision : snapshot complet après modification (ADR-021)
+-- save_revision : snapshot complet après modification (ADR-024)
 --
 -- On met à jour les colonnes de content.identity et content.body directement
 -- (as postgres, owner des tables), puis on appelle save_revision.
@@ -229,7 +229,7 @@ SELECT is(
    WHERE  document_id = (SELECT val FROM _ids WHERE key = 'doc1_id')
      AND  revision_num = 2),
   'Chapô v2',
-  'save_revision n°2 : snapshot_alternative_headline = ''Chapô v2'' (ADR-021)'
+  'save_revision n°2 : snapshot_alternative_headline = ''Chapô v2'' (ADR-024)'
 );
 
 SELECT is(
@@ -237,7 +237,7 @@ SELECT is(
    WHERE  document_id = (SELECT val FROM _ids WHERE key = 'doc1_id')
      AND  revision_num = 2),
   'Description v2',
-  'save_revision n°2 : snapshot_description = ''Description v2'' (ADR-021)'
+  'save_revision n°2 : snapshot_description = ''Description v2'' (ADR-024)'
 );
 
 SELECT is(
@@ -250,7 +250,7 @@ SELECT is(
 
 
 -- ============================================================
--- create_comment : construction des chemins ltree (ADR-012)
+-- create_comment : construction des chemins ltree (ADR-007)
 --
 -- La procédure alloue l'id via nextval() AVANT l'INSERT, construit le chemin
 -- en mémoire PL/pgSQL, puis effectue un INSERT unique avec OVERRIDING SYSTEM

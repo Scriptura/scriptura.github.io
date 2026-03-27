@@ -114,7 +114,7 @@ SELECT throws_ok(
   ),
   '23514',  -- check_violation : depth BETWEEN 0 AND 4
   NULL,
-  'create_tag au-delà de depth=4 : CHECK violation 23514 (ADR-026)'
+  'create_tag au-delà de depth=4 : CHECK violation 23514 (ADR-018)'
 );
 
 

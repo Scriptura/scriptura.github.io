@@ -61,7 +61,7 @@
 INSERT INTO identity.entity (id) OVERRIDING SYSTEM VALUE VALUES (1),(2),(3),(4),(5),(6),(7),(8);
 SELECT setval(pg_get_serial_sequence('identity.entity', 'id'), 8);
 
--- LIEUX — spine spatial (ADR-024 : données postales séparées dans geo.postal_address)
+-- LIEUX — spine spatial (ADR-017 : données postales séparées dans geo.postal_address)
 INSERT INTO geo.place_core (id, name, coordinates, elevation)
 OVERRIDING SYSTEM VALUE VALUES
   (1,  'Cathédrale Notre-Dame de Paris',                ST_SetSRID(ST_MakePoint(2.349747,  48.853133), 4326), 210),
@@ -78,7 +78,7 @@ OVERRIDING SYSTEM VALUE VALUES
   (12, 'Colombey-les-Deux-Églises',                    ST_SetSRID(ST_MakePoint(3.782467,  48.192773), 4326), 239);
 SELECT setval(pg_get_serial_sequence('geo.place_core', 'id'), 12);
 
--- ADRESSES POSTALES (ADR-024 · country_code 250 = France ISO 3166-1 numérique)
+-- ADRESSES POSTALES (ADR-017 · country_code 250 = France ISO 3166-1 numérique)
 INSERT INTO geo.postal_address (place_id, country_code, street,                            postal_code, locality,                      region) VALUES
   (1,  250, '6 Parvis Notre-Dame - Pl. Jean-Paul II', '75004', 'Paris',                      'Île-de-France'),
   (2,  250, '35 Rue du Chevalier de la Barre',         '75018', 'Paris',                      'Île-de-France'),
@@ -192,7 +192,7 @@ INSERT INTO content.body (document_id, content) VALUES
 -- COMMENTAIRES (sur le document 5 — Agent 327)
 -- Exécution via la procédure content.create_comment() : traverse le même chemin
 -- d'écriture (I/O) qu'en production. Valide l'absence de dead tuples structurels
--- et la construction correcte des chemins ltree (ADR-012).
+-- et la construction correcte des chemins ltree (ADR-007).
 -- L'argument OUT p_comment_id est ignoré ici (variable anonyme $_).
 DO $$
 DECLARE _id INT;

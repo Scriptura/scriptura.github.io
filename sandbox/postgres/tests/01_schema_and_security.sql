@@ -30,7 +30,7 @@ SELECT has_extension('postgis',  'Extension postgis présente');
 
 
 -- ============================================================
--- TYPES PHYSIQUES — INT8 pour les montants monétaires (ADR-022)
+-- TYPES PHYSIQUES — INT8 pour les montants monétaires (ADR-026)
 --
 -- NUMERIC est varlena sans exception dans PostgreSQL (en-tête 4 B, arithmétique
 -- émulée en base 10000, padding d'alignement forcé). INT8 est pass-by-value,
@@ -43,7 +43,7 @@ SELECT has_extension('postgis',  'Extension postgis présente');
 SELECT col_type_is(
   'commerce', 'product_core', 'price_cents',
   'bigint',
-  'product_core.price_cents : bigint, pas NUMERIC (ADR-022 — densité ×2)'
+  'product_core.price_cents : bigint, pas NUMERIC (ADR-026 — densité ×2)'
 );
 
 SELECT col_type_is(
@@ -55,12 +55,12 @@ SELECT col_type_is(
 SELECT col_type_is(
   'commerce', 'transaction_item', 'unit_price_snapshot_cents',
   'bigint',
-  'transaction_item.unit_price_snapshot_cents : bigint (ADR-022)'
+  'transaction_item.unit_price_snapshot_cents : bigint (ADR-026)'
 );
 
 
 -- ============================================================
--- TYPES PHYSIQUES — VARCHAR au lieu de CHAR(n) (ADR-022)
+-- TYPES PHYSIQUES — VARCHAR au lieu de CHAR(n) (ADR-026)
 --
 -- CHAR(n) dans PostgreSQL est varlena comme VARCHAR(n) — pas de stockage fixe.
 -- Surcoût : padding espace à l'écriture + stripping à la lecture.
@@ -70,19 +70,19 @@ SELECT col_type_is(
 SELECT col_type_is(
   'org', 'org_legal', 'duns',
   'character varying(9)',
-  'org_legal.duns : character varying(9), pas bpchar (ADR-022)'
+  'org_legal.duns : character varying(9), pas bpchar (ADR-026)'
 );
 
 SELECT col_type_is(
   'org', 'org_legal', 'siret',
   'character varying(14)',
-  'org_legal.siret : character varying(14), pas bpchar (ADR-022)'
+  'org_legal.siret : character varying(14), pas bpchar (ADR-026)'
 );
 
 SELECT col_type_is(
   'commerce', 'product_identity', 'isbn_ean',
   'character varying(13)',
-  'product_identity.isbn_ean : character varying(13), pas bpchar (ADR-022)'
+  'product_identity.isbn_ean : character varying(13), pas bpchar (ADR-026)'
 );
 
 -- Balayage global : aucun bpchar ne doit subsister dans les cinq schémas métier.
@@ -93,12 +93,12 @@ SELECT ok(
     WHERE  table_schema IN ('identity', 'geo', 'org', 'commerce', 'content')
       AND  data_type    = 'character'   -- 'character' = bpchar dans information_schema
   ),
-  'Aucune colonne CHAR(n) / bpchar dans les cinq schémas métier (ADR-022)'
+  'Aucune colonne CHAR(n) / bpchar dans les cinq schémas métier (ADR-026)'
 );
 
 
 -- ============================================================
--- ADR-021 — Colonnes de snapshot complètes dans content.revision
+-- ADR-024 — Colonnes de snapshot complètes dans content.revision
 --
 -- Ces colonnes ont été ajoutées suite à un audit : save_revision ne capturait
 -- pas alternative_headline ni description. Un snapshot incomplet crée un
@@ -107,17 +107,17 @@ SELECT ok(
 
 SELECT has_column(
   'content', 'revision', 'snapshot_alternative_headline',
-  'content.revision : colonne snapshot_alternative_headline présente (ADR-021)'
+  'content.revision : colonne snapshot_alternative_headline présente (ADR-024)'
 );
 
 SELECT has_column(
   'content', 'revision', 'snapshot_description',
-  'content.revision : colonne snapshot_description présente (ADR-021)'
+  'content.revision : colonne snapshot_description présente (ADR-024)'
 );
 
 
 -- ============================================================
--- INDEX BRIN — paramètre pages_per_range (ADR-017)
+-- INDEX BRIN — paramètre pages_per_range (ADR-010)
 --
 -- Un BRIN avec pages_per_range inadapté dégrade silencieusement l'efficacité
 -- des requêtes temporelles (plus de blocs candidats chargés). Ces tests figent
@@ -167,7 +167,7 @@ SELECT ok(
 
 
 -- ============================================================
--- SECURITY DEFINER — toutes les procédures de mutation (ADR-020)
+-- SECURITY DEFINER — toutes les procédures de mutation (ADR-001)
 --
 -- Sans SECURITY DEFINER, une procédure hérite des droits de l'appelant
 -- (marius_user), qui n'a pas de droits DML directs. Toute procédure sans
@@ -181,7 +181,7 @@ SELECT ok(
     JOIN   pg_namespace n ON n.oid = p.pronamespace
     WHERE  n.nspname = 'identity' AND p.proname = 'create_account' AND p.prokind = 'p'
   ), false),
-  'identity.create_account : SECURITY DEFINER (ADR-020)'
+  'identity.create_account : SECURITY DEFINER (ADR-001)'
 );
 
 SELECT ok(
@@ -190,7 +190,7 @@ SELECT ok(
     JOIN   pg_namespace n ON n.oid = p.pronamespace
     WHERE  n.nspname = 'identity' AND p.proname = 'create_person' AND p.prokind = 'p'
   ), false),
-  'identity.create_person : SECURITY DEFINER (ADR-020)'
+  'identity.create_person : SECURITY DEFINER (ADR-001)'
 );
 
 SELECT ok(
@@ -199,7 +199,7 @@ SELECT ok(
     JOIN   pg_namespace n ON n.oid = p.pronamespace
     WHERE  n.nspname = 'identity' AND p.proname = 'record_login' AND p.prokind = 'p'
   ), false),
-  'identity.record_login : SECURITY DEFINER (ADR-020)'
+  'identity.record_login : SECURITY DEFINER (ADR-001)'
 );
 
 SELECT ok(
@@ -208,7 +208,7 @@ SELECT ok(
     JOIN   pg_namespace n ON n.oid = p.pronamespace
     WHERE  n.nspname = 'identity' AND p.proname = 'grant_permission' AND p.prokind = 'p'
   ), false),
-  'identity.grant_permission : SECURITY DEFINER (ADR-020)'
+  'identity.grant_permission : SECURITY DEFINER (ADR-001)'
 );
 
 SELECT ok(
@@ -217,7 +217,7 @@ SELECT ok(
     JOIN   pg_namespace n ON n.oid = p.pronamespace
     WHERE  n.nspname = 'identity' AND p.proname = 'revoke_permission' AND p.prokind = 'p'
   ), false),
-  'identity.revoke_permission : SECURITY DEFINER (ADR-020)'
+  'identity.revoke_permission : SECURITY DEFINER (ADR-001)'
 );
 
 SELECT ok(
@@ -226,7 +226,7 @@ SELECT ok(
     JOIN   pg_namespace n ON n.oid = p.pronamespace
     WHERE  n.nspname = 'org' AND p.proname = 'create_organization' AND p.prokind = 'p'
   ), false),
-  'org.create_organization : SECURITY DEFINER (ADR-020)'
+  'org.create_organization : SECURITY DEFINER (ADR-001)'
 );
 
 SELECT ok(
@@ -235,7 +235,7 @@ SELECT ok(
     JOIN   pg_namespace n ON n.oid = p.pronamespace
     WHERE  n.nspname = 'content' AND p.proname = 'create_document' AND p.prokind = 'p'
   ), false),
-  'content.create_document : SECURITY DEFINER (ADR-020)'
+  'content.create_document : SECURITY DEFINER (ADR-001)'
 );
 
 SELECT ok(
@@ -244,7 +244,7 @@ SELECT ok(
     JOIN   pg_namespace n ON n.oid = p.pronamespace
     WHERE  n.nspname = 'content' AND p.proname = 'publish_document' AND p.prokind = 'p'
   ), false),
-  'content.publish_document : SECURITY DEFINER (ADR-020)'
+  'content.publish_document : SECURITY DEFINER (ADR-001)'
 );
 
 SELECT ok(
@@ -253,7 +253,7 @@ SELECT ok(
     JOIN   pg_namespace n ON n.oid = p.pronamespace
     WHERE  n.nspname = 'content' AND p.proname = 'save_revision' AND p.prokind = 'p'
   ), false),
-  'content.save_revision : SECURITY DEFINER (ADR-020)'
+  'content.save_revision : SECURITY DEFINER (ADR-001)'
 );
 
 SELECT ok(
@@ -262,7 +262,7 @@ SELECT ok(
     JOIN   pg_namespace n ON n.oid = p.pronamespace
     WHERE  n.nspname = 'content' AND p.proname = 'create_comment' AND p.prokind = 'p'
   ), false),
-  'content.create_comment : SECURITY DEFINER (ADR-020)'
+  'content.create_comment : SECURITY DEFINER (ADR-001)'
 );
 
 SELECT ok(
@@ -271,12 +271,12 @@ SELECT ok(
     JOIN   pg_namespace n ON n.oid = p.pronamespace
     WHERE  n.nspname = 'commerce' AND p.proname = 'create_transaction_item' AND p.prokind = 'p'
   ), false),
-  'commerce.create_transaction_item : SECURITY DEFINER (ADR-020)'
+  'commerce.create_transaction_item : SECURITY DEFINER (ADR-001)'
 );
 
 
 -- ============================================================
--- RBAC — marius_user ne peut pas écrire directement (ADR-020)
+-- RBAC — marius_user ne peut pas écrire directement (ADR-001)
 --
 -- Ces tests valident que l'invariant ECS est enforced au niveau moteur, pas
 -- seulement documenté. Un INSERT/UPDATE/DELETE direct par le rôle applicatif
@@ -319,7 +319,7 @@ SELECT ok(
     JOIN   pg_namespace n ON n.oid = p.pronamespace
     WHERE  n.nspname = 'identity' AND p.proname = 'anonymize_person' AND p.prokind = 'p'
   ), false),
-  'identity.anonymize_person : SECURITY DEFINER (ADR-020)'
+  'identity.anonymize_person : SECURITY DEFINER (ADR-001)'
 );
 
 SELECT ok(
@@ -328,7 +328,7 @@ SELECT ok(
     JOIN   pg_namespace n ON n.oid = p.pronamespace
     WHERE  n.nspname = 'org' AND p.proname = 'add_organization_to_hierarchy' AND p.prokind = 'p'
   ), false),
-  'org.add_organization_to_hierarchy : SECURITY DEFINER (ADR-020)'
+  'org.add_organization_to_hierarchy : SECURITY DEFINER (ADR-001)'
 );
 
 SELECT ok(
@@ -337,7 +337,7 @@ SELECT ok(
     JOIN   pg_namespace n ON n.oid = p.pronamespace
     WHERE  n.nspname = 'content' AND p.proname = 'add_tag_to_document' AND p.prokind = 'p'
   ), false),
-  'content.add_tag_to_document : SECURITY DEFINER (ADR-020)'
+  'content.add_tag_to_document : SECURITY DEFINER (ADR-001)'
 );
 
 SELECT ok(
@@ -346,14 +346,14 @@ SELECT ok(
     JOIN   pg_namespace n ON n.oid = p.pronamespace
     WHERE  n.nspname = 'content' AND p.proname = 'remove_tag_from_document' AND p.prokind = 'p'
   ), false),
-  'content.remove_tag_from_document : SECURITY DEFINER (ADR-020)'
+  'content.remove_tag_from_document : SECURITY DEFINER (ADR-001)'
 );
 
 -- ============================================================
 -- TRIGGERS modified_at — cohérence des métadonnées temporelles
 --
 -- L'absence d'un trigger laisse modified_at figé à NULL après mutation.
--- Le trigger media_core_modified_at a été ajouté suite à un audit (ADR-021) :
+-- Le trigger media_core_modified_at a été ajouté suite à un audit (ADR-024) :
 -- c'était la seule table mutable exposant modified_at sans trigger associé.
 -- ============================================================
 
@@ -369,7 +369,7 @@ SELECT has_trigger(
 
 SELECT has_trigger(
   'content', 'media_core', 'media_core_modified_at',
-  'Trigger media_core_modified_at présent sur content.media_core (ADR-021)'
+  'Trigger media_core_modified_at présent sur content.media_core (ADR-024)'
 );
 
 SELECT has_trigger(
@@ -384,7 +384,7 @@ SELECT ok(
     JOIN   pg_namespace n ON n.oid = p.pronamespace
     WHERE  n.nspname = 'commerce' AND p.proname = 'create_transaction' AND p.prokind = 'p'
   ), false),
-  'commerce.create_transaction : SECURITY DEFINER (ADR-020 + ADR-023)'
+  'commerce.create_transaction : SECURITY DEFINER (ADR-001 + ADR-016)'
 );
 
 -- transaction_core, transaction_price, transaction_payment, transaction_delivery all exist
@@ -396,30 +396,30 @@ SELECT ok(
        'transaction_payment','transaction_delivery'
      )
   ) = 4,
-  'Quatre composants ECS de commande présents dans le schéma commerce (ADR-023)'
+  'Quatre composants ECS de commande présents dans le schéma commerce (ADR-016)'
 );
 
--- Bits 0-20 définis dans identity.permission_bit (ADR-027)
+-- Bits 0-20 définis dans identity.permission_bit (ADR-004)
 SELECT is(
   (SELECT COUNT(*)::INT FROM identity.permission_bit),
   21,
-  'identity.permission_bit : 21 entrées (bits 0-20, ADR-027)'
+  'identity.permission_bit : 21 entrées (bits 0-20, ADR-004)'
 );
 
 -- Bit 20 (export_data = 1048576) présent
 SELECT ok(
   EXISTS (SELECT 1 FROM identity.permission_bit WHERE bit_value = 1048576 AND bit_index = 20),
-  'identity.permission_bit : export_data (bit 20 = 1048576) présent (ADR-027)'
+  'identity.permission_bit : export_data (bit 20 = 1048576) présent (ADR-004)'
 );
 
--- content.tag ne doit plus avoir de colonne ltree path (ADR-026)
+-- content.tag ne doit plus avoir de colonne ltree path (ADR-018)
 SELECT hasnt_column(
   'content', 'tag', 'path',
-  'content.tag : colonne path ltree supprimée (ADR-026 — Closure Table)'
+  'content.tag : colonne path ltree supprimée (ADR-018 — Closure Table)'
 );
 
 -- content.tag_hierarchy existe avec la PK composite attendue
-SELECT has_table('content', 'tag_hierarchy', 'content.tag_hierarchy présente (ADR-026)');
+SELECT has_table('content', 'tag_hierarchy', 'content.tag_hierarchy présente (ADR-018)');
 
 -- create_tag : SECURITY DEFINER
 SELECT ok(
@@ -428,7 +428,7 @@ SELECT ok(
     JOIN   pg_namespace n ON n.oid = p.pronamespace
     WHERE  n.nspname = 'content' AND p.proname = 'create_tag' AND p.prokind = 'p'
   ), false),
-  'content.create_tag : SECURITY DEFINER (ADR-020 + ADR-026)'
+  'content.create_tag : SECURITY DEFINER (ADR-001 + ADR-018)'
 );
 
 

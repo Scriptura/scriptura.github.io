@@ -1,6 +1,6 @@
 -- ==============================================================================
 -- 06_rls_policies.sql
--- Tests fonctionnels : Row-Level Security — Pattern GUC Stateless (ADR-028/029)
+-- Tests fonctionnels : Row-Level Security — Pattern GUC Stateless (ADR-002/029)
 -- pgTAP test suite — Projet Marius · PostgreSQL 18 · ECS/DOD
 --
 -- Stratégie : chaque scénario suit le cycle
@@ -15,7 +15,7 @@
 -- Exécution : psql -U postgres -d marius -f tests/06_rls_policies.sql
 --
 -- Révisions :
---   ADR-029 — A4  : auth_bits corrigé (59430→124990, moderator)
+--   ADR-003 — A4  : auth_bits corrigé (59430→124990, moderator)
 --             A8  : éditeur voit brouillon d'autrui via edit_others_contents (32768)
 --             A9  : auteur DELETE son propre contenu via delete_contents (8)
 --             A10 : subscriber ne peut pas DELETE le contenu d'autrui
@@ -25,11 +25,11 @@
 --             D6  : REVOKE SELECT content.identity
 --             D7  : REVOKE SELECT content.body
 --             D8  : REVOKE SELECT content.revision
---   ADR-020 rev. — E1-E4 : gardes d'autorisation dans procédures SECURITY DEFINER
---   ADR-028 rev. — F1-F4 : RLS content.comment
---   ADR-029 inv.2 — G1-G3 : WHERE GUC dans vues (security context postgres/BYPASSRLS)
---   ADR-029 inv.3 — G4   : save_revision ownership check
---   ADR-020 rev. — H1-H4 : add_tag_to_document / remove_tag_from_document
+--   ADR-001 rev. — E1-E4 : gardes d'autorisation dans procédures SECURITY DEFINER
+--   ADR-002 rev. — F1-F4 : RLS content.comment
+--   ADR-003 inv.2 — G1-G3 : WHERE GUC dans vues (security context postgres/BYPASSRLS)
+--   ADR-003 inv.3 — G4   : save_revision ownership check
+--   ADR-001 rev. — H1-H4 : add_tag_to_document / remove_tag_from_document
 --   Audit org   — I1-I5 : schéma org (REVOKE legal, guard create_organization, hiérarchie)
 --   Perm audit  — moderator 124990→124990 (+manage_tags=2048)
 --   Audit RLS global — J1-J3 : v_auth REVOKE, v_person no PII, content_to_tag gap note
@@ -62,7 +62,7 @@ RESET ROLE;
 
 -- ── A2 : brouillon de l'auteur visible par l'auteur lui-même
 SELECT set_config('marius.user_id',   '1', true);
-SELECT set_config('marius.auth_bits', '24622', true);   -- author (ADR-029 : +delete_contents)
+SELECT set_config('marius.auth_bits', '24622', true);   -- author (ADR-003 : +delete_contents)
 SET LOCAL ROLE marius_user;
 
 SELECT ok(
@@ -157,7 +157,7 @@ RESET ROLE;
 
 
 -- ── A8 : éditeur (edit_others_contents=32768, sans publish_contents) voit les brouillons d'autrui
--- ADR-029 invariant 3 : rls_core_select inclut le bit 32768.
+-- ADR-003 invariant 3 : rls_core_select inclut le bit 32768.
 -- editor (59438) : 59438 & 16 = 0 (publish_contents absent)
 --                  59438 & 32768 = 32768 (edit_others_contents présent)
 -- Sans ce critère dans SELECT, les politiques UPDATE/DELETE d'éditeur sont inatteignables.
@@ -174,8 +174,8 @@ RESET ROLE;
 
 
 -- ── A9 : auteur peut DELETE son propre contenu (delete_contents=8 requis)
--- ADR-029 : rls_core_delete_own vérifie le bit 8 (delete_contents) et non le bit 4
--- (edit_contents). Le rôle author (24622) inclut delete_contents depuis ADR-029.
+-- ADR-003 : rls_core_delete_own vérifie le bit 8 (delete_contents) et non le bit 4
+-- (edit_contents). Le rôle author (24622) inclut delete_contents depuis ADR-003.
 SELECT set_config('marius.user_id',   '1', true);
 SELECT set_config('marius.auth_bits', '24622', true);   -- author
 SET LOCAL ROLE marius_user;
@@ -281,7 +281,7 @@ RESET ROLE;
 
 
 -- ── B4 : gestionnaire avec manage_commerce seul (sans view_transactions) peut UPDATE
--- ADR-029 invariant 3 : manage_commerce (262144) ajouté dans rls_transaction_select.
+-- ADR-003 invariant 3 : manage_commerce (262144) ajouté dans rls_transaction_select.
 -- view_transactions (131072) et manage_commerce (262144) sont orthogonaux.
 -- Sans le critère 262144 dans SELECT, cet UPDATE renverrait 0 lignes silencieusement.
 -- On construit un bitmask minimal : manage_commerce seul, sans view_transactions.
@@ -296,7 +296,7 @@ SELECT is(
     RETURNING id
   ) SELECT COUNT(*)::INT FROM upd),
   1,
-  'RLS transaction_core : manage_commerce seul (sans view_transactions) peut UPDATE (ADR-029 inv.3)'
+  'RLS transaction_core : manage_commerce seul (sans view_transactions) peut UPDATE (ADR-003 inv.3)'
 );
 
 RESET ROLE;
@@ -334,7 +334,7 @@ RESET ROLE;
 
 
 -- ============================================================
--- SECTION D — Frontière de privilège par REVOKE SELECT (ADR-028/029)
+-- SECTION D — Frontière de privilège par REVOKE SELECT (ADR-002/029)
 -- Ces tests vérifient le mécanisme REVOKE SELECT, distinct du RLS.
 -- REVOKE SELECT = suppression du privilège : PostgreSQL refuse avant d'évaluer
 -- la requête, quel que soit le GUC positionné. Résultat : erreur 42501.
@@ -378,32 +378,32 @@ SELECT throws_ok(
 RESET ROLE;
 
 
--- ── D4 : commerce.transaction_price inaccessible (REVOKE SELECT — ADR-029 inv.1)
+-- ── D4 : commerce.transaction_price inaccessible (REVOKE SELECT — ADR-003 inv.1)
 -- Satellite de transaction_core : SELECT direct bypasse rls_transaction_select.
 SET LOCAL ROLE marius_user;
 
 SELECT throws_ok(
   $$SELECT shipping_cents FROM commerce.transaction_price LIMIT 1$$,
   '42501', NULL,
-  'REVOKE SELECT : commerce.transaction_price inaccessible (ADR-029 inv.1)'
+  'REVOKE SELECT : commerce.transaction_price inaccessible (ADR-003 inv.1)'
 );
 
 RESET ROLE;
 
 
--- ── D5 : commerce.transaction_item inaccessible (REVOKE SELECT — ADR-029 inv.1)
+-- ── D5 : commerce.transaction_item inaccessible (REVOKE SELECT — ADR-003 inv.1)
 SET LOCAL ROLE marius_user;
 
 SELECT throws_ok(
   $$SELECT quantity FROM commerce.transaction_item LIMIT 1$$,
   '42501', NULL,
-  'REVOKE SELECT : commerce.transaction_item inaccessible (ADR-029 inv.1)'
+  'REVOKE SELECT : commerce.transaction_item inaccessible (ADR-003 inv.1)'
 );
 
 RESET ROLE;
 
 
--- ── D6 : content.identity inaccessible (REVOKE SELECT — ADR-029 inv.1)
+-- ── D6 : content.identity inaccessible (REVOKE SELECT — ADR-003 inv.1)
 -- Satellite de content.core : SELECT direct exposerait titres et slugs de tous
 -- les brouillons sans que rls_core_select ne soit évalué.
 SET LOCAL ROLE marius_user;
@@ -411,33 +411,33 @@ SET LOCAL ROLE marius_user;
 SELECT throws_ok(
   $$SELECT headline FROM content.identity LIMIT 1$$,
   '42501', NULL,
-  'REVOKE SELECT : content.identity inaccessible (ADR-029 inv.1)'
+  'REVOKE SELECT : content.identity inaccessible (ADR-003 inv.1)'
 );
 
 RESET ROLE;
 
 
--- ── D7 : content.body inaccessible (REVOKE SELECT — ADR-029 inv.1)
+-- ── D7 : content.body inaccessible (REVOKE SELECT — ADR-003 inv.1)
 -- Corps HTML complet de tous les documents, brouillons inclus.
 SET LOCAL ROLE marius_user;
 
 SELECT throws_ok(
   $$SELECT content FROM content.body LIMIT 1$$,
   '42501', NULL,
-  'REVOKE SELECT : content.body inaccessible (ADR-029 inv.1)'
+  'REVOKE SELECT : content.body inaccessible (ADR-003 inv.1)'
 );
 
 RESET ROLE;
 
 
--- ── D8 : content.revision inaccessible (REVOKE SELECT — ADR-029 inv.1)
+-- ── D8 : content.revision inaccessible (REVOKE SELECT — ADR-003 inv.1)
 -- Snapshots éditoriaux complets (headline + body) de tous les documents.
 SET LOCAL ROLE marius_user;
 
 SELECT throws_ok(
   $$SELECT snapshot_headline FROM content.revision LIMIT 1$$,
   '42501', NULL,
-  'REVOKE SELECT : content.revision inaccessible (ADR-029 inv.1)'
+  'REVOKE SELECT : content.revision inaccessible (ADR-003 inv.1)'
 );
 
 RESET ROLE;
@@ -447,7 +447,7 @@ RESET ROLE;
 
 -- ============================================================
 -- SECTION G — Security context des vues et ownership procédural
--- (ADR-029 invariant 2 et corollaire invariant 3)
+-- (ADR-003 invariant 2 et corollaire invariant 3)
 -- ============================================================
 
 -- ── G1 : subscriber ne voit pas les brouillons via v_article_list
@@ -502,7 +502,7 @@ RESET ROLE;
 
 
 -- ── G4 : auteur ne peut pas sauvegarder une révision du document d''autrui
--- Valide l''ownership check dans content.save_revision (ADR-029 inv.3 corollaire).
+-- Valide l''ownership check dans content.save_revision (ADR-003 inv.3 corollaire).
 -- entity_id=5 a edit_contents(4) mais pas edit_others_contents(32768),
 -- et n''est pas l''auteur du document 8888 (auteur = entity_id 1).
 SELECT set_config('marius.user_id',   '5', true);
@@ -525,7 +525,7 @@ DELETE FROM content.document WHERE id          = 8888;
 
 -- ============================================================
 -- SECTION H — content.add_tag_to_document / remove_tag_from_document
--- (ADR-020 rev. — procédures de liaison taxonomique)
+-- (ADR-001 rev. — procédures de liaison taxonomique)
 -- Prérequis : tag seed id=1 doit exister (chargé depuis master_schema_dml.pgsql).
 -- ============================================================
 
@@ -737,7 +737,7 @@ ROLLBACK;
 
 -- ============================================================
 -- SECTION E — Gardes d'autorisation dans les procédures SECURITY DEFINER
--- (ADR-020 rev.)
+-- (ADR-001 rev.)
 -- Ces tests vérifient que l'élévation SECURITY DEFINER n'ouvre pas les
 -- procédures à des appelants sans permission. Le GUC est positionné pour
 -- simuler un contexte applicatif (rls_user_id() ≠ -1).

@@ -4,7 +4,7 @@
 
 ---
 
-## ADR-020 — Interface d'écriture scellée : révocation DML globale et SECURITY DEFINER
+## ADR-001 — Interface d'écriture scellée : révocation DML globale et SECURITY DEFINER
 
 **Statut** : Adopté
 
@@ -22,7 +22,7 @@ Trois mécanismes conjugués forment le verrou d'écriture :
 
 ### Pourquoi ce n'est pas de la sur-ingénierie
 
-L'invariant ECS posé par ADR-019 — les procédures sont les seuls points d'entrée
+L'invariant ECS posé par ADR-013 — les procédures sont les seuls points d'entrée
 en écriture — ne peut être tenu qu'au niveau moteur. Laisser `INSERT/UPDATE/DELETE`
 accessibles à `marius_user` revient à documenter une contrainte sans l'appliquer.
 Toute dérive (ORM bypassant les procédures, script de migration mal ciblé) est
@@ -75,25 +75,25 @@ END IF;
 
 Le bypass sur `rls_user_id() = -1` est intentionnel : le seed CI/CD et les
 sessions `marius_admin` directes n'injectent pas les GUC applicatifs. Leur accès
-est contrôlé par ADR-020 au niveau du rôle, pas par les GUC.
+est contrôlé par ADR-001 au niveau du rôle, pas par les GUC.
 
-| Procédure                     | Permission requise          | Complément                          |
-| ----------------------------- | --------------------------- | ----------------------------------- |
-| `content.publish_document`    | `publish_contents` (16)     | —                                   |
-| `content.create_document`     | `create_contents` (2)       | `p_author_id` = `rls_user_id()` sauf `edit_others_contents` |
-| `content.save_revision`       | `edit_contents` (4)         | OU `edit_others_contents` (32768)   |
-| `content.create_tag`          | `manage_tags` (2048)        | —                                   |
-| `content.add_tag_to_document` | `edit_contents` (4)         | OU `edit_others_contents` (32768) + ownership check |
-| `content.remove_tag_from_document` | `edit_contents` (4)    | OU `edit_others_contents` (32768) + ownership check |
-| `content.create_comment`      | `create_comments` (32)      | `p_account_entity_id` = `rls_user_id()` |
-| `identity.anonymize_person`   | `manage_users` (256)        | Sauf auto-anonymisation (`p_entity_id` = `rls_user_id()`) |
-| `identity.grant_permission`   | `manage_users` (256)        | —                                   |
-| `identity.revoke_permission`  | `manage_users` (256)        | —                                   |
+| Procédure                          | Permission requise      | Complément                                                  |
+| ---------------------------------- | ----------------------- | ----------------------------------------------------------- |
+| `content.publish_document`         | `publish_contents` (16) | —                                                           |
+| `content.create_document`          | `create_contents` (2)   | `p_author_id` = `rls_user_id()` sauf `edit_others_contents` |
+| `content.save_revision`            | `edit_contents` (4)     | OU `edit_others_contents` (32768)                           |
+| `content.create_tag`               | `manage_tags` (2048)    | —                                                           |
+| `content.add_tag_to_document`      | `edit_contents` (4)     | OU `edit_others_contents` (32768) + ownership check         |
+| `content.remove_tag_from_document` | `edit_contents` (4)     | OU `edit_others_contents` (32768) + ownership check         |
+| `content.create_comment`           | `create_comments` (32)  | `p_account_entity_id` = `rls_user_id()`                     |
+| `identity.anonymize_person`        | `manage_users` (256)    | Sauf auto-anonymisation (`p_entity_id` = `rls_user_id()`)   |
+| `identity.grant_permission`        | `manage_users` (256)    | —                                                           |
+| `identity.revoke_permission`       | `manage_users` (256)    | —                                                           |
 
-| `org.create_organization`              | `manage_system` (524288) | —                                   |
-| `org.add_organization_to_hierarchy`    | `manage_system` (524288) | —                                   |
+| `org.create_organization` | `manage_system` (524288) | — |
+| `org.add_organization_to_hierarchy` | `manage_system` (524288) | — |
 
-| `commerce.create_transaction`      | ownership `client_entity_id` = `rls_user_id()` | OU `manage_commerce` (262144) |
+| `commerce.create_transaction` | ownership `client_entity_id` = `rls_user_id()` | OU `manage_commerce` (262144) |
 | `commerce.create_transaction_item` | ownership transaction + `manage_commerce` | statut `status=0` requis |
 
 Procédures sans garde (accès ouvert à tout `marius_user` authentifié) :
@@ -108,7 +108,7 @@ existants via `add_tag_to_document`.
 
 ---
 
-## ADR-028 — Row-Level Security stateless via GUC bitmask
+## ADR-002 — Row-Level Security stateless via GUC bitmask
 
 **Statut** : Adopté
 
@@ -149,14 +149,14 @@ GUC sont lus une seule fois.
 
 ### Tables RLS activées
 
-| Table                         | Politiques SELECT                                    | Politiques UPDATE/DELETE      |
-| ----------------------------- | ---------------------------------------------------- | ----------------------------- |
-| `content.core`                | publié OU publish_contents OU edit_others OU auteur  | propre contenu OU edit_others |
-| `commerce.transaction_core`   | propre commande OU view_transactions OU manage_commerce | manage_commerce uniquement |
-| `identity.account_core`       | propre compte OU manage_users                        | propre compte OU manage_users |
-| `content.comment`             | approuvé OU auteur OU moderate_comments              | aucune (pas de DML applicatif)|
+| Table                       | Politiques SELECT                                       | Politiques UPDATE/DELETE       |
+| --------------------------- | ------------------------------------------------------- | ------------------------------ |
+| `content.core`              | publié OU publish_contents OU edit_others OU auteur     | propre contenu OU edit_others  |
+| `commerce.transaction_core` | propre commande OU view_transactions OU manage_commerce | manage_commerce uniquement     |
+| `identity.account_core`     | propre compte OU manage_users                           | propre compte OU manage_users  |
+| `content.comment`           | approuvé OU auteur OU moderate_comments                 | aucune (pas de DML applicatif) |
 
-### Interaction avec SECURITY DEFINER (ADR-020)
+### Interaction avec SECURITY DEFINER (ADR-001)
 
 Les procédures s'exécutent en tant que `postgres` (superutilisateur), qui contourne
 toujours le RLS. Ce comportement est **intentionnel** : les procédures implémentent
@@ -164,7 +164,7 @@ leur propre logique métier (ex : `create_document` écrit `author_entity_id` co
 et ne doivent pas être filtrées par des politiques conçues pour les lectures applicatives.
 
 Le RLS sécurise le **chemin de lecture** (`marius_user` → `SELECT` sur vues).
-Le chemin d'écriture est déjà sécurisé par l'absence de DML direct (ADR-020).
+Le chemin d'écriture est déjà sécurisé par l'absence de DML direct (ADR-001).
 
 ### marius_admin et BYPASSRLS
 
@@ -181,19 +181,19 @@ les vues contrôlées. Le RLS sur 3 tables ne fermait pas ce vecteur.
 
 Dix tables et une vue reçoivent un `REVOKE SELECT FROM marius_user` en Section 13 :
 
-| Table                         | Données sensibles                          | Interface contrôlée       |
-| ----------------------------- | ------------------------------------------ | ------------------------- |
-| `identity.auth`               | Hash argon2id, état de bannissement        | `identity.v_auth` (SECDEF)|
-| `identity.person_contact`     | Email, téléphone, fax (PII RGPD)           | `identity.v_person`       |
-| `commerce.transaction_payment`| Numéro de facture, méthode, ref. PSP       | `commerce.v_transaction`  |
-| `commerce.transaction_delivery`| Numéro de suivi logistique               | `commerce.v_transaction`  |
-| `commerce.transaction_price`  | Montants, devise, taux de taxe             | `commerce.v_transaction`  |
-| `commerce.transaction_item`   | Lignes de commande, prix snapshot          | `commerce.v_transaction`  |
-| `content.identity`            | Headline, slug, description de tous docs   | `content.v_article_list`, `content.v_article` |
-| `content.body`                | Corps HTML complet de tous docs            | `content.v_article`       |
-| `content.revision`            | Snapshots éditoriaux complets              | `content.v_article`       |
-| `org.org_legal`               | DUNS, SIRET, TVA — identifiants légaux     | `marius_admin` uniquement |
-| `identity.v_auth` (vue)       | Hash argon2id via BYPASSRLS vue            | Middleware auth (postgres) |
+| Table                           | Données sensibles                        | Interface contrôlée                           |
+| ------------------------------- | ---------------------------------------- | --------------------------------------------- |
+| `identity.auth`                 | Hash argon2id, état de bannissement      | `identity.v_auth` (SECDEF)                    |
+| `identity.person_contact`       | Email, téléphone, fax (PII RGPD)         | `identity.v_person`                           |
+| `commerce.transaction_payment`  | Numéro de facture, méthode, ref. PSP     | `commerce.v_transaction`                      |
+| `commerce.transaction_delivery` | Numéro de suivi logistique               | `commerce.v_transaction`                      |
+| `commerce.transaction_price`    | Montants, devise, taux de taxe           | `commerce.v_transaction`                      |
+| `commerce.transaction_item`     | Lignes de commande, prix snapshot        | `commerce.v_transaction`                      |
+| `content.identity`              | Headline, slug, description de tous docs | `content.v_article_list`, `content.v_article` |
+| `content.body`                  | Corps HTML complet de tous docs          | `content.v_article`                           |
+| `content.revision`              | Snapshots éditoriaux complets            | `content.v_article`                           |
+| `org.org_legal`                 | DUNS, SIRET, TVA — identifiants légaux   | `marius_admin` uniquement                     |
+| `identity.v_auth` (vue)         | Hash argon2id via BYPASSRLS vue          | Middleware auth (postgres)                    |
 
 **Deux mécanismes distincts, à ne pas confondre.**
 
@@ -205,32 +205,32 @@ mécanismes de nature différente :
   Aucun GUC, aucune politique, aucun contournement possible via une session
   `marius_user`. C'est une frontière d'accès, pas un filtre.
 
-- **RLS** : filtrage par ligne sur des tables *auxquelles* `marius_user` a `SELECT`.
+- **RLS** : filtrage par ligne sur des tables _auxquelles_ `marius_user` a `SELECT`.
   Le moteur évalue la politique pour chaque ligne candidate. Le résultat n'est pas
   une erreur — c'est un ensemble vide ou partiel. RLS présuppose l'existence du
   privilège SELECT ; il ne le remplace pas.
 
 **Modèle à deux étages résultant :**
 
-| Table                          | Mécanisme                | Comportement si `marius_user` accède directement |
-| ------------------------------ | ------------------------ | ------------------------------------------------- |
-| `identity.auth`                | `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
-| `identity.person_contact`      | `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
-| `commerce.transaction_payment` | `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
-| `commerce.transaction_delivery`| `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
-| `commerce.transaction_price`   | `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
-| `commerce.transaction_item`    | `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
-| `content.identity`             | `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
-| `content.body`                 | `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
-| `content.revision`             | `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
-| `org.org_legal`                | `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
-| `identity.v_auth` (vue)        | `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
-| `content.core`                 | RLS (politiques actives) | Résultat filtré selon GUC                         |
-| `commerce.transaction_core`    | RLS (politiques actives) | Résultat filtré selon GUC                         |
-| `identity.account_core`        | RLS (politiques actives) | Résultat filtré selon GUC                         |
-| Toutes autres tables           | `SELECT` autorisé        | Accès complet (vues = interface recommandée)      |
+| Table                           | Mécanisme                | Comportement si `marius_user` accède directement |
+| ------------------------------- | ------------------------ | ------------------------------------------------ |
+| `identity.auth`                 | `REVOKE SELECT`          | Erreur 42501 — accès refusé                      |
+| `identity.person_contact`       | `REVOKE SELECT`          | Erreur 42501 — accès refusé                      |
+| `commerce.transaction_payment`  | `REVOKE SELECT`          | Erreur 42501 — accès refusé                      |
+| `commerce.transaction_delivery` | `REVOKE SELECT`          | Erreur 42501 — accès refusé                      |
+| `commerce.transaction_price`    | `REVOKE SELECT`          | Erreur 42501 — accès refusé                      |
+| `commerce.transaction_item`     | `REVOKE SELECT`          | Erreur 42501 — accès refusé                      |
+| `content.identity`              | `REVOKE SELECT`          | Erreur 42501 — accès refusé                      |
+| `content.body`                  | `REVOKE SELECT`          | Erreur 42501 — accès refusé                      |
+| `content.revision`              | `REVOKE SELECT`          | Erreur 42501 — accès refusé                      |
+| `org.org_legal`                 | `REVOKE SELECT`          | Erreur 42501 — accès refusé                      |
+| `identity.v_auth` (vue)         | `REVOKE SELECT`          | Erreur 42501 — accès refusé                      |
+| `content.core`                  | RLS (politiques actives) | Résultat filtré selon GUC                        |
+| `commerce.transaction_core`     | RLS (politiques actives) | Résultat filtré selon GUC                        |
+| `identity.account_core`         | RLS (politiques actives) | Résultat filtré selon GUC                        |
+| Toutes autres tables            | `SELECT` autorisé        | Accès complet (vues = interface recommandée)     |
 
-**Note sur le security context des vues (ADR-029 invariant 2).**
+**Note sur le security context des vues (ADR-003 invariant 2).**
 Les vues Section 12 sont owned par `postgres` (BYPASSRLS). Le RLS sur les tables
 Core n'est pas évalué sur le chemin de lecture via ces vues. Le filtre d'accès
 est implémenté dans le WHERE de chaque vue concernée, via les helpers GUC. Le RLS
@@ -243,7 +243,7 @@ mécanisme protecteur alors que c'est le REVOKE).
 
 **Ordre de priorité des couches** :
 
-1. **Révocation DML** (ADR-020) : `marius_user` ne peut pas écrire directement.
+1. **Révocation DML** (ADR-001) : `marius_user` ne peut pas écrire directement.
 2. **Révocation SELECT ciblée** (Section 13) : fermeture totale sur les tables
    les plus sensibles — accès uniquement via leurs vues sémantiques.
 3. **RLS stateless GUC** (Section 15) : filtrage par ligne sur les tables
@@ -260,26 +260,26 @@ exposent désormais `WITH CHECK` explicitement — contrat rendu visible dans le
 
 Le RLS est la troisième couche de défense. Il ne remplace pas :
 
-- La révocation DML sur `marius_user` (ADR-020) — première couche
+- La révocation DML sur `marius_user` (ADR-001) — première couche
 - La révocation SELECT sur tables sensibles (Section 13) — deuxième couche
 - La logique métier des procédures (ownership, transitions d'état)
 - L'authentification applicative
 
 ### Politiques absentes
 
-`INSERT` : `marius_user` n'a pas de droit `INSERT` sur ces tables (ADR-020).
+`INSERT` : `marius_user` n'a pas de droit `INSERT` sur ces tables (ADR-001).
 Aucune politique INSERT nécessaire. Le DML seed s'exécute en tant que `postgres`
 (bypass automatique).
 
 ---
 
-## ADR-029 — RLS et fragmentation ECS : trois invariants de cohérence
+## ADR-003 — RLS et fragmentation ECS : trois invariants de cohérence
 
 **Statut** : Adopté
 
 ### Problème
 
-Le pattern GUC Stateless (ADR-028) garantit un filtrage O(1) par ligne sur les
+Le pattern GUC Stateless (ADR-002) garantit un filtrage O(1) par ligne sur les
 tables Core. Trois propriétés structurelles de PostgreSQL RLS, non déductibles
 de la lecture du DDL seul, peuvent rendre ce filtrage inopérant ou incohérent
 si elles ne sont pas documentées comme contraintes d'architecture.
@@ -293,7 +293,7 @@ un `REVOKE SELECT`, soit sa propre politique RLS.
 Le RLS d'une table Core ne se propage pas automatiquement à ses satellites. Un
 `SELECT * FROM commerce.transaction_item` par `marius_user` contourne entièrement
 `rls_transaction_select` — PostgreSQL évalue le RLS de la table accédée, pas
-celui de ses tables parentes. La fragmentation ECS (ADR-023) crée donc un vecteur
+celui de ses tables parentes. La fragmentation ECS (ADR-016) crée donc un vecteur
 de fuite par défaut : chaque composant satellite 1:1 est une porte d'entrée
 indépendante vers les données de la commande.
 
@@ -412,14 +412,14 @@ au moins un critère de la politique `FOR SELECT` de la même table.
 
 ---
 
-## ADR-027 — Expansion du bitmask de sécurité : passage à 21 bits sur INT4
+## ADR-004 — Expansion du bitmask de sécurité : passage à 21 bits sur INT4
 
 **Statut** : Adopté
 
 ### Correction de prémisse
 
 Le prompt demandait "passer de SMALLINT à INT4 pour permissions". Cette migration
-était déjà effectuée en ADR-003 (session initiale). `permissions` est et a toujours
+était déjà effectuée en ADR-015 (session initiale). `permissions` est et a toujours
 été `INT4` dans ce schéma. Ce qui est réellement muté ici :
 
 1. Le plafond du CHECK `permissions BETWEEN 0 AND 32767` → `BETWEEN 0 AND 2097151`
@@ -430,14 +430,14 @@ Le prompt demandait "passer de SMALLINT à INT4 pour permissions". Cette migrati
 
 ### Nouveaux bits
 
-| Bit | Valeur    | Nom                   | Sémantique |
-| --- | --------- | --------------------- | ---------- |
-| 15  | 32768     | edit_others_contents  | Modifier les contenus d'autres auteurs |
-| 16  | 65536     | moderate_comments     | Changer le statut des commentaires (spam, approbation) |
-| 17  | 131072    | view_transactions     | Lecture des données financières commerce |
-| 18  | 262144    | manage_commerce       | Gestion produits, stocks, remboursements |
-| 19  | 524288    | manage_system         | Modification des invariants structurels |
-| 20  | 1048576   | export_data           | Extraction massive (RGPD, sauvegarde) |
+| Bit | Valeur  | Nom                  | Sémantique                                             |
+| --- | ------- | -------------------- | ------------------------------------------------------ |
+| 15  | 32768   | edit_others_contents | Modifier les contenus d'autres auteurs                 |
+| 16  | 65536   | moderate_comments    | Changer le statut des commentaires (spam, approbation) |
+| 17  | 131072  | view_transactions    | Lecture des données financières commerce               |
+| 18  | 262144  | manage_commerce      | Gestion produits, stocks, remboursements               |
+| 19  | 524288  | manage_system        | Modification des invariants structurels                |
+| 20  | 1048576 | export_data          | Extraction massive (RGPD, sauvegarde)                  |
 
 ### Pourquoi INT4 et pas INT8 ?
 
@@ -456,17 +456,17 @@ ALU, indépendante du nombre de bits définis.
 
 ### Valeurs des rôles
 
-| Rôle           | Valeur  | Composition |
-| -------------- | ------- | ----------- |
-| administrator  | 2097151 | Tous bits 0–20 (2²¹−1) |
-| moderator      | 124990  | base_author + publish_contents + manage_tags + edit_others_contents + moderate_comments |
-| editor         | 59438   | base_author + edit_others_contents + manage_tags |
-| author         | 24622   | can_read + create_contents + edit_contents + delete_contents + upload_files + create_comments |
-| contributor    | 16418   | can_read + create_contents + create_comments |
-| commentator    | 16608   | can_read + create_comments + edit_comments + delete_comments |
-| subscriber     | 16384   | can_read uniquement |
+| Rôle          | Valeur  | Composition                                                                                   |
+| ------------- | ------- | --------------------------------------------------------------------------------------------- |
+| administrator | 2097151 | Tous bits 0–20 (2²¹−1)                                                                        |
+| moderator     | 124990  | base_author + publish_contents + manage_tags + edit_others_contents + moderate_comments       |
+| editor        | 59438   | base_author + edit_others_contents + manage_tags                                              |
+| author        | 24622   | can_read + create_contents + edit_contents + delete_contents + upload_files + create_comments |
+| contributor   | 16418   | can_read + create_contents + create_comments                                                  |
+| commentator   | 16608   | can_read + create_comments + edit_comments + delete_comments                                  |
+| subscriber    | 16384   | can_read uniquement                                                                           |
 
-`base_author` = 16384+2+4+8+8192+32 = **24622** (ADR-029 : delete_contents(8) ajouté).
+`base_author` = 16384+2+4+8+8192+32 = **24622** (ADR-003 : delete_contents(8) ajouté).
 `moderator` = base_author + 16 + 2048 + 32768 + 65536 = **124990** (manage_tags ajouté — cohérence avec le cycle de vie éditorial complet).
 Vérification : tous les calculs ont été validés par addition explicite des puissances de 2 avant intégration.
 
@@ -477,7 +477,7 @@ modification des contenus d'autrui (`edit_others_contents`), publication et
 dépublication (`publish_contents`), gestion du statut des commentaires
 (`moderate_comments`). `manage_users` reste réservé aux rangs supérieurs.
 
-`delete_contents` est accordé dès le rôle `author` (ADR-029) : un auteur doit
+`delete_contents` est accordé dès le rôle `author` (ADR-003) : un auteur doit
 pouvoir supprimer ses propres brouillons, et la politique `rls_core_delete_own`
 vérifie ce bit. Par composition, editor et moderator en héritent. La suppression
 de contenus tiers est régie par `edit_others_contents` via `rls_core_delete_others`,
@@ -497,17 +497,17 @@ guard AOT ni politique RLS dans ce blueprint. Leur enforcement est délégué à
 applicative (middleware, panneau d'administration). Cette délégation est intentionnelle
 dans tous les cas ci-dessous.
 
-| Bit | Valeur | Motif de la délégation applicative |
-| --- | ------ | ---------------------------------- |
-| `access_admin` (0)     |       1 | Accès au panneau admin — notion applicative pure, pas de table moteur associée |
-| `edit_comments` (6)    |      64 | Pas de procédure `edit_comment` dans ce blueprint ; DML révoqué sur `content.comment` (ADR-020) |
-| `delete_comments` (7)  |     128 | Même motif que `edit_comments` |
-| `manage_groups` (9)    |     512 | Aucune procédure de gestion des groupes dans ce blueprint — réservé pour usage futur |
-| `manage_contents` (10) |    1024 | Uniquement détenu par `administrator`, qui possède déjà `edit_others_contents`. Bit sémantiquement distinct (accès section admin éditoriale) mais sans frontière de privilège moteur supplémentaire |
-| `manage_menus` (12)    |    4096 | Aucune table de menus dans ce blueprint — réservé pour usage futur |
-| `upload_files` (13)    |    8192 | Contrôle délégué au service de stockage (S3/CDN) — le moteur PostgreSQL ne gère pas les uploads |
-| `can_read` (14)        |   16384 | Bit de présence minimale ; les données publiques sont lisibles sans RLS — pas de guard redondant |
-| `export_data` (20)     | 1048576 | Aucune procédure d'export dans ce blueprint — réservé pour jobs ETL/RGPD futurs |
+| Bit                    | Valeur  | Motif de la délégation applicative                                                                                                                                                                  |
+| ---------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `access_admin` (0)     | 1       | Accès au panneau admin — notion applicative pure, pas de table moteur associée                                                                                                                      |
+| `edit_comments` (6)    | 64      | Pas de procédure `edit_comment` dans ce blueprint ; DML révoqué sur `content.comment` (ADR-001)                                                                                                     |
+| `delete_comments` (7)  | 128     | Même motif que `edit_comments`                                                                                                                                                                      |
+| `manage_groups` (9)    | 512     | Aucune procédure de gestion des groupes dans ce blueprint — réservé pour usage futur                                                                                                                |
+| `manage_contents` (10) | 1024    | Uniquement détenu par `administrator`, qui possède déjà `edit_others_contents`. Bit sémantiquement distinct (accès section admin éditoriale) mais sans frontière de privilège moteur supplémentaire |
+| `manage_menus` (12)    | 4096    | Aucune table de menus dans ce blueprint — réservé pour usage futur                                                                                                                                  |
+| `upload_files` (13)    | 8192    | Contrôle délégué au service de stockage (S3/CDN) — le moteur PostgreSQL ne gère pas les uploads                                                                                                     |
+| `can_read` (14)        | 16384   | Bit de présence minimale ; les données publiques sont lisibles sans RLS — pas de guard redondant                                                                                                    |
+| `export_data` (20)     | 1048576 | Aucune procédure d'export dans ce blueprint — réservé pour jobs ETL/RGPD futurs                                                                                                                     |
 
 ---
 
@@ -547,12 +547,12 @@ Un scan sur `person_identity` (listing d'auteurs) ne charge jamais les biographi
 ni les textes longs, même si ces composants sont physiquement liés à la même entité.
 
 **Coût accepté** : jointures supplémentaires sur les lectures complètes. Mitigé
-par les vues sémantiques (ADR-006) qui masquent la fragmentation à la couche
+par les vues sémantiques (ADR-012) qui masquent la fragmentation à la couche
 applicative.
 
 ---
 
-## ADR-004 — Layout physique décroissant (règle universelle)
+## ADR-006 — Layout physique décroissant (règle universelle)
 
 **Statut** : Adopté
 
@@ -588,7 +588,7 @@ suivant. Ce padding est permanent et invisible dans `\d`.
 
 ---
 
-## ADR-012 — Procédure `content.create_comment()` : zéro dead tuple structurel
+## ADR-007 — Procédure `content.create_comment()` : zéro dead tuple structurel
 
 **Statut** : Adopté
 
@@ -618,22 +618,22 @@ marquée `xmax` et reste sur le heap jusqu'au prochain autovacuum. La colonne
 - Une seule entrée par index (GiST + B-tree) au lieu de deux.
 - `nextval()` est transactionnel : les gaps de séquence en cas de rollback
   sont identiques au comportement `GENERATED ALWAYS` standard.
-- La procédure est le seul point d'entrée autorisé (ADR-020), ce qui garantit
+- La procédure est le seul point d'entrée autorisé (ADR-001), ce qui garantit
   l'invariant sans trigger de contrôle supplémentaire.
 
 ---
 
-## ADR-015 — `fillfactor` réduit sur les tables à mises à jour fréquentes
+## ADR-008 — `fillfactor` réduit sur les tables à mises à jour fréquentes
 
 **Statut** : Adopté
 
 ### Décision
 
-| Table                   | fillfactor | Colonne mise à jour fréquemment         |
-| ----------------------- | ---------- | --------------------------------------- |
-| `identity.auth`         | 70         | `last_login_at` (chaque connexion)      |
-| `commerce.product_core` | 80         | `stock` (chaque vente)                  |
-| `content.core`          | 75         | `status`, `modified_at` (cycle de vie)  |
+| Table                   | fillfactor | Colonne mise à jour fréquemment        |
+| ----------------------- | ---------- | -------------------------------------- |
+| `identity.auth`         | 70         | `last_login_at` (chaque connexion)     |
+| `commerce.product_core` | 80         | `stock` (chaque vente)                 |
+| `content.core`          | 75         | `status`, `modified_at` (cycle de vie) |
 
 ### Justification
 
@@ -655,7 +655,7 @@ de l'élimination du bloat sur une table mise à jour 500 000 fois/jour.
 
 ---
 
-## ADR-016 — Isolation agressive du TOAST (`toast_tuple_target = 128`)
+## ADR-009 — Isolation agressive du TOAST (`toast_tuple_target = 128`)
 
 **Statut** : Adopté
 
@@ -684,7 +684,7 @@ indépendamment du volume de contenu stocké dans `content.body`.
 
 ---
 
-## ADR-017 — Index BRIN sur les colonnes temporelles à progression monotone
+## ADR-010 — Index BRIN sur les colonnes temporelles à progression monotone
 
 **Statut** : Adopté
 
@@ -718,7 +718,7 @@ couverts par les index partiels sur `published_at` et `status`.
 
 ---
 
-## ADR-007 — Schémas PostgreSQL pour l'isolation des domaines
+## ADR-011 — Schémas PostgreSQL pour l'isolation des domaines
 
 **Statut** : Adopté
 
@@ -739,7 +739,7 @@ application.
 
 ---
 
-## ADR-006 — Vues sémantiques comme seule interface de lecture
+## ADR-012 — Vues sémantiques comme seule interface de lecture
 
 **Statut** : Adopté
 
@@ -771,7 +771,7 @@ d'un listing, quelle que soit la requête applicative.
 
 ---
 
-## ADR-019 — Spine polymorphe : absence de validation de sous-type au niveau moteur
+## ADR-013 — Spine polymorphe : absence de validation de sous-type au niveau moteur
 
 **Statut** : Décision documentée (limite connue)
 
@@ -796,7 +796,7 @@ intérêt si chaque référence impose l'existence du composant.
 
 ### Invariant effectif
 
-La cohérence est garantie par les procédures d'écriture (ADR-020) :
+La cohérence est garantie par les procédures d'écriture (ADR-001) :
 
 - `identity.create_account()` crée systématiquement `entity + auth + account_core`
 - `identity.create_person()` crée systématiquement `entity + person_identity`
@@ -822,26 +822,26 @@ $$;
 ```
 
 Non implémenté : coût d'un SELECT supplémentaire à chaque INSERT sur `account_core`,
-injustifié dès lors qu'ADR-020 est en place.
+injustifié dès lors qu'ADR-001 est en place.
 
 ---
 
-## ADR-013 — `GENERATED ALWAYS AS IDENTITY` sur toutes les PK
+## ADR-014 — `GENERATED ALWAYS AS IDENTITY` sur toutes les PK
 
 **Statut** : Adopté
 
 ### Arbitrage entre les options d'identité
 
-| Option                 | Taille | Remarque                                                        |
-| ---------------------- | ------ | --------------------------------------------------------------- |
+| Option                 | Taille | Remarque                                                         |
+| ---------------------- | ------ | ---------------------------------------------------------------- |
 | UUID v4                | 16 B   | Pertinent multi-nœuds ; pénalisant sur les tables de liaison N:N |
-| `SERIAL`               | 4 B    | Syntaxe propriétaire, dépréciée depuis PG 10                    |
-| `GENERATED BY DEFAULT` | 4 B    | Permet les INSERT explicites sans `OVERRIDING SYSTEM VALUE`     |
-| `GENERATED ALWAYS`     | 4 B    | Interdit les INSERT explicites — cohérent avec ADR-020          |
+| `SERIAL`               | 4 B    | Syntaxe propriétaire, dépréciée depuis PG 10                     |
+| `GENERATED BY DEFAULT` | 4 B    | Permet les INSERT explicites sans `OVERRIDING SYSTEM VALUE`      |
+| `GENERATED ALWAYS`     | 4 B    | Interdit les INSERT explicites — cohérent avec ADR-001           |
 
 ### Justification
 
-`GENERATED ALWAYS` renforce le verrou d'ADR-020 au niveau de la séquence :
+`GENERATED ALWAYS` renforce le verrou d'ADR-001 au niveau de la séquence :
 même `marius_admin` doit passer par `OVERRIDING SYSTEM VALUE` pour forcer un
 id. Cela signale explicitement toute insertion hors procédure dans le code source.
 
@@ -851,7 +851,7 @@ est direct sur les tables à forte volumétrie (`content_to_tag`, `transaction_i
 
 ---
 
-## ADR-003 — Bitmask `INT4` pour les permissions de rôle
+## ADR-015 — Bitmask `INT4` pour les permissions de rôle
 
 **Statut** : Adopté
 
@@ -862,11 +862,11 @@ unique, par OR binaire des puissances de 2.
 
 ### Arbitrage entre les types candidats
 
-| Type     | Taille   | Contrainte                                               |
-| -------- | -------- | -------------------------------------------------------- |
-| `BIT(n)` | varlena  | 4 bytes d'en-tête + données ; opérateurs moins naturels  |
-| `INT2`   | 2 bytes  | Bit 15 = bit de signe ; toute 16e permission déborde     |
-| `INT4`   | 4 bytes  | 17 bits libres pour extensions ; `&`, `\|`, `~` natifs   |
+| Type     | Taille  | Contrainte                                              |
+| -------- | ------- | ------------------------------------------------------- |
+| `BIT(n)` | varlena | 4 bytes d'en-tête + données ; opérateurs moins naturels |
+| `INT2`   | 2 bytes | Bit 15 = bit de signe ; toute 16e permission déborde    |
+| `INT4`   | 4 bytes | 17 bits libres pour extensions ; `&`, `\|`, `~` natifs  |
 
 ### Justification
 
@@ -879,7 +879,7 @@ extensions futures sans migration de type.
 
 ---
 
-## ADR-023 — Éclatement de l'agrégat de commande en composants ECS 1:1
+## ADR-016 — Éclatement de l'agrégat de commande en composants ECS 1:1
 
 **Statut** : Adopté
 
@@ -897,13 +897,13 @@ chaque accès chaud.
 L'entité commande est décomposée en quatre composants denses, reliés par la
 même clé primaire (`transaction_id`) :
 
-| Composant                   | Sémantique schema.org             | Fréquence d'accès |
-| --------------------------- | --------------------------------- | ----------------- |
-| `transaction_core`          | `Order`                           | Très haute        |
-| `transaction_price`         | `PriceSpecification`              | Haute             |
-| `transaction_payment`       | `PaymentChargeSpecification`      | Moyenne           |
-| `transaction_delivery`      | `ParcelDelivery`                  | Basse             |
-| `transaction_item`          | `OrderItem` (N lignes)            | Haute             |
+| Composant              | Sémantique schema.org        | Fréquence d'accès |
+| ---------------------- | ---------------------------- | ----------------- |
+| `transaction_core`     | `Order`                      | Très haute        |
+| `transaction_price`    | `PriceSpecification`         | Haute             |
+| `transaction_payment`  | `PaymentChargeSpecification` | Moyenne           |
+| `transaction_delivery` | `ParcelDelivery`             | Basse             |
+| `transaction_item`     | `OrderItem` (N lignes)       | Haute             |
 
 Chaque composant est une relation 1:1 stricte (PK = FK vers `transaction_core`).
 
@@ -939,7 +939,7 @@ une simple table de lookup statique, jamais un accès base de données.
 ALU native remplace l'émulation NUMERIC : `(amount_cents * tax_rate_bp) / 10000`
 reste dans les registres CPU.
 
-**Tous les montants en `INT8` centimes** (ADR-022) : `shipping_cents`,
+**Tous les montants en `INT8` centimes** (ADR-026) : `shipping_cents`,
 `discount_cents`, `tax_cents` suivent la même règle que `price_cents`. Pas de
 NUMERIC dans le hot path financier.
 
@@ -947,20 +947,21 @@ NUMERIC dans le hot path financier.
 
 La procédure crée atomiquement les quatre composants : `transaction_core` +
 `transaction_price` (devise + montants à zéro) + `transaction_payment` (statut 0)
-+ `transaction_delivery` (statut 0). **Il n'existe jamais de transaction_core sans
-ses trois composants** — l'invariant est garanti par l'atomicité de la transaction.
-Les composants sont mis à jour indépendamment au fil du cycle de vie de la commande.
+
+- `transaction_delivery` (statut 0). **Il n'existe jamais de transaction_core sans
+  ses trois composants** — l'invariant est garanti par l'atomicité de la transaction.
+  Les composants sont mis à jour indépendamment au fil du cycle de vie de la commande.
 
 ### Relation avec les autres ADR
 
 - ADR-005 (fragmentation ECS) : même pattern appliqué au domaine Commerce.
-- ADR-022 (INT8 centimes) : invariant étendu à tous les montants de `transaction_price`.
-- ADR-020 (SECURITY DEFINER) : `create_transaction` est la seule procédure
+- ADR-026 (INT8 centimes) : invariant étendu à tous les montants de `transaction_price`.
+- ADR-001 (SECURITY DEFINER) : `create_transaction` est la seule procédure
   d'écriture autorisée pour `marius_user` sur `transaction_core` et ses composants.
 
 ---
 
-## ADR-024 — Fragmentation geo, soft delete RGPD et compliance de production
+## ADR-017 — Fragmentation geo, soft delete RGPD et compliance de production
 
 **Statut** : Adopté
 
@@ -975,7 +976,7 @@ Quatre vecteurs de risque identifiés avant mise en production européenne :
 
 ---
 
-## ADR-026 — Closure Table pour la taxonomie des tags : ltree conservé pour les commentaires
+## ADR-018 — Closure Table pour la taxonomie des tags : ltree conservé pour les commentaires
 
 **Statut** : Adopté
 
@@ -1005,14 +1006,14 @@ lève une exception à l'INSERT si un parent est déjà à depth 4.
 
 ### Pourquoi pas ltree pour les tags
 
-| Critère           | ltree                            | Closure Table                         |
-| ----------------- | -------------------------------- | ------------------------------------- |
-| Sous-arbre query  | `path <@ 'parent.path'` (GiST)   | `WHERE ancestor_id = X AND depth > 0` (B-tree) |
-| Move tag          | UPDATE en cascade O(descendants) | DELETE + reinsert O(depth)            |
-| Rename ancestor   | UPDATE en cascade O(descendants) | Zéro impact (noms dans tag spine)     |
-| Insert nouveau tag| O(1) — concat path               | O(depth) — inserts ancêtres           |
-| Breadcrumb        | Gratuit (le path IS le chemin)   | string_agg + self-join                |
-| Dépendance        | Extension ltree                  | SQL pur                               |
+| Critère            | ltree                            | Closure Table                                  |
+| ------------------ | -------------------------------- | ---------------------------------------------- |
+| Sous-arbre query   | `path <@ 'parent.path'` (GiST)   | `WHERE ancestor_id = X AND depth > 0` (B-tree) |
+| Move tag           | UPDATE en cascade O(descendants) | DELETE + reinsert O(depth)                     |
+| Rename ancestor    | UPDATE en cascade O(descendants) | Zéro impact (noms dans tag spine)              |
+| Insert nouveau tag | O(1) — concat path               | O(depth) — inserts ancêtres                    |
+| Breadcrumb         | Gratuit (le path IS le chemin)   | string_agg + self-join                         |
+| Dépendance         | Extension ltree                  | SQL pur                                        |
 
 Pour une taxonomie éditoriale à insertions rares et depth ≤ 4, le coût du move
 est le critère déterminant. La requête de sous-arbre sur la Closure Table est un
@@ -1020,7 +1021,7 @@ est le critère déterminant. La requête de sous-arbre sur la Closure Table est
 
 ### ltree conservé pour `content.comment`
 
-**Non négociable.** ADR-012 est architecturalement construit autour du ltree :
+**Non négociable.** ADR-007 est architecturalement construit autour du ltree :
 la procédure `create_comment` utilise `nextval()` préalable + construction du
 chemin en mémoire + INSERT unique pour garantir zéro dead tuple. La Closure Table
 sur les commentaires est inapplicable :
@@ -1029,17 +1030,17 @@ sur les commentaires est inapplicable :
   avec locks en cascade sur `tag_hierarchy` équivalent.
 - Les commentaires ne sont jamais "déplacés" — la raison principale de la Closure
   Table n'existe pas pour eux.
-- La profondeur des commentaires est non bornée (ADR-011 : ltree supporte des
+- La profondeur des commentaires est non bornée (ADR-022 : ltree supporte des
   arborescences profondes avec O(log n) via GiST).
 
 L'extension ltree reste installée et en usage actif pour `content.comment.path`.
 
 ### Physique — densité
 
-| Table              | Avant              | Après                 |
-| ------------------ | ------------------ | --------------------- |
-| `content.tag`      | ~80 B (ltree path) | ~50 B (slug+name)     |
-| `content.tag_hierarchy` | —             | 12 B/tuple (~682/page)|
+| Table                   | Avant              | Après                  |
+| ----------------------- | ------------------ | ---------------------- |
+| `content.tag`           | ~80 B (ltree path) | ~50 B (slug+name)      |
+| `content.tag_hierarchy` | —                  | 12 B/tuple (~682/page) |
 
 Pour 232 tags à plat : 232 lignes dans `tag_hierarchy` (self-refs).
 Pour une taxonomie 4 niveaux de 232 tags répartis : max ~500-900 lignes.
@@ -1052,16 +1053,16 @@ ancêtres du parent via SELECT/INSERT depuis `tag_hierarchy`.
 
 ---
 
-## ADR-002 — Spine `content.document` indépendant de `identity.entity`
+## ADR-019 — Spine `content.document` indépendant de `identity.entity`
 
 **Statut** : Adopté
 
 ### Arbitrage
 
-| Option                            | Avantage               | Inconvénient                                    |
-| --------------------------------- | ---------------------- | ----------------------------------------------- |
-| Spine partagé (`identity.entity`) | Un seul registre d'IDs | Mélange volumétrique, cascades croisées         |
-| Spine dédié (`content.document`)  | Isolation complète     | Un registre supplémentaire                      |
+| Option                            | Avantage               | Inconvénient                            |
+| --------------------------------- | ---------------------- | --------------------------------------- |
+| Spine partagé (`identity.entity`) | Un seul registre d'IDs | Mélange volumétrique, cascades croisées |
+| Spine dédié (`content.document`)  | Isolation complète     | Un registre supplémentaire              |
 
 ### Justification
 
@@ -1080,7 +1081,7 @@ ancêtres du parent via SELECT/INSERT depuis `tag_hierarchy`.
 
 ---
 
-## ADR-008 — Spines `org.entity` et `geo.place_core` : stratégies distinctes
+## ADR-020 — Spines `org.entity` et `geo.place_core` : stratégies distinctes
 
 **Statut** : Adopté
 
@@ -1102,7 +1103,7 @@ le niveau d'abstraction adéquat.
 
 ---
 
-## ADR-009 — Table `commerce.transaction_item` : résolution 1NF
+## ADR-021 — Table `commerce.transaction_item` : résolution 1NF
 
 **Statut** : Adopté
 
@@ -1123,18 +1124,18 @@ peuvent dépasser ce volume. INT4 couvre jusqu'à ~2,1 milliards.
 
 ---
 
-## ADR-011 — `ltree` pour les hiérarchies de tags et commentaires
+## ADR-022 — `ltree` pour les hiérarchies de tags et commentaires
 
 **Statut** : Adopté
 
 ### Comparaison des patterns hiérarchiques
 
-| Critère             | Adjacency List                | Nested Set                  | ltree                  |
-| ------------------- | ----------------------------- | --------------------------- | ---------------------- |
-| Lecture sous-arbre  | O(profondeur) — CTE récursive | O(1) — BETWEEN              | O(log n) — index GiST  |
-| INSERT              | O(1)                          | O(n) — recalcul intervalles | O(1) — concat chemin   |
-| Lisibilité du chemin| `parent_id = 42`              | `lft=5, rgt=12`             | `theology.patristics`  |
-| Index disponible    | B-tree sur `parent_id`        | B-tree sur `lft`/`rgt`      | GiST (`@>`, `<@`, KNN) |
+| Critère              | Adjacency List                | Nested Set                  | ltree                  |
+| -------------------- | ----------------------------- | --------------------------- | ---------------------- |
+| Lecture sous-arbre   | O(profondeur) — CTE récursive | O(1) — BETWEEN              | O(log n) — index GiST  |
+| INSERT               | O(1)                          | O(n) — recalcul intervalles | O(1) — concat chemin   |
+| Lisibilité du chemin | `parent_id = 42`              | `lft=5, rgt=12`             | `theology.patristics`  |
+| Index disponible     | B-tree sur `parent_id`        | B-tree sur `lft`/`rgt`      | GiST (`@>`, `<@`, KNN) |
 
 ### Justification
 
@@ -1149,12 +1150,12 @@ Le Nested Set est écarté pour les commentaires : son INSERT est O(n) et requie
 un verrouillage de table pour recalculer les intervalles. Incompatible avec une
 table à insertions concurrentes.
 
-La procédure `content.create_comment()` (ADR-012) construit le chemin en mémoire
+La procédure `content.create_comment()` (ADR-007) construit le chemin en mémoire
 avant l'INSERT unique, sans aucun UPDATE post-insertion.
 
 ---
 
-## ADR-018 — Agrégation JSON dans les vues pour éliminer le N+1
+## ADR-023 — Agrégation JSON dans les vues pour éliminer le N+1
 
 **Statut** : Adopté
 
@@ -1167,9 +1168,10 @@ sémantiques `content.v_article` et `commerce.v_transaction`.
 ### Justification
 
 Sans agrégation moteur, la couche applicative effectue une requête principale
-+ N requêtes secondaires. Pour 3–20 éléments liés, le coût CPU de `json_agg`
-est systématiquement inférieur au coût cumulé des aller-retours réseau
-(1–5 ms/requête en LAN, 10–50 ms en WAN).
+
+- N requêtes secondaires. Pour 3–20 éléments liés, le coût CPU de `json_agg`
+  est systématiquement inférieur au coût cumulé des aller-retours réseau
+  (1–5 ms/requête en LAN, 10–50 ms en WAN).
 
 La base de données livre un objet JSON directement désérialisable. L'applicatif
 n'orchestre aucune jointure secondaire.
@@ -1183,7 +1185,7 @@ n'orchestre aucune jointure secondaire.
 
 ---
 
-## ADR-021 — Correctifs de cohérence : snapshot complet, verrou exclusif, trigger manquant
+## ADR-024 — Correctifs de cohérence : snapshot complet, verrou exclusif, trigger manquant
 
 **Statut** : Adopté
 
@@ -1237,19 +1239,19 @@ descriptives (`mime_type`, `folder_url`, `file_name`, `width`, `height`).
 
 ### Suggestions écartées
 
-| # | Suggestion | Motif d'exclusion |
-|---|---|---|
-| 1 | Retry automatique dans `fn_slug_deduplicate` | Comportement intentionnel documenté dans le DDL : la contrainte `UNIQUE` est le garde-fou ; l'erreur 23505 est propre et attrapable côté applicatif. Ajouter un retry dans le trigger déplacerait la responsabilité du retry au mauvais niveau. |
-| 4 | Remplacer `CHECK (path IS NOT NULL)` par `NOT NULL` | Déjà documenté en détail dans le DDL. Le `CHECK` est l'unique moyen de permettre `OVERRIDING SYSTEM VALUE` dans `create_comment` tout en rejetant les INSERT directs sans path. |
-| 5 | B-tree complémentaire si BRIN inefficace | Déjà couvert en ADR-017 : la condition d'efficacité (insertions chronologiques) est documentée ; l'ajout d'un B-tree complémentaire est une décision opérationnelle à prendre sur données réelles, pas un invariant à inscrire dans le blueprint. |
-| 7 | Partitionnement de `content.comment` et `content.revision` | Prématuré à l'échelle cible (500 k utilisateurs). PostgreSQL gère confortablement ces volumes avec les index existants. Le partitionnement ajoute de la complexité opérationnelle significative (maintenance des partitions, contraintes croisées) sans bénéfice mesurable à ce stade. |
-| 8 | Suite de tests pgTAP | Hors périmètre du blueprint DDL. Pertinent comme étape CI/CD distincte. |
+| #   | Suggestion                                                 | Motif d'exclusion                                                                                                                                                                                                                                                                      |
+| --- | ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Retry automatique dans `fn_slug_deduplicate`               | Comportement intentionnel documenté dans le DDL : la contrainte `UNIQUE` est le garde-fou ; l'erreur 23505 est propre et attrapable côté applicatif. Ajouter un retry dans le trigger déplacerait la responsabilité du retry au mauvais niveau.                                        |
+| 4   | Remplacer `CHECK (path IS NOT NULL)` par `NOT NULL`        | Déjà documenté en détail dans le DDL. Le `CHECK` est l'unique moyen de permettre `OVERRIDING SYSTEM VALUE` dans `create_comment` tout en rejetant les INSERT directs sans path.                                                                                                        |
+| 5   | B-tree complémentaire si BRIN inefficace                   | Déjà couvert en ADR-010 : la condition d'efficacité (insertions chronologiques) est documentée ; l'ajout d'un B-tree complémentaire est une décision opérationnelle à prendre sur données réelles, pas un invariant à inscrire dans le blueprint.                                      |
+| 7   | Partitionnement de `content.comment` et `content.revision` | Prématuré à l'échelle cible (500 k utilisateurs). PostgreSQL gère confortablement ces volumes avec les index existants. Le partitionnement ajoute de la complexité opérationnelle significative (maintenance des partitions, contraintes croisées) sans bénéfice mesurable à ce stade. |
+| 8   | Suite de tests pgTAP                                       | Hors périmètre du blueprint DDL. Pertinent comme étape CI/CD distincte.                                                                                                                                                                                                                |
 
 ---
 
-## ADR-014 — `INT8` centimes pour tous les montants monétaires
+## ADR-025 — `INT8` centimes pour tous les montants monétaires
 
-**Statut** : Adopté (révisé — ADR-022)
+**Statut** : Adopté (révisé — ADR-026)
 
 ### Décision
 
@@ -1293,7 +1295,7 @@ soit sans ambiguïté.
 
 ---
 
-## ADR-022 — Optimisations CPU/mémoire : entiers natifs, VARCHAR, padding documenté, pushdown
+## ADR-026 — Optimisations CPU/mémoire : entiers natifs, VARCHAR, padding documenté, pushdown
 
 **Statut** : Adopté
 
@@ -1305,7 +1307,7 @@ Audit DOD ciblé sur les composants chauds (`commerce.product_core`,
 
 ### 1. NUMERIC → INT8 centimes (commerce)
 
-Voir ADR-014 pour le raisonnement complet. Résumé :
+Voir ADR-025 pour le raisonnement complet. Résumé :
 
 - `NUMERIC` est varlena → padding d'alignement, tuple deforming indirect, arithmétique logicielle.
 - `INT8` est pass-by-value, aligné sur 8 bytes, arithmétique ALU native.
@@ -1325,6 +1327,7 @@ la même raison (était `CHAR(13)`).
 ### 3. Slot de padding libre dans `identity.auth` — documentation
 
 Séquence de types en fin de tuple fixe de `identity.auth` :
+
 ```
 role_id   SMALLINT  (2 B, offset 28)
 is_banned BOOLEAN   (1 B, offset 30)
@@ -1351,6 +1354,7 @@ en `WHERE t.id = :id` par le query rewriter avant que le planner n'intervienne.
 PK est utilisé, l'agrégation porte sur les lignes de la commande concernée uniquement.
 
 **Vérification recommandée** :
+
 ```sql
 EXPLAIN (ANALYZE, BUFFERS)
 SELECT * FROM commerce.v_transaction WHERE "identifier" = 1;
@@ -1363,9 +1367,9 @@ Documenté dans la définition de la vue.
 
 ---
 
-## ADR-010 — `VARCHAR(n)` pour DUNS, SIRET et ISBN/EAN
+## ADR-027 — `VARCHAR(n)` pour DUNS, SIRET et ISBN/EAN
 
-**Statut** : Adopté (révisé — ADR-022)
+**Statut** : Adopté (révisé — ADR-026)
 
 ### Décision
 
@@ -1385,7 +1389,7 @@ absent de tout overhead de padding.
 
 ---
 
-## ADR-025 — Interface sémantique snake_case : schema.org sans guillemets SQL
+## ADR-028 — Interface sémantique snake_case : schema.org sans guillemets SQL
 
 **Statut** : Adopté
 
@@ -1396,7 +1400,7 @@ Les vues sémantiques exposaient des alias camelCase entre guillemets doubles
 frictions opérationnelles :
 
 1. **Guillemets obligatoires dans toute requête SQL** : `SELECT "givenName" FROM
-   identity.v_person` — l'oubli d'un guillemet provoque une erreur silencieuse
+identity.v_person` — l'oubli d'un guillemet provoque une erreur silencieuse
    (colonne non trouvée, ou pire : résolution vers une colonne système).
 2. **Caractère `@` illégal** comme identifiant SQL nu : `"@type"` ne peut jamais
    être utilisé sans guillemets.
@@ -1413,15 +1417,15 @@ published_at`, `articleBody → article_body`.
 
 ### Règles de translittération
 
-| Règle | Exemple schema.org | Alias vue |
-| ----- | ------------------ | --------- |
-| camelCase → snake_case | `givenName` | `given_name` |
-| Suffixe `_at` pour TIMESTAMPTZ | `datePublished` | `published_at` |
-| Suffixe `_cents` pour INT8 monétaire | `price` | `price_cents` |
-| Suffixe `_id` pour FK | `authorId` | `author_id` |
-| Suffixe `_code` pour codes numériques | `currencyCode` | `currency_code` |
-| Miroir du nom physique quand identique | `is_readable` | `is_readable` (pas `is_accessible_for_free`) |
-| `@type` → `doc_type` / `org_type` | `@type` | `doc_type`, `org_type` |
+| Règle                                  | Exemple schema.org | Alias vue                                    |
+| -------------------------------------- | ------------------ | -------------------------------------------- |
+| camelCase → snake_case                 | `givenName`        | `given_name`                                 |
+| Suffixe `_at` pour TIMESTAMPTZ         | `datePublished`    | `published_at`                               |
+| Suffixe `_cents` pour INT8 monétaire   | `price`            | `price_cents`                                |
+| Suffixe `_id` pour FK                  | `authorId`         | `author_id`                                  |
+| Suffixe `_code` pour codes numériques  | `currencyCode`     | `currency_code`                              |
+| Miroir du nom physique quand identique | `is_readable`      | `is_readable` (pas `is_accessible_for_free`) |
+| `@type` → `doc_type` / `org_type`      | `@type`            | `doc_type`, `org_type`                       |
 
 ### Exceptions documentées — refus de `address_country` pour `country_code`
 
@@ -1457,7 +1461,7 @@ avant toute mise en production.
 
 ---
 
-## ADR-001 — Séparation DDL / DML
+## ADR-029 — Séparation DDL / DML
 
 **Statut** : Adopté
 
@@ -1499,19 +1503,20 @@ Deux gardes manquants :
 
 ### Correction 3 — Garde AOT sur `create_transaction`
 
-`create_transaction` était dans la liste des "procédures sans garde" (ADR-020). Tout subscriber pouvait créer une transaction pour n'importe quel `client_entity_id` (usurpation). Garde ajouté : `p_client_entity_id = rls_user_id() OR manage_commerce (262144)`.
+`create_transaction` était dans la liste des "procédures sans garde" (ADR-001). Tout subscriber pouvait créer une transaction pour n'importe quel `client_entity_id` (usurpation). Garde ajouté : `p_client_entity_id = rls_user_id() OR manage_commerce (262144)`.
 
 ### Analyse des points conformes
 
 **Séparation lecture prix / transactions** : cohérente. Le catalogue produit (`product_core`, `product_identity`) est intentionnellement public — pas de RLS, pas de REVOKE. Les données transactionnelles sont toutes sous REVOKE SELECT + RLS sur `transaction_core`.
 
-**Déshydratation** : conforme à ADR-004 et ADR-023. `transaction_core` porte uniquement les champs hot path. `product_content` a `toast_tuple_target = 128`. `transaction_core.description TEXT` est une varlena dans le hot tuple — non-nul, elle gonfle chaque lecture de statut ; la valeur NULL (défaut) maintient le tuple à 32B.
+**Déshydratation** : conforme à ADR-006 et ADR-016. `transaction_core` porte uniquement les champs hot path. `product_content` a `toast_tuple_target = 128`. `transaction_core.description TEXT` est une varlena dans le hot tuple — non-nul, elle gonfle chaque lecture de statut ; la valeur NULL (défaut) maintient le tuple à 32B.
 
-**Race condition sur le stock** : `FOR UPDATE` sur `product_core` dans `create_transaction_item` + CHECK `stock >= 0` — correctement traité depuis ADR-021.
+**Race condition sur le stock** : `FOR UPDATE` sur `product_core` dans `create_transaction_item` + CHECK `stock >= 0` — correctement traité depuis ADR-024.
 
 ### Invariant de maintenance
 
 Toute procédure SECURITY DEFINER opérant sur des données financières doit vérifier :
+
 1. L'ownership du contexte (à qui appartient la ressource cible)
 2. L'état courant de la ressource (transitions d'état valides)
 3. Le bit de permission approprié
@@ -1538,4 +1543,4 @@ Ces trois gardes sont indépendants et tous trois nécessaires : chacun couvre u
 
 ---
 
-*Architecture ECS/DOD · PostgreSQL 18 · Projet Marius · 30 décisions*
+_Architecture ECS/DOD · PostgreSQL 18 · Projet Marius · 30 décisions_

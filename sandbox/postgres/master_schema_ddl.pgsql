@@ -57,7 +57,7 @@ CREATE SCHEMA content;
 
 -- Acteurs du système (utilisateurs, profils publics, contacts)
 -- anonymized_at : timestamp de la dernière anonymisation RGPD (irréversible).
--- NULL = entité active. Non-NULL = données nominatives effacées (ADR-024).
+-- NULL = entité active. Non-NULL = données nominatives effacées (ADR-017).
 -- L'entité physique est conservée pour maintenir l'intégrité des FK commerce.
 CREATE TABLE identity.entity (
   anonymized_at  TIMESTAMPTZ  NULL,
@@ -90,8 +90,8 @@ CREATE TABLE content.document (
 -- 4a — GEO : PLACE CORE & PLACE CONTENT
 -- ------------------------------------------------------------------------------
 
--- Spine spatial pur — ADR-024 : données postales extraites vers geo.postal_address.
--- Layout (ADR-004) :
+-- Spine spatial pur — ADR-017 : données postales extraites vers geo.postal_address.
+-- Layout (ADR-006) :
 --   id INT4 (offset 0) · elevation SMALLINT (4) · type_id SMALLINT (6) | varlena
 -- Tuple avec GPS+nom : ~46 B → ~179 tuples/page (vs ~211 B avant fragmentation)
 -- Tuple GPS seul, sans nom : ~26 B → ~317 tuples/page
@@ -109,14 +109,14 @@ CREATE TABLE geo.place_core (
 CREATE INDEX place_core_gist ON geo.place_core USING gist (coordinates)
   WHERE coordinates IS NOT NULL;
 
--- POSTAL ADDRESS — adresse postale (ADR-024 · sémantique schema.org/PostalAddress)
+-- POSTAL ADDRESS — adresse postale (ADR-017 · sémantique schema.org/PostalAddress)
 -- Composant logistique 1:1 sur place_id. Accès lors de l'affichage d'une adresse,
 -- de la génération d'une facture ou d'un bordereau d'expédition.
--- Layout (ADR-004) :
+-- Layout (ADR-006) :
 --   place_id INT4 (offset 0) · country_code SMALLINT (4) · 2B pad (6) | varlena
--- country_code : ISO 3166-1 numérique — 2 B pass-by-value (ADR-024).
+-- country_code : ISO 3166-1 numérique — 2 B pass-by-value (ADR-017).
 -- Nom conservé (vs address_country) : country_code signale explicitement que la
--- valeur est un code entier (250), pas une chaîne textuelle ("France") — ADR-025.
+-- valeur est un code entier (250), pas une chaîne textuelle ("France") — ADR-028.
 --   Exemples : 250 = France · 276 = Allemagne · 840 = États-Unis · 826 = Royaume-Uni.
 --   Le mapping vers le code alphabétique (FR, DE, US) est délégué à l'applicatif.
 CREATE TABLE geo.postal_address (
@@ -199,7 +199,7 @@ CREATE TABLE identity.role (
 REVOKE INSERT, UPDATE, DELETE ON identity.role FROM PUBLIC;
 
 -- Valeurs calculées : somme des puissances de 2 des permissions actives (voir role_bitmask_update.pgsql)
--- Valeurs recalculées avec les bits 15-20 (ADR-027) ; delete_contents(8) ajouté à base_author (ADR-029).
+-- Valeurs recalculées avec les bits 15-20 (ADR-004) ; delete_contents(8) ajouté à base_author (ADR-003).
 -- administrator   : tous les bits 0–20 = 2^21−1
 -- moderator       : base_author + publish_contents(16) + manage_tags(2048) + edit_others_contents(32768) + moderate_comments(65536)
 -- editor          : base_author + edit_others_contents(32768) + manage_tags(2048)
@@ -223,7 +223,7 @@ INSERT INTO identity.role (permissions, name) VALUES
 -- ==============================================================================
 
 -- AUTH — hot path (chaque requête authentifiée) · fillfactor=70 pour HOT updates
--- Layout (ADR-004) :
+-- Layout (ADR-006) :
 --   3×TIMESTAMPTZ (8B, offsets 0–23) · entity_id INT4 (24) · role_id SMALLINT (28)
 --   · is_banned BOOL (30, 1B) · [1B libre offset 31 — slot réservé pour un prochain
 --   BOOLEAN sans coût marginal, ex : is_email_verified] · password_hash varlena (32+)
@@ -245,8 +245,8 @@ CREATE TABLE identity.auth (
 CREATE INDEX auth_created_at_brin ON identity.auth USING brin (created_at)
   WITH (pages_per_range = 128);
 
--- ACCOUNT CORE — données publiques du compte (ADR-024 : +tos_accepted_at)
--- Layout (ADR-004) : tos_accepted_at TIMESTAMPTZ (offset 0, 8B)
+-- ACCOUNT CORE — données publiques du compte (ADR-017 : +tos_accepted_at)
+-- Layout (ADR-006) : tos_accepted_at TIMESTAMPTZ (offset 0, 8B)
 --   · 4×INT4 (8-23) · 2×SMALLINT (24-27) · 2×BOOL (28-29) · 2B pad (30-31) | varlena
 -- Tuple ~85 B → ~99 tuples/page
 -- tos_accepted_at : timestamp d'acceptation des CGU. NULL = non encore accepté.
@@ -413,14 +413,14 @@ CREATE TABLE org.org_contact (
   FOREIGN KEY (entity_id) REFERENCES org.entity(id) ON DELETE CASCADE
 );
 
--- ORG LEGAL — DUNS/SIRET en VARCHAR (ADR-022) : CHAR(n) dans PostgreSQL est varlena
+-- ORG LEGAL — DUNS/SIRET en VARCHAR (ADR-026) : CHAR(n) dans PostgreSQL est varlena
 -- comme VARCHAR(n) — aucun stockage fixe, mais surcoût de padding/stripping CPU.
 -- L'invariant de longueur est garanti exclusivement par les contraintes CHECK.
 CREATE TABLE org.org_legal (
   entity_id   INT           NOT NULL,
   duns        VARCHAR(9)    NULL,
   siret       VARCHAR(14)   NULL,
-  vat_id      VARCHAR(32)   NULL,   -- VARCHAR(32) : TVA internationale + IDs fiscaux hors UE (ADR-024)
+  vat_id      VARCHAR(32)   NULL,   -- VARCHAR(32) : TVA internationale + IDs fiscaux hors UE (ADR-017)
   PRIMARY KEY (entity_id),
   FOREIGN KEY (entity_id) REFERENCES org.entity(id) ON DELETE CASCADE,
   CONSTRAINT duns_format  CHECK (duns  IS NULL OR duns  ~ '^[0-9]{9}$'),
@@ -447,11 +447,11 @@ CREATE INDEX org_hierarchy_interval ON org.org_hierarchy (lft, rgt);
 -- ==============================================================================
 
 -- PRODUCT CORE — prix et stock (HAUTE fréquence) · fillfactor=80 pour HOT updates
--- Layout (ADR-004 + ADR-022) :
+-- Layout (ADR-006 + ADR-026) :
 --   price_cents INT8 (offset 0, 8B) · id INT4 (8) · stock INT4 (12) · media_id INT4 (16)
 --   · is_available BOOL (20, 1B) · 3B pad (21-23)
 -- Tuple 24 B → ~341 tuples/page (vs ~170 avec NUMERIC — densité ×2)
--- price_cents : montant en centimes de la devise de référence (ADR-022).
+-- price_cents : montant en centimes de la devise de référence (ADR-026).
 --   Exemples : 1999 = 19,99 € · 0 = gratuit · NULL = prix non défini.
 --   La conversion décimale est déléguée à la couche applicative.
 CREATE TABLE commerce.product_core (
@@ -465,7 +465,7 @@ CREATE TABLE commerce.product_core (
 ) WITH (fillfactor = 80);
 
 -- PRODUCT IDENTITY — catalogue
--- isbn_ean en VARCHAR(13) : même raisonnement que duns/siret (ADR-022).
+-- isbn_ean en VARCHAR(13) : même raisonnement que duns/siret (ADR-026).
 CREATE TABLE commerce.product_identity (
   product_id  INT           NOT NULL,
   name        VARCHAR(64)   NOT NULL,
@@ -488,9 +488,9 @@ CREATE TABLE commerce.product_content (
   FOREIGN KEY (product_id) REFERENCES commerce.product_core(id) ON DELETE CASCADE
 ) WITH (toast_tuple_target = 128);
 
--- TRANSACTION CORE — spine de commande (ADR-023)
+-- TRANSACTION CORE — spine de commande (ADR-016)
 -- Composant hot path : statut, dates, FK entités — zero champs froids.
--- Layout (ADR-004) :
+-- Layout (ADR-006) :
 --   2×TIMESTAMPTZ (offset 0, 16B) · id INT4 (16) · client_entity_id INT4 (20)
 --   · seller_entity_id INT4 (24) · status SMALLINT (28) · 2B pad (30)
 -- Tuple 32 B (sans description) → ~258 tuples/page
@@ -515,16 +515,16 @@ CREATE INDEX transaction_core_pending ON commerce.transaction_core (client_entit
 CREATE INDEX transaction_created_brin ON commerce.transaction_core USING brin (created_at)
   WITH (pages_per_range = 128);
 
--- TRANSACTION PRICE — PriceSpecification (ADR-023)
+-- TRANSACTION PRICE — PriceSpecification (ADR-016)
 -- Composant financier : montants, devise, taxe. Accès à la validation/affichage.
--- Layout (ADR-004 + ADR-022) :
+-- Layout (ADR-006 + ADR-026) :
 --   3×INT8 (offset 0, 24B) · transaction_id INT4 (24) · tax_rate_bp INT4 (28)
 --   · currency_code SMALLINT (32) · is_tax_included BOOL (34) · 1B pad (35)
 -- Tuple 36 B → ~229 tuples/page
 -- currency_code : code ISO 4217 numérique (ex: 978 = EUR, 840 = USD).
---   SMALLINT 2 B pass-by-value (ADR-023) vs CHAR(3) varlena avec padding.
+--   SMALLINT 2 B pass-by-value (ADR-016) vs CHAR(3) varlena avec padding.
 -- tax_rate_bp : taux de taxe en basis points (ex: 2000 = 20,00%).
---   INT4 pass-by-value (ADR-023) vs NUMERIC varlena + arithmétique logicielle.
+--   INT4 pass-by-value (ADR-016) vs NUMERIC varlena + arithmétique logicielle.
 CREATE TABLE commerce.transaction_price (
   shipping_cents   INT8      NOT NULL DEFAULT 0  CHECK (shipping_cents  >= 0),
   discount_cents   INT8      NOT NULL DEFAULT 0  CHECK (discount_cents  >= 0),
@@ -538,10 +538,10 @@ CREATE TABLE commerce.transaction_price (
   CONSTRAINT currency_code_range CHECK (currency_code BETWEEN 1 AND 999)
 );
 
--- TRANSACTION PAYMENT — PaymentChargeSpecification (ADR-023)
+-- TRANSACTION PAYMENT — PaymentChargeSpecification (ADR-016)
 -- Composant paiement : statut, méthode, référence PSP, numéro de facture.
 -- Accès contextuel (confirmation de commande, facture, tableau de bord admin).
--- Layout (ADR-004) :
+-- Layout (ADR-006) :
 --   paid_at TIMESTAMPTZ (offset 0, 8B) · transaction_id INT4 (8)
 --   · billing_place_id INT4 (12) · payment_status SMALLINT (16) · 2B pad (18)
 --   · invoice_number varlena · payment_method varlena · provider_reference varlena
@@ -560,11 +560,11 @@ CREATE TABLE commerce.transaction_payment (
   CONSTRAINT payment_status_range CHECK (payment_status IN (0, 1, 2, 3, 9))
 );
 
--- TRANSACTION DELIVERY — ParcelDelivery (ADR-023)
+-- TRANSACTION DELIVERY — ParcelDelivery (ADR-016)
 -- Composant logistique : adresse, transporteur, suivi. Données froides —
 -- consultées après expédition uniquement. Isolées pour ne pas polluer
 -- transaction_core qui est accédé à chaque affichage de statut de commande.
--- Layout (ADR-004) :
+-- Layout (ADR-006) :
 --   3×TIMESTAMPTZ (offset 0, 24B) · transaction_id INT4 (24)
 --   · shipping_place_id INT4 (28) · delivery_status SMALLINT (32) · 2B pad (34)
 --   · carrier varlena · tracking_number varlena
@@ -584,7 +584,7 @@ CREATE TABLE commerce.transaction_delivery (
 );
 
 -- TRANSACTION ITEM — résolution 1NF
--- Layout (ADR-004 + ADR-022) :
+-- Layout (ADR-006 + ADR-026) :
 --   unit_price_snapshot_cents INT8 (offset 0, 8B) · transaction_id INT4 (8)
 --   · product_id INT4 (12) · quantity INT4 (16)
 -- Tuple 20 B → ~409 tuples/page (vs ~186 avec NUMERIC — densité ×2,2)
@@ -680,7 +680,7 @@ ALTER TABLE content.body ALTER COLUMN content SET STORAGE EXTENDED;
 -- CONTENT REVISION — cold storage des snapshots éditoriaux
 -- Layout : saved_at TIMESTAMPTZ · document_id INT4 · author_entity_id INT4
 --          · revision_num SMALLINT · 2B pad | varlena × 5 (snapshot_headline remplace snapshot_name)
--- snapshot_alternative_headline et snapshot_description inclus (ADR-021) :
+-- snapshot_alternative_headline et snapshot_description inclus (ADR-024) :
 -- un snapshot incomplet crée un historique silencieusement faux.
 CREATE TABLE content.revision (
   saved_at                      TIMESTAMPTZ    NOT NULL DEFAULT now(),
@@ -700,10 +700,10 @@ CREATE TABLE content.revision (
 
 CREATE INDEX revision_recent ON content.revision (document_id, revision_num DESC);
 
--- CONTENT TAG — spine taxonomique (Closure Table, ADR-026)
+-- CONTENT TAG — spine taxonomique (Closure Table, ADR-018)
 -- parent_id et path ltree supprimés : la hiérarchie est portée par tag_hierarchy.
 -- Le spine tag reste immuable : seuls name et slug le définissent.
--- Layout (ADR-004) : id INT4 | slug varlena · name varlena
+-- Layout (ADR-006) : id INT4 | slug varlena · name varlena
 -- Tuple ~50 B (nom+slug 20 chars chacun) → ~164 tuples/page
 CREATE TABLE content.tag (
   id    INT          GENERATED ALWAYS AS IDENTITY,
@@ -714,11 +714,11 @@ CREATE TABLE content.tag (
   CONSTRAINT slug_format CHECK (slug ~ '^[a-z0-9-]+$')
 );
 
--- TAG HIERARCHY — Closure Table (ADR-026)
+-- TAG HIERARCHY — Closure Table (ADR-018)
 -- Stocke toutes les paires (ancêtre, descendant) avec leur distance.
 -- Un tag est son propre ancêtre à depth=0 (self-reference obligatoire).
 -- Profondeur maximale : 4 niveaux (depth BETWEEN 0 AND 4).
--- Layout (ADR-004) :
+-- Layout (ADR-006) :
 --   ancestor_id INT4 (offset 0) · descendant_id INT4 (4) · depth SMALLINT (8) · 2B pad
 -- Tuple 12 B → ~682 tuples/page
 -- Cardinalité maximale théorique : N*(N+1)/2 ≈ 500 000 / 2 = 250 000 pour 1 000 tags
@@ -754,7 +754,7 @@ CREATE TABLE content.media_core (
 );
 
 -- MEDIA CONTENT — titre, texte alternatif, mention de droits (BASSE fréquence)
--- copyright_notice : mention légale du titulaire des droits (ADR-024).
+-- copyright_notice : mention légale du titulaire des droits (ADR-017).
 --   Placé dans media_content (cold path) et non dans media_core (hot path)
 --   pour ne pas diluer la densité du composant de métadonnées techniques.
 CREATE TABLE content.media_content (
@@ -820,7 +820,7 @@ CREATE TABLE content.comment (
   CONSTRAINT comment_path_not_null CHECK (path IS NOT NULL)
   -- Le CHECK remplace NOT NULL pour laisser la procédure insérer avec OVERRIDING SYSTEM VALUE.
   -- Un INSERT direct sans fournir path sera rejeté. Seule content.create_comment() est
-  -- autorisée (droits applicatifs révoqués en SECTION 14 — ADR-020).
+  -- autorisée (droits applicatifs révoqués en SECTION 14 — ADR-001).
 );
 
 CREATE INDEX comment_path_gist  ON content.comment USING gist (path);
@@ -966,7 +966,7 @@ FOR EACH ROW WHEN (
   OLD.status IS DISTINCT FROM NEW.status
 ) EXECUTE FUNCTION identity.fn_update_modified_at();
 
--- CONTENT : media_core — modified_at (ADR-021)
+-- CONTENT : media_core — modified_at (ADR-024)
 -- Déclenché uniquement sur les colonnes descriptives, pas sur created_at.
 CREATE TRIGGER media_core_modified_at
 BEFORE UPDATE ON content.media_core
@@ -1017,13 +1017,13 @@ BEGIN
 END;
 $$;
 
--- Anonymisation RGPD d'une personne physique (ADR-024)
+-- Anonymisation RGPD d'une personne physique (ADR-017)
 -- Opération irréversible. Préserve l'entité (spine) pour l'intégrité des FK
 -- commerce.transaction_core. Efface toutes les données nominatives dans les
 -- composants person_*, invalide les credentials, purge les appartenances aux groupes.
 -- Le champ anonymized_at dans identity.entity sert de marqueur de statut et
 -- de preuve d'exécution pour les audits de conformité RGPD.
--- Garde d'autorisation (ADR-020 rev.) :
+-- Garde d'autorisation (ADR-001 rev.) :
 --   manage_users (bit 8, valeur 256) requis pour anonymiser autrui.
 --   L'auto-anonymisation (p_entity_id = rls_user_id()) est toujours autorisée.
 CREATE PROCEDURE identity.anonymize_person(p_entity_id INT)
@@ -1086,7 +1086,7 @@ LANGUAGE sql AS $$
 $$;
 
 -- Ajout/révocation de permission sur un rôle
--- Garde d'autorisation (ADR-020 rev.) : manage_users (bit 8, valeur 256) requis.
+-- Garde d'autorisation (ADR-001 rev.) : manage_users (bit 8, valeur 256) requis.
 -- Opérations structurelles : modifier les permissions d'un rôle affecte tous ses membres.
 CREATE PROCEDURE identity.grant_permission(p_role_id SMALLINT, p_permission INT)
 LANGUAGE plpgsql AS $$
@@ -1113,7 +1113,7 @@ END;
 $$;
 
 -- Création d'une organisation (entity + org_core + org_identity)
--- Garde d'autorisation (ADR-020 rev.) : manage_system (bit 19, valeur 524288) requis.
+-- Garde d'autorisation (ADR-001 rev.) : manage_system (bit 19, valeur 524288) requis.
 CREATE PROCEDURE org.create_organization(
   p_name       VARCHAR(64),
   p_slug       VARCHAR(64),
@@ -1191,7 +1191,7 @@ $$;
 
 
 -- Création d'un document (spine + core + identity + body optionnel + première révision)
--- Gardes d'autorisation (ADR-020 rev.) :
+-- Gardes d'autorisation (ADR-001 rev.) :
 --   create_contents (bit 1, valeur 2) requis.
 --   p_author_id doit correspondre à rls_user_id() sauf si edit_others_contents (32768)
 --   (interdit l'usurpation d'identité d'auteur par un utilisateur standard).
@@ -1242,7 +1242,7 @@ END;
 $$;
 
 -- Publication d'un document (brouillon/archivé → publié)
--- Garde d'autorisation (ADR-020 rev.) : publish_contents (bit 4, valeur 16) requis.
+-- Garde d'autorisation (ADR-001 rev.) : publish_contents (bit 4, valeur 16) requis.
 -- Bypass si rls_user_id() = -1 (GUC absent : contexte seed/admin sans session applicative).
 CREATE PROCEDURE content.publish_document(p_document_id INT)
 LANGUAGE plpgsql AS $$
@@ -1259,8 +1259,8 @@ END;
 $$;
 
 -- Snapshot éditorial avant modification
--- Capture l'intégralité de content.identity + content.body (ADR-021).
--- Garde d'autorisation (ADR-020 rev.) : edit_contents (4) ou edit_others_contents (32768).
+-- Capture l'intégralité de content.identity + content.body (ADR-024).
+-- Garde d'autorisation (ADR-001 rev.) : edit_contents (4) ou edit_others_contents (32768).
 CREATE PROCEDURE content.save_revision(p_document_id INT, p_author_id INT)
 LANGUAGE plpgsql AS $$
 DECLARE
@@ -1303,9 +1303,9 @@ BEGIN
 END;
 $$;
 
--- Création d'un tag et insertion automatique dans la Closure Table (ADR-026)
+-- Création d'un tag et insertion automatique dans la Closure Table (ADR-018)
 -- Automatise la gestion des ancêtres : l'appelant fournit uniquement le parent_id.
--- SECURITY DEFINER : marius_user n'a pas de droits DML directs (ADR-020).
+-- SECURITY DEFINER : marius_user n'a pas de droits DML directs (ADR-001).
 --
 -- Mécanisme :
 --   1. INSERT du tag dans content.tag (spine)
@@ -1315,7 +1315,7 @@ $$;
 --      FROM tag_hierarchy WHERE descendant_id = parent_id
 -- Validation de profondeur : si le parent est déjà à depth=4, l'INSERT viole
 -- le CHECK depth BETWEEN 0 AND 4 — l'exception est propagée à l'appelant.
--- Garde d'autorisation (ADR-020 rev.) : manage_tags (bit 11, valeur 2048) requis.
+-- Garde d'autorisation (ADR-001 rev.) : manage_tags (bit 11, valeur 2048) requis.
 CREATE PROCEDURE content.create_tag(
   p_name      VARCHAR(64),
   p_slug      VARCHAR(64),
@@ -1356,7 +1356,7 @@ END;
 $$;
 
 -- Liaison d'un tag à un document (content_to_tag)
--- Gardes AOT (ADR-020 rev.) :
+-- Gardes AOT (ADR-001 rev.) :
 --   edit_contents (bit 2, valeur 4) OU edit_others_contents (bit 15, valeur 32768).
 --   Sans edit_others_contents, ownership check : l'appelant doit être l'auteur du document.
 -- ON CONFLICT DO NOTHING : idempotent — une double liaison n'est pas une erreur.
@@ -1414,9 +1414,9 @@ $$;
 
 
 -- Insertion d'un commentaire avec construction du chemin ltree (une seule écriture heap)
--- Remplace définitivement le double trigger BEFORE/AFTER (ADR-012).
+-- Remplace définitivement le double trigger BEFORE/AFTER (ADR-007).
 -- nextval() préalable → path construit en mémoire → INSERT unique, zéro dead tuple.
--- Gardes d'autorisation (ADR-020 rev.) :
+-- Gardes d'autorisation (ADR-001 rev.) :
 --   create_comments (bit 5, valeur 32) requis.
 --   p_account_entity_id doit correspondre à rls_user_id() (interdit les commentaires
 --   attribués à un autre compte).
@@ -1485,13 +1485,13 @@ BEGIN
 END;
 $$;
 
--- Création d'une commande (transaction_core + trois composants ECS) (ADR-023)
+-- Création d'une commande (transaction_core + trois composants ECS) (ADR-016)
 -- Les composants price, payment et delivery sont initialisés avec des valeurs par
 -- défaut : ils existent toujours après create_transaction, sans NULL structurel.
 -- La couche applicative met à jour chaque composant indépendamment via UPDATE
 -- direct (marius_admin) ou via des procédures métier dédiées.
 -- p_currency_code : code ISO 4217 numérique (défaut 978 = EUR).
--- Garde AOT (ADR-020 rev.) :
+-- Garde AOT (ADR-001 rev.) :
 --   p_client_entity_id doit correspondre à rls_user_id() OU manage_commerce (262144).
 --   Interdit la création de commandes au nom d'un autre client.
 CREATE PROCEDURE commerce.create_transaction(
@@ -1531,9 +1531,9 @@ END;
 $$;
 
 -- Insertion d'une ligne de commande avec snapshot du prix
--- FOR UPDATE sur product_core (ADR-021) : verrou exclusif pour prévenir la sur-vente.
--- price_cents lue et stockée telle quelle — arithmétique entière native (ADR-022).
--- Gardes AOT (ADR-020 rev.) :
+-- FOR UPDATE sur product_core (ADR-024) : verrou exclusif pour prévenir la sur-vente.
+-- price_cents lue et stockée telle quelle — arithmétique entière native (ADR-026).
+-- Gardes AOT (ADR-001 rev.) :
 --   1. Ownership : la transaction doit appartenir à rls_user_id() OU manage_commerce.
 --   2. Statut : ajout d'items uniquement sur transaction status=0 (pending).
 --      Une transaction confirmée, expédiée ou annulée est verrouillée.
@@ -1586,14 +1586,14 @@ $$;
 
 
 -- ==============================================================================
--- SECTION 12 : VUES SÉMANTIQUES (INTERFACE schema.org — snake_case, ADR-025)
+-- SECTION 12 : VUES SÉMANTIQUES (INTERFACE schema.org — snake_case, ADR-028)
 -- Couche de traduction : composants ECS physiques → contrat d'accès public.
 -- snake_case systématique : pas de guillemets requis dans les requêtes SQL.
 -- Suffixes DOD conservés : _at (TIMESTAMPTZ), _cents (INT8), _id (FK), _code.
 -- ==============================================================================
 
 -- IDENTITY : v_role — décompose le bitmask en colonnes booléennes nommées
--- Bits 0–20 exposés (ADR-027 : expansion 15→21 bits sur INT4).
+-- Bits 0–20 exposés (ADR-004 : expansion 15→21 bits sur INT4).
 CREATE VIEW identity.v_role AS
 SELECT id, name, permissions,
   (permissions &       1) <> 0  AS access_admin,
@@ -1626,7 +1626,7 @@ SELECT a.entity_id, a.password_hash, a.is_banned, a.role_id,
 FROM identity.auth a JOIN identity.role r ON r.id = a.role_id;
 
 -- IDENTITY : v_account — schema.org/Person (compte utilisateur)
--- Sécurité : WHERE GUC miroir de rls_account_select (ADR-029 invariant 2 révisé).
+-- Sécurité : WHERE GUC miroir de rls_account_select (ADR-003 invariant 2 révisé).
 CREATE VIEW identity.v_account AS
 SELECT
   ac.entity_id             AS identifier,
@@ -1693,10 +1693,10 @@ LEFT JOIN   identity.person_biography pb  ON pb.entity_id = e.id
 LEFT JOIN   identity.person_contact   pc  ON pc.entity_id = e.id
 LEFT JOIN   identity.person_content   pco ON pco.entity_id = e.id;
 
--- GEO : v_place — schema.org/Place + PostalAddress (ADR-024)
+-- GEO : v_place — schema.org/Place + PostalAddress (ADR-017)
 -- Jointure spine spatial (place_core) + composant postal (postal_address).
 -- LEFT JOIN : un lieu peut exister sans adresse postale (ex : point GPS pur).
--- country_code (SMALLINT) conserve son nom physique — ADR-025 : un code entier
+-- country_code (SMALLINT) conserve son nom physique — ADR-028 : un code entier
 -- n'est pas un pays textuel.
 CREATE VIEW geo.v_place AS
 SELECT
@@ -1747,7 +1747,7 @@ LEFT JOIN   org.org_contact     oct ON oct.entity_id = e.id
 LEFT JOIN   geo.v_place         gp  ON gp.identifier  = oc.place_id;
 
 -- COMMERCE : v_product — schema.org/Product
--- price_cents (INT8) — conversion décimale déléguée à l'applicatif (ADR-022).
+-- price_cents (INT8) — conversion décimale déléguée à l'applicatif (ADR-026).
 CREATE VIEW commerce.v_product AS
 SELECT
   pc.id                    AS identifier,
@@ -1762,11 +1762,11 @@ FROM        commerce.product_core     pc
 JOIN        commerce.product_identity pi  ON pi.product_id  = pc.id
 LEFT JOIN   commerce.product_content  pco ON pco.product_id = pc.id;
 
--- COMMERCE : v_transaction — schema.org/Order enrichi (ADR-023)
--- snake_case + suffixes _cents conservés (ADR-025).
+-- COMMERCE : v_transaction — schema.org/Order enrichi (ADR-016)
+-- snake_case + suffixes _cents conservés (ADR-028).
 -- PUSHDOWN GARANTI : WHERE identifier = :id → WHERE tc.id = :id avant json_agg().
 -- Sécurité : la vue est owned par postgres (BYPASSRLS). Le WHERE GUC ci-dessous
--- est le mécanisme de contrôle d'accès primaire (ADR-029 invariant 2 révisé).
+-- est le mécanisme de contrôle d'accès primaire (ADR-003 invariant 2 révisé).
 -- Miroir de rls_transaction_select : client OU view_transactions OU manage_commerce.
 CREATE VIEW commerce.v_transaction AS
 SELECT
@@ -1835,7 +1835,7 @@ GROUP BY
 
 -- CONTENT : v_article_list — hot path listing (zéro TOAST, zéro agrégat)
 -- Sécurité : la vue est owned par postgres (BYPASSRLS). Le RLS physique sur
--- content.core est inopérant sur ce chemin (ADR-029 invariant 2 révisé).
+-- content.core est inopérant sur ce chemin (ADR-003 invariant 2 révisé).
 -- Le WHERE ci-dessous constitue le mécanisme de contrôle d'accès primaire
 -- pour ce chemin de lecture. Les helpers rls_user_id() / rls_auth_bits()
 -- lisent le GUC de session — invariant par rapport au security context de la vue.
@@ -1907,7 +1907,7 @@ WHERE (
 );
 -- Sécurité : voir note v_article_list — même mécanisme WHERE GUC.
 
--- CONTENT : v_tag_tree — taxonomie avec Closure Table (ADR-026)
+-- CONTENT : v_tag_tree — taxonomie avec Closure Table (ADR-018)
 -- depth = distance depuis la racine (0 = racine, 4 = feuille maximale).
 -- parent_id = ancêtre immédiat (depth = 1), NULL si racine.
 -- breadcrumb = chemin textuel racine→tag, séparateurs " > ".
@@ -1957,7 +1957,7 @@ GRANT USAGE ON SCHEMA commerce  TO marius_user;
 GRANT USAGE ON SCHEMA content   TO marius_user;
 
 -- Lecture des tables et vues (interface applicative en lecture)
--- GRANT large par schéma, puis REVOKE ciblé sur les tables sensibles (ADR-028 audit).
+-- GRANT large par schéma, puis REVOKE ciblé sur les tables sensibles (ADR-002 audit).
 -- Interface contractuelle : les vues de Section 12 sont le chemin de lecture attendu.
 GRANT SELECT ON ALL TABLES IN SCHEMA identity  TO marius_user;
 GRANT SELECT ON ALL TABLES IN SCHEMA geo       TO marius_user;
@@ -1987,16 +1987,16 @@ REVOKE SELECT ON commerce.transaction_delivery FROM marius_user;
 
 -- commerce.transaction_price : montants, devise, taux de taxe — données financières.
 --   Interface contrôlée : commerce.v_transaction (RLS via transaction_core).
---   ADR-029 : sans ce REVOKE, un SELECT direct bypasse le RLS de transaction_core
+--   ADR-003 : sans ce REVOKE, un SELECT direct bypasse le RLS de transaction_core
 --   (fragmentation ECS — le RLS d'un composant Core ne se propage pas aux satellites).
 REVOKE SELECT ON commerce.transaction_price FROM marius_user;
 
 -- commerce.transaction_item : lignes de commande, produits, quantités, prix snapshot.
 --   Interface contrôlée : commerce.v_transaction.
---   ADR-029 : même vecteur de fuite que transaction_price.
+--   ADR-003 : même vecteur de fuite que transaction_price.
 REVOKE SELECT ON commerce.transaction_item FROM marius_user;
 
--- Composants satellites éditoriaux — ADR-029 invariant 1 (ECS × RLS).
+-- Composants satellites éditoriaux — ADR-003 invariant 1 (ECS × RLS).
 -- Le RLS de content.core ne se propage pas aux satellites : un SELECT direct
 -- sur ces tables retourne l'intégralité des données (brouillons inclus) sans
 -- que rls_core_select ne soit jamais évalué.
@@ -2008,7 +2008,7 @@ REVOKE SELECT ON commerce.transaction_item FROM marius_user;
 -- Les tags eux-mêmes sont publics — seule la liaison brouillon+tag est exposée, pas
 -- le contenu du brouillon. Risque évalué faible. Le correctif (REVOKE) casserait
 -- v_tag_tree (article_count via content_to_tag) sans gain de sécurité significatif.
--- Référence : audit RLS global, ADR-029 invariant 1 note de limitation.
+-- Référence : audit RLS global, ADR-003 invariant 1 note de limitation.
 
 -- content.identity : headline, slug, description — métadonnées de tous les documents.
 REVOKE SELECT ON content.identity FROM marius_user;
@@ -2021,7 +2021,7 @@ REVOKE SELECT ON content.revision FROM marius_user;
 
 -- org.org_legal : DUNS, SIRET, TVA — identifiants légaux sensibles.
 --   Interface contrôlée : org.v_organization, projetés uniquement pour manage_system.
---   ADR-029 inv.1 : satellite d'org.org_core, accessible directement sans ce REVOKE.
+--   ADR-003 inv.1 : satellite d'org.org_core, accessible directement sans ce REVOKE.
 REVOKE SELECT ON org.org_legal FROM marius_user;
 
 -- identity.v_auth : hash argon2id, is_banned, role_id — interface d'authentification.
@@ -2059,7 +2059,7 @@ ALTER TABLE content.comment SET (
 
 
 -- ==============================================================================
--- SECTION 14 : VERROUILLAGE ECS STRICT — ADR-020
+-- SECTION 14 : VERROUILLAGE ECS STRICT — ADR-001
 -- ==============================================================================
 -- Scelle le contrat d'interface d'écriture :
 --   marius_user → SELECT + EXECUTE uniquement (zéro DML direct)
@@ -2067,7 +2067,7 @@ ALTER TABLE content.comment SET (
 --   Procédures  → SECURITY DEFINER (s'exécutent avec les droits du propriétaire)
 --
 -- Rationalise et absorbe :
---   • ADR-012 : REVOKE INSERT ON content.comment (désormais couvert globalement)
+--   • ADR-007 : REVOKE INSERT ON content.comment (désormais couvert globalement)
 -- ==============================================================================
 
 -- 14.1 — Rôle de maintenance production
@@ -2179,12 +2179,12 @@ ALTER PROCEDURE commerce.create_transaction_item(integer, integer, integer)
 
 
 -- ==============================================================================
--- SECTION 15 : ROW-LEVEL SECURITY (RLS) — Pattern Stateless GUC (ADR-028)
+-- SECTION 15 : ROW-LEVEL SECURITY (RLS) — Pattern Stateless GUC (ADR-002)
 -- ==============================================================================
 -- Architecture : la couche applicative injecte deux GUC dans chaque session avant
 -- toute requête :
 --   SET LOCAL marius.user_id  = '<entity_id>'   -- identifiant de l'utilisateur connecté
---   SET LOCAL marius.auth_bits = '<bitmask INT4>' -- permissions du rôle (ADR-003/027)
+--   SET LOCAL marius.auth_bits = '<bitmask INT4>' -- permissions du rôle (ADR-015/027)
 --
 -- Les politiques lisent ces GUC via current_setting(..., true) — le paramètre `true`
 -- retourne NULL au lieu de lever une erreur si le GUC n'est pas défini (session système,
@@ -2193,7 +2193,7 @@ ALTER PROCEDURE commerce.create_transaction_item(integer, integer, integer)
 --
 -- Superutilisateurs (postgres) et marius_admin (BYPASSRLS) contournent le RLS.
 -- Ce contournement est intentionnel : les procédures SECURITY DEFINER s'exécutent
--- en tant que postgres et doivent pouvoir écrire sans restriction (ADR-020).
+-- en tant que postgres et doivent pouvoir écrire sans restriction (ADR-001).
 -- Le RLS sécurise le chemin de LECTURE (SELECT sur vues par marius_user).
 -- Les tables les plus sensibles (identity.auth, person_contact, transaction_payment,
 -- transaction_delivery) ont vu leur SELECT révoqué en Section 13. La vue identity.v_auth
@@ -2223,14 +2223,14 @@ $$;
 --   OU si l'utilisateur possède publish_contents (bit 4, valeur 16) → accès éditorial
 --   OU si l'utilisateur possède edit_others_contents (bit 15, valeur 32768) → éditeur/modérateur
 --   OU si l'utilisateur est l'auteur de la ligne.
--- Note ADR-029 : tout bit accordant UPDATE ou DELETE sur cette table doit figurer
+-- Note ADR-003 : tout bit accordant UPDATE ou DELETE sur cette table doit figurer
 -- aussi dans le USING SELECT, sans quoi la politique d'écriture est structurellement
 -- inatteignable (PostgreSQL évalue le filtre SELECT avant d'accorder l'écriture).
 -- Politique UPDATE/DELETE :
 --   Permissive A : auteur de la ligne ET edit_contents(4) pour UPDATE
---                  auteur de la ligne ET delete_contents(8) pour DELETE (ADR-029)
+--                  auteur de la ligne ET delete_contents(8) pour DELETE (ADR-003)
 --   Permissive B : edit_others_contents(32768) → édition/suppression globale
--- Note ADR-029 : delete_own vérifie delete_contents (8) et non edit_contents (4).
+-- Note ADR-003 : delete_own vérifie delete_contents (8) et non edit_contents (4).
 --   Utiliser edit_contents pour garder une suppression est un mismatch sémantique :
 --   un rôle perdant uniquement edit_contents conserverait sa capacité destructrice.
 -- Note : INSERT est géré exclusivement par content.create_document (SECURITY DEFINER).
@@ -2270,8 +2270,8 @@ CREATE POLICY rls_core_update_others ON content.core
   );
 
 -- Suppression propre : auteur ET delete_contents (bit 3, valeur 8)
--- ADR-029 : corrigé de edit_contents(4) → delete_contents(8). Le rôle author
--- inclut delete_contents depuis ADR-029. Utiliser le bit d'édition pour garder
+-- ADR-003 : corrigé de edit_contents(4) → delete_contents(8). Le rôle author
+-- inclut delete_contents depuis ADR-003. Utiliser le bit d'édition pour garder
 -- une suppression crée un sur-privilège silencieux lors d'un déclassement de rôle.
 CREATE POLICY rls_core_delete_own ON content.core
   FOR DELETE
@@ -2294,7 +2294,7 @@ CREATE POLICY rls_core_delete_others ON content.core
 --   Ligne visible si l'utilisateur est le client (isolation stricte)
 --   OU si le bit view_transactions (bit 17, valeur 131072) est présent.
 --   OU si le bit manage_commerce (bit 18, valeur 262144) est présent.
---   Note ADR-029 (invariant 3) : manage_commerce est requis dans le USING UPDATE ;
+--   Note ADR-003 (invariant 3) : manage_commerce est requis dans le USING UPDATE ;
 --   il doit donc figurer aussi dans le USING SELECT pour que la politique d'écriture
 --   soit atteignable. Un profil portant manage_commerce mais pas view_transactions
 --   (bits orthogonaux) échouerait silencieusement (0 rows updated) sans ce critère.
@@ -2311,7 +2311,7 @@ CREATE POLICY rls_transaction_select ON commerce.transaction_core
   USING (
     client_entity_id = identity.rls_user_id()          -- client : ses propres commandes
     OR (identity.rls_auth_bits() & 131072) = 131072    -- view_transactions
-    OR (identity.rls_auth_bits() & 262144) = 262144    -- manage_commerce (ADR-029 invariant 3)
+    OR (identity.rls_auth_bits() & 262144) = 262144    -- manage_commerce (ADR-003 invariant 3)
   );
 
 CREATE POLICY rls_transaction_update ON commerce.transaction_core
@@ -2360,8 +2360,8 @@ CREATE POLICY rls_account_update ON identity.account_core
 --   OU auteur du commentaire (account_entity_id = rls_user_id()) : voit ses propres
 --      commentaires en attente ou rejetés.
 --   OU moderate_comments (bit 16, valeur 65536) : modérateurs voient tout.
--- Note ADR-029 invariant 3 : marius_user n'a pas de DML sur content.comment
--- (ADR-020) → pas de politique UPDATE/DELETE nécessaire sur ce chemin.
+-- Note ADR-003 invariant 3 : marius_user n'a pas de DML sur content.comment
+-- (ADR-001) → pas de politique UPDATE/DELETE nécessaire sur ce chemin.
 -- ─────────────────────────────────────────────────────────────────────────────
 
 ALTER TABLE content.comment ENABLE ROW LEVEL SECURITY;

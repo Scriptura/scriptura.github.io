@@ -3,9 +3,9 @@
 -- Tests fonctionnels : domaine Commerce
 -- pgTAP test suite — Projet Marius · PostgreSQL 18 · ECS/DOD
 --
--- Couvre : atomicité de create_transaction (ADR-023), décrémentation atomique
---          du stock (ADR-021 FOR UPDATE), immutabilité du snapshot de prix
---          en centimes (ADR-022), rejet de la sur-vente (CHECK stock_positive),
+-- Couvre : atomicité de create_transaction (ADR-016), décrémentation atomique
+--          du stock (ADR-024 FOR UPDATE), immutabilité du snapshot de prix
+--          en centimes (ADR-026), rejet de la sur-vente (CHECK stock_positive),
 --          agrégation correcte dans v_transaction (subtotal + total avec taxes).
 --          ADR-030 : gardes ownership/statut create_transaction(_item), trigger immutabilité.
 --
@@ -56,7 +56,7 @@ INSERT INTO _ids SELECT 'product_id', id FROM ins;
 INSERT INTO commerce.product_identity (product_id, name, slug)
 VALUES ((SELECT val FROM _ids WHERE key = 'product_id'), 'Produit de test', 'produit-de-test');
 
--- Transaction créée via la procédure (ADR-023)
+-- Transaction créée via la procédure (ADR-016)
 DO $$
 DECLARE v_id INT;
 BEGIN
@@ -74,7 +74,7 @@ $$;
 
 
 -- ============================================================
--- TEST 1–3 — create_transaction : atomicité des quatre composants (ADR-023)
+-- TEST 1–3 — create_transaction : atomicité des quatre composants (ADR-016)
 -- ============================================================
 
 SELECT ok(
@@ -99,14 +99,14 @@ SELECT ok(
 
 
 -- ============================================================
--- TEST 4 — currency_code par défaut : 978 (EUR) (ADR-023)
+-- TEST 4 — currency_code par défaut : 978 (EUR) (ADR-016)
 -- ============================================================
 
 SELECT is(
   (SELECT currency_code FROM commerce.transaction_price
    WHERE  transaction_id = (SELECT val FROM _ids WHERE key = 'txn_id')),
   978::SMALLINT,
-  'create_transaction : currency_code = 978 (EUR) par défaut (ADR-023)'
+  'create_transaction : currency_code = 978 (EUR) par défaut (ADR-016)'
 );
 
 
@@ -128,7 +128,7 @@ SELECT is(
 
 
 -- ============================================================
--- TEST 6 — Snapshot du prix au moment de la commande (ADR-022)
+-- TEST 6 — Snapshot du prix au moment de la commande (ADR-026)
 -- ============================================================
 
 SELECT is(
@@ -175,7 +175,7 @@ SELECT throws_ok(
 
 
 -- ============================================================
--- TEST 9 — v_transaction : subtotalCents correct (ADR-018 + ADR-022)
+-- TEST 9 — v_transaction : subtotalCents correct (ADR-023 + ADR-026)
 -- 2 unités × 2999 = 5998 centimes
 -- ============================================================
 
@@ -189,7 +189,7 @@ SELECT is(
 
 
 -- ============================================================
--- TEST 10 — v_transaction : totalCents avec taxes et livraison (ADR-023)
+-- TEST 10 — v_transaction : totalCents avec taxes et livraison (ADR-016)
 -- On fixe shipping = 500 ct, tax = 1200 ct, discount = 0
 -- totalCents attendu = 5998 + 500 + 1200 - 0 = 7698
 -- ============================================================
@@ -210,7 +210,7 @@ SELECT is(
 
 
 -- ============================================================
--- TEST 11 — v_product : exposition de priceCents courant (ADR-022)
+-- TEST 11 — v_product : exposition de priceCents courant (ADR-026)
 -- Prix catalogue mis à jour à 4999 ci-dessus
 -- ============================================================
 
@@ -224,7 +224,7 @@ SELECT is(
 
 
 -- ============================================================
--- TEST 12 — v_transaction : currencyCode présent (ADR-023)
+-- TEST 12 — v_transaction : currencyCode présent (ADR-016)
 -- ============================================================
 
 SELECT is(

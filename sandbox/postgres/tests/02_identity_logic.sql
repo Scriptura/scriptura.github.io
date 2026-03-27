@@ -4,7 +4,7 @@
 -- pgTAP test suite — Projet Marius · PostgreSQL 18 · ECS/DOD
 --
 -- Couvre : atomicité de create_account, déduplication des slugs,
---          bitmask des permissions (ADR-003), record_login (hot path ADR-015),
+--          bitmask des permissions (ADR-015), record_login (hot path ADR-008),
 --          grant_permission / revoke_permission.
 --
 -- Exécution : psql -U postgres -d marius -f 02_identity_logic.sql
@@ -50,7 +50,7 @@ $$;
 --   identity.auth      → credentials + rôle
 --   identity.account_core → données publiques du compte
 --
--- L'absence de l'un des composants invalide l'invariant de sous-type (ADR-019).
+-- L'absence de l'un des composants invalide l'invariant de sous-type (ADR-013).
 -- ============================================================
 
 SELECT ok(
@@ -79,7 +79,7 @@ SELECT ok(
 
 
 -- ============================================================
--- Déduplication de slug (fn_slug_deduplicate, ADR-020 — comportement documenté)
+-- Déduplication de slug (fn_slug_deduplicate, ADR-001 — comportement documenté)
 --
 -- Deux comptes avec le même slug de base → le second reçoit <slug>-1.
 -- La déduplication est optimiste (SELECT EXISTS + incrément). La contrainte
@@ -111,7 +111,7 @@ SELECT is(
 
 
 -- ============================================================
--- has_permission : vérification du bitmask (ADR-003)
+-- has_permission : vérification du bitmask (ADR-015)
 --
 -- Le rôle subscriber (id = 7) a permissions = 16384 (can_read uniquement).
 -- La fonction has_permission effectue un AND bitwise : (permissions & bit) <> 0.
@@ -136,7 +136,7 @@ SELECT ok(
 
 
 -- ============================================================
--- record_login : mise à jour de last_login_at (hot path, ADR-015)
+-- record_login : mise à jour de last_login_at (hot path, ADR-008)
 --
 -- last_login_at doit être NULL avant la première connexion.
 -- Après CALL record_login(), la colonne doit être renseignée.
@@ -186,7 +186,7 @@ SELECT ok(
 
 
 -- ============================================================
--- Vérification des nouvelles permissions bits 15-20 sur administrator (ADR-027)
+-- Vérification des nouvelles permissions bits 15-20 sur administrator (ADR-004)
 -- L'administrateur (role_id=1) doit avoir tous les bits 0-20.
 -- ============================================================
 
@@ -210,7 +210,7 @@ SELECT ok(
     (SELECT val FROM _ids WHERE key = 'admin_id'),
     32768    -- edit_others_contents (bit 15)
   ),
-  'administrator : edit_others_contents (32768) = true (ADR-027)'
+  'administrator : edit_others_contents (32768) = true (ADR-004)'
 );
 
 SELECT ok(
@@ -218,7 +218,7 @@ SELECT ok(
     (SELECT val FROM _ids WHERE key = 'admin_id'),
     1048576  -- export_data (bit 20)
   ),
-  'administrator : export_data (1048576) = true (ADR-027)'
+  'administrator : export_data (1048576) = true (ADR-004)'
 );
 
 SELECT ok(
@@ -226,7 +226,7 @@ SELECT ok(
     (SELECT val FROM _ids WHERE key = 'acct1_id'),
     32768    -- subscriber n''a pas edit_others_contents
   ),
-  'subscriber : edit_others_contents (32768) = false (ADR-027)'
+  'subscriber : edit_others_contents (32768) = false (ADR-004)'
 );
 
 -- Vérification que le rôle moderator inclut publish_contents (bit 4 = 16)
@@ -251,7 +251,7 @@ SELECT ok(
     (SELECT val FROM _ids WHERE key = 'mod_id'),
     16       -- publish_contents (bit 4)
   ),
-  'moderator : publish_contents (16) = true après correction ADR-027'
+  'moderator : publish_contents (16) = true après correction ADR-004'
 );
 
 
