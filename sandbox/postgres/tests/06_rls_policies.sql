@@ -32,13 +32,14 @@
 --   ADR-020 rev. — H1-H4 : add_tag_to_document / remove_tag_from_document
 --   Audit org   — I1-I5 : schéma org (REVOKE legal, guard create_organization, hiérarchie)
 --   Perm audit  — moderator 124990→124990 (+manage_tags=2048)
+--   Audit RLS global — J1-J3 : v_auth REVOKE, v_person no PII, content_to_tag gap note
 -- ==============================================================================
 
 \set ON_ERROR_STOP 1
 
 BEGIN;
 
-SELECT plan(45);
+SELECT plan(48);
 
 
 -- ============================================================
@@ -677,6 +678,59 @@ DELETE FROM org.org_hierarchy WHERE entity_id = current_setting('test.org_id')::
 DELETE FROM org.org_identity  WHERE entity_id = current_setting('test.org_id')::INT;
 DELETE FROM org.org_core      WHERE entity_id = current_setting('test.org_id')::INT;
 DELETE FROM org.entity        WHERE id        = current_setting('test.org_id')::INT;
+
+
+-- ============================================================
+-- SECTION J — Audit RLS global : fixes v_auth et v_person
+-- ============================================================
+
+-- ── J1 : identity.v_auth inaccessible à marius_user (REVOKE SELECT sur la vue)
+-- La vue lisait identity.auth (REVOKE'd) via BYPASSRLS postgres.
+-- Sans REVOKE sur la vue, password_hash était lisible à tout marius_user.
+SELECT set_config('marius.user_id',   '1', true);
+SELECT set_config('marius.auth_bits', '2097151', true);
+SET LOCAL ROLE marius_user;
+
+SELECT throws_ok(
+  $$SELECT password_hash FROM identity.v_auth LIMIT 1$$,
+  '42501', NULL,
+  'REVOKE SELECT : identity.v_auth inaccessible à marius_user (password_hash protégé)'
+);
+
+RESET ROLE;
+
+
+-- ── J2 : identity.v_person ne projette pas email ni téléphone
+-- Colonnes PII issues de identity.person_contact (REVOKE'd) retirées de la projection.
+SET LOCAL ROLE marius_user;
+
+SELECT ok(
+  NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = 'identity'
+      AND table_name   = 'v_person'
+      AND column_name  IN ('email', 'telephone', 'phone')
+  ),
+  'Vue v_person : colonnes PII (email, telephone) absentes de la projection'
+);
+
+RESET ROLE;
+
+
+-- ── J3 : identity.v_person conserve url (donnée de contact publique)
+SET LOCAL ROLE marius_user;
+
+SELECT ok(
+  EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = 'identity'
+      AND table_name   = 'v_person'
+      AND column_name  = 'url'
+  ),
+  'Vue v_person : url (site web public) conservé dans la projection'
+);
+
+RESET ROLE;
 
 SELECT * FROM finish();
 ROLLBACK;

@@ -1656,7 +1656,15 @@ WHERE (
   OR (identity.rls_auth_bits() & 256) = 256    -- manage_users
 );
 
--- IDENTITY : v_person — schema.org/Person (profil public complet)
+-- IDENTITY : v_person — schema.org/Person (profil public)
+-- Colonnes PII retirées de la projection (audit RLS global) :
+--   email, phone/telephone, fax — REVOKE SELECT sur identity.person_contact ;
+--   la vue étant owned par postgres (BYPASSRLS), elle pouvait lire person_contact
+--   malgré le REVOKE, exposant email/téléphone à tout marius_user.
+--   url (site web) conservé : donnée de contact intentionnellement publique.
+--   address_id (place_id) conservé : référence géographique, pas de PII directe.
+-- Accès aux données de contact (email, phone) : réservé aux sessions manage_users
+--   via connexion marius_admin ou procédure SECURITY DEFINER dédiée.
 CREATE VIEW identity.v_person AS
 SELECT
   e.id                     AS identifier,
@@ -1673,8 +1681,6 @@ SELECT
   pb.birth_place_id,
   pb.death_date,
   pb.death_place_id,
-  pc.email,
-  pc.phone                 AS telephone,
   pc.url,
   pc.place_id              AS address_id,
   pco.media_id             AS image_id,
@@ -1996,6 +2002,14 @@ REVOKE SELECT ON commerce.transaction_item FROM marius_user;
 -- que rls_core_select ne soit jamais évalué.
 -- Interface contrôlée : content.v_article_list, content.v_article.
 
+-- Gap documenté et accepté : content.content_to_tag et content.content_to_media
+-- sont accessibles en SELECT direct (pas de REVOKE, pas de RLS propre). Un SELECT
+-- sur ces tables de liaison révèle quels tags/médias sont associés à des brouillons.
+-- Les tags eux-mêmes sont publics — seule la liaison brouillon+tag est exposée, pas
+-- le contenu du brouillon. Risque évalué faible. Le correctif (REVOKE) casserait
+-- v_tag_tree (article_count via content_to_tag) sans gain de sécurité significatif.
+-- Référence : audit RLS global, ADR-029 invariant 1 note de limitation.
+
 -- content.identity : headline, slug, description — métadonnées de tous les documents.
 REVOKE SELECT ON content.identity FROM marius_user;
 
@@ -2009,6 +2023,13 @@ REVOKE SELECT ON content.revision FROM marius_user;
 --   Interface contrôlée : org.v_organization, projetés uniquement pour manage_system.
 --   ADR-029 inv.1 : satellite d'org.org_core, accessible directement sans ce REVOKE.
 REVOKE SELECT ON org.org_legal FROM marius_user;
+
+-- identity.v_auth : hash argon2id, is_banned, role_id — interface d'authentification.
+--   Usage réservé au middleware d'authentification via connexion postgres ou fonction
+--   SECURITY DEFINER dédiée. La vue étant owned par postgres (BYPASSRLS), elle lit
+--   identity.auth malgré le REVOKE SELECT sur la table physique. Sans ce REVOKE sur
+--   la vue, tout marius_user peut lire les hashes de mots de passe de tous les comptes.
+REVOKE SELECT ON identity.v_auth FROM marius_user;
 
 -- USAGE séquences : permet currval() et inspection — les nextval() des procédures
 -- passent via SECURITY DEFINER (owner = postgres) et n'en ont pas besoin.
@@ -2175,8 +2196,9 @@ ALTER PROCEDURE commerce.create_transaction_item(integer, integer, integer)
 -- en tant que postgres et doivent pouvoir écrire sans restriction (ADR-020).
 -- Le RLS sécurise le chemin de LECTURE (SELECT sur vues par marius_user).
 -- Les tables les plus sensibles (identity.auth, person_contact, transaction_payment,
--- transaction_delivery) ont vu leur SELECT révoqué en Section 13 : le RLS est une
--- défense complémentaire, pas le seul verrou sur ces données.
+-- transaction_delivery) ont vu leur SELECT révoqué en Section 13. La vue identity.v_auth
+-- a également un REVOKE SELECT (audit RLS global) : password_hash ne doit jamais être
+-- accessible à marius_user, même via la vue. Le RLS est une défense complémentaire.
 -- ==============================================================================
 
 -- Helper functions — évitent de répéter le COALESCE/casting dans chaque politique.

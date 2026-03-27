@@ -179,7 +179,7 @@ Un audit a identifié un gap structurel : `GRANT SELECT ON ALL TABLES` en Sectio
 donnait à `marius_user` un accès direct aux tables physiques sensibles, contournant
 les vues contrôlées. Le RLS sur 3 tables ne fermait pas ce vecteur.
 
-Dix tables reçoivent un `REVOKE SELECT FROM marius_user` en Section 13 :
+Dix tables et une vue reçoivent un `REVOKE SELECT FROM marius_user` en Section 13 :
 
 | Table                         | Données sensibles                          | Interface contrôlée       |
 | ----------------------------- | ------------------------------------------ | ------------------------- |
@@ -193,6 +193,7 @@ Dix tables reçoivent un `REVOKE SELECT FROM marius_user` en Section 13 :
 | `content.body`                | Corps HTML complet de tous docs            | `content.v_article`       |
 | `content.revision`            | Snapshots éditoriaux complets              | `content.v_article`       |
 | `org.org_legal`               | DUNS, SIRET, TVA — identifiants légaux     | `marius_admin` uniquement |
+| `identity.v_auth` (vue)       | Hash argon2id via BYPASSRLS vue            | Middleware auth (postgres) |
 
 **Deux mécanismes distincts, à ne pas confondre.**
 
@@ -223,6 +224,7 @@ mécanismes de nature différente :
 | `content.body`                 | `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
 | `content.revision`             | `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
 | `org.org_legal`                | `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
+| `identity.v_auth` (vue)        | `REVOKE SELECT`          | Erreur 42501 — accès refusé                       |
 | `content.core`                 | RLS (politiques actives) | Résultat filtré selon GUC                         |
 | `commerce.transaction_core`    | RLS (politiques actives) | Résultat filtré selon GUC                         |
 | `identity.account_core`        | RLS (politiques actives) | Résultat filtré selon GUC                         |
@@ -234,7 +236,7 @@ Core n'est pas évalué sur le chemin de lecture via ces vues. Le filtre d'accè
 est implémenté dans le WHERE de chaque vue concernée, via les helpers GUC. Le RLS
 physique reste actif pour les accès directs aux tables Core (défense en profondeur).
 
-**Conséquence pratique** : les tables avec `REVOKE SELECT` n'ont pas de politique
+**Conséquence pratique** : les tables et vues avec `REVOKE SELECT` n'ont pas de politique
 RLS et n'en ont pas besoin — elles sont structurellement inaccessibles. Ajouter
 du RLS dessus serait redondant et trompeur (laisserait croire que le RLS est le
 mécanisme protecteur alors que c'est le REVOKE).
@@ -305,11 +307,24 @@ ne soit jamais évalué. L'accès applicatif est contraint aux vues sémantiques
 `content.v_article_list` et `content.v_article`, qui imposent la jointure sur
 `content.core` filtré par RLS.
 
+**Extension aux vues (audit RLS global).**
+Le même vecteur s'applique aux vues owned par `postgres` (BYPASSRLS) : une vue
+peut lire des tables sous REVOKE SELECT et en exposer les données sans filtre.
+`identity.v_auth` illustrait ce cas — la vue exposait `password_hash` à tout
+`marius_user` en contournant le REVOKE sur `identity.auth`. Correction :
+`REVOKE SELECT ON identity.v_auth FROM marius_user`.
+`identity.v_person` illustre un second vecteur : email et phone issus de
+`identity.person_contact` (REVOKE'd) étaient projetés sans filtre. Correction :
+exclusion des colonnes PII de la projection de la vue.
+
 **Invariant de maintenance.**
 Lors de tout ajout d'un composant satellite dans un schéma dont le Core est sous
 RLS, le `GRANT SELECT` hérité de `GRANT SELECT ON ALL TABLES` doit être
 immédiatement suivi d'un `REVOKE SELECT` ciblé ou d'une politique RLS dédiée.
 L'absence de protection est silencieuse — PostgreSQL n'émet aucun avertissement.
+La même vérification s'applique aux vues : toute vue projetant des données issues
+d'une table sous REVOKE SELECT doit recevoir soit un REVOKE SELECT propre, soit
+exclure les colonnes sensibles de sa projection.
 
 ### Invariant 2 — Security context des vues et responsabilité du contrôle d'accès
 
@@ -474,6 +489,25 @@ lui retirer la gestion de la taxonomie créait une asymétrie opérationnelle : 
 publier un article mais pas créer le tag manquant pour l'indexer. `contributor` et
 `author` ne reçoivent pas `manage_tags` — la taxonomie est un domaine structurel
 distinct de la création de contenu.
+
+### Bits sans enforcement moteur (signaux applicatifs)
+
+Neuf bits sont définis dans `identity.permission_bit` mais ne font l'objet d'aucun
+guard AOT ni politique RLS dans ce blueprint. Leur enforcement est délégué à la couche
+applicative (middleware, panneau d'administration). Cette délégation est intentionnelle
+dans tous les cas ci-dessous.
+
+| Bit | Valeur | Motif de la délégation applicative |
+| --- | ------ | ---------------------------------- |
+| `access_admin` (0)     |       1 | Accès au panneau admin — notion applicative pure, pas de table moteur associée |
+| `edit_comments` (6)    |      64 | Pas de procédure `edit_comment` dans ce blueprint ; DML révoqué sur `content.comment` (ADR-020) |
+| `delete_comments` (7)  |     128 | Même motif que `edit_comments` |
+| `manage_groups` (9)    |     512 | Aucune procédure de gestion des groupes dans ce blueprint — réservé pour usage futur |
+| `manage_contents` (10) |    1024 | Uniquement détenu par `administrator`, qui possède déjà `edit_others_contents`. Bit sémantiquement distinct (accès section admin éditoriale) mais sans frontière de privilège moteur supplémentaire |
+| `manage_menus` (12)    |    4096 | Aucune table de menus dans ce blueprint — réservé pour usage futur |
+| `upload_files` (13)    |    8192 | Contrôle délégué au service de stockage (S3/CDN) — le moteur PostgreSQL ne gère pas les uploads |
+| `can_read` (14)        |   16384 | Bit de présence minimale ; les données publiques sont lisibles sans RLS — pas de guard redondant |
+| `export_data` (20)     | 1048576 | Aucune procédure d'export dans ce blueprint — réservé pour jobs ETL/RGPD futurs |
 
 ---
 

@@ -14,7 +14,7 @@
 
 BEGIN;
 
-SELECT plan(42);
+SELECT plan(46);
 
 
 -- ============================================================
@@ -311,6 +311,43 @@ SELECT throws_ok(
 
 RESET ROLE;
 
+
+
+SELECT ok(
+  COALESCE((
+    SELECT p.prosecdef FROM pg_proc p
+    JOIN   pg_namespace n ON n.oid = p.pronamespace
+    WHERE  n.nspname = 'identity' AND p.proname = 'anonymize_person' AND p.prokind = 'p'
+  ), false),
+  'identity.anonymize_person : SECURITY DEFINER (ADR-020)'
+);
+
+SELECT ok(
+  COALESCE((
+    SELECT p.prosecdef FROM pg_proc p
+    JOIN   pg_namespace n ON n.oid = p.pronamespace
+    WHERE  n.nspname = 'org' AND p.proname = 'add_organization_to_hierarchy' AND p.prokind = 'p'
+  ), false),
+  'org.add_organization_to_hierarchy : SECURITY DEFINER (ADR-020)'
+);
+
+SELECT ok(
+  COALESCE((
+    SELECT p.prosecdef FROM pg_proc p
+    JOIN   pg_namespace n ON n.oid = p.pronamespace
+    WHERE  n.nspname = 'content' AND p.proname = 'add_tag_to_document' AND p.prokind = 'p'
+  ), false),
+  'content.add_tag_to_document : SECURITY DEFINER (ADR-020)'
+);
+
+SELECT ok(
+  COALESCE((
+    SELECT p.prosecdef FROM pg_proc p
+    JOIN   pg_namespace n ON n.oid = p.pronamespace
+    WHERE  n.nspname = 'content' AND p.proname = 'remove_tag_from_document' AND p.prokind = 'p'
+  ), false),
+  'content.remove_tag_from_document : SECURITY DEFINER (ADR-020)'
+);
 
 -- ============================================================
 -- TRIGGERS modified_at — cohérence des métadonnées temporelles
