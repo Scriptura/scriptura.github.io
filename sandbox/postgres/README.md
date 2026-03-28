@@ -6,112 +6,24 @@
 [![Design](https://img.shields.io/badge/Design-Data--Oriented-2D6A4F?style=for-the-badge)]()
 [![Semantics](https://img.shields.io/badge/Sémantique-schema.org-1565C0?style=for-the-badge)]()
 [![Hierarchy](https://img.shields.io/badge/Hiérarchies-ltree-5C6BC0?style=for-the-badge)]()
-[![ADR](https://img.shields.io/badge/ADR-22%20décisions-455A64?style=for-the-badge)]()
+[![ADR](https://img.shields.io/badge/ADR-30%20décisions-455A64?style=for-the-badge)]()
 [![Status](https://img.shields.io/badge/Statut-R%26D-7B1FA2?style=for-the-badge)]()
 
-Architecture de base de données orientée données (DOD) pour PostgreSQL 18,
-appliquant les principes de l'Entity-Component-System (ECS) à la modélisation
-relationnelle. Conçu pour une cible de **500 000 utilisateurs actifs**.
+Architecture de base de données orientée données (DOD) pour PostgreSQL 18, appliquant les principes de l'Entity-Component-System (ECS) à la modélisation relationnelle. Conçu pour une cible de **500 000 utilisateurs actifs**.
 
 ---
 
 ## Philosophie
 
-Ce projet applique le paradigme **SoA** (_Structure of Arrays_), inspiré de l'ECS
-des moteurs de jeu et du DOD bas niveau :
+Ce projet applique le paradigme **SoA** (_Structure of Arrays_), inspiré de l'ECS des moteurs de jeu et du DOD bas niveau :
 
 - **Entity** — un identifiant entier pur, sans donnée métier.
-- **Component** — une table physique par axe d'accès (noms, contact, biographie,
-  contenu long), dimensionnée selon sa fréquence de lecture réelle.
-- **System** — une procédure stockée par mutation, seul point d'écriture autorisé
-  sur les composants physiques.
+- **Component** — une table physique par axe d'accès (noms, contact, biographie, contenu long), dimensionnée selon sa fréquence de lecture réelle.
+- **System** — une procédure stockée par mutation, seul point d'écriture autorisé sur les composants physiques.
 
-La couche applicative ne voit que des **vues sémantiques** reconstituant
-l'interface [schema.org](https://schema.org) par-dessus les composants fragmentés.
+La couche applicative ne voit que des **vues sémantiques** reconstituant l'interface [schema.org](https://schema.org) par-dessus les composants fragmentés.
 
-**Résultat mesurable** : la densité de certains composants hot path atteint
-×8,5 celle d'un modèle monolithique équivalent (`identity.person_identity` :
-~110 tuples/page).
-
----
-
-## Structure du dépôt
-
-```
-.
-├── master_schema_ddl.pgsql          # Blueprint immuable — DDL pur
-├── master_schema_dml.pgsql          # Seed data — dev / CI uniquement
-├── architecture_decision_records.md # 28 arbitrages architecturaux
-├── README.md
-└── tests/
-    ├── 01_schema_and_security.sql   # Types physiques, BRIN, RBAC, SECURITY DEFINER
-    ├── 02_identity_logic.sql        # Comptes, slugs, bitmask, connexions
-    ├── 03_content_logic.sql         # Documents, révisions, commentaires ltree
-    ├── 04_commerce_logic.sql        # Stock, snapshots de prix, agrégats
-    ├── 05_tag_hierarchy.sql          # Closure Table, profondeur, breadcrumb
-    └── 06_rls_policies.sql           # RLS GUC stateless, SELECT/UPDATE isolation
-```
-
-### `master_schema_ddl.pgsql`
-
-Le schéma complet en un fichier autonome. Contient dans l'ordre d'exécution :
-
-| Section               | Contenu                                                                                                      |
-| --------------------- | ------------------------------------------------------------------------------------------------------------ |
-| 0 — Initialisation    | Création de l'utilisateur, de la base, connexion                                                             |
-| 1 — Extensions        | `unaccent`, `ltree`, `pg_trgm`, `postgis`                                                                    |
-| 2 — Schémas           | `identity`, `geo`, `org`, `commerce`, `content`                                                              |
-| 3 — Spines            | `identity.entity`, `org.entity`, `content.document`                                                          |
-| 4 — Fondation         | `geo.place_core/content`, `identity.permission_bit`, `identity.role`                                         |
-| 5–8 — Composants      | Toutes les tables physiques par domaine                                                                      |
-| 9 — Fonctions         | `fn_update_modified_at`, `fn_slug_deduplicate`, `fn_revision_num`, `has_permission`                          |
-| 10 — Triggers         | Triggers `modified_at`, déduplication de slug, numérotation des révisions                                    |
-| 11 — Procédures       | `create_account`, `create_document`, `create_comment`, `create_transaction`, `create_transaction_item`, etc. |
-| 12 — Vues             | Toutes les vues sémantiques schema.org                                                                       |
-| 13 — Permissions      | `GRANT SELECT + EXECUTE` sur `marius_user` · calibrage autovacuum                                            |
-| 14 — Verrouillage ECS | `marius_admin` · révocation DML globale · `SECURITY DEFINER` · `BYPASSRLS` (ADR-001/028)                     |
-| 15 — RLS              | Politiques stateless GUC sur `content.core`, `transaction_core`, `account_core` (ADR-002)                    |
-
-### `master_schema_dml.pgsql`
-
-Données de remplissage à des fins de développement et de benchmarking.
-**Ne pas exécuter en production.**
-
-Exécuté en tant que `postgres` (superutilisateur) : la révocation DML sur
-`marius_user` (ADR-001) ne l'affecte pas. Les commentaires sont insérés via
-`CALL content.create_comment()` — le seed traverse exactement le même chemin
-d'écriture que la production.
-
-### `architecture_decision_records.md`
-
-28 arbitrages architecturaux, ordonnés par importance décroissante. Chaque
-entrée documente ce qui **n'est pas déductible de la lecture du code** : le
-raisonnement derrière la décision, les alternatives écartées et leurs coûts.
-
-### `tests/`
-
-Suite pgTAP autonome, découpée par domaine. Chaque fichier s'exécute dans une
-transaction `BEGIN / ROLLBACK` — aucune donnée de test ne persiste. Prérequis :
-`CREATE EXTENSION pgtap` sur la base `marius`.
-
-```bash
-# Exécution séquentielle (pipeline CI/CD)
-psql -U postgres -d marius -f tests/01_schema_and_security.sql
-psql -U postgres -d marius -f tests/02_identity_logic.sql
-psql -U postgres -d marius -f tests/03_content_logic.sql
-psql -U postgres -d marius -f tests/04_commerce_logic.sql
-psql -U postgres -d marius -f tests/05_tag_hierarchy.sql
-psql -U postgres -d marius -f tests/06_rls_policies.sql
-```
-
-| Fichier                      | Périmètre                                                              | Tests |
-| ---------------------------- | ---------------------------------------------------------------------- | ----- |
-| `01_schema_and_security.sql` | Types INT8, absence de bpchar, BRIN, SECURITY DEFINER, RBAC, triggers  | 42    |
-| `02_identity_logic.sql`      | `create_account`, slugs, bitmask `has_permission`, `record_login`      | 12    |
-| `03_content_logic.sql`       | `create_document`, snapshot complet (ADR-024), ltree, `create_comment` | 17    |
-| `04_commerce_logic.sql`      | Stock, snapshot de prix, sur-vente, agrégats `v_transaction`           | 6     |
-| `05_tag_hierarchy.sql`       | Closure Table, create_tag, sous-arbre, profondeur max, breadcrumb      | 10    |
-| `06_rls_policies.sql`        | RLS stateless GUC, SELECT/UPDATE sur content, commerce, identity       | 15    |
+La fragmentation des données augmente mécaniquement la densité des composants hot path. Le composant le plus dense du schéma (`content.tag_hierarchy`, 40B/tuple) atteint ~185 tuples/page ; les composants purement fixes (`commerce.transaction_item`, 48B) ~157 tuples/page. À titre de comparaison, une table monolithique équivalente portant les mêmes champs se situerait généralement autour de 20 à 30 tuples/page.
 
 ---
 
@@ -121,6 +33,7 @@ psql -U postgres -d marius -f tests/06_rls_policies.sql
 | ---------- | ---------------------------------- |
 | PostgreSQL | **18** (async I/O, EXPLAIN MEMORY) |
 | PostGIS    | 3.x                                |
+| pgTAP      | Compatible PG 18 (tests uniquement)|
 
 ### Extensions PostgreSQL requises
 
@@ -137,6 +50,7 @@ Vérification de disponibilité sur le serveur cible :
 SELECT name, default_version FROM pg_available_extensions
 WHERE  name IN ('unaccent', 'ltree', 'pg_trgm', 'postgis')
 ORDER  BY name;
+-- Les quatre extensions doivent apparaître dans la liste.
 ```
 
 ---
@@ -149,26 +63,29 @@ ORDER  BY name;
 psql -U postgres -f master_schema_ddl.pgsql
 ```
 
-Script **idempotent sur une installation vierge** (`DROP DATABASE IF EXISTS`
-en tête). Sur une base existante, supprimer manuellement la base avant exécution.
+Le script commence par `DROP DATABASE IF EXISTS marius` — il repart d'une ardoise vierge. Sur une installation déjà existante, vérifier que la base peut être supprimée avant d'exécuter.
 
-### 2. Injection des données de test (optionnel)
+Ce que le script fait dans l'ordre : crée l'utilisateur `marius_user` et la base, installe les quatre extensions, crée les cinq schémas (`identity`, `geo`, `org`, `commerce`, `content`), puis les spines, composants, fonctions, triggers, procédures, vues, permissions et politiques RLS. Aucune dépendance externe : le fichier est entièrement autonome.
+
+### 2. Données de test (optionnel)
 
 ```bash
 psql -U postgres -d marius -f master_schema_dml.pgsql
 ```
+
+À des fins de développement et de benchmarking uniquement. **Ne pas exécuter en production.** Les insertions traversent les mêmes procédures stockées que la production — la seed ne bypasse pas l'interface de mutation.
 
 ### 3. Vérification post-installation
 
 ```sql
 \c marius
 
--- Vérifier les schémas
+-- Les cinq schémas métier doivent être présents
 SELECT schema_name FROM information_schema.schemata
 WHERE  schema_name IN ('identity','geo','org','commerce','content')
 ORDER  BY schema_name;
 
--- Vérifier le compte de tables par schéma
+-- Compte de tables par schéma (valeurs indicatives)
 SELECT table_schema, COUNT(*) AS tables
 FROM   information_schema.tables
 WHERE  table_schema IN ('identity','geo','org','commerce','content')
@@ -193,61 +110,120 @@ RESET ROLE;
 SELECT n.nspname, p.proname, p.prosecdef
 FROM   pg_proc p
 JOIN   pg_namespace n ON n.oid = p.pronamespace
-WHERE  n.nspname IN ('identity','content','org','commerce')
+WHERE  n.nspname IN ('identity','content','org','commerce','geo')
   AND  p.prokind = 'p'
 ORDER  BY n.nspname, p.proname;
 -- prosecdef = true attendu sur toutes les lignes
 ```
 
-### Séquence complète (environnement CI/CD)
+### 4. Installation du Meta-Registry (optionnel, recommandé)
+
+Le Meta-Registry détecte les dérives entre l'intention architecturale et la réalité physique du catalogue. Il s'installe sur la même base :
 
 ```bash
-psql -U postgres -f master_schema_ddl.pgsql \
-  && psql -U postgres -d marius -f master_schema_dml.pgsql
+psql -U postgres -d marius -f meta_registry_v2.sql
+
+# ANALYZE est requis pour que la densité des colonnes varlena soit calculée
+# à partir des données réelles (pg_stats.avg_width). Sans ANALYZE, la matrice
+# utilise un fallback de 4B par colonne TEXT/VARCHAR.
+psql -U postgres -d marius -c "ANALYZE;"
 ```
+
+Interroger la matrice :
+
+```sql
+SELECT component_name,
+       component_not_found_alert AS "∄",
+       density_drift_alert        AS "DOD",
+       missing_mutation_interface AS "ECS",
+       security_breach_alert      AS "SEC",
+       intent_density_bytes       AS "intent",
+       actual_density_bytes       AS "actual"
+FROM   meta.v_extended_containment_security_matrix
+ORDER  BY component_name;
+-- Zéro TRUE dans les colonnes d'alerte = schéma conforme aux ADR.
+```
+
+Voir `extended-containment-security-matrix.md` pour le guide complet.
+
+### 5. Séquence complète (environnement CI/CD)
+
+```bash
+# Déploiement
+psql -U postgres -f master_schema_ddl.pgsql
+psql -U postgres -d marius -f master_schema_dml.pgsql
+
+# Meta-Registry
+psql -U postgres -d marius -f meta_registry_v2.sql
+psql -U postgres -d marius -c "ANALYZE;"
+
+# Suite de tests (requiert pgTAP)
+psql -U postgres -d marius -c "CREATE EXTENSION IF NOT EXISTS pgtap;"
+for f in tests/0*.sql; do
+  psql -U postgres -d marius -f "$f"
+done
+```
+
+---
+
+## Rôles PostgreSQL
+
+| Rôle           | Droits                                        | Usage                            |
+| -------------- | --------------------------------------------- | -------------------------------- |
+| `marius_user`  | `SELECT` + `EXECUTE`                          | Runtime applicatif               |
+| `marius_admin` | `SELECT` + `EXECUTE` + `INSERT/UPDATE/DELETE` | Maintenance, migrations, CI seed |
+| `postgres`     | Superutilisateur                              | Déploiement DDL, installation    |
+
+`marius_admin` hérite de `marius_user` via `GRANT ... WITH INHERIT TRUE` et possède `BYPASSRLS` pour les opérations de maintenance. En environnement hautement sécurisé, désactiver le `LOGIN` direct sur `marius_admin` et passer par `SET ROLE marius_admin` depuis une session `postgres`. Surveiller les sessions actives de ce rôle via `identity.v_admin_sessions` — toute connexion hors fenêtre de maintenance est une anomalie.
 
 ---
 
 ## Concepts clés — Quick Reference
 
-### Alignement mémoire et padding
+### Alignement mémoire et padding (ADR-006)
 
-Toutes les tables respectent un ordre de déclaration **décroissant par taille
-d'alignement** pour éliminer le padding invisible entre colonnes (ADR-006) :
+Toutes les tables respectent un ordre de déclaration **décroissant par taille d'alignement** pour éliminer le padding invisible entre colonnes :
 
 ```
 8 bytes  →  TIMESTAMPTZ, FLOAT8, INT8
 4 bytes  →  INT4, DATE, FLOAT4
 2 bytes  →  SMALLINT
 1 byte   →  BOOLEAN
-variable →  VARCHAR, TEXT, CHAR, NUMERIC, ltree, geometry
+variable →  VARCHAR, TEXT, ltree, geometry
 ```
 
-`NUMERIC` est varlena dans PostgreSQL indépendamment de sa précision déclarée —
-il va toujours après les types fixes.
+`NUMERIC` est varlena dans PostgreSQL indépendamment de sa précision déclarée — il se place toujours après les types fixes. Aucune colonne `CHAR(n)` dans le schéma : `bpchar` est varlena avec padding CPU, remplacé par `VARCHAR` + contrainte `CHECK` pour les longueurs fixes (ADR-026). Les codes ISO numériques (`country_code`, `currency_code`, `nationality`) sont stockés en `SMALLINT` (2B pass-by-value) plutôt qu'en `CHAR(2)`/`CHAR(3)` (ADR-028).
 
-### Convention centimes (ADR-025 + ADR-026)
+### Tailles de tuples padded — valeurs de référence
 
-Les montants monétaires sont stockés en **centimes entiers** (`INT8`), pas en
-décimaux. Le suffixe `_cents` est visible dans les colonnes physiques et les
-alias de vues :
+| Composant                    | Tuple padded | ff   | tpp approx. | Hot path                          |
+| ---------------------------- | ------------ | ---- | ----------- | --------------------------------- |
+| `content.tag_hierarchy`      | 40B          | 100% | ~185        | INSERT-only (Closure Table)       |
+| `commerce.transaction_item`  | 48B          | 100% | ~157        | INSERT-only (trigger immuabilité) |
+| `commerce.product_core`      | 48B          | 80%  | ~125        | HOT update sur `stock`            |
+| `content.core`               | 72B          | 100% | ~107        | Aucun HOT (toutes colonnes indexées) |
+| `identity.auth`              | 160B         | 70%  | ~34         | HOT update sur `last_login_at`    |
+
+Le tuple `identity.auth` (160B) inclut `password_hash` inline (~101B) en `STORAGE MAIN` : argon2id est pseudo-aléatoire, la compression PGLZ n'apporte rien. `content.core` n'a pas de fillfactor : tous ses chemins d'UPDATE touchent des colonnes indexées (`published_at`, `modified_at`), le HOT n'est jamais possible.
+
+### Convention centimes (ADR-026)
+
+Les montants monétaires sont stockés en **centimes entiers** (`INT8`), pas en décimaux. Le suffixe `_cents` est visible dans les colonnes physiques et les alias de vues :
 
 ```sql
--- Lecture du prix d'un produit
+-- Prix d'un produit
 SELECT identifier, price_cents FROM commerce.v_product WHERE identifier = 1;
--- priceCents = 1999 → 19,99 € (conversion déléguée à la couche applicative)
+-- price_cents = 1999 → 19,99 € (conversion déléguée à la couche applicative)
 
 -- Total d'une commande
 SELECT total_cents FROM commerce.v_transaction WHERE identifier = 42;
 ```
 
-`INT8` est pass-by-value sur toutes les architectures 64 bits : arithmétique ALU
-native, zéro overhead varlena, densité ×2 sur les tables commerce.
+`INT8` est pass-by-value sur toutes les architectures 64 bits : arithmétique ALU native, zéro overhead varlena.
 
 ### Bitmask des permissions de rôle (ADR-015)
 
-Les permissions sont encodées dans un `INT4` par OR binaire des puissances de 2
-(ADR-015). Vérification en une opération `&` sans jointure :
+Les permissions sont encodées dans un `INT4` par OR binaire des puissances de 2 (bits 0 à 20). Vérification en une opération `&` sans jointure :
 
 ```sql
 -- Vérifier si un utilisateur peut publier (bit 4 = valeur 16)
@@ -257,134 +233,82 @@ SELECT identity.has_permission(entity_id, 16);
 SELECT * FROM identity.v_role WHERE id = 1;
 ```
 
-### Vues de listing vs page complète (isolation TOAST, ADR-009)
+La fonction `has_permission` est `LANGUAGE sql STABLE PARALLEL SAFE` : inlinable par le planner, elle disparaît du plan d'exécution et devient une simple opération `&` sur la ligne.
+
+### Vues de listing vs page complète (ADR-009)
 
 | Vue                      | Usage                      | Charge TOAST        |
 | ------------------------ | -------------------------- | ------------------- |
 | `content.v_article_list` | Listings, flux, navigation | Zéro                |
 | `content.v_article`      | Page article complète      | Oui (`articleBody`) |
 
-Toujours utiliser `v_article_list` pour les listings. Ne projeter `articleBody`
-que sur les lectures de page complète.
+Toujours utiliser `v_article_list` pour les listings. Ne projeter `articleBody` que sur les lectures de page complète. `toast_tuple_target = 128` sur les composants basse fréquence (`content.body`, `content.revision`, `identity.person_content`, etc.) garantit que les données textuelles longues ne chargent jamais les pages des composants hot path.
 
 ### Écriture via procédures uniquement (ADR-001)
 
-`marius_user` ne possède aucun droit `INSERT`, `UPDATE`, `DELETE` direct sur les
-tables physiques. Toute mutation passe par les procédures stockées, déclarées
-`SECURITY DEFINER` : elles s'exécutent avec les droits du propriétaire (`postgres`)
-indépendamment des droits de l'appelant.
+`marius_user` ne possède aucun droit `INSERT`, `UPDATE`, `DELETE` direct. Toute mutation passe par les procédures `SECURITY DEFINER`, qui s'exécutent avec les droits du propriétaire (`postgres`) indépendamment des droits de l'appelant.
 
-| Procédure                                       | Usage                                                                    |
-| ----------------------------------------------- | ------------------------------------------------------------------------ |
-| `identity.create_account(...)`                  | Créer un compte (entity + auth + account_core)                           |
-| `identity.create_person(...)`                   | Créer un profil public                                                   |
-| `identity.record_login(entity_id)`              | Enregistrer une connexion (hot path)                                     |
-| `content.create_document(...)`                  | Créer un article/page                                                    |
-| `content.publish_document(document_id)`         | Publier un brouillon                                                     |
-| `content.save_revision(document_id, author_id)` | Snapshot éditorial complet (name, slug, alt_headline, description, body) |
-| `content.create_comment(...)`                   | Insérer un commentaire (zéro dead tuple, ADR-007)                        |
-| `commerce.create_transaction_item(...)`         | Ligne de commande avec snapshot du prix en centimes (INT8, ADR-025)      |
+Procédures principales :
 
-### Rôles PostgreSQL
-
-| Rôle           | Droits                                        | Usage                            |
-| -------------- | --------------------------------------------- | -------------------------------- |
-| `marius_user`  | `SELECT` + `EXECUTE`                          | Runtime applicatif               |
-| `marius_admin` | `SELECT` + `EXECUTE` + `INSERT/UPDATE/DELETE` | Maintenance, migrations, CI seed |
-| `postgres`     | Superutilisateur                              | Déploiement DDL, installation    |
-
-`marius_admin` hérite de `marius_user` via `GRANT ... WITH INHERIT TRUE`.
-En environnement hautement sécurisé, désactiver le `LOGIN` direct sur
-`marius_admin` et passer par `SET ROLE marius_admin` depuis une session `postgres`.
+| Procédure                                        | Composants créés                                  |
+| ------------------------------------------------ | ------------------------------------------------- |
+| `identity.create_account(...)`                   | `entity` + `auth` + `account_core`                |
+| `identity.create_person(...)`                    | `entity` + `person_identity`                      |
+| `identity.anonymize_person(entity_id)`           | Purge RGPD des 10 composants nominatifs (ADR-017) |
+| `identity.create_group(name)`                    | `group`                                           |
+| `identity.add_account_to_group(...)`             | `group_to_account`                                |
+| `geo.create_place(...)`                          | `place_core` + `postal_address` optionnel         |
+| `content.create_document(...)`                   | `document` + `core` + `identity` + `revision`     |
+| `content.publish_document(document_id)`          | UPDATE `core.status`                              |
+| `content.save_revision(document_id, author_id)`  | Snapshot éditorial complet (ADR-024)              |
+| `content.create_comment(...)`                    | `comment` avec chemin ltree atomique (ADR-007)    |
+| `content.create_tag(...)`                        | `tag` + entrées `tag_hierarchy` (Closure Table)   |
+| `content.create_media(...)`                      | `media_core` + `media_content` optionnel          |
+| `content.add_media_to_document(...)`             | `content_to_media`                                |
+| `commerce.create_product(...)`                   | `product_core` + `product_identity`               |
+| `commerce.create_transaction(...)`               | `transaction_core` + 3 composants ECS             |
+| `commerce.create_transaction_item(...)`          | `transaction_item` + décrémentation `stock`       |
 
 ---
 
-## Cas d'usage : de la frugalité à l'extreme scale
+## Tests pgTAP
 
-L'architecture Marius n'est pas dimensionnée _pour_ 500 000 utilisateurs —
-elle est dimensionnée _par_ les contraintes physiques de PostgreSQL. Cette
-rigueur mécanique la rend pertinente à n'importe quelle échelle.
+La suite de tests est découplée en fichiers thématiques. Chaque fichier s'exécute dans `BEGIN / ROLLBACK` — aucune donnée ne persiste. Prérequis : `CREATE EXTENSION pgtap` sur la base `marius`.
 
----
-
-### Micro-hébergement & auto-hébergement — le "Blog Frugal"
-
-**Cible** : VPS 1 Go RAM, Raspberry Pi 4, instance mutualisée.
-
-L'enjeu n'est pas le débit mais la **résidence en RAM** du hot path. Si les
-pages les plus accédées tiennent dans `shared_buffers`, chaque requête est
-servie sans I/O disque.
-
-**Estimation concrète** : pour un site de 5 000 articles avec 500 tags et
-2 000 utilisateurs actifs, les composants hot path (`content.core`,
-`content.identity`, `identity.auth`, `identity.account_core`) représentent
-environ 5 000 × (64 + 240) + 2 000 × (155 + 77) ≈ **2 Mo de données utiles**.
-Un `shared_buffers` de 128 Mo couvre ce volume avec une marge ×60. Le système
-est silencieux : zéro I/O heap sur les lectures de listing une fois le cache chaud.
-
-`toast_tuple_target = 128` (ADR-009) garantit que les corps d'articles ne
-gonfleront jamais les tables hot path, quelle que soit leur longueur.
-
----
-
-### Plateformes à fort trafic — le "Scale-up Industriel"
-
-**Cible** : Applications web avec 500 000+ utilisateurs, flux de commentaires
-massifs, catalogues produits dynamiques.
-
-À ce volume, le coût dominant n'est plus le I/O disque mais la **fragmentation
-progressive du stockage** (_bloat_) et la pression sur l'autovacuum.
-
-**Zéro dead tuple structurel** (ADR-007) : `content.create_comment()` effectue
-une seule écriture heap par commentaire. Sur 10 000 commentaires/jour, l'absence
-de dead tuples structurels réduit significativement la charge autovacuum.
-
-**HOT updates** (ADR-008) : les `fillfactor` réduits (70 sur `identity.auth`,
-80 sur `commerce.product_core`) permettent les mises à jour `last_login_at` et
-`stock` sans nouvelle entrée d'index. Sur 500 000 connexions/jour, l'économie
-en index maintenance est significative.
-
-**BRIN sur les colonnes temporelles** (ADR-010) : sur `identity.auth` à 500 000
-lignes, le BRIN occupe ~50 Ko de `shared_buffers` contre ~11 Mo pour un B-tree
-équivalent.
-
----
-
-### Architecture Headless & API-first — le "Content Hub"
-
-**Cible** : Systèmes où le contenu est consommé par plusieurs clients (web,
-mobile, IoT, services tiers) via une API.
-
-**Zéro N+1 par agrégation SQL** (ADR-023) : un `SELECT` sur `content.v_article`
-retourne l'article, ses tags et ses médias en un seul aller-retour réseau.
-
-**Pushdown garanti sur `commerce.v_transaction`** (ADR-026) : PostgreSQL inline
-les vues avant planification. `WHERE "identifier" = :id` est réécrit en
-`WHERE t.id = :id` par le query rewriter avant que `json_agg()` ne soit évalué —
-l'index PK est frappé, l'agrégation porte sur les seules lignes de la commande
-concernée. Toujours filtrer par `"identifier"` ou `"customerId"` : un
-`SELECT *` sans `WHERE` agrège toutes les transactions.
-
-**Interface schema.org stable** (ADR-012) : les vues exposent un contrat nommé
-(`"givenName"`, `"datePublished"`, `"gtin13"`) découplé du modèle physique. Un
-remaniement interne ne casse pas l'interface API.
-
-**Cloisonnement des permissions par domaine** (ADR-011 + ADR-001) :
-
-```sql
--- Exemple : rôle éditorial, lecture identity + écriture content
-CREATE ROLE editorial_service;
-GRANT USAGE ON SCHEMA content  TO editorial_service;
-GRANT USAGE ON SCHEMA identity TO editorial_service;
-GRANT SELECT ON identity.v_account     TO editorial_service;
-GRANT SELECT ON content.v_article_list TO editorial_service;
-GRANT EXECUTE ON PROCEDURE content.create_document  TO editorial_service;
-GRANT EXECUTE ON PROCEDURE content.publish_document TO editorial_service;
+```bash
+psql -U postgres -d marius -f tests/01_schema_and_security.sql
+psql -U postgres -d marius -f tests/02_identity_logic.sql
+# ... etc
 ```
+
+| Fichier                       | Périmètre                                                              |
+| ----------------------------- | ---------------------------------------------------------------------- |
+| `01_schema_and_security.sql`  | Types physiques, BRIN, RBAC, SECURITY DEFINER, triggers immuabilité    |
+| `02_identity_logic.sql`       | `create_account`, slugs, bitmask, connexions, garde escalade de rôle   |
+| `03_content_logic.sql`        | Documents, snapshot complet (ADR-024), ltree, commentaires             |
+| `04_commerce_logic.sql`       | Stock, snapshot de prix, sur-vente, agrégats, gardes ADR-030           |
+| `05_tag_hierarchy.sql`        | Closure Table, profondeur max, sous-arbre, breadcrumb                  |
+| `06_security_audit.sql`       | Shadow write detection, qualification des objets, bypass admin         |
+| `07_hot_audit.sql`            | Immuabilité `created_at`, matrice HOT, corrélation BRIN                |
+| `08_rgpd_audit.sql`           | Gardes bitwise, anonymisation complète, jointure orpheline, finance     |
+| `09_dod_hot_collision.sql`    | Collision layout/HOT, fillfactor, index `core_author`                  |
+| `10_mutation_interface.sql`   | Nouvelles procédures, trigger `entity_id` immuable, gardes bitwise     |
+| `11_meta_audit.sql`           | ECSM fail-safe : zéro dérive DOD/sécurité/interface                    |
 
 ---
 
 ## Maintenance
+
+### Surveiller les dérives structurelles
+
+Après toute modification du DDL ou chargement de données significatif :
+
+```bash
+psql -U postgres -d marius -c "ANALYZE;"
+psql -U postgres -d marius -c "SELECT * FROM meta.v_extended_containment_security_matrix;"
+```
+
+Zéro alerte `TRUE` = schéma conforme.
 
 ### Surveillance des dead tuples
 
@@ -402,8 +326,22 @@ LIMIT  20;
 | ----------------------- | ----------------------------------------- | ---------- |
 | `identity.auth`         | `last_login_at` à chaque connexion        | 70         |
 | `commerce.product_core` | `stock` à chaque vente                    | 80         |
-| `content.core`          | `status` à chaque changement de cycle     | 75         |
 | `content.comment`       | Suppressions de modération (`status = 9`) | défaut     |
+
+`content.core` n'a pas de fillfactor : aucun de ses chemins d'UPDATE n'est HOT-eligible (toutes les colonnes mutées sont indexées). Le vacuum par défaut (ff=100%) est correct.
+
+### Détecter les shadow writes (bypass ADR-001)
+
+```sql
+-- Toute ligne ici est une violation : DML direct sans passer par une procédure
+SELECT logged_at, schema_name, table_name, operation, row_pk
+FROM   identity.v_shadow_writes
+ORDER  BY logged_at DESC;
+
+-- Sessions marius_admin actives hors maintenance planifiée
+SELECT * FROM identity.v_admin_sessions;
+-- Doit retourner zéro ligne en production normale.
+```
 
 ### Vérification de l'isolation TOAST
 
@@ -421,37 +359,47 @@ WHERE  identifier = 1;
 ### Vérification du predicate pushdown sur `commerce.v_transaction`
 
 ```sql
--- Attendu : Index Scan sur commerce.transaction (PK), pas de Seq Scan.
--- Si Seq Scan → le filtre n'est pas poussé : vérifier que la colonne
--- filtrée figure dans le GROUP BY de la vue.
+-- Attendu : Index Scan sur commerce.transaction_core (PK), pas de Seq Scan.
 EXPLAIN (ANALYZE, BUFFERS)
 SELECT * FROM commerce.v_transaction WHERE "identifier" = 1;
 ```
 
-### Calibrage autovacuum sur `content.comment`
+---
 
-```sql
-SELECT reloptions FROM pg_class
-WHERE  relname = 'comment'
-  AND  relnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'content');
--- Attendu : autovacuum_vacuum_scale_factor=0.05, autovacuum_analyze_scale_factor=0.02
-```
+## Cas d'usage
 
-### Audit des connexions par rôle
+### Micro-hébergement — le "Blog Frugal"
 
-```sql
-SELECT usename, application_name, client_addr, state
-FROM   pg_stat_activity
-WHERE  usename IN ('marius_user', 'marius_admin')
-ORDER  BY usename, state;
--- marius_admin ne doit apparaître que lors d'opérations de maintenance explicites.
-```
+**Cible** : VPS 1 Go RAM, Raspberry Pi 4, instance mutualisée.
+
+L'enjeu est la **résidence en RAM** du hot path. Pour un site de 5 000 articles avec 500 tags et 2 000 utilisateurs actifs, les composants hot path (`content.core`, `content.identity`, `identity.auth`, `identity.account_core`) représentent environ 5 000 × (72 + 240) + 2 000 × (160 + 48) ≈ **2 Mo de données utiles**. Un `shared_buffers` de 128 Mo couvre ce volume avec une marge ×60. Le système est silencieux : zéro I/O heap sur les lectures de listing une fois le cache chaud.
+
+### Plateformes à fort trafic — le "Scale-up Industriel"
+
+**Cible** : 500 000+ utilisateurs, flux de commentaires massifs, catalogues produits dynamiques.
+
+À ce volume, le coût dominant n'est plus le I/O disque mais la **fragmentation progressive du stockage** (_bloat_) et la pression sur l'autovacuum.
+
+**Zéro dead tuple structurel** (ADR-007) : `content.create_comment()` effectue une seule écriture heap par commentaire (construction du chemin ltree en mémoire PL/pgSQL avant l'INSERT, sans UPDATE post-insertion).
+
+**HOT updates** (ADR-008) : `fillfactor=70` sur `identity.auth` et `fillfactor=80` sur `commerce.product_core` permettent les mises à jour `last_login_at` et `stock` sans nouvelle entrée d'index. Sur 500 000 connexions/jour, l'économie en index maintenance est significative.
+
+**BRIN sur les colonnes temporelles** (ADR-010) : sur `identity.auth` à 500 000 lignes, le BRIN occupe ~50 Ko de `shared_buffers` contre ~11 Mo pour un B-tree équivalent. Les colonnes `created_at` sont protégées par un trigger d'immuabilité — toute modification invaliderait la corrélation physique/logique de l'index.
+
+### Architecture Headless & API-first — le "Content Hub"
+
+**Cible** : Systèmes où le contenu est consommé par plusieurs clients (web, mobile, IoT, services tiers) via une API.
+
+**Zéro N+1 par agrégation SQL** (ADR-023) : un `SELECT` sur `content.v_article` retourne l'article, ses tags et ses médias en un seul aller-retour réseau.
+
+**Interface schema.org stable** (ADR-012) : les vues exposent un contrat nommé (`"givenName"`, `"datePublished"`, `"gtin13"`) découplé du modèle physique. Un remaniement interne ne casse pas l'interface API.
 
 ---
 
 ## Références
 
 - [Architecture Decision Records](./architecture_decision_records.md)
+- [Extended Containment Security Matrix — Guide](./extended-containment-security-matrix.md)
 - [PostgreSQL 18 — Async I/O](https://www.postgresql.org/docs/18/runtime-config-resource.html)
 - [PostGIS — ST_DWithin / opérateur KNN](https://postgis.net/docs/ST_DWithin.html)
 - [schema.org — Person](https://schema.org/Person) · [Article](https://schema.org/Article) · [Organization](https://schema.org/Organization) · [Order](https://schema.org/Order)
