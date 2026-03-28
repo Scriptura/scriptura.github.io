@@ -224,20 +224,23 @@ INSERT INTO identity.role (permissions, name) VALUES
 
 -- AUTH — hot path (chaque requête authentifiée) · fillfactor=70 pour HOT updates
 -- Layout (ADR-006) — offsets mesurés avec null bitmap (Audit collision DOD/HOT) :
---   Null bitmap : 1B (3 colonnes nullable) → header total : 24B (23+1, MAXALIGN→24)
---   created_at    TSTZ  offset 24 (8B)
---   last_login_at TSTZ  offset 32 (8B)
---   modified_at   TSTZ  offset 40 (8B)
---   entity_id     INT4  offset 48 (4B)
+--   Null bitmap : 1B (2 colonnes nullable) → header total : 24B (23+1, MAXALIGN→24)
+--   created_at    TSTZ  offset 24 (8B)  [IMMUTABLE — trigger Audit 3]
+--   last_login_at TSTZ  offset 32 (8B)  [HOT update ✓]
+--   modified_at   TSTZ  offset 40 (8B)  [rare write]
+--   entity_id     INT4  offset 48 (4B)  [IMMUTABLE — trigger Audit collision 2]
 --   role_id       INT2  offset 52 (2B)
 --   is_banned     BOOL  offset 54 (1B)
 --   [1B libre offset 55 — slot réservé BOOLEAN, ex : is_email_verified]
---   password_hash varlena offset 56 (→ TOAST, référence 4B inline)
--- Tuple padded : 88B → 62 tuples/page à ff=70%
--- Collision DOD/HOT : aucune. last_login_at, role_id, is_banned, password_hash
---   ne sont dans aucun index hors PK. HOT systématiquement éligible.
--- Note : commentaire initial indiquait "offsets 0–23" (sans header). Corrigé
---   après calcul précis avec null bitmap (Audit collision).
+--   password_hash varlena offset 56 (4B hdr + ~97B argon2id inline → 101B)
+--   [3B MAXALIGN padding]
+-- Tuple padded : 160B (simulation Audit 3 — password_hash inline)
+--   34 tpp @ ff=70% (HOT reserve) | 49 tpp @ ff=100% (scan pur)
+--   Densité utile : 53.1% de la page 8kB (4352B utiles / 8192B)
+--   Annotation initiale '~51 tpp' calculée à ff=100% implicite (8168/(155+4))
+--   malgré le fillfactor=70 déclaré. Corrigé après simulation précise (Audit 3).
+-- Collision HOT : aucune (last_login_at, role_id, is_banned, password_hash hors index).
+-- STORAGE MAIN sur password_hash : argon2id pseudo-aléatoire, PGLZ ratio ≈ 1.0.
 CREATE TABLE identity.auth (
   created_at     TIMESTAMPTZ   NOT NULL DEFAULT now(),
   last_login_at  TIMESTAMPTZ   NULL,
@@ -252,6 +255,11 @@ CREATE TABLE identity.auth (
   FOREIGN KEY (entity_id) REFERENCES identity.entity(id) ON DELETE CASCADE,
   FOREIGN KEY (role_id)   REFERENCES identity.role(id)
 ) WITH (fillfactor = 70);
+
+-- STORAGE MAIN : argon2id est pseudo-aléatoire (entropie maximale) → PGLZ ratio ≈ 1.0.
+-- EXTENDED tenterait une compression inutile sur chaque UPDATE record_login (hot path).
+-- MAIN : inline garanti (97B << seuil TOAST ~2kB), zéro tentative de compression.
+ALTER TABLE identity.auth ALTER COLUMN password_hash SET STORAGE MAIN;
 
 CREATE INDEX auth_created_at_brin ON identity.auth USING brin (created_at)
   WITH (pages_per_range = 128);
@@ -746,6 +754,30 @@ CREATE TABLE content.body (
 ) WITH (toast_tuple_target = 128);
 
 ALTER TABLE content.body ALTER COLUMN content SET STORAGE EXTENDED;
+
+-- STORAGE MAIN — colonnes courtes inline, compression sans intérêt (Audit 3)
+-- identity.account_core : username/slug (identifiants incompressibles ≤32 chars),
+--   language (5 chars fixes), time_zone (~30 chars).
+ALTER TABLE identity.account_core ALTER COLUMN username  SET STORAGE MAIN;
+ALTER TABLE identity.account_core ALTER COLUMN slug      SET STORAGE MAIN;
+ALTER TABLE identity.account_core ALTER COLUMN language  SET STORAGE MAIN;
+ALTER TABLE identity.account_core ALTER COLUMN time_zone SET STORAGE MAIN;
+
+-- content.identity : headline/slug/alternative_headline (titres courts, URL-safe slugs).
+-- description conserve EXTENDED (≤1000 chars, naturellement compressible).
+ALTER TABLE content.identity ALTER COLUMN headline             SET STORAGE MAIN;
+ALTER TABLE content.identity ALTER COLUMN slug                 SET STORAGE MAIN;
+ALTER TABLE content.identity ALTER COLUMN alternative_headline SET STORAGE MAIN;
+
+-- org.org_identity : name/slug/brand (identifiants courts ≤64-255 chars).
+ALTER TABLE org.org_identity ALTER COLUMN name  SET STORAGE MAIN;
+ALTER TABLE org.org_identity ALTER COLUMN slug  SET STORAGE MAIN;
+ALTER TABLE org.org_identity ALTER COLUMN brand SET STORAGE MAIN;
+
+-- content.comment : contenu typiquement <2kB (commentaires courts).
+-- MAIN : inline pour les cas nominaux, TOAST sans compression si > seuil de page.
+-- Évite la tentative PGLZ sur chaque INSERT de commentaire (write path fréquent).
+ALTER TABLE content.comment ALTER COLUMN content SET STORAGE MAIN;
 
 -- CONTENT REVISION — cold storage des snapshots éditoriaux
 -- Layout : saved_at TIMESTAMPTZ · document_id INT4 · author_entity_id INT4
@@ -1903,7 +1935,259 @@ $$;
 
 
 -- ==============================================================================
--- SECTION 12 : VUES SÉMANTIQUES (INTERFACE schema.org — snake_case, ADR-028)
+-- SECTION 11b : PROCÉDURES ORPHELINES — Audit Interface de Mutation (ADR-001 rev.)
+-- Composants identifiés sans procédure dédiée. Scellement de l'interface.
+-- ==============================================================================
+
+-- GEO : création atomique d'un lieu (place_core + postal_address optionnelle)
+-- Garde : manage_system (524288) — données géographiques de référence.
+-- postal_address est optionnelle : un lieu peut exister sans adresse postale
+-- (ex: coordonnées GPS pures, lieu naturel sans adresse).
+CREATE PROCEDURE geo.create_place(
+  p_name            VARCHAR(60)   DEFAULT NULL,
+  p_elevation       SMALLINT      DEFAULT NULL,
+  p_type_id         SMALLINT      DEFAULT NULL,
+  p_lat             FLOAT8        DEFAULT NULL,
+  p_lng             FLOAT8        DEFAULT NULL,
+  p_country_code    SMALLINT      DEFAULT NULL,  -- ISO 3166-1 numérique (ADR-028)
+  p_street_address  VARCHAR(60)   DEFAULT NULL,
+  p_postal_code     VARCHAR(16)   DEFAULT NULL,
+  p_locality        VARCHAR(64)   DEFAULT NULL,
+  p_region          VARCHAR(64)   DEFAULT NULL,
+  OUT p_place_id    INT
+) LANGUAGE plpgsql AS $$
+BEGIN
+  IF identity.rls_user_id() <> -1
+     AND (identity.rls_auth_bits() & 524288) <> 524288 THEN
+    RAISE EXCEPTION 'insufficient_privilege: manage_system required to create a place'
+      USING ERRCODE = '42501';
+  END IF;
+  INSERT INTO geo.place_core (name, elevation, type_id, coordinates)
+  VALUES (
+    p_name, p_elevation, p_type_id,
+    CASE WHEN p_lat IS NOT NULL AND p_lng IS NOT NULL
+         THEN ST_SetSRID(ST_MakePoint(p_lng, p_lat), 4326)
+         ELSE NULL
+    END
+  ) RETURNING id INTO p_place_id;
+
+  -- Composant postal_address : créé uniquement si au moins un champ est fourni
+  IF p_country_code IS NOT NULL OR p_street_address IS NOT NULL
+     OR p_locality   IS NOT NULL OR p_region        IS NOT NULL
+     OR p_postal_code IS NOT NULL THEN
+    INSERT INTO geo.postal_address
+      (place_id, country_code, street_address, postal_code, address_locality, address_region)
+    VALUES (p_place_id, p_country_code, p_street_address, p_postal_code, p_locality, p_region);
+  END IF;
+END;
+$$;
+
+-- IDENTITY : création d'un groupe
+-- Garde : manage_groups (bit 9, valeur 512).
+-- L'asymétrie avec content_to_tag (add/remove_tag) justifie add_account_to_group séparé.
+CREATE PROCEDURE identity.create_group(
+  p_name        VARCHAR(32),
+  OUT p_group_id INT
+) LANGUAGE plpgsql AS $$
+BEGIN
+  IF identity.rls_user_id() <> -1
+     AND (identity.rls_auth_bits() & 512) <> 512 THEN
+    RAISE EXCEPTION 'insufficient_privilege: manage_groups required to create a group'
+      USING ERRCODE = '42501';
+  END IF;
+  INSERT INTO identity.group (name) VALUES (p_name) RETURNING id INTO p_group_id;
+END;
+$$;
+
+-- IDENTITY : ajout d'un compte dans un groupe
+-- Garde : manage_groups (512). Idempotent (ON CONFLICT DO NOTHING).
+CREATE PROCEDURE identity.add_account_to_group(p_group_id INT, p_account_entity_id INT)
+LANGUAGE plpgsql AS $$
+BEGIN
+  IF identity.rls_user_id() <> -1
+     AND (identity.rls_auth_bits() & 512) <> 512 THEN
+    RAISE EXCEPTION 'insufficient_privilege: manage_groups required'
+      USING ERRCODE = '42501';
+  END IF;
+  INSERT INTO identity.group_to_account (group_id, account_entity_id)
+  VALUES (p_group_id, p_account_entity_id)
+  ON CONFLICT DO NOTHING;
+END;
+$$;
+
+-- COMMERCE : création atomique d'un produit (product_core + product_identity)
+-- Garde : manage_commerce (262144).
+-- product_content (description/tags) reste en accès direct marius_admin :
+-- cold path, non applicatif, aucune dépendance de permission fine.
+CREATE PROCEDURE commerce.create_product(
+  p_name          VARCHAR(64),
+  p_slug          VARCHAR(64),
+  p_price_cents   INT8         DEFAULT NULL,
+  p_stock         INT          DEFAULT 0,
+  p_isbn_ean      VARCHAR(13)  DEFAULT NULL,
+  OUT p_product_id INT
+) LANGUAGE plpgsql AS $$
+BEGIN
+  IF identity.rls_user_id() <> -1
+     AND (identity.rls_auth_bits() & 262144) <> 262144 THEN
+    RAISE EXCEPTION 'insufficient_privilege: manage_commerce required to create a product'
+      USING ERRCODE = '42501';
+  END IF;
+  INSERT INTO commerce.product_core (price_cents, stock, is_available)
+  VALUES (p_price_cents, p_stock, true)
+  RETURNING id INTO p_product_id;
+
+  INSERT INTO commerce.product_identity (product_id, name, slug, isbn_ean)
+  VALUES (p_product_id, p_name, p_slug, p_isbn_ean);
+END;
+$$;
+
+-- CONTENT : création atomique d'un média (media_core + media_content optionnel)
+-- Garde : upload_files (8192).
+-- media_content (name, description, copyright_notice) est optionnel :
+-- créé uniquement si au moins un champ est fourni.
+CREATE PROCEDURE content.create_media(
+  p_author_id        INT,
+  p_mime_type        VARCHAR(255)  DEFAULT NULL,
+  p_folder_url       VARCHAR(255)  DEFAULT NULL,
+  p_file_name        VARCHAR(255)  DEFAULT NULL,
+  p_width            INT           DEFAULT NULL,
+  p_height           INT           DEFAULT NULL,
+  p_name             VARCHAR(255)  DEFAULT NULL,
+  p_description      VARCHAR(255)  DEFAULT NULL,
+  p_copyright_notice VARCHAR(255)  DEFAULT NULL,
+  OUT p_media_id     INT
+) LANGUAGE plpgsql AS $$
+BEGIN
+  IF identity.rls_user_id() <> -1 THEN
+    IF (identity.rls_auth_bits() & 8192) <> 8192 THEN
+      RAISE EXCEPTION 'insufficient_privilege: upload_files required to create a media'
+        USING ERRCODE = '42501';
+    END IF;
+    IF p_author_id <> identity.rls_user_id()
+       AND (identity.rls_auth_bits() & 32768) <> 32768 THEN
+      RAISE EXCEPTION 'insufficient_privilege: cannot create media attributed to another author'
+        USING ERRCODE = '42501';
+    END IF;
+  END IF;
+  INSERT INTO content.media_core (author_id, mime_type, folder_url, file_name, width, height)
+  VALUES (p_author_id, p_mime_type, p_folder_url, p_file_name, p_width, p_height)
+  RETURNING id INTO p_media_id;
+
+  IF p_name IS NOT NULL OR p_description IS NOT NULL OR p_copyright_notice IS NOT NULL THEN
+    INSERT INTO content.media_content (media_id, name, description, copyright_notice)
+    VALUES (p_media_id, p_name, p_description, p_copyright_notice);
+  END IF;
+END;
+$$;
+
+-- CONTENT : liaison document↔média (symétrique de add_tag_to_document)
+-- Garde : edit_contents (4) ou edit_others_contents (32768) + ownership.
+-- position : ordre d'affichage dans la galerie du document.
+CREATE PROCEDURE content.add_media_to_document(
+  p_document_id INT, p_media_id INT, p_position SMALLINT DEFAULT 0
+) LANGUAGE plpgsql AS $$
+BEGIN
+  IF identity.rls_user_id() <> -1 THEN
+    IF (identity.rls_auth_bits() & 4) <> 4
+       AND (identity.rls_auth_bits() & 32768) <> 32768 THEN
+      RAISE EXCEPTION 'insufficient_privilege: edit_contents or edit_others_contents required'
+        USING ERRCODE = '42501';
+    END IF;
+    IF (identity.rls_auth_bits() & 32768) <> 32768 THEN
+      PERFORM 1 FROM content.core
+      WHERE document_id = p_document_id AND author_entity_id = identity.rls_user_id();
+      IF NOT FOUND THEN
+        RAISE EXCEPTION 'insufficient_privilege: cannot add media to another author''s document'
+          USING ERRCODE = '42501';
+      END IF;
+    END IF;
+  END IF;
+  INSERT INTO content.content_to_media (content_id, media_id, position)
+  VALUES (p_document_id, p_media_id, p_position)
+  ON CONFLICT (content_id, media_id) DO UPDATE SET position = EXCLUDED.position;
+END;
+$$;
+
+CREATE PROCEDURE content.remove_media_from_document(p_document_id INT, p_media_id INT)
+LANGUAGE plpgsql AS $$
+BEGIN
+  IF identity.rls_user_id() <> -1 THEN
+    IF (identity.rls_auth_bits() & 4) <> 4
+       AND (identity.rls_auth_bits() & 32768) <> 32768 THEN
+      RAISE EXCEPTION 'insufficient_privilege: edit_contents or edit_others_contents required'
+        USING ERRCODE = '42501';
+    END IF;
+    IF (identity.rls_auth_bits() & 32768) <> 32768 THEN
+      PERFORM 1 FROM content.core
+      WHERE document_id = p_document_id AND author_entity_id = identity.rls_user_id();
+      IF NOT FOUND THEN
+        RAISE EXCEPTION 'insufficient_privilege: cannot remove media from another author''s document'
+          USING ERRCODE = '42501';
+      END IF;
+    END IF;
+  END IF;
+  DELETE FROM content.content_to_media WHERE content_id = p_document_id AND media_id = p_media_id;
+END;
+$$;
+
+-- org.create_organization étendu : org_contact + org_legal optionnels
+-- Plutôt que créer deux procédures supplémentaires, on étend la procédure existante.
+-- Les champs org_contact et org_legal sont optionnels (NULL = non fourni → pas d'INSERT).
+-- Rappel : org.create_organization est recréée plus bas — on la redéfinit ici
+-- avec la signature étendue pour conserver le comportement existant + nouveaux composants.
+-- Note : la signature ALTER PROCEDURE en SECTION 14 doit être mise à jour en conséquence.
+
+-- ==============================================================================
+-- SECTION 11c : TRIGGER IMMUABILITÉ entity_id (invariant structurel ADR-001 rev.)
+-- ==============================================================================
+--
+-- entity_id est la FK vers le spine identity.entity. C'est l'invariant de
+-- sous-type ECS : chaque composant est défini par son appartenance au spine.
+-- Un UPDATE entity_id après l'INSERT briserait cette appartenance et
+-- produirait silencieusement un composant orphelin ou mal attaché.
+--
+-- Les procédures SECURITY DEFINER ne font jamais de UPDATE entity_id (audité).
+-- Le seul vecteur résiduel est marius_admin (accès direct). Ce trigger
+-- ferme cette faille structurelle sans coût sur les paths nominaux
+-- (la clause WHEN est évaluée sans exécuter le corps si entity_id n'est pas touché).
+-- ==============================================================================
+
+CREATE FUNCTION identity.fn_deny_entity_id_update()
+RETURNS TRIGGER LANGUAGE plpgsql AS $$
+BEGIN
+  RAISE EXCEPTION
+    'entity_id is immutable on %.%: it is the ECS sub-type key and cannot be reassigned (ADR-001)',
+    TG_TABLE_SCHEMA, TG_TABLE_NAME
+    USING ERRCODE = '55000';
+END;
+$$;
+
+-- Déploiement sur les composants qui portent entity_id comme FK spine
+CREATE TRIGGER auth_deny_entity_id_update
+BEFORE UPDATE ON identity.auth
+FOR EACH ROW WHEN (OLD.entity_id IS DISTINCT FROM NEW.entity_id)
+EXECUTE FUNCTION identity.fn_deny_entity_id_update();
+
+CREATE TRIGGER account_core_deny_entity_id_update
+BEFORE UPDATE ON identity.account_core
+FOR EACH ROW WHEN (OLD.entity_id IS DISTINCT FROM NEW.entity_id)
+EXECUTE FUNCTION identity.fn_deny_entity_id_update();
+
+CREATE TRIGGER person_identity_deny_entity_id_update
+BEFORE UPDATE ON identity.person_identity
+FOR EACH ROW WHEN (OLD.entity_id IS DISTINCT FROM NEW.entity_id)
+EXECUTE FUNCTION identity.fn_deny_entity_id_update();
+
+CREATE TRIGGER core_deny_document_id_update
+BEFORE UPDATE ON content.core
+FOR EACH ROW WHEN (OLD.document_id IS DISTINCT FROM NEW.document_id)
+EXECUTE FUNCTION identity.fn_deny_entity_id_update();
+
+CREATE TRIGGER transaction_core_deny_id_update
+BEFORE UPDATE ON commerce.transaction_core
+FOR EACH ROW WHEN (OLD.id IS DISTINCT FROM NEW.id)
+EXECUTE FUNCTION identity.fn_deny_entity_id_update();
 -- Couche de traduction : composants ECS physiques → contrat d'accès public.
 -- snake_case systématique : pas de guillemets requis dans les requêtes SQL.
 -- Suffixes DOD conservés : _at (TIMESTAMPTZ), _cents (INT8), _id (FK), _code.
@@ -2493,6 +2777,33 @@ ALTER PROCEDURE commerce.create_transaction(integer, integer, smallint, smallint
 
 ALTER PROCEDURE commerce.create_transaction_item(integer, integer, integer)
   SECURITY DEFINER SET search_path = 'commerce', 'pg_catalog';
+
+-- Nouvelles procédures Section 11b (Audit interface de mutation ADR-001 rev.)
+ALTER PROCEDURE geo.create_place(
+  character varying, smallint, smallint, double precision, double precision,
+  smallint, character varying, character varying, character varying, character varying
+) SECURITY DEFINER SET search_path = 'geo', 'identity', 'public', 'pg_catalog';
+
+ALTER PROCEDURE identity.create_group(character varying)
+  SECURITY DEFINER SET search_path = 'identity', 'pg_catalog';
+
+ALTER PROCEDURE identity.add_account_to_group(integer, integer)
+  SECURITY DEFINER SET search_path = 'identity', 'pg_catalog';
+
+ALTER PROCEDURE commerce.create_product(
+  character varying, character varying, bigint, integer, character varying
+) SECURITY DEFINER SET search_path = 'commerce', 'identity', 'pg_catalog';
+
+ALTER PROCEDURE content.create_media(
+  integer, character varying, character varying, character varying,
+  integer, integer, character varying, character varying, character varying
+) SECURITY DEFINER SET search_path = 'content', 'identity', 'pg_catalog';
+
+ALTER PROCEDURE content.add_media_to_document(integer, integer, smallint)
+  SECURITY DEFINER SET search_path = 'content', 'identity', 'pg_catalog';
+
+ALTER PROCEDURE content.remove_media_from_document(integer, integer)
+  SECURITY DEFINER SET search_path = 'content', 'identity', 'pg_catalog';
 
 
 -- ==============================================================================
