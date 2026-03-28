@@ -14,7 +14,7 @@
 
 BEGIN;
 
-SELECT plan(46);
+SELECT plan(63);
 
 
 -- ============================================================
@@ -94,6 +94,43 @@ SELECT ok(
       AND  data_type    = 'character'   -- 'character' = bpchar dans information_schema
   ),
   'Aucune colonne CHAR(n) / bpchar dans les cinq schémas métier (ADR-026)'
+);
+
+
+-- ============================================================
+-- TYPES PHYSIQUES — Codes ISO pass-by-value (ADR-028)
+--
+-- identity.person_identity.nationality : SMALLINT ISO 3166-1 numérique.
+-- Avant audit DOD : CHAR(2) alpha-2 → varlena, violait ADR-026 + ADR-028
+-- et laissait un gap de 2B à l'offset 6-7 (après gender SMALLINT).
+-- Après correction : 2×SMALLINT (gender offset 4, nationality offset 6)
+-- consomment exactement les 4B post-INT4, zéro gap structurel.
+--
+-- identity.account_core.language : VARCHAR(5) — pas CHAR(5).
+-- CHAR(5) est bpchar dans PostgreSQL : varlena avec padding/stripping CPU.
+-- ADR-026 : l'invariant de longueur est garanti par la DEFAULT 'fr_FR' et
+-- la contrainte applicative, pas par le type.
+-- ============================================================
+
+SELECT col_type_is(
+  'identity', 'person_identity', 'nationality',
+  'smallint',
+  'person_identity.nationality : smallint ISO 3166-1 numérique (ADR-028 — gap offset 6-7 absorbé)'
+);
+
+SELECT col_type_is(
+  'identity', 'account_core', 'language',
+  'character varying(5)',
+  'account_core.language : character varying(5), pas bpchar (ADR-026)'
+);
+
+SELECT ok(
+  EXISTS (
+    SELECT 1 FROM information_schema.check_constraints
+    WHERE  constraint_schema = 'identity'
+      AND  constraint_name   = 'nationality_range'
+  ),
+  'person_identity.nationality_range : contrainte CHECK 1-999 présente (ADR-028)'
 );
 
 
@@ -429,6 +466,182 @@ SELECT ok(
     WHERE  n.nspname = 'content' AND p.proname = 'create_tag' AND p.prokind = 'p'
   ), false),
   'content.create_tag : SECURITY DEFINER (ADR-001 + ADR-018)'
+);
+
+
+-- ============================================================
+-- TOAST TUPLE TARGET — composants basse fréquence (Audit 1.2)
+--
+-- toast_tuple_target = 128 force le moteur à TOASTer les varlena dès 128 B
+-- au lieu du seuil par défaut (~2 kB). Effet : les composants "cold" (textes longs,
+-- descriptions, corps HTML) ne chargent jamais de données textuelles lors des
+-- scans de métadonnées sur les tables "hot" associées.
+--
+-- Invariant : seuls les composants explicitement déclarés basse fréquence portent
+-- ce paramètre. Les tables hot path (identity.auth, content.core, product_core)
+-- ne doivent PAS l'avoir — leur densité de tuple dépend de l'inline des varlena.
+-- ============================================================
+
+SELECT ok(
+  COALESCE(
+    (SELECT reloptions @> ARRAY['toast_tuple_target=128']
+     FROM   pg_class WHERE relname = 'place_content'),
+    false
+  ),
+  'TOAST geo.place_content : toast_tuple_target = 128 (corps textuel isolé)'
+);
+
+SELECT ok(
+  COALESCE(
+    (SELECT reloptions @> ARRAY['toast_tuple_target=128']
+     FROM   pg_class WHERE relname = 'person_content'),
+    false
+  ),
+  'TOAST identity.person_content : toast_tuple_target = 128 (biographie, TRÈS BASSE fréquence)'
+);
+
+SELECT ok(
+  COALESCE(
+    (SELECT reloptions @> ARRAY['toast_tuple_target=128']
+     FROM   pg_class WHERE relname = 'product_content'),
+    false
+  ),
+  'TOAST commerce.product_content : toast_tuple_target = 128 (description catalogue)'
+);
+
+SELECT ok(
+  COALESCE(
+    (SELECT reloptions @> ARRAY['toast_tuple_target=128']
+     FROM   pg_class WHERE relname = 'body'),
+    false
+  ),
+  'TOAST content.body : toast_tuple_target = 128 (corps HTML, BASSE fréquence)'
+);
+
+SELECT ok(
+  COALESCE(
+    (SELECT reloptions @> ARRAY['toast_tuple_target=128']
+     FROM   pg_class WHERE relname = 'revision'),
+    false
+  ),
+  'TOAST content.revision : toast_tuple_target = 128 (snapshots cold storage)'
+);
+
+
+-- ============================================================
+-- FILLFACTOR — tables à HOT updates fréquents (Audit 2)
+--
+-- HOT update (Heap Only Tuple) : PostgreSQL réutilise l'espace libre de la
+-- même page pour la nouvelle version du tuple, sans créer d'entrée d'index
+-- supplémentaire. Condition : la nouvelle version du tuple doit tenir dans la
+-- même page que l'ancienne → fillfactor réserve cet espace à l'avance.
+--
+-- Sans fillfactor calibré, les HOT updates se dégradent en full updates :
+-- chaque mutation crée une nouvelle entrée dans tous les index de la table
+-- (dead tuple structurel + bloat index systématique).
+--
+-- identity.auth=70 : last_login_at mis à jour à chaque connexion (hot path ADR-008).
+--   30 % de marge = ~2,4 kB libre/page → absorbe ~15 connexions avant vacuum.
+-- content.core=75 : status, modified_at, is_commentable mutés fréquemment.
+-- commerce.product_core=80 : stock décrémenté à chaque transaction.
+-- ============================================================
+
+SELECT ok(
+  COALESCE(
+    (SELECT reloptions @> ARRAY['fillfactor=70']
+     FROM   pg_class WHERE relname = 'auth'),
+    false
+  ),
+  'fillfactor identity.auth = 70 (HOT updates last_login_at, ADR-008)'
+);
+
+SELECT ok(
+  -- Audit 3 : fillfactor retiré de content.core (zero HOT benefit démontré).
+  -- Tous les chemins d'UPDATE touchent des colonnes indexées (published_at, modified_at)
+  -- ou des conditions de partial index (status). Le fillfactor<100 dégradait la densité
+  -- sans aucune contrepartie HOT. On vérifie l'absence du paramètre.
+  NOT COALESCE(
+    (SELECT reloptions @> ARRAY['fillfactor=75']
+     FROM   pg_class WHERE relname = 'core'
+       AND  relnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'content')),
+    false
+  ),
+  'fillfactor content.core : paramètre absent (Audit 3 — zero HOT benefit, densité +25%)'
+);
+
+SELECT ok(
+  COALESCE(
+    (SELECT reloptions @> ARRAY['fillfactor=80']
+     FROM   pg_class WHERE relname = 'product_core'),
+    false
+  ),
+  'fillfactor commerce.product_core = 80 (HOT updates stock, ADR-024 FOR UPDATE)'
+);
+
+
+-- ============================================================
+-- INDEX PARTIELS — couverture des hot scans (Audit 2)
+--
+-- product_core_catalog (Audit 2 — gap identifié) :
+--   Avant correction : aucun index sur is_available. Un listing catalogue
+--   déclenchait un seq scan sur product_core entier, y compris les produits
+--   désactivés (cold data). L'index partial filtre ce segment dès le parcours.
+--
+-- core_modified (Audit 2 — gap identifié) :
+--   Avant correction : seul BRIN(created_at) était présent — optimisé pour les
+--   scans par plage de création, pas pour ORDER BY modified_at DESC (dashboard
+--   éditorial "derniers articles modifiés"). L'index partial exclut les
+--   brouillons jamais modifiés (modified_at IS NOT NULL), réduisant sa surface.
+-- ============================================================
+
+SELECT ok(
+  EXISTS (
+    SELECT 1 FROM pg_indexes
+    WHERE  schemaname = 'commerce'
+      AND  tablename  = 'product_core'
+      AND  indexname  = 'product_core_catalog'
+  ),
+  'Index product_core_catalog présent : scan catalogue sans seq scan (Audit 2)'
+);
+
+SELECT ok(
+  EXISTS (
+    SELECT 1 FROM pg_indexes
+    WHERE  schemaname = 'content'
+      AND  tablename  = 'core'
+      AND  indexname  = 'core_modified'
+  ),
+  'Index core_modified présent : dashboard éditorial ORDER BY modified_at (Audit 2)'
+);
+
+
+-- ============================================================
+-- BRIN IMMUTABILITÉ — created_at ne doit jamais être modifié (Audit 3)
+--
+-- Un UPDATE sur created_at invalide la corrélation physique/logique de l'index
+-- BRIN et peut produire des faux négatifs (lignes exclues à tort lors d'un
+-- scan de zone). Les quatre triggers ci-dessous lèvent SQLSTATE 55000
+-- si OLD.created_at IS DISTINCT FROM NEW.created_at.
+-- ============================================================
+
+SELECT has_trigger(
+  'identity', 'auth', 'auth_deny_created_at_update',
+  'Trigger auth_deny_created_at_update : created_at immuable sur identity.auth (Audit 3)'
+);
+
+SELECT has_trigger(
+  'content', 'core', 'core_deny_created_at_update',
+  'Trigger core_deny_created_at_update : created_at immuable sur content.core (Audit 3)'
+);
+
+SELECT has_trigger(
+  'commerce', 'transaction_core', 'transaction_deny_created_at_update',
+  'Trigger transaction_deny_created_at_update : created_at immuable sur commerce.transaction_core (Audit 3)'
+);
+
+SELECT has_trigger(
+  'org', 'org_core', 'org_core_deny_created_at_update',
+  'Trigger org_core_deny_created_at_update : created_at immuable sur org.org_core (Audit 3)'
 );
 
 

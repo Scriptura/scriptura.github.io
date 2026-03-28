@@ -14,7 +14,7 @@
 
 BEGIN;
 
-SELECT plan(13);
+SELECT plan(15);
 
 
 -- ============================================================
@@ -253,6 +253,53 @@ SELECT ok(
   ),
   'moderator : publish_contents (16) = true après correction ADR-004'
 );
+
+
+-- ============================================================
+-- Garde d'escalade de rôle dans create_account (Audit 4)
+--
+-- Un subscriber (role_id=7, auth_bits=16384) ne doit pas pouvoir
+-- créer un compte avec un rôle privilégié (ex: administrator, role_id=1).
+-- Sans manage_users (bit 8, valeur 256), la procédure doit lever 42501.
+-- Le contexte système (rls_user_id=-1) bypasse la garde — les appels
+-- CI/CD et seed ci-dessus (role_id=1, role_id=2) restent valides.
+-- ============================================================
+
+SELECT set_config('marius.user_id',
+  (SELECT val::text FROM _ids WHERE key = 'acct1_id'), true);
+SELECT set_config('marius.auth_bits', '16384', true);  -- subscriber : pas manage_users
+SET LOCAL ROLE marius_user;
+
+SELECT throws_ok(
+  $$CALL identity.create_account('evil_admin','$argon2id$v=19$m=65536$x','evil-admin',1,'fr_FR')$$,
+  '42501',
+  NULL,
+  'create_account : subscriber ne peut pas créer un compte administrator (role_id=1) — Audit 4'
+);
+
+RESET ROLE;
+
+
+-- ============================================================
+-- Garde create_person (Audit 4)
+--
+-- create_person requiert manage_users (256) hors contexte système.
+-- Un subscriber (16384) doit être rejeté.
+-- ============================================================
+
+SELECT set_config('marius.user_id',
+  (SELECT val::text FROM _ids WHERE key = 'acct1_id'), true);
+SELECT set_config('marius.auth_bits', '16384', true);
+SET LOCAL ROLE marius_user;
+
+SELECT throws_ok(
+  $$CALL identity.create_person('Jean','Dupont',NULL,NULL)$$,
+  '42501',
+  NULL,
+  'create_person : subscriber rejeté sans manage_users — Audit 4'
+);
+
+RESET ROLE;
 
 
 SELECT * FROM finish();

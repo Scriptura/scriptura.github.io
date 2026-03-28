@@ -223,11 +223,21 @@ INSERT INTO identity.role (permissions, name) VALUES
 -- ==============================================================================
 
 -- AUTH — hot path (chaque requête authentifiée) · fillfactor=70 pour HOT updates
--- Layout (ADR-006) :
---   3×TIMESTAMPTZ (8B, offsets 0–23) · entity_id INT4 (24) · role_id SMALLINT (28)
---   · is_banned BOOL (30, 1B) · [1B libre offset 31 — slot réservé pour un prochain
---   BOOLEAN sans coût marginal, ex : is_email_verified] · password_hash varlena (32+)
--- Tuple ~155 B → ~51 tuples/page
+-- Layout (ADR-006) — offsets mesurés avec null bitmap (Audit collision DOD/HOT) :
+--   Null bitmap : 1B (3 colonnes nullable) → header total : 24B (23+1, MAXALIGN→24)
+--   created_at    TSTZ  offset 24 (8B)
+--   last_login_at TSTZ  offset 32 (8B)
+--   modified_at   TSTZ  offset 40 (8B)
+--   entity_id     INT4  offset 48 (4B)
+--   role_id       INT2  offset 52 (2B)
+--   is_banned     BOOL  offset 54 (1B)
+--   [1B libre offset 55 — slot réservé BOOLEAN, ex : is_email_verified]
+--   password_hash varlena offset 56 (→ TOAST, référence 4B inline)
+-- Tuple padded : 88B → 62 tuples/page à ff=70%
+-- Collision DOD/HOT : aucune. last_login_at, role_id, is_banned, password_hash
+--   ne sont dans aucun index hors PK. HOT systématiquement éligible.
+-- Note : commentaire initial indiquait "offsets 0–23" (sans header). Corrigé
+--   après calcul précis avec null bitmap (Audit collision).
 CREATE TABLE identity.auth (
   created_at     TIMESTAMPTZ   NOT NULL DEFAULT now(),
   last_login_at  TIMESTAMPTZ   NULL,
@@ -235,7 +245,8 @@ CREATE TABLE identity.auth (
   entity_id      INT           NOT NULL,
   role_id        SMALLINT      NOT NULL DEFAULT 7,
   is_banned      BOOLEAN       NOT NULL DEFAULT false,
-  -- Slot 1B libre à l'offset 31 (padding avant varlena) — voir commentaire de table.
+  -- Slot 1B libre à l'offset 55 (entre is_banned et password_hash varlena).
+  -- Audit collision : offset corrigé de 31→55 après calcul précis avec null bitmap.
   password_hash  VARCHAR(255)  NOT NULL,
   PRIMARY KEY (entity_id),
   FOREIGN KEY (entity_id) REFERENCES identity.entity(id) ON DELETE CASCADE,
@@ -247,7 +258,10 @@ CREATE INDEX auth_created_at_brin ON identity.auth USING brin (created_at)
 
 -- ACCOUNT CORE — données publiques du compte (ADR-017 : +tos_accepted_at)
 -- Layout (ADR-006) : tos_accepted_at TIMESTAMPTZ (offset 0, 8B)
---   · 4×INT4 (8-23) · 2×SMALLINT (24-27) · 2×BOOL (28-29) · 2B pad (30-31) | varlena
+--   · 3×INT4 (8-19) · 2×SMALLINT (20-23) · 2×BOOL (24-25) · 2B pad (26-27) | varlena
+-- Correction audit DOD : "4×INT4 (8-23)" était erroné — 3 INT4 seulement (entity_id,
+-- person_entity_id, media_id = 12B, offsets 8-19). Gap réel : 2B aux offsets 26-27,
+-- absorbable par 2 BOOLEAN supplémentaires si besoin fonctionnel identifié.
 -- Tuple ~85 B → ~99 tuples/page
 -- tos_accepted_at : timestamp d'acceptation des CGU. NULL = non encore accepté.
 CREATE TABLE identity.account_core (
@@ -261,7 +275,7 @@ CREATE TABLE identity.account_core (
   is_private_message  BOOLEAN      NOT NULL DEFAULT false,
   username            VARCHAR(32)  NOT NULL,
   slug                VARCHAR(32)  NOT NULL,
-  language            CHAR(5)      NOT NULL DEFAULT 'fr_FR',
+  language            VARCHAR(5)   NOT NULL DEFAULT 'fr_FR',  -- ADR-026 : VARCHAR, pas CHAR(n)
   time_zone           TEXT         NULL,
   PRIMARY KEY (entity_id),
   UNIQUE (username),
@@ -274,9 +288,18 @@ CREATE TABLE identity.account_core (
 );
 
 -- PERSON IDENTITY — noms (HAUTE fréquence) · ~74 B → ~110 tuples/page
+-- Layout (ADR-006 + ADR-028) :
+--   entity_id INT4 (offset 0, 4B) · gender SMALLINT (4) · nationality SMALLINT (6) | varlena × 7
+-- Zéro gap structurel : 2×SMALLINT consomment exactement les 4B post-INT4 avant la première
+-- varlena (alignement 4B). Avant correction : nationality CHAR(2) était déclaré après les
+-- varlena — le gap offset 6-7 restait inutilisé et CHAR(2) violait ADR-026 + ADR-028.
+-- nationality : ISO 3166-1 numérique pass-by-value (ex: 250 = France, 276 = Allemagne).
+--   Même convention que geo.postal_address.country_code (ADR-028).
+--   Mapping vers l'alpha-2 (FR, DE) délégué à l'applicatif.
 CREATE TABLE identity.person_identity (
   entity_id        INT          NOT NULL,
   gender           SMALLINT     NULL,
+  nationality      SMALLINT     NULL,   -- ISO 3166-1 numérique (ADR-028) — absorbe gap offset 6-7
   given_name       VARCHAR(32)  NULL,
   family_name      VARCHAR(32)  NULL,
   usual_name       VARCHAR(32)  NULL,
@@ -284,9 +307,9 @@ CREATE TABLE identity.person_identity (
   prefix           VARCHAR(32)  NULL,
   suffix           VARCHAR(32)  NULL,
   additional_name  VARCHAR(32)  NULL,
-  nationality      CHAR(2)      NULL,
   PRIMARY KEY (entity_id),
-  FOREIGN KEY (entity_id) REFERENCES identity.entity(id) ON DELETE CASCADE
+  FOREIGN KEY (entity_id) REFERENCES identity.entity(id) ON DELETE CASCADE,
+  CONSTRAINT nationality_range CHECK (nationality IS NULL OR nationality BETWEEN 1 AND 999)
 );
 
 CREATE INDEX person_identity_name ON identity.person_identity (family_name, given_name)
@@ -452,8 +475,17 @@ CREATE INDEX org_hierarchy_interval ON org.org_hierarchy (lft, rgt);
 --   · is_available BOOL (20, 1B) · 3B pad (21-23)
 -- Tuple 24 B → ~341 tuples/page (vs ~170 avec NUMERIC — densité ×2)
 -- price_cents : montant en centimes de la devise de référence (ADR-026).
---   Exemples : 1999 = 19,99 € · 0 = gratuit · NULL = prix non défini.
---   La conversion décimale est déléguée à la couche applicative.
+--
+-- Audit 3 — Matrice HOT eligibility :
+--   UPDATE stock          → non indexé → HOT ✓ (hot path create_transaction_item)
+--   UPDATE price_cents    → indexé par product_core_catalog → HOT ✗
+--                           Fréquence : faible (gestion catalogue admin) → amplification acceptable.
+--   UPDATE is_available   → dans condition partielle de product_core_catalog → HOT ✗
+--                           Fréquence : faible (désactivation produit) → amplification acceptable.
+--   UPDATE media_id       → non indexé → HOT ✓
+-- fillfactor=80 est calibré pour le hot path stock : toute décrémentation de stock
+-- dans create_transaction_item est HOT-eligible et réutilise l'espace libre de la page.
+-- Les 20 % de marge absorbent ~N mises à jour de stock avant que autovacuum ne soit requis.
 CREATE TABLE commerce.product_core (
   price_cents   INT8     NULL                  CHECK (price_cents >= 0),
   id            INT      GENERATED ALWAYS AS IDENTITY,
@@ -464,7 +496,13 @@ CREATE TABLE commerce.product_core (
   FOREIGN KEY (media_id) REFERENCES content.media_core(id) ON DELETE SET NULL
 ) WITH (fillfactor = 80);
 
--- PRODUCT IDENTITY — catalogue
+-- Catalogue publié : scan sur produits disponibles (HAUTE fréquence)
+-- Sans cet index, un listing catalogue déclenche un seq scan sur product_core entier.
+-- Partial index sur is_available = true : exclut les produits désactivés (cold data)
+-- du segment actif, ce qui réduit la surface de scan d'autant que le taux de
+-- produits indisponibles est élevé. Couvre ORDER BY price_cents ASC/DESC (listing trié).
+CREATE INDEX product_core_catalog ON commerce.product_core (price_cents)
+  WHERE is_available = true;
 -- isbn_ean en VARCHAR(13) : même raisonnement que duns/siret (ADR-026).
 CREATE TABLE commerce.product_identity (
   product_id  INT           NOT NULL,
@@ -492,7 +530,8 @@ CREATE TABLE commerce.product_content (
 -- Composant hot path : statut, dates, FK entités — zero champs froids.
 -- Layout (ADR-006) :
 --   2×TIMESTAMPTZ (offset 0, 16B) · id INT4 (16) · client_entity_id INT4 (20)
---   · seller_entity_id INT4 (24) · status SMALLINT (28) · 2B pad (30)
+--   · seller_entity_id INT4 (24) · status SMALLINT (28) · 2B gap (30-31) | description TEXT
+-- Gap 30-31 : absorbable par 2 BOOLEAN (ex: is_gift, is_recurring) sans coût marginal.
 -- Tuple 32 B (sans description) → ~258 tuples/page
 -- seller_entity_id : entité org vendeur (était org_entity_id — renommé pour
 --   cohérence avec la sémantique schema.org/Order.seller).
@@ -626,30 +665,61 @@ FOR EACH ROW EXECUTE FUNCTION commerce.fn_deny_transaction_item_update();
 -- SECTION 8 : COMPOSANTS CONTENT
 -- ==============================================================================
 
--- CONTENT CORE — status / dates / auteur (TRÈS HAUTE fréquence) · fillfactor=75
+-- CONTENT CORE — status / dates / auteur (TRÈS HAUTE fréquence)
 -- Layout : 3×TIMESTAMPTZ · document_id INT4 · author_entity_id INT4 · status SMALLINT
 --          · 3×BOOL · 3B pad
 -- Tuple 64 B → ~127 tuples/page
+--
+-- Audit 3 — HOT eligibility :
+-- fillfactor=75 retiré. Aucun HOT update n'est possible sur ce composant :
+--   publish_document  : SET status=1, published_at=now()
+--     status    → dans la condition WHERE des index partiels core_published et core_author
+--                 → changement de condition partielle = sortie/entrée du segment d'index
+--                 → PostgreSQL doit maintenir l'index → HOT impossible.
+--     published_at → colonne de tri de core_published et core_author → indexée → HOT impossible.
+--   modified_at trigger : SET modified_at=now()
+--     modified_at → indexée par core_modified → HOT impossible.
+-- Conserver fillfactor < 100 sur une table sans chemin HOT signifie réserver
+-- 25 % de chaque page sans jamais pouvoir les réutiliser via HOT → perte nette
+-- de densité (~127 → ~169 tuples/page à fillfactor=100) pour zéro bénéfice.
+-- Correction : fillfactor supprimé (default = 100). Les index existants fournissent
+-- la couverture nécessaire ; la réduction des dead tuples est assurée par autovacuum.
 CREATE TABLE content.core (
   published_at        TIMESTAMPTZ   NULL,
   created_at          TIMESTAMPTZ   NOT NULL DEFAULT now(),
   modified_at         TIMESTAMPTZ   NULL,
   document_id         INT           NOT NULL,
-  author_entity_id    INT           NOT NULL,
+  author_entity_id    INT           NULL,     -- NULL après anonymisation RGPD (ADR-017 + Audit 4)
   status              SMALLINT      NOT NULL DEFAULT 0,
   is_readable         BOOLEAN       NOT NULL DEFAULT true,
   is_commentable      BOOLEAN       NOT NULL DEFAULT false,
   is_visible_comments BOOLEAN       NOT NULL DEFAULT true,
   PRIMARY KEY (document_id),
   FOREIGN KEY (document_id)      REFERENCES content.document(id)  ON DELETE CASCADE,
-  FOREIGN KEY (author_entity_id) REFERENCES identity.entity(id),
+  FOREIGN KEY (author_entity_id) REFERENCES identity.entity(id)   ON DELETE SET NULL,
   CONSTRAINT status_range CHECK (status IN (0, 1, 2, 9))
-) WITH (fillfactor = 75);
+);
 
 CREATE INDEX core_published ON content.core (published_at DESC) WHERE status = 1;
-CREATE INDEX core_author    ON content.core (author_entity_id, published_at DESC) WHERE status = 1;
+-- core_author : filtre author_entity_id IS NOT NULL (Audit collision DOD/HOT)
+-- Audit 4 a rendu author_entity_id nullable (anonymize_person step 9).
+-- Sans ce filtre, les lignes anonymisées (author_entity_id = NULL) seraient
+-- incluses dans l'index avec une valeur NULL — entrées inutiles qui gonflent
+-- l'index et dégradent les scans "articles d'un auteur donné".
+-- Le filtre IS NOT NULL exclut structurellement les auteurs anonymisés.
+CREATE INDEX core_author ON content.core (author_entity_id, published_at DESC)
+  WHERE status = 1 AND author_entity_id IS NOT NULL;
 CREATE INDEX core_created_brin ON content.core USING brin (created_at)
   WITH (pages_per_range = 128);
+
+-- Dashboard éditorial : tri par date de modification récente (back-office, MOYENNE fréquence)
+-- Absent du blueprint initial : le seul index temporel sur content.core était BRIN(created_at),
+-- optimisé pour les scans par plage de création, pas pour ORDER BY modified_at DESC.
+-- Partial index (WHERE modified_at IS NOT NULL) : exclut les brouillons jamais modifiés
+-- depuis leur création, réduisant la surface de l'index de ~30-40% en pratique.
+-- Ce scan est déclenché par le tableau de bord éditorial ("derniers articles modifiés").
+CREATE INDEX core_modified ON content.core (modified_at DESC)
+  WHERE modified_at IS NOT NULL;
 
 -- CONTENT IDENTITY — titres / slug / description SEO (HAUTE fréquence)
 CREATE TABLE content.identity (
@@ -685,7 +755,7 @@ ALTER TABLE content.body ALTER COLUMN content SET STORAGE EXTENDED;
 CREATE TABLE content.revision (
   saved_at                      TIMESTAMPTZ    NOT NULL DEFAULT now(),
   document_id                   INT            NOT NULL,
-  author_entity_id              INT            NOT NULL,
+  author_entity_id              INT            NULL,      -- NULL après anonymisation RGPD (ADR-017 + Audit 4)
   revision_num                  SMALLINT       NOT NULL DEFAULT 0,
   snapshot_headline             VARCHAR(255)   NOT NULL,
   snapshot_slug                 VARCHAR(255)   NOT NULL,
@@ -694,7 +764,7 @@ CREATE TABLE content.revision (
   snapshot_body                 TEXT           NULL,
   PRIMARY KEY (document_id, revision_num),
   FOREIGN KEY (document_id)       REFERENCES content.document(id)  ON DELETE CASCADE,
-  FOREIGN KEY (author_entity_id)  REFERENCES identity.entity(id),
+  FOREIGN KEY (author_entity_id)  REFERENCES identity.entity(id)   ON DELETE SET NULL,
   CONSTRAINT revision_num_positive CHECK (revision_num > 0)
 ) WITH (toast_tuple_target = 128);
 
@@ -739,18 +809,19 @@ CREATE INDEX tag_hierarchy_descendant ON content.tag_hierarchy (descendant_id, d
 -- MEDIA CORE — métadonnées fichiers (MOYENNE fréquence)
 -- Layout : 2×TIMESTAMPTZ · id INT4 · author_id INT4 · 2×INT4 (w/h) | varlena × 3
 -- Tuple ~148 B → ~55 tuples/page
+-- author_id : NULL après anonymisation RGPD (ADR-017 + Audit 4) — ON DELETE SET NULL.
 CREATE TABLE content.media_core (
   created_at   TIMESTAMPTZ   NOT NULL DEFAULT now(),
   modified_at  TIMESTAMPTZ   NULL,
   id           INT           GENERATED ALWAYS AS IDENTITY,
-  author_id    INT           NOT NULL,
+  author_id    INT           NULL,      -- NULL après anonymisation RGPD (ADR-017 + Audit 4)
   width        INT           NULL,
   height       INT           NULL,
   mime_type    VARCHAR(255)  NULL,
   folder_url   VARCHAR(255)  NULL,
   file_name    VARCHAR(255)  NULL,
   PRIMARY KEY (id),
-  FOREIGN KEY (author_id) REFERENCES identity.entity(id)
+  FOREIGN KEY (author_id) REFERENCES identity.entity(id) ON DELETE SET NULL
 );
 
 -- MEDIA CONTENT — titre, texte alternatif, mention de droits (BASSE fréquence)
@@ -805,7 +876,7 @@ CREATE TABLE content.comment (
   created_at          TIMESTAMPTZ   NOT NULL DEFAULT now(),
   modified_at         TIMESTAMPTZ   NULL,
   document_id         INT           NOT NULL,
-  account_entity_id   INT           NOT NULL,
+  account_entity_id   INT           NULL,     -- NULL après anonymisation RGPD (ADR-017 + Audit 4)
   parent_id           INT           NULL,
   id                  INT           GENERATED ALWAYS AS IDENTITY,
   status              SMALLINT      NOT NULL DEFAULT 1,
@@ -813,7 +884,7 @@ CREATE TABLE content.comment (
   content             TEXT          NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (document_id)       REFERENCES content.document(id)   ON DELETE CASCADE,
-  FOREIGN KEY (account_entity_id) REFERENCES identity.entity(id),
+  FOREIGN KEY (account_entity_id) REFERENCES identity.entity(id)    ON DELETE SET NULL,
   FOREIGN KEY (parent_id)         REFERENCES content.comment(id)    ON DELETE SET NULL,
   CONSTRAINT status_range         CHECK (status IN (0, 1, 9)),
   CONSTRAINT content_notempty     CHECK (char_length(trim(content)) > 0),
@@ -827,6 +898,150 @@ CREATE INDEX comment_path_gist  ON content.comment USING gist (path);
 CREATE INDEX comment_doc_path   ON content.comment (document_id, path);
 CREATE INDEX comment_approved   ON content.comment (document_id, created_at)
   WHERE status = 1;
+
+
+
+-- ==============================================================================
+-- SECTION 8b : INFRASTRUCTURE D'AUDIT — Shadow Write Detection (ADR-001 rev.)
+-- ==============================================================================
+--
+-- pg_stat_user_tables accumule n_tup_ins/upd/del de façon agrégée par table,
+-- sans distinction de rôle. Il est impossible d'isoler les DML de marius_user
+-- des DML des procédures SECURITY DEFINER (qui s'exécutent en tant que postgres)
+-- avec cette seule vue — c'est une limite structurelle de PostgreSQL.
+--
+-- Mécanisme retenu : table d'audit + trigger AFTER sur les tables DML-sensibles.
+-- La fonction fn_dml_audit() enregistre session_user (le rôle de connexion,
+-- pas le rôle effectif) à chaque mutation sur les tables cibles.
+-- Un enregistrement de session_user = 'marius_user' indique un shadow write :
+-- marius_user a contourné la couche procédurale (ORM mal configuré, requête
+-- manuelle, migration appliquée avec le mauvais rôle).
+--
+-- Tables instrumentées : les six tables les plus sensibles (credentials,
+-- transactions financières, entités). Les composants cold path (person_content,
+-- media_content) ne sont pas instrumentés — leur surface d'attaque est nulle
+-- (REVOKE DML en SECTION 14, aucun chemin applicatif direct).
+-- ==============================================================================
+
+-- Table d'audit — cold storage (peu de volume attendu, toute ligne est une anomalie)
+CREATE TABLE identity.dml_audit_log (
+  logged_at     TIMESTAMPTZ  NOT NULL DEFAULT now(),
+  session_user  VARCHAR(64)  NOT NULL,
+  current_user  VARCHAR(64)  NOT NULL,
+  schema_name   VARCHAR(64)  NOT NULL,
+  table_name    VARCHAR(64)  NOT NULL,
+  operation     VARCHAR(6)   NOT NULL,  -- INSERT · UPDATE · DELETE
+  row_pk        TEXT         NULL       -- PK sérialisée pour traçabilité forensique
+) WITH (toast_tuple_target = 128);
+
+-- Index temporel pour purge périodique et consultation chronologique
+CREATE INDEX dml_audit_log_ts ON identity.dml_audit_log (logged_at DESC);
+
+-- Révocation des droits de suppression pour marius_user ET marius_admin :
+-- un attaquant ayant compromis marius_admin ne doit pas pouvoir purger les traces.
+-- Seul postgres peut DELETE sur dml_audit_log.
+REVOKE DELETE ON identity.dml_audit_log FROM PUBLIC;
+
+-- Fonction de trigger d'audit (AFTER, chaque ligne)
+-- session_user : rôle de connexion TCP — non spoofable via SET ROLE.
+-- current_user : rôle effectif (postgres pour une procédure SECURITY DEFINER).
+-- Un shadow write se distingue : session_user = 'marius_user' ET current_user = 'marius_user'.
+-- Une écriture légitime : session_user = 'marius_user' ET current_user = 'postgres'
+--   (la procédure SECURITY DEFINER a élevé le rôle effectif).
+CREATE FUNCTION identity.fn_dml_audit()
+RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER
+SET search_path = 'identity', 'pg_catalog' AS $$
+BEGIN
+  INSERT INTO identity.dml_audit_log
+    (session_user, current_user, schema_name, table_name, operation, row_pk)
+  VALUES (
+    session_user::varchar(64),
+    current_user::varchar(64),
+    TG_TABLE_SCHEMA,
+    TG_TABLE_NAME,
+    TG_OP,
+    CASE TG_OP
+      WHEN 'DELETE' THEN row_to_json(OLD)::text
+      ELSE               row_to_json(NEW)::text
+    END
+  );
+  RETURN NULL;  -- AFTER trigger : valeur de retour ignorée
+END;
+$$;
+
+-- Déploiement du trigger sur les tables DML-sensibles
+CREATE TRIGGER audit_identity_auth
+AFTER INSERT OR UPDATE OR DELETE ON identity.auth
+FOR EACH ROW EXECUTE FUNCTION identity.fn_dml_audit();
+
+CREATE TRIGGER audit_identity_entity
+AFTER INSERT OR UPDATE OR DELETE ON identity.entity
+FOR EACH ROW EXECUTE FUNCTION identity.fn_dml_audit();
+
+CREATE TRIGGER audit_commerce_transaction_core
+AFTER INSERT OR UPDATE OR DELETE ON commerce.transaction_core
+FOR EACH ROW EXECUTE FUNCTION identity.fn_dml_audit();
+
+CREATE TRIGGER audit_commerce_transaction_item
+AFTER INSERT OR UPDATE OR DELETE ON commerce.transaction_item
+FOR EACH ROW EXECUTE FUNCTION identity.fn_dml_audit();
+
+CREATE TRIGGER audit_commerce_transaction_payment
+AFTER INSERT OR UPDATE OR DELETE ON commerce.transaction_payment
+FOR EACH ROW EXECUTE FUNCTION identity.fn_dml_audit();
+
+CREATE TRIGGER audit_identity_account_core
+AFTER INSERT OR UPDATE OR DELETE ON identity.account_core
+FOR EACH ROW EXECUTE FUNCTION identity.fn_dml_audit();
+
+-- ==============================================================================
+-- SECTION 8c : VUE DE SURVEILLANCE — Sessions marius_admin (ADR-001 rev.)
+-- ==============================================================================
+--
+-- marius_admin est créé WITH LOGIN pour les sessions de maintenance et migrations.
+-- Il ne doit jamais apparaître dans les connexions de runtime applicatif.
+-- Cette vue expose les sessions actives de marius_admin via pg_stat_activity.
+-- Elle permet une détection opérationnelle :
+--   SELECT * FROM identity.v_admin_sessions;  → résultat vide en production normale.
+--
+-- Recommandation pour les environnements à haute criticité (ADR-001 rev.) :
+--   ALTER ROLE marius_admin NOLOGIN;
+--   -- Accès via : psql -U postgres -d marius -c "SET ROLE marius_admin; ..."
+-- Le LOGIN est conservé ici pour ne pas bloquer le workflow CI/CD des migrations.
+-- ==============================================================================
+
+CREATE VIEW identity.v_admin_sessions AS
+SELECT
+  pid,
+  usename          AS connected_as,
+  application_name,
+  client_addr,
+  backend_start,
+  state,
+  query_start,
+  left(query, 120) AS query_preview
+FROM pg_stat_activity
+WHERE usename = 'marius_admin'
+  AND pid <> pg_backend_pid();  -- exclut la session courante (ex: la migration elle-même)
+
+COMMENT ON VIEW identity.v_admin_sessions IS
+  'Sessions actives de marius_admin. Toute ligne en production normale est une anomalie. ADR-001.';
+
+-- Vue des shadow writes détectés : session_user = current_user = marius_user
+CREATE VIEW identity.v_shadow_writes AS
+SELECT
+  logged_at,
+  schema_name,
+  table_name,
+  operation,
+  row_pk
+FROM identity.dml_audit_log
+WHERE session_user  = 'marius_user'
+  AND current_user  = 'marius_user'
+ORDER BY logged_at DESC;
+
+COMMENT ON VIEW identity.v_shadow_writes IS
+  'DML émis directement par marius_user, hors procédures SECURITY DEFINER. Toute ligne est une violation ADR-001.';
 
 
 -- ==============================================================================
@@ -920,6 +1135,32 @@ RETURNS BOOLEAN LANGUAGE sql STABLE PARALLEL SAFE AS $$
   LIMIT  1;
 $$;
 
+-- Garde d'immuabilité de created_at (Audit 3 — ADR-010 rev.)
+-- Contexte : created_at est la colonne de séquençage des index BRIN sur les tables
+-- suivantes : identity.auth, content.core, commerce.transaction_core, org.org_core.
+--
+-- Un index BRIN stocke, pour chaque plage de pages, les valeurs MIN et MAX de la
+-- colonne. Son efficacité repose entièrement sur la corrélation entre l'ordre
+-- physique d'insertion des tuples et la valeur de created_at (≈ 1.0 pour des
+-- lignes insérées chronologiquement). Si created_at est modifié après l'INSERT :
+--   1. La corrélation physique/logique tombe (une page peut contenir des timestamps
+--      épars) → le planner charge plus de blocs → scan de zone dégradé.
+--   2. Le BRIN perd son invariant structural : MIN(page) <= valeur <= MAX(page)
+--      n'est plus garanti → faux négatifs possibles (lignes exclues à tort).
+--
+-- Cette fonction est utilisée comme trigger BEFORE UPDATE avec une clause WHEN
+-- ciblée (OLD.created_at IS DISTINCT FROM NEW.created_at) : coût nul si
+-- created_at n'est pas touché, ce qui couvre tous les chemins procéduraux nominaux.
+CREATE FUNCTION identity.fn_deny_created_at_update()
+RETURNS TRIGGER LANGUAGE plpgsql AS $$
+BEGIN
+  RAISE EXCEPTION
+    'created_at is immutable on %.%: BRIN index correlation would be invalidated (Audit 3 — ADR-010)',
+    TG_TABLE_SCHEMA, TG_TABLE_NAME
+    USING ERRCODE = '55000';  -- object_not_in_prerequisite_state
+END;
+$$;
+
 
 -- ==============================================================================
 -- SECTION 10 : TRIGGERS
@@ -978,6 +1219,29 @@ FOR EACH ROW WHEN (
   OLD.height      IS DISTINCT FROM NEW.height
 ) EXECUTE FUNCTION identity.fn_update_modified_at();
 
+-- BRIN IMMUTABILITY — created_at ne doit jamais être modifié après INSERT (Audit 3)
+-- Clause WHEN ciblée : coût nul sur les UPDATE nominaux (created_at non touché).
+-- Couvre les quatre tables portant un index BRIN sur created_at.
+CREATE TRIGGER auth_deny_created_at_update
+BEFORE UPDATE ON identity.auth
+FOR EACH ROW WHEN (OLD.created_at IS DISTINCT FROM NEW.created_at)
+EXECUTE FUNCTION identity.fn_deny_created_at_update();
+
+CREATE TRIGGER core_deny_created_at_update
+BEFORE UPDATE ON content.core
+FOR EACH ROW WHEN (OLD.created_at IS DISTINCT FROM NEW.created_at)
+EXECUTE FUNCTION identity.fn_deny_created_at_update();
+
+CREATE TRIGGER transaction_deny_created_at_update
+BEFORE UPDATE ON commerce.transaction_core
+FOR EACH ROW WHEN (OLD.created_at IS DISTINCT FROM NEW.created_at)
+EXECUTE FUNCTION identity.fn_deny_created_at_update();
+
+CREATE TRIGGER org_core_deny_created_at_update
+BEFORE UPDATE ON org.org_core
+FOR EACH ROW WHEN (OLD.created_at IS DISTINCT FROM NEW.created_at)
+EXECUTE FUNCTION identity.fn_deny_created_at_update();
+
 
 -- ==============================================================================
 -- SECTION 11 : PROCÉDURES D'ÉCRITURE (SYSTEM / AOT LAYER)
@@ -985,15 +1249,30 @@ FOR EACH ROW WHEN (
 -- ==============================================================================
 
 -- Création d'un compte (entity + auth + account_core)
+-- Garde d'autorisation (ADR-001 rev. + Audit 4) :
+--   Si rls_user_id() = -1 (contexte système/seed) : bypass total — pas de session applicative.
+--   Si l'appelant est actif :
+--     - p_role_id = 7 (subscriber, DEFAULT) : toujours autorisé — inscription publique.
+--     - p_role_id <> 7 : manage_users (bit 8, valeur 256) requis.
+--   Sans cette garde, tout marius_user authentifié pouvait s'auto-attribuer le rôle
+--   'administrator' (role_id=1) en passant explicitement p_role_id=1.
+--   La procédure étant SECURITY DEFINER, le FK vers identity.role était valide
+--   et l'INSERT réussissait silencieusement.
 CREATE PROCEDURE identity.create_account(
   p_username      VARCHAR(32),
   p_password_hash VARCHAR(255),
   p_slug          VARCHAR(32),
   p_role_id       SMALLINT DEFAULT 7,
-  p_language      CHAR(5)  DEFAULT 'fr_FR',
+  p_language      VARCHAR(5)  DEFAULT 'fr_FR',
   OUT p_entity_id INT
 ) LANGUAGE plpgsql AS $$
 BEGIN
+  IF identity.rls_user_id() <> -1
+     AND p_role_id <> 7                              -- tout rôle hors subscriber
+     AND (identity.rls_auth_bits() & 256) <> 256 THEN  -- manage_users requis
+    RAISE EXCEPTION 'insufficient_privilege: manage_users required to assign non-default role (role_id=%)', p_role_id
+      USING ERRCODE = '42501';
+  END IF;
   INSERT INTO identity.entity DEFAULT VALUES RETURNING id INTO p_entity_id;
   INSERT INTO identity.auth   (created_at, entity_id, role_id, is_banned, password_hash)
   VALUES (now(), p_entity_id, p_role_id, false, p_password_hash);
@@ -1003,14 +1282,24 @@ END;
 $$;
 
 -- Création d'une personne (entity + person_identity)
+-- Garde d'autorisation (Audit 4) : manage_users (256) requis hors contexte système.
+-- create_person est exposée comme procédure SECURITY DEFINER accessible à marius_user.
+-- Sans garde, tout marius_user pouvait créer des entités person_identity arbitraires,
+-- polluant le registre nominatif hors du chemin create_account.
+-- Bypass rls_user_id()=-1 : couvre les seeds et l'import admin.
 CREATE PROCEDURE identity.create_person(
   p_given_name  VARCHAR(32) DEFAULT NULL,
   p_family_name VARCHAR(32) DEFAULT NULL,
   p_gender      SMALLINT    DEFAULT NULL,
-  p_nationality CHAR(2)     DEFAULT NULL,
+  p_nationality SMALLINT    DEFAULT NULL,  -- ISO 3166-1 numérique (ADR-028)
   OUT p_entity_id INT
 ) LANGUAGE plpgsql AS $$
 BEGIN
+  IF identity.rls_user_id() <> -1
+     AND (identity.rls_auth_bits() & 256) <> 256 THEN
+    RAISE EXCEPTION 'insufficient_privilege: manage_users required to create a person entity'
+      USING ERRCODE = '42501';
+  END IF;
   INSERT INTO identity.entity DEFAULT VALUES RETURNING id INTO p_entity_id;
   INSERT INTO identity.person_identity (entity_id, given_name, family_name, gender, nationality)
   VALUES (p_entity_id, p_given_name, p_family_name, p_gender, p_nationality);
@@ -1076,6 +1365,34 @@ BEGIN
 
   -- 8. Purge des appartenances aux groupes (donnée de traçabilité sociale)
   DELETE FROM identity.group_to_account WHERE account_entity_id = p_entity_id;
+
+  -- 9. Dissociation des contenus éditoriaux (Audit 4 — ADR-017 gap)
+  -- author_entity_id dans content.core, content.revision et content.media_core
+  -- révèle que l'entité anonymisée est l'auteur de ces ressources.
+  -- Politique retenue : SET author_entity_id = NULL plutôt que DELETE du contenu —
+  -- l'article/média conserve sa valeur éditoriale, mais le lien nominatif est rompu.
+  -- Prérequis DDL (ci-dessous) : les FK author_entity_id doivent passer à ON DELETE SET NULL.
+  -- content.core.author_entity_id → NULL (auteur anonyme)
+  UPDATE content.core
+  SET    author_entity_id = NULL
+  WHERE  author_entity_id = p_entity_id;
+
+  -- content.revision.author_entity_id → NULL (historique éditorial : auteur non nominatif)
+  UPDATE content.revision
+  SET    author_entity_id = NULL
+  WHERE  author_entity_id = p_entity_id;
+
+  -- content.media_core.author_id → NULL (uploadeur non nominatif)
+  UPDATE content.media_core
+  SET    author_id = NULL
+  WHERE  author_id = p_entity_id;
+
+  -- 10. Dissociation des commentaires (Audit 4 — ADR-017 gap)
+  -- account_entity_id dans content.comment lie chaque commentaire à une entité nominative.
+  -- Politique : SET NULL plutôt que DELETE — les discussions threadées restent cohérentes.
+  UPDATE content.comment
+  SET    account_entity_id = NULL
+  WHERE  account_entity_id = p_entity_id;
 END;
 $$;
 
@@ -2122,11 +2439,11 @@ ALTER PROCEDURE identity.anonymize_person(integer)
   SECURITY DEFINER SET search_path = 'identity', 'pg_catalog';
 
 ALTER PROCEDURE identity.create_account(
-  character varying, character varying, character varying, smallint, character
+  character varying, character varying, character varying, smallint, character varying
 ) SECURITY DEFINER SET search_path = 'identity', 'pg_catalog';
 
 ALTER PROCEDURE identity.create_person(
-  character varying, character varying, smallint, character
+  character varying, character varying, smallint, smallint
 ) SECURITY DEFINER SET search_path = 'identity', 'pg_catalog';
 
 ALTER PROCEDURE identity.record_login(integer)
