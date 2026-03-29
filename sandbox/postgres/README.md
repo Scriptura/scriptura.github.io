@@ -121,7 +121,7 @@ ORDER  BY n.nspname, p.proname;
 Le Meta-Registry détecte les dérives entre l'intention architecturale et la réalité physique du catalogue. Il s'installe sur la même base :
 
 ```bash
-psql -U postgres -d marius -f meta_registry_v2.sql
+psql -U postgres -d marius -f meta_registry.sql
 
 # ANALYZE est requis pour que la densité des colonnes varlena soit calculée
 # à partir des données réelles (pg_stats.avg_width). Sans ANALYZE, la matrice
@@ -144,7 +144,39 @@ ORDER  BY component_name;
 -- Zéro TRUE dans les colonnes d'alerte = schéma conforme aux ADR.
 ```
 
-Voir `extended-containment-security-matrix.md` pour le guide complet.
+Voir `documentation/extended-containment-security-matrix.md` pour le guide complet.
+
+### 5. Installation des outils `meta` (optionnel, recommandé)
+
+Le répertoire `tools/` contient quatre outils d'ingénierie et d'audit qui s'appuient sur le Meta-Registry. Ils doivent être installés après l'étape 4 :
+
+```bash
+# Générateur DDL aligné CPU
+psql -U postgres -d marius -f tools/f_generate_dod_template.sql
+
+# Compilateur AOT de la vue de profil ECS
+psql -U postgres -d marius -f tools/f_compile_entity_profile.sql
+
+# Vue d'audit de performance (HOT / BRIN / bloat)
+psql -U postgres -d marius -f tools/v_performance_sentinel.sql
+
+# Vue de santé globale (agrège ECSM + sentinel)
+psql -U postgres -d marius -f tools/v_master_health_audit.sql
+```
+
+Premier lancement après installation :
+
+```sql
+-- Compiler la vue de profil ECS (à relancer après tout ajout de composant)
+SELECT meta.f_compile_entity_profile();
+
+-- Vérifier le sentinel (requiert ANALYZE au préalable)
+SELECT component_id, hot_blocker_alert, brin_drift_alert, bloat_alert
+FROM   meta.v_performance_sentinel;
+-- Zéro TRUE = schéma conforme aux invariants de performance.
+```
+
+Voir `documentation/meta_tooling_guide.md` pour le guide complet des trois outils.
 
 ### 5. Séquence complète (environnement CI/CD)
 
@@ -154,7 +186,7 @@ psql -U postgres -f master_schema_ddl.pgsql
 psql -U postgres -d marius -f master_schema_dml.pgsql
 
 # Meta-Registry
-psql -U postgres -d marius -f meta_registry_v2.sql
+psql -U postgres -d marius -f meta_registry.sql
 psql -U postgres -d marius -c "ANALYZE;"
 
 # Suite de tests (requiert pgTAP)
@@ -310,6 +342,21 @@ psql -U postgres -d marius -c "SELECT * FROM meta.v_extended_containment_securit
 
 Zéro alerte `TRUE` = schéma conforme.
 
+### Surveiller les régressions de performance
+
+```sql
+-- HOT-blockers, BRIN-drift et bloat en un seul appel
+SELECT component_id,
+       hot_blocker_alert, hot_blocker_cols,
+       brin_drift_alert,  brin_worst_col, brin_correlation,
+       bloat_alert,       observed_bytes_per_tuple, bloat_threshold_bytes
+FROM   meta.v_performance_sentinel
+WHERE  hot_blocker_alert OR brin_drift_alert OR bloat_alert = TRUE;
+-- Zéro ligne = invariants de performance respectés.
+```
+
+Requiert `ANALYZE` préalable pour que `pg_stats.correlation` et `n_live_tup` soient fiables.
+
 ### Surveillance des dead tuples
 
 ```sql
@@ -399,7 +446,8 @@ L'enjeu est la **résidence en RAM** du hot path. Pour un site de 5 000 articles
 ## Références
 
 - [Architecture Decision Records](./architecture_decision_records.md)
-- [Extended Containment Security Matrix — Guide](./extended-containment-security-matrix.md)
+- [Extended Containment Security Matrix — Guide](./documentation/extended-containment-security-matrix.md)
+- [Outils Meta — Mode d'emploi](./documentation/meta_tooling_guide.md)
 - [PostgreSQL 18 — Async I/O](https://www.postgresql.org/docs/18/runtime-config-resource.html)
 - [PostGIS — ST_DWithin / opérateur KNN](https://postgis.net/docs/ST_DWithin.html)
 - [schema.org — Person](https://schema.org/Person) · [Article](https://schema.org/Article) · [Organization](https://schema.org/Organization) · [Order](https://schema.org/Order)
