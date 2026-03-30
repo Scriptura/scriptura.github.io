@@ -14,7 +14,7 @@ WITH component_status AS (
         COALESCE(s.bloat_alert, false) AS bloat_alert
     FROM meta.v_extended_containment_security_matrix m
     LEFT JOIN meta.v_performance_sentinel s 
-        ON m.component_name = s.component_name
+        ON m.component_name = s.component_id
 ),
 scoring AS (
     SELECT 

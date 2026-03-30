@@ -11,6 +11,8 @@
 --
 -- CONTENU
 -- -------
+--   content.media_core       9 médias
+--   content.media_content    9 métadonnées de médias
 --   geo.place_core           12 lieux (France)
 --   identity.entity          8 entités (4 personnes + 4 comptes)
 --   identity.person_*        profils Henri de Lubac, Jeanne d'Arc, de Gaulle, anonyme
@@ -23,8 +25,6 @@
 --   content.comment          5 commentaires (document 5) — via CALL content.create_comment()
 --   content.tag              232 tags (taxonomie plate — hiérarchiser via UPDATE path)
 --   content.content_to_tag   16 liaisons article ↔ tag
---   content.media_core       9 médias
---   content.media_content    9 métadonnées de médias
 --   content.content_to_media 6 liaisons article ↔ média
 --
 -- NOTES D'EXÉCUTION
@@ -44,22 +44,48 @@
 -- l'INSERT. Les triggers AFTER INSERT finalisent chaque chemin en
 -- '<document_id>.<comment_id>' après attribution de l'identifiant par la séquence.
 --
--- La hiérarchie des tags (path ltree) est initialisée à plat (racines uniquement).
--- Établir la taxonomie via :
---   UPDATE content.tag SET path = 'theologie.patristique', parent_id = <id_parent>
---   WHERE slug = 'cyrille-d-alexandrie';
+-- La hiérarchie des tags est initialisée à plat (racines uniquement).
+-- Établir la taxonomie via CALL content.create_tag() avec p_parent_id,
+-- ou via INSERT direct dans content.tag_hierarchy (Closure Table — ADR-018).
+-- Exemple :
+--   CALL content.create_tag('Patristique', 'patristique', NULL);  -- racine
+--   CALL content.create_tag('Cyrille d''Alexandrie', 'cyrille-d-alexandrie', <id_parent>);
 -- ==============================================================================
 
 \c marius
 
 -- SECTION 14 : DONNÉES DE REMPLISSAGE (SEED)
--- Traduction fidèle de logicalDataModel.pgsql vers le modèle ECS.
 -- OVERRIDING SYSTEM VALUE utilisé pour forcer les IDs des FK croisées.
 -- ==============================================================================
 
 -- ENTITÉS D'IDENTITÉ (persons 1-4, accounts 5-8)
 INSERT INTO identity.entity (id) OVERRIDING SYSTEM VALUE VALUES (1),(2),(3),(4),(5),(6),(7),(8);
 SELECT setval(pg_get_serial_sequence('identity.entity', 'id'), 8);
+
+-- MÉDIAS
+INSERT INTO content.media_core (id, created_at, author_id, width, height, mime_type, folder_url, file_name)
+OVERRIDING SYSTEM VALUE VALUES
+  (1, now(), 1, 1337, 1337, 'image/jpeg', '/medias/1974/11/21/041212', 'henri-de-lubac.jpg'),
+  (2, now(), 2, 503,  756,  'image/jpeg', '/medias/1974/11/21/041212', 'jeanne-d-arc.jpg'),
+  (3, now(), 1, 1150, 1150, 'image/jpeg', '/medias/1974/11/21/041212', 'charles-de-gaulle.jpg'),
+  (4, now(), 1, 3024, 4032, 'image/jpeg', '/medias/1974/11/21/041212', 'pisit-heng.jpg'),
+  (5, now(), 2, 2712, 4068, 'image/jpeg', '/medias/1974/11/21/041212', 'kevin-mueller.jpg'),
+  (6, now(), 1, 3715, 3715, 'image/jpeg', '/medias/1974/11/21/041212', 'nicolas-hoizey.jpg'),
+  (7, now(), 1, 2500, 2500, 'image/jpg',  '/medias/1974/11/21/041212', 'robin-billy2.jpg'),
+  (8, now(), 1, 2002, 3000, 'image/jpeg', '/medias/1974/11/21/041212', 'clay-banks.jpg'),
+  (9, now(), 2, 3040, 3942, 'image/jpeg', '/medias/1974/11/21/041212', 'charles-de-foucauld.jpg');
+SELECT setval(pg_get_serial_sequence('content.media_core', 'id'), 9);
+
+INSERT INTO content.media_content (media_id, name) VALUES
+  (1, 'Henri de Lubac'),
+  (2, 'Jeanne d''Arc'),
+  (3, 'Charles de Gaulle'),
+  (4, 'Tombeau ouvert'),
+  (5, 'Perroquet'),
+  (6, 'Escalier intérieur d''un phare'),
+  (7, 'Herbe, macro'),
+  (8, 'Phare'),
+  (9, 'Charles de Foucauld');
 
 -- LIEUX — spine spatial (ADR-017 : données postales séparées dans geo.postal_address)
 INSERT INTO geo.place_core (id, name, coordinates, elevation)
@@ -79,7 +105,7 @@ OVERRIDING SYSTEM VALUE VALUES
 SELECT setval(pg_get_serial_sequence('geo.place_core', 'id'), 12);
 
 -- ADRESSES POSTALES (ADR-017 · country_code 250 = France ISO 3166-1 numérique)
-INSERT INTO geo.postal_address (place_id, country_code, street,                            postal_code, locality,                      region) VALUES
+INSERT INTO geo.postal_address (place_id, country_code, street_address, postal_code, address_locality, address_region) VALUES
   (1,  250, '6 Parvis Notre-Dame - Pl. Jean-Paul II', '75004', 'Paris',                      'Île-de-France'),
   (2,  250, '35 Rue du Chevalier de la Barre',         '75018', 'Paris',                      'Île-de-France'),
   (3,  250, 'Place Saint-Jean',                        '69005', 'Lyon',                       'Rhône'),
@@ -95,10 +121,10 @@ INSERT INTO geo.postal_address (place_id, country_code, street,                 
 
 -- PERSONNES (entities 1-4) — person_identity + biography + contact + content
 INSERT INTO identity.person_identity (entity_id, gender, given_name, additional_name, family_name, suffix, prefix, nickname, nationality) VALUES
-  (1, 1, 'Henri',   'Sonier',              'de Lubac',     's.j.', 'P.',    NULL,                    'FR'),
-  (2, 2, 'Jeanne',  NULL,                  'd''Arc',       NULL,   'Ste',   'La Pucelle d''Orléans', 'FR'),
-  (3, 1, 'Charles', 'André Joseph Marie',  'de Gaulle',    NULL,   'Gal',   'Le Général',            'FR'),
-  (4, NULL, NULL,   NULL,                   NULL,          NULL,   NULL,    'El Comandante',         'FR');
+  (1, 1, 'Henri',   'Sonier',              'de Lubac',     's.j.', 'P.',    NULL,                    250),
+  (2, 2, 'Jeanne',  NULL,                  'd''Arc',       NULL,   'Ste',   'La Pucelle d''Orléans', 250),
+  (3, 1, 'Charles', 'André Joseph Marie',  'de Gaulle',    NULL,   'Gal',   'Le Général',            250),
+  (4, NULL, NULL,   NULL,                   NULL,          NULL,   NULL,    'El Comandante',         250);
 
 INSERT INTO identity.person_biography (entity_id, birth_date, death_date, birth_place_id, death_place_id) VALUES
   (1, '1896-02-20', '1991-09-04', NULL, NULL),
@@ -177,7 +203,6 @@ INSERT INTO content.identity (document_id, slug, headline, alternative_headline,
   (16, 'cyan',                                                             'Cyan',                                                              'Magenta',    'Noir');
 
 -- CONTENT BODY (corps HTML — stockés séparément pour isolation TOAST)
--- Le contenu complet est préservé fidèlement depuis logicalDataModel.pgsql.
 INSERT INTO content.body (document_id, content) VALUES
   (5,  '<video class="media" controls="controls" poster="/medias/videos/Agent327/poster.jpg"><source src="/medias/videos/Agent327/Agent327.mp4" type="video/mp4"></video>'),
   (10, '{{https://www.youtube.com/watch?v=3Bs4LOtIuxg}} <hr> {{https://www.youtube.com/watch?v=TJo-xajORwY}}'),
@@ -193,20 +218,21 @@ INSERT INTO content.body (document_id, content) VALUES
 -- Exécution via la procédure content.create_comment() : traverse le même chemin
 -- d'écriture (I/O) qu'en production. Valide l'absence de dead tuples structurels
 -- et la construction correcte des chemins ltree (ADR-007).
--- L'argument OUT p_comment_id est ignoré ici (variable anonyme $_).
+-- L'argument OUT p_comment_id (position 4) reçoit la variable _id.
+-- Signature actuelle : (document_id, account_entity_id, content, OUT p_comment_id, parent_id, status)
 DO $$
 DECLARE _id INT;
 BEGIN
-  CALL content.create_comment(5, 6, 'Un petit commentaire. Un.',    NULL, 1, _id);
-  CALL content.create_comment(5, 7, 'Un petit commentaire. Deux.',  NULL, 1, _id);
-  CALL content.create_comment(5, 8, 'Un petit commentaire. Trois.', NULL, 1, _id);
-  CALL content.create_comment(5, 5, 'Un petit commentaire. Quatre.',NULL, 1, _id);
-  CALL content.create_comment(5, 6, 'Un petit commentaire. Cinq.',  NULL, 1, _id);
+  CALL content.create_comment(5, 6, 'Un petit commentaire. Un.',    _id, NULL, 1::smallint);
+  CALL content.create_comment(5, 7, 'Un petit commentaire. Deux.',  _id, NULL, 1::smallint);
+  CALL content.create_comment(5, 8, 'Un petit commentaire. Trois.', _id, NULL, 1::smallint);
+  CALL content.create_comment(5, 5, 'Un petit commentaire. Quatre.',_id, NULL, 1::smallint);
+  CALL content.create_comment(5, 6, 'Un petit commentaire. Cinq.',  _id, NULL, 1::smallint);
 END;
 $$;
 
--- TAGS (flat, tous en racine — hiérarchie établie via UPDATE path ultérieurement)
--- path = replace(slug, '-', '_')::ltree
+-- TAGS (flat, tous en racine — hiérarchie établie via content.create_tag() avec p_parent_id)
+-- ADR-018 : path ltree supprimé de content.tag ; la hiérarchie est portée par content.tag_hierarchy (Closure Table)
 INSERT INTO content.tag (id, slug, name) OVERRIDING SYSTEM VALUE VALUES
   (1, 'sur-le-monde-invisible',           'Sur le monde invisible'),
   (2, 'parole-du-magistere',              'Parole du magistère'),
@@ -471,31 +497,6 @@ INSERT INTO content.content_to_tag (content_id, tag_id) VALUES
   (14,26),(14,25),
   (15,27),(15,26),
   (16,25);
-
--- MÉDIAS
-INSERT INTO content.media_core (id, created_at, author_id, width, height, mime_type, folder_url, file_name)
-OVERRIDING SYSTEM VALUE VALUES
-  (1, now(), 1, 1337, 1337, 'image/jpeg', '/medias/1974/11/21/041212', 'henri-de-lubac.jpg'),
-  (2, now(), 2, 503,  756,  'image/jpeg', '/medias/1974/11/21/041212', 'jeanne-d-arc.jpg'),
-  (3, now(), 1, 1150, 1150, 'image/jpeg', '/medias/1974/11/21/041212', 'charles-de-gaulle.jpg'),
-  (4, now(), 1, 3024, 4032, 'image/jpeg', '/medias/1974/11/21/041212', 'pisit-heng.jpg'),
-  (5, now(), 2, 2712, 4068, 'image/jpeg', '/medias/1974/11/21/041212', 'kevin-mueller.jpg'),
-  (6, now(), 1, 3715, 3715, 'image/jpeg', '/medias/1974/11/21/041212', 'nicolas-hoizey.jpg'),
-  (7, now(), 1, 2500, 2500, 'image/jpg',  '/medias/1974/11/21/041212', 'robin-billy2.jpg'),
-  (8, now(), 1, 2002, 3000, 'image/jpeg', '/medias/1974/11/21/041212', 'clay-banks.jpg'),
-  (9, now(), 2, 3040, 3942, 'image/jpeg', '/medias/1974/11/21/041212', 'charles-de-foucauld.jpg');
-SELECT setval(pg_get_serial_sequence('content.media_core', 'id'), 9);
-
-INSERT INTO content.media_content (media_id, name) VALUES
-  (1, 'Henri de Lubac'),
-  (2, 'Jeanne d''Arc'),
-  (3, 'Charles de Gaulle'),
-  (4, 'Tombeau ouvert'),
-  (5, 'Perroquet'),
-  (6, 'Escalier intérieur d''un phare'),
-  (7, 'Herbe, macro'),
-  (8, 'Phare'),
-  (9, 'Charles de Foucauld');
 
 -- LIAISONS Article ↔ Média
 INSERT INTO content.content_to_media (content_id, media_id, position) VALUES

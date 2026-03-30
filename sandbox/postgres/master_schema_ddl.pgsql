@@ -19,6 +19,12 @@
 -- ==============================================================================
 
 DROP DATABASE IF EXISTS marius;
+-- marius_admin doit être nettoyé avant marius_user (héritage GRANT marius_user TO marius_admin).
+-- Sans cet ordre, DROP USER marius_user échoue si le GRANT existe encore.
+-- Ces trois commandes échouent silencieusement si marius_admin n'existe pas encore (premier déploiement).
+REASSIGN OWNED BY marius_admin TO postgres;
+DROP OWNED BY marius_admin;
+DROP ROLE IF EXISTS marius_admin;
 REASSIGN OWNED BY marius_user TO postgres;
 DROP OWNED BY marius_user;
 DROP USER IF EXISTS marius_user;
@@ -36,6 +42,17 @@ CREATE EXTENSION unaccent;    -- normalisation des accents (recherche texte)
 CREATE EXTENSION ltree;       -- chemins matérialisés (tags, commentaires)
 CREATE EXTENSION pg_trgm;     -- index trigrammes (recherche partielle sur noms)
 CREATE EXTENSION postgis;     -- types et index géospatiaux (geo.place_core)
+
+-- Wrapper IMMUTABLE requis pour l'utilisation de unaccent() dans les index.
+-- unaccent() n'est pas déclarée IMMUTABLE dans PostgreSQL (dépendance de dictionnaire).
+-- Ce wrapper délègue à unaccent() et hérite de son comportement fonctionnel, mais
+-- permet au planner de traiter l'expression comme stable entre les lignes — prérequis
+-- pour toute expression d'index. Tout changement de dictionnaire unaccent nécessite
+-- un REINDEX sur les index qui l'utilisent (org_identity_name_trgm, content_identity_headline_trgm).
+CREATE FUNCTION public.immutable_unaccent(text)
+RETURNS text LANGUAGE sql IMMUTABLE PARALLEL SAFE AS $$
+  SELECT public.unaccent($1);
+$$;
 
 
 -- ==============================================================================
@@ -80,6 +97,42 @@ CREATE TABLE content.document (
   CONSTRAINT doc_type_range CHECK (doc_type IN (0, 1, 2, 3))
 );
 
+
+-- MEDIA CORE + MEDIA CONTENT — pré-déclarés avant la Section 4
+-- Motif : content.media_core est référencé par FK dans identity.account_core,
+-- identity.person_content, org.org_core et commerce.product_core (Sections 5-7).
+-- La déclaration doit précéder ces composants pour satisfaire la résolution FK.
+-- Les triggers (modified_at) sont installés en Section 10 comme pour toutes les tables.
+-- MEDIA CORE — métadonnées fichiers (MOYENNE fréquence)
+-- Layout : 2×TIMESTAMPTZ · id INT4 · author_id INT4 · 2×INT4 (w/h) | varlena × 3
+-- Tuple ~148 B → ~55 tuples/page
+-- author_id : NULL après anonymisation RGPD (ADR-017 + Audit 4) — ON DELETE SET NULL.
+CREATE TABLE content.media_core (
+  created_at   TIMESTAMPTZ   NOT NULL DEFAULT now(),
+  modified_at  TIMESTAMPTZ   NULL,
+  id           INT           GENERATED ALWAYS AS IDENTITY,
+  author_id    INT           NULL,      -- NULL après anonymisation RGPD (ADR-017 + Audit 4)
+  width        INT           NULL,
+  height       INT           NULL,
+  mime_type    VARCHAR(255)  NULL,
+  folder_url   VARCHAR(255)  NULL,
+  file_name    VARCHAR(255)  NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (author_id) REFERENCES identity.entity(id) ON DELETE SET NULL
+);
+
+-- MEDIA CONTENT — titre, texte alternatif, mention de droits (BASSE fréquence)
+-- copyright_notice : mention légale du titulaire des droits (ADR-017).
+--   Placé dans media_content (cold path) et non dans media_core (hot path)
+--   pour ne pas diluer la densité du composant de métadonnées techniques.
+CREATE TABLE content.media_content (
+  media_id          INT           NOT NULL,
+  name              VARCHAR(255)  NULL,
+  description       VARCHAR(255)  NULL,
+  copyright_notice  VARCHAR(255)  NULL,
+  PRIMARY KEY (media_id),
+  FOREIGN KEY (media_id) REFERENCES content.media_core(id) ON DELETE CASCADE
+);
 
 -- ==============================================================================
 -- SECTION 4 : TABLES DE FONDATION
@@ -430,7 +483,7 @@ CREATE TABLE org.org_identity (
 );
 
 CREATE INDEX org_identity_name_trgm ON org.org_identity
-  USING gin (unaccent(name) gin_trgm_ops);
+  USING gin (public.immutable_unaccent(name) gin_trgm_ops);
 
 -- ORG CONTACT
 CREATE TABLE org.org_contact (
@@ -550,6 +603,8 @@ CREATE TABLE commerce.transaction_core (
   client_entity_id    INT           NOT NULL,
   seller_entity_id    INT           NOT NULL,
   status              SMALLINT      NOT NULL DEFAULT 0,
+  is_gift             BOOLEAN       NOT NULL DEFAULT false,
+  is_recurring        BOOLEAN       NOT NULL DEFAULT false,
   description         TEXT          NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (client_entity_id)  REFERENCES identity.entity(id),
@@ -743,7 +798,7 @@ CREATE TABLE content.identity (
 );
 
 CREATE INDEX content_identity_headline_trgm ON content.identity
-  USING gin (unaccent(headline) gin_trgm_ops);
+  USING gin (public.immutable_unaccent(headline) gin_trgm_ops);
 
 -- CONTENT BODY — corps HTML (BASSE fréquence) · TOAST EXTENDED systématique
 CREATE TABLE content.body (
@@ -774,10 +829,6 @@ ALTER TABLE org.org_identity ALTER COLUMN name  SET STORAGE MAIN;
 ALTER TABLE org.org_identity ALTER COLUMN slug  SET STORAGE MAIN;
 ALTER TABLE org.org_identity ALTER COLUMN brand SET STORAGE MAIN;
 
--- content.comment : contenu typiquement <2kB (commentaires courts).
--- MAIN : inline pour les cas nominaux, TOAST sans compression si > seuil de page.
--- Évite la tentative PGLZ sur chaque INSERT de commentaire (write path fréquent).
-ALTER TABLE content.comment ALTER COLUMN content SET STORAGE MAIN;
 
 -- CONTENT REVISION — cold storage des snapshots éditoriaux
 -- Layout : saved_at TIMESTAMPTZ · document_id INT4 · author_entity_id INT4
@@ -837,37 +888,6 @@ CREATE TABLE content.tag_hierarchy (
 
 -- Index inverse : chercher tous les ancêtres d'un tag (breadcrumb, move)
 CREATE INDEX tag_hierarchy_descendant ON content.tag_hierarchy (descendant_id, depth);
-
--- MEDIA CORE — métadonnées fichiers (MOYENNE fréquence)
--- Layout : 2×TIMESTAMPTZ · id INT4 · author_id INT4 · 2×INT4 (w/h) | varlena × 3
--- Tuple ~148 B → ~55 tuples/page
--- author_id : NULL après anonymisation RGPD (ADR-017 + Audit 4) — ON DELETE SET NULL.
-CREATE TABLE content.media_core (
-  created_at   TIMESTAMPTZ   NOT NULL DEFAULT now(),
-  modified_at  TIMESTAMPTZ   NULL,
-  id           INT           GENERATED ALWAYS AS IDENTITY,
-  author_id    INT           NULL,      -- NULL après anonymisation RGPD (ADR-017 + Audit 4)
-  width        INT           NULL,
-  height       INT           NULL,
-  mime_type    VARCHAR(255)  NULL,
-  folder_url   VARCHAR(255)  NULL,
-  file_name    VARCHAR(255)  NULL,
-  PRIMARY KEY (id),
-  FOREIGN KEY (author_id) REFERENCES identity.entity(id) ON DELETE SET NULL
-);
-
--- MEDIA CONTENT — titre, texte alternatif, mention de droits (BASSE fréquence)
--- copyright_notice : mention légale du titulaire des droits (ADR-017).
---   Placé dans media_content (cold path) et non dans media_core (hot path)
---   pour ne pas diluer la densité du composant de métadonnées techniques.
-CREATE TABLE content.media_content (
-  media_id          INT           NOT NULL,
-  name              VARCHAR(255)  NULL,
-  description       VARCHAR(255)  NULL,
-  copyright_notice  VARCHAR(255)  NULL,
-  PRIMARY KEY (media_id),
-  FOREIGN KEY (media_id) REFERENCES content.media_core(id) ON DELETE CASCADE
-);
 
 -- LIAISON Document ↔ Tag (N:N) · 32 B → ~255 tuples/page
 CREATE TABLE content.content_to_tag (
@@ -931,6 +951,11 @@ CREATE INDEX comment_doc_path   ON content.comment (document_id, path);
 CREATE INDEX comment_approved   ON content.comment (document_id, created_at)
   WHERE status = 1;
 
+-- content.comment : contenu typiquement <2kB (commentaires courts).
+-- MAIN : inline pour les cas nominaux, TOAST sans compression si > seuil de page.
+-- Évite la tentative PGLZ sur chaque INSERT de commentaire (write path fréquent).
+ALTER TABLE content.comment ALTER COLUMN content SET STORAGE MAIN;
+
 
 
 -- ==============================================================================
@@ -958,8 +983,8 @@ CREATE INDEX comment_approved   ON content.comment (document_id, created_at)
 -- Table d'audit — cold storage (peu de volume attendu, toute ligne est une anomalie)
 CREATE TABLE identity.dml_audit_log (
   logged_at     TIMESTAMPTZ  NOT NULL DEFAULT now(),
-  session_user  VARCHAR(64)  NOT NULL,
-  current_user  VARCHAR(64)  NOT NULL,
+  db_session_user  VARCHAR(64)  NOT NULL,
+  db_current_user  VARCHAR(64)  NOT NULL,
   schema_name   VARCHAR(64)  NOT NULL,
   table_name    VARCHAR(64)  NOT NULL,
   operation     VARCHAR(6)   NOT NULL,  -- INSERT · UPDATE · DELETE
@@ -985,7 +1010,7 @@ RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER
 SET search_path = 'identity', 'pg_catalog' AS $$
 BEGIN
   INSERT INTO identity.dml_audit_log
-    (session_user, current_user, schema_name, table_name, operation, row_pk)
+    (db_session_user, db_current_user, schema_name, table_name, operation, row_pk)
   VALUES (
     session_user::varchar(64),
     current_user::varchar(64),
@@ -1068,8 +1093,8 @@ SELECT
   operation,
   row_pk
 FROM identity.dml_audit_log
-WHERE session_user  = 'marius_user'
-  AND current_user  = 'marius_user'
+WHERE db_session_user  = 'marius_user'
+  AND db_current_user  = 'marius_user'
 ORDER BY logged_at DESC;
 
 COMMENT ON VIEW identity.v_shadow_writes IS
@@ -1294,9 +1319,9 @@ CREATE PROCEDURE identity.create_account(
   p_username      VARCHAR(32),
   p_password_hash VARCHAR(255),
   p_slug          VARCHAR(32),
+  OUT p_entity_id INT,
   p_role_id       SMALLINT DEFAULT 7,
-  p_language      VARCHAR(5)  DEFAULT 'fr_FR',
-  OUT p_entity_id INT
+  p_language      VARCHAR(5)  DEFAULT 'fr_FR'
 ) LANGUAGE plpgsql AS $$
 BEGIN
   IF identity.rls_user_id() <> -1
@@ -1320,11 +1345,11 @@ $$;
 -- polluant le registre nominatif hors du chemin create_account.
 -- Bypass rls_user_id()=-1 : couvre les seeds et l'import admin.
 CREATE PROCEDURE identity.create_person(
+  OUT p_entity_id INT,
   p_given_name  VARCHAR(32) DEFAULT NULL,
   p_family_name VARCHAR(32) DEFAULT NULL,
   p_gender      SMALLINT    DEFAULT NULL,
-  p_nationality SMALLINT    DEFAULT NULL,  -- ISO 3166-1 numérique (ADR-028)
-  OUT p_entity_id INT
+  p_nationality SMALLINT    DEFAULT NULL  -- ISO 3166-1 numérique (ADR-028)
 ) LANGUAGE plpgsql AS $$
 BEGIN
   IF identity.rls_user_id() <> -1
@@ -1466,10 +1491,10 @@ $$;
 CREATE PROCEDURE org.create_organization(
   p_name       VARCHAR(64),
   p_slug       VARCHAR(64),
+  OUT p_entity_id INT,
   p_type       VARCHAR(30) DEFAULT NULL,
   p_place_id   INT         DEFAULT NULL,
-  p_contact_id INT         DEFAULT NULL,
-  OUT p_entity_id INT
+  p_contact_id INT         DEFAULT NULL
 ) LANGUAGE plpgsql AS $$
 BEGIN
   IF identity.rls_user_id() <> -1
@@ -1548,12 +1573,12 @@ CREATE PROCEDURE content.create_document(
   p_author_id     INT,
   p_name          VARCHAR(255),
   p_slug          VARCHAR(255),
+  OUT p_document_id INT,
   p_doc_type      SMALLINT      DEFAULT 0,
   p_status        SMALLINT      DEFAULT 0,
   p_content       TEXT          DEFAULT NULL,
   p_description   VARCHAR(1000) DEFAULT NULL,
-  p_alt_headline  VARCHAR(255)  DEFAULT NULL,
-  OUT p_document_id INT
+  p_alt_headline  VARCHAR(255)  DEFAULT NULL
 ) LANGUAGE plpgsql AS $$
 BEGIN
   IF identity.rls_user_id() <> -1 THEN
@@ -1668,8 +1693,8 @@ $$;
 CREATE PROCEDURE content.create_tag(
   p_name      VARCHAR(64),
   p_slug      VARCHAR(64),
-  p_parent_id INT      DEFAULT NULL,
-  OUT p_tag_id INT
+  OUT p_tag_id INT,
+  p_parent_id INT      DEFAULT NULL
 ) LANGUAGE plpgsql AS $$
 BEGIN
   IF identity.rls_user_id() <> -1
@@ -1773,15 +1798,15 @@ CREATE PROCEDURE content.create_comment(
   p_document_id       INT,
   p_account_entity_id INT,
   p_content           TEXT,
+  OUT p_comment_id    INT,
   p_parent_id         INT      DEFAULT NULL,
-  p_status            SMALLINT DEFAULT 1,
-  OUT p_comment_id    INT
+  p_status            SMALLINT DEFAULT 1
 )
 LANGUAGE plpgsql AS $$
 DECLARE
   v_seq_name    TEXT;
-  v_parent_path ltree;
-  v_path        ltree;
+  v_parent_path public.ltree;
+  v_path        public.ltree;
 BEGIN
   IF identity.rls_user_id() <> -1 THEN
     IF (identity.rls_auth_bits() & 32) <> 32 THEN
@@ -1799,7 +1824,7 @@ BEGIN
 
   -- 2. Construire le chemin ltree complet en mémoire
   IF p_parent_id IS NULL THEN
-    v_path := text2ltree(p_document_id::text || '.' || p_comment_id::text);
+    v_path := public.text2ltree(p_document_id::text || '.' || p_comment_id::text);
   ELSE
     SELECT path INTO v_parent_path
     FROM   content.comment
@@ -1816,7 +1841,7 @@ BEGIN
         p_parent_id, p_document_id
         USING ERRCODE = 'foreign_key_violation';
     END IF;
-    v_path := v_parent_path || text2ltree(p_comment_id::text);
+    v_path := v_parent_path || public.text2ltree(p_comment_id::text);
   END IF;
 
   -- 3. INSERT unique — chemin définitif, zéro dead tuple structurel
@@ -1846,10 +1871,10 @@ $$;
 CREATE PROCEDURE commerce.create_transaction(
   p_client_entity_id  INT,
   p_seller_entity_id  INT,
+  OUT p_transaction_id INT,
   p_currency_code     SMALLINT DEFAULT 978,
   p_status            SMALLINT DEFAULT 0,
-  p_description       TEXT     DEFAULT NULL,
-  OUT p_transaction_id INT
+  p_description       TEXT     DEFAULT NULL
 ) LANGUAGE plpgsql AS $$
 BEGIN
   IF identity.rls_user_id() <> -1
@@ -1944,6 +1969,7 @@ $$;
 -- postal_address est optionnelle : un lieu peut exister sans adresse postale
 -- (ex: coordonnées GPS pures, lieu naturel sans adresse).
 CREATE PROCEDURE geo.create_place(
+  OUT p_place_id    INT,
   p_name            VARCHAR(60)   DEFAULT NULL,
   p_elevation       SMALLINT      DEFAULT NULL,
   p_type_id         SMALLINT      DEFAULT NULL,
@@ -1953,8 +1979,7 @@ CREATE PROCEDURE geo.create_place(
   p_street_address  VARCHAR(60)   DEFAULT NULL,
   p_postal_code     VARCHAR(16)   DEFAULT NULL,
   p_locality        VARCHAR(64)   DEFAULT NULL,
-  p_region          VARCHAR(64)   DEFAULT NULL,
-  OUT p_place_id    INT
+  p_region          VARCHAR(64)   DEFAULT NULL
 ) LANGUAGE plpgsql AS $$
 BEGIN
   IF identity.rls_user_id() <> -1
@@ -2022,10 +2047,10 @@ $$;
 CREATE PROCEDURE commerce.create_product(
   p_name          VARCHAR(64),
   p_slug          VARCHAR(64),
+  OUT p_product_id INT,
   p_price_cents   INT8         DEFAULT NULL,
   p_stock         INT          DEFAULT 0,
-  p_isbn_ean      VARCHAR(13)  DEFAULT NULL,
-  OUT p_product_id INT
+  p_isbn_ean      VARCHAR(13)  DEFAULT NULL
 ) LANGUAGE plpgsql AS $$
 BEGIN
   IF identity.rls_user_id() <> -1
@@ -2048,6 +2073,7 @@ $$;
 -- créé uniquement si au moins un champ est fourni.
 CREATE PROCEDURE content.create_media(
   p_author_id        INT,
+  OUT p_media_id     INT,
   p_mime_type        VARCHAR(255)  DEFAULT NULL,
   p_folder_url       VARCHAR(255)  DEFAULT NULL,
   p_file_name        VARCHAR(255)  DEFAULT NULL,
@@ -2055,8 +2081,7 @@ CREATE PROCEDURE content.create_media(
   p_height           INT           DEFAULT NULL,
   p_name             VARCHAR(255)  DEFAULT NULL,
   p_description      VARCHAR(255)  DEFAULT NULL,
-  p_copyright_notice VARCHAR(255)  DEFAULT NULL,
-  OUT p_media_id     INT
+  p_copyright_notice VARCHAR(255)  DEFAULT NULL
 ) LANGUAGE plpgsql AS $$
 BEGIN
   IF identity.rls_user_id() <> -1 THEN
@@ -2192,6 +2217,23 @@ EXECUTE FUNCTION identity.fn_deny_entity_id_update();
 -- snake_case systématique : pas de guillemets requis dans les requêtes SQL.
 -- Suffixes DOD conservés : _at (TIMESTAMPTZ), _cents (INT8), _id (FK), _code.
 -- ==============================================================================
+
+-- Helper functions GUC — définies ici car référencées par les vues Section 12 ET les
+-- politiques RLS Section 15. PostgreSQL valide les références de fonctions à la création
+-- des vues (contrairement aux procédures PL/pgSQL dont les corps sont vérifiés à l'exécution).
+-- STABLE : retourne la même valeur pour toutes les lignes d'un même statement.
+-- SECURITY INVOKER : pas besoin d'élévation pour lire un GUC de session.
+
+CREATE FUNCTION identity.rls_user_id()
+RETURNS INT LANGUAGE sql STABLE SECURITY INVOKER AS $$
+  SELECT COALESCE(current_setting('marius.user_id',  true)::INT, -1);
+$$;
+
+CREATE FUNCTION identity.rls_auth_bits()
+RETURNS INT LANGUAGE sql STABLE SECURITY INVOKER AS $$
+  SELECT COALESCE(current_setting('marius.auth_bits', true)::INT, 0);
+$$;
+
 
 -- IDENTITY : v_role — décompose le bitmask en colonnes booléennes nommées
 -- Bits 0–20 exposés (ADR-004 : expansion 15→21 bits sur INT4).
@@ -2482,8 +2524,8 @@ SELECT
   co.author_entity_id      AS author_id,
   b.content                AS article_body,
   (SELECT json_agg(json_build_object(
-    'id', t.id, 'name', t.name, 'slug', t.slug, 'path', t.path::text
-  ) ORDER BY t.path)
+    'id', t.id, 'name', t.name, 'slug', t.slug
+  ) ORDER BY t.name)
    FROM content.content_to_tag ct JOIN content.tag t ON t.id = ct.tag_id
    WHERE ct.content_id = d.id) AS keywords,
   (SELECT json_agg(json_build_object(
@@ -2700,7 +2742,7 @@ GRANT USAGE, UPDATE ON ALL SEQUENCES IN SCHEMA content   TO marius_admin;
 -- marius_admin doit contourner le RLS pour les opérations de maintenance et migrations.
 -- Sans BYPASSRLS, ses UPDATE/INSERT directs seraient bloqués par les politiques RLS
 -- activées en SECTION 15 sur content.core, commerce.transaction_core, identity.account_core.
-GRANT BYPASSRLS TO marius_admin;
+ALTER ROLE marius_admin BYPASSRLS;  -- BYPASSRLS est un attribut de rôle, pas un rôle grantable
 
 -- 14.2 — Révocation globale DML sur marius_user (défense en profondeur)
 -- Idempotent : marius_user n'a jamais reçu ces droits en SECTION 13.
@@ -2828,21 +2870,6 @@ ALTER PROCEDURE content.remove_media_from_document(integer, integer)
 -- a également un REVOKE SELECT (audit RLS global) : password_hash ne doit jamais être
 -- accessible à marius_user, même via la vue. Le RLS est une défense complémentaire.
 -- ==============================================================================
-
--- Helper functions — évitent de répéter le COALESCE/casting dans chaque politique.
--- STABLE : retourne la même valeur pour toutes les lignes d'un même statement.
--- SECURITY INVOKER : pas besoin d'élévation pour lire un GUC de session.
-
-CREATE FUNCTION identity.rls_user_id()
-RETURNS INT LANGUAGE sql STABLE SECURITY INVOKER AS $$
-  SELECT COALESCE(current_setting('marius.user_id',  true)::INT, -1);
-$$;
-
-CREATE FUNCTION identity.rls_auth_bits()
-RETURNS INT LANGUAGE sql STABLE SECURITY INVOKER AS $$
-  SELECT COALESCE(current_setting('marius.auth_bits', true)::INT, 0);
-$$;
-
 
 -- ─────────────────────────────────────────────────────────────────────────────
 -- 15.1 — content.core
