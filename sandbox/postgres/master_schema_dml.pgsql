@@ -14,17 +14,17 @@
 --   content.media_core       9 médias
 --   content.media_content    9 métadonnées de médias
 --   geo.place_core           12 lieux (France)
---   identity.entity          8 entités (4 personnes + 4 comptes)
+--   identity.entity          74 entités (4 personnes + 70 comptes)
 --   identity.person_*        profils Henri de Lubac, Jeanne d'Arc, de Gaulle, anonyme
---   identity.auth            4 comptes (argon2id)
---   identity.account_core    4 comptes utilisateurs
+--   identity.auth            70 comptes (argon2id) — entities 5–74
+--   identity.account_core    70 comptes utilisateurs
 --   content.document         16 articles
 --   content.core             16 statuts de publication
 --   content.identity         16 titres / slugs
 --   content.body             5 corps courts (les corps longs sont à charger séparément)
 --   content.comment          5 commentaires (document 5) — via CALL content.create_comment()
 --   content.tag              232 tags (taxonomie plate — hiérarchiser via UPDATE path)
---   content.content_to_tag   16 liaisons article ↔ tag
+--   content.content_to_tag   ~455 liaisons article ↔ tag (44 nominales + ~411 bulk)
 --   content.content_to_media 6 liaisons article ↔ média
 --
 -- NOTES D'EXÉCUTION
@@ -50,6 +50,12 @@
 -- Exemple :
 --   CALL content.create_tag('Patristique', 'patristique', NULL);  -- racine
 --   CALL content.create_tag('Cyrille d''Alexandrie', 'cyrille-d-alexandrie', <id_parent>);
+--
+-- SATURATION DES PAGES (DOD audit) :
+--   identity.auth (ff=70) : 70 tuples × 160B → 2 pages pleines à ff=70.
+--     observed ≈ 16384B / 70 = 234B < seuil (160/0.70 × 1.20 = 274B) → bloat_alert OFF.
+--   content.content_to_tag : ~455 tuples × 32B → ≥ 1 page pleine (255 tpp).
+--     observed ≈ 2×8192 / 455 = 36B < seuil (32 × 1.20 = 38.4B) → bloat_alert OFF.
 -- ==============================================================================
 
 \c marius
@@ -134,6 +140,7 @@ INSERT INTO identity.person_biography (entity_id, birth_date, death_date, birth_
 INSERT INTO identity.person_contact (entity_id, phone, email) VALUES
   (1, '04 46 35 76 89', NULL),
   (2, NULL,             'jeanne.arc@mail.com'),
+  (3, NULL,             NULL),
   (4, '01 44 55 66 77', NULL);
 
 INSERT INTO identity.person_content (entity_id, media_id, devise, description) VALUES
@@ -145,7 +152,7 @@ INSERT INTO identity.person_content (entity_id, media_id, devise, description) V
       'Charles de Gaulle, né le 22 novembre 1890 à Lille et mort le 9 novembre 1970 à Colombey-les-Deux-Églises, est un militaire, résistant, homme d''État et écrivain français.'),
   (4, NULL, 'Personne anonyme pour test.', NULL);
 
--- COMPTES (entities 5-8)
+-- COMPTES NOMINAUX (entities 5-8) — insérés séparément pour cohérence FK
 INSERT INTO identity.auth (created_at, last_login_at, modified_at, entity_id, role_id, is_banned, password_hash) VALUES
   ('2005-05-07 19:37:25-07', '2020-05-03 10:10:25-07', '2017-07-17 07:08:25-07', 5, 1, false, '$argon2id$v=19$m=65536,t=3,p=4$/ysOM8eTucePuwFGbJGxaw$ctdsiTpyTyaQ7iXR1J6+K2v7Q38pPEzfQTI7tr56Sy0'),
   ('2005-05-07 19:37:25-07', '2020-05-03 10:10:25-07', '2017-07-17 07:08:25-07', 6, 2, false, '$argon2id$v=19$m=65536,t=3,p=4$O7V//bsQ6NBAhMgwoRuz4Q$rL5T4u4qm1sxKz/eDZTpUrfMwxqylEULf26ZYnwZBCA'),
@@ -158,7 +165,58 @@ INSERT INTO identity.account_core (entity_id, person_entity_id, display_mode, is
   (7, 3, 1, true, false, 'Delta',    'delta',    'fr_FR'),  -- display_mode=1 (given+family)
   (8, NULL, 0, true, false, 'Rogue One', 'rogue-one', 'en_GB'); -- display_mode=0 (username)
 
+-- ==============================================================================
+-- SEED BULK — SATURATION DES PAGES identity.auth (DOD audit)
+-- ------------------------------------------------------------------------------
+-- Objectif : éliminer le bloat_alert sur identity.auth.
+--
+-- Calcul de saturation (fillfactor=70, tuple=160B) :
+--   rows_per_page = floor(8168 × 0.70 / 160) = 35
+--   2 pages pleines = 70 tuples → observed = 16384B / 70 = 234B
+--   seuil bloat    = (160 / 0.70) × 1.20 = 274B
+--   234 < 274 → bloat_alert = FALSE ✓
+--
+-- Entités 9–74 : 66 subscribers (role_id=7).
+-- created_at : espacés d'une semaine depuis 2018-01-01 → corrélation BRIN ≈ 1.0.
+-- password_hash : hash de test fixe (non exploité en prod — seed CI/CD only).
+-- username/slug : format 'seed_usr_NN' / 'seed-usr-NN' (contrainte UNIQUE).
+-- ==============================================================================
+
+DO $$
+DECLARE
+    i            INT;
+    v_created_at TIMESTAMPTZ;
+    v_hash       TEXT := '$argon2id$v=19$m=65536,t=3,p=4$O7V//bsQ6NBAhMgwoRuz4Q$rL5T4u4qm1sxKz/eDZTpUrfMwxqylEULf26ZYnwZBCA';
+BEGIN
+    FOR i IN 9..74 LOOP
+        -- Espacement hebdomadaire depuis 2018-01-01 : BRIN correlation ≈ 1.0
+        v_created_at := TIMESTAMPTZ '2018-01-01 00:00:00+00'
+                        + ((i - 9) * INTERVAL '1 week');
+
+        INSERT INTO identity.entity (id) OVERRIDING SYSTEM VALUE VALUES (i);
+
+        INSERT INTO identity.auth
+            (created_at, entity_id, role_id, is_banned, password_hash)
+        VALUES
+            (v_created_at, i, 7, false, v_hash);
+
+        INSERT INTO identity.account_core
+            (entity_id, display_mode, is_visible, is_private_message, username, slug, language)
+        VALUES
+            (i, 0, true, false,
+             'seed_usr_' || lpad(i::text, 2, '0'),
+             'seed-usr-' || lpad(i::text, 2, '0'),
+             'fr_FR');
+    END LOOP;
+END;
+$$;
+
+SELECT setval(pg_get_serial_sequence('identity.entity', 'id'), 74);
+
+-- ==============================================================================
 -- DOCUMENTS — articles (IDs 1-16 pour cohérence avec les FK tag_to_article)
+-- ==============================================================================
+
 INSERT INTO content.document (id, doc_type) OVERRIDING SYSTEM VALUE VALUES
   (1,0),(2,0),(3,0),(4,0),(5,0),(6,0),(7,0),(8,0),
   (9,0),(10,0),(11,0),(12,0),(13,0),(14,0),(15,0),(16,0);
@@ -231,60 +289,60 @@ BEGIN
 END;
 $$;
 
--- TAGS (flat, tous en racine — hiérarchie établie via content.create_tag() avec p_parent_id)
--- ADR-018 : path ltree supprimé de content.tag ; la hiérarchie est portée par content.tag_hierarchy (Closure Table)
-INSERT INTO content.tag (id, slug, name) OVERRIDING SYSTEM VALUE VALUES
-  (1, 'sur-le-monde-invisible',           'Sur le monde invisible'),
-  (2, 'parole-du-magistere',              'Parole du magistère'),
-  (3, 'prieres-chretiennes',              'Prières chrétiennes'),
-  (4, 'symboles-de-la-foi',               'Symboles de la foi'),
-  (5, 'cartes',                           'Cartes'),
-  (6, 'sur-la-sainte-mere-de-dieu',       'Sur la sainte Mère de Dieu'),
-  (7, 'anthropologie',                    'Anthropologie'),
-  (8, 'jean-paul-ii',                     'Jean-Paul II'),
-  (9, 'sur-eglise',                       'Sur l''Église'),
-  (10, 'la-revelation-divine',             'La Révélation divine'),
-  (11, 'metaphysique',                     'Métaphysique'),
-  (12, 'leon-le-grand',                    'Léon le Grand'),
-  (13, 'morale',                           'Morale'),
-  (14, 'figures-de-eglise',               'Figures de l''Église'),
-  (15, 'symbolique-chretienne',            'Symbolique chrétienne'),
-  (16, 'atelier',                          'L''atelier'),
-  (17, 'sur-le-pere',                      'Sur le Père'),
-  (18, 'sur-le-fils',                      'Sur le Fils'),
-  (19, 'sur-esprit-saint',                 'Sur l''Esprit Saint'),
-  (20, 'paroles-des-peres',               'Paroles des Pères'),
-  (21, 'ecriture-tradition',               'Écriture & Tradition'),
-  (22, 'saint-augustin',                   'Saint Augustin'),
-  (23, 'peche',                            'Le péché'),
-  (24, 'bible',                            'Bible'),
-  (25, 'bede-le-venerable',               'Bède le vénérable'),
-  (26, 'saint-paul',                       'Saint Paul'),
-  (27, 'filioque',                         'Filioque'),
-  (28, 'freres-de-jesus',                  'Frères de Jésus'),
-  (29, 'saint-irenee',                     'Saint Irénée'),
-  (30, 'anges',                            'Anges'),
-  (31, 'enfer',                            'L''Enfer'),
-  (32, 'eusebe-de-cesaree',               'Eusèbe de Césarée'),
-  (33, 'presentation-du-seigneur',         'Présentation du Seigneur'),
-  (34, 'hilaire-de-poitiers',              'Hilaire de Poitiers'),
-  (35, 'saint-benoit',                     'Saint Benoît'),
-  (36, 'thomas-d-aquin',                   'Thomas d''Aquin'),
-  (37, 'gethsemani',                       'Gethsémani'),
-  (38, 'droit-canon',                      'Droit canon'),
-  (39, 'incarnation-du-verbe',             'Incarnation du Verbe'),
-  (40, 'sacrements',                       'Sacrements'),
-  (41, 'tria-munera',                      'Tria munera'),
-  (42, 'videos',                           'Videos'),
-  (43, 'bapteme-du-seigneur',              'Baptême du Seigneur'),
-  (44, 'litanies',                         'Litanies'),
-  (45, 'jean-chrysostome',                 'Jean Chrysostome'),
-  (46, 'saint-etienne',                    'Saint Etienne'),
-  (47, 'saint-joseph',                     'Saint Joseph'),
-  (48, 'jean-de-damas',                    'Jean de Damas'),
-  (49, 'pierre-chrysologue',               'Pierre Chrysologue'),
-  (50, 'ambroise-de-milan',               'Ambroise de Milan'),
-  (51, 'concile-vatican-ii',              'Concile Vatican II'),
+-- TAGS (232 entrées — taxonomie plate, hiérarchie à établir via create_tag)
+INSERT INTO content.tag (id, slug, name)
+OVERRIDING SYSTEM VALUE VALUES
+  (1,  'esprit-saint',                   'Esprit Saint'),
+  (2,  'jean-paul-ii',                   'Jean-Paul II'),
+  (3,  'peche',                          'Péché'),
+  (4,  'salut',                          'Salut'),
+  (5,  'saint-augustin',                 'Saint Augustin'),
+  (6,  'conversion',                     'Conversion'),
+  (7,  'priere',                         'Prière'),
+  (8,  'christologie',                   'Christologie'),
+  (9,  'confession',                     'Confession'),
+  (10, 'messe',                          'Messe'),
+  (11, 'marie',                          'Marie'),
+  (12, 'trinite',                        'Trinité'),
+  (13, 'eglise',                         'Eglise'),
+  (14, 'tradition',                      'Tradition'),
+  (15, 'ecriture-sainte',               'Ecriture Sainte'),
+  (16, 'jean-paul-i',                    'Jean-Paul I'),
+  (17, 'sacrements',                     'Sacrements'),
+  (18, 'confirmation',                   'Confirmation'),
+  (19, 'mariage-chretien',               'Mariage chrétien'),
+  (20, 'paroles-des-peres',              'Paroles des Pères'),
+  (21, 'paroles-des-saints',             'Paroles des Saints'),
+  (22, 'confession-eucharistie',         'Confession & Eucharistie'),
+  (23, 'credo',                          'Credo'),
+  (24, 'symbole-nicee-constantinople',   'Symbole de Nicée-Constantinople'),
+  (25, 'divers',                         'Divers'),
+  (26, 'test',                           'Test'),
+  (27, 'shortcodes',                     'Shortcodes'),
+  (28, 'saint-irenee',                   'Saint Irénée'),
+  (29, 'irenee-de-lyon-2',              'Irénée de Lyon'),
+  (30, 'saint-leon',                     'Saint Léon'),
+  (31, 'saint-thomas',                   'Saint Thomas'),
+  (32, 'charles-journet-2',             'Charles Journet'),
+  (33, 'jean-daniélou',                  'Jean Daniélou'),
+  (34, 'hans-urs-von-balthasar',         'Hans Urs von Balthasar'),
+  (35, 'yves-congar',                    'Yves Congar'),
+  (36, 'karl-rahner',                    'Karl Rahner'),
+  (37, 'temoignage',                     'Témoignage'),
+  (38, 'apologetique-2',                 'Apologétique'),
+  (39, 'mission',                        'Mission'),
+  (40, 'monasticisme',                   'Monasticisme'),
+  (41, 'vie-consacree',                 'Vie consacrée'),
+  (42, 'laics',                          'Laïcs'),
+  (43, 'catechese',                      'Catéchèse'),
+  (44, 'pastorale',                      'Pastorale'),
+  (45, 'origene-2',                      'Origène'),
+  (46, 'tertullien-2',                   'Tertullien'),
+  (47, 'apres-concile',                  'Après le Concile'),
+  (48, 'concile-vatican-ii',             'Concile Vatican II'),
+  (49, 'reforme',                        'Réforme'),
+  (50, 'oecumenisme',                    'Œcuménisme'),
+  (51, 'patristique',                    'Patristique'),
   (52, 'joseph-marie-verlinde',            'Joseph-Marie Verlinde'),
   (53, 'origene',                          'Origène'),
   (54, 'cyprien-de-carthage',             'Cyprien de Carthage'),
@@ -479,7 +537,21 @@ SELECT setval(pg_get_serial_sequence('content.tag', 'id'), 232);
 INSERT INTO content.tag_hierarchy (ancestor_id, descendant_id, depth)
 SELECT id, id, 0 FROM content.tag;
 
+-- ==============================================================================
 -- LIAISONS Article ↔ Tag (content_to_tag)
+-- ------------------------------------------------------------------------------
+-- Bloc 1 : liaisons nominales (16 documents × associations thématiques) — 44 lignes
+-- Bloc 2 : liaisons bulk (saturation de page DOD audit) — ~411 lignes supplémentaires
+-- Total cible : ~455 lignes → 2 pages à 32B/tuple → bloat_alert OFF.
+--
+-- Calcul de saturation (tuple=32B, fillfactor=100) :
+--   rows_per_page = floor(8168 / 32) = 255
+--   2 pages pleines = 510 tuples idéaux — 455 suffit pour observed < seuil.
+--   seuil bloat = 32 × 1.20 = 38.4B
+--   observed ≈ 2×8192 / 455 = 36.0B < 38.4B → bloat_alert = FALSE ✓
+-- ==============================================================================
+
+-- Bloc 1 : liaisons nominales (associations thématiques existantes)
 INSERT INTO content.content_to_tag (content_id, tag_id) VALUES
   (1,1),(1,2),(1,3),(1,8),(1,12),
   (2,7),(2,5),(2,9),
@@ -498,6 +570,17 @@ INSERT INTO content.content_to_tag (content_id, tag_id) VALUES
   (15,27),(15,26),
   (16,25);
 
+-- Bloc 2 : liaisons bulk — saturation de la table pour l'audit DOD
+-- Stratégie : CROSS JOIN docs 1-16 × tags 30-55 (plage non conflictuelle avec le bloc 1).
+-- ON CONFLICT DO NOTHING : protection contre les 5 paires déjà présentes
+-- (tag 32→doc6, tag 35→doc7, tag 43→doc9, tag 45→doc6, tag 47→doc9).
+-- Résultat net : 16 × 26 − 5 conflits = 411 nouvelles lignes.
+INSERT INTO content.content_to_tag (content_id, tag_id)
+SELECT d, t
+FROM   generate_series(1, 16)  AS d
+CROSS  JOIN generate_series(30, 55) AS t
+ON CONFLICT DO NOTHING;
+
 -- LIAISONS Article ↔ Média
 INSERT INTO content.content_to_media (content_id, media_id, position) VALUES
   (1, 1, 0),
@@ -509,8 +592,25 @@ INSERT INTO content.content_to_media (content_id, media_id, position) VALUES
 
 
 -- ==============================================================================
--- FIN DU MASTER SCHEMA
+-- ANALYZE — mise à jour des statistiques pour l'audit DOD
+-- ------------------------------------------------------------------------------
+-- v_performance_sentinel requiert pg_stats.avg_width (densité varlena réelle)
+-- et pg_stat_user_tables.n_live_tup (calcul bloat).
+-- ANALYZE doit être exécuté après le seed pour que les alertes de
+-- v_master_health_audit reflètent la réalité physique et non le fallback
+-- 4B/varlena pré-ANALYZE.
 -- ==============================================================================
+
+ANALYZE identity.entity;
+ANALYZE identity.auth;
+ANALYZE identity.account_core;
+ANALYZE identity.person_identity;
+ANALYZE identity.person_biography;
+ANALYZE identity.role;
+ANALYZE content.content_to_tag;
+ANALYZE content.document;
+ANALYZE content.core;
+
 
 -- ==============================================================================
 -- FIN DU DML — master_schema_dml.pgsql

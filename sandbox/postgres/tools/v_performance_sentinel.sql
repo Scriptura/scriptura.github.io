@@ -35,6 +35,13 @@
 --     identity.auth    ff_threshold=274 B : 241 < 274  -> pas d'alerte [OK]
 --     product_core     ff_threshold= 72 B :  66 <  72  -> pas d'alerte [OK]
 --
+--   Court-circuit exempt_bloat_check :
+--     Lorsque le flag est TRUE dans meta.containment_intent, bloat_alert est
+--     force a FALSE independamment du ratio observe. Prevu pour les tables
+--     dictionnaire (faible cardinalite structurelle, immuables en production) :
+--     identity.role (7 lignes, REVOKE INSERT/UPDATE/DELETE). Le "bloat" detecte
+--     sur ces tables est un artefact de la page quasi-vide, pas une derive.
+--
 --   bloat_threshold_bytes et observed_bytes_per_tuple sont exposes pour diagnostic.
 --   NULL si n_live_tup = 0 (table vide ou stats absentes).
 --
@@ -50,6 +57,7 @@ components AS (
         ci.component_id,
         ci.intent_density_bytes,
         ci.immutable_keys,
+        ci.exempt_bloat_check,
         pc.oid                                      AS reloid,
         n.nspname                                   AS schemaname,
         pc.relname                                  AS tablename,
@@ -143,7 +151,12 @@ SELECT
     bh.min_abs_correlation                              AS brin_correlation,
 
     -- ── Pilier 3 : BLOAT (fillfactor-corrige) ────────────────────────────────
+    -- Court-circuit : exempt_bloat_check = TRUE → FALSE inconditionnel.
+    -- Tables dictionnaire (identity.role etc.) : bloat structurel inévitable,
+    -- pas une derive. La pénalité de scoring serait un faux positif permanent.
     CASE
+        WHEN c.exempt_bloat_check
+        THEN FALSE
         WHEN NULLIF(s.n_live_tup, 0) IS NULL
         THEN NULL::boolean
         WHEN pg_catalog.pg_relation_size(c.reloid)::numeric / s.n_live_tup
@@ -175,6 +188,8 @@ COMMENT ON VIEW meta.v_performance_sentinel IS
     'HOT-BLOCKER (colonnes mutables indexees via immutable_keys + pg_index), '
     'BRIN-DRIFT (correlation physique < 0.90, pire cas multi-BRIN), '
     'BLOAT (pg_relation_size / n_live_tup vs intent_density / fillfactor * 1.20). '
+    'Court-circuit exempt_bloat_check : bloat_alert=FALSE pour les tables '
+    'dictionnaire (faible cardinalite, immuables en production — identity.role). '
     'Correction fillfactor obligatoire : tables ff<100 (auth ff=70, product_core ff=80) '
     'produisent des faux positifs sans elle. '
     'Prerequis : ANALYZE execute. ADR-006 / ADR-010 / ADR-030 . meta_registry v2.';

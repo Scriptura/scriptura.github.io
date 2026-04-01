@@ -17,8 +17,17 @@
 --   7. prokind = 'p' : filtrage sur les procédures uniquement
 --   8. Nouvelle alerte : component_not_found_alert
 --
+-- v2.1 — Ajout exempt_bloat_check :
+--   9. exempt_bloat_check BOOLEAN : neutralise le scoring bloat dans
+--      v_master_health_audit pour les tables de configuration structurelle
+--      (faible cardinalité immuable en production — ex: identity.role).
+--      N'affecte pas la vue v_performance_sentinel (qui continue de reporter
+--      la densité brute) ni density_drift_alert. Mécanisme documentaire : le
+--      bloat physique réel est inévitable sur une table à 7 lignes ; le
+--      déclarer exception évite le faux positif sans masquer les vrais drifts.
+--
 -- Dépendances : pg_catalog, pg_stats (ANALYZE requis pour densité précise).
--- Exécution  : psql -U postgres -d marius -f meta_registry_v2.sql
+-- Exécution  : psql -U postgres -d marius -f meta_registry.sql
 -- ==============================================================================
 
 CREATE SCHEMA IF NOT EXISTS meta;
@@ -50,6 +59,12 @@ CREATE SCHEMA IF NOT EXISTS meta;
 --   Colonnes scellées post-INSERT (FK spine, clés de tri BRIN...). Métadonnée
 --   documentaire — les triggers d'immuabilité correspondants sont vérifiés
 --   dans les tests pgTAP (11_meta_audit.sql).
+--
+-- exempt_bloat_check BOOLEAN :
+--   Neutralise la contribution bloat dans le scoring de v_master_health_audit.
+--   Réservé aux tables de configuration structurelle (cardinalité fixe, mutations
+--   REVOKE'd en production). N'affecte pas v_performance_sentinel ni
+--   density_drift_alert — la réalité physique reste visible pour diagnostic.
 
 CREATE TABLE meta.containment_intent (
     component_id          TEXT      NOT NULL PRIMARY KEY,
@@ -57,6 +72,7 @@ CREATE TABLE meta.containment_intent (
     rls_guard_bitmask     INT       NULL,
     mutation_procedures   TEXT[]    NULL,
     immutable_keys        name[]    NULL,
+    exempt_bloat_check    BOOLEAN   NOT NULL DEFAULT false,
 
     CONSTRAINT intent_density_positive  CHECK (intent_density_bytes > 0),
     CONSTRAINT component_id_format      CHECK (component_id ~ '^[a-z_]+\.[a-z_0-9]+$')
@@ -313,7 +329,10 @@ SELECT
     -- Colonnes de diagnostic (non-booléennes)
     ci.mutation_procedures,
     ci.immutable_keys,
-    ci.rls_guard_bitmask
+    ci.rls_guard_bitmask,
+
+    -- 4. Flag d'exemption bloat (v2.1)
+    ci.exempt_bloat_check
 
 FROM       meta.containment_intent          ci
 LEFT JOIN  meta.v_introspection_layout      ts
@@ -333,7 +352,7 @@ LEFT JOIN  meta.v_introspection_layout      ts
 -- ==============================================================================
 
 INSERT INTO meta.containment_intent
-    (component_id, intent_density_bytes, rls_guard_bitmask, mutation_procedures, immutable_keys)
+    (component_id, intent_density_bytes, rls_guard_bitmask, mutation_procedures, immutable_keys, exempt_bloat_check)
 VALUES
 
 -- ── identity.auth ────────────────────────────────────────────────────────────
@@ -350,7 +369,8 @@ VALUES
         'identity.record_login(integer)',
         'identity.anonymize_person(integer)'
     ],
-    ARRAY['entity_id'::name, 'created_at'::name]
+    ARRAY['entity_id'::name, 'created_at'::name],
+    false
 ),
 
 -- ── content.core ─────────────────────────────────────────────────────────────
@@ -366,7 +386,8 @@ VALUES
         'content.create_document(integer,character varying,character varying,smallint,smallint,text,character varying,character varying)',
         'content.publish_document(integer)'
     ],
-    ARRAY['document_id'::name, 'created_at'::name]
+    ARRAY['document_id'::name, 'created_at'::name],
+    false
 ),
 
 -- ── commerce.transaction_item ────────────────────────────────────────────────
@@ -382,7 +403,8 @@ VALUES
     ARRAY[
         'commerce.create_transaction_item(integer,integer,integer)'
     ],
-    ARRAY['unit_price_snapshot_cents'::name, 'transaction_id'::name, 'product_id'::name]
+    ARRAY['unit_price_snapshot_cents'::name, 'transaction_id'::name, 'product_id'::name],
+    false
 ),
 
 -- ── commerce.product_core ────────────────────────────────────────────────────
@@ -398,7 +420,8 @@ VALUES
         'commerce.create_product(character varying,character varying,bigint,integer,character varying)',
         'commerce.create_transaction_item(integer,integer,integer)'
     ],
-    ARRAY['id'::name]
+    ARRAY['id'::name],
+    false
 ),
 
 -- ── commerce.transaction_price ───────────────────────────────────────────────
@@ -412,7 +435,8 @@ VALUES
     ARRAY[
         'commerce.create_transaction(integer,integer,smallint,smallint,text)'
     ],
-    ARRAY['transaction_id'::name]
+    ARRAY['transaction_id'::name],
+    false
 ),
 
 -- ── content.tag_hierarchy ────────────────────────────────────────────────────
@@ -428,7 +452,8 @@ VALUES
     ARRAY[
         'content.create_tag(character varying,character varying,integer)'
     ],
-    ARRAY['ancestor_id'::name, 'descendant_id'::name, 'depth'::name]
+    ARRAY['ancestor_id'::name, 'descendant_id'::name, 'depth'::name],
+    false
 )
 
 ON CONFLICT DO NOTHING;
