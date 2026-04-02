@@ -324,7 +324,7 @@ OVERRIDING SYSTEM VALUE VALUES
   (30, 'saint-leon',                     'Saint Léon'),
   (31, 'saint-thomas',                   'Saint Thomas'),
   (32, 'charles-journet-2',             'Charles Journet'),
-  (33, 'jean-daniélou',                  'Jean Daniélou'),
+  (33, 'jean-danielou',                   'Jean Daniélou'),
   (34, 'hans-urs-von-balthasar',         'Hans Urs von Balthasar'),
   (35, 'yves-congar',                    'Yves Congar'),
   (36, 'karl-rahner',                    'Karl Rahner'),

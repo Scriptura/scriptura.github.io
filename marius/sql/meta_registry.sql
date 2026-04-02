@@ -1,5 +1,5 @@
 -- ==============================================================================
--- META-REGISTRY v2 — Extended Containment Security Matrix (ECSM)
+-- META-REGISTRY v2.2 — Extended Containment Security Matrix (ECSM)
 -- Architecture ECS/DOD · PostgreSQL 18
 --
 -- Objectif : Détection AOT (Ahead-Of-Time) des dérives structurelles et
@@ -19,12 +19,18 @@
 --
 -- v2.1 — Ajout exempt_bloat_check :
 --   9. exempt_bloat_check BOOLEAN : neutralise le scoring bloat dans
---      v_master_health_audit pour les tables de configuration structurelle
---      (faible cardinalité immuable en production — ex: identity.role).
---      N'affecte pas la vue v_performance_sentinel (qui continue de reporter
---      la densité brute) ni density_drift_alert. Mécanisme documentaire : le
---      bloat physique réel est inévitable sur une table à 7 lignes ; le
---      déclarer exception évite le faux positif sans masquer les vrais drifts.
+--      v_master_health_audit pour les tables de configuration structurelle.
+--
+-- v2.2 — Métriques architecturales (intégration propositions Gemini) :
+--  10. naive_density_bytes SMALLINT NULL : densité pre-DOD (pré-optimisation),
+--      source du dod_efficiency_ratio. À renseigner via f_generate_dod_template.
+--  11. raw_data_bytes dans v_introspection_layout : header + SUM(col_sizes) sans
+--      padding, base de calcul du padding_bytes structurel.
+--  12. positive_drift_bytes dans ECSM : octets gagnés si actual < intent
+--      (ANALYZE plus précis que l'estimation pre-ANALYZE, pas un artefact PG18).
+--  13. padding_bytes dans ECSM : waste structurel = actual - raw_data.
+--  14. dod_efficiency_ratio dans ECSM : naive / intent (ratio de densité DOD vs naïf).
+--  15. padding_category dans v_master_health_audit : OPTIMAL / WARNING / INVESTIGATE.
 --
 -- Dépendances : pg_catalog, pg_stats (ANALYZE requis pour densité précise).
 -- Exécution  : psql -U postgres -d marius -f meta_registry.sql
@@ -65,18 +71,69 @@ CREATE SCHEMA IF NOT EXISTS meta;
 --   Réservé aux tables de configuration structurelle (cardinalité fixe, mutations
 --   REVOKE'd en production). N'affecte pas v_performance_sentinel ni
 --   density_drift_alert — la réalité physique reste visible pour diagnostic.
+--
+-- naive_density_bytes SMALLINT NULL (v2.2 — Proposition 1 Cache Multiplier) :
+--   Taille du tuple padded si les colonnes étaient dans leur ordre naturel pré-DOD
+--   (non optimisé), produite par f_generate_dod_template sur la liste originale.
+--   NULL = non renseigné (métrique optionnelle, aucun effet sur les alertes).
+--   Le ratio dod_efficiency_ratio = naive / intent est exposé dans
+--   v_extended_containment_security_matrix comme KPI architectural.
+--   Pour les tables conçues d'emblée en ordre DOD, calculer rétrospectivement en
+--   passant les colonnes dans l'ordre fonctionnel (alphabétique ou déclaratif)
+--   à f_generate_dod_template. Contrainte naive >= intent : par définition, le
+--   layout optimisé est ≤ au layout naïf (un tuple DOD ne peut être plus grand).
 
-CREATE TABLE meta.containment_intent (
+CREATE TABLE IF NOT EXISTS meta.containment_intent (
     component_id          TEXT      NOT NULL PRIMARY KEY,
     intent_density_bytes  SMALLINT  NOT NULL,
     rls_guard_bitmask     INT       NULL,
     mutation_procedures   TEXT[]    NULL,
     immutable_keys        name[]    NULL,
-    exempt_bloat_check    BOOLEAN   NOT NULL DEFAULT false,
 
     CONSTRAINT intent_density_positive  CHECK (intent_density_bytes > 0),
     CONSTRAINT component_id_format      CHECK (component_id ~ '^[a-z_]+\.[a-z_0-9]+$')
 );
+
+-- ── Migrations idempotentes ────────────────────────────────────────────────────
+-- Chaque colonne ajoutée après la version initiale est déclarée via ADD COLUMN IF
+-- NOT EXISTS. Ce bloc est sans effet sur une base fraîche (les colonnes sont déjà
+-- présentes via CREATE TABLE IF NOT EXISTS qui aurait créé la table complète) et
+-- applique uniquement les colonnes manquantes sur une base existante à une version
+-- antérieure.
+--
+-- v2.1 — exempt_bloat_check
+ALTER TABLE meta.containment_intent
+    ADD COLUMN IF NOT EXISTS exempt_bloat_check BOOLEAN NOT NULL DEFAULT false;
+
+-- v2.2 — naive_density_bytes + contraintes associées
+ALTER TABLE meta.containment_intent
+    ADD COLUMN IF NOT EXISTS naive_density_bytes SMALLINT NULL;
+
+-- Contraintes ajoutées en v2.2 — idempotentes via DO/EXCEPTION.
+-- pg_constraint n'a pas de IF NOT EXISTS ; on teste l'existence avant d'ajouter.
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint
+        WHERE conname = 'naive_density_positive'
+          AND conrelid = 'meta.containment_intent'::regclass
+    ) THEN
+        ALTER TABLE meta.containment_intent
+            ADD CONSTRAINT naive_density_positive
+            CHECK (naive_density_bytes IS NULL OR naive_density_bytes > 0);
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint
+        WHERE conname = 'naive_gte_intent'
+          AND conrelid = 'meta.containment_intent'::regclass
+    ) THEN
+        ALTER TABLE meta.containment_intent
+            ADD CONSTRAINT naive_gte_intent
+            CHECK (naive_density_bytes IS NULL OR naive_density_bytes >= intent_density_bytes);
+    END IF;
+END;
+$$;
 
 
 -- ==============================================================================
@@ -198,7 +255,14 @@ SELECT
     -- Tuple final : MAXALIGN(8) sur la fin du dernier champ
     ((MAX(offset_bytes + len_bytes) + 7) / 8 * 8)::smallint       AS actual_density_bytes,
     -- Expose le header calculé pour diagnostic (colonne informative)
-    MAX(header_bytes)::smallint                                     AS header_bytes_used
+    MAX(header_bytes)::smallint                                     AS header_bytes_used,
+    -- raw_data_bytes (v2.2 — Proposition 3 Waste Management) :
+    --   Somme brute : header + données sans padding inter-colonnes ni tail MAXALIGN.
+    --   padding_bytes = actual_density_bytes - raw_data_bytes.
+    --   Interprétation : tout octet entre raw_data_bytes et actual_density_bytes est
+    --   du padding d'alignement CPU — soit inter-colonnes (layout sous-optimal) soit
+    --   tail padding MAXALIGN (inévitable sur toute table, ≤ 7B).
+    (MAX(header_bytes) + SUM(len_bytes))::smallint                  AS raw_data_bytes
 FROM layout_calc
 GROUP BY attrelid;
 
@@ -332,7 +396,46 @@ SELECT
     ci.rls_guard_bitmask,
 
     -- 4. Flag d'exemption bloat (v2.1)
-    ci.exempt_bloat_check
+    ci.exempt_bloat_check,
+
+    -- ── Nouvelles colonnes de diagnostic v2.2 ────────────────────────────────
+
+    -- 5. Positive drift (Proposition 2 — recadrage correct)
+    --    Quantifie les octets gagnés quand actual < intent.
+    --    Interprétation : ANALYZE a mesuré des données plus compactes que
+    --    l'estimation pre-ANALYZE (ex: varlena courtes inline, NULLs fréquents).
+    --    N'affecte PAS density_drift_alert (unidirectionnel : actual > intent).
+    --    NULL si la table n'existe pas physiquement (component_not_found_alert).
+    CASE
+        WHEN ts.actual_density_bytes IS NULL          THEN NULL
+        WHEN ts.actual_density_bytes < ci.intent_density_bytes
+        THEN (ci.intent_density_bytes - ts.actual_density_bytes)::smallint
+        ELSE 0::smallint
+    END                                                         AS positive_drift_bytes,
+
+    -- 6. Structural padding (Proposition 3 — Waste Management)
+    --    padding_bytes = actual_density_bytes - raw_data_bytes.
+    --    = alignement intra-tuple + tail MAXALIGN, en octets.
+    --    Tout padding >= 8B sur une table fixe signale un layout sous-optimal.
+    --    Sur une table varlena post-ANALYZE, la valeur peut légitimement dépasser
+    --    8B (tail MAXALIGN après une colonne de grande avg_width).
+    --    Voir padding_category dans v_master_health_audit pour la catégorisation.
+    (ts.actual_density_bytes - ts.raw_data_bytes)               AS padding_bytes,
+
+    -- 7. DOD efficiency ratio (Proposition 1 — Cache Multiplier)
+    --    = naive_density_bytes / intent_density_bytes.
+    --    Interprétation : 1.25 → le layout DOD est 25% plus dense que le layout naïf
+    --    (25% de tuples supplémentaires par page = 25% de I/O en moins sur seq scan).
+    --    NULL si naive_density_bytes non renseigné dans meta.containment_intent.
+    --    À renseigner via f_generate_dod_template sur la liste de colonnes pré-DOD.
+    CASE
+        WHEN ci.naive_density_bytes IS NOT NULL AND ci.intent_density_bytes > 0
+        THEN (ci.naive_density_bytes::numeric / ci.intent_density_bytes)::numeric(4, 2)
+        ELSE NULL
+    END                                                         AS dod_efficiency_ratio,
+
+    -- Exposition des valeurs brutes pour diagnostic
+    ts.raw_data_bytes
 
 FROM       meta.containment_intent          ci
 LEFT JOIN  meta.v_introspection_layout      ts
@@ -352,7 +455,7 @@ LEFT JOIN  meta.v_introspection_layout      ts
 -- ==============================================================================
 
 INSERT INTO meta.containment_intent
-    (component_id, intent_density_bytes, rls_guard_bitmask, mutation_procedures, immutable_keys, exempt_bloat_check)
+    (component_id, intent_density_bytes, rls_guard_bitmask, mutation_procedures, immutable_keys, exempt_bloat_check, naive_density_bytes)
 VALUES
 
 -- ── identity.auth ────────────────────────────────────────────────────────────
@@ -360,6 +463,10 @@ VALUES
 -- Header : 7 cols, 2 nullable → bitmap 1B → 24B (MAXALIGN absorbe)
 -- Tuple padded : 160B @ ff=70% → 34 tpp
 -- STORAGE MAIN sur password_hash : argon2id pseudo-aléatoire, PGLZ ratio ≈ 1.0
+-- naive_density_bytes : NULL — table conçue d'emblée en ordre DOD.
+--   Pré-DOD hypothétique (ordre fonctionnel) : entity_id(4B) first, puis TSTZ ×3,
+--   role_id, is_banned, password_hash → padding 4B entre entity_id et 1er TSTZ.
+--   Exécuter f_generate_dod_template avec cet ordre pour obtenir la valeur exacte.
 (
     'identity.auth',
     160,
@@ -370,7 +477,8 @@ VALUES
         'identity.anonymize_person(integer)'
     ],
     ARRAY['entity_id'::name, 'created_at'::name],
-    false
+    false,
+    NULL    -- naive_density_bytes : à renseigner via f_generate_dod_template
 ),
 
 -- ── content.core ─────────────────────────────────────────────────────────────
@@ -387,7 +495,8 @@ VALUES
         'content.publish_document(integer)'
     ],
     ARRAY['document_id'::name, 'created_at'::name],
-    false
+    false,
+    NULL    -- naive_density_bytes : à renseigner via f_generate_dod_template
 ),
 
 -- ── commerce.transaction_item ────────────────────────────────────────────────
@@ -404,7 +513,8 @@ VALUES
         'commerce.create_transaction_item(integer,integer,integer)'
     ],
     ARRAY['unit_price_snapshot_cents'::name, 'transaction_id'::name, 'product_id'::name],
-    false
+    false,
+    NULL    -- naive_density_bytes : layout entièrement fixe, ordre DOD = ordre naturel
 ),
 
 -- ── commerce.product_core ────────────────────────────────────────────────────
@@ -421,7 +531,8 @@ VALUES
         'commerce.create_transaction_item(integer,integer,integer)'
     ],
     ARRAY['id'::name],
-    false
+    false,
+    NULL    -- naive_density_bytes : à renseigner via f_generate_dod_template
 ),
 
 -- ── commerce.transaction_price ───────────────────────────────────────────────
@@ -436,7 +547,8 @@ VALUES
         'commerce.create_transaction(integer,integer,smallint,smallint,text)'
     ],
     ARRAY['transaction_id'::name],
-    false
+    false,
+    NULL    -- naive_density_bytes : à renseigner via f_generate_dod_template
 ),
 
 -- ── content.tag_hierarchy ────────────────────────────────────────────────────
@@ -453,7 +565,8 @@ VALUES
         'content.create_tag(character varying,character varying,integer)'
     ],
     ARRAY['ancestor_id'::name, 'descendant_id'::name, 'depth'::name],
-    false
+    false,
+    NULL    -- naive_density_bytes : layout fixe, DOD = ordre naturel (INT2 en dernier déjà)
 )
 
 ON CONFLICT DO NOTHING;

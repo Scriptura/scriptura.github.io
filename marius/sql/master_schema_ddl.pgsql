@@ -1991,7 +1991,7 @@ BEGIN
   VALUES (
     p_name, p_elevation, p_type_id,
     CASE WHEN p_lat IS NOT NULL AND p_lng IS NOT NULL
-         THEN ST_SetSRID(ST_MakePoint(p_lng, p_lat), 4326)
+         THEN public.ST_SetSRID(public.ST_MakePoint(p_lng, p_lat), 4326)
          ELSE NULL
     END
   ) RETURNING id INTO p_place_id;
@@ -2788,13 +2788,14 @@ ALTER PROCEDURE org.create_organization(
 ALTER PROCEDURE org.add_organization_to_hierarchy(integer, integer)
   SECURITY DEFINER SET search_path = 'org', 'identity', 'pg_catalog';
 
--- content.create_document déclenche fn_slug_deduplicate (schéma public).
--- Le trigger est résolu par OID — pas de risque fonctionnel lié au search_path.
--- 'public' inclus pour la résolution des fonctions utilitaires dans le corps.
+-- content.create_document : 'public' retiré du search_path (v2.1 — ADR-001).
+-- fn_slug_deduplicate est un trigger résolu par OID, pas par nom qualifié.
+-- Aucun appel à une fonction public.* dans le corps — 'public' était inutile
+-- et contrevenait au check NOT LIKE '%public%' de v_introspection_security.
 ALTER PROCEDURE content.create_document(
   integer, character varying, character varying,
   smallint, smallint, text, character varying, character varying
-) SECURITY DEFINER SET search_path = 'content', 'identity', 'public', 'pg_catalog';
+) SECURITY DEFINER SET search_path = 'content', 'identity', 'pg_catalog';
 
 ALTER PROCEDURE content.publish_document(integer)
   SECURITY DEFINER SET search_path = 'content', 'pg_catalog';
@@ -2821,10 +2822,14 @@ ALTER PROCEDURE commerce.create_transaction_item(integer, integer, integer)
   SECURITY DEFINER SET search_path = 'commerce', 'pg_catalog';
 
 -- Nouvelles procédures Section 11b (Audit interface de mutation ADR-001 rev.)
+-- geo.create_place : 'public' retiré du search_path (v2.1 — ADR-001).
+-- Les appels PostGIS sont désormais entièrement qualifiés (public.ST_SetSRID,
+-- public.ST_MakePoint) dans le corps de la procédure — conformément à l'invariant
+-- ADR-001 "tous les noms d'objets sont entièrement qualifiés".
 ALTER PROCEDURE geo.create_place(
   character varying, smallint, smallint, double precision, double precision,
   smallint, character varying, character varying, character varying, character varying
-) SECURITY DEFINER SET search_path = 'geo', 'identity', 'public', 'pg_catalog';
+) SECURITY DEFINER SET search_path = 'geo', 'identity', 'pg_catalog';
 
 ALTER PROCEDURE identity.create_group(character varying)
   SECURITY DEFINER SET search_path = 'identity', 'pg_catalog';
