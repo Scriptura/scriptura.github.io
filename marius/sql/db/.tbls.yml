@@ -1,0 +1,6 @@
+# Format standard : postgres://USER:PASSWORD@HOST:PORT/DBNAME?sslmode=disable
+dsn: postgres://postgres:marius@localhost:5433/marius?sslmode=disable
+docPath: doc
+exclude:
+  - pg_.*
+  - information_schema.*
