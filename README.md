@@ -7,8 +7,8 @@ Le framework repose sur un principe central : **préserver l’intégrité struc
 ## 🔗 Liens & Démonstration
 
 - **GitHub Pages (Production)** : [scriptura.github.io](https://scriptura.github.io)
-- **Composants (Local)** : [components.html](https://scriptura.github.io.localhost/page/components.html)
-- **Templates (Local)** : [templates.html](https://scriptura.github.io.localhost/page/templates.html)
+- **Composants (Local)** : [components.html](https://scriptura.github.io/page/components.html)
+- **Templates (Local)** : [templates.html](https://scriptura.github.io/page/templates.html)
 
 ## ⚙️ Invariants Structurels & Architecture
 
