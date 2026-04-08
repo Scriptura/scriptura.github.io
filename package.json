@@ -9,10 +9,10 @@
   "license": "MIT",
   "devDependencies": {
     "browser-sync": "^3.0.4",
-    "eslint": "^10.0.3",
+    "eslint": "^10.2.0",
     "image-size": "^2.0.2",
     "ora": "^9.3.0",
-    "postcss": "^8.5.8",
+    "postcss": "^8.5.9",
     "postcss-advanced-variables": "^5.0.0",
     "postcss-calc": "^10.1.1",
     "postcss-cli": "^11.0.1",
